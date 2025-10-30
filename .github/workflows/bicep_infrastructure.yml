@@ -1,0 +1,98 @@
+# Infrastructure Deployment Workflow
+# 
+# This GitHub Actions workflow automates the deployment of Azure infrastructure
+# for the DTFS project. It performs the following main tasks:
+#
+# 1. Sets up the environment and variables
+# 2. Logs in to Azure
+# 3. Creates or updates the resource group
+# 4. Replaces placeholders in the parameters.json file with actual values from GitHub secrets
+# 5. Deploys Azure resources using the Bicep template
+#
+# The workflow is triggered on pushes to the main branch and uses environment
+# variables and secrets for configuration. It's designed to work with the
+# main.bicep and parameters.json files in the infrastructure directory.
+#
+# Note: Ensure all required secrets and variables are set in the GitHub repository
+# settings before running this workflow.
+
+name: Infrastructure 🔨
+run-name: DTFS base infrastructure build from ${{ github.repository }}
+
+on:
+  push:
+    branches:
+      - feat/DTFS2-16188-bicep-templates
+    paths:
+      - '.github/workflows/bicep_infrastructure.yml'  
+  workflow_dispatch:    
+    
+env:
+  PRODUCT: dfts2
+  ENVIRONMENT: infrastructure
+  TIMEZONE: '${{ vars.TIMEZONE }}'
+  # Deployment environment target i.e., `development`, `staging`, `production`
+  TARGET: ${{ vars.ENVIRONMENT }}
+
+jobs:
+# 1. Setup infrastructure variables
+  setup:
+    name: Setup 🔧
+    runs-on: [ubuntu-latest]
+    outputs:
+      environment: ${{ env.ENVIRONMENT }}
+      timezone: ${{ env.TIMEZONE }}
+    steps:
+      - name: Repository 🗃️
+        uses: actions/checkout@v4
+
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+      - name: Login 🔐
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }} 
+
+      - name: Azure defaults ✨
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+
+      - name: Create Resource group 🏗️
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az group create \
+            --location ${{ vars.REGION }} \
+            --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
+            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}            
+            
+      - name: Set Resource Group Name
+        run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
+
+# 2. Bicep Quality Assurance - Lint                                              
+  lint:
+    name: Lint Bicep code
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Bicep
+      run: |
+        az config set bicep.use_binary_from_path=False
+        az bicep install
+        az bicep upgrade
+
+    - name: Lint Bicep Code
+      run: |
+        az bicep version
+        az bicep build --file infrastructure/resource_group_level/main.bicep
+
+      

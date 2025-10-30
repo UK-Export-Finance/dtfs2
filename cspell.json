@@ -269,7 +269,8 @@
     "UCDO",
     "tfsdemostorage",
     "tfsdevstorage",
-    "APPGW"
+    "APPGW",
+    "dfts"
   ],
   "dictionaries": [
     "en-gb",
