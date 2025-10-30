@@ -171,7 +171,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
   }
 
   return {
-    inProgressAllAmendments: false,
+    hasInProgressAllAmendments: false,
     hasInProgressPortalAmendments: false,
     hasAmendmentInProgressButton: false,
     showContinueAmendmentButton: false,
