@@ -58,6 +58,9 @@ describe('crypto utils', () => {
       { testName: 'when no hash is supplied', inputPassword: A_PASSWORD, inputSalt: A_SALT },
       { testName: 'when no salt is supplied', inputPassword: A_PASSWORD, inputHash: A_DIFFERENT_HASH_AS_HEX },
       { testName: 'when password, salt, hash are all empty', inputPassword: '', inputSalt: '', inputHash: '' },
+      { testName: 'when password, salt, hash are all empty spaces', inputPassword: ' ', inputSalt: '   ', inputHash: ' ' },
+      { testName: 'when password is empty string', inputPassword: ' ', inputSalt: A_SALT, inputHash: A_DIFFERENT_HASH_AS_HEX },
+      { testName: 'when salt is empty string', inputPassword: A_PASSWORD, inputSalt: '   ', inputHash: A_DIFFERENT_HASH_AS_HEX },
       { testName: 'when no input is supplied' },
     ];
 

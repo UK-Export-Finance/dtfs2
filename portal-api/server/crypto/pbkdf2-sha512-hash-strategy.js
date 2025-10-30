@@ -12,10 +12,15 @@ class Pbkdf2Sha512HashStrategy {
   }
 
   generateHash(password, salt) {
-    const passwordString = password.toString('hex');
-    const saltString = salt.toString('hex');
+    try {
+      const passwordString = password.toString('hex');
+      const saltString = salt.toString('hex');
 
-    return hash(passwordString, saltString);
+      return hash(passwordString, saltString);
+    } catch (error) {
+      console.error('An error has occurred while generating the hash %o', error);
+      return false;
+    }
   }
 }
 
