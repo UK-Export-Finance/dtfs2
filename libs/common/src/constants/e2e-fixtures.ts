@@ -20,6 +20,9 @@ export const PORTAL_USER_SALTS = {
   INVALID_FORMAT_SALT: 'abc',
 };
 
+export const VALID_COMPUTED_HASH =
+  '56460206ec9458101d667e2e7aae79b7648d75e7b9ada792ebd9200010c29cccbd651b653f49acbdcfb1b497c9bac7937f7f76c1c0c5d7747299bce4e769ff215bdb2cea592216182d304f3d2d11fca2cc8f16efc9eeeeaf7cf5b71cbcb8628159e70d59deeb2042254da4ef6ddd868dd53c53acc830dba6fcfa375cff26f05a';
+
 export const NODE_TASKS = {
   GET_ALL_BANKS: 'getAllBanks',
   INSERT_UTILISATION_REPORTS_INTO_DB: 'insertUtilisationReportsIntoDb',
