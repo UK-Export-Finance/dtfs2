@@ -9,7 +9,7 @@ describe(component, () => {
   describe('when a portal amendment does not exist', () => {
     it('should not render the banner', () => {
       const params = {
-        inProgressPortalAmendments: false,
+        hasInProgressPortalAmendments: false,
       };
 
       wrapper = render(params);
@@ -21,21 +21,21 @@ describe(component, () => {
   describe('when one portal amendment exists', () => {
     it('should render the banner with the correct text', () => {
       const params = {
-        inProgressPortalAmendments: [{ ukefFacilityId: '12345' }],
+        hasInProgressPortalAmendments: [{ ukefFacilityId: '12345' }],
       };
 
       wrapper = render(params);
 
       wrapper
         .expectText('[data-cy="portal-amendment--in-progress-deal-bar"]')
-        .toRead(`There is an amendment initiated by the bank on the deal (Facility ${params.inProgressPortalAmendments[0].ukefFacilityId}).`);
+        .toRead(`There is an amendment initiated by the bank on the deal (Facility ${params.hasInProgressPortalAmendments[0].ukefFacilityId}).`);
     });
   });
 
   describe('when more than one portal amendment exists', () => {
     it('should render the banner with the correct text', () => {
       const params = {
-        inProgressPortalAmendments: [{ ukefFacilityId: '12345' }, { ukefFacilityId: '67890' }],
+        hasInProgressPortalAmendments: [{ ukefFacilityId: '12345' }, { ukefFacilityId: '67890' }],
       };
 
       wrapper = render(params);
@@ -43,7 +43,7 @@ describe(component, () => {
       wrapper
         .expectText('[data-cy="portal-amendment--in-progress-deal-bar"]')
         .toRead(
-          `There is an amendment initiated by the bank on the deal (Facility ${params.inProgressPortalAmendments[0].ukefFacilityId}, ${params.inProgressPortalAmendments[1].ukefFacilityId}).`,
+          `There is an amendment initiated by the bank on the deal (Facility ${params.hasInProgressPortalAmendments[0].ukefFacilityId}, ${params.hasInProgressPortalAmendments[1].ukefFacilityId}).`,
         );
     });
   });
