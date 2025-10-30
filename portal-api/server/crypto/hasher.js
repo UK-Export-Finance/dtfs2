@@ -12,16 +12,18 @@ class Hasher {
       const salt = this.#hashStrategy.generateSalt();
       const hash = this.#hashStrategy.generateHash(target, salt);
 
+      if (!salt || !hash) {
+        console.error('An error occurred while generating hash');
+        return false;
+      }
+
       return {
         hash,
         salt,
       };
     } catch (error) {
       console.error('An error has occurred while computing the hash %o', error);
-      return {
-        hash: '',
-        salt: '',
-      };
+      return false;
     }
   }
 

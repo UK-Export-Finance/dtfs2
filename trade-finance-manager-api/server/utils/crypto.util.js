@@ -30,7 +30,9 @@ function validPassword(password, hash, salt) {
     // Generate hash as Buffer from provided password and salt
     const generatedHash = generateHash(passwordString, saltString);
 
-    if (!savedHash || !generatedHash || savedHash.length !== generatedHash.length) {
+    const invalidHash = !savedHash || !generatedHash || savedHash.length !== generatedHash.length;
+
+    if (invalidHash) {
       // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
       return false;
     }
@@ -64,9 +66,7 @@ function genPasswordResetToken(user) {
     };
   } catch (error) {
     console.error('An error occurred while generating reset password token %o', error);
-    return {
-      hash: '',
-    };
+    return false;
   }
 }
 

@@ -63,10 +63,13 @@ module.exports = {
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
+
         const salt = generateSalt();
         const saltHex = salt.toString('hex');
+
         const hash = generateHash(signInTokenFromLink, saltHex);
         const hashHex = hash.toString('hex');
+
         return { saltHex, hashHex, expiry };
       });
 

@@ -1,7 +1,6 @@
-const { when, resetAllWhenMocks } = require('jest-when');
 const { AxiosError } = require('axios');
 const crypto = require('crypto');
-const { CRYPTO, PORTAL_USER_SALTS, PORTAL_USER_SIGN_IN_TOKENS, VALID_COMPUTED_HASH } = require('@ukef/dtfs2-common');
+const { PORTAL_USER_SALTS, PORTAL_USER_SIGN_IN_TOKENS, VALID_COMPUTED_HASH } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../server/v1/email');
@@ -41,7 +40,6 @@ const userToCreateFullyLoggedIn = { ...maker2 };
 jest.mock('../../../server/v1/email');
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
-  // pbkdf2Sync: jest.fn().mockReturnValue(Buffer.from('aaa', 'hex')),
   randomBytes: jest.fn().mockReturnValue(Buffer.from('bbb', 'hex')),
 }));
 
@@ -93,12 +91,10 @@ describe('POST /users/me/sign-in-link', () => {
       username: temporaryUsernameAndEmail,
       update: { 'user-status': USER.STATUS.ACTIVE },
     });
-
-    jest.resetAllMocks();
-    resetAllWhenMocks();
   });
 
   afterEach(() => {
+    jest.resetAllMocks();
     jest.restoreAllMocks();
     jest.clearAllMocks();
   });
@@ -241,11 +237,9 @@ describe('POST /users/me/sign-in-link', () => {
   describe('when user has remaining attempts', () => {
     describe('when creating the sign in token errors', () => {
       beforeEach(() => {
-        when(crypto.randomBytes)
-          .calledWith(CRYPTO.SALT.BYTES)
-          .mockImplementationOnce(() => {
-            throw new Error();
-          });
+        jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => {
+          throw new Error();
+        });
       });
 
       it('returns a 500 error response', async () => {
@@ -256,27 +250,28 @@ describe('POST /users/me/sign-in-link', () => {
 
     describe('when creating the sign in token succeeds', () => {
       beforeEach(() => {
-        when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(mockSalt);
+        jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => mockSalt);
       });
 
       describe('when creating the sign in salt errors', () => {
         beforeEach(() => {
-          when(crypto.randomBytes)
-            .calledWith(CRYPTO.SALT.BYTES)
-            .mockImplementationOnce(() => {
-              throw new Error();
-            });
+          jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => {
+            throw new Error();
+          });
         });
 
         it('returns a 500 error response', async () => {
+          // Act
           const { status, body } = await sendSignInLink();
+
+          // Assert
           expect500ErrorWithFailedToSaveCodeMessage({ status, body });
         });
       });
 
       describe('when creating the sign in salt succeeds', () => {
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(mockSalt);
+          jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => mockSalt);
         });
 
         describe('when creating the sign in hash errors', () => {
