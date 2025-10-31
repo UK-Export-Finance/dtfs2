@@ -98,7 +98,7 @@ on:
 
 env:
   environment: dev
-  TZ: ${{ vars.TIMEZONE }}
+  TZ: ${{ vars.TIMEZONE_LONDON }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
