@@ -3,9 +3,9 @@ param environment string
 param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
 
-var managedEnvironmentName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav-env'
-var applicationInsightsName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav-ai'
-var containerName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav'
+var managedEnvironmentName = '${product}-${target}-${version}-clamav-env'
+var applicationInsightsName = '${product}-${target}-${version}-clamav-ai'
+var containerName = '${product}-${target}-${version}-clamav'
 
 resource workspace 'Microsoft.OperationalInsights/workspaces@2024-02-15' existing = {
   name: logAnalyticsWorkspaceName

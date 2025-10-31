@@ -2,8 +2,8 @@ param environment string
 param location string
 
 var ipNames = [
-  'tfs-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-ip'
-  'tfs-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-tfm-ip'
+  'tfs-${product}-${target}-${version}-ip'
+  'tfs-${product}-${target}-${version}-tfm-ip'
 ]
 
 resource publicIps 'Microsoft.Network/publicIPAddresses@2024-02-15' = [for ipName in ipNames: {
