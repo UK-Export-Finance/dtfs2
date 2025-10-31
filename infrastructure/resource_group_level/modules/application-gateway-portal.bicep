@@ -17,9 +17,9 @@ param autoscaleConfiguration object = {
   maxCapacity: 5
 }
 
-var applicationGatewayName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-gw'
+var applicationGatewayName = '${product}-${target}-${version}-gw'
 
-var tfsPortApi = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-port-api'
+var tfsPortApi = '${product}-${target}-${version}-port-api'
 
 var frontendPorts = concat([
   {

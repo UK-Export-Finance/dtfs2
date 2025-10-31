@@ -4,7 +4,7 @@ param environment string
 param frontDoorAccess string
 param apiPortalAccessPort int
 
-var nsgName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-gw-nsg'
+var nsgName = '${product}-${target}-${version}-gw-nsg'
 
 
 var staticRules = [

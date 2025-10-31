@@ -17,8 +17,8 @@ param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
 
-var cosmosDbAccountName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-mongo'
-var privateEndpointName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-mongo'
+var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
+var privateEndpointName = '${product}-${target}-${version}-mongo'
 
 var allowedIps = json(allowedIpsString)
 

@@ -37,7 +37,7 @@ var appSettingsWithAppInsights = union(
   )
 
 resource site 'Microsoft.Web/sites@2024-02-15' = {
-  name: appName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+  name: appName-${product}-${target}-${version}
   location: location
   tags: {}
   kind: 'app,linux,container'
@@ -78,7 +78,7 @@ resource webappConnectionStrings 'Microsoft.Web/sites/config@2024-02-15' = if (!
 }
 
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
-  name: privateEndpointName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+  name: privateEndpointName-${product}-${target}-${version}
   location: location
   tags: {}
   properties: {
@@ -119,7 +119,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = if (deployApplicationInsights) {
-  name: applicationInsightsName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+  name: applicationInsightsName-${product}-${target}-${version}
   location: location
   tags: {}
   kind: 'web'
