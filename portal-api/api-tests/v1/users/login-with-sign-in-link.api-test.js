@@ -1,4 +1,4 @@
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_USER_SIGN_IN_TOKENS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const app = require('../../../server/createApp');
 const { mongoDbClient: db } = require('../../../server/drivers/db-client');
 const { Hasher } = require('../../../server/crypto/hasher');
@@ -11,16 +11,21 @@ const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../server/v1/users/sanitizeUserData');
+const { createUser } = require('../../helpers/create-user');
 
 const maker1 = users.testBank1Maker1;
 const maker2 = users.testBank1Maker2;
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const invalidUserId = '1';
-  const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const shortSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde';
-  const longSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0';
-  const invalidSignInToken = 'thisIsASixtyFourCharacterLengthTesterStringThatIsNotHexadecimal.';
+  const validSignInToken = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+  const shortSignInToken = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE.substring(0, 10);
+  const longSignInToken = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE.concat('a');
+  const invalidSignInToken = PORTAL_USER_SIGN_IN_TOKENS.INVALID_FORMAT_SIGN_IN_TOKEN;
+  const shortNonHexadecimalString = 'NotHexAndShort';
+  const notaHexadecimalString =
+    '111111111111111111111111111111111111111111111111111111111111111111111G111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111';
+
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
   const hasher = new Hasher(new Pbkdf2Sha512HashStrategy(new CryptographicallyStrongGenerator()));
@@ -51,7 +56,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
     userToCreateOtherUsers = await setUpApiTestUser(as);
 
-    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn);
+    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn, userToCreateOtherUsers);
     partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
     partiallyLoggedInUserId = partiallyLoggedInUser._id;
     ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
@@ -101,7 +106,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     it('returns a 400 error if signInToken is not a valid hex string', async () => {
       const { status, body } = await loginWithSignInLink({
         userId: partiallyLoggedInUserId,
-        signInToken: invalidSignInToken,
+        signInToken: notaHexadecimalString,
         userToken: partiallyLoggedInUserToken,
       });
 
@@ -112,6 +117,35 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           {
             location: 'params',
             msg: 'Value must be a hexadecimal string',
+            path: 'signInToken',
+            type: 'field',
+            value: notaHexadecimalString,
+          },
+          {
+            location: 'params',
+            msg: 'Value must be 256 characters long',
+            path: 'signInToken',
+            type: 'field',
+            value: notaHexadecimalString,
+          },
+        ],
+      });
+    });
+
+    it('returns a 400 error if signInToken is not 256 Hex characters', async () => {
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: invalidSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: 'Value must be 256 characters long',
             path: 'signInToken',
             type: 'field',
             value: invalidSignInToken,
@@ -165,7 +199,6 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error if there are multiple errors', async () => {
-      const shortNonHexadecimalString = 'NotHexAndShort';
       const { status, body } = await loginWithSignInLink({
         userId: partiallyLoggedInUserId,
         signInToken: shortNonHexadecimalString,
@@ -202,7 +235,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     let anotherPartiallyLoggedInUserToken;
 
     beforeAll(async () => {
-      const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn);
+      const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn, userToCreateOtherUsers);
       anotherPartiallyLoggedInUser = anotherPartiallyLoggedInUserResponse.body.user;
       ({ token: anotherPartiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
     });
@@ -480,8 +513,4 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
     });
   });
-
-  async function createUser(userToCreate) {
-    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
-  }
 });

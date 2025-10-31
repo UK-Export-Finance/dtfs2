@@ -1,4 +1,4 @@
-const crypto = require('node:crypto');
+const crypto = require('crypto');
 
 class Hasher {
   #hashStrategy;
@@ -8,17 +8,34 @@ class Hasher {
   }
 
   hash(target) {
-    const salt = this.#hashStrategy.generateSalt();
-    const hash = this.#hashStrategy.generateHash(target, salt);
-    return {
-      hash,
-      salt,
-    };
+    try {
+      const salt = this.#hashStrategy.generateSalt();
+      const hash = this.#hashStrategy.generateHash(target, salt);
+
+      if (!salt || !hash) {
+        console.error('An error occurred while generating hash');
+        return false;
+      }
+
+      return {
+        hash,
+        salt,
+      };
+    } catch (error) {
+      console.error('An error has occurred while computing the hash %o', error);
+      return false;
+    }
   }
 
   verifyHash({ target, salt, hash }) {
-    const targetHash = this.#hashStrategy.generateHash(target, salt);
-    return crypto.timingSafeEqual(targetHash, hash);
+    try {
+      const targetHash = this.#hashStrategy.generateHash(target, salt);
+
+      return crypto.timingSafeEqual(targetHash, hash);
+    } catch (error) {
+      console.error('An error has occurred while verifying the hash %o', error);
+      return false;
+    }
   }
 }
 

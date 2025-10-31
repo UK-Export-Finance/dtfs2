@@ -1,6 +1,8 @@
+const { CRYPTO } = require('@ukef/dtfs2-common');
+
 const maxSignInLinkSendCount = 3;
 const signInLinkDurationMinutes = 30;
-const tokenByteLength = 32;
+const tokenByteLength = CRYPTO.HASHING.KEY_LENGTH;
 
 module.exports = {
   MAX_SEND_COUNT: maxSignInLinkSendCount,
