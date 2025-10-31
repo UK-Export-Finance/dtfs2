@@ -45,7 +45,7 @@ on:
 env:
   PRODUCT: dtfs
   ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
-  TIMEZONE: ${{ vars.TIMEZONE }}
+  TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
   # Base artifact
   FROM: latest
 
