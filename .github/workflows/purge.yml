@@ -10,7 +10,7 @@ on:
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
-  TIMEZONE: ${{ vars.TIMEZONE }}
+  TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
 
 jobs:
   # 1. Base actions configrations
