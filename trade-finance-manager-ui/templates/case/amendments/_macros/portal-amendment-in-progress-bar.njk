@@ -3,7 +3,7 @@
  {% macro render(params) %}
   {% set hasInProgressPortalAmendments = params.hasInProgressPortalAmendments %}
 
-  {% if hasInProgressPortalAmendments === true %}
+  {% if hasInProgressPortalAmendments %}
     {% set bannerHtml %}
       <p class="govuk-body" data-cy="portal-amendment--in-progress-bar">There is an amendment in progress for this facility</p>
     {% endset %}

@@ -88,10 +88,12 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
+        hasInProgressPortalAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        hasFutureEffectiveDatePortalAmendments: false,
+        formattedFutureEffectiveDatePortalAmendments: [],
       };
 
       expect(result).toEqual(expected);
@@ -108,11 +110,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -132,11 +132,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [unsubmittedInProgressTFMAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [unsubmittedInProgressTFMAmendment()],
         hasAmendmentInProgressButton: true,
         showContinueAmendmentButton: true,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -156,11 +154,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -180,11 +176,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -204,12 +198,10 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [notStartedPortalAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [notStartedPortalAmendment()],
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [notStartedPortalAmendment()],
-        hasInProgressPortalAmendments: true,
+        hasInProgressPortalAmendments: [notStartedPortalAmendment()],
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
       };
@@ -228,12 +220,10 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [inProgressPortalAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [inProgressPortalAmendment()],
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [inProgressPortalAmendment()],
-        hasInProgressPortalAmendments: true,
+        hasInProgressPortalAmendments: [inProgressPortalAmendment()],
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
       };
@@ -252,12 +242,10 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [returnedToMakerPortalAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [returnedToMakerPortalAmendment()],
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [returnedToMakerPortalAmendment()],
-        hasInProgressPortalAmendments: true,
+        hasInProgressPortalAmendments: [returnedToMakerPortalAmendment()],
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
       };
@@ -277,11 +265,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [inProgressPortalAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [inProgressPortalAmendment()],
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [inProgressPortalAmendment()],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -307,11 +293,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [inProgressPortalAmendment()],
-        hasAmendmentInProgress: true,
+        hasInProgressAllAmendments: [inProgressPortalAmendment()],
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [inProgressPortalAmendment()],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -331,11 +315,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -365,11 +347,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: true,
         formattedFutureEffectiveDatePortalAmendments,
@@ -390,11 +370,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
@@ -420,11 +398,9 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        hasInProgressAllAmendments: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
-        inProgressPortalAmendments: [],
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: false,
         formattedFutureEffectiveDatePortalAmendments: [],
