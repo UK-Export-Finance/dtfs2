@@ -220,7 +220,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -316,7 +316,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -424,7 +424,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -510,7 +510,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -579,7 +579,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -654,7 +654,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -749,7 +749,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -806,7 +806,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-portal-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -854,7 +854,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -912,7 +912,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-gef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -981,7 +981,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1039,7 +1039,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-tfm-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1067,7 +1067,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1120,7 +1120,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1155,7 +1155,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1211,7 +1211,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-ukef-mocked-calls-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1352,7 +1352,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1415,7 +1415,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-ukef-ff-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1451,7 +1451,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1495,7 +1495,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: e2e-tests-maintenance-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1524,7 +1524,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1569,7 +1569,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
