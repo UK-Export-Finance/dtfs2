@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.0...v2.12.0) (2025-11-01)
+
+
+### Features
+
+* **DTFS2-6761:** commonised password hashing ([#4509](https://github.com/UK-Export-Finance/dtfs2/issues/4509)) ([0904a27](https://github.com/UK-Export-Finance/dtfs2/commit/0904a27d6609d010c346425b1e2da3b071236620))
+* **DTFS2-6761:** improve password hasing - pbkdf2sync ([#4516](https://github.com/UK-Export-Finance/dtfs2/issues/4516)) ([90b77fb](https://github.com/UK-Export-Finance/dtfs2/commit/90b77fb7f75aa1157e214099922f07d736d4c47f))
+* **DTFS2-8187:** global exception handlers ([#4523](https://github.com/UK-Export-Finance/dtfs2/issues/4523)) ([d5ab3e5](https://github.com/UK-Export-Finance/dtfs2/commit/d5ab3e51c3ee4486bf31e332610d2805d9fad88d))
+
+
+### Bug Fixes
+
+* **DTFS2-6761:** updated key length to 128 ([#4518](https://github.com/UK-Export-Finance/dtfs2/issues/4518)) ([4a5f387](https://github.com/UK-Export-Finance/dtfs2/commit/4a5f3878f5a33fea0ae16aab05ad62841110c3f7))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
