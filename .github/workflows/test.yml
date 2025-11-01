@@ -220,7 +220,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -316,7 +316,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -424,7 +424,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -510,7 +510,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -579,7 +579,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -654,7 +654,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -749,7 +749,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -854,7 +854,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -981,7 +981,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1067,7 +1067,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1155,7 +1155,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1352,7 +1352,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1451,7 +1451,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1524,7 +1524,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
@@ -1569,7 +1569,7 @@ jobs:
 
     steps:
       - name: Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
 

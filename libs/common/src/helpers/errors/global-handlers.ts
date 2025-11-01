@@ -12,10 +12,8 @@
 export const exceptionHandlers = () => {
   process.on('unhandledRejection', (error) => {
     console.error('An unhandled promise rejection was caught %o', error);
-    return false;
   });
   process.on('uncaughtException', (error) => {
     console.error('An uncaught exception was caught %o', error);
-    return false;
   });
 };
