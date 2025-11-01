@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { maintenance, SWAGGER, xss } from '@ukef/dtfs2-common';
+import { exceptionHandlers, maintenance, SWAGGER, xss } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -16,6 +16,9 @@ const { CORS_ORIGIN } = process.env;
 
 export const generateApp = () => {
   const app = express();
+
+  // Register global handlers
+  exceptionHandlers();
 
   app.use(seo);
 

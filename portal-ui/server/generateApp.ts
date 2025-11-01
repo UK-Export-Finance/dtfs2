@@ -3,7 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import { SWAGGER, xss, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
+import { exceptionHandlers, SWAGGER, xss, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import { HttpStatusCode } from 'axios';
 import routes from './routes';
@@ -15,6 +15,9 @@ import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './help
 
 export const generateApp = () => {
   const app = express();
+
+  // Register global handlers
+  exceptionHandlers();
 
   // Global application configuration
   configure(app);

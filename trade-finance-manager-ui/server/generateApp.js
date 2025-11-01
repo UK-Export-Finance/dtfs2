@@ -4,7 +4,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
-const { SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { expressSession, configure } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
@@ -18,6 +18,9 @@ const createRateLimit = require('./middleware/rateLimit/index');
 
 const generateApp = () => {
   const app = express();
+
+  // Register global handlers
+  exceptionHandlers();
 
   // Global application configuration
   configure(app);

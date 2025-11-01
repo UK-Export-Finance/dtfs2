@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const { SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
@@ -17,6 +17,9 @@ dotenv.config();
 
 const generateApp = () => {
   const app = express();
+
+  // Register global handlers
+  exceptionHandlers();
 
   // Global application configuration
   configure(app);
