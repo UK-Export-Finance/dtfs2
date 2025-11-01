@@ -17,7 +17,7 @@ on:
     - cron: '00 00 * * *'
 env:
   environment: dev
-  timezone: ${{ vars.TIMEZONE }}
+  timezone: ${{ vars.TIMEZONE_LONDON }}
 
 jobs:
   # 1. Setup test infrastructure

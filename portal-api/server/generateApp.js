@@ -1,5 +1,5 @@
 const { CORS_ORIGIN } = process.env;
-const { maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -26,6 +26,9 @@ const generateApp = () => {
   loginCompleteAuth(passport, userService);
 
   const app = express();
+
+  // Register global handlers
+  exceptionHandlers();
 
   app.use(seo);
 
