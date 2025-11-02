@@ -98,7 +98,7 @@ on:
 
 env:
   environment: dev
-  TZ: ${{ vars.TIMEZONE }}
+  TZ: ${{ vars.TIMEZONE_LONDON }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
@@ -802,7 +802,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
@@ -907,7 +907,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
@@ -1034,7 +1034,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
@@ -1115,7 +1115,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
@@ -1205,7 +1205,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -1411,7 +1411,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
@@ -1491,7 +1491,7 @@ jobs:
           env: |
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            TZ=${{ vars.TIMEZONE }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
