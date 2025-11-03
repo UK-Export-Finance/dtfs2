@@ -77,11 +77,13 @@ describe('post-keying-data.controller', () => {
       const feeRecords = someFeeRecordsForReport(UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build());
       const feeRecordsWithNoReport = feeRecords.map((feeRecord) => {
         // Test-only mutation: purposely remove report property for error scenario
-        const feeRecordCopy = Object.assign(Object.create(Object.getPrototypeOf(feeRecord) as object), feeRecord) as FeeRecordEntity;
+        const feeRecordCopy = { ...feeRecord };
         delete (feeRecordCopy as { report?: unknown }).report;
         return feeRecordCopy;
       });
-      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecordsWithNoReport);
+      when(feeRecordRepoFindSpy)
+        .calledWith(reportId, [FEE_RECORD_STATUS.MATCH])
+        .mockResolvedValue(feeRecordsWithNoReport as unknown as FeeRecordEntity[]);
 
       // Act
       await postKeyingData(req, res);

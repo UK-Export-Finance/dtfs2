@@ -16,7 +16,7 @@ jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => {
   };
 });
 
-describe.only('scheduler/jobs/delete-acbs-durable-function-logs', () => {
+describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
   describe('the task', () => {
     beforeEach(() => {
       jest.mocked(asString).mockImplementation((value) => value as string);
