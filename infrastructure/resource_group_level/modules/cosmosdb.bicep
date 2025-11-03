@@ -5,6 +5,15 @@ param mongoDbDnsZoneId string
 param privateEndpointsSubnetId string
 param databaseName string
 
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
+
 
 @description('Network IPs to permit access to CosmosDB')
 @secure()

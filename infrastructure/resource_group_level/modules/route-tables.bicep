@@ -1,6 +1,14 @@
 param location string
 param nextHopIpAddress string
 param productionSubnetCidr string
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
 
 // TODO:DTFS-6422 consider resource naming convention
 var routeTableName = "rt-ukef-uks-${product}-${target}-${version}"

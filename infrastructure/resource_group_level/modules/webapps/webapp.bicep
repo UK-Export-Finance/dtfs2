@@ -13,6 +13,14 @@ param appSettings object
 
 @secure()
 param connectionStrings object
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
 
 param privateEndpointsSubnetId string
 param azureWebsitesDnsZoneId string
@@ -22,7 +30,7 @@ param deployApplicationInsights bool
 
 param selfHostnameEnvironmentVariable string = ''
 
-var appName = 'tfs-${environment}-${resourceNameFragment}'
+var appName = '${product}-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
 var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
