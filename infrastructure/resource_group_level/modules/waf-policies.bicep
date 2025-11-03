@@ -1,4 +1,4 @@
-param wafPoliciesName string = "waf${product}${target}${version}"
+param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
 @description('IPs which are not blocked/redirected')

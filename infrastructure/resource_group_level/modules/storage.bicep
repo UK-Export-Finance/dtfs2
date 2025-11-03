@@ -19,7 +19,7 @@ param shareDeleteRetentionEnabled bool
 
 param filesDnsZoneId string
 
-var storageAccountName = "${product}-${target}-${version}-storage"
+var storageAccountName = '${product}-${target}-${version}-storage'
 
 var allowedIps = json(allowedIpsString)
 

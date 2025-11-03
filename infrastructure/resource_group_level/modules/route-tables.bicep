@@ -3,7 +3,7 @@ param nextHopIpAddress string
 param productionSubnetCidr string
 
 // TODO:DTFS-6422 consider resource naming convention
-var routeTableName = "rt-ukef-uks-${product}-${target}-${version}"
+var routeTableName = 'rt-ukef-uks-${product}-${target}-${version}'
 
 resource routeTable 'Microsoft.Network/routeTables@2024-02-15' = {
   name: routeTableName

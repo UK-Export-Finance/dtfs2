@@ -11,7 +11,7 @@ param appServicePlanName string
 param networkSecurityGroupId string
 
 // Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
-param peeringVnetName string = "vnet-peer-uks-${product}-${target}-${version}"
+param peeringVnetName string = 'vnet-peer-uks-${product}-${target}-${version}'
 @secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string
@@ -20,16 +20,16 @@ param peeringAddressSpace string
 
 param storageLocations array
 
-var natGatewayName = "${product}-${target}-${version}-nat-gw"
-var natGatewayIpAddressesName = "${product}-${target}-${version}-nat-ip"
+var natGatewayName = '${product}-${target}-${version}-nat-gw'
+var natGatewayIpAddressesName = '${product}-${target}-${version}-nat-ip'
 
-var vnetName = "${product}-${target}-${version}-vnet"
+var vnetName = '${product}-${target}-${version}-vnet'
 
-var appServicePlanEgressSubnetName = "${product}-${target}-${version}-app-service-plan-egress"
-var gatewaySubnetName = "${product}-${target}-${version}-gateway"
-var privateEndpointsSubnetName = "${product}-${target}-${version}-private-endpoints"
+var appServicePlanEgressSubnetName = '${product}-${target}-${version}-app-service-plan-egress'
+var gatewaySubnetName = '${product}-${target}-${version}-gateway'
+var privateEndpointsSubnetName = '${product}-${target}-${version}-private-endpoints'
 
-var acaClamAvSubnetName = "${product}-${target}-${version}-aca-clamav"
+var acaClamAvSubnetName = '${product}-${target}-${version}-aca-clamav'
 
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-02-15' = {
   name: natGatewayIpAddressesName
