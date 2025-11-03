@@ -1,0 +1,11 @@
+{
+  "analyzers": {
+    "core": {
+      "rules": {
+        "no-unnecessary-string-interpolations": {
+          "level": "off"
+        }
+      }
+    }
+  }
+}
