@@ -10,14 +10,6 @@ param privateEndpointsSubnetId string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
-@description('The product name for resource naming')
-param product string
-
-@description('The target environment for resource naming')
-param target string
-
-@description('The version for resource naming')
-param version string
 
 // Note that the name fragment has "azure-" prepended to it when used for the docker image!
 param resourceNameFragment string = 'function-acbs'
@@ -78,9 +70,9 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionAcbsName = '${product}-${target}-${version}-${resourceNameFragment}'
-var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
-var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
+var functionAcbsName = "${product}-${target}-${version}-${resourceNameFragment}"
+var privateEndpointName = "${product}-${target}-${version}-${resourceNameFragment}"
+var applicationInsightsName = "${product}-${target}-${version}-${resourceNameFragment}"
 
 
 // Minimal setup from MS example
