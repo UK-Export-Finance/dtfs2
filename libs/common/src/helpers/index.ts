@@ -59,3 +59,4 @@ export * from './is-deal-cancelled';
 export * from './format';
 export * from './can-submit-to-acbs';
 export * from './is-amendment-declined';
+export * from './errors';

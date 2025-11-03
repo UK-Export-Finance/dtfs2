@@ -1129,7 +1129,7 @@ jobs:
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1269,7 +1269,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
@@ -1436,7 +1436,7 @@ jobs:
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
@@ -1616,7 +1616,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
@@ -1803,7 +1803,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
@@ -1972,7 +1972,7 @@ jobs:
                 ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}" \
                 ENTRA_ID_CLIENT_SECRET="${{ vars.ENTRA_ID_CLIENT_SECRET }}" \
                 ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}" \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
@@ -2133,7 +2133,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ=${{ vars.TIMEZONE }}
+                TZ=${{ vars.TIMEZONE_LONDON }}
 
       - name: Secrets
         uses: azure/cli@v2.1.0
