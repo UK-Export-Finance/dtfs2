@@ -31,8 +31,8 @@ param deployApplicationInsights bool
 param selfHostnameEnvironmentVariable string = ''
 
 var appName = '${product}-${environment}-${resourceNameFragment}'
-var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
-var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
 
 var appSettingsWithAppInsights = union(
   appSettings,

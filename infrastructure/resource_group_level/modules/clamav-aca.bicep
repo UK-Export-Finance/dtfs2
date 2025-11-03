@@ -2,14 +2,6 @@ param location string = resourceGroup().location
 param environment string
 param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
-@description('The product name for resource naming')
-param product string
-
-@description('The target environment for resource naming')
-param target string
-
-@description('The version for resource naming')
-param version string
 
 var managedEnvironmentName = "${product}-${target}-${version}-clamav-env"
 var applicationInsightsName = "${product}-${target}-${version}-clamav-ai"

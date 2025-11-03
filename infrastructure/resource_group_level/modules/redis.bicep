@@ -1,14 +1,6 @@
 param location string
 param environment string
 param sku object
-@description('The product name for resource naming')
-param product string
-
-@description('The target environment for resource naming')
-param target string
-
-@description('The version for resource naming')
-param version string
 
 var redisName = "${product}-${target}-${version}-redis"
 
