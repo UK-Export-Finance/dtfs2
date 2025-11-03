@@ -25,6 +25,7 @@ on:
       - feat/DTFS2-16188-bicep-templates
     paths:
       - '.github/workflows/bicep_infrastructure.yml'  
+      - 'infrastructure/resource_group_level/**'
   workflow_dispatch:    
     
 env:
