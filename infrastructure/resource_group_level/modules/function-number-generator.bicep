@@ -26,7 +26,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 // NOTE: this differs from the webapp names as we prepend "azure-" to the image name.
-var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
+var dockerImageName = "${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}"
 
 // This is the IP address Azure uses for its DNS server.
 // https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances?tabs=redhat#considerations

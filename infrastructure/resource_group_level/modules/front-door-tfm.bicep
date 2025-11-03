@@ -2,7 +2,7 @@ param environment string
 param backendPoolIp string
 param wafPoliciesId string
 
-var frontDoorTfmName = 'tfs-${environment}-tfm-fd'
+var frontDoorTfmName = "frontdoor-${product}-tfm-${target}-${version}"
 
 var defaultFrontendProperties = {
     hostName: '${frontDoorTfmName}.azurefd.net'

@@ -2,7 +2,7 @@ param environment string
 param backendPoolIp string
 param wafPoliciesId string = ''
 
-var frontDoorPortalName = 'frontdoor-${product}-${target}-${version}'
+var frontDoorPortalName = "frontdoor-${product}-portal-${target}-${version}"
 
 var defaultFrontendProperties = {
   hostName: '${frontDoorPortalName}.azurefd.net'
