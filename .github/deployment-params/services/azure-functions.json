@@ -1,0 +1,12 @@
+{
+  "description": "Azure Functions and scheduling specific parameters",
+  "serviceName": "azure-functions",
+  "parameters": [
+    "AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE"
+  ],
+  "specialMappings": {
+    "AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE": "\"$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV\""
+  },
+  "secretMappings": {},
+  "commonParameterFiles": []
+}

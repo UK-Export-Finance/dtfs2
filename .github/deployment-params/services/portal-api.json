@@ -1,0 +1,18 @@
+{
+  "description": "Portal API specific parameters",
+  "serviceName": "portal-api",
+  "parameters": [
+    "AZURE_PORTAL_EXPORT_FOLDER",
+    "AZURE_PORTAL_FILESHARE_NAME",
+    "PDC_INPUTTERS_EMAIL_RECIPIENT"
+  ],
+  "secretMappings": {
+    "AZURE_PORTAL_EXPORT_FOLDER": "${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}",
+    "AZURE_PORTAL_FILESHARE_NAME": "${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}",
+    "PDC_INPUTTERS_EMAIL_RECIPIENT": "${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}"
+  },
+  "commonParameterFiles": [
+    "auth-params.json",
+    "apim-params.json"
+  ]
+}

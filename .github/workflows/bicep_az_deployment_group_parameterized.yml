@@ -1,4 +1,4 @@
-name: Perform action for an Az Deployment Group via Bicep
+name: Perform action for an Az Deployment Group via Bicep (Parameterized)
 
 # We don't want concurrent deploys to the same resource group.
 concurrency: bicep_az_deployment_group_${{ inputs.resourceGroupName }}
@@ -17,6 +17,11 @@ on:
         description: What action to perform - validate, what-if or create
         required: true
         type: string
+      components:
+        description: 'Comma-separated list of components to deploy (e.g., "trade-finance-manager-api,portal-api,utilization-reports")'
+        required: false
+        type: string
+        default: 'all'
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -175,8 +180,14 @@ jobs:
         id: build-params
         run: |
           chmod +x ./.github/build-deployment-params.sh
-          echo "Building parameters for all components..."
-          PARAMS=$(./.github/build-deployment-params.sh all)
+
+          # Convert comma-separated components to space-separated
+          COMPONENTS="${{ inputs.components }}"
+          COMPONENTS_ARRAY=(${COMPONENTS//,/ })
+
+          echo "Building parameters for components: ${COMPONENTS_ARRAY[*]}"
+          PARAMS=$(./.github/build-deployment-params.sh "${COMPONENTS_ARRAY[@]}")
+
           echo "parameters<<EOF" >> $GITHUB_OUTPUT
           echo "$PARAMS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT

@@ -1,0 +1,26 @@
+{
+  "description": "Trade Finance Manager API specific parameters",
+  "serviceName": "trade-finance-manager-api",
+  "parameters": [
+    "COMPANIES_HOUSE_API_KEY",
+    "ORDNANCE_SURVEY_API_KEY",
+    "GOV_NOTIFY_API_KEY",
+    "GOV_NOTIFY_EMAIL_RECIPIENT",
+    "UKEF_INTERNAL_NOTIFICATION",
+    "ESTORE_URL",
+    "CORS_ORIGIN"
+  ],
+  "secretMappings": {
+    "COMPANIES_HOUSE_API_KEY": "${{ secrets.COMPANIES_HOUSE_API_KEY }}",
+    "ORDNANCE_SURVEY_API_KEY": "${{ secrets.ORDNANCE_SURVEY_API_KEY }}",
+    "GOV_NOTIFY_API_KEY": "${{ secrets.GOV_NOTIFY_API_KEY }}",
+    "GOV_NOTIFY_EMAIL_RECIPIENT": "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}",
+    "UKEF_INTERNAL_NOTIFICATION": "${{ secrets.UKEF_INTERNAL_NOTIFICATION }}",
+    "ESTORE_URL": "${{ secrets.ESTORE_URL }}",
+    "CORS_ORIGIN": "${{ secrets.CORS_ORIGIN }}"
+  },
+  "commonParameterFiles": [
+    "auth-params.json",
+    "apim-params.json"
+  ]
+}
