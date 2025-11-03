@@ -186,8 +186,8 @@ export type TfmFacilityWithStringId = Omit<TfmFacility, '_id' | 'facilitySnapsho
 };
 
 export type GetTfmAmendmentInProgressResponse = {
-  amendmentsInProgress: FacilityAmendment[] | TfmFacilityAmendment[];
-  hasAmendmentInProgress: boolean;
+  hasInProgressAllAmendments: PortalFacilityAmendment[] | TfmFacilityAmendment[] | false;
+  hasInProgressPortalAmendments: PortalFacilityAmendment[] | false;
   hasAmendmentInProgressButton: boolean;
   showContinueAmendmentButton: boolean;
 };
