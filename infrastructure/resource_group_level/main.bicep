@@ -26,14 +26,6 @@ param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('The product name for resource naming')
-param product string
-
-@description('The target environment for resource naming')
-param target string
-
-@description('The version for resource naming')
-param version string
 
 
 ///////////////////////////////////////////////////////////////////////////////
