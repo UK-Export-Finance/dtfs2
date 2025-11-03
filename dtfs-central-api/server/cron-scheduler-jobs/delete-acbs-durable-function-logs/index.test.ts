@@ -7,13 +7,16 @@ console.info = jest.fn();
 jest.mock('../../repositories/durable-functions-repo', () => ({
   deleteAllCompleteAcbsDurableFunctionLogs: jest.fn(),
 }));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  asString: jest.fn(),
-}));
 
-describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
+jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => {
+  const actualDtfs2Common: typeof import('@ukef/dtfs2-common') = jest.requireActual('@ukef/dtfs2-common');
+  return {
+    ...actualDtfs2Common,
+    asString: jest.fn(),
+  };
+});
+
+describe.only('scheduler/jobs/delete-acbs-durable-function-logs', () => {
   describe('the task', () => {
     beforeEach(() => {
       jest.mocked(asString).mockImplementation((value) => value as string);
