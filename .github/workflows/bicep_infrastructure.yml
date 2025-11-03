@@ -77,6 +77,13 @@ jobs:
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
+      - name: Replace GitHub variables into parameters.json
+        run: | 
+          # Replace GitHub variables into parameters.json
+          sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters.dev.json
+
 # 2. Bicep Quality Assurance - Lint                                              
   lint:
     name: Lint Bicep code
