@@ -3,6 +3,9 @@ param environment string
 param gatewaySubnetId string
 param tfsTfmIpId string
 param tfmUiHostname string
+param product string
+param target string
+param version string
 
 param applicationGatewaySku object = {
   name: 'WAF_v2'

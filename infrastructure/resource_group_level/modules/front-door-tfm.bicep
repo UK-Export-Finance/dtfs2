@@ -1,6 +1,9 @@
 param environment string
 param backendPoolIp string
 param wafPoliciesId string
+param product string
+param target string
+param version string
 
 var frontDoorTfmName = 'frontdoor-${product}-tfm-${target}-${version}'
 

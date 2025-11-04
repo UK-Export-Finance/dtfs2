@@ -3,6 +3,9 @@ param environment string
 @allowed(['Allow', 'Deny'])
 param frontDoorAccess string
 param apiPortalAccessPort int
+param product string
+param target string
+param version string
 
 var nsgName = '${product}-${target}-${version}-gw-nsg'
 

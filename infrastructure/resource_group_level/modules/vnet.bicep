@@ -5,6 +5,9 @@ param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
 param applicationGatewayCidr string
 param acaClamAvCidr string
+param product string
+param target string
+param version string
 
 param appServicePlanName string
 

@@ -4,6 +4,9 @@ param appServicePlanEgressSubnetId string
 param mongoDbDnsZoneId string
 param privateEndpointsSubnetId string
 param databaseName string
+param product string
+param target string
+param version string
 
 
 @description('Network IPs to permit access to CosmosDB')

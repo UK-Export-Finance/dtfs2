@@ -85,22 +85,14 @@ jobs:
           sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters.dev.json
           sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters.dev.json
 
-# 2. Bicep Quality Assurance - Lint                                              
-  lint:
-    name: Lint Bicep code
-    runs-on: [self-hosted, linux, deployment]
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Install Bicep
-      run: |
-        az config set bicep.use_binary_from_path=False
-        az bicep install
-        az bicep upgrade
-
-    - name: Lint Bicep Code
-      run: |
-        az bicep version
-        az bicep build --file infrastructure/resource_group_level/test.bicep
+      - name: Run Bicep What-If with parameters file
+        run: |
+          az deployment group what-if 
+            --resource-group MyResourceGroup 
+            --subscription ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }} 
+            --resource-group $RESOURCE_GROUP_NAME
+            --template-file infrastructure/main.bicep 
+            --parameters @infrastructure/parameters.dev.json 
+            --output table
 
       
