@@ -95,7 +95,6 @@ jobs:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }} 
 
       - name: Replace GitHub variables into parameters.json 
-        working-directory: dtfs2/infrastructure/resource_group_level
         run: | 
           # Replace GitHub variables into parameters.json 
           sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
