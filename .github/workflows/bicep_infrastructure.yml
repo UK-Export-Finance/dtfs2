@@ -93,13 +93,13 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }} 
-          
+
       - name: Check working directory and files
         run: |
           pwd
-          ls -R dtfs2/infrastructure/resource_group_level || echo "❌ Directory not found"
-
+          
       - name: Replace GitHub variables into parameters.json 
+        working-directory: dtfs2/infrastructure/resource_group_level
         run: | 
           # Replace GitHub variables into parameters.json 
           sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
