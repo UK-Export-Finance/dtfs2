@@ -11,6 +11,21 @@
       "version": {
         "value": "{{VERSION}}"
       },
+      "vnetAddressPrefix": {
+        "value": "{{AZ_DEV_VNET_ADDRESS_PREFIX}}"
+      },
+      "applicationGatewayCidr": {
+        "value": "{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}"
+      },
+      "appServicePlanEgressPrefixCidr": {
+        "value": "{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}"
+      },
+      "acaClamAvCidr": {
+        "value": "{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}"
+      },
+      "privateEndpointsCidr": {
+        "value": "{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}"
+      },
       "tags": {
         "value": {
           "Environment": "{{ENVIRONMENT_TYPE}}",

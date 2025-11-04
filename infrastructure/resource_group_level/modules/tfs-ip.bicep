@@ -1,5 +1,13 @@
 param environment string
 param location string
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
 
 var ipNames = [
   '${product}-${target}-${version}-ip'

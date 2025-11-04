@@ -1,3 +1,11 @@
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
 param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
