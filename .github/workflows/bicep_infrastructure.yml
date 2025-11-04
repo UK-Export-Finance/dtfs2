@@ -99,6 +99,9 @@ jobs:
           
       - name: Checkout repo
         uses: actions/checkout@v4
+        
+      - name: Set Resource Group Name
+        run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
       - name: Run Bicep What-If
         uses: ./.github/actions/bicep-whatif
