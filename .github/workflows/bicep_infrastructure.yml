@@ -85,13 +85,17 @@ jobs:
           sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters.dev.json
           sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters.dev.json
 
+# 2. Validate infrastructure resources
+  Resource-Plan:
+    name: Validate Resource Plan 📊
+    runs-on: [ubuntu-latest]
+    steps:
       - name: Run Bicep What-If with parameters file
         run: |
-          az deployment group what-if 
-            --resource-group MyResourceGroup 
+            az deployment group what-if 
             --subscription ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }} 
             --resource-group $RESOURCE_GROUP_NAME
-            --template-file infrastructure/main.bicep 
+            --template-file infrastructure/resource_group_level/main.bicep
             --parameters @infrastructure/parameters.dev.json 
             --output table
 
