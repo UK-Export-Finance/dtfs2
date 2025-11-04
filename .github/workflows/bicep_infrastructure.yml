@@ -94,14 +94,14 @@ jobs:
       - name: Replace GitHub variables into parameters.json 
         run: | 
           # Replace GitHub variables into parameters.json
-          sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX}}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|g" /infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR}}|g" dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX}}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR}}|g" ./dtfs2/infrastructure/resource_group_level/parameters_dev.json
       
       - name: Install Bicep
         run: |
