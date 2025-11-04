@@ -1,5 +1,8 @@
 param environment string
 param location string
+param product string
+param target string
+param version string
 
 // TODO:FN-931 Add access from external accounts if appropriate.
 

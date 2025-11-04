@@ -7,6 +7,9 @@ param privateEndpointsSubnetId string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
+param product string
+param target string
+param version string
 
 // Note that the name fragment has "azure-" prepended to it when used for the docker image!
 param resourceNameFragment string = 'function-number-generator'

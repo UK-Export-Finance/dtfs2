@@ -4,6 +4,14 @@ param location string  = resourceGroup().location
 // Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'.
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
+@description('The product name for resource naming')
+param product string
+
+@description('The target environment for resource naming')
+param target string
+
+@description('The version for resource naming')
+param version string
 
 // Enable network access from an external subscription.
 @secure()
@@ -577,9 +585,12 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
 }
 
 module vnet 'modules/vnet.bicep' = {
-  name: 'vnet-${{ PRODUCT }}-${{ TARGET }}-${{ VERSION }}'
+  name: 'vnet'
   params: {
     environment: environment
+    location: location
+    location: location
+    location: location
     location: location
     appServicePlanName: appServicePlan.name
     addressPrefixes: parametersMap[environment].vnet.addressPrefixes

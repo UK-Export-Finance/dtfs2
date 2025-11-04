@@ -6,6 +6,9 @@ param portalApiHostname string
 param portalUiHostname string
 param gefUiHostname string
 param apiPortalAccessPort int = 0
+param product string
+param target string
+param version string
 
 param applicationGatewaySku object = {
   name: 'WAF_v2'
