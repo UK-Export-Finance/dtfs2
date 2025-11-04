@@ -96,6 +96,9 @@ jobs:
           az config set bicep.use_binary_from_path=False
           az bicep install
           az bicep upgrade
+          
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Run Bicep What-If
         uses: ./.github/actions/bicep-whatif

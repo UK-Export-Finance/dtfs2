@@ -1,0 +1,28 @@
+name: 'Bicep What-If'
+description: 'Runs az deployment group what-if'
+runs:
+  using: 'composite'
+  steps:
+    - uses: azure/cli@v2
+      with:
+        inlineScript: |
+          az bicep install
+          az deployment group what-if \
+            --subscription ${{ inputs.subscription }} \
+            --resource-group ${{ inputs.resourceGroup }} \
+            --template-file ${{ inputs.templateFile }} \
+            --parameters @${{ inputs.parametersFile }} \
+            --output table
+inputs:
+  subscription:
+    description: 'Azure subscription id'
+    required: true
+  resourceGroup:
+    description: 'Azure resource group'
+    required: true
+  templateFile:
+    description: 'Bicep template file'
+    required: true
+  parametersFile:
+    description: 'Bicep ParametersFile'
+    required: true
