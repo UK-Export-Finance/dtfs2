@@ -279,7 +279,8 @@
     "tfsdemostorage",
     "tfsdevstorage",
     "APPGW",
-    "dfts"
+    "dfts",
+    "whatif"
   ],
   "dictionaries": [
     "en-gb",

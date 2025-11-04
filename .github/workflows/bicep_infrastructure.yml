@@ -88,15 +88,21 @@ jobs:
 # 2. Validate infrastructure resources
   Resource-Plan:
     name: Validate Resource Plan 📊
+    needs: setup
     runs-on: [ubuntu-latest]
     steps:
-      - name: Run Bicep What-If with parameters file
+      - name: Install Bicep
         run: |
-            az deployment group what-if 
-            --subscription ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }} 
-            --resource-group $RESOURCE_GROUP_NAME
-            --template-file infrastructure/resource_group_level/main.bicep
-            --parameters @infrastructure/parameters.dev.json 
-            --output table
+          az config set bicep.use_binary_from_path=False
+          az bicep install
+          az bicep upgrade
+
+      - name: Run Bicep What-If
+        uses: ./.github/actions/bicep-whatif
+        with:
+          subscription: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+          resourceGroup: ${{ env.RESOURCE_GROUP_NAME }}
+          templateFile: infrastructure/resource_group_level/main.bicep
+          parametersFile: infrastructure/resource_group_level/parameters.json
 
       
