@@ -78,37 +78,39 @@ jobs:
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
+      
+
+# 2. Validate infrastructure resources
+  Resource-Deploy:
+    name: Deploy Resources 📊
+    needs: setup
+    runs-on: [ubuntu-latest]
+    steps:
       - name: Replace GitHub variables into parameters.json
         run: | 
           # Replace GitHub variables into parameters.json
           sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./infrastructure/resource_group_level/parameters.dev.json
           sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters.dev.json
           sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters.dev.json
-
-# 2. Validate infrastructure resources
-  Resource-Plan:
-    name: Validate Resource Plan 📊
-    needs: setup
-    runs-on: [ubuntu-latest]
-    steps:
+          sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX}}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|g" ./infrastructure/resource_group_level/parameters.dev.json
+          sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR}}|g" ./infrastructure/resource_group_level/parameters.dev.json
+      
       - name: Install Bicep
         run: |
           az config set bicep.use_binary_from_path=False
           az bicep install
           az bicep upgrade
           
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        
-      - name: Set Resource Group Name
-        run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
-
-      - name: Run Bicep What-If
-        uses: ./.github/actions/bicep-whatif
+      - name: Deploy Azure Resources
+        uses: azure/arm-deploy@v2
         with:
-          subscription: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
-          resourceGroup: ${{ env.RESOURCE_GROUP_NAME }}
-          templateFile: infrastructure/resource_group_level/main.bicep
-          parametersFile: infrastructure/resource_group_level/parameters.json
+          subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+          resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+          template: infrastructure/resource_group_level/main.bicep
+          parameters: infrastructure/resource_group_level/parameters.dev.json          
+          scope: resourcegroup
 
       
