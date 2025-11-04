@@ -97,6 +97,7 @@ jobs:
       - name: Check working directory and files
         run: |
           pwd
+          ls -ltra
           
       - name: Replace GitHub variables into parameters.json 
         working-directory: dtfs2/infrastructure/resource_group_level

@@ -271,7 +271,8 @@
     "tfsdevstorage",
     "APPGW",
     "dfts",
-    "whatif"
+    "whatif",
+    "ltra"
   ],
   "dictionaries": [
     "en-gb",
