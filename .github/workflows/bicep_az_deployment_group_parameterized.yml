@@ -139,15 +139,17 @@ jobs:
       command: ${{ steps.config-command.outputs.command }}
     steps:
       - id: config-command
+        env:
+          ACTION_INPUT: ${{ inputs.action }}
         run: |
-          if [[ ${{ inputs.action }} == "validate" ]] ; then
+          if [[ "$ACTION_INPUT" == "validate" ]] ; then
             echo "command=validate" >> $GITHUB_OUTPUT
-          elif [[ ${{ inputs.action }} == "what-if" ]] ; then
+          elif [[ "$ACTION_INPUT" == "what-if" ]] ; then
             echo "command=what-if" >> $GITHUB_OUTPUT
-          elif [[ ${{ inputs.action }} == "create" ]] ; then
+          elif [[ "$ACTION_INPUT" == "create" ]] ; then
             echo "command=create" >> $GITHUB_OUTPUT
           else
-            echo "::error title=invalid action specified::'${{ inputs.action }}' is not a valid action. Choose from 'validate', 'what-if' or 'create'."
+            echo "::error title=invalid action specified::$ACTION_INPUT is not a valid action. Choose from 'validate', 'what-if' or 'create'."
             exit 1
           fi
 
@@ -178,11 +180,13 @@ jobs:
 
       - name: Build deployment parameters
         id: build-params
+        env:
+          COMPONENTS_INPUT: ${{ inputs.components }}
         run: |
           chmod +x ./.github/build-deployment-params.sh
 
           # Convert comma-separated components to space-separated
-          COMPONENTS="${{ inputs.components }}"
+          COMPONENTS="$COMPONENTS_INPUT"
           COMPONENTS_ARRAY=(${COMPONENTS//,/ })
 
           echo "Building parameters for components: ${COMPONENTS_ARRAY[*]}"
@@ -201,21 +205,13 @@ jobs:
           UKEF_VPN_IPS_ENV: ' ${{ secrets.UKEF_VPN_IPS }}'
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
           COMMAND: ${{ needs.configure-command.outputs.command }}
-
-        # Note that we use the plain run command here, having installed Bicep above.
-        # - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
-        # I have tried foo=${{ secrets.bar }}, setting the secret to an env and doing foo="$env", escaping values and lots of other things.
-        # - We don't use the azure/cli action because with the latest versions on 13/9/23 it doesn't seem
-        # to have the bicep dependencies (Alpine Linux) available and so fails with
-        # "ERROR: Error loading shared library ld-linux-x86-64.so.2: No such file or directory (needed by /root/.azure/bin/bicep)"
-        # This seems to be: https://github.com/Azure/bicep/issues/1683
-        # - We can just use a normal run command, but will need to keep an eye on the Azure CLI version as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
-        # - Note that for the secrets with special characters, I have used the indirection recommended here:
-        # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
+          RESOURCE_GROUP_NAME: ${{ inputs.resourceGroupName }}
+          RUN_NUMBER: ${{ github.run_number }}
+          DEPLOYMENT_PARAMS: ${{ steps.build-params.outputs.parameters }}
         run: |
-          az deployment group ${{ env.COMMAND }} \
-            --name ${{ github.run_number }} \
-            --resource-group ${{ inputs.resourceGroupName }} \
+          az deployment group $COMMAND \
+            --name "$RUN_NUMBER" \
+            --resource-group "$RESOURCE_GROUP_NAME" \
             --template-file ./infrastructure/resource_group_level/main.bicep \
             --parameters \
-              ${{ steps.build-params.outputs.parameters }}
+              $DEPLOYMENT_PARAMS

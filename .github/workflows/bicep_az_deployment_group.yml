@@ -134,15 +134,17 @@ jobs:
       command: ${{ steps.config-command.outputs.command }}
     steps:
       - id: config-command
+        env:
+          ACTION_INPUT: ${{ inputs.action }}
         run: |
-          if [[ ${{ inputs.action }} == "validate" ]] ; then
+          if [[ "$ACTION_INPUT" == "validate" ]] ; then
             echo "command=validate" >> $GITHUB_OUTPUT
-          elif [[ ${{ inputs.action }} == "what-if" ]] ; then
+          elif [[ "$ACTION_INPUT" == "what-if" ]] ; then
             echo "command=what-if" >> $GITHUB_OUTPUT
-          elif [[ ${{ inputs.action }} == "create" ]] ; then
+          elif [[ "$ACTION_INPUT" == "create" ]] ; then
             echo "command=create" >> $GITHUB_OUTPUT
           else
-            echo "::error title=invalid action specified::'${{ inputs.action }}' is not a valid action. Choose from 'validate', 'what-if' or 'create'."
+            echo "::error title=invalid action specified::$ACTION_INPUT is not a valid action. Choose from 'validate', 'what-if' or 'create'."
             exit 1
           fi
 
@@ -190,6 +192,9 @@ jobs:
           UKEF_VPN_IPS_ENV: ' ${{ secrets.UKEF_VPN_IPS }}'
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
           COMMAND: ${{ needs.configure-command.outputs.command }}
+          RESOURCE_GROUP_NAME: ${{ inputs.resourceGroupName }}
+          RUN_NUMBER: ${{ github.run_number }}
+          DEPLOYMENT_PARAMS: ${{ steps.build-params.outputs.parameters }}
 
         # Note that we use the plain run command here, having installed Bicep above.
         # - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
@@ -202,9 +207,9 @@ jobs:
         # - Note that for the secrets with special characters, I have used the indirection recommended here:
         # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
         run: |
-          az deployment group ${{ env.COMMAND }} \
-            --name ${{ github.run_number }} \
-            --resource-group ${{ inputs.resourceGroupName }} \
+          az deployment group "$COMMAND" \
+            --name "$RUN_NUMBER" \
+            --resource-group "$RESOURCE_GROUP_NAME" \
             --template-file ./infrastructure/resource_group_level/main.bicep \
             --parameters \
-              ${{ steps.build-params.outputs.parameters }}
+              $DEPLOYMENT_PARAMS
