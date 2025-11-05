@@ -9,8 +9,6 @@ param product string
 param target string
 param version string
 
-param appServicePlanName string
-
 param networkSecurityGroupId string
 
 // Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
