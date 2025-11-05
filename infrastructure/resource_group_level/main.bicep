@@ -36,158 +36,6 @@ param privateEndpointsCidr string
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// We have a lot of application secrets that are passed in from GitHub
-// We define them here.
-///////////////////////////////////////////////////////////////////////////////
-@secure()
-param APIM_TFS_KEY string
-@secure()
-param APIM_TFS_VALUE string
-@secure()
-param APIM_TFS_URL string
-@secure()
-param APIM_MDM_KEY string
-@secure()
-param APIM_MDM_URL string
-@secure()
-param APIM_MDM_VALUE string // different in staging and dev
-@secure()
-param CORS_ORIGIN string
-@secure()
-param APIM_ESTORE_URL string
-@secure()
-param APIM_ESTORE_KEY string
-@secure()
-param APIM_ESTORE_VALUE string
-@secure()
-param COMPANIES_HOUSE_API_KEY string // Actually set from an env variable but that's from a secret.
-@secure()
-param ORDNANCE_SURVEY_API_KEY string
-@secure()
-param GOV_NOTIFY_API_KEY string
-@secure()
-param GOV_NOTIFY_EMAIL_RECIPIENT string
-@secure()
-param AZURE_PORTAL_EXPORT_FOLDER string
-@secure()
-param AZURE_PORTAL_FILESHARE_NAME string
-@secure()
-param JWT_SIGNING_KEY string
-@secure()
-param JWT_VALIDATING_KEY string
-@secure()
-param DTFS_CENTRAL_API_KEY string
-@secure()
-param EXTERNAL_API_KEY string
-@secure()
-param PORTAL_API_KEY string
-@secure()
-param TFM_API_KEY string
-@secure()
-param SESSION_SECRET string
-@secure()
-param ESTORE_URL string
-@secure()
-param PDC_INPUTTERS_EMAIL_RECIPIENT string
-
-// The following parameters come from GH vars, rather than secrets.
-param RATE_LIMIT_THRESHOLD string
-param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
-param PORTAL_UI_URL string
-param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
-param UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
-param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
-param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
-param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
-param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
-param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
-
-///////////////////////////////////////////////////////////////////////////////
-// Having read all the parameters, we set up the values that are needed for the
-// app services here.
-///////////////////////////////////////////////////////////////////////////////
-
-// The values for both functions are identical
-var functionSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-}
-var functionSecureSettings = {
-  APIM_TFS_KEY: APIM_TFS_KEY
-  APIM_TFS_VALUE: APIM_TFS_VALUE
-  APIM_TFS_URL: APIM_TFS_URL
-  APIM_MDM_KEY: APIM_MDM_KEY
-  APIM_MDM_URL: APIM_MDM_URL
-  APIM_MDM_VALUE: APIM_MDM_VALUE // different in staging and dev
-}
-// These values are taken from an export of Configuration on Dev
-// Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed.
-var functionAdditionalSecureSettings = { }
-
-var externalApiSettings = {
-    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
-    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
-}
-var externalApiSecureSettings = {
-  CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL
-  APIM_TFS_KEY: APIM_TFS_KEY
-  APIM_TFS_VALUE: APIM_TFS_VALUE
-  APIM_MDM_URL: APIM_MDM_URL
-  APIM_MDM_KEY: APIM_MDM_KEY
-  APIM_MDM_VALUE: APIM_MDM_VALUE
-  APIM_ESTORE_URL: APIM_ESTORE_URL
-  APIM_ESTORE_KEY: APIM_ESTORE_KEY
-  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // Actually set from an env variable but that's from a secret.
-  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
-  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
-  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
-}
-var externalApiAdditionalSecureSettings = {
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  // Note that EXTERNAL_API_URL is not set from GitHub, but derived.
-}
-
-var dtfsCentralApiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
-}
-var dtfsCentralApiSecureSettings = {}
-var dtfsCentralApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-}
-
-var portalApiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-  PORTAL_UI_URL: PORTAL_UI_URL
-  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
-  UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
-  UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE: UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE
-  UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
-  UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
-  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
-}
-var portalApiSecureSettings = {
-  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
-  CORS_ORIGIN: CORS_ORIGIN
-  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
-  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
-  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
-}
-var portalApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 // We have some non-secret parameters, which we can keep in the code here.
 // - values that vary based on the environment are managed with a map
 // - values that aren't that likely to change are just simple variables.
@@ -196,24 +44,11 @@ var portalApiAdditionalSecureSetting = {
 // The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
 // The following parameters come from GH environment variables, rather than secrets
-var COMPANIES_HOUSE_API_URL = 'https://api.companieshouse.gov.uk'
-var ORDNANCE_SURVEY_API_URL = 'https://api.os.co.uk'
-
-// routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts.
-var routeTableNextHopIpAddress = '10.50.0.100'
-// Allowed frontDoorAccess values: 'Allow', 'Deny'
-var frontDoorAccess = 'Allow'
-var productionSubnetCidr = '10.60.0.0/16'
-
 // TODO:FN-938 check is ukwest is used anywhere
 var storageLocations = [
   'uksouth'
   'ukwest'
 ]
-
-// TODO:FN-693 considering enabling 7 day soft deletes on some or all environments
-@description('Enable 7-day soft deletes on file shares')
-var shareDeleteRetentionEnabled = false
 
 // var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
