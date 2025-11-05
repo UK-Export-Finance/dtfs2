@@ -12,6 +12,8 @@ param target string
 
 @description('The version for resource naming')
 param version string
+// Allowed frontDoorAccess values: 'Allow', 'Deny'
+var frontDoorAccess = 'Allow'
 
 // Enable network access from an external subscription.
 @secure()
