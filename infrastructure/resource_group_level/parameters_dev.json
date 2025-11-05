@@ -31,14 +31,6 @@
       },
       "privateEndpointsCidr": {
         "value": "{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}"
-      },
-      "tags": {
-        "value": {
-          "Environment": "{{ENVIRONMENT}}",
-          "Product": "{{PRODUCT}}",
-          "Team": "development",
-          "Owner": "Hari"
-        }
       }
     }
 }
