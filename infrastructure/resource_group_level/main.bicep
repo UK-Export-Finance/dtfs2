@@ -277,7 +277,7 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
   name: 'networkSecurityGroup'
   params: {
     location: location
-    environment: environment
+    target: target
     frontDoorAccess: frontDoorAccess
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
   }
