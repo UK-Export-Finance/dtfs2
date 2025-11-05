@@ -6,8 +6,7 @@ import { sendCorrectionReceivedBankNotificationEmails, sendCorrectionReceivedUke
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
+jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   getTfmUiUrl: jest.fn(),
   getUkefGefReportingEmailRecipients: jest.fn(),
