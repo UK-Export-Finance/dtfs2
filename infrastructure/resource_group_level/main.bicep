@@ -27,7 +27,6 @@ param peeringAddressSpace string = '10.50.0.0/16'
 @description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 // UKEF_VPN_IPS
-param onPremiseNetworkIpsString string
 
 param vnetAddressPrefix string
 param applicationGatewayCidr string
@@ -86,8 +85,6 @@ param EXTERNAL_API_KEY string
 param PORTAL_API_KEY string
 @secure()
 param TFM_API_KEY string
-@secure()
-param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
@@ -224,7 +221,7 @@ var storageLocations = [
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
-var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
+// var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
 // This parameters map holds the per-environment settings.
