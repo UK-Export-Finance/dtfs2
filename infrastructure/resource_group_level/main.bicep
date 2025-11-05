@@ -271,6 +271,15 @@ var parametersMap = {
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.
 ///////////////////////////////////////////////////////////////////////////////
+module networkSecurityGroup 'modules/gw-nsg.bicep' = {
+  name: 'networkSecurityGroup'
+  params: {
+    location: location
+    environment: environment
+    frontDoorAccess: frontDoorAccess
+    apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
+  }
+}
 
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
