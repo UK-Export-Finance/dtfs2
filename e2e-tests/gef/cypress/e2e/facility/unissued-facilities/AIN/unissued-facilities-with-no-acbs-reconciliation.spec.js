@@ -26,10 +26,10 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
           dealId = body._id;
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
