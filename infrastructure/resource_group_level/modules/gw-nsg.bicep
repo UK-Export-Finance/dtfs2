@@ -1,5 +1,4 @@
 param location string
-param environment string
 @allowed(['Allow', 'Deny'])
 param frontDoorAccess string
 param apiPortalAccessPort int
@@ -148,7 +147,7 @@ var optionalRules = apiPortalAccessPort != 0 ? [
 
 var securityRulesCombined = concat(staticRules, optionalRules)
 
-resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2024-02-15' = {
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2024-10-01' = {
   name: nsgName
   location: location
   tags: {}
