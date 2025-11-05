@@ -1,5 +1,4 @@
 param location string
-param environment string
 param addressPrefixes array
 param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
@@ -32,7 +31,7 @@ var privateEndpointsSubnetName = '${product}-${target}-${version}-private-endpoi
 
 var acaClamAvSubnetName = '${product}-${target}-${version}-aca-clamav'
 
-resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-02-15' = {
+resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-10-01' = {
   name: natGatewayIpAddressesName
   location: location
   tags: {}
@@ -54,7 +53,7 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-02-15' 
   }
 }
 
-resource natGateway 'Microsoft.Network/natGateways@2024-02-15' = {
+resource natGateway 'Microsoft.Network/natGateways@2024-10-01' = {
   name: natGatewayName
   location: location
   tags: {}
@@ -71,7 +70,7 @@ resource natGateway 'Microsoft.Network/natGateways@2024-02-15' = {
   }
 }
 
-resource vnet 'Microsoft.Network/virtualNetworks@2024-02-15' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
   name: vnetName
   location: location
   tags: {}
@@ -219,22 +218,22 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-02-15' = {
   }
 }
 
-resource appServicePlanEgressSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
+resource appServicePlanEgressSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-10-01' existing = {
   parent: vnet
   name: appServicePlanEgressSubnetName
 }
 
-resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
+resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2024-10-01' existing = {
   parent: vnet
   name: gatewaySubnetName
 }
 
-resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
+resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-10-01' existing = {
   parent: vnet
   name: privateEndpointsSubnetName
 }
 
-resource acaClamAvSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
+resource acaClamAvSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-10-01' existing = {
   parent: vnet
   name: acaClamAvSubnetName
 }
