@@ -1,5 +1,5 @@
 # Infrastructure Deployment Workflow
-# 
+#
 # This GitHub Actions workflow automates the deployment of Azure infrastructure
 # for the DTFS project. It performs the following main tasks:
 #
@@ -24,16 +24,16 @@ on:
     branches:
       - feat/DTFS2-16188-bicep-templates
     paths:
-      - '.github/workflows/bicep_infrastructure.yml'  
+      - '.github/workflows/bicep_infrastructure.yml'
       - 'infrastructure/resource_group_level/**'
-  workflow_dispatch:    
-    
+  workflow_dispatch:
+
 env:
-  PRODUCT: dfts2
+  PRODUCT: dtfs2
   ENVIRONMENT: infrastructure
   TIMEZONE: '${{ vars.TIMEZONE }}'
   # Deployment environment target i.e., `development`, `staging`, `production`
-  TARGET: ${{ vars.ENVIRONMENT }}
+  TARGET: ${{ vars.TARGET }}
 
 jobs:
 # 1. Setup infrastructure variables
@@ -56,7 +56,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }} 
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
       - name: Azure defaults ✨
         uses: azure/cli@v2
@@ -73,12 +73,12 @@ jobs:
             az group create \
             --location ${{ vars.REGION }} \
             --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}            
-            
+            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
-      
+
 
 # 2. Validate infrastructure resources
   Resource-Deploy:
@@ -92,33 +92,34 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }} 
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
-      - name: Replace GitHub variables into parameters.json 
-        run: | 
-          # Replace GitHub variables into parameters.json 
+      - name: Replace GitHub variables into parameters.json
+        run: |
+          # Replace GitHub variables into parameters.json
+          sed -i "s|{{ENVIRONMENT}}|${{ vars.ENVIRONMENT }}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}|${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
-      
+
       - name: Install Bicep
         run: |
           az config set bicep.use_binary_from_path=False
           az bicep install
           az bicep upgrade
-          
+
       - name: Deploy Azure Resources
         uses: azure/arm-deploy@v2
         with:
           subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
           template: /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/main.bicep
-          parameters: /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json          
+          parameters: /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           scope: resourcegroup
 
-      

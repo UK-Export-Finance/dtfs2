@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "environment": {
+        "value": "{{ENVIRONMENT}}"
+      },
       "product": {
         "value": "{{PRODUCT}}"
       },
@@ -10,6 +13,9 @@
       },
       "version": {
         "value": "{{VERSION}}"
+      },
+      "peeringRemoteVnetSubscriptionId": {
+        "value": "{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}"
       },
       "vnetAddressPrefix": {
         "value": "{{AZ_DEV_VNET_ADDRESS_PREFIX}}"
@@ -28,7 +34,7 @@
       },
       "tags": {
         "value": {
-          "Environment": "{{ENVIRONMENT_TYPE}}",
+          "Environment": "{{ENVIRONMENT}}",
           "Product": "{{PRODUCT}}",
           "Team": "development",
           "Owner": "Hari"
