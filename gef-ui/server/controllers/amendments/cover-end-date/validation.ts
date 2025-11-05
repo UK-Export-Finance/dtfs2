@@ -5,7 +5,7 @@ import {
   DayMonthYearInput,
   COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE,
 } from '@ukef/dtfs2-common';
-import { add, isAfter, isBefore, startOfDay } from 'date-fns';
+import { add, isAfter, startOfDay } from 'date-fns';
 import { ErrorsOrValue } from '../../../types/errors-or-value';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
@@ -30,7 +30,7 @@ export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, co
   const now = startOfDay(new Date());
   const maximumCoverEndDate = add(now, { years: COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE });
 
-  if (isBefore(coverEndDate, coverStartDate)) {
+  if (!isAfter(coverEndDate, coverStartDate)) {
     return {
       errors: [
         {
