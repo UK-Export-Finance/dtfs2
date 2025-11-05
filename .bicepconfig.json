@@ -2,9 +2,9 @@
   "analyzers": {
     "core": {
       "rules": {
-        "no-unnecessary-string-interpolations": {
-          "level": "off"
-        }
+        "no-unused-params": { "level": "warning" },
+        "no-hardcoded-env-urls": { "level": "warning" },
+        "BCP081": { "level": "off" }
       }
     }
   }
