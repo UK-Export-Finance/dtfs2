@@ -286,10 +286,10 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
   params: {
-    environment: environment
     location: location
     product: product
     version: version
+    target: target
     addressPrefixes: parametersMap[environment].vnet.addressPrefixes
     privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
