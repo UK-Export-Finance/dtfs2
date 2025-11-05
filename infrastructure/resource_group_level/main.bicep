@@ -76,8 +76,6 @@ param JWT_SIGNING_KEY string
 @secure()
 param JWT_VALIDATING_KEY string
 @secure()
-param UKEF_INTERNAL_NOTIFICATION string
-@secure()
 param DTFS_CENTRAL_API_KEY string
 @secure()
 param EXTERNAL_API_KEY string
@@ -85,10 +83,6 @@ param EXTERNAL_API_KEY string
 param PORTAL_API_KEY string
 @secure()
 param TFM_API_KEY string
-@secure()
-param UKEF_TFM_API_REPORTS_KEY string
-@secure()
-param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 @secure()
 param SESSION_SECRET string
 @secure()
