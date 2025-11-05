@@ -1,4 +1,4 @@
-import { sixYearsOneDay } from '@ukef/dtfs2-common/test-helpers';
+import { tomorrow, sixYearsOneDay } from '@ukef/dtfs2-common/test-helpers';
 import { now } from '@ukef/dtfs2-common';
 import { sub } from 'date-fns';
 import relative from '../../../../../../relativeURL';
@@ -55,7 +55,7 @@ context('Amendments - Bank Review Date - page tests', () => {
         whatDoYouNeedToChange.coverEndDateCheckbox().click();
         cy.clickContinueButton();
 
-        cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+        cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
         cy.clickContinueButton();
 
         doYouHaveAFacilityEndDate.noRadioButton().click();
