@@ -39,7 +39,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  TIMEZONE: ${{ vars.TIMEZONE }}
+  TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
 
 jobs:
   # 1. Base actions configrations
