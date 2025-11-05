@@ -95,7 +95,7 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
-      addressPrefixes: vnetAddressPrefix
+      addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
@@ -145,7 +145,7 @@ var parametersMap = {
       }
     }
     vnet: {
-      addressPrefixes: vnetAddressPrefix
+      addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
       // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
       // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
@@ -198,7 +198,7 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
-      addressPrefixes: vnetAddressPrefix
+      addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
@@ -251,7 +251,7 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
-      addressPrefixes: vnetAddressPrefix
+      addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
