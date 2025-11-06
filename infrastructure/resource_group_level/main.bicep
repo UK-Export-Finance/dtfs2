@@ -307,7 +307,7 @@ module vnet 'modules/vnet.bicep' = {
   }
 }
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2025-03-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
   name: 'appservice-plan-${product}-${target}-${version}'
   location: location
   sku: {
