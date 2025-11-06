@@ -307,4 +307,48 @@ module vnet 'modules/vnet.bicep' = {
   }
 }
 
+resource appServicePlan 'Microsoft.Web/serverfarms@2025-03-01' = {
+  name: 'appservice-plan-${product}-${target}-${version}'
+  location: location
+  sku: {
+    name: parametersMap[environment].asp.sku
+  }
+  kind: 'linux'
+  properties: {
+    // Linux ASPs need to have reserved as true:
+    // https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties
+    reserved: true
+  }
+}
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
+  name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
+  location: location
+  sku: parametersMap[environment].acr.sku
+  properties: {
+    // Admin needs to be enabled for App Service continuous deployment
+    adminUserEnabled: true
+  }
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-02-01' = {
+  name: 'log-workspace-${product}-${target}-${version}'
+  location: location
+  tags: {}
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+    features: {
+      enableLogAccessUsingOnlyResourcePermissions: true
+    }
+    workspaceCapping: {
+      dailyQuotaGb: -1
+    }
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Enabled'
+  }
+}
+
 
