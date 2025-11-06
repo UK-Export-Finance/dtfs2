@@ -10,18 +10,18 @@ import {
   twentyEightDays,
   threeDays,
 } from '@ukef/dtfs2-common/test-helpers';
-import relative from '../../../relativeURL';
-import CONSTANTS from '../../../../fixtures/constants';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
-import { continueButton, errorSummary, mainHeading } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../pages/application-submission';
-import statusBanner from '../../../pages/application-status-banner';
+import relative from '../../relativeURL';
+import CONSTANTS from '../../../fixtures/constants';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
+import { continueButton, errorSummary, mainHeading } from '../../partials';
+import applicationPreview from '../../pages/application-preview';
+import unissuedFacilityTable from '../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../pages/application-submission';
+import statusBanner from '../../pages/application-status-banner';
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -465,9 +465,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
     });
 
-    it('should not display the make a change button', () => {
+    it('should not display the make a change button for the facilities that have changed to issued', () => {
       applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityTwoId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
       applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
       applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
