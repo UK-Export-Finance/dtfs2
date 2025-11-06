@@ -1,4 +1,4 @@
-import { today } from '@ukef/dtfs2-common/test-helpers';
+import { today, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -77,7 +77,7 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));

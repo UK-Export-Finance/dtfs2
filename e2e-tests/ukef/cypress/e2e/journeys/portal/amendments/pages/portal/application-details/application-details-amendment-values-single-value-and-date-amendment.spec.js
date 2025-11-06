@@ -62,7 +62,7 @@ context('Amendments - Single cover end date AND value amendment - Application de
 
   it('should display the updated amendment value AND cover end date on facility summary list', () => {
     applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, false));
-    applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
+    applicationPreview.facilitySummaryList().contains(format(new Date(tomorrow.date), D_MMMM_YYYY_FORMAT));
     applicationPreview.facilitySummaryList().contains(facilityEndDate);
   });
 });
