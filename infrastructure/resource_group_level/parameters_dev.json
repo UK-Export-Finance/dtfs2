@@ -31,6 +31,12 @@
       },
       "privateEndpointsCidr": {
         "value": "{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}"
+      },
+      "productionSubnetCidr": {
+        "value": "{{PROD_SUBNET_CIDR}}"
+      },
+      "routeTableNextHopIpAddress": {
+        "value": "{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}"
       }
     }
 }

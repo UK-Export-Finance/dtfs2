@@ -1,7 +1,7 @@
 param location string  = resourceGroup().location
 
-// Expected values are 'feature', 'dev', 'staging' & 'prod'
-// Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'.
+/* Expected values are 'feature', 'dev', 'staging' & 'prod'
+  Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'. */
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 @description('The product name for resource naming')
@@ -12,8 +12,11 @@ param target string
 
 @description('The version for resource naming')
 param version string
-// Allowed frontDoorAccess values: 'Allow', 'Deny'
+/* Allowed frontDoorAccess values: 'Allow', 'Deny' */
 var frontDoorAccess = 'Allow'
+param productionSubnetCidr string
+/* routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts. */
+param routeTableNextHopIpAddress string
 
 // Enable network access from an external subscription.
 @secure()
@@ -52,7 +55,7 @@ var storageLocations = [
   'ukwest'
 ]
 
-// var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
+var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
 // This parameters map holds the per-environment settings.
@@ -332,7 +335,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
 }
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-02-01' = {
-  name: 'log-workspace-${product}-${target}-${version}'
+  name: logAnalyticsWorkspaceName
   location: location
   tags: {}
   properties: {
@@ -348,6 +351,26 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-02
     }
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'
+  }
+}
+
+module routeTable 'modules/route-tables.bicep' = {
+  name: 'routeTable'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    productionSubnetCidr: productionSubnetCidr
+    nextHopIpAddress: routeTableNextHopIpAddress
+  }
+}
+
+module tfsIp 'modules/tfs-ip.bicep' = {
+  name: 'tfsIp'
+  params: {
+    location: location
+    environment: environment
   }
 }
 
