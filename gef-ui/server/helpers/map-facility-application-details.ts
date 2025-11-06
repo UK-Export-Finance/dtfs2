@@ -70,8 +70,19 @@ export const mapFacilityApplicationDetails = (
       return item.facilityId === facility.facilityId && amendmentAcknowledged && amendmentEffectiveDateInFuture;
     });
 
+    /**
+     * if the facility has been issued (after first submission) and the issuance is not yet submitted to UKEF
+     * canResubmitIssuedFacilities will be true
+     * else will be false or null
+     */
+    const canResubmitIssueFacilities = facilityToMap?.canResubmitIssuedFacilities;
+
     const canIssuedFacilitiesBeAmended =
-      isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress && !isFacilityWithEffectiveAmendment;
+      isFacilityIssued &&
+      userCanAmendIssuedFacilities &&
+      !isFacilityWithAmendmentInProgress &&
+      !isFacilityWithEffectiveAmendment &&
+      !canResubmitIssueFacilities;
 
     facilityToMap.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended;
 
