@@ -66,7 +66,6 @@ export const getFeeRecordPaymentEntityGroups = (feeRecords: FeeRecordEntity[]): 
 
       // If the key already exists in the map, we add the fee record to that group.
       if (map[paymentIdKey]) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         map[paymentIdKey].feeRecords.push(feeRecord);
         return map;
       }

@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import {
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_TYPES,
@@ -6,11 +5,6 @@ import {
   AmendmentsEligibilityCriteria,
   PortalFacilityAmendmentConflictError,
 } from '@ukef/dtfs2-common';
-
-const mockFindOneUser = jest.fn();
-const mockFindOneFacility = jest.fn();
-const mockFindLatestEligibilityCriteria = jest.fn() as jest.Mock<Promise<AmendmentsEligibilityCriteria>>;
-
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { getUnixTime } from 'date-fns';
@@ -21,12 +15,20 @@ import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aFacility, aPortalUser } from '../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
+const mockFindOneUser = jest.fn();
+const mockFindOneFacility = jest.fn();
+const mockFindLatestEligibilityCriteria = jest.fn() as jest.Mock<Promise<AmendmentsEligibilityCriteria>>;
+
 jest.mock('../../v1/controllers/user/get-user.controller', () => ({
-  findOneUser: mockFindOneUser,
+  get findOneUser() {
+    return mockFindOneUser;
+  },
 }));
 
 jest.mock('../../v1/controllers/portal/facility/get-facility.controller', () => ({
-  findOneFacility: mockFindOneFacility,
+  get findOneFacility() {
+    return mockFindOneFacility;
+  },
 }));
 
 jest.mock('../../repositories/portal/eligibility-criteria-amendments.repo', () => ({
