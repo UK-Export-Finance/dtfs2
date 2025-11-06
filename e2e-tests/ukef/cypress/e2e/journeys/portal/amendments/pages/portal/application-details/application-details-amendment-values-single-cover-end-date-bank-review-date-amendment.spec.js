@@ -44,6 +44,7 @@ context('Amendments - Single cover end date amendment with bank review date - Ap
         cy.loginAndSubmitPortalAmendmentRequestToUkef({
           facilityValueExists: false,
           coverEndDateExists: true,
+          changedCoverEndDate: tomorrow.date,
           changedBankReviewDate: tomorrow.date,
           applicationDetailsUrl,
           facilityId,
