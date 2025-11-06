@@ -27,7 +27,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -39,7 +39,7 @@ var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragm
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' existing = {
   name: storageAccountName
 }
 
@@ -81,7 +81,7 @@ var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFra
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionAcbs 'Microsoft.Web/sites@2024-02-15' = {
+resource functionAcbs 'Microsoft.Web/sites@2025-03-01' = {
   name: functionAcbsName
   location: location
   tags: {}
@@ -111,7 +111,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-02-15' = {
   }
 }
 
-resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-02-15' = {
+resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2025-03-01' = {
   parent: functionAcbs
   name: 'appsettings'
   properties: appSettings
@@ -119,7 +119,7 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-02-15' = {
 
 
 // The private endpoint is taken from the function-acbs/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -144,7 +144,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
   }
 }
 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -159,7 +159,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = {
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
   location: location
   kind: 'web'
