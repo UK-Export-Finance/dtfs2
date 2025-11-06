@@ -15,6 +15,8 @@ import facilities from '../../../pages/facilities';
 let dealId;
 let token;
 let facilityOneId;
+let facilityTwoId;
+let facilityThreeId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -37,12 +39,17 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
-            );
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
-            );
+
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
+            });
+
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
+              facilityThreeId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
+            });
+
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
 
             // Add ACBS object to TFM
@@ -160,6 +167,12 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[1].name);
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
       applicationPreview.submitButtonPostApproval().should('exist');
+    });
+
+    it('should not display the make a change button for the facilities that have changed to issued', () => {
+      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
     });
 
     /* should be able to change dates and unissue on facility that has changed to issued */

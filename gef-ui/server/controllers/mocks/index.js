@@ -223,7 +223,7 @@ const MockFacilityResponseIssued = {
         currency: 'JPY',
         value: 3000000,
         ukefFacilityId: '12345',
-        canResubmitIssuedFacilities: true,
+        canResubmitIssuedFacilities: false,
       },
       validation: { required: [] },
       createdAt: 20,

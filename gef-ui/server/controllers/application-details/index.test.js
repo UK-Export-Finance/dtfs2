@@ -383,6 +383,30 @@ describe('controllers/application-details', () => {
         );
       });
 
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, facility changed to issued but not submitted, the submission type is valid and there are no amendments in progress on the facility`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
       it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments in progress on the facility`, async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
