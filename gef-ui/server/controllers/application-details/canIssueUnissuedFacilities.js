@@ -36,7 +36,8 @@ const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPre
   const isMinApproved = isMin && hasUkefDecisionAccepted;
 
   // ACBS
-  const isInAcbs = tfmDeal?.tfm?.acbs?.facilities?.[0]?.facilityStage === ACBS_FACILITY_STAGE.COMMITMENT;
+  const facilities = tfmDeal?.tfm?.acbs?.facilities ?? [];
+  const isInAcbs = facilities.some((facility) => facility?.facilityStage === ACBS_FACILITY_STAGE.COMMITMENT);
 
   /**
    * Series of facility issuance validation:
@@ -46,7 +47,6 @@ const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPre
    * 4. ACBS creation has been successful
    */
   const cannotIssueFacilities = !isMaker || !unissuedFacilitiesPresent || canResubmitIssuedFacilities || !isInAcbs;
-
   if (cannotIssueFacilities) {
     return false;
   }
