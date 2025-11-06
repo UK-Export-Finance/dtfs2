@@ -76,7 +76,7 @@ describe('validateAndParseCoverEndDate', () => {
     });
   });
 
-  it('should return an error if date if is the same with cover start date', () => {
+  it('should return an error if the date is the same as the cover start date', () => {
     // Arrange
     const fixedDate = new Date(2025, 0, 20);
     const coverEndDate = fixedDate;
