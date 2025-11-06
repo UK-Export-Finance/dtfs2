@@ -163,9 +163,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.submitButtonPostApproval().should('exist');
     });
 
-    it('should not display the make a change button for the facilities that have changed to issued', () => {
+    it('should not display the make a change button', () => {
       applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('not.exist');
       applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
       applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
