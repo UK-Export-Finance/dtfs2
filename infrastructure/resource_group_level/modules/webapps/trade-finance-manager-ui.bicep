@@ -31,13 +31,13 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
-resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
+resource redis 'Microsoft.Cache/redis@2024-11-01' existing = {
   name: redisName
 }
 
@@ -71,7 +71,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
-  // TODO:FN-1086 - WEBSITE_HEALTHCHECK_MAXPINGFAILURES not present on dev.  
+  // TODO:FN-1086 - WEBSITE_HEALTHCHECK_MAXPINGFAILURES not present on dev.
   WEBSITE_HEALTHCHECK_MAXPINGFAILURES: 10
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'

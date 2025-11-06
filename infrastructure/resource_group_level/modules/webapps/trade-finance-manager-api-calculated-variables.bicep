@@ -33,7 +33,7 @@ param additionalSecureSettings object
 param additionalSecureConnectionStrings object
 
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -65,7 +65,7 @@ var additionalSettings = {
   TZ: 'Europe/London'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
-  
+
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
   EXTERNAL_API_URL: externalApiUrl
 }
@@ -80,14 +80,14 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
   value: item.value
 } )
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' existing = {
   name: cosmosDbAccountName
 }
 
 // Then there are the calculated values.
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' existing = {
   name: storageAccountName
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
@@ -104,12 +104,12 @@ var calculatedAppSettings = {
 }
 
 var appSettings = union(
-  settings, 
-  staticSettings, 
-  secureSettings, 
-  additionalSettings, 
-  additionalSecureSettings, 
-  nodeEnv, 
+  settings,
+  staticSettings,
+  secureSettings,
+  additionalSettings,
+  additionalSecureSettings,
+  nodeEnv,
   calculatedAppSettings,
   deployApplicationInsights ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
@@ -119,17 +119,17 @@ var appSettings = union(
     }
 )
 
-resource site 'Microsoft.Web/sites@2022-09-01' existing = {
+resource site 'Microsoft.Web/sites@2025-03-01' existing = {
   name: tfmApiName
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2025-03-01' = {
   parent: site
   name: 'appsettings'
   properties: appSettings
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsList)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(connectionStringsList)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStringsProperties

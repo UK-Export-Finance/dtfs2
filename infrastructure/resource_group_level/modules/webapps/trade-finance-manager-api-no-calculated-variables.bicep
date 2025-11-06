@@ -19,7 +19,7 @@ param azureWebsitesDnsZoneId string
 
 param resourceNameFragment string = 'trade-finance-manager-api'
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
