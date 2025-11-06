@@ -1,4 +1,3 @@
-param environment string
 param location string
 @description('The product name for resource naming')
 param product string
@@ -12,7 +11,7 @@ var ipNames = [
   '${product}-${target}-${version}-tfm-ip'
 ]
 
-resource publicIps 'Microsoft.Network/publicIPAddresses@2024-02-15' = [for ipName in ipNames: {
+resource publicIps 'Microsoft.Network/publicIPAddresses@2024-10-01' = [for ipName in ipNames: {
   name: ipName
   location: location
   tags: {}
