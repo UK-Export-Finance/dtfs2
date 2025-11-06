@@ -96,15 +96,14 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       reportTwo.feeRecords = [getMockFeeRecordForReport(reportTwo)];
 
-      // eslint-disable-next-line @typescript-eslint/require-await
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
+      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation((bankId) => {
         switch (bankId) {
           case bankIdOne:
-            return reportOne;
+            return Promise.resolve(reportOne);
           case bankIdTwo:
-            return reportTwo;
+            return Promise.resolve(reportTwo);
           default:
-            return null;
+            return Promise.resolve(null);
         }
       });
 
@@ -495,18 +494,19 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           }
         });
 
-      // eslint-disable-next-line @typescript-eslint/require-await
-      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation(async (bankId) => {
+      const findOneByBankIdAndReportPeriodSpy = jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockImplementation((bankId) => {
         switch (bankId) {
           case bankA.id:
-            return getOpenMonthlyReport({ bank: bankA, month: 11 });
+            return Promise.resolve(getOpenMonthlyReport({ bank: bankA, month: 11 }));
           case bankC.id:
-            return getOpenReportWithReportPeriod(bankA, {
-              start: { month: 9, year: 2023 },
-              end: { month: 11, year: 2023 },
-            });
+            return Promise.resolve(
+              getOpenReportWithReportPeriod(bankA, {
+                start: { month: 9, year: 2023 },
+                end: { month: 11, year: 2023 },
+              }),
+            );
           default:
-            return null;
+            return Promise.resolve(null);
         }
       });
 
