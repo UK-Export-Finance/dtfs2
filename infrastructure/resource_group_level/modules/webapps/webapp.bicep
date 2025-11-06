@@ -44,7 +44,7 @@ var appSettingsWithAppInsights = union(
     }
   )
 
-resource site 'Microsoft.Web/sites@2024-02-15' = {
+resource site 'Microsoft.Web/sites@2025-03-01' = {
   name: appName-${product}-${target}-${version}
   location: location
   tags: {}
@@ -73,19 +73,19 @@ resource site 'Microsoft.Web/sites@2024-02-15' = {
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2024-02-15' = if (!empty(appSettings)) {
+resource webappSetting 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2024-02-15' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStrings
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
   name: privateEndpointName-${product}-${target}-${version}
   location: location
   tags: {}
@@ -111,7 +111,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
 }
 
 // Adding the Zone group sets up automatic DNS for the private link.
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -126,7 +126,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = if (deployApplicationInsights) {
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
   name: applicationInsightsName-${product}-${target}-${version}
   location: location
   tags: {}

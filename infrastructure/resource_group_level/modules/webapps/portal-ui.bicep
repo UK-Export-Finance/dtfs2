@@ -34,13 +34,13 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
-resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
+resource redis 'Microsoft.Cache/redis@2024-11-01' existing = {
   name: redisName
 }
 
