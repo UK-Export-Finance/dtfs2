@@ -28,10 +28,12 @@ type RuleSet = {
 }
 param ruleSet RuleSet
 
-// Safely parse the allowedIpsString with comprehensive error handling
+// Safely handle the allowedIpsString parameter with better validation
 var cleanIpsString = trim(allowedIpsString)
-// Use try() to handle invalid JSON gracefully, defaulting to empty array
-var allowedIps = empty(cleanIpsString) ? [] : try(json(cleanIpsString), [])
+// Check if the string looks like a JSON array (starts with [ and ends with ])
+var looksLikeJson = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
+// Parse the JSON only if it looks valid, otherwise use empty array
+var allowedIps = looksLikeJson ? json(cleanIpsString) : []
 var unauthorisedMessageBody = base64('Unathorised access!')
 
 // Note that by default, some rules are disabled by default because they have been superceded.
