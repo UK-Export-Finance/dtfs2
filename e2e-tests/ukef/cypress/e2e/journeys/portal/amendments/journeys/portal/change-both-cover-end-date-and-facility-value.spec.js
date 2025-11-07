@@ -105,7 +105,7 @@ context('Amendments - Change both cover end date and facility value - full journ
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility end date');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
 
-    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
+    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(tomorrow.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
     amendmentSummaryList.amendmentSummaryListTable().facilityValueValue().contains(`${CURRENCY.GBP} 10,000`);

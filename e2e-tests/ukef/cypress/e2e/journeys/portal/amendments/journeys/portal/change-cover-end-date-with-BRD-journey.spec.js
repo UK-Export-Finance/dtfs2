@@ -101,7 +101,7 @@ context('Amendments - Change cover end date with bank review date - full journey
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Bank review date');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Facility value');
 
-    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
+    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(tomorrow.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateChangeLink().should('not.exist');
 

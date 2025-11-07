@@ -97,7 +97,7 @@ context('Amendments - Change cover end date with facility end date - full journe
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility end date');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Facility value');
 
-    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
+    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(tomorrow.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
 
