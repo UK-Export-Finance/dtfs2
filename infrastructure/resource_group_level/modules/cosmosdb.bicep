@@ -23,9 +23,10 @@ param backupPolicyTier string
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
-// Safely parse the allowedIpsString, handling empty/null/invalid JSON cases
+// Safely parse the allowedIpsString with comprehensive error handling
 var cleanIpsString = trim(allowedIpsString)
-var allowedIps = empty(cleanIpsString) ? [] : json(cleanIpsString)
+// Use try() to handle invalid JSON gracefully, defaulting to empty array
+var allowedIps = empty(cleanIpsString) ? [] : try(json(cleanIpsString), [])
 
 // On activating "Allow access from Azure Portal":
 // https://github.com/Azure/azure-cli/issues/7495 ->

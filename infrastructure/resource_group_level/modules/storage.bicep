@@ -24,9 +24,10 @@ param filesDnsZoneId string
 
 var storageAccountName = '${product}-${target}-${version}-storage'
 
-// Safely parse the allowedIpsString, handling empty/null/invalid JSON cases
+// Safely parse the allowedIpsString with comprehensive error handling
 var cleanIpsString = trim(allowedIpsString)
-var allowedIps = empty(cleanIpsString) ? [] : json(cleanIpsString)
+// Use try() to handle invalid JSON gracefully, defaulting to empty array
+var allowedIps = empty(cleanIpsString) ? [] : try(json(cleanIpsString), [])
 
 var ipRules = [for ip in allowedIps: {
   value: ip
