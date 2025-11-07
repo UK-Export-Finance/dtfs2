@@ -232,6 +232,33 @@ describe('mapFacilityApplicationDetails', () => {
           expect(response).toEqual(expected);
         });
       });
+
+      describe('when a facility is changed to issued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
+          // Arrange
+          const changedToIssuedFacility = {
+            ...facility,
+            canResubmitIssuedFacilities: true,
+          };
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [changedToIssuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...changedToIssuedFacility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
+      });
     });
   });
 
