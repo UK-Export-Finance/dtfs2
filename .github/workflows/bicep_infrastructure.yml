@@ -109,6 +109,7 @@ jobs:
           sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PROD_SUBNET_CIDR}}|${{ secrets.PROD_SUBNET_CIDR}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOPE_ADDRESS}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UKEF_VPN_IPS}}|${{ secrets.UKEF_VPN_IPS}}|g" /home/runner/work/dtfs2/dtfs2/infrastructure/resource_group_level/parameters_dev.json
 
       - name: Install Bicep
         run: |

@@ -38,6 +38,10 @@ param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
+@description('IPs allowed to access restricted services, represented as Json array string')
+@secure()
+// UKEF_VPN_IPS
+param onPremiseNetworkIpsString string
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -373,6 +377,51 @@ module tfsIp 'modules/tfs-ip.bicep' = {
     product: product
     version: version
     target: target
+  }
+}
+
+module websitesDns 'modules/privatelink-azurewebsites-net.bicep' = {
+  name: 'websitesDns'
+  params: {
+    vnetId: vnet.outputs.vnetId
+  }
+}
+
+module filesDns 'modules/privatelink-file-core-windows-net.bicep' = {
+  name: 'filesDns'
+  params: {
+    vnetId: vnet.outputs.vnetId
+  }
+}
+
+module mongoDbDns 'modules/privatelink-mongo-cosmos-azure-com.bicep' = {
+  name: 'mongoDbDns'
+  params: {
+    vnetId: vnet.outputs.vnetId
+  }
+}
+
+module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
+  name: 'redisCacheDns'
+  params: {
+    vnetId: vnet.outputs.vnetId
+  }
+}
+
+module storage 'modules/storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    allowedIpsString: onPremiseNetworkIpsString
+    networkAccessDefaultAction: parametersMap[environment].nsg.storageNetworkAccessDefaultAction
+    shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
+    filesDnsZoneId: filesDns.outputs.filesDnsZoneId
   }
 }
 
