@@ -1,0 +1,25 @@
+{
+  "description": "Common APIM (API Management) parameters used across services",
+  "parameters": [
+    "APIM_TFS_KEY",
+    "APIM_TFS_VALUE",
+    "APIM_TFS_URL",
+    "APIM_MDM_KEY",
+    "APIM_MDM_URL",
+    "APIM_MDM_VALUE",
+    "APIM_ESTORE_URL",
+    "APIM_ESTORE_KEY",
+    "APIM_ESTORE_VALUE"
+  ],
+  "secretMappings": {
+    "APIM_TFS_KEY": "${{ secrets.APIM_TFS_KEY }}",
+    "APIM_TFS_VALUE": "${{ secrets.APIM_TFS_VALUE }}",
+    "APIM_TFS_URL": "${{ secrets.APIM_TFS_URL }}",
+    "APIM_MDM_KEY": "${{ secrets.APIM_MDM_KEY }}",
+    "APIM_MDM_URL": "${{ secrets.APIM_MDM_URL }}",
+    "APIM_MDM_VALUE": "${{ secrets.APIM_MDM_VALUE }}",
+    "APIM_ESTORE_URL": "${{ secrets.APIM_ESTORE_URL }}",
+    "APIM_ESTORE_KEY": "${{ secrets.APIM_ESTORE_KEY }}",
+    "APIM_ESTORE_VALUE": "${{ secrets.APIM_ESTORE_VALUE }}"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Common authentication and security parameters",
+  "parameters": [
+    "JWT_SIGNING_KEY",
+    "JWT_VALIDATING_KEY",
+    "SESSION_SECRET",
+    "DTFS_CENTRAL_API_KEY",
+    "EXTERNAL_API_KEY",
+    "PORTAL_API_KEY",
+    "TFM_API_KEY",
+    "UKEF_TFM_API_SYSTEM_KEY",
+    "UKEF_TFM_API_REPORTS_KEY"
+  ],
+  "secretMappings": {
+    "JWT_SIGNING_KEY": "${{ secrets.JWT_SIGNING_KEY }}",
+    "JWT_VALIDATING_KEY": "${{ secrets.JWT_VALIDATING_KEY }}",
+    "SESSION_SECRET": "${{ secrets.SESSION_SECRET }}",
+    "DTFS_CENTRAL_API_KEY": "${{ secrets.DTFS_CENTRAL_API_KEY }}",
+    "EXTERNAL_API_KEY": "${{ secrets.EXTERNAL_API_KEY }}",
+    "PORTAL_API_KEY": "${{ secrets.PORTAL_API_KEY }}",
+    "TFM_API_KEY": "${{ secrets.TFM_API_KEY }}",
+    "UKEF_TFM_API_SYSTEM_KEY": "${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}",
+    "UKEF_TFM_API_REPORTS_KEY": "${{ secrets.UKEF_TFM_API_REPORTS_KEY }}"
+  }
+}

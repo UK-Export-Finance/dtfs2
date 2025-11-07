@@ -1,0 +1,17 @@
+{
+  "description": "Common network and infrastructure parameters used across multiple services",
+  "parameters": [
+    "peeringRemoteVnetSubscriptionId",
+    "peeringRemoteVnetResourceGroupName",
+    "peeringRemoteVnetName",
+    "peeringAddressSpace",
+    "onPremiseNetworkIpsString"
+  ],
+  "secretMappings": {
+    "peeringRemoteVnetSubscriptionId": "${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}",
+    "peeringRemoteVnetResourceGroupName": "${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}}",
+    "peeringRemoteVnetName": "${{ secrets.REMOTE_VNET_NAME_VPN }}",
+    "peeringAddressSpace": "${{ secrets.VNET_ADDRESS_PREFIX }}",
+    "onPremiseNetworkIpsString": "\"$UKEF_VPN_IPS_ENV\""
+  }
+}

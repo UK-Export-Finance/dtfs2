@@ -1,4 +1,4 @@
-name: Perform action for an Az Deployment Group via Bicep
+name: Perform action for an Az Deployment Group via Bicep (Parameterized)
 
 # We don't want concurrent deploys to the same resource group.
 concurrency: bicep_az_deployment_group_${{ inputs.resourceGroupName }}
@@ -17,6 +17,11 @@ on:
         description: What action to perform - validate, what-if or create
         required: true
         type: string
+      components:
+        description: 'Comma-separated list of components to deploy (e.g., "trade-finance-manager-api,portal-api,utilization-reports")'
+        required: false
+        type: string
+        default: 'all'
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -175,10 +180,18 @@ jobs:
 
       - name: Build deployment parameters
         id: build-params
+        env:
+          COMPONENTS_INPUT: ${{ inputs.components }}
         run: |
           chmod +x ./.github/build-deployment-params.sh
-          echo "Building parameters for all components..."
-          PARAMS=$(./.github/build-deployment-params.sh all)
+
+          # Convert comma-separated components to space-separated
+          COMPONENTS="$COMPONENTS_INPUT"
+          COMPONENTS_ARRAY=(${COMPONENTS//,/ })
+
+          echo "Building parameters for components: ${COMPONENTS_ARRAY[*]}"
+          PARAMS=$(./.github/build-deployment-params.sh "${COMPONENTS_ARRAY[@]}")
+
           echo "parameters<<EOF" >> $GITHUB_OUTPUT
           echo "$PARAMS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -195,19 +208,8 @@ jobs:
           RESOURCE_GROUP_NAME: ${{ inputs.resourceGroupName }}
           RUN_NUMBER: ${{ github.run_number }}
           DEPLOYMENT_PARAMS: ${{ steps.build-params.outputs.parameters }}
-
-        # Note that we use the plain run command here, having installed Bicep above.
-        # - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
-        # I have tried foo=${{ secrets.bar }}, setting the secret to an env and doing foo="$env", escaping values and lots of other things.
-        # - We don't use the azure/cli action because with the latest versions on 13/9/23 it doesn't seem
-        # to have the bicep dependencies (Alpine Linux) available and so fails with
-        # "ERROR: Error loading shared library ld-linux-x86-64.so.2: No such file or directory (needed by /root/.azure/bin/bicep)"
-        # This seems to be: https://github.com/Azure/bicep/issues/1683
-        # - We can just use a normal run command, but will need to keep an eye on the Azure CLI version as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
-        # - Note that for the secrets with special characters, I have used the indirection recommended here:
-        # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
         run: |
-          az deployment group "$COMMAND" \
+          az deployment group $COMMAND \
             --name "$RUN_NUMBER" \
             --resource-group "$RESOURCE_GROUP_NAME" \
             --template-file ./infrastructure/resource_group_level/main.bicep \
