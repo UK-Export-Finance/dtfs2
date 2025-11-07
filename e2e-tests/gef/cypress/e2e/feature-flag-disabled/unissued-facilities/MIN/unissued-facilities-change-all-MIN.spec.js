@@ -1,15 +1,15 @@
 import { threeDaysAgo, threeMonths, threeMonthsOneDay, today, twoMonths } from '@ukef/dtfs2-common/test-helpers';
-import relative from '../../relativeURL';
-import CONSTANTS from '../../../fixtures/constants';
-import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
-import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
-import { continueButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../pages/application-submission';
+import relative from '../../../relativeURL';
+import CONSTANTS from '../../../../fixtures/constants';
+import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
+import { continueButton } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../../pages/application-submission';
 
 let dealId;
 let token;
@@ -24,7 +24,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities MIN - change all to issued from unissued table - Feature flag enabled', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table - Feature flag disabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -163,9 +163,9 @@ context('Unissued Facilities MIN - change all to issued from unissued table - Fe
       applicationPreview.submitButtonPostApproval().should('exist');
     });
 
-    it('should not display the make a change button for the facilities that have changed to issued', () => {
+    it('should not display the make a change button', () => {
       applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('not.exist');
       applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
       applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });

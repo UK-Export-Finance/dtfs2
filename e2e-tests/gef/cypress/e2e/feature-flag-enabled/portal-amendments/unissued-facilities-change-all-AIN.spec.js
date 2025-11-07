@@ -36,7 +36,7 @@ let facilityFourId;
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facilities AIN - change all to issued from unissued table - Feature flag enabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {

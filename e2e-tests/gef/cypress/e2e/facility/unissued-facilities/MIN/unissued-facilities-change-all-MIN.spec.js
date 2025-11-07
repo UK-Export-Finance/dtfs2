@@ -14,9 +14,6 @@ import applicationSubmission from '../../../pages/application-submission';
 let dealId;
 let token;
 let facilityOneId;
-let facilityTwoId;
-let facilityThreeId;
-let facilityFourId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -40,20 +37,17 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityTwoId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
+            );
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
-              facilityThreeId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
+            );
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityFourId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
+            );
 
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF).then(() => {
               cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
@@ -161,13 +155,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[2].name);
       applicationPreview.unissuedFacilitiesReviewLink().should('not.exist');
       applicationPreview.submitButtonPostApproval().should('exist');
-    });
-
-    it('should not display the make a change button', () => {
-      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityTwoId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
 
     /* should be able to change dates on facility that has changed to issued */

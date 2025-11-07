@@ -30,9 +30,6 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 let dealId;
 let token;
 let facilityOneId;
-let facilityTwoId;
-let facilityThreeId;
-let facilityFourId;
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
@@ -52,20 +49,17 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityTwoId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
+            );
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
-              facilityThreeId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
+            );
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityFourId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
-            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
+            );
 
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
 
@@ -463,13 +457,6 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       // checks that name has been updated
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${unissuedCashFacility.name}name`);
       applicationPreview.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
-    });
-
-    it('should not display the make a change button', () => {
-      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityTwoId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
-      applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
 
     // checks that can submit application to checker with changed facilities
