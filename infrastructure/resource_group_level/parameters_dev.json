@@ -37,6 +37,9 @@
       },
       "routeTableNextHopIpAddress": {
         "value": "{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}"
+      },
+      "onPremiseNetworkIpsString": {
+        "value": "{{UKEF_VPN_IPS}}"
       }
     }
 }

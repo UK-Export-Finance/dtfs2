@@ -1,4 +1,4 @@
-param environment string
+//param environment string
 param location string
 param product string
 param target string
