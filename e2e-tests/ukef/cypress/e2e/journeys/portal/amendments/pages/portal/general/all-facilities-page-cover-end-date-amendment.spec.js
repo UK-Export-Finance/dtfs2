@@ -1,4 +1,5 @@
 import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -36,6 +37,7 @@ context('Amendments - Cover end date amendment - Portal all facilities page shou
           facilityValueExists: false,
           coverEndDateExists: true,
           applicationDetailsUrl,
+          changedCoverEndDate: tomorrow.date,
           facilityId,
           dealId,
         });
