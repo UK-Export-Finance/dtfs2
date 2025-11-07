@@ -1,4 +1,4 @@
-import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
+import { twoDays, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import coverEndDate from '../../../gef/cypress/e2e/pages/amendments/cover-end-date';
 import facilityEndDate from '../../../gef/cypress/e2e/pages/amendments/facility-end-date';
 import bankReviewDate from '../../../gef/cypress/e2e/pages/amendments/bank-review-date';
@@ -40,7 +40,7 @@ export const MOCK_JOURNEYS_WITH_FED = [
     fragment: 'coverEndDate-day',
     nextPageHeading: 'Do you have a facility end date?',
     change: () => {
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twoDays.date });
       cy.clickContinueButton();
     },
   },

@@ -1,7 +1,7 @@
 import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 
-import { D_MMMM_YYYY_FORMAT, twoDays, oneMonth } from '@ukef/dtfs2-common/test-helpers';
+import { D_MMMM_YYYY_FORMAT, twoDays, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -40,6 +40,7 @@ context('Amendments - Multiple cover end date AND value amendments - Application
           coverEndDateExists: true,
           facilityValueExists: true,
           changedFacilityValue: CHANGED_FACILITY_VALUE_1,
+          changedCoverEndDate: tomorrow.date,
           applicationDetailsUrl,
           facilityId,
           dealId,
@@ -48,7 +49,7 @@ context('Amendments - Multiple cover end date AND value amendments - Application
         // second amendment request with facility value and cover end date and facility end date
         cy.loginAndSubmitPortalAmendmentRequestToUkef({
           coverEndDateExists: true,
-          changedCoverEndDate: oneMonth.date,
+          changedCoverEndDate: tomorrow.date,
           facilityValueExists: true,
           changedFacilityValue: CHANGED_FACILITY_VALUE_1,
           applicationDetailsUrl,
