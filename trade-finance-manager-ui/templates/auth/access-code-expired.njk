@@ -1,0 +1,36 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set showServiceNameOnly = true %}
+
+{% block pageTitle -%}
+  Access code expired
+{%- endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-cy="sign-in-heading">Your access code has expired</h1>
+
+      <p class="govuk-body">
+        For security, access codes expire after 30 minutes. You can request for a new access code to be sent to your email address.
+      </p>
+
+      <p class="govuk-body">
+        You have {{ attemptsRemaining }} attempts remaining.
+      </p>
+
+      <p class="govuk-body">
+        If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.
+      </p>
+
+      {{ govukButton({
+        text: "Request a new code",
+        attributes: {
+          "data-cy": "submit-button"
+        }
+      }) }}
+    </div>
+  </div>
+{% endblock %}
