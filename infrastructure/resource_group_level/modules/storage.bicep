@@ -12,7 +12,7 @@ param privateEndpointsSubnetId string
 
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
 @secure()
-param allowedIpsString string = '[]'
+param allowedIpsString string = ''
 
 @description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
@@ -26,7 +26,7 @@ var storageAccountName = '${product}-${target}-${version}-storage'
 
 // Safely parse the allowedIpsString, handling empty/null/invalid JSON cases
 var cleanIpsString = trim(allowedIpsString)
-var allowedIps = empty(cleanIpsString) ? [] : (cleanIpsString == '[]' ? [] : json(cleanIpsString))
+var allowedIps = empty(cleanIpsString) ? [] : json(cleanIpsString)
 
 var ipRules = [for ip in allowedIps: {
   value: ip

@@ -11,7 +11,7 @@ param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
 @secure()
-param allowedIpsString string = '[]'
+param allowedIpsString string = ''
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
 param matchVariable string
@@ -30,7 +30,7 @@ param ruleSet RuleSet
 
 // Safely parse the allowedIpsString, handling empty/null/invalid JSON cases
 var cleanIpsString = trim(allowedIpsString)
-var allowedIps = empty(cleanIpsString) ? [] : (cleanIpsString == '[]' ? [] : json(cleanIpsString))
+var allowedIps = empty(cleanIpsString) ? [] : json(cleanIpsString)
 var unauthorisedMessageBody = base64('Unathorised access!')
 
 // Note that by default, some rules are disabled by default because they have been superceded.
