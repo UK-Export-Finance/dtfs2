@@ -42,6 +42,8 @@ param privateEndpointsCidr string
 @secure()
 // UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
+@description('Enable 7-day soft deletes on file shares')
+var shareDeleteRetentionEnabled = false
 
 
 ///////////////////////////////////////////////////////////////////////////////
