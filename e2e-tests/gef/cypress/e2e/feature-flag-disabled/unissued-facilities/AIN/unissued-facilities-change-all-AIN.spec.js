@@ -88,7 +88,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     // ensures the task comment box exists with correct headers and link after ACBS reconciliation
-    it('task comment box exists with correct header and unissued facilities link', () => {
+    it('should ensure that task comment box exists with correct header and unissued facilities link', () => {
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
@@ -100,7 +100,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     /* application preview should not have unlocked ability to change unissued facilities until
        at least 1 changed from unissued table
     */
-    it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
+    it('should ensure that facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
 
@@ -113,7 +113,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
     });
 
-    it('clicking unissued facilities link takes you to unissued facility list page', () => {
+    it('should ensure that clicking unissued facilities link takes you to unissued facility list page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
@@ -125,7 +125,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       statusBanner.applicationBanner().should('exist');
     });
 
-    it('clicking back or update later takes you back to application preview', () => {
+    it('should ensure that clicking back or update later takes you back to application preview', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
@@ -138,13 +138,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     // clicking update on unissued-facilities table
-    it('clicking on update should take you to the update facility page with correct url', () => {
+    it('should ensure that clicking on update should take you to the update facility page with correct url', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
-    it('update facility page should have correct titles and text', () => {
+    it('should ensure that update facility page should have correct titles and text', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -168,7 +168,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
     });
 
-    it('error messages should be correct when entering dates beyond validation limits', () => {
+    it('should ensure that error messages are correct when entering dates beyond validation limits', () => {
       // when entering no dates
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
@@ -255,7 +255,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       aboutFacilityUnissued.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
     });
 
-    it('the correct success messages should be displayed after changing facility to issued', () => {
+    it('should ensure that the correct success messages are displayed after changing facility to issued', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -328,7 +328,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     // task comments box should show facilities names have changed to unissued
-    it('preview review facility stage has correct headers and shows all 3 updated facilities and submit button should be visible', () => {
+    it('should ensure that preview review facility stage has correct headers and shows all 3 updated facilities and submit button should be visible', () => {
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
@@ -339,7 +339,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     /* should be able to change dates on facility that has changed to issued */
-    it('facility table should have change links on the changed to issued facilities', () => {
+    it('should ensure that facility table has change links on the changed to issued facilities', () => {
       // to check date format
       const issuedDate = today.d_MMMM_yyyy;
       const coverStart = twoMonths.d_MMMM_yyyy;
@@ -374,7 +374,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
     });
 
-    it('can submit facility when facility end date has been provided', () => {
+    it('should ensure that can submit facility when facility end date has been provided', () => {
       const facilityEndDateFormatted = threeMonths.d_MMMM_yyyy;
 
       applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEndDateFormatted);
@@ -382,7 +382,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.submitButtonPostApproval();
     });
 
-    it('cannot submit facility without bank review date', () => {
+    it('should ensure that cannot submit facility without bank review date', () => {
       applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
       aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
@@ -396,7 +396,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.submitButtonPostApproval().should('not.exist');
     });
 
-    it('can submit facility when bank review date has been provided', () => {
+    it('should ensure that can submit facility when bank review date has been provided', () => {
       const bankReviewDateFormatted = threeMonths.d_MMMM_yyyy;
 
       applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
@@ -410,7 +410,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.submitButtonPostApproval();
     });
 
-    it('cannot submit facility without facility end date', () => {
+    it('should ensure that cannot submit facility without facility end date', () => {
       applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -425,7 +425,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     // checks that can edit changed facility
-    it('clicking change should take you to about facility page with different url', () => {
+    it('should ensure that clicking change takes you to about facility page with different url', () => {
       const issuedDate = threeDaysAgo.d_MMMM_yyyy;
       const coverStart = threeDaysAgo.d_MMMM_yyyy;
 
@@ -473,7 +473,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     // checks that can submit application to checker with changed facilities
-    it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
+    it('should ensure that pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
       cy.clickSubmitButton();
