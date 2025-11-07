@@ -18,6 +18,7 @@ describe('mapFacilityApplicationDetails', () => {
     ...MOCK_ISSUED_FACILITY.details,
     stage: 'Issued',
     facilityId: 'facility-1',
+    canResubmitIssuedFacilities: false,
   };
 
   const facilityTwo = {
@@ -99,7 +100,7 @@ describe('mapFacilityApplicationDetails', () => {
 
     describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is false', () => {
       describe('when a facility is issued', () => {
-        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
           // Arrange
           const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
@@ -122,11 +123,39 @@ describe('mapFacilityApplicationDetails', () => {
       });
 
       describe('when a facility is unissued', () => {
-        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
           // Arrange
           const unissuedFacility = {
             ...facility,
             stage: 'Unissued',
+          };
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...unissuedFacility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
+      });
+
+      describe('when a facility has changed to issued but not yet been submitted to UKEF', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
+          // Arrange
+          const unissuedFacility = {
+            ...facility,
+            stage: 'Issued',
+            canIssuedFacilitiesBeAmended: true,
           };
           const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
@@ -194,6 +223,33 @@ describe('mapFacilityApplicationDetails', () => {
             mappedFacilities: [
               {
                 ...unissuedFacility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
+      });
+
+      describe('when a facility is changed to issued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
+          // Arrange
+          const changedToIssuedFacility = {
+            ...facility,
+            canResubmitIssuedFacilities: true,
+          };
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [changedToIssuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...changedToIssuedFacility,
                 canIssuedFacilitiesBeAmended: false,
               },
             ],
