@@ -156,6 +156,8 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
             // ukefFacilityId required for html facility summary table id
             ukefFacilityId: item.details.ukefFacilityId,
             stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
+            // canResubmitIssuedFacilities is true only when an unissued facility has been changed to issued and not yet submitted
+            canResubmitIssuedFacilities: item.details?.canResubmitIssuedFacilities || false,
           }))
           .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
       },
