@@ -1,4 +1,4 @@
-import { twoDays } from '@ukef/dtfs2-common/test-helpers';
+import { threeDays } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -53,7 +53,7 @@ context('Amendments - amendment details page - change amendments journey', () =>
               facilityEndDateExists,
               facilityValueExists: true,
               changedFacilityValue: CHANGED_FACILITY_VALUE,
-              changedCoverEndDate: twoDays.date,
+              changedCoverEndDate: threeDays.date,
               amendmentDetailsUrl,
               confirmReturnToMakerUrl,
               submittedUrl,

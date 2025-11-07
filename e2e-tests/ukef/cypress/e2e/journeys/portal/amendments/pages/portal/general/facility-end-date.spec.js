@@ -1,5 +1,5 @@
 import { now } from '@ukef/dtfs2-common';
-import { sixYearsOneDay } from '@ukef/dtfs2-common/test-helpers';
+import { sixYearsOneDay, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import { sub } from 'date-fns';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -55,7 +55,8 @@ context('Amendments - Facility End Date - page tests', () => {
         whatDoYouNeedToChange.coverEndDateCheckbox().click();
         cy.clickContinueButton();
 
-        cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+        cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
+
         cy.clickContinueButton();
 
         doYouHaveAFacilityEndDate.yesRadioButton().click();
