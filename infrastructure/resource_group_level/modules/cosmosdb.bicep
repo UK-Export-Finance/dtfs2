@@ -11,7 +11,7 @@ param version string
 
 @description('Network IPs to permit access to CosmosDB')
 @secure()
-param allowedIpsString string
+param allowedIpsString string = '[]'
 
 // See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
 @allowed(['Provisioned Throughput', 'Serverless'])
@@ -23,7 +23,9 @@ param backupPolicyTier string
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
-var allowedIps = json(allowedIpsString)
+// Safely parse the allowedIpsString, handling empty/null/invalid JSON cases
+var cleanIpsString = trim(allowedIpsString)
+var allowedIps = empty(cleanIpsString) ? [] : (cleanIpsString == '[]' ? [] : json(cleanIpsString))
 
 // On activating "Allow access from Azure Portal":
 // https://github.com/Azure/azure-cli/issues/7495 ->
