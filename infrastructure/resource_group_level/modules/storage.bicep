@@ -214,7 +214,7 @@ resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2025-01-
 }]
 
 // This resource definition is taken from the storage-private-endpoint export
-resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
+resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: storageAccountName
   location: location
   tags: {}
@@ -244,7 +244,7 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' 
 // https://stackoverflow.com/questions/69810938/what-is-azure-private-dns-zone-group
 // https://learn.microsoft.com/en-us/azure/private-link/create-private-endpoint-bicep?tabs=CLI
 // https://bhabalajinkya.medium.com/azure-bicep-private-communication-between-azure-resources-f4a17c171cfb
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
   parent: storagePrivateEndpoint
   name: 'default'
   properties: {
