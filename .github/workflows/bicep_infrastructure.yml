@@ -39,7 +39,7 @@ jobs:
 # 1. Setup infrastructure variables
   setup:
     name: Setup 🔧
-    runs-on: [ubuntu-latest]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
@@ -84,7 +84,7 @@ jobs:
   Resource-Deploy:
     name: Deploy Resources 📊
     needs: setup
-    runs-on: [ubuntu-latest]
+    runs-on: [self-hosted, linux, deployment]
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
