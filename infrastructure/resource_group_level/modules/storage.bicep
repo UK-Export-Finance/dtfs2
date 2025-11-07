@@ -120,7 +120,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2024-02-15' = {
+resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2025-01-01' = {
   parent: storageAccount
   name: 'default'
   properties: {
@@ -136,7 +136,7 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2024
   }
 }
 
-resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2024-02-15' = {
+resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2025-01-01' = {
   parent: storageAccount
   name: 'default'
   // TODO:FN-693 Note that the extant environments don't have
@@ -149,17 +149,17 @@ resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2024
   }
 }
 
-resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2024-02-15' = {
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2025-01-01' = {
   parent: storageAccount
   name: 'default'
 }
 
-resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2024-02-15' = {
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2025-01-01' = {
   parent: storageAccount
   name: 'default'
 }
 
-resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-02-15' = [for blobContainerName in blobContainerNames: {
+resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-01-01' = [for blobContainerName in blobContainerNames: {
   parent: defaultBlobService
   name: blobContainerName
   properties: {
