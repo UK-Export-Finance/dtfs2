@@ -177,7 +177,7 @@ jobs:
           # of the string needing to be escaped if the string is not multi-line (which I believe adds leading spaces as a side effect).
           # See https://stackoverflow.com/questions/74817321/how-to-escape-leading-square-bracket-in-a-parameter-array-in-bicep
           # and the issue it mentions for details.
-          UKEF_VPN_IPS_ENV: ' ${{ secrets.UKEF_VPN_IPS }}'
+          UKEF_VPN_IPS_RAW: ${{ secrets.UKEF_VPN_IPS }}
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
           COMMAND: ${{ needs.configure-command.outputs.command }}
 
@@ -202,7 +202,7 @@ jobs:
               peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}} \
               peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }} \
               peeringAddressSpace=${{ secrets.VNET_ADDRESS_PREFIX }} \
-              onPremiseNetworkIpsString="$UKEF_VPN_IPS_ENV" \
+              onPremiseNetworkIpsString="$UKEF_VPN_IPS_RAW" \
               APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
               APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
               APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \

@@ -24,12 +24,12 @@ param filesDnsZoneId string
 
 var storageAccountName = '${product}-${target}-${version}-storage'
 
-// Safely handle the allowedIpsString parameter with better validation
+// Parse the allowedIpsString parameter safely
 var cleanIpsString = trim(allowedIpsString)
-// Check if the string looks like a JSON array (starts with [ and ends with ])
-var looksLikeJson = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
-// Parse the JSON only if it looks valid, otherwise use empty array
-var allowedIps = looksLikeJson ? json(cleanIpsString) : []
+// Validate that it looks like a JSON array format before parsing
+var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
+// Parse JSON if valid format, otherwise use empty array
+var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
 
 var ipRules = [for ip in allowedIps: {
   value: ip
