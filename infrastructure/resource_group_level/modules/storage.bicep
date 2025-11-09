@@ -22,9 +22,7 @@ param shareDeleteRetentionEnabled bool
 
 param filesDnsZoneId string
 
-// Create storage account name with proper length validation
-var baseStorageName = '${product}${target}${version}'
-var storageAccountName = length(baseStorageName) < 20 ? '${baseStorageName}store' : '${baseStorageName}st'
+var storageAccountName = '${product}-${target}-${version}-storage'
 
 // Parse the allowedIpsString parameter safely
 var cleanIpsString = trim(allowedIpsString)
