@@ -23,9 +23,12 @@ param backupPolicyTier string
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
-// Completely bypass JSON parsing for now to get deployment working
-// TODO: Fix JSON parsing issue in a follow-up change
-var allowedIps = []
+// Parse the allowedIpsString parameter safely
+var cleanIpsString = trim(allowedIpsString)
+// Validate that it looks like a JSON array format before parsing
+var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
+// Parse JSON if valid format, otherwise use empty array
+var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
 
 // On activating "Allow access from Azure Portal":
 // https://github.com/Azure/azure-cli/issues/7495 ->
