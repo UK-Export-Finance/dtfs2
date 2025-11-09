@@ -42,7 +42,7 @@ param privateEndpointsCidr string
 @secure()
 // UKEF_VPN_IPS
 param onPremiseNetworkIpsString string = ''
-@description('Alternative: Individual IP addresses separated by commas (fallback if JSON parsing fails)')
+
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
