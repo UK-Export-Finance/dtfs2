@@ -22,11 +22,14 @@ param shareDeleteRetentionEnabled bool
 
 param filesDnsZoneId string
 
-var storageAccountName = '${product}-${target}-${version}-storage'
+var storageAccountName = '${product}${target}${version}st'
 
-// Temporarily bypass all IP restrictions to get deployment working
-// This will allow the deployment to succeed while we debug the JSON format issue
-var allowedIps = []
+// Parse the allowedIpsString parameter safely
+var cleanIpsString = trim(allowedIpsString)
+// Validate that it looks like a JSON array format before parsing
+var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
+// Parse JSON if valid format, otherwise use empty array
+var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
 
 var ipRules = [for ip in allowedIps: {
   value: ip
