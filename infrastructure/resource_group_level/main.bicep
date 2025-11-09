@@ -42,6 +42,8 @@ param privateEndpointsCidr string
 @secure()
 // UKEF_VPN_IPS
 param onPremiseNetworkIpsString string = ''
+@description('Alternative: Individual IP addresses separated by commas (fallback if JSON parsing fails)')
+param allowedIpsCsv string = ''
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
@@ -421,6 +423,7 @@ module storage 'modules/storage.bicep' = {
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     allowedIpsString: onPremiseNetworkIpsString
+    allowedIpsCsv: allowedIpsCsv
     networkAccessDefaultAction: parametersMap[environment].nsg.storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
     filesDnsZoneId: filesDns.outputs.filesDnsZoneId
