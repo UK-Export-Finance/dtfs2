@@ -24,13 +24,15 @@
         If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.
     </p>
 
-    {{ govukButton({
-    text: "Sign in",
-    attributes: {
-      'data-cy': 'submit-button'
-    }
-    }) }}
-
+    <div class="govuk-!-margin-top-6">
+        {{ govukButton({
+        text: "Sign in",
+        attributes: {
+        'data-cy': 'submit-button'
+        }
+        }) }}
+    </div>
+    
     {% if isAccessCodeLink %}
         <a href="{{ requestNewCodeUrl }}" class="govuk-link" data-cy="request-code-link">Request a new code</a>
     {% endif %}
