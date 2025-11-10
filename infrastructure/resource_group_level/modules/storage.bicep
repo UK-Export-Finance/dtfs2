@@ -13,7 +13,7 @@ param privateEndpointsSubnetId string
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
 @secure()
 //param allowedIpsString string
-param allowedIpsString array = []
+param onPremiseNetworkIpsString array = []
 
 @description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
@@ -25,7 +25,7 @@ param filesDnsZoneId string
 
 var storageAccountName = '${product}-${target}-${version}-storage'
 
-//var allowedIps = json(allowedIpsString)
+var allowedIps = json(onPremiseNetworkIpsString)
 
 /* var ipRules = [for ip in allowedIps: {
   value: ip
@@ -100,7 +100,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
           action: 'Allow'
         }
       ]
-      ipRules: [for ip in allowedIpsString: {
+      ipRules: [for ip in allowedIps: {
         action: 'Allow'
         value: ip
       }]
