@@ -26,10 +26,10 @@ var storageAccountName = '${product}-${target}-${version}-storage'
 
 var allowedIps = json(allowedIpsString)
 
-var ipRules = [for ip in allowedIps: {
+/* var ipRules = [for ip in allowedIps: {
   value: ip
   action: 'Allow'
-}]
+}] */
 
 var queueNames = [
   'acbs-control-00'
@@ -99,7 +99,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
           action: 'Allow'
         }
       ]
-      ipRules: ipRules
+      ipRules: [for ip in allowedIPs: {
+        action: 'Allow'
+        value: ip
+      }]
       defaultAction: networkAccessDefaultAction
     }
     supportsHttpsTrafficOnly: true
