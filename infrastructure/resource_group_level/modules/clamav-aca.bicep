@@ -9,11 +9,11 @@ var managedEnvironmentName = '${product}-${target}-${version}-clamav-env'
 var applicationInsightsName = '${product}-${target}-${version}-clamav-ai'
 var containerName = '${product}-${target}-${version}-clamav'
 
-resource workspace 'Microsoft.OperationalInsights/workspaces@2025-02-01' existing = {
+resource workspace 'Microsoft.OperationalInsights/workspaces@2024-03-01' existing = {
   name: logAnalyticsWorkspaceName
 }
 
-resource managedEnvironment 'Microsoft.App/managedEnvironments@2025-07-01' = {
+resource managedEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: managedEnvironmentName
   location: location
   properties: {
