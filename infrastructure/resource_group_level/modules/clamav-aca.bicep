@@ -1,5 +1,4 @@
 param location string = resourceGroup().location
-param environment string
 param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
 param product string
@@ -48,7 +47,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource clamAvAca 'Microsoft.App/containerApps@2025-07-01' = {
+resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
   name: containerName
   location: location
   properties: {
