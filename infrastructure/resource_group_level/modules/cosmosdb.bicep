@@ -550,7 +550,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
     resource: {
       throughput: 400
       autoscaleSettings: {
-        maxThroughput: 3500
+        // maxThroughput: 3500
       }
     }
   }
