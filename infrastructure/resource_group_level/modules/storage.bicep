@@ -24,7 +24,7 @@ param filesDnsZoneId string
 
 var storageAccountName = '${product}-${target}-${version}-storage'
 
-var allowedIps = json(allowedIPs)
+var allowedIps = json(allowedIpsString)
 
 var ipRules = [for ip in allowedIps: {
   value: ip

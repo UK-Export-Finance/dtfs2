@@ -41,7 +41,7 @@ param privateEndpointsCidr string
 @description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 // UKEF_VPN_IPS
-param onPremiseNetworkIpsString string = ''
+param onPremiseNetworkIpsString string 
 
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
