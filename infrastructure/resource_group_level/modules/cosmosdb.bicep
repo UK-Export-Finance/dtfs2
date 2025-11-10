@@ -1,5 +1,5 @@
 param location string
-param environment string
+// param environment string
 param appServicePlanEgressSubnetId string
 param mongoDbDnsZoneId string
 param privateEndpointsSubnetId string
