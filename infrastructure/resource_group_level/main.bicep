@@ -421,7 +421,7 @@ module storage 'modules/storage.bicep' = {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    allowedIpsString: onPremiseNetworkIpsString
+    onPremiseNetworkIpsString: onPremiseNetworkIpsString
     networkAccessDefaultAction: parametersMap[environment].nsg.storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
     filesDnsZoneId: filesDns.outputs.filesDnsZoneId
