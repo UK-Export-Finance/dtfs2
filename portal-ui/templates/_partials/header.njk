@@ -2,17 +2,6 @@
 {% from "govuk/components/header/macro.njk" import govukHeader %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
-{% if showServiceNameOnly %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    attributes: {
-      "data-cy": "header"
-    }
-  }) }}
-  {{ govukServiceNavigation({
-    serviceName: "Get a guarantee for export finance"
-  }) }}
-{% else %}
 {{ govukSkipLink({
   text: "Skip to main content",
   href: "#main-content",
@@ -155,4 +144,3 @@
   },
   navigation: navigation
 }) }}
-{% endif %}
