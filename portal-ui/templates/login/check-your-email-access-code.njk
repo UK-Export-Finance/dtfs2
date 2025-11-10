@@ -1,0 +1,56 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% import "./_macros/access-code-attempts.njk" as accessCodeAttempts %}
+
+{% extends "index.njk" %}
+
+
+{% block pageTitle %}
+  Check your email
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>
+
+      <p class="govuk-body govuk-!-margin-bottom-6" data-cy="six-digit-access-code">
+        We have sent you a 6-digit access code to your email {{ email }}.
+      </p>
+ 
+      {{ govukInput({
+        label: {
+          text: "Enter access code:"
+        },
+        id: "sixDigitAccessCode",
+        classes: "govuk-input--width-10",
+        name: "sixDigitAccessCode",
+        value: sixDigitAccessCode,
+        spellcheck: false,
+        attributes: {
+        "data-cy": "six-digit-access-code",
+        "placeholder": "e.g. 123456"
+        },
+        errorMessage: errors and errors.fieldErrors.sixDigitAccessCode and {
+        text: errors.fieldErrors.sixDigitAccessCode.text,
+        attributes: {
+            'data-cy': 'six-digit-access-code-inline-error'
+        }
+        }
+      }) }}
+
+      <p class="govuk-body" data-cy="access-code-expired-info">
+        This code will expire after 30 minutes.
+      </p>
+
+      {{ accessCodeAttempts.render({
+        isSupportInfo: false,
+        attemptsLeft: attemptsLeft,
+        requestNewCodeUrl: requestNewCodeUrl,
+        isAccessCodeLink: true
+      }) }}
+    </div>
+  </div>
+{% endblock %}
