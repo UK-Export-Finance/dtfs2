@@ -426,6 +426,7 @@ module storage 'modules/storage.bicep' = {
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
     filesDnsZoneId: filesDns.outputs.filesDnsZoneId
   }
+}
 
   module cosmosDb 'modules/cosmosdb.bicep' = {
   name: 'mongoDb'
@@ -441,6 +442,6 @@ module storage 'modules/storage.bicep' = {
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
 }
-}
+
 
 
