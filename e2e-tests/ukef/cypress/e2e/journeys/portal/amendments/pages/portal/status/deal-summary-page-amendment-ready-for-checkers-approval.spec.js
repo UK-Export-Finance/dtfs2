@@ -1,4 +1,5 @@
 import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -52,6 +53,7 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
           facilityValueExists: true,
           facilityEndDateExists: true,
           changedFacilityValue: '10000',
+          changedCoverEndDate: tomorrow.date,
         });
       });
     });

@@ -76,7 +76,7 @@ describe('validateAndParseCoverEndDate', () => {
     });
   });
 
-  it('should return cover end date if cover end date is the same with cover start date', () => {
+  it('should return an error if the date is the same as the cover start date', () => {
     // Arrange
     const fixedDate = new Date(2025, 0, 20);
     const coverEndDate = fixedDate;
@@ -87,7 +87,13 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      value: getEpochMs(coverEndDate),
+      errors: [
+        {
+          errRef: valueRef,
+          errMsg: 'The new cover end date must be after the cover start date',
+          subFieldErrorRefs: ['coverEndDate-day', 'coverEndDate-month', 'coverEndDate-year'],
+        },
+      ],
     });
   });
 

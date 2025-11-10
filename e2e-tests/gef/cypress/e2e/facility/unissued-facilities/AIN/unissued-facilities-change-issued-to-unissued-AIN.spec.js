@@ -37,12 +37,15 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
+
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
+
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
+
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
 
             // Add ACBS object to TFM

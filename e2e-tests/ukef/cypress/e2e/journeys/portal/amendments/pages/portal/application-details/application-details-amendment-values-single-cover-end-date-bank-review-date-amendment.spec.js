@@ -44,6 +44,7 @@ context('Amendments - Single cover end date amendment with bank review date - Ap
         cy.loginAndSubmitPortalAmendmentRequestToUkef({
           facilityValueExists: false,
           coverEndDateExists: true,
+          changedCoverEndDate: tomorrow.date,
           changedBankReviewDate: tomorrow.date,
           applicationDetailsUrl,
           facilityId,
@@ -66,7 +67,7 @@ context('Amendments - Single cover end date amendment with bank review date - Ap
 
   it('should display the updated amendment cover end date on facility summary list', () => {
     applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(facilityValue, false));
-    applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
+    applicationPreview.facilitySummaryList().contains(format(new Date(tomorrow.date), D_MMMM_YYYY_FORMAT));
     applicationPreview.facilitySummaryList().contains(bankReviewDate);
   });
 });
