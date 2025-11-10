@@ -432,7 +432,9 @@ module storage 'modules/storage.bicep' = {
   name: 'mongoDb'
   params: {
     location: location
-    environment: environment
+    product: product
+    target: target
+    version: version
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
