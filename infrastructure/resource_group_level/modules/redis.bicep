@@ -14,7 +14,7 @@ var redisName = '${product}-${target}-${version}-redis'
 // See line 718 in developmentinfrastructure.yml
 // and https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
 
-resource redis 'Microsoft.Cache/redis@2024-02-15' = {
+resource redis 'Microsoft.Cache/redis@2024-11-01' = {
   name: redisName
   location: location
   tags: {}

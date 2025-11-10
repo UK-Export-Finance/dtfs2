@@ -428,4 +428,27 @@ module storage 'modules/storage.bicep' = {
   }
 }
 
+module redis 'modules/redis.bicep' = {
+  name: 'redis'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    sku: parametersMap[environment].redis.sku
+  }
+}
+
+module clamAv 'modules/clamav-aca.bicep' = {
+  name: 'clamAv'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    acaClamAvSubnetId: vnet.outputs.acaClamAvSubnetId
+    logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
+  }
+}
+
 
