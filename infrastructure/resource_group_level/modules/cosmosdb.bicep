@@ -122,7 +122,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     }
     networkAclBypassResourceIds: []
     capacity: capacityMode == 'Provisioned Throughput' ? {
-      totalThroughputLimit: 1000
+      totalThroughputLimit: 400
     } : null
   }
 }
@@ -542,13 +542,14 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
+// Using minimal autoscale settings to stay within free tier limits
 resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-05-01-preview' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
     resource: {
       autoscaleSettings: {
-        maxThroughput: 1000
+        maxThroughput: 400
       }
     }
   }
