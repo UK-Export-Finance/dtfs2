@@ -11,7 +11,7 @@ param gatewaySubnetId string
 param privateEndpointsSubnetId string
 
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
-@secure()
+//@secure()
 //param allowedIpsString string
 param onPremiseNetworkIpsString array = []
 
