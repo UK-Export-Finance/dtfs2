@@ -1,4 +1,3 @@
-//param environment string
 param location string
 param product string
 param target string
@@ -12,7 +11,6 @@ param privateEndpointsSubnetId string
 
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
 @secure()
-//param allowedIpsString string
 param onPremiseNetworkIpsString string
 
 @description('Is public access to the storage account allowed or denied for evertone')
@@ -26,11 +24,6 @@ param filesDnsZoneId string
 var storageAccountName = '${product}${target}${version}storage'
 
 var allowedIps = json(onPremiseNetworkIpsString)
-
-/* var ipRules = [for ip in allowedIps: {
-  value: ip
-  action: 'Allow'
-}] */
 
 var queueNames = [
   'acbs-control-00'
