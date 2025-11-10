@@ -11,9 +11,9 @@ param gatewaySubnetId string
 param privateEndpointsSubnetId string
 
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
-//@secure()
+@secure()
 //param allowedIpsString string
-param onPremiseNetworkIpsString array = []
+param onPremiseNetworkIpsString string
 
 @description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
