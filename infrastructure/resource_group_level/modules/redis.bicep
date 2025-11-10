@@ -1,5 +1,4 @@
 param location string
-param environment string
 param sku object
 param product string
 param target string
