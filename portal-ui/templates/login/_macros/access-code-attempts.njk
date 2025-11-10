@@ -6,21 +6,21 @@
     {% set requestNewCodeUrl = params.requestNewCodeUrl %}
     {% set isAccessCodeLink = params.isAccessCodeLink %}
 
-    <p class="govuk-body" data-cy="access-code-expired-security-info">
+    <p class="govuk-body" data-cy="access-code-spam-or-junk">
         Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.
     </p>
 
     {% if isSupportInfo %}
-        <p class="govuk-body" data-cy="access-code-expired-support-info">
+        <p class="govuk-body" data-cy="access-code-support-info">
             If you are still having problems signing in, contact us for support.
         </p>
     {% endif %}
 
-    <p class="govuk-body" data-cy="access-code-expired-attempts-info">
+    <p class="govuk-body" data-cy="access-code-attempts-info">
         You have {{ attemptsLeft }} attempts remaining.
     </p>
 
-    <p class="govuk-body" data-cy="access-code-expired-suspend-info">
+    <p class="govuk-body" data-cy="access-code-suspend-info">
         If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.
     </p>
 
@@ -32,7 +32,7 @@
         }
         }) }}
     </div>
-    
+
     {% if isAccessCodeLink %}
         <a href="{{ requestNewCodeUrl }}" class="govuk-link" data-cy="request-code-link">Request a new code</a>
     {% endif %}
