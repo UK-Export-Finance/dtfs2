@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "login/_macros/access-code-attempts.njk" import render as renderAccessCodeAttempts %}
+{% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
 
 {% extends "index.njk" %}
 
@@ -11,11 +11,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l" data-cy="access-code-email-sent-heading">
+      <h1 class="govuk-heading-l" data-cy="resend-access-code-email-sent-heading">
         We've sent you another access code
       </h1>
 
-      <p class="govuk-body" data-cy="access-code-email-sent-description">
+      <p class="govuk-body" data-cy="resend-access-code-email-sent-description">
         We've sent you another email with a access code to {{ email }}
       </p>
 
@@ -31,23 +31,22 @@
             type: "text",
             autocomplete: "off",
             attributes: {
-              "data-cy": "access-code-input",
               "placeholder": "e.g. 123A5C"
             }
           }) }}
         </div>
+
+        <p class="govuk-body" data-cy="resend-access-code-email-sent-expiry-info">
+          This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.
+        </p>
+
+        {{ renderAccessCodeAttempts.render({
+          isSupportInfo: true,
+          attemptsLeft: attemptsRemaining,
+          requestNewCodeUrl: '/login/request-new-code',
+          isAccessCodeLink: false
+        }) }}
       </form>
-
-      <p class="govuk-body" data-cy="access-code-email-sent-expiry-info">
-        This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.
-      </p>
-
-      {{ renderAccessCodeAttempts({
-        isSupportInfo: true,
-        attemptsLeft: attemptsRemaining,
-        requestNewCodeUrl: '/login/request-new-code',
-        isAccessCodeLink: false
-      }) }}
      
     </div>
   </div>

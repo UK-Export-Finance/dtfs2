@@ -16,11 +16,11 @@ describe(page, () => {
   withContactUsEmailAddressTests({ page });
 
   it('should render the heading', () => {
-    wrapper.expectText('[data-cy="access-code-email-sent-heading"]').toRead("We've sent you another access code");
+    wrapper.expectText('[data-cy="resend-access-code-email-sent-heading"]').toRead("We've sent you another access code");
   });
 
   it('should render the description paragraph with email', () => {
-    wrapper.expectText('[data-cy="access-code-email-sent-description"]').toMatch(new RegExp(email));
+    wrapper.expectText('[data-cy="resend-access-code-email-sent-description"]').toRead(`We've sent you another email with a access code to ${email}`);
   });
 
   it('should render the access code input', () => {
@@ -34,7 +34,7 @@ describe(page, () => {
 
   it('should render the expiry info paragraph', () => {
     wrapper
-      .expectText('[data-cy="access-code-email-sent-expiry-info"]')
+      .expectText('[data-cy="resend-access-code-email-sent-expiry-info"]')
       .toRead('This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.');
   });
 
