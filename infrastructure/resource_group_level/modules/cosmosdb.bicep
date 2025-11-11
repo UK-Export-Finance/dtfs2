@@ -127,9 +127,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     diagnosticLogSettings: {
       enableFullTextQuery: 'False'
     }
-    capacity: capacityMode == 'Provisioned Throughput' ? {
-      totalThroughputLimit: 4000
-    } : null
   }
 }
 
