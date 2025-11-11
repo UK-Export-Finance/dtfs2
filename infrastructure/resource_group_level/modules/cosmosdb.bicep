@@ -15,7 +15,7 @@ param allowedIpsString string = ''
 // See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
 // Serverless is recommended for development environments to avoid throughput limits
 @allowed(['Provisioned Throughput', 'Serverless'])
-param capacityMode string = 'Serverless'
+param capacityMode string
 
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
@@ -23,11 +23,6 @@ param backupPolicyTier string
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
-// Serverless mode configuration notes:
-// - No throughput limits or quotas to worry about
-// - Pay-per-use pricing model
-// - Automatic scaling based on demand
-// - No capacity configuration needed
 
 // Parse the allowedIpsString parameter safely
 var cleanIpsString = trim(allowedIpsString)
@@ -128,6 +123,9 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
       }
     }
     networkAclBypassResourceIds: []
+    capacity: capacityMode == 'Provisioned Throughput' ? {
+      totalThroughputLimit: 400
+    } : null
   }
 }
 
@@ -545,10 +543,20 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 }]
 
 
-// Throughput Configuration:
-// - For Serverless mode: No throughput configuration needed - Azure manages scaling automatically
-// - For Provisioned mode: Would need throughput settings (not recommended with current account limits)
-// - Collections in Serverless mode scale automatically based on usage without manual configuration
+// Setting the throughput only makes sense for 'Provisioned Throughput' mode
+// Using minimal autoscale settings to stay within free tier limits
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-04-15' = if (capacityMode == 'Provisioned Throughput') {
+  parent: submissionsDb
+  name: 'default'
+  properties: {
+    resource: {
+      autoscaleSettings: {
+        maxThroughput: 400
+      }
+    }
+  }
+}
+
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
