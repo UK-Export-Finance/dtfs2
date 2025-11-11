@@ -124,6 +124,9 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
       }
     }
     networkAclBypassResourceIds: []
+    capacity: {
+      totalThroughputLimit: 4000
+    }
     diagnosticLogSettings: {
       enableFullTextQuery: 'False'
     }
@@ -551,6 +554,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
   name: 'default'
   properties: {
     resource: {
+      throughput: 150
       autoscaleSettings: {
         maxThroughput: 4000
       }
