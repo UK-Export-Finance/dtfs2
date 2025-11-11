@@ -546,7 +546,7 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
 // Using minimal autoscale settings to stay within free tier limits
-resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-04-15' = if (capacityMode == 'Provisioned Throughput') {
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-12-01-preview' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
