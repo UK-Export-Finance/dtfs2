@@ -19,7 +19,7 @@ describe(page, () => {
   });
 
   it('should render the description paragraph with email', () => {
-    wrapper.expectText('[data-cy="check-your-email-description"]').toMatch(new RegExp(email));
+    wrapper.expectText('[data-cy="check-your-email-description"]').toRead(`We have sent you a 6-digit access code to your email ${email}.`);
   });
 
   it('should render the access code input', () => {
