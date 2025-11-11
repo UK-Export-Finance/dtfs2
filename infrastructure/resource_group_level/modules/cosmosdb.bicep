@@ -96,7 +96,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     networkAclBypass: 'None'
     disableLocalAuth: false
     enablePartitionMerge: false
-    enablePerRegionPerPartitionAutoscale: false
+    // enablePerRegionPerPartitionAutoscale: false
     minimalTlsVersion: 'Tls12'
     consistencyPolicy: {
       defaultConsistencyLevel: 'Session'
