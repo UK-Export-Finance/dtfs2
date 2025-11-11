@@ -78,7 +78,7 @@ var applicationInsightsName = "${product}-${target}-${version}-${resourceNameFra
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionNumberGenerator 'Microsoft.Web/sites@2025-03-01' = {
+resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
   name: functionNumberGeneratorName
   location: location
   tags: {}
@@ -107,7 +107,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2025-03-01' = {
   }
 }
 
-resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2025-03-01' = {
+resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
   parent: functionNumberGenerator
   name: 'appsettings'
   properties: appSettings
@@ -115,7 +115,7 @@ resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2025-03-
 
 
 // The private endpoint is taken from the function-number-generator/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -140,7 +140,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
   }
 }
 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
