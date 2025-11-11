@@ -548,12 +548,11 @@ resource submissionsDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
 // Using database-level autoscale throughput to match existing infrastructure pattern
-resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-05-01-preview' = if (capacityMode == 'Provisioned Throughput') {
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
     resource: {
-      throughput: 150
       autoscaleSettings: {
         maxThroughput: 4000
       }
