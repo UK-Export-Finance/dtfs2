@@ -64,7 +64,7 @@ var capabilities = capacityMode == 'Provisioned Throughput' ? [
 ]
 
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-05-01' = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
   name: cosmosDbAccountName
   location: location
   tags: {}
