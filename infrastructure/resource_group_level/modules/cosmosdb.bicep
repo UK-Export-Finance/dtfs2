@@ -95,6 +95,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     networkAclBypass: 'None'
     disableLocalAuth: false
     enablePartitionMerge: false
+    enablePerRegionPerPartitionAutoscale: false
     minimalTlsVersion: 'Tls12'
     consistencyPolicy: {
       defaultConsistencyLevel: 'Session'
@@ -123,6 +124,9 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
       }
     }
     networkAclBypassResourceIds: []
+    diagnosticLogSettings: {
+      enableFullTextQuery: 'False'
+    }
     capacity: {
       totalThroughputLimit: 4000
     }
@@ -544,8 +548,8 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
-// Using minimal autoscale settings to stay within free tier limits
-resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-05-01-preview' =  {
+// Using database-level throughput to match existing infrastructure pattern
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-05-01-preview' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
