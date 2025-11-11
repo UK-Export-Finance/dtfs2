@@ -538,12 +538,12 @@ var collectionsArray = [
 ]
 
 // We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
-@batchSize(4)
-resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2025-05-01-preview' = [for collection in collectionsArray: {
-  parent: submissionsDb
-  name: collection.name
-  properties: collection.properties
-}]
+// @batchSize(4)
+// resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2025-05-01-preview' = [for collection in collectionsArray: {
+//   parent: submissionsDb
+//   name: collection.name
+//   properties: collection.properties
+// }]
 
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
