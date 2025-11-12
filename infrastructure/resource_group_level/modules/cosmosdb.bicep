@@ -554,7 +554,7 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
   dependsOn: [
     submissionsDb
   ]
-  name: '${databaseName}'/collection.name
+  name: '${databaseName}/'collection.name
   properties: collection.properties
 }]
 
