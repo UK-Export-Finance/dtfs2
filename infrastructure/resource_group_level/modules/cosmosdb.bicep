@@ -125,7 +125,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     }
     networkAclBypassResourceIds: []
     capacity: {
-      totalThroughputLimit: 10000
+      totalThroughputLimit: 8500
     }
 
   }
@@ -161,9 +161,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -181,9 +178,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -200,9 +194,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -227,9 +218,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -258,9 +246,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -278,9 +263,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -297,9 +279,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -320,9 +299,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -351,9 +327,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -380,9 +353,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -411,9 +381,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -433,9 +400,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -457,9 +421,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -476,9 +437,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -497,9 +455,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -516,9 +471,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -540,9 +492,6 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
   {
@@ -562,9 +511,6 @@ var collectionsArray = [
             }
           }
         ]
-      }
-      options: {
-        throughput: 400 
       }
     }
   }
@@ -586,16 +532,13 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: 400 
-      }
     }
   }
 ]
 
 /* Setting the throughput only makes sense for 'Provisioned Throughput' mode
    Using database-level autoscale throughput to match existing infrastructure pattern */
-/* resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
@@ -603,7 +546,7 @@ var collectionsArray = [
       throughput: 400
     }
   }
-} */
+}
 // We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
 @batchSize(4)
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
