@@ -22,7 +22,7 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 on:
   push:
     branches:
-      - feat/DTFS2-16191-provision-cosmo-database-resource
+      - feat/DTFS2-16188-bicep-templates
     paths:
       - '.github/workflows/bicep_infrastructure.yml'
       - 'infrastructure/resource_group_level/**'
