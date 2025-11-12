@@ -1,19 +1,22 @@
 import { threeDaysAgo, threeMonths, threeMonthsOneDay, today, twoMonths } from '@ukef/dtfs2-common/test-helpers';
-import relative from '../../../relativeURL';
-import CONSTANTS from '../../../../fixtures/constants';
-import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
-import { continueButton } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../pages/application-submission';
+import relative from '../../relativeURL';
+import CONSTANTS from '../../../fixtures/constants';
+import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
+import { continueButton } from '../../partials';
+import applicationPreview from '../../pages/application-preview';
+import unissuedFacilityTable from '../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../pages/application-submission';
 
 let dealId;
 let token;
 let facilityOneId;
+let facilityTwoId;
+let facilityThreeId;
+let facilityFourId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -21,7 +24,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities MIN - change all to issued from unissued table', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table - Feature flag enabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -37,17 +40,20 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
-            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
+            });
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
-            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
+              facilityThreeId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
+            });
 
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
-            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityFourId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
+            });
 
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF).then(() => {
               cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
@@ -72,7 +78,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('should ensure that the correct success messages are displayed after changing facility to issued', () => {
+    it('should ensure that the correct success messages should be displayed after changing facility to issued', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -157,8 +163,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.submitButtonPostApproval().should('exist');
     });
 
+    it('should not display the make a change button for the facilities that have changed to issued', () => {
+      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
+    });
+
     /* should be able to change dates on facility that has changed to issued */
-    it('should ensure that facility table has change links on the changed to issued facilities', () => {
+    it('should ensure that facility table should have change links on the changed to issued facilities', () => {
       // to check date format
       const issuedDate = today.d_MMMM_yyyy;
       const coverStartThreeMonths = threeMonths.d_MMMM_yyyy;

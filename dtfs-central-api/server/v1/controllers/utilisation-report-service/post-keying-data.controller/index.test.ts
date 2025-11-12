@@ -3,7 +3,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UtilisationReportEntity, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UtilisationReportEntity, RECONCILIATION_IN_PROGRESS, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
@@ -75,12 +75,15 @@ describe('post-keying-data.controller', () => {
       const { req, res } = getHttpMocks();
 
       const feeRecords = someFeeRecordsForReport(UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build());
-      feeRecords.forEach((feeRecord) => {
-        // @ts-expect-error We are setting the report to be undefined purposefully
-        // eslint-disable-next-line no-param-reassign
-        delete feeRecord.report;
+      const feeRecordsWithNoReport = feeRecords.map((feeRecord) => {
+        // Test-only mutation: purposely remove report property for error scenario
+        const feeRecordCopy = { ...feeRecord };
+        delete (feeRecordCopy as { report?: unknown }).report;
+        return feeRecordCopy;
       });
-      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy)
+        .calledWith(reportId, [FEE_RECORD_STATUS.MATCH])
+        .mockResolvedValue(feeRecordsWithNoReport as unknown as FeeRecordEntity[]);
 
       // Act
       await postKeyingData(req, res);

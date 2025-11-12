@@ -7,14 +7,14 @@ import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { mainHeading } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 
-const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
+const { unissuedCashFacility, issuedCashFacility } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
 });
 
 let dealId;
 let token;
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facility AIN - change unissued to issued facility', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -29,13 +29,10 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility),
-            );
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });

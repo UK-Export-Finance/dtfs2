@@ -1,3 +1,4 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -56,6 +57,7 @@ context('Amendments - Check your answers change journey', () => {
             cy.makerMakesPortalAmendmentRequest({
               facilityEndDateExists,
               facilityValueExists: true,
+              changedCoverEndDate: tomorrow.date,
               changedFacilityValue: CHANGED_FACILITY_VALUE,
               coverEndDateExists: true,
             });
