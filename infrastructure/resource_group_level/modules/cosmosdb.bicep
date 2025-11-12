@@ -162,7 +162,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -182,7 +182,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -202,7 +202,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -229,7 +229,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -259,7 +259,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -279,7 +279,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -299,7 +299,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -322,7 +322,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -352,7 +352,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -382,7 +382,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -412,7 +412,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -435,7 +435,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -458,7 +458,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -478,7 +478,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -498,7 +498,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -518,7 +518,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -541,7 +541,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -564,7 +564,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -587,7 +587,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 200 
+        throughput: 400 
       }
     }
   }
@@ -600,7 +600,7 @@ var collectionsArray = [
   name: 'default'
   properties: {
     resource: {
-      throughput: 200
+      throughput: 400
     }
   }
 } */
