@@ -541,6 +541,9 @@ var collectionsArray = [
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
   name: collection.name
+  dependsOn: [
+    submissionsDb
+  ]
   properties: collection.properties
 }]
 
