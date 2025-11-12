@@ -41,7 +41,7 @@ param privateEndpointsCidr string
 @description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 // UKEF_VPN_IPS
-param onPremiseNetworkIpsString string 
+param onPremiseNetworkIpsString string
 
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
@@ -428,6 +428,24 @@ module storage 'modules/storage.bicep' = {
   }
 }
 
+  module cosmosDb 'modules/cosmosdb.bicep' = {
+  name: 'mongoDb'
+  params: {
+    location: location
+    product: product
+    target: target
+    version: version
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
+    databaseName: parametersMap[environment].cosmosDb.databaseName
+    allowedIpsString: onPremiseNetworkIpsString
+    capacityMode: parametersMap[environment].cosmosDb.capacityMode
+    backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
+  }
+}
+
+
 module redis 'modules/redis.bicep' = {
   name: 'redis'
   params: {
@@ -493,20 +511,3 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     additionalSecureSettings: functionAdditionalSecureSettings
   }
 } */
-
-module cosmosDb 'modules/cosmosdb.bicep' = {
-  name: 'mongoDb'
-  params: {
-    location: location
-    product: product
-    version: version
-    target: target
-    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
-    databaseName: parametersMap[environment].cosmosDb.databaseName
-    allowedIpsString: onPremiseNetworkIpsString
-    capacityMode: parametersMap[environment].cosmosDb.capacityMode
-    backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
-  }
-}

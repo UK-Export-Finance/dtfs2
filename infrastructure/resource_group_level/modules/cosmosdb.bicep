@@ -13,6 +13,7 @@ param version string
 param allowedIpsString string = ''
 
 // See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
+// Serverless is recommended for development environments to avoid throughput limits
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
 
@@ -21,6 +22,7 @@ param backupPolicyTier string
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
+
 
 // Parse the allowedIpsString parameter safely
 var cleanIpsString = trim(allowedIpsString)
@@ -93,6 +95,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     networkAclBypass: 'None'
     disableLocalAuth: false
     enablePartitionMerge: false
+    // enablePerRegionPerPartitionAutoscale: false
     minimalTlsVersion: 'Tls12'
     consistencyPolicy: {
       defaultConsistencyLevel: 'Session'
@@ -124,6 +127,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     capacity: {
       totalThroughputLimit: 4000
     }
+
   }
 }
 
@@ -176,384 +180,386 @@ var collectionsArray = [
       }
     }
   }
-  {
-    name: 'deals'
-    properties: {
-      resource: {
-        id: 'deals'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'durable-functions-log'
-    properties: {
-      resource: {
-        id: 'durable-functions-log'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'status'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'eligibilityCriteria'
-    properties: {
-      resource: {
-        id: 'eligibilityCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'facilities'
-    properties: {
-      resource: {
-        id: 'facilities'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'feedback'
-    properties: {
-      resource: {
-        id: 'feedback'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'files'
-    properties: {
-      resource: {
-        id: 'files'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'gef-eligibilityCriteria'
-    properties: {
-      resource: {
-        id: 'gef-eligibilityCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'gef-mandatoryCriteriaVersioned'
-    properties: {
-      resource: {
-        id: 'gef-mandatoryCriteriaVersioned'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'mandatoryCriteria'
-    properties: {
-      resource: {
-        id: 'mandatoryCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-deals'
-    properties: {
-      resource: {
-        id: 'tfm-deals'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-facilities'
-    properties: {
-      resource: {
-        id: 'tfm-facilities'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-feedback'
-    properties: {
-      resource: {
-        id: 'tfm-feedback'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-teams'
-    properties: {
-      resource: {
-        id: 'tfm-teams'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-users'
-    properties: {
-      resource: {
-        id: 'tfm-users'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'users'
-    properties: {
-      resource: {
-        id: 'users'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'utilisationData'
-    properties: {
-      resource: {
-        id: 'utilisationData'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'utilisationReports'
-    properties: {
-      resource: {
-        id: 'utilisationReports'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
+  // {
+  //   name: 'deals'
+  //   properties: {
+  //     resource: {
+  //       id: 'deals'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'durable-functions-log'
+  //   properties: {
+  //     resource: {
+  //       id: 'durable-functions-log'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'status'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'eligibilityCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'eligibilityCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'facilities'
+  //   properties: {
+  //     resource: {
+  //       id: 'facilities'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'feedback'
+  //   properties: {
+  //     resource: {
+  //       id: 'feedback'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'files'
+  //   properties: {
+  //     resource: {
+  //       id: 'files'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'gef-eligibilityCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'gef-eligibilityCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'gef-mandatoryCriteriaVersioned'
+  //   properties: {
+  //     resource: {
+  //       id: 'gef-mandatoryCriteriaVersioned'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'mandatoryCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'mandatoryCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-deals'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-deals'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-facilities'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-facilities'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-feedback'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-feedback'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-teams'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-teams'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-users'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-users'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'users'
+  //   properties: {
+  //     resource: {
+  //       id: 'users'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'utilisationData'
+  //   properties: {
+  //     resource: {
+  //       id: 'utilisationData'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'utilisationReports'
+  //   properties: {
+  //     resource: {
+  //       id: 'utilisationReports'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
 ]
 
 // We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
 @batchSize(4)
-resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2025-05-01-preview' = [for collection in collectionsArray: {
+resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
   name: collection.name
+  dependsOn: [
+    submissionsDb
+  ]
   properties: collection.properties
 }]
 
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
-resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2025-05-01-preview' = if (capacityMode == 'Provisioned Throughput') {
+// Using database-level autoscale throughput to match existing infrastructure pattern
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
     resource: {
-      throughput: 400
-      autoscaleSettings: {
-        maxThroughput: 4000
-      }
+      throughput: 200
     }
   }
 }
+
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
