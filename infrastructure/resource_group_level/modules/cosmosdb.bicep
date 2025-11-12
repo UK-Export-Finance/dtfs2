@@ -161,7 +161,6 @@ var collectionsArray = [
           }
         ]
       }
-      throughput:200
     }
   }
   {
