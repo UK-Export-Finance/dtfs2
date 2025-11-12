@@ -32,26 +32,36 @@ describe(page, () => {
   });
 
   it('should render the expiry info paragraph', () => {
-    wrapper.expectText('[data-cy="access-code-expired-info"]').toRead('This code will expire after 30 minutes.');
+    wrapper.expectText('[data-cy="access-code-expiry-info"]').toRead('This code will expire after 30 minutes.');
   });
 
-  it('should render the accessCodeAttempts with the correct message', () => {
+  it('should render the spam/junk info paragraph', () => {
     wrapper.expectElement('[data-cy="access-code-spam-or-junk"]').hasClass('govuk-body');
     wrapper
       .expectElement('[data-cy="access-code-spam-or-junk"]')
       .toContain('Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.');
+  });
 
+  it('should not render the support info paragraph', () => {
     wrapper.expectElement('[data-cy="access-code-support-info"]').notToExist();
+  });
 
+  it('should render the attempts remaining paragraph', () => {
     wrapper.expectElement('[data-cy="access-code-attempts-info"]').toContain('You have 2 attempts remaining.');
+  });
 
+  it('should render the suspend info paragraph', () => {
     wrapper.expectElement('[data-cy="access-code-suspend-info"]').hasClass('govuk-body');
     wrapper
       .expectElement('[data-cy="access-code-suspend-info"]')
       .toContain('If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.');
+  });
 
+  it('should render the sign in button', () => {
     wrapper.expectElement('[data-cy="submit-button"]').toContain('Sign in');
+  });
 
+  it('should render the request code link', () => {
     wrapper.expectElement('[data-cy="request-code-link"]').hasClass('govuk-link');
     wrapper.expectElement('[data-cy="request-code-link"]').toContain('Request a new code');
   });
