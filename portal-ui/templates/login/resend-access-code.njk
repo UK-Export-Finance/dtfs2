@@ -1,0 +1,57 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Resend access code
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l" data-cy="resend-access-code-email-sent-heading">
+        We've sent you another access code
+      </h1>
+
+      <p class="govuk-body" data-cy="resend-access-code-email-sent-description">
+        We've sent you another email with a access code to {{ email }}
+      </p>
+
+      <form method="POST" autocomplete="off">
+        <div class="govuk-form-group govuk-!-width-one-third">
+          {{ govukInput({
+            label: {
+              text: "Enter access code:"
+            },
+            id: "accessCode",
+            name: "accessCode",
+            spellcheck: false,
+            type: "text",
+            autocomplete: "off",
+            attributes: {
+              "placeholder": "e.g. 123A5C"
+            }
+          }) }}
+        </div>
+
+        <p class="govuk-body" data-cy="resend-access-code-email-sent-expiry-info">
+          This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.
+        </p>
+
+        {{ renderAccessCodeAttempts.render({
+          isSupportInfo: true,
+          attemptsLeft: attemptsRemaining,
+          requestNewCodeUrl: '/login/request-new-code',
+          isAccessCodeLink: false
+        }) }}
+      </form>
+     
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Contact us</h2>
+  {% include "_partials/contact.njk" %}
+{% endblock %}
