@@ -551,7 +551,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
 @batchSize(4)
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
-  name: concat(databaseName, '/', collection.name)
+  name: collection.name
   properties: collection.properties
 }]
 
