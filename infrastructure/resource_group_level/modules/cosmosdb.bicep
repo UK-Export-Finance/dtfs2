@@ -538,9 +538,8 @@ var collectionsArray = [
 ]
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
-// Create database-level autoscale throughput before collections to avoid a race
-// where the service reports throughputSettings as NotFound. Collections will
-// explicitly depend on this when provisioned throughput is used.
+// Create database-level autoscale throughput after collections to ensure the database
+// is fully provisioned before applying throughput settings.
 resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2023-04-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
@@ -551,6 +550,9 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
       }
     }
   }
+  dependsOn: [
+    collections
+  ]
 }
 
 
@@ -560,10 +562,7 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
   parent: submissionsDb
   name: collection.name
   properties: collection.properties
-  // Ensure collections are created after the database-level throughput when using
-  // provisioned throughput. If Serverless is used the throughput resource doesn't exist
-  // and the empty array is ignored by Bicep.
-  dependsOn: capacityMode == 'Provisioned Throughput' ? [defaultThroughputSettings] : []
+  // Collections don't need to depend on throughput since we create throughput after collections
 }]
 
 
