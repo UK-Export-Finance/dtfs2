@@ -181,360 +181,360 @@ var collectionsArray = [
       }
     }
   }
-  {
-    name: 'deals'
-    properties: {
-      resource: {
-        id: 'deals'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'durable-functions-log'
-    properties: {
-      resource: {
-        id: 'durable-functions-log'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'status'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'eligibilityCriteria'
-    properties: {
-      resource: {
-        id: 'eligibilityCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'facilities'
-    properties: {
-      resource: {
-        id: 'facilities'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'feedback'
-    properties: {
-      resource: {
-        id: 'feedback'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'files'
-    properties: {
-      resource: {
-        id: 'files'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'gef-eligibilityCriteria'
-    properties: {
-      resource: {
-        id: 'gef-eligibilityCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'gef-mandatoryCriteriaVersioned'
-    properties: {
-      resource: {
-        id: 'gef-mandatoryCriteriaVersioned'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'mandatoryCriteria'
-    properties: {
-      resource: {
-        id: 'mandatoryCriteria'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-          {
-            key: {
-              keys: [
-                'version'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-deals'
-    properties: {
-      resource: {
-        id: 'tfm-deals'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-facilities'
-    properties: {
-      resource: {
-        id: 'tfm-facilities'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-feedback'
-    properties: {
-      resource: {
-        id: 'tfm-feedback'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-teams'
-    properties: {
-      resource: {
-        id: 'tfm-teams'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'tfm-users'
-    properties: {
-      resource: {
-        id: 'tfm-users'
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'users'
-    properties: {
-      resource: {
-        id: 'users'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'utilisationData'
-    properties: {
-      resource: {
-        id: 'utilisationData'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  {
-    name: 'utilisationReports'
-    properties: {
-      resource: {
-        id: 'utilisationReports'
-        shardKey: {
-          _id: 'Hash'
-        }
-        indexes: [
-          {
-            key: {
-              keys: [
-                '_id'
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
+  // {
+  //   name: 'deals'
+  //   properties: {
+  //     resource: {
+  //       id: 'deals'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'durable-functions-log'
+  //   properties: {
+  //     resource: {
+  //       id: 'durable-functions-log'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'status'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'eligibilityCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'eligibilityCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'facilities'
+  //   properties: {
+  //     resource: {
+  //       id: 'facilities'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'feedback'
+  //   properties: {
+  //     resource: {
+  //       id: 'feedback'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'files'
+  //   properties: {
+  //     resource: {
+  //       id: 'files'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'gef-eligibilityCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'gef-eligibilityCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'gef-mandatoryCriteriaVersioned'
+  //   properties: {
+  //     resource: {
+  //       id: 'gef-mandatoryCriteriaVersioned'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'mandatoryCriteria'
+  //   properties: {
+  //     resource: {
+  //       id: 'mandatoryCriteria'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //         {
+  //           key: {
+  //             keys: [
+  //               'version'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-deals'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-deals'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-facilities'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-facilities'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-feedback'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-feedback'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-teams'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-teams'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'tfm-users'
+  //   properties: {
+  //     resource: {
+  //       id: 'tfm-users'
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'users'
+  //   properties: {
+  //     resource: {
+  //       id: 'users'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'utilisationData'
+  //   properties: {
+  //     resource: {
+  //       id: 'utilisationData'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
+  // {
+  //   name: 'utilisationReports'
+  //   properties: {
+  //     resource: {
+  //       id: 'utilisationReports'
+  //       shardKey: {
+  //         _id: 'Hash'
+  //       }
+  //       indexes: [
+  //         {
+  //           key: {
+  //             keys: [
+  //               '_id'
+  //             ]
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // }
 ]
 
 // We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
