@@ -21,6 +21,10 @@ param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
 
+@description('When using Provisioned Throughput this sets the database autoscale max RU/s. Set to a value within your account quota.')
+@minValue(400)
+param autoscaleMaxThroughput int = 4000
+
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
@@ -533,31 +537,34 @@ var collectionsArray = [
   }
 ]
 
-// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
-@batchSize(4)
-resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = [for collection in collectionsArray: {
-  parent: submissionsDb
-  name: collection.name
-  properties: collection.properties
-}]
-
-
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
-// Using database-level autoscale throughput to match existing infrastructure pattern
+// Create database-level autoscale throughput before collections to avoid a race
+// where the service reports throughputSettings as NotFound. Collections will
+// explicitly depend on this when provisioned throughput is used.
 resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2023-04-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
     resource: {
       autoscaleSettings: {
-        maxThroughput: 4000
+        maxThroughput: autoscaleMaxThroughput
       }
     }
   }
-  dependsOn: [
-    collections
-  ]
 }
+
+
+// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
+@batchSize(4)
+resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = [for collection in collectionsArray: {
+  parent: submissionsDb
+  name: collection.name
+  properties: collection.properties
+  // Ensure collections are created after the database-level throughput when using
+  // provisioned throughput. If Serverless is used the throughput resource doesn't exist
+  // and the empty array is ignored by Bicep.
+  dependsOn: capacityMode == 'Provisioned Throughput' ? [defaultThroughputSettings] : []
+}]
 
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
