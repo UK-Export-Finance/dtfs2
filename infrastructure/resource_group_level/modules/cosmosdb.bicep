@@ -547,17 +547,15 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
 // Using database-level autoscale throughput to match existing infrastructure pattern
-// resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
-//   parent: submissionsDb
-//   name: 'default'
-//   properties: {
-//     resource: {
-//       autoscaleSettings: {
-//         maxThroughput: 4000
-//       }
-//     }
-//   }
-// }
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
+  parent: submissionsDb
+  name: 'default'
+  properties: {
+    resource: {
+      throughput: 200
+    }
+  }
+}
 
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
