@@ -161,6 +161,7 @@ var collectionsArray = [
           }
         ]
       }
+      throughput:200
     }
   }
   {
@@ -536,18 +537,6 @@ var collectionsArray = [
   // }
 ]
 
-// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
-@batchSize(4)
-resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
-  parent: submissionsDb
-  name: collection.name
-  dependsOn: [
-    submissionsDb
-  ]
-  properties: collection.properties
-}]
-
-
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
 // Using database-level autoscale throughput to match existing infrastructure pattern
 resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
@@ -559,6 +548,13 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
     }
   }
 }
+// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
+@batchSize(4)
+resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
+  parent: submissionsDb
+  name: collection.name
+  properties: collection.properties
+}]
 
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
