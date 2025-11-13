@@ -34,15 +34,21 @@ var appName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
+// Application Insights configuration - only include if enabled
+var appInsightsConfig = deployApplicationInsights ? {
+  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
+} : {}
+
+// Self hostname configuration - only include if specified
+var selfHostnameConfig = selfHostnameEnvironmentVariable == '' ? {} : {
+  '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
+}
+
 var appSettingsWithAppInsights = union(
   appSettings,
-  deployApplicationInsights && applicationInsights != null ? {
-    APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-    } : {},
-    selfHostnameEnvironmentVariable == '' ? {} : {
-      '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
-    }
-  )
+  appInsightsConfig,
+  selfHostnameConfig
+)
 
 resource site 'Microsoft.Web/sites@2024-04-01' = {
   name: appName
