@@ -31,7 +31,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' e
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
-var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
+// var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
@@ -86,8 +86,7 @@ module externalApiWebapp 'webapp.bicep' = {
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
-    dockerImageName: dockerImageName
-    environment: environment
+    // dockerImageName: dockerImageName
     ftpsState: 'FtpsOnly'
     location: location
     product: product
