@@ -75,8 +75,8 @@ param APIM_MDM_URL string
 @secure()
 param APIM_MDM_VALUE string
 // param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
-// @secure()
-// param DTFS_CENTRAL_API_KEY string
+@secure()
+param DTFS_CENTRAL_API_KEY string
 @secure()
 param CORS_ORIGIN string
 @secure()
