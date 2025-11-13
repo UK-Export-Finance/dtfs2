@@ -1,6 +1,8 @@
 param resourceNameFragment string
 param location string
-param environment string
+param product string
+param target string
+param version string
 
 param appServicePlanId string
 param dockerImageName string
