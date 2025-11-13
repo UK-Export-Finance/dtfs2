@@ -21,7 +21,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -69,7 +69,7 @@ var appSettings = union(settings, staticSettings, secureSettings, additionalSett
 
 var connectionStrings = { }
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' existing = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' existing = {
   name: cosmosDbAccountName
 }
 

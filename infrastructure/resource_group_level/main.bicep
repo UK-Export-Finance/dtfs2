@@ -74,6 +74,10 @@ param APIM_MDM_URL string
 @description('different in staging and dev')
 @secure()
 param APIM_MDM_VALUE string 
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
+@secure()
+param DTFS_CENTRAL_API_KEY string
+
 
 var storageLocations = [
   'uksouth'
@@ -83,12 +87,12 @@ var storageLocations = [
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
-// This parameters map holds the per-environment settings.
-// Some notes from initial networking conversations:
-// Dev uses 172.16.4x.xx
-// Demo (legacy?) uses 172.16.6x.xx
-// Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
-// Feature can use 172.16.2x.xx
+/* This parameters map holds the per-environment settings.
+Some notes from initial networking conversations:
+Dev uses 172.16.4x.xx
+Demo (legacy?) uses 172.16.6x.xx
+Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
+Feature can use 172.16.2x.xx */
 var parametersMap = {
   dev: {
     acr: {
@@ -312,6 +316,14 @@ var functionSecureSettings = {
 Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
 var functionAdditionalSecureSettings = { }
 
+var dtfsCentralApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+}
+var dtfsCentralApiSecureSettings = {}
+var dtfsCentralApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+}
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.
@@ -559,5 +571,25 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
+  }
+}
+
+module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
+  name: 'dtfsCentralApi'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: dtfsCentralApiSettings
+    secureSettings: dtfsCentralApiSecureSettings
+    additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
   }
 }
