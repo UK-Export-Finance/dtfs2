@@ -52,3 +52,4 @@ export * from './number-generator';
 export * from './cookie';
 export * from './crypto';
 export * from './request';
+export * from './access-code';

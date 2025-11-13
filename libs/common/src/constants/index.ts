@@ -54,5 +54,6 @@ export * from './cookie';
 export * from './redis';
 export * from './csrf';
 export * from './crypto';
+export * from './access-code';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
