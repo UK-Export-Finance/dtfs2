@@ -44,7 +44,7 @@ var appSettingsWithAppInsights = union(
     }
   )
 
-resource site 'Microsoft.Web/sites@2025-03-01' = {
+resource site 'Microsoft.Web/sites@2024-04-01' = {
   name: appName
   location: location
   tags: {}
