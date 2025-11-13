@@ -89,7 +89,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   properties: {
     httpsOnly: false
     serverFarmId: appServicePlanId
-    state: state
+    //state: state
     siteConfig: {
       // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
