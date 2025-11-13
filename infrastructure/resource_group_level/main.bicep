@@ -77,6 +77,28 @@ param APIM_MDM_VALUE string
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 @secure()
 param DTFS_CENTRAL_API_KEY string
+@secure()
+param CORS_ORIGIN string
+@secure()
+param COMPANIES_HOUSE_API_URL string
+@secure()
+param ORDNANCE_SURVEY_API_URL string
+@secure()
+param APIM_ESTORE_URL string
+@secure()
+param APIM_ESTORE_KEY string
+@secure()
+param APIM_ESTORE_VALUE string
+@secure()
+param COMPANIES_HOUSE_API_KEY string
+@secure()
+param ORDNANCE_SURVEY_API_KEY string
+@secure()
+param GOV_NOTIFY_API_KEY string
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+@secure()
+param EXTERNAL_API_KEY string
 
 
 var storageLocations = [
@@ -316,14 +338,14 @@ var functionSecureSettings = {
 Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
 var functionAdditionalSecureSettings = { }
 
-var dtfsCentralApiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
-}
-var dtfsCentralApiSecureSettings = {}
-var dtfsCentralApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-}
+// var dtfsCentralApiSettings = {
+//   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+//   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+// }
+// var dtfsCentralApiSecureSettings = {}
+// var dtfsCentralApiAdditionalSecureSetting = {
+//   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+// }
 
 var externalApiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
