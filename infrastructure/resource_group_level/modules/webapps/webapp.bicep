@@ -30,7 +30,7 @@ param deployApplicationInsights bool
 
 param selfHostnameEnvironmentVariable string = ''
 
-var appName = '${product}-${environment}-${resourceNameFragment}'
+var appName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
 
@@ -45,7 +45,7 @@ var appSettingsWithAppInsights = union(
   )
 
 resource site 'Microsoft.Web/sites@2025-03-01' = {
-  name: appName-${product}-${target}-${version}
+  name: appName
   location: location
   tags: {}
   kind: 'app,linux,container'

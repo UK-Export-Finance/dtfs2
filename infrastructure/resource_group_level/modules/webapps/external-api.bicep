@@ -1,7 +1,5 @@
 param location string
-param product string
-param target string
-param version string
+param environment string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
