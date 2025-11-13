@@ -14,8 +14,6 @@ param allowedIpsString string
 @secure()
 param azurePortalIpsString string
 
-/* See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
-Serverless is recommended for development environments to avoid throughput limits */
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
 
@@ -28,22 +26,6 @@ var privateEndpointName = '${product}-${target}-${version}-mongo'
 
 var allowedIps = json(allowedIpsString)
 var azureAllowedIps = json(azurePortalIpsString)
-
- /* On activating "Allow access from Azure Portal":
-   https://github.com/Azure/azure-cli/issues/7495 ->
-   https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-   As mentioned above, adding the following is equivalent to checking "Allow access from Azure Portal" "Accept connections from within public Azure datacenters" in the portal. */
-/*var azurePortalIps = [
-  '104.42.195.92'
-  '40.76.54.131'
-  '52.176.6.30'
-  '52.169.50.45'
-  '52.187.184.26'
-] */
-
-/* // As mentioned above, adding the following is equivalent to checking "Accept connections from within public Azure datacenters" in the portal.
-// We need this for Azure functions.
-var acceptPublicAzureDatacentersIp = ['0.0.0.0'] */
 
 var allAllowedIps = concat(allowedIps, azureAllowedIps)
 
@@ -93,7 +75,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     networkAclBypass: 'None'
     disableLocalAuth: false
     enablePartitionMerge: false
-    // enablePerRegionPerPartitionAutoscale: false
     minimalTlsVersion: 'Tls12'
     consistencyPolicy: {
       defaultConsistencyLevel: 'Session'
@@ -591,18 +572,6 @@ var collectionsArray = [
   }
 ]
 
-/* Setting the throughput only makes sense for 'Provisioned Throughput' mode
-   Using database-level autoscale throughput to match existing infrastructure pattern */
-/* resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-11-15' = if (capacityMode == 'Provisioned Throughput') {
-  parent: submissionsDb
-  name: 'default'
-  properties: {
-    resource: {
-      throughput: 400
-    }
-  }
-} */
-// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
 @batchSize(4)
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
@@ -611,7 +580,7 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 }]
 
 
-// The private endpoint is taken from the cosmosdb/private-endpoint export
+/*  The private endpoint is taken from the cosmosdb/private-endpoint export */
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
@@ -633,11 +602,10 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
       id: privateEndpointsSubnetId
     }
     ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
 
-// Adding the Zone group sets up automatic DNS for the private link.
+/* Adding the Zone group sets up automatic DNS for the private link. */
 resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
   parent: privateEndpoint
   name: 'default'

@@ -43,6 +43,27 @@
       },
       "azurePortalIpsString": {
         "value": "{{AZ_PORTAL_IPS}}"
+      },
+      "RATE_LIMIT_THRESHOLD": {
+        "value": "{{RATE_LIMIT_THRESHOLD}}"
+      },
+      "APIM_TFS_KEY": {
+        "value": "{{APIM_TFS_KEY}}"
+      },
+      "APIM_TFS_VALUE": {
+        "value": "{{APIM_TFS_VALUE}}"
+      },
+      "APIM_TFS_URL": {
+        "value": "{{APIM_TFS_URL}}"
+      },
+      "APIM_MDM_KEY": {
+        "value": "{{APIM_MDM_KEY}}"
+      },
+      "APIM_MDM_URL": {
+        "value": "{{APIM_MDM_URL}}"
+      },
+      "APIM_MDM_VALUE": {
+        "value": "{{APIM_MDM_VALUE}}"
       }
     }
 }
