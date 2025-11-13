@@ -1,8 +1,8 @@
 param location string
 param environment string
 
-@allowed(['Stopped', 'Running'])
-param state string
+/* @allowed(['Stopped', 'Running'])
+param state string */
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
