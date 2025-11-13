@@ -73,6 +73,33 @@
       },
       "ORDNANCE_SURVEY_API_URL": {
         "value": "{{ORDNANCE_SURVEY_API_URL}}"
+      },
+      "CORS_ORIGIN": {
+        "value": "{{CORS_ORIGIN}}"
+      },
+      "APIM_ESTORE_URL": {
+        "value": "{{APIM_ESTORE_URL}}"
+      },
+      "APIM_ESTORE_KEY": {
+        "value": "{{APIM_ESTORE_KEY}}"
+      },
+      "APIM_ESTORE_VALUE": {
+        "value": "{{APIM_ESTORE_VALUE}}"
+      },
+      "COMPANIES_HOUSE_API_KEY": {
+        "value": "{{COMPANIES_HOUSE_API_KEY}}"
+      },
+      "ORDNANCE_SURVEY_API_KEY": {
+        "value": "{{ORDNANCE_SURVEY_API_KEY}}"
+      },
+      "GOV_NOTIFY_API_KEY": {
+        "value": "{{GOV_NOTIFY_API_KEY}}"
+      },
+      "GOV_NOTIFY_EMAIL_RECIPIENT": {
+        "value": "{{GOV_NOTIFY_EMAIL_RECIPIENT}}"
+      },
+      "EXTERNAL_API_KEY": {
+        "value": "{{EXTERNAL_API_KEY}}"
       }
     }
 }

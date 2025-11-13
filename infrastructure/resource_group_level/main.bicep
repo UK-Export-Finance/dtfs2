@@ -330,6 +330,27 @@ var externalApiSettings = {
     COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
     ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
 }
+
+var externalApiSecureSettings = {
+  CORS_ORIGIN: CORS_ORIGIN
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_ESTORE_URL: APIM_ESTORE_URL
+  APIM_ESTORE_KEY: APIM_ESTORE_KEY
+  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+
+var externalApiAdditionalSecureSettings = {
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+}
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.
@@ -605,22 +626,22 @@ module externalApi 'modules/webapps/external-api.bicep' = {
   }
 }
 
-module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
-  name: 'dtfsCentralApi'
-  params: {
-    location: location
-    environment: environment
-    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-    appServicePlanId: appServicePlan.id
-    containerRegistryName: containerRegistry.name
-    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
-    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: dtfsCentralApiSettings
-    secureSettings: dtfsCentralApiSecureSettings
-    additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
-  }
-}
+// module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
+//   name: 'dtfsCentralApi'
+//   params: {
+//     location: location
+//     environment: environment
+//     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+//     appServicePlanId: appServicePlan.id
+//     containerRegistryName: containerRegistry.name
+//     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+//     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+//     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+//     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+//     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+//     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+//     settings: dtfsCentralApiSettings
+//     secureSettings: dtfsCentralApiSecureSettings
+//     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
+//   }
+// }
