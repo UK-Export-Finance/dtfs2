@@ -1,8 +1,6 @@
 param resourceNameFragment string
 param location string
-param product string
-param target string
-param version string
+param environment string
 
 param appServicePlanId string
 param dockerImageName string
@@ -75,19 +73,19 @@ resource site 'Microsoft.Web/sites@2025-03-01' = {
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(appSettings)) {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStrings
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
   name: privateEndpointName-${product}-${target}-${version}
   location: location
   tags: {}
@@ -113,7 +111,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
 }
 
 // Adding the Zone group sets up automatic DNS for the private link.
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
