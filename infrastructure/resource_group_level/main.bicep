@@ -511,7 +511,6 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     version: version
     target: target
     location: location
-    state: parametersMap[environment].functionAcbs.state
     containerRegistryName: containerRegistry.name
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
