@@ -503,11 +503,13 @@ module clamAv 'modules/clamav-aca.bicep' = {
   }
 }
 
-module externalApi 'modules/webapps/external-api.bicep' = {
-  name: 'externalApi'
+
+
+module functionNumberGenerator 'modules/function-number-generator.bicep' = {
+  name: 'functionNumberGenerator'
   params: {
-    location: location
     environment: environment
+    location: location
     product: product
     version: version
     target: target
@@ -528,12 +530,11 @@ module externalApi 'modules/webapps/external-api.bicep' = {
   }
 }
 
-
-module functionNumberGenerator 'modules/function-number-generator.bicep' = {
-  name: 'functionNumberGenerator'
+module externalApi 'modules/webapps/external-api.bicep' = {
+  name: 'externalApi'
   params: {
-    environment: environment
     location: location
+    environment: environment
     product: product
     version: version
     target: target
