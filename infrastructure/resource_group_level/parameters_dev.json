@@ -67,6 +67,12 @@
       },
       "DTFS_CENTRAL_API_KEY": {
         "value": "{{DTFS_CENTRAL_API_KEY}}"
+      },
+      "COMPANIES_HOUSE_API_URL": {
+        "value": "{{COMPANIES_HOUSE_API_URL}}"
+      },
+      "ORDNANCE_SURVEY_API_URL": {
+        "value": "{{ORDNANCE_SURVEY_API_URL}}"
       }
     }
 }

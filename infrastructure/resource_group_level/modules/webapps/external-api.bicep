@@ -91,6 +91,9 @@ module externalApiWebapp 'webapp.bicep' = {
     environment: environment
     ftpsState: 'FtpsOnly'
     location: location
+    product: product
+    target: target
+    version: version
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment

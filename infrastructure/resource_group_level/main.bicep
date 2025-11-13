@@ -324,6 +324,12 @@ var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
 }
+
+var externalApiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
+}
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.

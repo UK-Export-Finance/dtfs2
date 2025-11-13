@@ -117,6 +117,10 @@ jobs:
           sed -i "s|{{APIM_MDM_KEY}}|${{ secrets.APIM_MDM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{APIM_MDM_URL}}|${{ secrets.APIM_MDM_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{APIM_MDM_VALUE}}|${{ secrets.APIM_MDM_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{APIM_MDM_KEY_VAULT_NAME}}|${{ secrets.APIM_MDM_KEY_VAULT_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{COMPANIES_HOUSE_API_URL}}|${{ secrets.COMPANIES_HOUSE_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ORDNANCE_SURVEY_API_URL}}|${{ secrets.ORDNANCE_SURVEY_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{RATE_LIMIT_THRESHOLD}}|${{ secrets.RATE_LIMIT_THRESHOLD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
 
       - name: Install Bicep
         run: |
