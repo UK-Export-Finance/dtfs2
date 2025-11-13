@@ -64,6 +64,9 @@
       },
       "APIM_MDM_VALUE": {
         "value": "{{APIM_MDM_VALUE}}"
+      },
+      "DTFS_CENTRAL_API_KEY": {
+        "value": "{{DTFS_CENTRAL_API_KEY}}"
       }
     }
 }
