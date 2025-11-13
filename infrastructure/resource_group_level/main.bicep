@@ -297,15 +297,15 @@ var parametersMap = {
   }
 }
 var functionSettings = {
- RATE_LIMIT_THRESHOLD : '${ RATE_LIMIT_THRESHOLD }'
+ RATE_LIMIT_THRESHOLD : ${ RATE_LIMIT_THRESHOLD }
 }
 var functionSecureSettings = {
-  APIM_TFS_KEY: '${ APIM_TFS_KEY }'
-  APIM_TFS_VALUE: '${ APIM_TFS_VALUE }'
-  APIM_TFS_URL: '${ APIM_TFS_URL }'
-  APIM_MDM_KEY: '${ APIM_MDM_KEY }'
-  APIM_MDM_URL: '${ APIM_MDM_URL }'
-  APIM_MDM_VALUE: '${ APIM_MDM_VALUE }' 
+  APIM_TFS_KEY: ${ APIM_TFS_KEY }
+  APIM_TFS_VALUE: ${ APIM_TFS_VALUE }
+  APIM_TFS_URL: ${ APIM_TFS_URL }
+  APIM_MDM_KEY: ${ APIM_MDM_KEY }
+  APIM_MDM_URL: ${ APIM_MDM_URL }
+  APIM_MDM_VALUE: ${ APIM_MDM_VALUE } 
 }
 
 /* These values are taken from an export of Configuration on Dev
