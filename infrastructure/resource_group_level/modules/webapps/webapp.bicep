@@ -1,7 +1,5 @@
 param resourceNameFragment string
 param location string
-param environment string
-
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string // TODO:DTFS2-6422 make consistent?
@@ -31,8 +29,8 @@ param deployApplicationInsights bool
 param selfHostnameEnvironmentVariable string = ''
 
 var appName = '${product}-${target}-${version}-${resourceNameFragment}'
-var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
-var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
 var appSettingsWithAppInsights = union(
   appSettings,
@@ -86,7 +84,7 @@ resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!
 }
 
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
-  name: privateEndpointName-${product}-${target}-${version}
+  name: privateEndpointName
   location: location
   tags: {}
   properties: {
@@ -127,7 +125,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
-  name: applicationInsightsName-${product}-${target}-${version}
+  name: applicationInsightsName
   location: location
   tags: {}
   kind: 'web'
