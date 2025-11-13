@@ -38,10 +38,12 @@ param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string')
+@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
 @secure()
-// UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
+@description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
+@secure()
+param azurePortalIpsString string
 
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
@@ -440,6 +442,7 @@ module storage 'modules/storage.bicep' = {
     mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
     databaseName: parametersMap[environment].cosmosDb.databaseName
     allowedIpsString: onPremiseNetworkIpsString
+    azurePortalIpsString: azurePortalIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
