@@ -119,7 +119,7 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
 
 
 // The private endpoint is taken from the function-acbs/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
   tags: {}

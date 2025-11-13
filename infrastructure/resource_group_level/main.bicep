@@ -59,6 +59,22 @@ var shareDeleteRetentionEnabled = false
 // as they are the same for all environments and don't look like they will change.
 // The following parameters come from GH environment variables, rather than secrets
 // TODO:FN-938 check is ukwest is used anywhere
+@secure()
+param RATE_LIMIT_THRESHOLD string
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_KEY string
+@secure()
+param APIM_MDM_URL string
+@description('different in staging and dev')
+@secure()
+param APIM_MDM_VALUE string 
+
 var storageLocations = [
   'uksouth'
   'ukwest'
@@ -280,6 +296,21 @@ var parametersMap = {
     }
   }
 }
+var functionSettings = {
+ RATE_LIMIT_THRESHOLD : '${ RATE_LIMIT_THRESHOLD }'
+}
+var functionSecureSettings = {
+  APIM_TFS_KEY: '${ APIM_TFS_KEY }'
+  APIM_TFS_VALUE: '${ APIM_TFS_VALUE }'
+  APIM_TFS_URL: '${ APIM_TFS_URL }'
+  APIM_MDM_KEY: '${ APIM_MDM_KEY }'
+  APIM_MDM_URL: '${ APIM_MDM_URL }'
+  APIM_MDM_VALUE: '${ APIM_MDM_VALUE }' 
+}
+
+/* These values are taken from an export of Configuration on Dev
+Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
+var functionAdditionalSecureSettings = { }
 
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
@@ -472,7 +503,7 @@ module clamAv 'modules/clamav-aca.bicep' = {
   }
 }
 
-/* module functionAcbs 'modules/function-acbs.bicep' = {
+module functionAcbs 'modules/function-acbs.bicep' = {
   name: 'functionAcbs'
   params: {
     environment: environment
@@ -513,4 +544,4 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
   }
-} */
+}
