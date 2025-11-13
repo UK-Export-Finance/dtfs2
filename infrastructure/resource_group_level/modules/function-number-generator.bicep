@@ -70,9 +70,9 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionNumberGeneratorName = "${product}-${target}-${version}-${resourceNameFragment}"
-var privateEndpointName = "${product}-${target}-${version}-${resourceNameFragment}"
-var applicationInsightsName = "${product}-${target}-${version}-${resourceNameFragment}"
+var functionNumberGeneratorName = '${product}-${target}-${version}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example
