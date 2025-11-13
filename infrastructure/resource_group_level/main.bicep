@@ -38,10 +38,12 @@ param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string')
+@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
 @secure()
-// UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
+@description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
+@secure()
+param azurePortalIpsString string
 
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
@@ -57,6 +59,22 @@ var shareDeleteRetentionEnabled = false
 // as they are the same for all environments and don't look like they will change.
 // The following parameters come from GH environment variables, rather than secrets
 // TODO:FN-938 check is ukwest is used anywhere
+@secure()
+param RATE_LIMIT_THRESHOLD string
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_KEY string
+@secure()
+param APIM_MDM_URL string
+@description('different in staging and dev')
+@secure()
+param APIM_MDM_VALUE string
+
 var storageLocations = [
   'uksouth'
   'ukwest'
@@ -278,6 +296,21 @@ var parametersMap = {
     }
   }
 }
+var functionSettings = {
+ RATE_LIMIT_THRESHOLD : RATE_LIMIT_THRESHOLD
+}
+var functionSecureSettings = {
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+}
+
+/* These values are taken from an export of Configuration on Dev
+Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
+var functionAdditionalSecureSettings = { }
 
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
@@ -440,6 +473,7 @@ module storage 'modules/storage.bicep' = {
     mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
     databaseName: parametersMap[environment].cosmosDb.databaseName
     allowedIpsString: onPremiseNetworkIpsString
+    azurePortalIpsString: azurePortalIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
@@ -472,6 +506,31 @@ module clamAv 'modules/clamav-aca.bicep' = {
 module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
   params: {
+module functionAcbs 'modules/function-acbs.bicep' = {
+  name: 'functionAcbs'
+  params: {
+    environment: environment
+    product: product
+    version: version
+    target: target
+    location: location
+    containerRegistryName: containerRegistry.name
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: functionSettings
+    secureSettings: functionSecureSettings
+    additionalSecureSettings: functionAdditionalSecureSettings
+  }
+}
+
+module functionNumberGenerator 'modules/function-number-generator.bicep' = {
+  name: 'functionNumberGenerator'
+  params: {
+    environment: environment
     location: location
     product: product
     version: version

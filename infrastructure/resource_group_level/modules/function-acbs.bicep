@@ -1,8 +1,8 @@
 param location string
 param environment string
 
-@allowed(['Stopped', 'Running'])
-param state string
+/* @allowed(['Stopped', 'Running'])
+param state string */
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -89,7 +89,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   properties: {
     httpsOnly: false
     serverFarmId: appServicePlanId
-    state: state
+    //state: state
     siteConfig: {
       // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
@@ -104,7 +104,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
       // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
+      remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
@@ -119,7 +119,7 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
 
 
 // The private endpoint is taken from the function-acbs/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
   tags: {}

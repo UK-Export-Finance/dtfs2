@@ -24,7 +24,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -36,7 +36,7 @@ var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragm
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
 }
 
@@ -70,9 +70,9 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionNumberGeneratorName = "${product}-${target}-${version}-${resourceNameFragment}"
-var privateEndpointName = "${product}-${target}-${version}-${resourceNameFragment}"
-var applicationInsightsName = "${product}-${target}-${version}-${resourceNameFragment}"
+var functionNumberGeneratorName = '${product}-${target}-${version}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example
@@ -100,7 +100,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
       // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
+      remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
@@ -115,7 +115,7 @@ resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2024-11-
 
 
 // The private endpoint is taken from the function-number-generator/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
   tags: {}
