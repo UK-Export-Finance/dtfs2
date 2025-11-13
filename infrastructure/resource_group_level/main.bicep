@@ -469,45 +469,24 @@ module clamAv 'modules/clamav-aca.bicep' = {
   }
 }
 
-/* module functionAcbs 'modules/function-acbs.bicep' = {
-  name: 'functionAcbs'
+module externalApi 'modules/webapps/external-api.bicep' = {
+  name: 'externalApi'
   params: {
-    environment: environment
-    product: product
-    version: version
-    target: target
     location: location
-    state: parametersMap[environment].functionAcbs.state
-    containerRegistryName: containerRegistry.name
+    environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    storageAccountName: storage.outputs.storageAccountName
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: functionSettings
-    secureSettings: functionSecureSettings
-    additionalSecureSettings: functionAdditionalSecureSettings
+    settings: externalApiSettings
+    secureSettings: externalApiSecureSettings
+    additionalSecureSettings: externalApiAdditionalSecureSettings
   }
 }
-
-module functionNumberGenerator 'modules/function-number-generator.bicep' = {
-  name: 'functionNumberGenerator'
-  params: {
-    environment: environment
-    location: location
-    product: product
-    version: version
-    target: target
-    containerRegistryName: containerRegistry.name
-    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-    appServicePlanId: appServicePlan.id
-    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    storageAccountName: storage.outputs.storageAccountName
-    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: functionSettings
-    secureSettings: functionSecureSettings
-    additionalSecureSettings: functionAdditionalSecureSettings
-  }
-} */
