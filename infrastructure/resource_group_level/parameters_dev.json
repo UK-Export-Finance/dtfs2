@@ -40,6 +40,9 @@
       },
       "onPremiseNetworkIpsString": {
         "value": "{{UKEF_VPN_IPS}}"
+      },
+      "azurePortalIpsString": {
+        "value": "{{AZ_PORTAL_IPS}}"
       }
     }
 }

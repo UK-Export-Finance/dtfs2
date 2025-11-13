@@ -10,10 +10,12 @@ param version string
 
 @description('Network IPs to permit access to CosmosDB')
 @secure()
-param allowedIpsString string = ''
+param allowedIpsString string
+@secure()
+param azurePortalIpsString string
 
-// See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
-// Serverless is recommended for development environments to avoid throughput limits
+/* See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
+Serverless is recommended for development environments to avoid throughput limits */
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
 
@@ -24,30 +26,26 @@ var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
 
 
-// Parse the allowedIpsString parameter safely
-var cleanIpsString = trim(allowedIpsString)
-// Validate that it looks like a JSON array format before parsing
-var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
-// Parse JSON if valid format, otherwise use empty array
-var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
+var allowedIps = json(allowedIpsString)
+var azureAllowedIps = json(azurePortalIpsString)
 
-// On activating "Allow access from Azure Portal":
-// https://github.com/Azure/azure-cli/issues/7495 ->
-// https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-// As mentioned above, adding the following is equivalent to checking "Allow access from Azure Portal" "Accept connections from within public Azure datacenters" in the portal.
-var azurePortalIps = [
+ /* On activating "Allow access from Azure Portal":
+   https://github.com/Azure/azure-cli/issues/7495 ->
+   https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+   As mentioned above, adding the following is equivalent to checking "Allow access from Azure Portal" "Accept connections from within public Azure datacenters" in the portal. */
+/*var azurePortalIps = [
   '104.42.195.92'
   '40.76.54.131'
   '52.176.6.30'
   '52.169.50.45'
   '52.187.184.26'
-]
+] */
 
-// As mentioned above, adding the following is equivalent to checking "Accept connections from within public Azure datacenters" in the portal.
+/* // As mentioned above, adding the following is equivalent to checking "Accept connections from within public Azure datacenters" in the portal.
 // We need this for Azure functions.
-var acceptPublicAzureDatacentersIp = ['0.0.0.0']
+var acceptPublicAzureDatacentersIp = ['0.0.0.0'] */
 
-var allAllowedIps = concat(allowedIps, azurePortalIps, acceptPublicAzureDatacentersIp)
+var allAllowedIps = concat(allowedIps, azureAllowedIps)
 
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
