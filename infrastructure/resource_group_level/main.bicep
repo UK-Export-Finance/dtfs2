@@ -73,7 +73,7 @@ param APIM_MDM_KEY string
 param APIM_MDM_URL string
 @description('different in staging and dev')
 @secure()
-param APIM_MDM_VALUE string 
+param APIM_MDM_VALUE string
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 @secure()
 param DTFS_CENTRAL_API_KEY string
@@ -304,12 +304,12 @@ var functionSettings = {
  RATE_LIMIT_THRESHOLD : RATE_LIMIT_THRESHOLD
 }
 var functionSecureSettings = {
-  APIM_TFS_KEY: APIM_TFS_KEY 
-  APIM_TFS_VALUE: APIM_TFS_VALUE 
-  APIM_TFS_URL: APIM_TFS_URL 
-  APIM_MDM_KEY: APIM_MDM_KEY 
-  APIM_MDM_URL: APIM_MDM_URL 
-  APIM_MDM_VALUE: APIM_MDM_VALUE  
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE
 }
 
 /* These values are taken from an export of Configuration on Dev
@@ -554,6 +554,31 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
+  }
+}
+
+module externalApi 'modules/webapps/external-api.bicep' = {
+  name: 'externalApi'
+  params: {
+    location: location
+    environment: environment
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: externalApiSettings
+    secureSettings: externalApiSecureSettings
+    additionalSecureSettings: externalApiAdditionalSecureSettings
   }
 }
 
