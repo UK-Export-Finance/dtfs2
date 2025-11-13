@@ -100,7 +100,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
       // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
+      remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
