@@ -36,7 +36,7 @@ var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFra
 
 var appSettingsWithAppInsights = union(
   appSettings,
-  deployApplicationInsights ? {
+  deployApplicationInsights && applicationInsights != null ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
     } : {},
     selfHostnameEnvironmentVariable == '' ? {} : {
