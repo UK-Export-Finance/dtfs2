@@ -1,5 +1,5 @@
 param location string
-param environment string
+// param environment string
 param product string
 param target string
 param version string
@@ -88,7 +88,7 @@ module externalApiWebapp 'webapp.bicep' = {
     connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
+    // environment: environment
     ftpsState: 'FtpsOnly'
     location: location
     product: product
