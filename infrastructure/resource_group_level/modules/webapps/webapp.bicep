@@ -36,7 +36,7 @@ var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFra
 
 // Application Insights configuration - only include if enabled
 var appInsightsConfig = deployApplicationInsights ? {
-  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
+  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights!.properties.ConnectionString
 } : {}
 
 // Self hostname configuration - only include if specified
