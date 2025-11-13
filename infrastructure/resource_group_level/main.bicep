@@ -473,7 +473,9 @@ module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
   params: {
     location: location
-    environment: environment
+    product: product
+    version: version
+    target: target
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
