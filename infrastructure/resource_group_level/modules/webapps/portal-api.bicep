@@ -134,7 +134,6 @@ module portalApiWebapp 'webapp.bicep' = {
     connectionStrings: connectionStringsProperties
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
