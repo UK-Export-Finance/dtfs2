@@ -145,6 +145,8 @@ jobs:
           sed -i "s|{{PORTAL_API_KEY}}|${{ secrets.PORTAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{TFM_API_KEY}}|${{ secrets.TFM_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}|${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SESSION_SECRET}}|${{ secrets.SESSION_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
 
 
       - name: Install Bicep

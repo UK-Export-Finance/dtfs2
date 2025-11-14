@@ -17,6 +17,9 @@ param clamAvSettings {
 }
 
 param resourceNameFragment string = 'portal-ui'
+param product string
+param target string
+param version string
 
 param settings object
 

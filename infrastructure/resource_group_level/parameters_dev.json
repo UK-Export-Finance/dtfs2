@@ -142,6 +142,12 @@
       },
       "PORTAL_API_KEY": {
         "value": "{{PORTAL_API_KEY}}"
+      },
+      "UTILISATION_REPORT_MAX_FILE_SIZE_BYTES": {
+        "value": "{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}"
+      },
+      "SESSION_SECRET": {
+        "value": "{{SESSION_SECRET}}"
       }
     }
 }
