@@ -1,4 +1,3 @@
-param environment string
 param backendPoolIp string
 param wafPoliciesId string
 param product string
