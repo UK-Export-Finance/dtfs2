@@ -1005,3 +1005,27 @@ module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = if (!parameters
     }
   }
 }
+
+module frontDoorPortal 'modules/front-door-portal.bicep' = {
+  name: 'frontDoorPortal'
+  params: {
+    backendPoolIp: tfsIp.outputs.tfsIpAddress
+    product: product
+    version: version
+    target: target
+    wafPoliciesId: parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps ? wafPoliciesIpRestricted.outputs.wafPoliciesId : wafPoliciesNoIpRestriction.outputs.wafPoliciesId
+  }
+  dependsOn: [applicationGatewayPortal]
+}
+
+module frontDoorTfm 'modules/front-door-tfm.bicep' = {
+  name: 'frontDoorTfm'
+  params: {
+    backendPoolIp: tfsIp.outputs.tfsTfmIpAddress
+    product: product
+    version: version
+    target: target
+    wafPoliciesId: wafPoliciesIpRestricted.outputs.wafPoliciesId
+  }
+  dependsOn: [applicationGatewayTfm]
+}
