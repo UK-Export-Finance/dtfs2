@@ -125,8 +125,9 @@ param TFM_API_KEY string
 param SESSION_SECRET string
 @secure()
 param ESTORE_URL string
-param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
+param UKEF_TFM_API_SYSTEM_KEY string
+
 /*@secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
@@ -879,7 +880,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
+    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
