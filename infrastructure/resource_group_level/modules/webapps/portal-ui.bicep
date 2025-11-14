@@ -116,6 +116,9 @@ module portalUiWebapp 'webapp.bicep' = {
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
+    product: product
+    target: target
+    version: version
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
