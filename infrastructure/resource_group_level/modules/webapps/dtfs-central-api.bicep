@@ -86,7 +86,6 @@ module dtfsCentralApiWebapp 'webapp.bicep' = {
     connectionStrings: connectionStrings
     deployApplicationInsights: true
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'Disabled'
     location: location
     product: product
