@@ -965,3 +965,37 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
     tfmUiHostname: tfmUi.outputs.defaultHostName
   }
 }
+
+module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
+  name: 'wafPoliciesIpRestricted'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    matchVariable: parametersMap[environment].wafPolicies.matchVariable
+    redirectUrl: parametersMap[environment].wafPolicies.redirectUrl
+    rejectAction: parametersMap[environment].wafPolicies.rejectAction
+    wafPoliciesName: parametersMap[environment].wafPolicies.wafPoliciesName
+    applyWafRuleOverrides: parametersMap[environment].wafPolicies.applyWafRuleOverrides
+    restrictAccessToUkefIps: true
+    ruleSet: {
+      ruleSetType: 'DefaultRuleSet'
+      ruleSetVersion: '1.0'
+    }
+  }
+}
+
+module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = if (!parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps) {
+  name: 'wafPoliciesNoIpRestriction'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    matchVariable: parametersMap[environment].wafPolicies.matchVariable
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: parametersMap[environment].wafPolicies.rejectAction
+    wafPoliciesName:'${parametersMap[environment].wafPolicies.wafPoliciesName}Portal'
+    applyWafRuleOverrides: false
+    restrictAccessToUkefIps: false
+    ruleSet: {
+      ruleSetType: 'Microsoft_DefaultRuleSet'
+      ruleSetVersion: '1.1'
+    }
+  }
+}
