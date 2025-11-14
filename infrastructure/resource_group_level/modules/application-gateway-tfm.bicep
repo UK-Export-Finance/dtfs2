@@ -1,8 +1,10 @@
 param location string
-param environment string
 param gatewaySubnetId string
 param tfsTfmIpId string
 param tfmUiHostname string
+param product string
+param target string
+param version string
 param product string
 param target string
 param version string
@@ -81,7 +83,7 @@ var requestRoutingRules = [
 // See the following for example usage.
 // https://github.com/Azure/azure-quickstart-templates/blob/master/demos/ag-docs-qs/main.bicep
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2025-01-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
   tags: {}
