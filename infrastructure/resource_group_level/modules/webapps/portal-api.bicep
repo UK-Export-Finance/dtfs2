@@ -37,7 +37,7 @@ param connectionStrings object
 @secure()
 param secureConnectionStrings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -103,7 +103,7 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 // Then there are the calculated values.
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
@@ -117,7 +117,7 @@ var settingsCalculated = {
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-06-01' existing = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' existing = {
   name: cosmosDbAccountName
 }
 

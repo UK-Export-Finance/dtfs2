@@ -99,6 +99,42 @@ param GOV_NOTIFY_API_KEY string
 param GOV_NOTIFY_EMAIL_RECIPIENT string
 @secure()
 param EXTERNAL_API_KEY string
+param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
+param PORTAL_UI_URL string
+param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+param UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
+param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
+param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
+param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
+
+@secure()
+param AZURE_PORTAL_EXPORT_FOLDER string
+@secure()
+param AZURE_PORTAL_FILESHARE_NAME string
+@secure()
+param JWT_SIGNING_KEY string
+@secure()
+param JWT_VALIDATING_KEY string
+@secure()
+param PORTAL_API_KEY string
+@secure()
+param TFM_API_KEY string
+@secure()
+param UKEF_TFM_API_SYSTEM_KEY string
+@secure()
+param UKEF_TFM_API_REPORTS_KEY string
+@secure()
+param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
+@secure()
+param SESSION_SECRET string
+@secure()
+param ESTORE_URL string
+@secure()
+param PDC_INPUTTERS_EMAIL_RECIPIENT string
+@secure()
+param UKEF_INTERNAL_NOTIFICATION string
 
 
 var storageLocations = [
@@ -373,6 +409,59 @@ var externalApiSecureSettings = {
 var externalApiAdditionalSecureSettings = {
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
 }
+
+var portalApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  PORTAL_UI_URL: PORTAL_UI_URL
+  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+  UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+  UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE: UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE
+  UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
+  UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
+}
+
+var portalApiSecureSettings = {
+  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
+  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
+  CORS_ORIGIN: CORS_ORIGIN
+  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
+  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+var portalApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var portalApiConnectionStrings = { }
+var portalApiSecureConnectionStrings = { }
+
+var tmfApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
+}
+var tfmApiSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+}
+var tfmApiAdditionalSecureSettings = {
+  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  TFM_API_KEY: TFM_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+var tfmApiSecureConnectionStrings = { }
+var tfmApiAdditionalSecureConnectionStrings = { }
+
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.
@@ -651,5 +740,55 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     settings: dtfsCentralApiSettings
     secureSettings: dtfsCentralApiSecureSettings
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
+  }
+}
+
+module portalApi 'modules/webapps/portal-api.bicep' = {
+  name: 'portalApi'
+  params: {
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
+    environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    storageAccountName: storage.outputs.storageAccountName
+    tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalApiSettings
+    secureSettings: portalApiSecureSettings
+    additionalSecureSettings: portalApiAdditionalSecureSetting
+    connectionStrings: portalApiConnectionStrings
+    secureConnectionStrings: portalApiSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.exposedIp
+      port: clamAv.outputs.exposedPort
+    }
+  }
+}
+
+module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables.bicep' = {
+  name: 'tfmApi'
+  params: {
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    environment: environment
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
