@@ -123,14 +123,15 @@ param PORTAL_API_KEY string
 param TFM_API_KEY string
 @secure()
 param SESSION_SECRET string
-/*@secure()
+@secure()
+param ESTORE_URL string
 param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
+/*@secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
-@secure()
-param ESTORE_URL string */
+ */
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
 /* @secure()
@@ -457,6 +458,20 @@ var portalUiAdditionalSecureSettings = {
 var portalUiSecureConnectionStrings = { }
 var portalUiAdditionalSecureConnectionStrings = { }
 
+var tfmUiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+}
+var tfmUiSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  ESTORE_URL: ESTORE_URL
+  SESSION_SECRET: SESSION_SECRET
+}
+var tfmUiAdditionalSecureSettings = {
+  TFM_API_KEY: TFM_API_KEY
+}
+var tfmUiSecureConnectionStrings = { }
+var tfmUiAdditionalSecureConnectionStrings = { }
 /* var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
@@ -854,5 +869,31 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
+  }
+}
+
+module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
+  name: 'tfmUi'
+  params: {
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
+    location: location
+    product: product
+    version: version
+    target: target
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    redisName: redis.outputs.redisName
+    tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: tfmUiSettings
+    secureSettings: tfmUiSecureSettings
+    additionalSecureSettings: tfmUiAdditionalSecureSettings
+    secureConnectionStrings: tfmUiSecureConnectionStrings
+    additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
   }
 }

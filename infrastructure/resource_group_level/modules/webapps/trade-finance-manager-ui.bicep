@@ -11,6 +11,10 @@ param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
+param product string
+param target string
+param version string
+
 param resourceNameFragment string = 'trade-finance-manager-ui'
 
 param settings object
@@ -105,8 +109,10 @@ module tfmUiWebapp 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'Disabled'
+    product: product
+    target: target
+    version: version
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
