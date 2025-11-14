@@ -293,7 +293,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
   }
 ] : []
 
-resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2024-02-15' = {
+resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2025-03-01' = {
   name: wafPoliciesName
   location: 'Global'
   tags: {}
@@ -315,9 +315,9 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     managedRules: {
       managedRuleSets: [
         {
-          // Note that if using the "Classic" Front Door tier, the rule sets available are:
-          // ruleSetType 'DefaultRuleSet' with ruleSetType '1.0' corresponding to 'DefaultRuleSet_1.0' in the UI
-          // ruleSetType 'Microsoft_DefaultRuleSet' with ruleSetType '1.1' corresponding to 'Microsoft_DefaultRuleSet_1.1' in the UI
+          /* Note that if using the "Classic" Front Door tier, the rule sets available are:
+          ruleSetType 'DefaultRuleSet' with ruleSetType '1.0' corresponding to 'DefaultRuleSet_1.0' in the UI
+          ruleSetType 'Microsoft_DefaultRuleSet' with ruleSetType '1.1' corresponding to 'Microsoft_DefaultRuleSet_1.1' in the UI */
           ruleSetType: ruleSet.ruleSetType
           ruleSetVersion: ruleSet.ruleSetVersion
           ruleGroupOverrides: devRuleOverrides

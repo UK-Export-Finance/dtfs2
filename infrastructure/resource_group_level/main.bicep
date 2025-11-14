@@ -969,6 +969,9 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
 module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesIpRestricted'
   params: {
+    product: product
+    version: version
+    target: target
     allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
     redirectUrl: parametersMap[environment].wafPolicies.redirectUrl
@@ -986,6 +989,9 @@ module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
 module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = if (!parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps) {
   name: 'wafPoliciesNoIpRestriction'
   params: {
+    product: product
+    version: version
+    target: target
     allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
     redirectUrl: 'https://ukexportfinance.gov.uk/'
