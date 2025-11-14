@@ -919,3 +919,19 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
   }
 }
+
+module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
+  name: 'applicationGatewayPortal'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    tfsIpId: tfsIp.outputs.tfsIpId
+    portalApiHostname: portalApi.outputs.defaultHostName
+    portalUiHostname: portalUi.outputs.defaultHostName
+    gefUiHostname: gefUi.outputs.defaultHostName
+    apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
+  }
+}
