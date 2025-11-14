@@ -33,7 +33,7 @@ param additionalSecureSettings object
 param additionalSecureConnectionStrings object
 
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -80,14 +80,14 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
   value: item.value
 } )
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' existing = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' existing = {
   name: cosmosDbAccountName
 }
 
 // Then there are the calculated values.
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
@@ -123,13 +123,13 @@ resource site 'Microsoft.Web/sites@2025-03-01' existing = {
   name: tfmApiName
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2025-03-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   parent: site
   name: 'appsettings'
   properties: appSettings
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(connectionStringsList)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsList)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStringsProperties
