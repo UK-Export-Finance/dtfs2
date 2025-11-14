@@ -1,5 +1,8 @@
 param location string
 param environment string
+param product string
+param target string
+param version string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -21,7 +24,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -86,6 +89,9 @@ module dtfsCentralApiWebapp 'webapp.bicep' = {
     environment: environment
     ftpsState: 'Disabled'
     location: location
+    product: product
+    target: target
+    version: version
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment

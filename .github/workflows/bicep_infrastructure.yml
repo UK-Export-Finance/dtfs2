@@ -130,6 +130,9 @@ jobs:
           sed -i "s|{{GOV_NOTIFY_API_KEY}}|${{ secrets.GOV_NOTIFY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{EXTERNAL_API_KEY}}|${{ secrets.EXTERNAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ORDNANCE_SURVEY_API_KEY}}|${{ secrets.ORDNANCE_SURVEY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE}}|${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DTFS_CENTRAL_API_KEY}}|${{ secrets.DTFS_CENTRAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+
 
       - name: Install Bicep
         run: |
