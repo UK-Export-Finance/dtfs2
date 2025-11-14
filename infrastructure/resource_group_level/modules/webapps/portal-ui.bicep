@@ -34,7 +34,7 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -115,7 +115,6 @@ module portalUiWebapp 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId

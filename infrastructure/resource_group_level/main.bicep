@@ -118,10 +118,10 @@ param JWT_SIGNING_KEY string
 param JWT_VALIDATING_KEY string
 @secure()
 param PORTAL_API_KEY string
-/*
+
 @secure()
 param TFM_API_KEY string
-@secure()
+/*@secure()
 param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
@@ -133,8 +133,8 @@ param SESSION_SECRET string
 param ESTORE_URL string */
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
-@secure()
-param UKEF_INTERNAL_NOTIFICATION string
+/* @secure()
+param UKEF_INTERNAL_NOTIFICATION string */
 
 
 var storageLocations = [
