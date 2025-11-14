@@ -22,7 +22,7 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 on:
   push:
     branches:
-      - feat/DTFS2-16188-bicep-templates
+      - feat/DTFS2-16191/provision-external-api
     paths:
       - '.github/workflows/bicep_infrastructure.yml'
       - 'infrastructure/resource_group_level/**'
@@ -117,6 +117,22 @@ jobs:
           sed -i "s|{{APIM_MDM_KEY}}|${{ secrets.APIM_MDM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{APIM_MDM_URL}}|${{ secrets.APIM_MDM_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{APIM_MDM_VALUE}}|${{ secrets.APIM_MDM_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{APIM_MDM_KEY_VAULT_NAME}}|${{ secrets.APIM_MDM_KEY_VAULT_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{COMPANIES_HOUSE_API_URL}}|${{ secrets.COMPANIES_HOUSE_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ORDNANCE_SURVEY_API_URL}}|${{ secrets.ORDNANCE_SURVEY_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{RATE_LIMIT_THRESHOLD}}|${{ secrets.RATE_LIMIT_THRESHOLD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{APIM_ESTORE_URL}}|${{ secrets.APIM_ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CORS_ORIGIN}}|${{ secrets.CORS_ORIGIN }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{APIM_ESTORE_KEY}}|${{ secrets.APIM_ESTORE_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{APIM_ESTORE_VALUE}}|${{ secrets.APIM_ESTORE_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{COMPANIES_HOUSE_API_KEY}}|${{ secrets.COMPANIES_HOUSE_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{GOV_NOTIFY_EMAIL_RECIPIENT}}|${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{GOV_NOTIFY_API_KEY}}|${{ secrets.GOV_NOTIFY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{EXTERNAL_API_KEY}}|${{ secrets.EXTERNAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ORDNANCE_SURVEY_API_KEY}}|${{ secrets.ORDNANCE_SURVEY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE}}|${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DTFS_CENTRAL_API_KEY}}|${{ secrets.DTFS_CENTRAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+
 
       - name: Install Bicep
         run: |

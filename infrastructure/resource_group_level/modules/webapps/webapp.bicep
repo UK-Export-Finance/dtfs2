@@ -1,6 +1,6 @@
 param resourceNameFragment string
 param location string
-param environment string
+// param environment string
 
 param appServicePlanId string
 param dockerImageName string
@@ -30,22 +30,28 @@ param deployApplicationInsights bool
 
 param selfHostnameEnvironmentVariable string = ''
 
-var appName = '${product}-${environment}-${resourceNameFragment}'
-var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
-var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
+var appName = '${product}-${target}-${version}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
+
+// Application Insights configuration - only include if enabled
+var appInsightsConfig = deployApplicationInsights ? {
+  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights!.properties.ConnectionString
+} : {}
+
+// Self hostname configuration - only include if specified
+var selfHostnameConfig = selfHostnameEnvironmentVariable == '' ? {} : {
+  '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
+}
 
 var appSettingsWithAppInsights = union(
   appSettings,
-  deployApplicationInsights ? {
-    APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-    } : {},
-    selfHostnameEnvironmentVariable == '' ? {} : {
-      '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
-    }
-  )
+  appInsightsConfig,
+  selfHostnameConfig
+)
 
-resource site 'Microsoft.Web/sites@2025-03-01' = {
-  name: appName-${product}-${target}-${version}
+resource site 'Microsoft.Web/sites@2024-04-01' = {
+  name: appName
   location: location
   tags: {}
   kind: 'app,linux,container'
@@ -65,7 +71,7 @@ resource site 'Microsoft.Web/sites@2025-03-01' = {
       vnetRouteAllEnabled: true
       ftpsState: ftpsState
       scmMinTlsVersion: scmMinTlsVersion
-      remoteDebuggingVersion: 'VS2019'
+      remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging, true in prod
       healthCheckPath: '/healthcheck'
     }
@@ -73,20 +79,20 @@ resource site 'Microsoft.Web/sites@2025-03-01' = {
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(appSettings)) {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2025-03-01' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStrings
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
-  name: privateEndpointName-${product}-${target}-${version}
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
+  name: privateEndpointName
   location: location
   tags: {}
   properties: {
@@ -111,7 +117,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2025-01-01' = {
 }
 
 // Adding the Zone group sets up automatic DNS for the private link.
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -127,7 +133,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
-  name: applicationInsightsName-${product}-${target}-${version}
+  name: applicationInsightsName
   location: location
   tags: {}
   kind: 'web'

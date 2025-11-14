@@ -73,10 +73,32 @@ param APIM_MDM_KEY string
 param APIM_MDM_URL string
 @description('different in staging and dev')
 @secure()
-param APIM_MDM_VALUE string 
-param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
+param APIM_MDM_VALUE string
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string = '0 2 * * 1'
 @secure()
 param DTFS_CENTRAL_API_KEY string
+@secure()
+param CORS_ORIGIN string
+@secure()
+param COMPANIES_HOUSE_API_URL string
+@secure()
+param ORDNANCE_SURVEY_API_URL string
+@secure()
+param APIM_ESTORE_URL string
+@secure()
+param APIM_ESTORE_KEY string
+@secure()
+param APIM_ESTORE_VALUE string
+@secure()
+param COMPANIES_HOUSE_API_KEY string
+@secure()
+param ORDNANCE_SURVEY_API_KEY string
+@secure()
+param GOV_NOTIFY_API_KEY string
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+@secure()
+param EXTERNAL_API_KEY string
 
 
 var storageLocations = [
@@ -304,12 +326,12 @@ var functionSettings = {
  RATE_LIMIT_THRESHOLD : RATE_LIMIT_THRESHOLD
 }
 var functionSecureSettings = {
-  APIM_TFS_KEY: APIM_TFS_KEY 
-  APIM_TFS_VALUE: APIM_TFS_VALUE 
-  APIM_TFS_URL: APIM_TFS_URL 
-  APIM_MDM_KEY: APIM_MDM_KEY 
-  APIM_MDM_URL: APIM_MDM_URL 
-  APIM_MDM_VALUE: APIM_MDM_VALUE  
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE
 }
 
 /* These values are taken from an export of Configuration on Dev
@@ -323,6 +345,33 @@ var dtfsCentralApiSettings = {
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+}
+
+var externalApiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
+}
+
+var externalApiSecureSettings = {
+  CORS_ORIGIN: CORS_ORIGIN
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_ESTORE_URL: APIM_ESTORE_URL
+  APIM_ESTORE_KEY: APIM_ESTORE_KEY
+  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+
+var externalApiAdditionalSecureSettings = {
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
 }
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
@@ -557,11 +606,39 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
   }
 }
 
+module externalApi 'modules/webapps/external-api.bicep' = {
+  name: 'externalApi'
+  params: {
+    location: location
+    environment: environment
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: externalApiSettings
+    secureSettings: externalApiSecureSettings
+    additionalSecureSettings: externalApiAdditionalSecureSettings
+  }
+}
+
 module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
   name: 'dtfsCentralApi'
   params: {
     location: location
     environment: environment
+    product: product
+    version: version
+    target: target
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name

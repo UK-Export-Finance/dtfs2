@@ -1,5 +1,8 @@
 param location string
 param environment string
+param product string
+param target string
+param version string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -25,7 +28,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -70,7 +73,7 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' existing = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' existing = {
   name: cosmosDbAccountName
 }
 
@@ -85,9 +88,11 @@ module externalApiWebapp 'webapp.bicep' = {
     connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'FtpsOnly'
     location: location
+    product: product
+    target: target
+    version: version
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
