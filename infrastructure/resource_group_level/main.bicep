@@ -74,6 +74,7 @@ param APIM_MDM_URL string
 @description('different in staging and dev')
 @secure()
 param APIM_MDM_VALUE string
+@secure()
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 @secure()
 param DTFS_CENTRAL_API_KEY string
