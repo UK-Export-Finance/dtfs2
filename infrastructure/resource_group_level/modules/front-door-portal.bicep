@@ -1,4 +1,3 @@
-param environment string
 param backendPoolIp string
 param wafPoliciesId string = ''
 param product string
@@ -16,10 +15,10 @@ var defaultFrontendProperties = {
     }
 }
 
-// NOTE: Until the following issue is resolved, we need to self-reference the frontdoor 
-// using resourceId() for the various sub-components that need to be created.
-// https://github.com/Azure/bicep/issues/1852
-// The same issue affects ApplicationGateway
+/* NOTE: Until the following issue is resolved, we need to self-reference the frontdoor 
+using resourceId() for the various sub-components that need to be created.
+https://github.com/Azure/bicep/issues/1852
+The same issue affects ApplicationGateway */
 resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
   name: frontDoorPortalName
   location: 'Global'
