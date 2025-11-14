@@ -10,6 +10,10 @@ param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
+param product string
+param target string
+param version string
+
 param resourceNameFragment string = 'gef-ui'
 
 param settings object
@@ -105,9 +109,11 @@ module gefUiWebapp 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'FtpsOnly'
     location: location
+    product: product
+    version: version
+    target: target
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment

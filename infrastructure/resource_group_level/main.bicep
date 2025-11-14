@@ -473,6 +473,19 @@ var tfmUiAdditionalSecureSettings = {
 }
 var tfmUiSecureConnectionStrings = { }
 var tfmUiAdditionalSecureConnectionStrings = { }
+
+var gefUiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var gefUiSecureSettings = {
+  SESSION_SECRET: SESSION_SECRET
+}
+var gefUiAdditionalSecureSettings = {
+  PORTAL_API_KEY: PORTAL_API_KEY
+}
+var gefUiSecureConnectionStrings = { }
+var gefUiAdditionalSecureConnectionStrings = { }
+
 /* var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
@@ -896,5 +909,30 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     additionalSecureSettings: tfmUiAdditionalSecureSettings
     secureConnectionStrings: tfmUiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
+  }
+}
+
+module gefUi 'modules/webapps/gef-ui.bicep' = {
+  name: 'gefUi'
+  params: {
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    environment: environment
+    location: location
+    product: product
+    version: version
+    target: target
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    portalApiHostname: portalApi.outputs.defaultHostName
+    redisName: redis.outputs.redisName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: gefUiSettings
+    secureSettings: gefUiSecureSettings
+    additionalSecureSettings: gefUiAdditionalSecureSettings
+    secureConnectionStrings: gefUiSecureConnectionStrings
+    additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
   }
 }
