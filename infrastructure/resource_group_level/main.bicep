@@ -952,3 +952,16 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
   }
 }
+
+module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
+  name: 'applicationGatewayTfm'
+  params: {
+    location: location
+    product: product
+    version: version
+    target: target
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    tfsTfmIpId: tfsIp.outputs.tfsTfmIpId
+    tfmUiHostname: tfmUi.outputs.defaultHostName
+  }
+}
