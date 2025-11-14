@@ -127,10 +127,10 @@ param UKEF_TFM_API_SYSTEM_KEY string
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
-@secure()
+@/* secure()
 param SESSION_SECRET string
 @secure()
-param ESTORE_URL string
+param ESTORE_URL string */
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
 @secure()
@@ -441,10 +441,10 @@ var portalApiAdditionalSecureSetting = {
 var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
-var tmfApiSettings = {
+/* var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
-}
+} 
 var tfmApiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
@@ -461,7 +461,7 @@ var tfmApiAdditionalSecureSettings = {
 }
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
-
+*/
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.

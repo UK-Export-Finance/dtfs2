@@ -12,10 +12,13 @@ param numberGeneratorFunctionDefaultHostName string
 param tfmUiUrl string
 param storageAccountName string
 param settings object
+param product string
+param target string
+param version string
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
-var tfmApiName = '${product}-${environment}-${tfmApiNameFragment}'
-var applicationInsightsName = '${product}-${environment}-${tfmApiNameFragment}'
+var tfmApiName = '${product}-${target}-${tfmApiNameFragment}'
+var applicationInsightsName = '${product}-${target}-${tfmApiNameFragment}'
 
 var deployApplicationInsights = false // TODO:DTFS2-6422 enable application insights
 var selfHostnameEnvironmentVariable = ''
