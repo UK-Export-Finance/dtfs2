@@ -71,7 +71,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
       vnetRouteAllEnabled: true
       ftpsState: ftpsState
       scmMinTlsVersion: scmMinTlsVersion
-      remoteDebuggingVersion: 'VS2019'
+      remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging, true in prod
       healthCheckPath: '/healthcheck'
     }
