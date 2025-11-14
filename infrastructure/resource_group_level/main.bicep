@@ -816,7 +816,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
+    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
