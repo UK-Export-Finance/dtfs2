@@ -1275,6 +1275,103 @@ describe('summaryItemsConditions()', () => {
       );
     });
   });
+
+  describe(`if deal has status ${DEAL_STATUS.PENDING_CANCELLATION}`, () => {
+    describe('if deal is AIN', () => {
+      const deal = {
+        ...MOCK_AIN_APPLICATION,
+        status: DEAL_STATUS.PENDING_CANCELLATION,
+      };
+
+      it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])(
+        'Should not be able to change %s',
+        (id) => {
+          const summaryItemsObj = {
+            preview: true,
+            item: mockDisplayItems[id],
+            details: MOCK_UNISSUED_FACILITY,
+            app: deal,
+            user: MOCK_REQUEST,
+            data: deal.facilities.items[0],
+          };
+
+          const result = summaryItemsConditions(summaryItemsObj);
+          expect(result).toEqual([
+            {
+              attributes: {
+                'data-cy': `${id}-action`,
+              },
+              classes: 'govuk-!-display-none',
+            },
+          ]);
+        },
+      );
+    });
+
+    describe('if deal is MIN', () => {
+      const deal = {
+        ...MOCK_AIN_APPLICATION,
+        submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
+        status: DEAL_STATUS.PENDING_CANCELLATION,
+      };
+
+      it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])(
+        'Should not be able to change %s',
+        (id) => {
+          const summaryItemsObj = {
+            preview: true,
+            item: mockDisplayItems[id],
+            details: MOCK_UNISSUED_FACILITY,
+            app: deal,
+            user: MOCK_REQUEST,
+            data: deal.facilities.items[0],
+          };
+
+          const result = summaryItemsConditions(summaryItemsObj);
+          expect(result).toEqual([
+            {
+              attributes: {
+                'data-cy': `${id}-action`,
+              },
+              classes: 'govuk-!-display-none',
+            },
+          ]);
+        },
+      );
+    });
+
+    describe('if the deal is MIA', () => {
+      const deal = {
+        ...MOCK_AIN_APPLICATION,
+        submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
+        status: DEAL_STATUS.PENDING_CANCELLATION,
+      };
+
+      it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])(
+        'Should not be able to change %s',
+        (id) => {
+          const summaryItemsObj = {
+            preview: true,
+            item: mockDisplayItems[id],
+            details: MOCK_UNISSUED_FACILITY,
+            app: deal,
+            user: MOCK_REQUEST,
+            data: deal.facilities.items[0],
+          };
+
+          const result = summaryItemsConditions(summaryItemsObj);
+          expect(result).toEqual([
+            {
+              attributes: {
+                'data-cy': `${id}-action`,
+              },
+              classes: 'govuk-!-display-none',
+            },
+          ]);
+        },
+      );
+    });
+  });
 });
 
 describe('displayTaskComments()', () => {
