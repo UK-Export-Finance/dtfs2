@@ -17,6 +17,9 @@ param clamAvSettings {
   ipAddress: string
   port: int
 }
+param product string
+param target string
+param version string
 
 param resourceNameFragment string = 'portal-api'
 
@@ -138,6 +141,9 @@ module portalApiWebapp 'webapp.bicep' = {
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
+    location: location
+    product: product
+    target: target
   }
 }
 
