@@ -31,7 +31,7 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer

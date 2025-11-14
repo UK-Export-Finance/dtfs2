@@ -16,10 +16,13 @@ param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
 
 param azureWebsitesDnsZoneId string
+param product string
+param target string
+param version string
 
 param resourceNameFragment string = 'trade-finance-manager-api'
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-11-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
@@ -36,7 +39,6 @@ module tfmApiWebapp 'webapp.bicep' = {
     connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
-    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
