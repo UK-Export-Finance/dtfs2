@@ -141,8 +141,8 @@ module portalApiWebapp 'webapp.bicep' = {
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
-    location: location
     product: product
+    version: version
     target: target
   }
 }

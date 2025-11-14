@@ -107,7 +107,6 @@ param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
 param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
 param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
 param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
-param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 
 @secure()
 param AZURE_PORTAL_EXPORT_FOLDER string
@@ -119,6 +118,7 @@ param JWT_SIGNING_KEY string
 param JWT_VALIDATING_KEY string
 @secure()
 param PORTAL_API_KEY string
+/*
 @secure()
 param TFM_API_KEY string
 @secure()
@@ -127,7 +127,7 @@ param UKEF_TFM_API_SYSTEM_KEY string
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
-@/* secure()
+ @secure()
 param SESSION_SECRET string
 @secure()
 param ESTORE_URL string */
