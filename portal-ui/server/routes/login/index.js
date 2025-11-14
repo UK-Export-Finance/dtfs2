@@ -4,6 +4,8 @@ const { requestParams, generateErrorSummary, errorHref, validationErrorHandler }
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
+const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
+const { renderTemporarilySuspendedAccessCodePage } = require('../../controllers/login/account-suspended-page.ts');
 const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
@@ -332,5 +334,20 @@ router.post('/login/sign-in-link-expired', validatePartialAuthToken, sendNewSign
  *         description: Internal server error
  */
 router.get('/login/sign-in-link', loginWithSignInLink);
+
+/**
+ * @openapi
+ * /login/temporarily-suspended-access-code:
+ *   get:
+ *     summary: Render temporarily suspended access code page
+ *     tags: [Portal]
+ *     description: Render temporarily suspended access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       403:
+ *         description: Forbidden
+ */
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, renderTemporarilySuspendedAccessCodePage);
 
 module.exports = router;
