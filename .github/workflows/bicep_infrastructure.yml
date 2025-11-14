@@ -143,10 +143,6 @@ jobs:
           sed -i "s|{{AZURE_PORTAL_FILESHARE_NAME}}|${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{JWT_VALIDATING_KEY}}|${{ secrets.JWT_VALIDATING_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PORTAL_API_KEY}}|${{ secrets.PORTAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_SYSTEM_KEY}}|${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_REPORTS_KEY}}|${{ secrets.UKEF_TFM_API_REPORTS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{TFM_API_KEY}}|${{ secrets.TFM_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
 
