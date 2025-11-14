@@ -298,7 +298,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
   location: 'Global'
   tags: {}
   sku: {
-    name: 'Classic_AzureFrontDoor'
+    name: 'Standard_AzureFrontDoor'
   }
   properties: {
     policySettings: {
