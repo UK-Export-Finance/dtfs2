@@ -99,7 +99,7 @@ param GOV_NOTIFY_API_KEY string
 param GOV_NOTIFY_EMAIL_RECIPIENT string
 @secure()
 param EXTERNAL_API_KEY string
-//param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
+param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
 param PORTAL_UI_URL string
 param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
 param UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
@@ -121,14 +121,14 @@ param PORTAL_API_KEY string
 
 @secure()
 param TFM_API_KEY string
+@secure()
+param SESSION_SECRET string
 /*@secure()
 param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
- @secure()
-param SESSION_SECRET string
 @secure()
 param ESTORE_URL string */
 @secure()
@@ -440,6 +440,22 @@ var portalApiAdditionalSecureSetting = {
 }
 var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
+
+var portalUiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+  UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
+}
+var portalUiSecureSettings = {
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
+var portalUiAdditionalSecureSettings = {
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var portalUiSecureConnectionStrings = { }
+var portalUiAdditionalSecureConnectionStrings = { }
 
 /* var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
@@ -807,5 +823,36 @@ module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+  }
+}
+
+module portalUi 'modules/webapps/portal-ui.bicep' = {
+  name: 'portalUi'
+  params: {
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
+    location: location
+    product: product
+    version: version
+    target: target
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    portalApiHostname: portalApi.outputs.defaultHostName
+    redisName: redis.outputs.redisName
+    tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalUiSettings
+    secureSettings: portalUiSecureSettings
+    additionalSecureSettings: portalUiAdditionalSecureSettings
+    secureConnectionStrings: portalUiSecureConnectionStrings
+    additionalSecureConnectionStrings: portalUiAdditionalSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.exposedIp
+      port: clamAv.outputs.exposedPort
+    }
   }
 }
