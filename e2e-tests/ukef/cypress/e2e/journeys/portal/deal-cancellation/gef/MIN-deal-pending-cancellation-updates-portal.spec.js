@@ -10,7 +10,7 @@ import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('GEF MIN deal - When TFM submits a pending deal cancellation - Facility section should be locked', () => {
+context('GEF MIN deal - When TFM submits a pending deal cancellation - Portal status and activity feed should be updated', () => {
   let gefDeal;
   let dealId;
 
