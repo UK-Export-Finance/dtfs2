@@ -74,9 +74,8 @@ param APIM_MDM_URL string
 @description('different in staging and dev')
 @secure()
 param APIM_MDM_VALUE string
-// param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 @secure()
-#disable-next-line no-unused-params
 param DTFS_CENTRAL_API_KEY string
 @secure()
 param CORS_ORIGIN string
@@ -339,14 +338,14 @@ var functionSecureSettings = {
 Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
 var functionAdditionalSecureSettings = { }
 
-// var dtfsCentralApiSettings = {
-//   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-//   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
-// }
-// var dtfsCentralApiSecureSettings = {}
-// var dtfsCentralApiAdditionalSecureSetting = {
-//   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-// }
+var dtfsCentralApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+}
+var dtfsCentralApiSecureSettings = {}
+var dtfsCentralApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+}
 
 var externalApiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
@@ -649,22 +648,25 @@ module externalApi 'modules/webapps/external-api.bicep' = {
   }
 }
 
-// module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
-//   name: 'dtfsCentralApi'
-//   params: {
-//     location: location
-//     environment: environment
-//     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-//     appServicePlanId: appServicePlan.id
-//     containerRegistryName: containerRegistry.name
-//     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-//     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-//     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
-//     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
-//     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-//     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-//     settings: dtfsCentralApiSettings
-//     secureSettings: dtfsCentralApiSecureSettings
-//     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
-//   }
-// }
+module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
+  name: 'dtfsCentralApi'
+  params: {
+    location: location
+    environment: environment
+    product: product
+    version: version
+    target: target
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: dtfsCentralApiSettings
+    secureSettings: dtfsCentralApiSecureSettings
+    additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
+  }
+}
