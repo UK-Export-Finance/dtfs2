@@ -148,6 +148,12 @@
       },
       "SESSION_SECRET": {
         "value": "{{SESSION_SECRET}}"
+      },
+      "ESTORE_URL": {
+        "value": "{{ESTORE_URL}}"
+      },
+      "UKEF_TFM_API_SYSTEM_KEY": {
+        "value": "{{UKEF_TFM_API_SYSTEM_KEY}}"
       }
     }
 }
