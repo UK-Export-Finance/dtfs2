@@ -21,6 +21,9 @@ param rejectAction string
 param applyWafRuleOverrides bool = false
 param restrictAccessToUkefIps bool
 
+@allowed(['Standard_AzureFrontDoor', 'Premium_AzureFrontDoor'])
+param wafSku string = 'Premium_AzureFrontDoor'
+
 type RuleSetType = 'DefaultRuleSet' | 'Microsoft_DefaultRuleSet'
 type RuleSet = {
   ruleSetType: RuleSetType
@@ -298,7 +301,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
   location: 'Global'
   tags: {}
   sku: {
-    name: 'Standard_AzureFrontDoor'
+    name: wafSku
   }
   properties: {
     policySettings: {
@@ -312,7 +315,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     customRules: {
       rules: wafCustomRules
     }
-    managedRules: {
+    managedRules: wafSku == 'Premium_AzureFrontDoor' ? {
       managedRuleSets: [
         {
           /* Note that if using the "Classic" Front Door tier, the rule sets available are:
@@ -324,7 +327,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
           exclusions: []
         }
       ]
-    }
+    } : null
   }
 }
 
