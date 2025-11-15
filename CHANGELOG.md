@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.0...v2.12.0) (2025-11-15)
+
+
+### Features
+
+* **8194:** resend access code ([#4543](https://github.com/UK-Export-Finance/dtfs2/issues/4543)) ([5d3b417](https://github.com/UK-Export-Finance/dtfs2/commit/5d3b4179da1f4ca026ec290f1d4033c463c05433))
+* **DTFS2-6761:** commonised password hashing ([#4509](https://github.com/UK-Export-Finance/dtfs2/issues/4509)) ([0904a27](https://github.com/UK-Export-Finance/dtfs2/commit/0904a27d6609d010c346425b1e2da3b071236620))
+* **DTFS2-6761:** improve password hasing - pbkdf2sync ([#4516](https://github.com/UK-Export-Finance/dtfs2/issues/4516)) ([90b77fb](https://github.com/UK-Export-Finance/dtfs2/commit/90b77fb7f75aa1157e214099922f07d736d4c47f))
+* **DTFS2-8187:** global exception handlers ([#4523](https://github.com/UK-Export-Finance/dtfs2/issues/4523)) ([d5ab3e5](https://github.com/UK-Export-Finance/dtfs2/commit/d5ab3e51c3ee4486bf31e332610d2805d9fad88d))
+* **DTFS2-8192:** access code expired template ([#4537](https://github.com/UK-Export-Finance/dtfs2/issues/4537)) ([ab45e28](https://github.com/UK-Export-Finance/dtfs2/commit/ab45e28fded6d5a7b3cc17ed816dc1fb599b1dd4))
+* **DTFS2-8193:** add access code attempts macro template ([#4540](https://github.com/UK-Export-Finance/dtfs2/issues/4540)) ([97c02b5](https://github.com/UK-Export-Finance/dtfs2/commit/97c02b52a51a3cfb293505c6fa8fe04d7cdf42e3))
+* **DTFS2-8197:** add check your email access code template ([#4542](https://github.com/UK-Export-Finance/dtfs2/issues/4542)) ([ef839da](https://github.com/UK-Export-Finance/dtfs2/commit/ef839da68762133748785bd7f39ffa86a973ac82))
+* **DTFS2-8198:** add middleware validate portal 2fa is enabled ([#4541](https://github.com/UK-Export-Finance/dtfs2/issues/4541)) ([d8d8858](https://github.com/UK-Export-Finance/dtfs2/commit/d8d8858850c6957813fe8d32b134ec63405c701a))
+
+
+### Bug Fixes
+
+* **DTFS2-6761:** updated key length to 128 ([#4518](https://github.com/UK-Export-Finance/dtfs2/issues/4518)) ([4a5f387](https://github.com/UK-Export-Finance/dtfs2/commit/4a5f3878f5a33fea0ae16aab05ad62841110c3f7))
+* **DTFS2-8184:** hide make a change button when facility changed to issued and not submitted ([#4534](https://github.com/UK-Export-Finance/dtfs2/issues/4534)) ([08733c6](https://github.com/UK-Export-Finance/dtfs2/commit/08733c66172c198134d58bb1f851d5ecd7a0922a))
+* **DTFS2-8185:** fix unissued facility banner ([#4531](https://github.com/UK-Export-Finance/dtfs2/issues/4531)) ([5e5bb84](https://github.com/UK-Export-Finance/dtfs2/commit/5e5bb84758b5f7f47231b967da7e950fcf0b8e08))
+* **DTFS2-8186:** fix cover end date validation ([#4533](https://github.com/UK-Export-Finance/dtfs2/issues/4533)) ([a1af934](https://github.com/UK-Export-Finance/dtfs2/commit/a1af934fda026f5a5862279c2021e6f38c24b84a))
+* **DTFS2-8207:** fix pending cancellation change button ([#4550](https://github.com/UK-Export-Finance/dtfs2/issues/4550)) ([eeb9cf0](https://github.com/UK-Export-Finance/dtfs2/commit/eeb9cf0d7bff852b88a7aeec55b7b255640b9894))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
