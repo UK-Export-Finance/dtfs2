@@ -293,7 +293,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
   }
 ] : []
 
-resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2025-03-01' = {
+resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2024-02-01' = {
   name: wafPoliciesName
   location: 'Global'
   tags: {}
