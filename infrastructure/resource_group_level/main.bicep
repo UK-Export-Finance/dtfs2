@@ -489,7 +489,7 @@ var gefUiAdditionalSecureConnectionStrings = { }
 /* var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
-} 
+}
 var tfmApiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
@@ -986,7 +986,7 @@ module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
   }
 }
 
-module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = if (!parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps) {
+module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesNoIpRestriction'
   params: {
     product: product
