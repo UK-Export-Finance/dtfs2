@@ -1,5 +1,5 @@
 param backendPoolIp string
-param wafPoliciesId string
+param wafPoliciesId string = ''
 param product string
 param target string
 param version string
@@ -31,7 +31,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
 
 resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
   name: originGroupName
-  parent: afdProfile
+  parent: afdEndpoint
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
@@ -43,14 +43,14 @@ resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      isEnabled: false       // matches Classic: EnabledState: 'Disabled'
+      isEnabled: false // matches Classic EnabledState: 'Disabled'
     }
   }
 }
 
 resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
   name: originName
-  parent: afdProfile
+  parent: originGroup
   properties: {
     hostName: backendPoolIp
     httpPort: 80
@@ -63,18 +63,14 @@ resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
 
 resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeForwardName
-  parent: afdProfile
+  parent: afdEndpoint
   properties: {
     originGroup: {
       id: originGroup.id
     }
-    patternsToMatch: [
-      '/*'
-    ]
-    supportedProtocols: [
-      'Https'
-    ]
-    httpsRedirect: 'Disabled'   // Classic behavior: HttpOnly forwarding
+    patternsToMatch: ['/*']
+    supportedProtocols: ['Https']
+    httpsRedirect: 'Disabled'       // Classic used HttpOnly forwarding
     forwardingProtocol: 'HttpOnly'
     linkToDefaultDomain: 'Enabled'
   }
@@ -82,29 +78,22 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
 
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeRedirectName
-  parent: afdProfile
+  parent: afdEndpoint
   properties: {
     originGroup: null
-    patternsToMatch: [
-      '/*'
-    ]
-    supportedProtocols: [
-      'Http'
-    ]
+    patternsToMatch: ['/*']
+    supportedProtocols: ['Http']
     httpsRedirect: 'Enabled'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
 resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
-  name: 'wafPolicy'
-  parent: afdProfile
+  name: '${afdProfile.name}/wafPolicy'
   properties: {
     associations: [
       {
-        domains: [
-          afdEndpoint.id
-        ]
+        domains: [afdEndpoint.id]
         wafPolicy: {
           id: wafPoliciesId
         }
