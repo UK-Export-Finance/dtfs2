@@ -21,7 +21,8 @@ resource afdProfile 'Microsoft.Cdn/profiles@2024-02-01' = {
 }
 
 resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}'
+  name: endpointName
+  parent: afdProfile
   location: 'global'
   properties: {
     enabledState: 'Enabled'
@@ -29,7 +30,8 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
 }
 
 resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-02-01' = {
-  name: '${afdProfile.name}/${originGroupName}'
+  name: originGroupName
+  parent: afdProfile
   properties: {
     loadBalancingSettings: {
       sampleSize: 4

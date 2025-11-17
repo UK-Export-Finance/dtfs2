@@ -21,7 +21,8 @@ resource afdProfile 'Microsoft.Cdn/profiles@2024-02-01' = {
 }
 
 resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}'
+  name: endpointName
+  parent: afdProfile
   location: 'global'
   properties: {
     enabledState: 'Enabled'
@@ -80,7 +81,8 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
 }
 
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}/${routeRedirectName}'
+  name: originGroupName
+  parent: afdProfile
   properties: {
     originGroup: null
 
