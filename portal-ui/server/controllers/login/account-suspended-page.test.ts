@@ -1,9 +1,9 @@
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { Response } from 'express';
-import { renderTemporarilySuspendedAccessCodePage, GetTemporarilySuspendedAccessCodePageRequest } from './account-suspended-page.ts';
+import { getAccountSuspendedPage, GetTemporarilySuspendedAccessCodePageRequest } from './account-suspended-page';
 
-describe('renderTemporarilySuspendedAccessCodePage', () => {
+describe('getAccountSuspendedPage', () => {
   let req: GetTemporarilySuspendedAccessCodePageRequest;
   let res: Response & {
     _getStatusCode: () => number;
@@ -19,16 +19,11 @@ describe('renderTemporarilySuspendedAccessCodePage', () => {
   });
 
   it('should render the temporarily suspended access code template', () => {
-    // Arrange
-    const handler = renderTemporarilySuspendedAccessCodePage[1];
-    const next = jest.fn();
-
     // Act
-    handler(req, res, next);
+    getAccountSuspendedPage(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('login/temporarily-suspended-access-code.njk');
-    expect(next).not.toHaveBeenCalled();
   });
 });
