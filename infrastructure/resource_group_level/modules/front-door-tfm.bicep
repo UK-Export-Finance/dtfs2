@@ -29,26 +29,28 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-02-01' = {
-  name: '${afdProfile.name}/${originGroupName}'
+resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
+  name: originGroupName
+  parent: afdEndpoint
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
       successfulSamplesRequired: 2
-      additionalLatencyMilliseconds: 0
+      additionalLatencyInMilliseconds: 0
     }
     healthProbeSettings: {
       probePath: '/healthcheck?fd-tfm'
       probeRequestType: 'GET'
       probeProtocol: 'Http'
-      intervalInSeconds: 30
-      isEnabled: false          // matches EnabledState: 'Disabled'
+      probeIntervalInSeconds: 30
+      isEnabled: false       // matches Classic: EnabledState: 'Disabled'
     }
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = {
-  name: '${afdProfile.name}/${originGroupName}/${originName}'
+resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
+  name: originName
+  parent: originGroup
   properties: {
     hostName: backendPoolIp
     httpPort: 80
@@ -60,48 +62,43 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = {
 }
 
 resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}/${routeForwardName}'
+  name: routeForwardName
+  parent: afdEndpoint
   properties: {
     originGroup: {
       id: originGroup.id
     }
-    supportedProtocols: [
-      'Https'
-    ]
     patternsToMatch: [
       '/*'
     ]
-
-    httpsRedirect: 'Disabled' // Because Classic used HttpOnly forwarding
-
+    supportedProtocols: [
+      'Https'
+    ]
+    httpsRedirect: 'Disabled'   // Classic behavior: HttpOnly forwarding
     forwardingProtocol: 'HttpOnly'
-
     linkToDefaultDomain: 'Enabled'
   }
 }
 
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
-  name: originGroupName
-  parent: afdProfile
+  name: routeRedirectName
+  parent: afdEndpoint
   properties: {
     originGroup: null
-
-    supportedProtocols: [
-      'Http'
-    ]
-
     patternsToMatch: [
       '/*'
     ]
-
+    supportedProtocols: [
+      'Http'
+    ]
     httpsRedirect: 'Enabled'
-
     linkToDefaultDomain: 'Enabled'
   }
 }
 
-resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = {
-  name: '${afdProfile.name}/wafPolicy'
+resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
+  name: 'wafPolicy'
+  parent: afdProfile
   properties: {
     associations: [
       {
