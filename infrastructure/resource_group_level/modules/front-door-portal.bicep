@@ -11,7 +11,7 @@ var originName = 'backendOrigin'
 var routeForwardName = 'DefaultRoutingRule'
 var routeRedirectName = 'RedirectToHttps'
 
-resource afdProfile 'Microsoft.Cdn/profiles@2024-02-01' = {
+resource afdProfile 'Microsoft.Cdn/profiles@22025-06-01' = {
   name: frontDoorPortalName
   location: 'global'
   sku: {
@@ -20,7 +20,7 @@ resource afdProfile 'Microsoft.Cdn/profiles@2024-02-01' = {
   tags: {}
 }
 
-resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
+resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@22025-06-01' = {
   name: endpointName
   parent: afdProfile
   location: 'global'
@@ -29,7 +29,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups@2024-02-01' = {
+resource originGroup 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups@22025-06-01' = {
   name: originGroupName
   parent: afdEndpoint
   properties: {
@@ -48,7 +48,7 @@ resource originGroup 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups@2024-0
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups/origins@2024-02-01' = {
+resource origin 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups/origins@22025-06-01' = {
   name: originName
   parent: originGroup
   properties: {
@@ -61,7 +61,7 @@ resource origin 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups/origins@202
   }
 }
 
-resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
+resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@22025-06-01' = {
   name: routeForwardName
   parent: afdEndpoint
   properties: {
@@ -76,7 +76,7 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
+resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@22025-06-01' = {
   name: routeRedirectName
   parent: afdEndpoint
   properties: {
@@ -88,7 +88,7 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' =
   }
 }
 
-resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
+resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@22025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
   parent: afdProfile
   properties: {
