@@ -31,7 +31,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
 
 resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
   name: originGroupName
-  parent: afdEndpoint
+  parent: afdProfile
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
@@ -50,7 +50,7 @@ resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
 
 resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
   name: originName
-  parent: originGroup
+  parent: afdProfile
   properties: {
     hostName: backendPoolIp
     httpPort: 80
@@ -63,7 +63,7 @@ resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
 
 resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeForwardName
-  parent: afdEndpoint
+  parent: afdProfile
   properties: {
     originGroup: {
       id: originGroup.id
@@ -82,7 +82,7 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
 
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeRedirectName
-  parent: afdEndpoint
+  parent: afdProfile
   properties: {
     originGroup: null
     patternsToMatch: [
