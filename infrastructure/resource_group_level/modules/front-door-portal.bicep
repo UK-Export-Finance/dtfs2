@@ -29,27 +29,28 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-02-01' = {
+resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2024-02-01' = {
   name: originGroupName
-  parent: afdProfile
+  parent: afdEndpoint
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
       successfulSamplesRequired: 2
-      additionalLatencyMilliseconds: 0
+      additionalLatencyInMilliseconds: 0
     }
     healthProbeSettings: {
       probePath: '/healthcheck?fd-portal'
       probeRequestType: 'GET'
       probeProtocol: 'Http'
-      intervalInSeconds: 30
-      isEnabled: false       // matches Classic's enabledState: 'Disabled'
+      probeIntervalInSeconds: 30
+      isEnabled: false   // matches Classic's enabledState: 'Disabled'
     }
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = {
-  name: '${afdProfile.name}/${originGroupName}/${originName}'
+resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2024-02-01' = {
+  name: originName
+  parent: originGroup
   properties: {
     hostName: backendPoolIp
     httpPort: 80
@@ -61,7 +62,8 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = {
 }
 
 resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}/${routeForwardName}'
+  name: routeForwardName
+  parent: afdEndpoint
   properties: {
     originGroup: {
       id: originGroup.id
@@ -72,14 +74,15 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
     supportedProtocols: [
       'Https'
     ]
-    httpsRedirect: 'Disabled'     // HTTPS should *not* redirect → forward
+    httpsRedirect: 'Disabled'     // Classic: HttpOnly forwarding
     forwardingProtocol: 'HttpOnly'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
-  name: '${afdProfile.name}/${endpointName}/${routeRedirectName}'
+  name: routeRedirectName
+  parent: afdEndpoint
   properties: {
     originGroup: null
     patternsToMatch: [
@@ -94,7 +97,8 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' =
 }
 
 resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
-  name: '${afdProfile.name}/wafPolicy'
+  name: 'wafPolicy'
+  parent: afdProfile
   properties: {
     associations: [
       {
@@ -108,3 +112,5 @@ resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!em
     ]
   }
 }
+
+output frontendHostName string = afdEndpoint.properties.hostName
