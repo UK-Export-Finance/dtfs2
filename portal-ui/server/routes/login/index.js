@@ -5,7 +5,7 @@ const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controlle
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
-const { renderTemporarilySuspendedAccessCodePage } = require('../../controllers/login/account-suspended-page.ts');
+const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
 const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
@@ -348,6 +348,6 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *       403:
  *         description: Forbidden
  */
-router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, renderTemporarilySuspendedAccessCodePage);
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, getAccountSuspendedPage);
 
 module.exports = router;
