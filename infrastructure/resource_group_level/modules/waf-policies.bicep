@@ -315,7 +315,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     customRules: {
       rules: wafCustomRules
     }
-    managedRules: wafSku == 'Premium_AzureFrontDoor' ? {
+    managedRules: wafSku == 'Standard_AzureFrontDoor' ? {
       managedRuleSets: [
         {
           /* Note that if using the "Classic" Front Door tier, the rule sets available are:
