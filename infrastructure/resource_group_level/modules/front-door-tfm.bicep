@@ -102,6 +102,10 @@ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = i
   parent: afdProfile
   properties: {
     parameters: {
+      type: 'WebApplicationFirewall'                
+      wafPolicy: {
+        id: wafPoliciesId                            
+      }
       associations: [
         {
           domains: [
@@ -110,14 +114,10 @@ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = i
             }
           ]
           patternsToMatch: ['/*']
-          policyLink: {
-            id: wafPoliciesId
-          }
         }
       ]
     }
   }
 }
 
-// Output the default hostname
 output defaultHostName string = '${frontDoorTfmName}.azurefd.net'
