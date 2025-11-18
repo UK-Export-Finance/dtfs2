@@ -2,26 +2,9 @@ import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { addCheckerCommentsToApplication } from './add-checker-comments-to-application';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
+import api from '../services/api';
 
-let getApplicationMock: jest.Mock;
-let getUserDetailsMock: jest.Mock;
-let updateApplicationMock: jest.Mock;
-
-jest.mock('../services/api', () => ({
-  get getApplication() {
-    return getApplicationMock;
-  },
-  get getUserDetails() {
-    return getUserDetailsMock;
-  },
-  get updateApplication() {
-    return updateApplicationMock;
-  },
-}));
-
-getApplicationMock = jest.fn();
-getUserDetailsMock = jest.fn();
-updateApplicationMock = jest.fn();
+jest.mock('../services/api');
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const mockUser = aPortalSessionUser();
@@ -33,18 +16,18 @@ const mockComment = 'This is a test comment';
 describe('addCheckerCommentsToApplication', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    getApplicationMock.mockResolvedValue(mockDeal);
-    getUserDetailsMock.mockResolvedValue(mockUser);
-    updateApplicationMock.mockResolvedValue(mockDeal);
+    (api.getApplication as jest.Mock).mockResolvedValue(mockDeal);
+    (api.getUserDetails as jest.Mock).mockResolvedValue(mockUser);
+    (api.updateApplication as jest.Mock).mockResolvedValue(mockDeal);
   });
 
   describe('when a comment is NOT provided', () => {
     it('should not add a comment to the application', async () => {
       await addCheckerCommentsToApplication(dealId, userToken, userId, '');
 
-      expect(getApplicationMock).not.toHaveBeenCalled();
-      expect(getUserDetailsMock).not.toHaveBeenCalled();
-      expect(updateApplicationMock).not.toHaveBeenCalled();
+      expect(api.getApplication).not.toHaveBeenCalled();
+      expect(api.getUserDetails).not.toHaveBeenCalled();
+      expect(api.updateApplication).not.toHaveBeenCalled();
     });
   });
 
@@ -68,14 +51,14 @@ describe('addCheckerCommentsToApplication', () => {
         ],
       };
 
-      expect(getApplicationMock).toHaveBeenCalledTimes(1);
-      expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken });
+      expect(api.getApplication).toHaveBeenCalledTimes(1);
+      expect(api.getApplication).toHaveBeenCalledWith({ dealId, userToken });
 
-      expect(getUserDetailsMock).toHaveBeenCalledTimes(1);
-      expect(getUserDetailsMock).toHaveBeenCalledWith({ userId, userToken });
+      expect(api.getUserDetails).toHaveBeenCalledTimes(1);
+      expect(api.getUserDetails).toHaveBeenCalledWith({ userId, userToken });
 
-      expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-      expect(updateApplicationMock).toHaveBeenCalledWith({ dealId, application: expectedApplication, userToken });
+      expect(api.updateApplication).toHaveBeenCalledTimes(1);
+      expect(api.updateApplication).toHaveBeenCalledWith({ dealId, application: expectedApplication, userToken });
     });
   });
 });
