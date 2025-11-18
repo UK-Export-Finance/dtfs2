@@ -1016,7 +1016,7 @@ module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = {
     wafPoliciesId: parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps ? wafPoliciesIpRestricted.outputs.wafPoliciesId : wafPoliciesNoIpRestriction.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
-} */
+} 
 
 /* module frontDoorTfm 'modules/front-door-tfm.bicep' = {
   name: 'frontDoorTfm'
