@@ -123,7 +123,8 @@ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = i
               id: afdEndpoint.id
             }
           ]
-          wafPolicy: {
+          patternsToMatch: ['/*']
+          policyLink: {
             id: wafPoliciesId
           }
         }
