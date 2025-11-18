@@ -965,7 +965,7 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
     tfmUiHostname: tfmUi.outputs.defaultHostName
   }
 }
-
+/*
 module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesIpRestricted'
   params: {
@@ -1006,7 +1006,7 @@ module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = {
   }
 }
 
-module frontDoorPortal 'modules/front-door-portal.bicep' = {
+ module frontDoorPortal 'modules/front-door-portal.bicep' = {
   name: 'frontDoorPortal'
   params: {
     backendPoolIp: tfsIp.outputs.tfsIpAddress
@@ -1016,7 +1016,7 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
     wafPoliciesId: parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps ? wafPoliciesIpRestricted.outputs.wafPoliciesId : wafPoliciesNoIpRestriction.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
-}
+} */
 
 /* module frontDoorTfm 'modules/front-door-tfm.bicep' = {
   name: 'frontDoorTfm'
