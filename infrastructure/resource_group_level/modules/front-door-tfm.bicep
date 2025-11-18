@@ -11,6 +11,7 @@ var originName = 'backendOrigin'
 var routeForwardName = 'DefaultRoutingRule'
 var routeRedirectName = 'RedirectToHttps'
 
+// Create the Front Door profile
 resource afdProfile 'Microsoft.Cdn/profiles@2025-06-01' = {
   name: frontDoorTfmName
   location: 'global'
@@ -20,6 +21,7 @@ resource afdProfile 'Microsoft.Cdn/profiles@2025-06-01' = {
   tags: {}
 }
 
+// Create the Frontend endpoint
 resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   name: endpointName
   parent: afdProfile
@@ -29,6 +31,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   }
 }
 
+// Create the origin group
 resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
   name: originGroupName
   parent: afdProfile
@@ -43,11 +46,12 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      //isEnabled: false // matches Classic EnabledState: 'Disabled'
+      // isEnabled is not allowed in AFD V2
     }
   }
 }
 
+// Create the backend origin
 resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   name: originName
   parent: originGroup
@@ -61,26 +65,30 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   }
 }
 
-resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
+// Create the forwarding route
+resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
   name: routeForwardName
-  parent: originGroup
+  parent: afdEndpoint
   properties: {
     originGroup: {
       id: originGroup.id
     }
     patternsToMatch: ['/*']
     supportedProtocols: ['Https']
-    httpsRedirect: 'Disabled'       // Classic used HttpOnly forwarding
+    httpsRedirect: 'Disabled'       // HttpOnly forwarding
     forwardingProtocol: 'HttpOnly'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
+// Create the redirect route
+resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
   name: routeRedirectName
-  parent: originGroup
+  parent: afdEndpoint
   properties: {
-    originGroup: null
+    originGroup: {
+      id: ''  // Required placeholder
+    }
     patternsToMatch: ['/*']
     supportedProtocols: ['Http']
     httpsRedirect: 'Enabled'
@@ -88,19 +96,23 @@ resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' =
   }
 }
 
+// Associate WAF policy if provided
 resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
   parent: afdProfile
   properties: {
-    associations: [
-      {
-        domains: [afdEndpoint.id]
-        wafPolicy: {
-          id: wafPoliciesId
+    parameters: {
+      associations: [
+        {
+          domains: [afdEndpoint.id]
+          wafPolicy: {
+            id: wafPoliciesId
+          }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
+// Output the default hostname
 output defaultHostName string = '${frontDoorTfmName}.azurefd.net'

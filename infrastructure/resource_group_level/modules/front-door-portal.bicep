@@ -81,54 +81,52 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = 
     originGroup: {
       id: originGroup.id
     }
-    supportedProtocols: [
-      'Https'
-    ]
-    patternsToMatch: [
-      '/*'
-    ]
+    patternsToMatch: ['/*']
+    supportedProtocols: ['Https']
+    httpsRedirect: 'Disabled'
     forwardingProtocol: 'HttpOnly'
-    httpsRedirect: 'Disabled' // matches Classic FWD behaviour
     linkToDefaultDomain: 'Enabled'
   }
 }
 
+
 // -------------------------------------------
 // Redirect Route (HTTP → HTTPS)
 // -------------------------------------------
-resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
+resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
   name: routeRedirectName
   parent: afdEndpoint
   properties: {
-    originGroup: null
-    supportedProtocols: [
-      'Http'
-    ]
-    patternsToMatch: [
-      '/*'
-    ]
+    originGroup: {
+      id: ''
+    }
+    patternsToMatch: ['/*']
+    supportedProtocols: ['Http']
     httpsRedirect: 'Enabled'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
+
 // -------------------------------------------
 // WAF Policy Association (optional)
 // -------------------------------------------
-resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
-  name: 'waf-policy'
+resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
+  name: 'wafPolicy'
   parent: afdProfile
   properties: {
-    associations: [
-      {
-        domains: [
-          afdEndpoint.id
-        ]
-        wafPolicy: {
-          id: wafPoliciesId
-        }
+    parameters: {
+      wafPolicy: {
+        id: wafPoliciesId
       }
-    ]
+      associations: [
+        {
+          domains: [
+            afdEndpoint.id
+          ]
+        }
+      ]
+    }
   }
 }
 
