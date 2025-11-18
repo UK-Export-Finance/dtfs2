@@ -1001,7 +1001,7 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
   dependsOn: [applicationGatewayPortal]
 }
 
-module frontDoorTfm 'modules/front-door-tfm.bicep' = {
+/* module frontDoorTfm 'modules/front-door-tfm.bicep' = {
   name: 'frontDoorTfm'
   params: {
     backendPoolIp: tfsIp.outputs.tfsTfmIpAddress
@@ -1011,4 +1011,4 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
     wafPoliciesId: wafPoliciesIpRestricted.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayTfm]
-}
+} */

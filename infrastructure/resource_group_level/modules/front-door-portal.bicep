@@ -4,23 +4,28 @@ param product string
 param target string
 param version string
 
-var frontDoorPortalName = 'frontdoor-${product}-portal-${target}-${version}'
-var endpointName = 'DefaultFrontendEndpoint'
-var originGroupName = 'DefaultBackendPool'
-var originName = 'backendOrigin'
-var routeForwardName = 'DefaultRoutingRule'
-var routeRedirectName = 'RedirectToHttps'
+var frontDoorName     = 'frontdoor-${product}-portal-${target}-${version}'
+var endpointName      = 'default-endpoint'
+var originGroupName   = 'default-origin-group'
+var originName        = 'backend-origin'
+var routeForwardName  = 'forward-route'
+var routeRedirectName = 'redirect-route'
 
-resource afdProfile 'Microsoft.Cdn/profiles@2025-06-01' = {
-  name: frontDoorPortalName
+// -------------------------------------------
+// AFD Profile
+// -------------------------------------------
+resource afdProfile 'Microsoft.Cdn/profiles@2024-02-01' = {
+  name: frontDoorName
   location: 'global'
   sku: {
     name: 'Standard_AzureFrontDoor'
   }
-  tags: {}
 }
 
-resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
+// -------------------------------------------
+// Endpoint
+// -------------------------------------------
+resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
   name: endpointName
   parent: afdProfile
   location: 'global'
@@ -29,7 +34,10 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
+// -------------------------------------------
+// Origin Group
+// -------------------------------------------
+resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-02-01' = {
   name: originGroupName
   parent: afdProfile
   properties: {
@@ -43,12 +51,14 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      //isEnabled: false
     }
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
+// -------------------------------------------
+// Origin inside Origin Group
+// -------------------------------------------
+resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = {
   name: originName
   parent: originGroup
   properties: {
@@ -61,40 +71,59 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   }
 }
 
-resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
+// -------------------------------------------
+// Forward Route (HTTPS → HTTP backend)
+// -------------------------------------------
+resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeForwardName
   parent: afdEndpoint
   properties: {
     originGroup: {
       id: originGroup.id
     }
-    patternsToMatch: ['/*']
-    supportedProtocols: ['Https']
-    httpsRedirect: 'Disabled'     // Classic HttpOnly forwarding
+    supportedProtocols: [
+      'Https'
+    ]
+    patternsToMatch: [
+      '/*'
+    ]
     forwardingProtocol: 'HttpOnly'
+    httpsRedirect: 'Disabled' // matches Classic FWD behaviour
     linkToDefaultDomain: 'Enabled'
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
+// -------------------------------------------
+// Redirect Route (HTTP → HTTPS)
+// -------------------------------------------
+resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   name: routeRedirectName
   parent: afdEndpoint
   properties: {
     originGroup: null
-    patternsToMatch: ['/*']
-    supportedProtocols: ['Http']
+    supportedProtocols: [
+      'Http'
+    ]
+    patternsToMatch: [
+      '/*'
+    ]
     httpsRedirect: 'Enabled'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
-resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
-  name: 'wafPolicy'
+// -------------------------------------------
+// WAF Policy Association (optional)
+// -------------------------------------------
+resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = if (!empty(wafPoliciesId)) {
+  name: 'waf-policy'
   parent: afdProfile
   properties: {
     associations: [
       {
-        domains: [afdEndpoint.id]
+        domains: [
+          afdEndpoint.id
+        ]
         wafPolicy: {
           id: wafPoliciesId
         }
@@ -103,4 +132,4 @@ resource wafAssoc 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!em
   }
 }
 
-output frontendHostName string = '${frontDoorPortalName}.azurefd.net'
+output endpointHostName string = afdEndpoint.properties.hostName
