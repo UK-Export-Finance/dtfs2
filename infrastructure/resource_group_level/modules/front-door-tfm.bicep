@@ -63,7 +63,7 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
 
 resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeForwardName
-  parent: afdEndpoint
+  parent: originGroup
   properties: {
     originGroup: {
       id: originGroup.id
@@ -78,7 +78,7 @@ resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = 
 
 resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeRedirectName
-  parent: afdEndpoint
+  parent: originGroup
   properties: {
     originGroup: null
     patternsToMatch: ['/*']
