@@ -43,7 +43,7 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      isEnabled: false // matches Classic EnabledState: 'Disabled'
+      //isEnabled: false // matches Classic EnabledState: 'Disabled'
     }
   }
 }

@@ -30,8 +30,8 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
 }
 
 resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
-  name: afdProfile
-  parent: afdEndpoint
+  name: originGroupName
+  parent: afdProfile
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
@@ -43,7 +43,7 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      isEnabled: false
+      //isEnabled: false
     }
   }
 }
