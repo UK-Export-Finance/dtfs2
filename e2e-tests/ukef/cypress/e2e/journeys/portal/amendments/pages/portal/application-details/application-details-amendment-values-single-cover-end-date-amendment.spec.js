@@ -1,7 +1,7 @@
 import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 
-import { D_MMMM_YYYY_FORMAT } from '@ukef/dtfs2-common/test-helpers';
+import { D_MMMM_YYYY_FORMAT, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -39,6 +39,7 @@ context('Amendments - Single cover end date amendment - Application details disp
         cy.loginAndSubmitPortalAmendmentRequestToUkef({
           facilityValueExists: false,
           coverEndDateExists: true,
+          changedCoverEndDate: tomorrow.date,
           applicationDetailsUrl,
           facilityId,
           dealId,
@@ -60,7 +61,7 @@ context('Amendments - Single cover end date amendment - Application details disp
 
   it('should display the updated amendment cover end date on facility summary list', () => {
     applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(facilityValue, false));
-    applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
+    applicationPreview.facilitySummaryList().contains(format(new Date(tomorrow.date), D_MMMM_YYYY_FORMAT));
     applicationPreview.facilitySummaryList().contains(facilityEndDate);
   });
 });

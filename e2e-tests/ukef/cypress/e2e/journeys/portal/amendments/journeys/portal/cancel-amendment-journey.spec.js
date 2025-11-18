@@ -1,3 +1,4 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -168,7 +169,7 @@ context('Amendments - Cancel amendment journey', () => {
     const pageActions = () => {
       whatDoYouNeedToChange.coverEndDateCheckbox().click();
       cy.clickContinueButton();
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
       cy.clickContinueButton();
       doYouHaveAFacilityEndDate.yesRadioButton().click();
       cy.clickContinueButton();
@@ -181,7 +182,7 @@ context('Amendments - Cancel amendment journey', () => {
       whatDoYouNeedToChange.coverEndDateCheckbox().click();
       whatDoYouNeedToChange.facilityValueCheckbox().click();
       cy.clickContinueButton();
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
       cy.clickContinueButton();
       doYouHaveAFacilityEndDate.noRadioButton().click();
       cy.clickContinueButton();

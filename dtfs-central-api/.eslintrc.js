@@ -73,6 +73,7 @@ module.exports = {
   root: true,
   ignorePatterns: ['**/node_modules/**'],
   rules: baseRules,
+  noInlineConfig: true,
   settings: {
     'import/resolver': {
       typescript: {},

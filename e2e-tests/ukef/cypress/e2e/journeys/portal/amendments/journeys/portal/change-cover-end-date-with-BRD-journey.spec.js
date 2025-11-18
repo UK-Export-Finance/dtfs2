@@ -1,4 +1,4 @@
-import { today } from '@ukef/dtfs2-common/test-helpers';
+import { today, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -75,7 +75,7 @@ context('Amendments - Change cover end date with bank review date - full journey
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
@@ -101,7 +101,7 @@ context('Amendments - Change cover end date with bank review date - full journey
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Bank review date');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Facility value');
 
-    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
+    amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(tomorrow.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateChangeLink().should('not.exist');
 
