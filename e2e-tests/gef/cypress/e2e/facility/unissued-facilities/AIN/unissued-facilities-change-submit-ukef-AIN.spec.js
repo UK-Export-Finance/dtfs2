@@ -17,6 +17,9 @@ import applicationActivities from '../../../pages/application-activities';
 let dealId;
 let token;
 let facilityOneId;
+let facilityTwoId;
+let facilityThreeId;
+let facilityFourId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -40,15 +43,18 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               unissuedCashFacility._id = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
-            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
+            });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
               unissuedContingentFacility._id = facility.body.details._id;
+              facilityThreeId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               unissuedCashFacilityWith20MonthsOfCover._id = facility.body.details._id;
+              facilityFourId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
             });
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
@@ -329,6 +335,13 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.abandonLink().should('not.exist');
       // should not be able to edit ref name
       applicationDetails.editRefNameLink().should('not.exist');
+    });
+
+    it('should only show make a change for facilities which were already issued (not changed to issued', () => {
+      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
 
     // change facility to issued and check correct format

@@ -53,17 +53,37 @@
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
-    <header class="is-flex is-justify-content-space-between">
-      <h3 class="govuk-heading-m" data-cy="facility-type-heading">
-        {{item.heading}} facility
-      </h3>
-      {% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
-        <a
-          class="govuk-link"
-          href="/gef/application-details/{{dealId}}/facilities/{{item.facilityId}}/confirm-deletion"
-          aria-label="Delete facility {{item.facilityName}}"
-          data-cy="delete-facility">Delete facility</a>
-      {% endif %}
+
+    {% if item.canIssuedFacilitiesBeAmended %}
+      <header class="is-flex">
+        <h3 class="govuk-heading-m govuk-grid-column-one-half govuk-!-padding-left-0" data-cy="facility-type-heading">
+          {{item.heading}} facility
+        </h3>
+    
+        <form method="post" action={{"/gef/application-details/"+dealId+"/facilities/"+item.facilityId+"/amendments/create-draft"}} >
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukButton({
+          text: "Make a change",
+          attributes: {
+            'data-cy': "facility-" + item.facilityId + "-make-change-button"
+          }
+        }) }}
+        </form>
+    {% else %}
+      <header class="is-flex is-justify-content-space-between">
+        <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+          {{item.heading}} facility
+        </h3>
+        {% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{dealId}}/facilities/{{item.facilityId}}/confirm-deletion"
+            aria-label="Delete facility {{item.facilityName}}"
+            data-cy="delete-facility">Delete facility</a>
+        {% endif %}
+    {% endif %}
+
     </header>
     {{ govukSummaryList({
       rows: item.rows,
