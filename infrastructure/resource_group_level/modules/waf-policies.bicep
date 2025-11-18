@@ -327,7 +327,10 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
           exclusions: []
         }
       ]
-    } : null
+    } : {
+      // Required by API for Standard SKU, but ignored by the service
+      managedRuleSets: []
+    }
   }
 }
 
