@@ -29,7 +29,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2025-06-01' = {
+resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
   name: originGroupName
   parent: afdProfile
   properties: {
@@ -48,7 +48,7 @@ resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2025-06-01' = {
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2025-06-01' = {
+resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   name: originName
   parent: originGroup
   properties: {
@@ -61,7 +61,7 @@ resource origin 'Microsoft.Cdn/profiles/afdOriginGroups/origins@2025-06-01' = {
   }
 }
 
-resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
+resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeForwardName
   parent: afdEndpoint
   properties: {
@@ -76,7 +76,7 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = 
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
+resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeRedirectName
   parent: afdEndpoint
   properties: {

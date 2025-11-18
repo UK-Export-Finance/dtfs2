@@ -61,7 +61,7 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   }
 }
 
-resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
+resource routeForward 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeForwardName
   parent: afdEndpoint
   properties: {
@@ -76,7 +76,7 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = 
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
+resource routeRedirect 'Microsoft.Cdn/profiles/originGroups/routes@2025-06-01' = {
   name: routeRedirectName
   parent: afdEndpoint
   properties: {
