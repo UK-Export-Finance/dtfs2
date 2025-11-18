@@ -104,7 +104,11 @@ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = i
     parameters: {
       associations: [
         {
-          domains: [afdEndpoint.id]
+          domains: [
+            {
+              id: afdEndpoint.id
+            }
+          ]
           wafPolicy: {
             id: wafPoliciesId
           }
