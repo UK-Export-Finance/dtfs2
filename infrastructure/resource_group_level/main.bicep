@@ -965,7 +965,7 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
     tfmUiHostname: tfmUi.outputs.defaultHostName
   }
 }
-/*
+
 module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesIpRestricted'
   params: {

@@ -22,7 +22,7 @@ param applyWafRuleOverrides bool = false
 param restrictAccessToUkefIps bool
 
 @allowed(['Standard_AzureFrontDoor', 'Premium_AzureFrontDoor'])
-param wafSku string = 'Premium_AzureFrontDoor'
+param wafSku string = 'Standard_AzureFrontDoor'
 
 type RuleSetType = 'DefaultRuleSet' | 'Microsoft_DefaultRuleSet'
 type RuleSet = {
