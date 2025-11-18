@@ -111,7 +111,7 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
 // -------------------------------------------
 // WAF Policy Association (optional)
 // -------------------------------------------
-resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
+/* resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
   parent: afdProfile
   properties: {
@@ -131,6 +131,6 @@ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = i
       ]
     }
   }
-}
+} */
 
 output endpointHostName string = afdEndpoint.properties.hostName
