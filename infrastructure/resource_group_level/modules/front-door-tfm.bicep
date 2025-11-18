@@ -87,7 +87,7 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   parent: afdEndpoint
   properties: {
     originGroup: {
-      id: ''  // Required placeholder
+      id: originGroup.id
     }
     patternsToMatch: ['/*']
     supportedProtocols: ['Http']
