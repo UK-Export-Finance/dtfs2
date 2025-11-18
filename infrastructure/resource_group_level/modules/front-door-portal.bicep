@@ -29,8 +29,8 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   }
 }
 
-resource originGroup 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups@2025-06-01' = {
-  name: originGroupName
+resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
+  name: afdProfile
   parent: afdEndpoint
   properties: {
     loadBalancingSettings: {
@@ -48,7 +48,7 @@ resource originGroup 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups@2025-0
   }
 }
 
-resource origin 'Microsoft.Cdn/profiles/afdEndpoints/afdOriginGroups/origins@2025-06-01' = {
+resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   name: originName
   parent: originGroup
   properties: {

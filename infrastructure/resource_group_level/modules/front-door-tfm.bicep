@@ -31,7 +31,7 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
 
 resource originGroup 'Microsoft.Cdn/profiles/afdOriginGroups@2025-06-01' = {
   name: originGroupName
-  parent: afdEndpoint
+  parent: afdProfile
   properties: {
     loadBalancingSettings: {
       sampleSize: 4
@@ -90,7 +90,7 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
 
 resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
-  parent: afdEndpoint
+  parent: afdProfile
   properties: {
     associations: [
       {
