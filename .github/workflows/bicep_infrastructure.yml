@@ -156,6 +156,7 @@ jobs:
           az config set bicep.use_binary_from_path=False
           az bicep install
           az bicep upgrade
+          az bicep version
 
       - name: Deploy Azure Resources
         uses: azure/arm-deploy@v2
