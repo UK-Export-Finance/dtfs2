@@ -1,5 +1,5 @@
 param backendPoolIp string
-param wafPoliciesId string = ''
+param wafPoliciesId string
 param product string
 param target string
 param version string
@@ -111,7 +111,7 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
 // -------------------------------------------
 // WAF Policy Association (optional)
 // -------------------------------------------
-/* resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
+resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
   parent: afdProfile
   properties: {
@@ -131,6 +131,6 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
       ]
     }
   }
-} */
+}
 
 output endpointHostName string = afdEndpoint.properties.hostName
