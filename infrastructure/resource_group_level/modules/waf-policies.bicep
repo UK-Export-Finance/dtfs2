@@ -315,19 +315,14 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     customRules: {
       rules: wafCustomRules
     }
-    managedRules: wafSku == 'Standard_AzureFrontDoor' ? {
+    managedRules: {
       managedRuleSets: [
         {
-          /* Note that if using the "Classic" Front Door tier, the rule sets available are:
-          ruleSetType 'DefaultRuleSet' with ruleSetType '1.0' corresponding to 'DefaultRuleSet_1.0' in the UI
-          ruleSetType 'Microsoft_DefaultRuleSet' with ruleSetType '1.1' corresponding to 'Microsoft_DefaultRuleSet_1.1' in the UI */
-          ruleSetType: ruleSet.ruleSetType
-          ruleSetVersion: ruleSet.ruleSetVersion
-          ruleGroupOverrides: devRuleOverrides
-          exclusions: []
+          ruleSetType: 'DefaultRuleSet'
+          ruleSetVersion: '1.0'
         }
       ]
-    } : null
+    }
   }
 }
 
