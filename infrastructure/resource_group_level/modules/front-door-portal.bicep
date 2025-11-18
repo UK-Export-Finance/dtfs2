@@ -78,7 +78,6 @@ resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = 
   name: routeForwardName
   parent: afdEndpoint
   dependsOn: [
-    originGroup
     origin
   ]
   properties: {
@@ -101,7 +100,6 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   name: routeRedirectName
   parent: afdEndpoint
   dependsOn: [
-    originGroup
     origin
   ]
   properties: {
