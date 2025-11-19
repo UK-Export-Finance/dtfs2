@@ -218,6 +218,7 @@ describe('postBankReviewDate', () => {
 
     const tfmUpdate = {
       bankReviewDate: today,
+      isUsingFacilityEndDate: false,
     };
 
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
