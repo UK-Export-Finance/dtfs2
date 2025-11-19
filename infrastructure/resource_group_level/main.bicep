@@ -128,15 +128,14 @@ param ESTORE_URL string
 @secure()
 param UKEF_TFM_API_SYSTEM_KEY string
 
-/*@secure()
+@secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
- */
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
-/* @secure()
-param UKEF_INTERNAL_NOTIFICATION string */
+@secure()
+param UKEF_INTERNAL_NOTIFICATION string
 
 
 var storageLocations = [
@@ -485,8 +484,7 @@ var gefUiAdditionalSecureSettings = {
 }
 var gefUiSecureConnectionStrings = { }
 var gefUiAdditionalSecureConnectionStrings = { }
-
-/* var tmfApiSettings = {
+var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
 }
@@ -506,7 +504,7 @@ var tfmApiAdditionalSecureSettings = {
 }
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
-*/
+
 ///////////////////////////////////////////////////////////////////////////////
 // We now define the resources, mostly via modules but some are simple enough
 // not to need their own module.
@@ -1028,4 +1026,30 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
     wafPoliciesId: wafPoliciesIpRestricted.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayTfm]
+}
+
+var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
+
+module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
+  name: 'tfmApiCalculatedVariables'
+  params: {
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    environment: environment
+    product: product
+    version: version
+    target: target
+    containerRegistryName: containerRegistry.name
+    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
+    externalApiHostname: externalApi.outputs.defaultHostName
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    secureConnectionStrings: tfmApiSecureConnectionStrings
+    additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
+    tfmUiUrl: tfmUiUrl
+    storageAccountName: storage.outputs.storageAccountName
+    settings: tmfApiSettings
+    secureSettings: tfmApiSecureSettings
+    additionalSecureSettings: tfmApiAdditionalSecureSettings
+  }
 }

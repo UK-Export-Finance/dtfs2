@@ -154,6 +154,15 @@
       },
       "UKEF_TFM_API_SYSTEM_KEY": {
         "value": "{{UKEF_TFM_API_SYSTEM_KEY}}"
+      },
+      "UKEF_TFM_API_REPORTS_KEY": {
+        "value": "{{UKEF_TFM_API_REPORTS_KEY}}"
+      },
+      "AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE": {
+        "value": "{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}"
+      },
+      "UKEF_INTERNAL_NOTIFICATION": {
+        "value": "{{UKEF_INTERNAL_NOTIFICATION}}"
       }
     }
 }
