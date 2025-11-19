@@ -34,10 +34,7 @@ describe('/countries', () => {
   });
 
   it('does not include excluded countries in the countries list', async () => {
-    const { status, body } = await get('/countries');
-    expect(status).toEqual(200);
-    const countryNames = body.countries.map((c: any) => c.name);
-    expect(countryNames).toBeInstanceOf(Array);
+    // Arrange
     const excludedCountries = [
       'Benin',
       'Cape Verde',
@@ -52,6 +49,14 @@ describe('/countries', () => {
       'Sierra Leone',
       'Togo',
     ];
+
+    // Act
+    const { status, body } = await get('/countries');
+    const countryNames = body.countries.map((c: any) => c.name);
+
+    // Assert
+    expect(status).toEqual(200);
+    expect(countryNames).toBeInstanceOf(Array);
     excludedCountries.forEach((country) => {
       expect(countryNames).not.toContain(country);
     });
