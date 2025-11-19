@@ -1,5 +1,5 @@
 param backendPoolIp string
-param wafPoliciesId string = ''
+param wafPoliciesId string
 param product string
 param target string
 param version string
@@ -21,7 +21,9 @@ resource afdProfile 'Microsoft.Cdn/profiles@2025-06-01' = {
   tags: {}
 }
 
-// Create the Frontend endpoint
+// -------------------------------------------
+// Endpoint
+// -------------------------------------------
 resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   name: endpointName
   parent: afdProfile
@@ -31,7 +33,9 @@ resource afdEndpoint 'Microsoft.Cdn/profiles/afdEndpoints@2025-06-01' = {
   }
 }
 
-// Create the origin group
+// -------------------------------------------
+// Origin Group
+// -------------------------------------------
 resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
   name: originGroupName
   parent: afdProfile
@@ -42,16 +46,17 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       additionalLatencyInMilliseconds: 0
     }
     healthProbeSettings: {
-      probePath: '/healthcheck?fd-tfm'
+      probePath: '/healthcheck?fd-portal'
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
-      // isEnabled is not allowed in AFD V2
     }
   }
 }
 
-// Create the backend origin
+// -------------------------------------------
+// Origin inside Origin Group
+// -------------------------------------------
 resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   name: originName
   parent: originGroup
@@ -65,26 +70,37 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2025-06-01' = {
   }
 }
 
-// Create the forwarding route
+// -------------------------------------------
+// Forward Route (HTTPS → HTTP backend)
+// -------------------------------------------
 resource routeForward 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
   name: routeForwardName
   parent: afdEndpoint
+  dependsOn: [
+    origin
+  ]
   properties: {
     originGroup: {
       id: originGroup.id
     }
     patternsToMatch: ['/*']
     supportedProtocols: ['Https']
-    httpsRedirect: 'Disabled'       // HttpOnly forwarding
+    httpsRedirect: 'Disabled'
     forwardingProtocol: 'HttpOnly'
     linkToDefaultDomain: 'Enabled'
   }
 }
 
-// Create the redirect route
+
+// -------------------------------------------
+// Redirect Route (HTTP → HTTPS)
+// -------------------------------------------
 resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' = {
   name: routeRedirectName
   parent: afdEndpoint
+  dependsOn: [
+    origin
+  ]
   properties: {
     originGroup: {
       id: originGroup.id
@@ -96,8 +112,10 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   }
 }
 
-// Associate WAF policy if provided
-resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
+/*----------------------------------------------
+    WAF Policy Association (optional)
+  ---------------------------------------------- */
+ resource wafAssociation 'Microsoft.Cdn/profiles/securityPolicies@2025-06-01' = if (!empty(wafPoliciesId)) {
   name: 'wafPolicy'
   parent: afdProfile
   properties: {
