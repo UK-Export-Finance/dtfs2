@@ -46,7 +46,7 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2025-06-01' = {
       additionalLatencyInMilliseconds: 0
     }
     healthProbeSettings: {
-      probePath: '/healthcheck?fd-portal'
+      probePath: '/healthcheck?fd-tfm'
       probeRequestType: 'GET'
       probeProtocol: 'Http'
       probeIntervalInSeconds: 30
