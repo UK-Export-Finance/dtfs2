@@ -82,7 +82,7 @@ const getHttpMocks = (coverEndDateDayMonthYear: DayMonthYearInput = { day: forma
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 
 const exposurePeriod = { exposurePeriodInMonths: 12 };
 const { parsedDate: parsedCoverEndDate } = applyStandardValidationAndParseDateInput(validCoverEndDate, 'cover end date', '');

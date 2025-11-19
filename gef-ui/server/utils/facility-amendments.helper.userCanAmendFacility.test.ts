@@ -12,6 +12,7 @@ const generateMockDeal = () =>
   ({
     submissionType: MIN,
     status: UKEF_ACKNOWLEDGED,
+    submissionCount: 1,
   }) as Deal;
 
 const generateIssuedFacility = () =>
