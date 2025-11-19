@@ -33,6 +33,30 @@ describe('/countries', () => {
     });
   });
 
+  it('does not include excluded countries in the countries list', async () => {
+    const { status, body } = await get('/countries');
+    expect(status).toEqual(200);
+    const countryNames = body.countries.map((c: any) => c.name);
+    expect(countryNames).toBeInstanceOf(Array);
+    const excludedCountries = [
+      'Benin',
+      'Cape Verde',
+      'China',
+      'Gambia',
+      'Ghana',
+      'Hong Kong',
+      'Cote d Ivoire',
+      'Liberia',
+      'Nigeria',
+      'Senegal',
+      'Sierra Leone',
+      'Togo',
+    ];
+    excludedCountries.forEach((country) => {
+      expect(countryNames).not.toContain(country);
+    });
+  });
+
   describe('GET /v1/countries/:code', () => {
     it('returns country', async () => {
       const { status, body } = await get('/countries/GBR');
