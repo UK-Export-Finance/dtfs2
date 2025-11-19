@@ -149,6 +149,9 @@ jobs:
           sed -i "s|{{SESSION_SECRET}}|${{ secrets.SESSION_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UKEF_TFM_API_SYSTEM_KEY}}|${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ESTORE_URL}}|${{ secrets.ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UKEF_TFM_API_REPORTS_KEY}}|${{ secrets.UKEF_TFM_API_REPORTS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
 
 
       - name: Install Bicep
