@@ -6,6 +6,17 @@ Digital Trade Finance Service (DTFS), including prerequisites, technology
 stack, setup instructions, testing procedures, deployment guidelines and other
 essential information for the developers.
 
+## 📖 Documentation
+
+- **[Architecture Overview](./doc/architecture-overview.md)** - Comprehensive guide to the main packages and services, including:
+  - `gef-ui` - General Export Facility user interface
+  - `portal-ui` - Portal UI for BSS/EWCS (Bond Support Scheme/Export Working Capital Scheme)
+  - `portal-api` - API serving both BSS and GEF products
+  - `dtfs-central-api` - Central API for data management and submissions
+  - `trade-finance-manager-api` - TFM API for UKEF internal deal processing
+  - `trade-finance-manager-ui` - TFM UI for reviewing deals
+  - System interaction flows and design evolution
+
 **Status** 🚦
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
