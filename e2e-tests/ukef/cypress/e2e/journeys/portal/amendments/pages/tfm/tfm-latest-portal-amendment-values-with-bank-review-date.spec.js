@@ -1,5 +1,6 @@
+import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
 import { format, differenceInMonths } from 'date-fns';
-import { D_MMMM_YYYY_FORMAT, twoYears, tomorrow } from '@ukef/dtfs2-common/test-helpers';
+import { D_MMMM_YYYY_FORMAT, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -71,13 +72,14 @@ context('Amendments - TFM - Latest values for portal amendment - Bank Review Dat
   });
 
   it('should display the latest amended values on facility summary list', () => {
-    const tenor = differenceInMonths(new Date(twoYears.date), new Date()) + 1; // +1 to include the current month
+    const formattedValueWithCurrency = `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, true)}`;
+    const tenor = differenceInMonths(new Date(tomorrow.date), new Date()) + 1; // +1 to include the current month
     const coverEndDateFormatted = format(new Date(tomorrow.date), D_MMMM_YYYY_FORMAT);
     const bankReviewDateFormatted = format(new Date(tomorrow.date), D_MMMM_YYYY_FORMAT);
 
     facilityPage.facilityCoverEndDate().contains(coverEndDateFormatted);
-    facilityPage.facilityTenor().contains(`${tenor} months`);
+    facilityPage.facilityTenor().contains(`${tenor} month`);
     facilityPage.facilityBankReviewDate().contains(bankReviewDateFormatted);
-    facilityPage.facilityValueGbp().contains(CHANGED_FACILITY_VALUE);
+    facilityPage.facilityValueGbp().contains(formattedValueWithCurrency);
   });
 });
