@@ -1,6 +1,7 @@
 # DTFS2 Architecture Overview 🏗️
 
-This document provides a comprehensive overview of the main packages/services in the DTFS2 (Digital Trade Finance Service) system and how they interact to support UK Export Finance's trade finance operations.
+This document provides a comprehensive overview of the main packages/services in the DTFS2 (Digital Trade Finance Service) system and how
+they interact to support UK Export Finance's trade finance operations.
 
 ## System Overview
 
@@ -19,6 +20,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: User interface for BSS/EWCS (Bond Support Scheme, Export Working Capital Scheme)
 
 **Key Responsibilities**:
+
 - Handles user authentication and login (including 2FA via email)
 - Allows users to select which product to apply for (BSS or GEF)
 - Provides the UI for creating and managing BSS/EWCS deals and facilities
@@ -29,12 +31,14 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5000> (when running locally)
 
 **Key Features**:
+
 - User login with email-based 2FA verification
 - Deal creation and management for Bond Support Scheme
 - Submission of deals to banks and UKEF
 - Integration with session storage for authentication
 
-**Note**: Portal UI currently serves both the login/product selection functionality AND the BSS-specific pages. The vision is to eventually separate these concerns so Portal only handles login and product selection, with BSS moving to its own dedicated UI (similar to GEF).
+**Note**: Portal UI currently serves both the login/product selection functionality AND the BSS-specific pages. The vision is to eventually
+separate these concerns so Portal only handles login and product selection, with BSS moving to its own dedicated UI (similar to GEF).
 
 ---
 
@@ -43,6 +47,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: User interface for the General Export Facility (GEF) product
 
 **Key Responsibilities**:
+
 - Provides a modern, streamlined UI for GEF deal applications
 - Handles GEF-specific deal and cash contingent facility creation
 - Interacts with `/gef` endpoints in `portal-api`
@@ -53,12 +58,14 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5006> or <http://localhost> via reverse proxy (when running locally)
 
 **Key Features**:
+
 - Modern, cleaner design compared to the older BSS UI
 - Simplified data structure for easier maintenance
 - Streamlined user experience for deal creation
 - Integration with Portal for authentication
 
 **Architecture Notes**:
+
 - GEF was developed after BSS with lessons learned from the BSS project
 - Has a more modern design and simpler data structure than BSS
 - The vision is to eventually align BSS with GEF's design and data structure
@@ -71,6 +78,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: Backend API serving both BSS and GEF products
 
 **Key Responsibilities**:
+
 - Provides REST endpoints for BSS (located in `/server/v1`)
 - Provides REST endpoints for GEF (located in `/server/v1/gef`)
 - Handles business logic for deal and facility operations
@@ -82,6 +90,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5001> (when running locally)
 
 **Key Features**:
+
 - Separate endpoint structures for BSS and GEF
 - User authentication and authorization
 - Deal submission workflow to TFM
@@ -89,6 +98,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 - GraphQL support (partial implementation)
 
 **Architecture Notes**:
+
 - Initially developed for BSS with a complex structure
 - GEF endpoints are cleaner and more streamlined
 - BSS endpoints are gradually becoming legacy
@@ -102,6 +112,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: Central hub for managing data and submissions between different APIs
 
 **Key Responsibilities**:
+
 - Acts as an intermediary to prevent direct API-to-API calls
 - Provides centralized CRUD operations for deals and facilities
 - Creates immutable snapshots of submitted data for TFM
@@ -113,12 +124,14 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5005> (when running locally)
 
 **Key Features**:
+
 - Centralized deal and facility CRUD operations
 - Snapshot creation for TFM (deal snapshots and facility snapshots)
 - Minimal business logic - focuses on data management
 - Separation of concerns between different systems
 
 **Data Flow**:
+
 1. **Portal (BSS)** calls Central API for all deal/facility CRUD operations
 2. **TFM** calls Central API to:
    - Fetch deals from Portal MongoDB collection (`deals`)
@@ -126,6 +139,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
    - Update deal status from "Submitted" to "Acknowledged"
 
 **Snapshot Structure**:
+
 ```javascript
 // TFM Deal Structure
 {
@@ -144,6 +158,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 ```
 
 **Architecture Notes**:
+
 - Currently only BSS (Portal) uses Central API for CRUD operations
 - GEF does not currently use Central API for CRUD operations
 - Future alignment: Either GEF should use Central API, or CRUD operations should be moved back to Portal API
@@ -156,6 +171,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: Backend API for UKEF's internal Trade Finance Manager system
 
 **Key Responsibilities**:
+
 - Accepts deal submissions from Portal and GEF
 - Creates snapshots of deals and facilities via Central API
 - Calls external UKEF APIs for additional data (e.g., currency conversions)
@@ -168,6 +184,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5004> (when running locally)
 
 **Key Features**:
+
 - Deal submission processing and acknowledgment
 - Integration with external UKEF APIs (APIM, MDM, Number Generator)
 - Task generation and management for deal processing
@@ -175,6 +192,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 - Status updates back to Portal/GEF
 
 **Deal Submission Workflow**:
+
 1. Receive deal submission from Portal/GEF
 2. Fetch deal from database by deal ID
 3. Create snapshots of deal and facilities (via Central API)
@@ -186,6 +204,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 9. Send acknowledgment and notification emails
 
 **Architecture Notes**:
+
 - In TFM, a "deal" is part of a larger "Case" which includes deals, facilities, and tasks
 - Handles both BSS and GEF deal types (with different data structures)
 - BSS data structure is more complex; GEF is more streamlined
@@ -199,6 +218,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Purpose**: Internal user interface for UKEF staff to review and process trade finance deals
 
 **Key Responsibilities**:
+
 - Provides interface for reviewing submitted deals and facilities
 - Displays deal information using GovUK and MOJ design components
 - Allows TFM users to complete tasks required for deal processing
@@ -210,6 +230,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 **Access**: <http://localhost:5003> (when running locally)
 
 **Key Features**:
+
 - Deal and facility review interface
 - Task management for case processing
 - Case status tracking
@@ -217,6 +238,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 - Minimal business logic - focuses on data presentation
 
 **Architecture Philosophy**:
+
 - Prioritizes simplicity and clarity in codebase
 - Avoids complex logic or business rules
 - Focuses on rendering data for user review
@@ -241,7 +263,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 
 ### Data Flow Between Services
 
-```
+```text
 ┌─────────────┐         ┌─────────────┐         ┌──────────────────┐
 │  Portal UI  │────────▶│  Portal API │────────▶│  Central API     │
 │   (BSS)     │         │   (BSS)     │         │  (CRUD + Snapshot)│
@@ -305,6 +327,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 ## Technology Stack
 
 ### Common Technologies
+
 - **Runtime**: Node.js (Version 20+)
 - **Package Manager**: NPM with workspaces
 - **Databases**: MongoDB, Microsoft SQL Server
@@ -315,12 +338,14 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 - **Build Tool**: Webpack
 
 ### API Technologies
+
 - **Framework**: Express.js
 - **API Documentation**: Swagger (OpenAPI 3.0)
 - **GraphQL**: Partial implementation in Portal API
 - **ORM**: TypeORM (for SQL Server)
 
 ### Security Features
+
 - JWT authentication
 - Session management with cookies
 - CSRF protection
@@ -333,22 +358,26 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 ### When Working on Each Service
 
 **portal-ui / gef-ui / trade-finance-manager-ui**:
+
 - Minimal business logic - focus on presentation
 - Run `npm run build` after changing SCSS or JS source files
 - Update SRI hashes after recompiling JavaScript files
 - Keep design consistent with GovUK guidelines
 
 **portal-api**:
+
 - BSS endpoints: Minimize new work (legacy focus)
 - GEF endpoints: Active development area
 - Consider alignment between BSS and GEF when adding features
 
 **dtfs-central-api**:
+
 - Keep business logic minimal
 - Focus on data management and snapshots
 - Ensure data integrity between systems
 
 **trade-finance-manager-api**:
+
 - Handle both BSS and GEF product types
 - Maintain snapshot immutability
 - Coordinate with external UKEF APIs
@@ -358,7 +387,7 @@ Additionally, there is a **Central API** that acts as an intermediary for data m
 ## Quick Reference
 
 | Service | Port | Purpose | Key Technology |
-|---------|------|---------|----------------|
+| ------- | ---- | ------- | -------------- |
 | portal-ui | 5000 | BSS/EWCS UI | Nunjucks, GovUK |
 | portal-api | 5001 | BSS & GEF API | Express, MongoDB |
 | gef-ui | 5006 | GEF UI | Nunjucks, GovUK |
