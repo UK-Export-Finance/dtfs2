@@ -68,7 +68,7 @@ const effectiveDateWithoutMs = Number(new Date()) / 1000;
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-001`;
 

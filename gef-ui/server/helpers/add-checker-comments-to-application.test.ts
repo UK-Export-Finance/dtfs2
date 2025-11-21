@@ -11,7 +11,7 @@ import { addCheckerCommentsToApplication } from './add-checker-comments-to-appli
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
 import api from '../services/api';
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 const mockUser = aPortalSessionUser();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
