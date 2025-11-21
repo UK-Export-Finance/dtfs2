@@ -1,7 +1,7 @@
 // We need to add the calculated variables after beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
 // See the notes in trade-finance-manager-api-no-calculated-variables.bicep
 
-param environment string
+// param environment string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param containerRegistryName string
@@ -17,8 +17,8 @@ param target string
 param version string
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
-var tfmApiName = '${product}-${target}-${tfmApiNameFragment}'
-var applicationInsightsName = '${product}-${target}-${tfmApiNameFragment}'
+var tfmApiName = '${product}-${target}-${version}-${tfmApiNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${tfmApiNameFragment}'
 
 var deployApplicationInsights = false // TODO:DTFS2-6422 enable application insights
 var selfHostnameEnvironmentVariable = ''
@@ -122,7 +122,7 @@ var appSettings = union(
     }
 )
 
-resource site 'Microsoft.Web/sites@2025-03-01' existing = {
+resource site 'Microsoft.Web/sites@2024-04-01' existing = {
   name: tfmApiName
 }
 
