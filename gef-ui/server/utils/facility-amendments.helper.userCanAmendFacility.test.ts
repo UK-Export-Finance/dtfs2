@@ -12,6 +12,7 @@ const generateMockDeal = () =>
   ({
     submissionType: MIN,
     status: UKEF_ACKNOWLEDGED,
+    submissionCount: 1,
   }) as Deal;
 
 const generateIssuedFacility = () =>
@@ -75,6 +76,16 @@ describe('userCanAmendFacility', () => {
       const deal = generateMockDeal();
       const facility = { ...generateIssuedFacility(), hasBeenIssued: false };
       const userRoles = [MAKER];
+
+      const result = userCanAmendFacility(facility, deal, userRoles);
+
+      expect(result).toEqual(false);
+    });
+
+    it(`should return false when the submission type is ${MIN} but submissionCount is 0 and everything else is valid`, () => {
+      const deal = { ...generateMockDeal(), submissionType: MIN, status: UKEF_ACKNOWLEDGED, submissionCount: 0 };
+      const facility = generateIssuedFacility();
+      const userRoles = [MAKER, CHECKER, ADMIN];
 
       const result = userCanAmendFacility(facility, deal, userRoles);
 

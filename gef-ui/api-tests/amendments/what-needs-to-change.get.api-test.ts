@@ -34,7 +34,7 @@ const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
-const mockDeal = { ...MOCK_BASIC_DEAL, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 const mockFacility = MOCK_ISSUED_FACILITY.details;
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
