@@ -16,7 +16,7 @@ describe('middleware/maintenance', () => {
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
-    expect(response.body).toMatchObject({ count: 228 });
+    expect(response.body).toMatchObject({ count: 216 });
   });
 
   it(`should return ${HttpStatusCode.ServiceUnavailable} on GET countries, when the maintenance mode is active`, async () => {

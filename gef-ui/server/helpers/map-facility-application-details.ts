@@ -58,7 +58,9 @@ export const mapFacilityApplicationDetails = (
 
     const isFacilityIssued = facility.stage === STAGE.ISSUED;
 
-    const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(submissionType, status, userRoles);
+    const submissionCount = application.submissionCount || 0;
+
+    const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(submissionType, status, submissionCount, userRoles);
 
     const isFacilityWithAmendmentInProgress = submittedAmendments.find(
       (item: SubmittedAmendmentsParams) => item.facilityId === facility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),

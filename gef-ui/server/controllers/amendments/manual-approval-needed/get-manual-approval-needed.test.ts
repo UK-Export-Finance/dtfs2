@@ -45,7 +45,7 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 } as unknown as Deal;
 
 describe('getManualApprovalNeeded', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;

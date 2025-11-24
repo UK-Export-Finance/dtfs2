@@ -73,7 +73,10 @@ describe('controllers/application-details', () => {
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
     mockRequest = MOCKS.MockRequest();
-    mockApplicationResponse = MOCKS.MockApplicationResponseDraft();
+    mockApplicationResponse = {
+      ...MOCKS.MockApplicationResponseDraft(),
+      submissionCount: 1,
+    };
     mockFacilityResponse = MOCKS.MockFacilityResponse();
     mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
     mockUserResponse = MOCKS.MockUserResponse();
@@ -325,6 +328,7 @@ describe('controllers/application-details', () => {
       it('renders `application-details` with displayChangeSupportingInfo as true when draft', async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseChangedIssued);
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.DRAFT;
+        mockApplicationResponse.submissionCount = 0;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
@@ -424,6 +428,31 @@ describe('controllers/application-details', () => {
               data: expect.arrayContaining([
                 expect.objectContaining({
                   canIssuedFacilitiesBeAmended: true,
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments in progress on the facility, but submissionCount is 0`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseIssued);
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        mockApplicationResponse.submissionCount = 0;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
                 }),
               ]),
             }),
