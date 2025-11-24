@@ -285,25 +285,27 @@ describe('findLatestCompletedAmendment()', () => {
       jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
     });
 
+    const firstAmendmentTfmObject = {
+      ...anAmendmentTfmObject(),
+      isUsingFacilityEndDate: false,
+      bankReviewDate: new Date('2023-12-12'),
+      updatedAt: 1723641611,
+      version: 1,
+    };
+
+    const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+
+    const thirdAmendmentTfmObject = {
+      ...anAmendmentTfmObject(),
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date('2024-01-01'),
+      updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+      version: 3,
+    };
+
     describe('when no reference numbers are present', () => {
       it('should return the latest submitted amendment by version', () => {
         // Arrange
-        const firstAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date('2023-12-12'),
-          updatedAt: 1723641611,
-          version: 1,
-        };
-        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
-        const thirdAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: true,
-          facilityEndDate: new Date('2024-01-01'),
-          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
-          version: 3,
-        };
-
         const amendments = [
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
@@ -323,22 +325,6 @@ describe('findLatestCompletedAmendment()', () => {
     describe('when reference numbers are present', () => {
       it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
         // Arrange
-        const firstAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date('2023-12-12'),
-          updatedAt: 1723641611,
-          version: 1,
-        };
-        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
-        const thirdAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: true,
-          facilityEndDate: new Date('2024-01-01'),
-          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
-          version: 3,
-        };
-
         const amendments = [
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1, referenceNumber: '0011-003' },
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2, referenceNumber: '0011-001' },
@@ -358,22 +344,6 @@ describe('findLatestCompletedAmendment()', () => {
     describe('when mix of version and referenceNumbers', () => {
       it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
         // Arrange
-        const firstAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date('2023-12-12'),
-          updatedAt: 1723641611,
-          version: 1,
-        };
-        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
-        const thirdAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: true,
-          facilityEndDate: new Date('2024-01-01'),
-          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
-          version: 3,
-        };
-
         const amendments = [
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1, referenceNumber: '0011-003' },
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
@@ -393,22 +363,6 @@ describe('findLatestCompletedAmendment()', () => {
     describe('when mix of version and referenceNumbers and referenceNumber as ""', () => {
       it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
         // Arrange
-        const firstAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date('2023-12-12'),
-          updatedAt: 1723641611,
-          version: 1,
-        };
-        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
-        const thirdAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: true,
-          facilityEndDate: new Date('2024-01-01'),
-          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
-          version: 3,
-        };
-
         const amendments = [
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2, referenceNumber: '' },
@@ -425,25 +379,9 @@ describe('findLatestCompletedAmendment()', () => {
       });
     });
 
-    describe('when mix of version and and referenceNumber as ""', () => {
+    describe('when mix of version and referenceNumber as ""', () => {
       it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
         // Arrange
-        const firstAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date('2023-12-12'),
-          updatedAt: 1723641611,
-          version: 1,
-        };
-        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
-        const thirdAmendmentTfmObject = {
-          ...anAmendmentTfmObject(),
-          isUsingFacilityEndDate: true,
-          facilityEndDate: new Date('2024-01-01'),
-          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
-          version: 3,
-        };
-
         const amendments = [
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
           { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
