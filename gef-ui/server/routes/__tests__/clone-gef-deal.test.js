@@ -15,9 +15,8 @@ jest.doMock('express', () => ({
 }));
 
 describe('Routes', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line global-require
-    require('../clone-gef-deal');
+  beforeEach(async () => {
+    await import('../clone-gef-deal');
   });
 
   afterEach(() => {
