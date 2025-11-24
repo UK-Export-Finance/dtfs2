@@ -389,6 +389,76 @@ describe('findLatestCompletedAmendment()', () => {
         expect(result.bankReviewDate).toEqual(amendments[0].tfm.bankReviewDate);
       });
     });
+
+    describe('when mix of version and referenceNumbers and referenceNumber as ""', () => {
+      it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
+        // Arrange
+        const firstAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: false,
+          bankReviewDate: new Date('2023-12-12'),
+          updatedAt: 1723641611,
+          version: 1,
+        };
+        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+        const thirdAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: true,
+          facilityEndDate: new Date('2024-01-01'),
+          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+          version: 3,
+        };
+
+        const amendments = [
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2, referenceNumber: '' },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3, referenceNumber: '0011-002' },
+        ];
+
+        // Act
+        const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+        // Assert
+        expect(result.facilityEndDate).toEqual(amendments[2].tfm.facilityEndDate);
+        expect(result.isUsingFacilityEndDate).toEqual(amendments[2].tfm.isUsingFacilityEndDate);
+        expect(result.bankReviewDate).toEqual(amendments[2].tfm.bankReviewDate);
+      });
+    });
+
+    describe('when mix of version and and referenceNumber as ""', () => {
+      it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
+        // Arrange
+        const firstAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: false,
+          bankReviewDate: new Date('2023-12-12'),
+          updatedAt: 1723641611,
+          version: 1,
+        };
+        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+        const thirdAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: true,
+          facilityEndDate: new Date('2024-01-01'),
+          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+          version: 3,
+        };
+
+        const amendments = [
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3, referenceNumber: '' },
+        ];
+
+        // Act
+        const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+        // Assert
+        expect(result.facilityEndDate).toEqual(amendments[2].tfm.facilityEndDate);
+        expect(result.isUsingFacilityEndDate).toEqual(amendments[2].tfm.isUsingFacilityEndDate);
+        expect(result.bankReviewDate).toEqual(amendments[2].tfm.bankReviewDate);
+      });
+    });
   });
 
   function* timestampGenerator() {
