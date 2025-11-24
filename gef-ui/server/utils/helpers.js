@@ -176,7 +176,14 @@ const previewItemConditions = (previewParams) => {
   const { issuedHref, unissuedHref, issuedToUnissuedHref, shouldDisplayChangeLinkIfIssued, shouldDisplayChangeLinkIfUnissued, item, app } = previewParams;
   let summaryItems = [];
   const statusMIA = [DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.SUBMITTED_TO_UKEF];
-  const statusAIN = [...statusMIA, DEAL_STATUS.UKEF_ACKNOWLEDGED, DEAL_STATUS.SUBMITTED_TO_UKEF, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.CANCELLED];
+  const statusAIN = [
+    ...statusMIA,
+    DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    DEAL_STATUS.SUBMITTED_TO_UKEF,
+    DEAL_STATUS.CHANGES_REQUIRED,
+    DEAL_STATUS.CANCELLED,
+    DEAL_STATUS.PENDING_CANCELLATION,
+  ];
 
   const validStatus =
     app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN

@@ -72,7 +72,7 @@ const getHttpMocks = (bankReviewDateDayMonthYear: DayMonthYearInput = { day: for
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 
 describe('postBankReviewDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -218,6 +218,7 @@ describe('postBankReviewDate', () => {
 
     const tfmUpdate = {
       bankReviewDate: today,
+      isUsingFacilityEndDate: false,
     };
 
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);

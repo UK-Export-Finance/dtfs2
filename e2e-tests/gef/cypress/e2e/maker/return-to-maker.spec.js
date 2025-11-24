@@ -1,9 +1,13 @@
 import relative from '../relativeURL';
 import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
-import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import applicationPreview from '../pages/application-preview';
+import applicationDetails from '../pages/application-details';
+import { BANK1_CHECKER1, BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealIds = [];
+const issuedFacilityIds = [];
+const unissuedFacilityIds = [];
 
 context('Return to Maker', () => {
   before(() => {
@@ -11,10 +15,20 @@ context('Return to Maker', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiFetchAllGefApplications(token);
+        return cy.apiFetchAllGefApplications(token).then(({ body }) => ({ body, token }));
       })
-      .then(({ body }) => {
+      .then(({ body, token }) => {
         dealIds = body.items.map((item) => item._id);
+
+        cy.apiFetchAllFacilities(dealIds[2], token).then(({ body: facilitiesBody }) => {
+          facilitiesBody.items.forEach((item) => {
+            if (item.details.hasBeenIssued) {
+              issuedFacilityIds.push(item.details._id);
+            } else {
+              unissuedFacilityIds.push(item.details._id);
+            }
+          });
+        });
       });
   });
 
@@ -69,6 +83,23 @@ context('Return to Maker', () => {
       cy.keyboardInput(returnToMaker.comment(), 'Some comments here ....');
       cy.clickCancelLink();
       cy.location('pathname').should('eq', `/gef/application-details/${dealIds[2]}`);
+    });
+
+    it('should not display make a change button on application when returned to maker and show delete facility links', () => {
+      submitButton().click();
+
+      cy.login(BANK1_MAKER1);
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
+
+      applicationPreview.makeAChangeButton(unissuedFacilityIds[0]).should('not.exist');
+      applicationPreview.makeAChangeButton(unissuedFacilityIds[1]).should('not.exist');
+      applicationPreview.makeAChangeButton(issuedFacilityIds[0]).should('not.exist');
+      applicationPreview.makeAChangeButton(issuedFacilityIds[1]).should('not.exist');
+
+      cy.assertText(applicationDetails.deleteFacilityLink().eq(0), 'Delete facility');
+      cy.assertText(applicationDetails.deleteFacilityLink().eq(1), 'Delete facility');
+      cy.assertText(applicationDetails.deleteFacilityLink().eq(2), 'Delete facility');
+      cy.assertText(applicationDetails.deleteFacilityLink().eq(3), 'Delete facility');
     });
   });
 });
