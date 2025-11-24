@@ -149,7 +149,7 @@ describe('mapFacilityApplicationDetails', () => {
         });
       });
 
-      describe('when a facility is has changed to issued but not yet been submitted to UKEF', () => {
+      describe('when a facility has changed to issued but not yet been submitted to UKEF', () => {
         it('should return mapped facilities with canIssuedFacilitiesBeAmended set to false', () => {
           // Arrange
           const unissuedFacility = {

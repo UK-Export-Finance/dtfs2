@@ -30,7 +30,7 @@ const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 jest.mock('../../../services/api');
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 
 const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
   .withDealId(dealId)

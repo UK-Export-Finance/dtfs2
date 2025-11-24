@@ -46,7 +46,7 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { exporter: { companyName }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
+const mockDeal = { exporter: { companyName }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 } as Deal;
 
 describe('getWhatNeedsToChange', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
