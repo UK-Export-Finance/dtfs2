@@ -48,17 +48,22 @@ const findLatestCompletedAmendment = (amendments) => {
 
   /**
    * if the feature flag is enabled,
-   * sort by referenceNumber (if it exists)
-   * and if it does not exist then sort by version
+   * sort by referenceNumber first (if it exists)
+   * if it is an empty string, then it is set to undefined and then sorted by version
+   * and reference number does not exist at all, then sort by version
    */
   if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
     sortedAmendments = orderBy(
       completedAmendments,
       [
-        (amendment) => amendment?.referenceNumber, // Sort by referenceNumber if exists, else undefined
+        // First sort: if referenceNumber exists and is not empty string, then 1 else 0 - so sorted first
+        (amendment) => (amendment?.referenceNumber && amendment.referenceNumber !== '' ? 1 : 0),
+        // Second sort: if referenceNumber exists, sort by it or else set it to undefined
+        (amendment) => amendment?.referenceNumber || undefined,
+        // third sort: by version, for those without reference number
         (amendment) => amendment.version,
       ],
-      ['desc', 'desc'],
+      ['desc', 'desc', 'desc'],
     );
   }
 
