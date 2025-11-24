@@ -338,7 +338,7 @@ context('Return to maker', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('Statuses and banners should correct text', () => {
+    it('should show correct text for statuses and banners', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
       applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
