@@ -1,22 +1,25 @@
 import { threeDaysAgo, nightyOneDays, twoMonths } from '@ukef/dtfs2-common/test-helpers';
-import relative from '../../../relativeURL';
-import CONSTANTS from '../../../../fixtures/constants';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
-import { continueButton, submitButton } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../pages/application-submission';
-import statusBanner from '../../../pages/application-status-banner';
-import applicationDetails from '../../../pages/application-details';
-import applicationActivities from '../../../pages/application-activities';
+import relative from '../../relativeURL';
+import CONSTANTS from '../../../fixtures/constants';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
+import { continueButton, submitButton } from '../../partials';
+import applicationPreview from '../../pages/application-preview';
+import unissuedFacilityTable from '../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../pages/application-submission';
+import statusBanner from '../../pages/application-status-banner';
+import applicationDetails from '../../pages/application-details';
+import applicationActivities from '../../pages/application-activities';
 
 let dealId;
 let token;
 let facilityOneId;
+let facilityTwoId;
+let facilityThreeId;
+let facilityFourId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -42,16 +45,19 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
             });
 
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility);
             });
 
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
               unissuedContingentFacility._id = facility.body.details._id;
+              facilityThreeId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
             });
 
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               unissuedCashFacilityWith20MonthsOfCover._id = facility.body.details._id;
+              facilityFourId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
             });
 
@@ -333,6 +339,13 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.abandonLink().should('not.exist');
       // should not be able to edit ref name
       applicationDetails.editRefNameLink().should('not.exist');
+    });
+
+    it('should only show "Make a Change" button for facilities which are already issued (not changed to issued)', () => {
+      applicationPreview.makeAChangeButton(facilityOneId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityTwoId).should('exist');
+      applicationPreview.makeAChangeButton(facilityThreeId).should('not.exist');
+      applicationPreview.makeAChangeButton(facilityFourId).should('not.exist');
     });
 
     // change facility to issued and check correct format

@@ -241,7 +241,7 @@ context('Return to maker for unissued to issued facilities', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('Statuses and banners should correct text', () => {
+    it('should show correct text for statuses and banners', () => {
       statusBanner.bannerStatus().contains("Further Maker's input required");
       applicationPreview.reviewFacilityStage().contains('Change facility details');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');

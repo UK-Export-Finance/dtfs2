@@ -38,7 +38,7 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 const criteria = [
   { id: 1, text: 'test criteria 1', answer: true },
   { id: 2, text: 'test criteria 2', answer: false },
