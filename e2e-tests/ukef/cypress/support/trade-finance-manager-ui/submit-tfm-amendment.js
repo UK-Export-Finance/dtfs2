@@ -51,6 +51,16 @@ export const submitTfmAmendment = ({ dealId, facilityId, facilityValue, coverEnd
     cy.clickContinueButton();
   }
 
-  // submit check your answers
-  cy.clickContinueButton();
+  return cy
+    .url()
+    .then((url) => {
+      const urlSplit = url.split('/');
+
+      const amendmentId = urlSplit[8];
+
+      cy.clickContinueButton();
+
+      return cy.wrap(amendmentId);
+    })
+    .then((amendmentId) => amendmentId);
 };

@@ -53,3 +53,16 @@ module.exports.login = (username, password) =>
 
       return resp.body.token;
     });
+
+module.exports.updateAmendment = (facilityId, amendmentId, update, token) =>
+  cy
+    .request({
+      url: `${api()}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
+      method: 'PUT',
+      body: update,
+      headers: headers(token),
+    })
+    .then((resp) => {
+      expect(resp.status).to.equal(200);
+      return resp.body;
+    });
