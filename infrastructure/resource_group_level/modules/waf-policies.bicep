@@ -11,7 +11,7 @@ param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
 @secure()
-param allowedIpsString string = ''
+param allowedIpsString string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
 param matchVariable string
