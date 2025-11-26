@@ -38,7 +38,7 @@ on:
       - feat/DTFS2-16188-bicep-templates
 
 env:
-  PRODUCT: dtfs2
+  PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
 
 jobs:
@@ -113,7 +113,7 @@ jobs:
         uses: ./.github/actions/webapp
         with:
           region: ${{ vars.REGION }}
-          group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+          group: rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
           credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
           acr: ${{ secrets.ACR_DEV_PASSWORD }}
           webapp: ${{ matrix.webapp }}
