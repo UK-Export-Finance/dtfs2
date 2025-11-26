@@ -7,7 +7,8 @@
        "scripts",
        "test-helpers",
        "./*.jest.config.js/",
-       ".eslintrc.js"
+       ".eslintrc.js",
+       "../libs/common/**/*.ts"
    ],
    "exclude": []
 }

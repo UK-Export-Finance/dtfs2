@@ -7,9 +7,11 @@ export type GetAccessCodePageRequest = CustomExpressRequest<{
 }>;
 
 /**
- * Controller to get the Access Code page
- * @param req - the request object
- * @param res - the response object
+ * Controller to get the access code page based on the current page identifier.
+ * Retrieves the appropriate attempts left and request new code URL for the page,
+ * or redirects to not-found if the page is invalid.
+ * @param req - The request object containing the page parameter
+ * @param res - The response object
  */
 export const getAccessCodePage = (req: GetAccessCodePageRequest, res: Response) => {
   const { page } = req.params;
