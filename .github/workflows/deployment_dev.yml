@@ -113,7 +113,7 @@ jobs:
         uses: ./.github/actions/webapp
         with:
           region: ${{ vars.REGION }}
-          group: rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
+          group: ${{ secrets.DEV_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
           acr: ${{ secrets.ACR_DEV_PASSWORD }}
           webapp: ${{ matrix.webapp }}
