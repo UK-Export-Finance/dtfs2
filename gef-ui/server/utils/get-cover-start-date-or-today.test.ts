@@ -18,6 +18,14 @@ describe('getCoverStartDateOrToday', () => {
     expect(result).toEqual(new Date(2024, 8, 6));
   });
 
+  it('returns the start of the cover start date, if provided as epoch milliseconds', () => {
+    const facility = { coverStartDate: 1725613200000 } as Facility;
+
+    const result = getCoverStartDateOrToday(facility);
+
+    expect(result).toEqual(new Date(2024, 8, 6));
+  });
+
   it('returns the start of today, if cover start date not provided', () => {
     const facility = {} as Facility;
 
