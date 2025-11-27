@@ -98,12 +98,6 @@ runs:
           # --slot ${{ github.sha }} \
           # --name ${{ env.WEBAPP }} \
           # --action swap
-
-          # Ensure curl is installed
-          if ! command -v curl >/dev/null 2>&1; then
-            echo "curl not found - installing..."
-            apt-get update && apt-get install -y curl
-          fi
   
           SLOT=${{ github.sha }}
           WEBAPP=${{ env.WEBAPP }}
@@ -132,7 +126,7 @@ runs:
 
           echo "Warming up slot via $WARMUP_URL"
           for i in {1..10}; do
-            if curl -fs $WARMUP_URL; then
+            if wget -qO- $WARMUP_URL > /dev/null 2>&1; then
               echo "Warmup successful."
               break
             fi
@@ -168,7 +162,7 @@ runs:
           for i in {1..5}; do
             if az webapp deployment slot delete \
                 --slot ${{ github.sha }} \
-                --name ${{ env.WEBAPP }} then
+                --name ${{ env.WEBAPP }}; then
               echo "Swap deleted successfully."
               break
             fi
