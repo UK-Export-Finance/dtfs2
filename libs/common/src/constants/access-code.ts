@@ -4,10 +4,3 @@ export const ACCESS_CODE = {
   ANOTHER_ACCESS_CODE: 'another-access-code',
   SUSPENDED_ACCOUNT: 'account-suspended',
 } as const;
-
-export const ATTEMPTS_LEFT = {
-  THREE: '3',
-  TWO: '2',
-  ONE: '1',
-  ZERO: '0',
-} as const;

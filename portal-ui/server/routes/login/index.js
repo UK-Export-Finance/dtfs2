@@ -2,7 +2,7 @@ const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
-const { getAccessCodePage } = require('../../controllers/login/access-code');
+const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
@@ -350,6 +350,6 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *       500:
  *         description: Internal server error
  */
-router.route('/login/access-code/:pageUrl').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getAccessCodePage);
+router.route('/login/check-your-email-access-code').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getCheckYourEmailAccessCodePage);
 
 module.exports = router;

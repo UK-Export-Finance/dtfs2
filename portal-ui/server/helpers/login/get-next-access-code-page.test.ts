@@ -1,59 +1,58 @@
-import { ATTEMPTS_LEFT, ACCESS_CODE, AccessCode } from '@ukef/dtfs2-common';
+import { ACCESS_CODE, AccessCode } from '@ukef/dtfs2-common';
 import { getNextAccessCodePage } from './get-next-access-code-page';
+import { LANDING_PAGES } from '../../constants/landing-pages';
 
 describe('getNextAccessCodePage', () => {
-  it(`should return correct data for ${ACCESS_CODE.CHECK_YOUR_EMAIL}`, () => {
+  it(`should return correct access code page when attemptLefts is 3`, () => {
     // Act
-    const result = getNextAccessCodePage(ACCESS_CODE.CHECK_YOUR_EMAIL);
+    const result = getNextAccessCodePage(3);
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/access-code/${ACCESS_CODE.CHECK_YOUR_EMAIL}`,
-      attemptsLeft: ATTEMPTS_LEFT.THREE,
+      requestNewCodeUrl: `/login/${ACCESS_CODE.CHECK_YOUR_EMAIL}`,
     });
   });
 
-  it(`should return correct data for ${ACCESS_CODE.NEW_ACCESS_CODE}`, () => {
+  it(`should return correct access code page when attemptLefts is 2`, () => {
     // Act
-    const result = getNextAccessCodePage(ACCESS_CODE.NEW_ACCESS_CODE);
+    const result = getNextAccessCodePage(2);
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/access-code/${ACCESS_CODE.NEW_ACCESS_CODE}`,
-      attemptsLeft: ATTEMPTS_LEFT.TWO,
+      requestNewCodeUrl: `/login/${ACCESS_CODE.NEW_ACCESS_CODE}`,
     });
   });
 
-  it(`should return correct data for ${ACCESS_CODE.ANOTHER_ACCESS_CODE}`, () => {
+  it(`should return correct access code page when attemptLefts is 1`, () => {
     // Act
-    const result = getNextAccessCodePage(ACCESS_CODE.ANOTHER_ACCESS_CODE);
+    const result = getNextAccessCodePage(1);
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/access-code/${ACCESS_CODE.ANOTHER_ACCESS_CODE}`,
-      attemptsLeft: ATTEMPTS_LEFT.ONE,
+      requestNewCodeUrl: `/login/${ACCESS_CODE.ANOTHER_ACCESS_CODE}`,
     });
   });
 
-  it(`should return correct data for ${ACCESS_CODE.SUSPENDED_ACCOUNT}`, () => {
+  it(`should return correct access code page when attemptLefts is 0`, () => {
     // Act
-    const result = getNextAccessCodePage(ACCESS_CODE.SUSPENDED_ACCOUNT);
+    const result = getNextAccessCodePage(0);
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/access-code/${ACCESS_CODE.SUSPENDED_ACCOUNT}`,
-      attemptsLeft: ATTEMPTS_LEFT.ZERO,
+      requestNewCodeUrl: `/login/${ACCESS_CODE.SUSPENDED_ACCOUNT}`,
     });
   });
 
-  it('should return error for unknown page', () => {
+  it('should return login page when attemptLefts is invalid', () => {
     // Arrange
-    const page = 'invalid-page' as AccessCode;
+    const attemptLefts = 'invalid-page' as AccessCode;
 
     // Act
-    const result = getNextAccessCodePage(page);
+    const result = getNextAccessCodePage(attemptLefts as unknown as number);
 
     // Assert
-    expect(result).toEqual({ error: true });
+    expect(result).toEqual({
+      requestNewCodeUrl: LANDING_PAGES.LOGIN,
+    });
   });
 });
