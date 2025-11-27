@@ -29,11 +29,9 @@ name: Deployment
 run-name: 🚀 Deploying to feature
 
 on:
-  schedule:
-    - cron: '0 20 * * *'
-
   push:
     branches:
+      - chore/deployment-fix
       # Manual deployment
       - dev
 

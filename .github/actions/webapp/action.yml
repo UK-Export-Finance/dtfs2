@@ -85,19 +85,67 @@ runs:
       uses: azure/cli@v2.1.0
       with:
         inlineScript: |
-          # Create new temporary slot
+          # # Create new temporary slot
+          # az webapp deployment slot create \
+          # --slot ${{ github.sha }} \
+          # --name ${{ env.WEBAPP }} \
+          # --configuration-source ${{ env.WEBAPP }} \
+          # --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+          # --docker-registry-server-user ${{ env.ACR_USER }} \
+          # --docker-registry-server-password ${{ inputs.acr }}
+          # # Swap slot
+          # az webapp deployment slot swap \
+          # --slot ${{ github.sha }} \
+          # --name ${{ env.WEBAPP }} \
+          # --action swap
+  
+          SLOT=${{ github.sha }}
+          WEBAPP=${{ env.WEBAPP }}
+          IMAGE="${{ env.ACR }}/${{ inputs.webapp }}:latest"
+          USER="${{ env.ACR_USER }}"
+          PASS="${{ inputs.acr }}"
+          WARMUP_URL="https://${WEBAPP}-${SLOT}.azurewebsites.net/health"
+
+          echo "Creating slot: $SLOT"
+
           az webapp deployment slot create \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --configuration-source ${{ env.WEBAPP }} \
-          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-          --docker-registry-server-user ${{ env.ACR_USER }} \
-          --docker-registry-server-password ${{ inputs.acr }}
-          # Swap slot
-          az webapp deployment slot swap \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --action swap
+            --slot $SLOT \
+            --name $WEBAPP \
+            --configuration-source $WEBAPP
+            --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+            --docker-registry-server-user ${{ env.ACR_USER }} \
+            --docker-registry-server-password ${{ inputs.acr }}
+
+          echo "Waiting for slot to start..."
+          for i in {1..30}; do
+            STATUS=$(az webapp show --name $WEBAPP --slot $SLOT --query "state" -o tsv)
+            echo "Slot state: $STATUS"
+            if [ "$STATUS" = "Running" ]; then break; fi
+            sleep 5
+          done
+
+          echo "Warming up slot via $WARMUP_URL"
+          for i in {1..10}; do
+            if curl -fs $WARMUP_URL; then
+              echo "Warmup successful."
+              break
+            fi
+            echo "Warmup attempt $i failed, retrying..."
+            sleep 5
+          done
+
+          echo "Attempting slot swap..."
+          for i in {1..5}; do
+            if az webapp deployment slot swap \
+                --slot $SLOT \
+                --name $WEBAPP \
+                --action swap; then
+              echo "Swap succeeded."
+              break
+            fi
+            echo "Swap attempt $i failed, retrying..."
+            sleep 10
+          done
 
     # Step 8: Cleanup temporary slot.
     - name: Cleanup 🧹
@@ -106,6 +154,18 @@ runs:
       with:
         inlineScript: |
           # Delete temporary slot
-          az webapp deployment slot delete \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }}
+          # az webapp deployment slot delete \
+          # --slot ${{ github.sha }} \
+          # --name ${{ env.WEBAPP }}
+
+          echo "Attempting slot delete..."
+          for i in {1..5}; do
+            if az webapp deployment slot delete \
+                --slot ${{ github.sha }} \
+                --name ${{ env.WEBAPP }} then
+              echo "Swap deleted successfully."
+              break
+            fi
+            echo "Swap delete attempt $i failed, retrying..."
+            sleep 10
+          done
