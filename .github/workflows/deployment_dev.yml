@@ -99,7 +99,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp: ['portal-api']
+        webapp: ['portal-ui', 'portal-api', 'dtfs-central-api']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
@@ -148,7 +148,7 @@ jobs:
         uses: ./.github/actions/functions
         with:
           region: ${{ vars.REGION }}
-          group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+          group: ${{ secrets.DEV_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
           acr: ${{ secrets.ACR_DEV_PASSWORD }}
           functions: ${{ matrix.functions }}
