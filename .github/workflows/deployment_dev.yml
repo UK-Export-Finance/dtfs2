@@ -99,7 +99,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+        webapp: ['portal-ui']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
@@ -118,84 +118,4 @@ jobs:
           acr: ${{ secrets.ACR_DEV_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
-  # 4. micro-serices Functions deployments
-  functions:
-    name: Functions ⚡
-    needs: [setup, database, webapp]
-    environment: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, DTFS, deployment]
-
-    env:
-      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-
-    strategy:
-      max-parallel: 2
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs']
-
-    concurrency:
-      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Repository 🗂️
-        uses: actions/checkout@v5
-
-      - name: Deploy ⚡
-        uses: ./.github/actions/functions
-        with:
-          region: ${{ vars.REGION }}
-          group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
-          credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
-          acr: ${{ secrets.ACR_DEV_PASSWORD }}
-          functions: ${{ matrix.functions }}
-
-  # 5. Notification
-  notify:
-    name: Notification 🔔
-    needs: [setup, database, webapp, functions]
-    environment: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, DTFS, deployment]
-
-    steps:
-      - name: Notification  🔔
-        uses: ./.github/actions/notify
-        with:
-          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
-          content: '
-                      {
-              "@type": "MessageCard",
-              "@context": "http://schema.org/extensions",
-              "themeColor": "00703c",
-              "title": "🚀 main : ${{ env.ENVIRONMENT }}",
-              "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
-              "sections": [
-                {
-                  "activityTitle": "Branch deployment",
-                  "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
-                  "facts": [
-                    { "name": "Branch", "value": "main" },
-                    { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
-                    { "name": "Commit", "value": "${{ github.sha }}" },
-                    { "name": "Status", "value": "Successful" }
-                  ],
-                  "markdown": true
-                }
-              ],
-              "potentialAction": [
-                {
-                  "@type": "OpenUri",
-                  "name": "Deployment",
-                  "targets": [
-                    {
-                      "os": "default",
-                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
-                }
-              ]
-            }
-            '
+ 
