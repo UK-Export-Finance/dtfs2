@@ -98,6 +98,12 @@ runs:
           # --slot ${{ github.sha }} \
           # --name ${{ env.WEBAPP }} \
           # --action swap
+
+          # Ensure curl is installed
+          if ! command -v curl >/dev/null 2>&1; then
+            echo "curl not found - installing..."
+            apt-get update && apt-get install -y curl
+          fi
   
           SLOT=${{ github.sha }}
           WEBAPP=${{ env.WEBAPP }}
@@ -137,9 +143,9 @@ runs:
           echo "Attempting slot swap..."
           for i in {1..5}; do
             if az webapp deployment slot swap \
-                --slot $SLOT \
-                --name $WEBAPP \
-                --action swap; then
+              --slot $SLOT \
+              --name $WEBAPP \
+              --action swap; then
               echo "Swap succeeded."
               break
             fi
