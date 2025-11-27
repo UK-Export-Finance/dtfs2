@@ -111,7 +111,7 @@ runs:
           az webapp deployment slot create \
             --slot $SLOT \
             --name $WEBAPP \
-            --configuration-source $WEBAPP
+            --configuration-source $WEBAPP \
             --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
             --docker-registry-server-user ${{ env.ACR_USER }} \
             --docker-registry-server-password ${{ inputs.acr }}
