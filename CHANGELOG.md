@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v2.12.0) (2025-11-27)
+
+
+### Features
+
+* **DTFS2-8195:** add route and controller for temporarily suspended access page ([ce32f1a](https://github.com/UK-Export-Finance/dtfs2/commit/ce32f1abd9eeb5d63fd711eefd55589359817d1b))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
