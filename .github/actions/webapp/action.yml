@@ -104,7 +104,6 @@ runs:
           IMAGE="${{ env.ACR }}/${{ inputs.webapp }}:latest"
           USER="${{ env.ACR_USER }}"
           PASS="${{ inputs.acr }}"
-          WARMUP_URL="https://${WEBAPP}-${SLOT}.scm.azurewebsites.net/api/health"
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
@@ -119,7 +118,7 @@ runs:
               break
             fi
             echo "Slot creation attempt $i failed, retrying..."
-            sleep 20
+            sleep 45
             if [ "$i" -eq 5 ]; then
               echo "Failed to create slot after 5 attempts."
               exit 1
@@ -138,16 +137,6 @@ runs:
             fi
           done
 
-          echo "Warming up slot via $WARMUP_URL"
-          for i in {1..10}; do
-            if wget -qO- $WARMUP_URL > /dev/null 2>&1; then
-              echo "Warmup successful."
-              break
-            fi
-            echo "Warmup attempt $i failed, retrying..."
-            sleep 5
-          done
-
           echo "Attempting slot swap..."
           for i in {1..5}; do
             if az webapp deployment slot swap \
@@ -158,7 +147,7 @@ runs:
               break
             fi
             echo "Swap attempt $i failed, retrying..."
-            sleep 20
+            sleep 45
             if [ "$i" -eq 5 ]; then
               echo "Failed to swap slot after 5 attempts."
               exit 1
