@@ -92,12 +92,12 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+        webapp: ['portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api', 'portal-ui', 'gef-ui', 'trade-finance-manager-ui']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
