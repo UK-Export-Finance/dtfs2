@@ -6,6 +6,7 @@ const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/che
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
+const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
 const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
@@ -351,5 +352,20 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *         description: Internal server error
  */
 router.route('/login/check-your-email-access-code').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getCheckYourEmailAccessCodePage);
+
+/**
+ * @openapi
+ * /login/temporarily-suspended-access-code:
+ *   get:
+ *     summary: Render temporarily suspended access code page
+ *     tags: [Portal]
+ *     description: Render temporarily suspended access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       403:
+ *         description: Forbidden
+ */
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, getAccountSuspendedPage);
 
 module.exports = router;
