@@ -122,6 +122,7 @@ runs:
               break
             fi
             echo "Slot creation attempt $i failed, retrying..."
+            echo "$OUTPUT"   # <-- Add this line to print the error output
             sleep 90
             if [ "$i" -eq 5 ]; then
               echo "Failed to create slot after 5 attempts."
