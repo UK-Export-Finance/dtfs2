@@ -108,7 +108,7 @@ runs:
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
-            az webapp deployment slot create \
+            if az webapp deployment slot create \
               --slot $SLOT \
               --name $WEBAPP \
               --configuration-source $WEBAPP \
