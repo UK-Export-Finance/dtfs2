@@ -104,7 +104,7 @@ runs:
           IMAGE="${{ env.ACR }}/${{ inputs.webapp }}:latest"
           USER="${{ env.ACR_USER }}"
           PASS="${{ inputs.acr }}"
-          WARMUP_URL="https://${WEBAPP}-${SLOT}.azurewebsites.net/healthcheck"
+          WARMUP_URL="https://${WEBAPP}-${SLOT}.scm.azurewebsites.net/api/health
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
@@ -120,6 +120,10 @@ runs:
             fi
             echo "Slot creation attempt $i failed, retrying..."
             sleep 20
+            if [ "$i" -eq 5 ]; then
+              echo "Failed to create slot after 5 attempts."
+              exit 1
+            fi
           done
 
           echo "Waiting for slot to start..."
@@ -128,6 +132,10 @@ runs:
             echo "Slot state: $STATUS"
             if [ "$STATUS" = "Running" ]; then break; fi
             sleep 5
+            if [ "$i" -eq 30 ]; then
+              echo "Slot did not start within expected time."
+              exit 1
+            fi
           done
 
           echo "Warming up slot via $WARMUP_URL"
@@ -151,6 +159,10 @@ runs:
             fi
             echo "Swap attempt $i failed, retrying..."
             sleep 20
+            if [ "$i" -eq 5 ]; then
+              echo "Failed to swap slot after 5 attempts."
+              exit 1
+            fi
           done
 
     # Step 8: Cleanup temporary slot.
@@ -174,4 +186,8 @@ runs:
             fi
             echo "Swap delete attempt $i failed, retrying..."
             sleep 20
+            if [ "$i" -eq 5 ]; then
+              echo "Failed to delete slot after 5 attempts."
+              exit 1
+            fi
           done
