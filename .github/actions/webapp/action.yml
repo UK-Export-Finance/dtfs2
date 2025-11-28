@@ -107,25 +107,22 @@ runs:
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
-            OUTPUT=$(az webapp deployment slot create \
-              --slot $SLOT \
-              --name $WEBAPP \
-              --configuration-source $WEBAPP \
-              --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-              --docker-registry-server-user ${{ env.ACR_USER }} \
-              --docker-registry-server-password ${{ inputs.acr }} 2>&1)
-            if echo "$OUTPUT" | grep -q "The slot cannot be changed because its configuration settings have been prepared for swap"; then
-              echo "$OUTPUT"
-              exit 1
-            elif echo "$OUTPUT" | grep -q "Slot created successfully"; then
-              echo "Slot created successfully."
+            if az webapp deployment slot create \
+                --slot $SLOT \
+                --name $WEBAPP \
+                --configuration-source $WEBAPP \
+                --deployment-container-image-name "${{ env.ACR }}/${{ inputs.webapp }}:latest" \
+                --docker-registry-server-user "${{ env.ACR_USER }}" \
+                --docker-registry-server-password "${{ inputs.acr }}"; then
+              echo "✅ Slot created successfully."
               break
             fi
-            echo "Slot creation attempt $i failed, retrying..."
-            echo "$OUTPUT"   # <-- Add this line to print the error output
-            sleep 90
+
+            echo "❌ Slot creation attempt $i failed. Retrying in 90s..."
+            sleep 50
+
             if [ "$i" -eq 5 ]; then
-              echo "Failed to create slot after 5 attempts."
+              echo "❌ Failed to create slot after 5 attempts."
               exit 1
             fi
           done
@@ -152,7 +149,7 @@ runs:
               break
             fi
             echo "Swap attempt $i failed, retrying..."
-            sleep 90
+            sleep 50
             if [ "$i" -eq 5 ]; then
               echo "Failed to swap slot after 5 attempts."
               exit 1
@@ -179,7 +176,7 @@ runs:
               break
             fi
             echo "Swap delete attempt $i failed, retrying..."
-            sleep 35
+            sleep 45
             if [ "$i" -eq 5 ]; then
               echo "Failed to delete slot after 5 attempts."
               exit 1
