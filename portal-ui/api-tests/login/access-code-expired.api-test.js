@@ -13,7 +13,7 @@ jest.mock('../../server/api', () => ({
 
 const { when } = require('jest-when');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
-const { login, validatePartialAuthToken } = require('../../server/api');
+const { login, sendSignInLink, validatePartialAuthToken } = require('../../server/api');
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
@@ -27,6 +27,11 @@ const password = 'mock password';
 const partialAuthToken = 'partial auth token';
 
 describe('GET /login/access-code-expired', () => {
+  beforeEach(() => {
+    // Mock sendSignInLink for all tests to ensure session has numberOfSignInLinkAttemptsRemaining
+    sendSignInLink.mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining: 2 } });
+  });
+
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login/access-code-expired', {}, headers),
     validateResponseWasSuccessful: (response) => {

@@ -11,7 +11,7 @@ describe('getAccessCodeExpiredPage', () => {
     jest.resetAllMocks();
     const mocks = createMocks<GetAccessCodeExpiredPageRequest>({
       session: {
-        numberOfSignInLinkAttemptsRemaining: 3,
+        numberOfSendSignInLinkAttemptsRemaining: 3,
       },
     });
     req = mocks.req as GetAccessCodeExpiredPageRequest;
@@ -40,7 +40,7 @@ describe('getAccessCodeExpiredPage', () => {
 
   it('should pass correct attemptsLeft value for 2 attempts', () => {
     // Arrange
-    req.session.numberOfSignInLinkAttemptsRemaining = 2;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
 
     // Act
     getAccessCodeExpiredPage(req, res);
@@ -52,7 +52,7 @@ describe('getAccessCodeExpiredPage', () => {
 
   it('should handle 1 attempt remaining', () => {
     // Arrange
-    req.session.numberOfSignInLinkAttemptsRemaining = 1;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = 1;
 
     // Act
     getAccessCodeExpiredPage(req, res);
@@ -62,9 +62,9 @@ describe('getAccessCodeExpiredPage', () => {
     expect(renderData.attemptsLeft).toEqual(1);
   });
 
-  it('should render problem with service when numberOfSignInLinkAttemptsRemaining is not a number', () => {
+  it('should render problem with service when numberOfSendSignInLinkAttemptsRemaining is not a number', () => {
     // Arrange
-    req.session.numberOfSignInLinkAttemptsRemaining = undefined;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = undefined;
 
     // Act
     getAccessCodeExpiredPage(req, res);
@@ -73,9 +73,9 @@ describe('getAccessCodeExpiredPage', () => {
     expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
   });
 
-  it('should render problem with service when numberOfSignInLinkAttemptsRemaining is greater than 3', () => {
+  it('should render problem with service when numberOfSendSignInLinkAttemptsRemaining is greater than 3', () => {
     // Arrange
-    req.session.numberOfSignInLinkAttemptsRemaining = 5;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = 5;
 
     // Act
     getAccessCodeExpiredPage(req, res);
