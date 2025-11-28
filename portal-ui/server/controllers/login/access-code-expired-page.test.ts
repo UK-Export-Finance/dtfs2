@@ -14,7 +14,7 @@ describe('getAccessCodeExpiredPage', () => {
         numberOfSendSignInLinkAttemptsRemaining: 3,
       },
     });
-    req = mocks.req as GetAccessCodeExpiredPageRequest;
+    req = mocks.req;
     res = mocks.res;
   });
 
