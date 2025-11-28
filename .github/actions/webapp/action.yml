@@ -106,7 +106,7 @@ runs:
           PASS="${{ inputs.acr }}"
 
           echo "Creating slot: $SLOT"
-          for i in {1..5}; do
+          for i in {1..3}; do
             if az webapp deployment slot create \
                 --slot $SLOT \
                 --name $WEBAPP \
@@ -118,29 +118,32 @@ runs:
               break
             fi
 
-            echo "❌ Slot creation attempt $i failed. Retrying in 90s..."
-            sleep 50
+            echo "❌ Slot creation attempt $i failed. Retrying in 10s..."
+            sleep 10
 
-            if [ "$i" -eq 5 ]; then
-              echo "❌ Failed to create slot after 5 attempts."
+            if [ "$i" -eq 3 ]; then
+              echo "❌ Failed to create slot after 3 attempts."
               exit 1
             fi
           done
 
           echo "Waiting for slot to start..."
-          for i in {1..30}; do
+          for i in {1..10}; do
             STATUS=$(az webapp show --name $WEBAPP --slot $SLOT --query "state" -o tsv)
             echo "Slot state: $STATUS"
-            if [ "$STATUS" = "Running" ]; then break; fi
+            if [ "$STATUS" = "Running" ]; then
+              echo "✅ Slot is running."
+              break 
+            fi
             sleep 15
-            if [ "$i" -eq 30 ]; then
-              echo "Slot did not start within expected time."
+            if [ "$i" -eq 10 ]; then
+              echo "❌ Slot did not start within expected time."
               exit 1
             fi
           done
 
           echo "Attempting slot swap..."
-          for i in {1..5}; do
+          for i in {1..3}; do
             if az webapp deployment slot swap \
               --slot $SLOT \
               --name $WEBAPP \
@@ -148,10 +151,10 @@ runs:
               echo "Swap succeeded."
               break
             fi
-            echo "Swap attempt $i failed, retrying..."
-            sleep 50
-            if [ "$i" -eq 5 ]; then
-              echo "Failed to swap slot after 5 attempts."
+            echo "✅ Swap attempt $i failed, retrying..."
+            sleep 10
+            if [ "$i" -eq 3 ]; then
+              echo "❌ Failed to swap slot after 3 attempts."
               exit 1
             fi
           done
@@ -175,10 +178,10 @@ runs:
               echo "Swap deleted successfully."
               break
             fi
-            echo "Swap delete attempt $i failed, retrying..."
-            sleep 45
+            echo "✅ Swap delete attempt $i failed, retrying..."
+            sleep 10
             if [ "$i" -eq 5 ]; then
-              echo "Failed to delete slot after 5 attempts."
+              echo "❌ Failed to delete slot after 5 attempts."
               exit 1
             fi
           done
