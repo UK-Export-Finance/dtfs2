@@ -21,6 +21,41 @@ const headers = {
   },
 };
 
+const createSignInOTPCode = async (user, auditDetails) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/users/me/sign-in-code`,
+      headers: headers.central,
+      data: {
+        user,
+        auditDetails,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch ({ response }) {
+    return response?.data;
+  }
+};
+
+const verifySignInOTPCode = async (user, signInOTPCode, auditDetails) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/users/me/validate-sign-in-code`,
+      headers: headers.central,
+      data: {
+        user,
+        signInOTPCode,
+        auditDetails,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
 const findOneDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
@@ -1082,6 +1117,8 @@ const getTfmFacility = async (facilityId) => {
 };
 
 module.exports = {
+  createSignInOTPCode,
+  verifySignInOTPCode,
   findOneDeal,
   createDeal,
   updateDeal,

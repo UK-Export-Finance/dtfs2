@@ -1,4 +1,4 @@
-const { isProduction } = require('@ukef/dtfs2-common');
+const { isProduction, validatePortal2FAFeatureFlagIsEnabled } = require('@ukef/dtfs2-common');
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
@@ -6,6 +6,7 @@ const { STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
 const utils = require('../../crypto/utils');
+const api = require('../api');
 
 class SignInLinkService {
   #randomGenerator;
@@ -29,26 +30,37 @@ class SignInLinkService {
    */
   async createAndEmailSignInLink(user, auditDetails) {
     const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName, signInLinkSendDate: userSignInLinkSendDate } = user;
+    let signInCount;
 
-    const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
+    if (validatePortal2FAFeatureFlagIsEnabled()) {
+      const { securityCode } = await api.createSignInOTPCode(user, auditDetails);
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail, auditDetails });
+      await api.verifySignInOTPCode(user, securityCode, auditDetails);
 
-    if (isUserBlockedOrDisabled) {
-      throw new UserBlockedError(userId);
+      signInCount = '';
+    } else {
+      const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
+
+      const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail, auditDetails });
+
+      if (isUserBlockedOrDisabled) {
+        throw new UserBlockedError(userId);
+      }
+      const signInToken = this.#createSignInToken();
+
+      await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
+
+      await this.#sendSignInLinkEmail({
+        signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${userId}`,
+        userEmail,
+        userFirstName,
+        userLastName,
+      });
+
+      signInCount = newSignInLinkCount;
     }
-    const signInToken = this.#createSignInToken();
 
-    await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
-
-    await this.#sendSignInLinkEmail({
-      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${userId}`,
-      userEmail,
-      userFirstName,
-      userLastName,
-    });
-
-    return newSignInLinkCount;
+    return signInCount;
   }
 
   /**
