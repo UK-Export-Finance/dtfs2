@@ -107,13 +107,17 @@ runs:
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
-            if az webapp deployment slot create \
+            OUTPUT=$(az webapp deployment slot create \
               --slot $SLOT \
               --name $WEBAPP \
               --configuration-source $WEBAPP \
               --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
               --docker-registry-server-user ${{ env.ACR_USER }} \
-              --docker-registry-server-password ${{ inputs.acr }}; then
+              --docker-registry-server-password ${{ inputs.acr }} 2>&1)
+            if echo "$OUTPUT" | grep -q "The slot cannot be changed because its configuration settings have been prepared for swap"; then
+              echo "$OUTPUT"
+              exit 1
+            elif echo "$OUTPUT" | grep -q "Slot created successfully"; then
               echo "Slot created successfully."
               break
             fi
