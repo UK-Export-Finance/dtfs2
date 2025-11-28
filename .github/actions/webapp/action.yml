@@ -104,17 +104,23 @@ runs:
           IMAGE="${{ env.ACR }}/${{ inputs.webapp }}:latest"
           USER="${{ env.ACR_USER }}"
           PASS="${{ inputs.acr }}"
-          WARMUP_URL="https://${WEBAPP}-${SLOT}.azurewebsites.net/health"
+          WARMUP_URL="https://${WEBAPP}-${SLOT}.azurewebsites.net/healthcheck"
 
           echo "Creating slot: $SLOT"
-
-          az webapp deployment slot create \
-            --slot $SLOT \
-            --name $WEBAPP \
-            --configuration-source $WEBAPP \
-            --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-            --docker-registry-server-user ${{ env.ACR_USER }} \
-            --docker-registry-server-password ${{ inputs.acr }}
+          for i in {1..5}; do
+            az webapp deployment slot create \
+              --slot $SLOT \
+              --name $WEBAPP \
+              --configuration-source $WEBAPP \
+              --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+              --docker-registry-server-user ${{ env.ACR_USER }} \
+              --docker-registry-server-password ${{ inputs.acr }}; then
+              echo "Slot created successfully."
+              break
+            fi
+            echo "Slot creation attempt $i failed, retrying..."
+            sleep 20
+          done
 
           echo "Waiting for slot to start..."
           for i in {1..30}; do
@@ -144,7 +150,7 @@ runs:
               break
             fi
             echo "Swap attempt $i failed, retrying..."
-            sleep 10
+            sleep 20
           done
 
     # Step 8: Cleanup temporary slot.
@@ -167,5 +173,5 @@ runs:
               break
             fi
             echo "Swap delete attempt $i failed, retrying..."
-            sleep 10
+            sleep 20
           done
