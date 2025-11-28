@@ -104,7 +104,7 @@ runs:
           IMAGE="${{ env.ACR }}/${{ inputs.webapp }}:latest"
           USER="${{ env.ACR_USER }}"
           PASS="${{ inputs.acr }}"
-          WARMUP_URL="https://${WEBAPP}-${SLOT}.scm.azurewebsites.net/api/health
+          WARMUP_URL="https://${WEBAPP}-${SLOT}.scm.azurewebsites.net/api/health"
 
           echo "Creating slot: $SLOT"
           for i in {1..5}; do
