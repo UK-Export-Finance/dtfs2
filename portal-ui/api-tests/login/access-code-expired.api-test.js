@@ -27,6 +27,18 @@ const password = 'mock password';
 const partialAuthToken = 'partial auth token';
 
 describe('GET /login/access-code-expired', () => {
+  const originalEnv = process.env.FF_PORTAL_2FA_ENABLED;
+
+  beforeAll(() => {
+    // Enable Portal 2FA feature flag for these tests
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
+
+  afterAll(() => {
+    // Restore original environment
+    process.env.FF_PORTAL_2FA_ENABLED = originalEnv;
+  });
+
   beforeEach(() => {
     // Mock sendSignInLink for all tests to ensure session has numberOfSignInLinkAttemptsRemaining
     sendSignInLink.mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining: 2 } });
