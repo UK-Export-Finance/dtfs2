@@ -118,7 +118,7 @@ runs:
               break
             fi
             echo "Slot creation attempt $i failed, retrying..."
-            sleep 45
+            sleep 90
             if [ "$i" -eq 5 ]; then
               echo "Failed to create slot after 5 attempts."
               exit 1
@@ -130,7 +130,7 @@ runs:
             STATUS=$(az webapp show --name $WEBAPP --slot $SLOT --query "state" -o tsv)
             echo "Slot state: $STATUS"
             if [ "$STATUS" = "Running" ]; then break; fi
-            sleep 5
+            sleep 15
             if [ "$i" -eq 30 ]; then
               echo "Slot did not start within expected time."
               exit 1
@@ -147,7 +147,7 @@ runs:
               break
             fi
             echo "Swap attempt $i failed, retrying..."
-            sleep 45
+            sleep 90
             if [ "$i" -eq 5 ]; then
               echo "Failed to swap slot after 5 attempts."
               exit 1
@@ -174,7 +174,7 @@ runs:
               break
             fi
             echo "Swap delete attempt $i failed, retrying..."
-            sleep 20
+            sleep 35
             if [ "$i" -eq 5 ]; then
               echo "Failed to delete slot after 5 attempts."
               exit 1
