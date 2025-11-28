@@ -1,0 +1,168 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "environment": {
+        "value": "{{ENVIRONMENT}}"
+      },
+      "product": {
+        "value": "{{PRODUCT}}"
+      },
+      "target": {
+        "value": "{{TARGET}}"
+      },
+      "version": {
+        "value": "{{VERSION}}"
+      },
+      "peeringRemoteVnetSubscriptionId": {
+        "value": "{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}"
+      },
+      "vnetAddressPrefix": {
+        "value": "{{AZ_DEV_VNET_ADDRESS_PREFIX}}"
+      },
+      "applicationGatewayCidr": {
+        "value": "{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}"
+      },
+      "appServicePlanEgressPrefixCidr": {
+        "value": "{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}"
+      },
+      "acaClamAvCidr": {
+        "value": "{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}"
+      },
+      "privateEndpointsCidr": {
+        "value": "{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}"
+      },
+      "productionSubnetCidr": {
+        "value": "{{PROD_SUBNET_CIDR}}"
+      },
+      "routeTableNextHopIpAddress": {
+        "value": "{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}"
+      },
+      "onPremiseNetworkIpsString": {
+        "value": "{{UKEF_VPN_IPS}}"
+      },
+      "azurePortalIpsString": {
+        "value": "{{AZ_PORTAL_IPS}}"
+      },
+      "RATE_LIMIT_THRESHOLD": {
+        "value": "{{RATE_LIMIT_THRESHOLD}}"
+      },
+      "APIM_TFS_KEY": {
+        "value": "{{APIM_TFS_KEY}}"
+      },
+      "APIM_TFS_VALUE": {
+        "value": "{{APIM_TFS_VALUE}}"
+      },
+      "APIM_TFS_URL": {
+        "value": "{{APIM_TFS_URL}}"
+      },
+      "APIM_MDM_KEY": {
+        "value": "{{APIM_MDM_KEY}}"
+      },
+      "APIM_MDM_URL": {
+        "value": "{{APIM_MDM_URL}}"
+      },
+      "APIM_MDM_VALUE": {
+        "value": "{{APIM_MDM_VALUE}}"
+      },
+      "DTFS_CENTRAL_API_KEY": {
+        "value": "{{DTFS_CENTRAL_API_KEY}}"
+      },
+      "COMPANIES_HOUSE_API_URL": {
+        "value": "{{COMPANIES_HOUSE_API_URL}}"
+      },
+      "ORDNANCE_SURVEY_API_URL": {
+        "value": "{{ORDNANCE_SURVEY_API_URL}}"
+      },
+      "CORS_ORIGIN": {
+        "value": "{{CORS_ORIGIN}}"
+      },
+      "APIM_ESTORE_URL": {
+        "value": "{{APIM_ESTORE_URL}}"
+      },
+      "APIM_ESTORE_KEY": {
+        "value": "{{APIM_ESTORE_KEY}}"
+      },
+      "APIM_ESTORE_VALUE": {
+        "value": "{{APIM_ESTORE_VALUE}}"
+      },
+      "COMPANIES_HOUSE_API_KEY": {
+        "value": "{{COMPANIES_HOUSE_API_KEY}}"
+      },
+      "ORDNANCE_SURVEY_API_KEY": {
+        "value": "{{ORDNANCE_SURVEY_API_KEY}}"
+      },
+      "GOV_NOTIFY_API_KEY": {
+        "value": "{{GOV_NOTIFY_API_KEY}}"
+      },
+      "GOV_NOTIFY_EMAIL_RECIPIENT": {
+        "value": "{{GOV_NOTIFY_EMAIL_RECIPIENT}}"
+      },
+      "EXTERNAL_API_KEY": {
+        "value": "{{EXTERNAL_API_KEY}}"
+      },
+      "PORTAL_UI_URL": {
+        "value": "{{PORTAL_UI_URL}}"
+      },
+      "TFM_API_KEY": {
+        "value": "{{TFM_API_KEY}}"
+      },
+      "UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH": {
+        "value": "{{UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}"
+      },
+      "UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH": {
+        "value": "{{UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}"
+      },
+      "UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE": {
+        "value": "{{UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE}}"
+      },
+      "UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE": {
+        "value": "{{UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE}}"
+      },
+      "UTILISATION_REPORT_DUE_EMAIL_SCHEDULE": {
+        "value": "{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}"
+      },
+      "AZURE_UTILISATION_REPORTS_FILESHARE_NAME": {
+        "value": "{{AZURE_UTILISATION_REPORTS_FILESHARE_NAME}}"
+      },
+      "PDC_INPUTTERS_EMAIL_RECIPIENT": {
+        "value": "{{PDC_INPUTTERS_EMAIL_RECIPIENT}}"
+      },
+      "AZURE_PORTAL_EXPORT_FOLDER": {
+        "value": "{{AZURE_PORTAL_EXPORT_FOLDER}}"
+      },
+      "AZURE_PORTAL_FILESHARE_NAME": {
+        "value": "{{AZURE_PORTAL_FILESHARE_NAME}}"
+      },
+      "JWT_SIGNING_KEY": {
+        "value": "{{JWT_SIGNING_KEY}}"
+      },
+      "JWT_VALIDATING_KEY": {
+        "value": "{{JWT_VALIDATING_KEY}}"
+      },
+      "PORTAL_API_KEY": {
+        "value": "{{PORTAL_API_KEY}}"
+      },
+      "UTILISATION_REPORT_MAX_FILE_SIZE_BYTES": {
+        "value": "{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}"
+      },
+      "SESSION_SECRET": {
+        "value": "{{SESSION_SECRET}}"
+      },
+      "ESTORE_URL": {
+        "value": "{{ESTORE_URL}}"
+      },
+      "UKEF_TFM_API_SYSTEM_KEY": {
+        "value": "{{UKEF_TFM_API_SYSTEM_KEY}}"
+      },
+      "UKEF_TFM_API_REPORTS_KEY": {
+        "value": "{{UKEF_TFM_API_REPORTS_KEY}}"
+      },
+      "AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE": {
+        "value": "{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}"
+      },
+      "UKEF_INTERNAL_NOTIFICATION": {
+        "value": "{{UKEF_INTERNAL_NOTIFICATION}}"
+      }
+    }
+}
