@@ -148,10 +148,10 @@ runs:
               --slot $SLOT \
               --name $WEBAPP \
               --action swap; then
-              echo "Swap succeeded."
+              echo "✅ Swap succeeded."
               break
             fi
-            echo "✅ Swap attempt $i failed, retrying..."
+            echo "❌ Swap attempt $i failed, retrying..."
             sleep 10
             if [ "$i" -eq 3 ]; then
               echo "❌ Failed to swap slot after 3 attempts."
