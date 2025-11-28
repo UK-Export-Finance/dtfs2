@@ -19,12 +19,12 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
   } = req;
 
   if (typeof sessionAttemptsLeft !== 'number') {
-    console.error('Number of send sign in link attempts remaining was not present in the session.');
+    console.error('Number of send sign in link attempts remaining is missing from the session.');
     return res.render('_partials/problem-with-service.njk');
   }
 
   if (sessionAttemptsLeft > 3) {
-    console.error(`Number of send sign in link attempts remaining was not within expected bounds: ${sessionAttemptsLeft}`);
+    console.error('Number of send sign in link attempts remaining is not within expected bounds: %s', sessionAttemptsLeft);
     return res.render('_partials/problem-with-service.njk');
   }
   const result: { requestNewCodeUrl?: string; error?: boolean } = getNextAccessCodePage(sessionAttemptsLeft);
