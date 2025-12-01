@@ -37,7 +37,7 @@ runs:
 
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v2
       with:
         inlineScript: |
           # Basic
@@ -82,7 +82,7 @@ runs:
 
     # Step 7: Create and swap deployment slot.
     - name: Slot 🔀
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v2
       with:
         inlineScript: |
           # Create new temporary slot
@@ -96,7 +96,7 @@ runs:
 
     # Step 8: Wait for slot to be ready.
     - name: Wait ⏳
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v2
       with:
         inlineScript: |
           # Wait for container to be ready
@@ -119,7 +119,7 @@ runs:
 
     # Step 9: Swap deployment slot.
     - name: Swap 🔀
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v2
       with:
         inlineScript: |
           # Swap slot
@@ -131,7 +131,7 @@ runs:
     # Step 10: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v2
       with:
         inlineScript: |
           # Delete temporary slot
