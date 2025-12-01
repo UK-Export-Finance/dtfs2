@@ -103,7 +103,7 @@ runs:
           echo "Waiting for slot ${{ github.sha }} to be ready..."
           COUNTER=0
           while [ $COUNTER -lt 30 ]; do
-            STATE=$(az webapp deployment slot list --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query '[0].state' -o tsv)
+            STATE=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'state' -o tsv)
             echo "Slot state: $STATE"
             if [ "$STATE" == "Running" ]; then
               echo "Slot is running."
