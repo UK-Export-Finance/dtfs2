@@ -99,7 +99,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp: ['trade-finance-manager-api']
+        webapp: ['dtfs-central-api']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
