@@ -101,6 +101,8 @@ runs:
         inlineScript: |
           # Wait for container to be ready
           echo "Waiting for slot ${{ github.sha }} to be ready..."
+
+          # First, wait for the slot to be running
           COUNTER=0
           while [ $COUNTER -lt 30 ]; do
             STATE=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'state' -o tsv)
@@ -112,8 +114,35 @@ runs:
             let COUNTER=COUNTER+1
             sleep 10
           done
+
           if [ "$STATE" != "Running" ]; then
             echo "Error: Slot did not start within the timeout period."
+            exit 1
+          fi
+
+          # Next, wait for the application to respond to HTTP requests
+          echo "Waiting for application to respond to HTTP requests..."
+          SLOT_URL=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'hostNames[0]' -o tsv)
+          echo "Slot URL: https://$SLOT_URL"
+
+          HTTP_COUNTER=0
+          while [ $HTTP_COUNTER -lt 60 ]; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$SLOT_URL" || echo "000")
+            echo "HTTP Status: $HTTP_STATUS"
+
+            # Accept any 2xx, 3xx, 4xx status codes (avoid only 5xx and connection errors)
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ]; then
+              echo "Application is responding to HTTP requests."
+              break
+            fi
+
+            let HTTP_COUNTER=HTTP_COUNTER+1
+            sleep 10
+          done
+
+          if [ "$HTTP_STATUS" -eq "000" ] || [ "$HTTP_STATUS" -ge 500 ]; then
+            echo "Error: Application did not respond to HTTP requests within the timeout period."
+            echo "Final HTTP Status: $HTTP_STATUS"
             exit 1
           fi
 
