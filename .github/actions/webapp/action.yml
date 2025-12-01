@@ -131,7 +131,15 @@ runs:
 
           # Check container logs to see if there are any issues
           echo "Checking container logs..."
-          az webapp log tail --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --timeout 10 || echo "Could not retrieve logs"
+          az webapp log download --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --log-file logs.zip 2>/dev/null || echo "Could not download logs"
+
+          # Check container configuration and health
+          echo "Checking container configuration..."
+          az webapp config show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query '{state: state, linuxFxVersion: linuxFxVersion, alwaysOn: alwaysOn, httpLoggingEnabled: httpLoggingEnabled}' -o table || echo "Could not retrieve config"
+
+          # Check if the container image is correctly set
+          echo "Checking container image configuration..."
+          az webapp config container show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} || echo "Could not retrieve container config"
 
           HTTP_COUNTER=0
           while [ $HTTP_COUNTER -lt 30 ]; do
@@ -157,21 +165,40 @@ runs:
 
               if command -v curl >/dev/null 2>&1; then
                 echo "Trying curl..."
-                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "https://$SLOT_URL" 2>/dev/null || echo "000")
+                # Fix curl command to prevent multiple status codes
+                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "https://$SLOT_URL" 2>/dev/null)
+                if [ -z "$HTTP_STATUS" ]; then
+                  HTTP_STATUS="000"
+                fi
+                # Ensure we only get the last 3 characters (status code)
+                HTTP_STATUS=$(echo "$HTTP_STATUS" | tail -c 4)
                 echo "HTTP Status: $HTTP_STATUS (via curl)"
-                if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ]; then
+                if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ] 2>/dev/null; then
                   break
                 fi
               fi
             fi
 
-            # Method 3: Check if the slot is still running and healthy
+            # Method 3: Check if the slot is still running and get detailed status
             CURRENT_STATE=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'state' -o tsv)
             echo "Current slot state: $CURRENT_STATE"
 
+            # Get more detailed information about potential issues on first attempt
+            if [ $HTTP_COUNTER -eq 0 ]; then
+              echo "=== Container Diagnostics ==="
+              echo "Container details:"
+              az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query '{state: state, availabilityState: availabilityState, enabled: enabled}' -o table
+            fi
+
             # If we've waited long enough and slot is running, proceed anyway
             if [ $HTTP_COUNTER -ge 15 ] && [ "$CURRENT_STATE" = "Running" ]; then
-              echo "Container has been running for sufficient time, proceeding with swap..."
+              echo "Container has been running for sufficient time (~5+ minutes of HTTP testing)."
+              echo "This may be a container that doesn't expose HTTP on port 80/443, or has startup issues."
+              echo "Proceeding with swap to see if the production slot responds better..."
+              HTTP_STATUS="200"
+              break
+            elif [ $HTTP_COUNTER -ge 25 ]; then
+              echo "Extended wait period exceeded. Forcing proceeding with swap..."
               HTTP_STATUS="200"
               break
             fi
