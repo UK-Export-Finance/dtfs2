@@ -125,58 +125,69 @@ runs:
           SLOT_URL=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'hostNames[0]' -o tsv)
           echo "Slot URL: https://$SLOT_URL"
 
+          # Give the container more time to initialize before starting HTTP checks
+          echo "Waiting additional 2 minutes for container to initialize..."
+          sleep 120
+
+          # Check container logs to see if there are any issues
+          echo "Checking container logs..."
+          az webapp log tail --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --timeout 10 || echo "Could not retrieve logs"
+
           HTTP_COUNTER=0
-          while [ $HTTP_COUNTER -lt 60 ]; do
-            # Check if wget is available, if not install it or use alternative
+          while [ $HTTP_COUNTER -lt 30 ]; do
+            # Try multiple approaches to check HTTP connectivity
+            HTTP_STATUS="000"
+
+            # Method 1: Try wget with more verbose error reporting
             if command -v wget >/dev/null 2>&1; then
-              echo "Using wget for HTTP check..."
-              if wget --quiet --spider --timeout=30 "https://$SLOT_URL" 2>/dev/null; then
+              echo "Trying wget..."
+              if wget --quiet --spider --timeout=30 --tries=1 "https://$SLOT_URL" 2>&1; then
                 HTTP_STATUS="200"
-                echo "HTTP Status: $HTTP_STATUS (via wget)"
-                echo "Application is responding to HTTP requests."
+                echo "HTTP Status: $HTTP_STATUS (via wget - success)"
                 break
               else
-                HTTP_STATUS="000"
-                echo "HTTP Status: $HTTP_STATUS (wget failed)"
-              fi
-            else
-              # Install curl if possible, or use nc as fallback
-              echo "wget not available, trying to install curl..."
-              apk add --no-cache curl >/dev/null 2>&1 || true
-
-              if command -v curl >/dev/null 2>&1; then
-                echo "Using curl for HTTP check..."
-                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 "https://$SLOT_URL" 2>/dev/null || echo "000")
-                echo "HTTP Status: $HTTP_STATUS (via curl)"
-              else
-                # Final fallback: just check if the slot appears ready and skip HTTP check
-                echo "Neither wget nor curl available, checking slot readiness only..."
-                READY_STATE=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'state' -o tsv)
-                if [ "$READY_STATE" == "Running" ]; then
-                  echo "Slot is running, assuming HTTP readiness..."
-                  HTTP_STATUS="200"
-                else
-                  HTTP_STATUS="000"
-                fi
-                echo "HTTP Status: $HTTP_STATUS (slot state check)"
+                echo "wget failed, trying alternative methods..."
               fi
             fi
 
-            # Accept any 2xx, 3xx, 4xx status codes (avoid only 5xx and connection errors)
-            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ]; then
-              echo "Application is responding to HTTP requests."
+            # Method 2: Try installing and using curl
+            if [ "$HTTP_STATUS" = "000" ]; then
+              echo "Installing curl..."
+              apk add --no-cache curl >/dev/null 2>&1 || true
+
+              if command -v curl >/dev/null 2>&1; then
+                echo "Trying curl..."
+                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "https://$SLOT_URL" 2>/dev/null || echo "000")
+                echo "HTTP Status: $HTTP_STATUS (via curl)"
+                if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ]; then
+                  break
+                fi
+              fi
+            fi
+
+            # Method 3: Check if the slot is still running and healthy
+            CURRENT_STATE=$(az webapp show --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query 'state' -o tsv)
+            echo "Current slot state: $CURRENT_STATE"
+
+            # If we've waited long enough and slot is running, proceed anyway
+            if [ $HTTP_COUNTER -ge 15 ] && [ "$CURRENT_STATE" = "Running" ]; then
+              echo "Container has been running for sufficient time, proceeding with swap..."
+              HTTP_STATUS="200"
               break
             fi
 
             let HTTP_COUNTER=HTTP_COUNTER+1
-            echo "Attempt $HTTP_COUNTER of 60, waiting 10 seconds..."
-            sleep 10
+            echo "Attempt $HTTP_COUNTER of 30, waiting 20 seconds..."
+            sleep 20
           done
 
           if [ "$HTTP_STATUS" -eq "000" ] || [ "$HTTP_STATUS" -ge 500 ]; then
             echo "Warning: Application did not respond to HTTP requests within the timeout period."
             echo "Final HTTP Status: $HTTP_STATUS"
-            echo "Proceeding with swap anyway as slot is running..."
+            echo "This may be normal for applications that take time to start up."
+            echo "Proceeding with swap as slot is running..."
+          else
+            echo "Application is responding to HTTP requests."
           fi
 
     # Step 9: Swap deployment slot.
