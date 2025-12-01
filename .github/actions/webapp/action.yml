@@ -93,13 +93,42 @@ runs:
           --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
           --docker-registry-server-user ${{ env.ACR_USER }} \
           --docker-registry-server-password ${{ inputs.acr }}
+
+    # Step 8: Wait for slot to be ready.
+    - name: Wait ⏳
+      uses: azure/cli@v2.1.0
+      with:
+        inlineScript: |
+          # Wait for container to be ready
+          echo "Waiting for slot ${{ github.sha }} to be ready..."
+          COUNTER=0
+          while [ $COUNTER -lt 30 ]; do
+            STATE=$(az webapp deployment slot list-instances --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query '[0].state' -o tsv)
+            echo "Slot state: $STATE"
+            if [ "$STATE" == "Running" ]; then
+              echo "Slot is running."
+              break
+            fi
+            let COUNTER=COUNTER+1
+            sleep 10
+          done
+          if [ "$STATE" != "Running" ]; then
+            echo "Error: Slot did not start within the timeout period."
+            exit 1
+          fi
+
+    # Step 9: Swap deployment slot.
+    - name: Swap 🔀
+      uses: azure/cli@v2.1.0
+      with:
+        inlineScript: |
           # Swap slot
           az webapp deployment slot swap \
           --slot ${{ github.sha }} \
           --name ${{ env.WEBAPP }} \
           --action swap
 
-    # Step 8: Cleanup temporary slot.
+    # Step 10: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
       uses: azure/cli@v2.1.0
