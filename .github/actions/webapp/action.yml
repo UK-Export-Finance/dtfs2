@@ -127,7 +127,13 @@ runs:
 
           HTTP_COUNTER=0
           while [ $HTTP_COUNTER -lt 60 ]; do
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$SLOT_URL" || echo "000")
+            # Use wget to test HTTP connectivity (available in Azure CLI container)
+            if wget --quiet --spider --timeout=30 "https://$SLOT_URL" 2>/dev/null; then
+              HTTP_STATUS="200"
+            else
+              # If wget fails, try to get more specific status with Python
+              HTTP_STATUS=$(python3 -c "import urllib.request,urllib.error; exec('''try:\n response = urllib.request.urlopen('https://$SLOT_URL', timeout=30)\n print(response.status)\nexcept urllib.error.HTTPError as e:\n print(e.code)\nexcept:\n print('000')''')" 2>/dev/null || echo "000")
+            fi
             echo "HTTP Status: $HTTP_STATUS"
 
             # Accept any 2xx, 3xx, 4xx status codes (avoid only 5xx and connection errors)
