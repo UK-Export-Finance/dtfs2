@@ -91,20 +91,24 @@ runs:
           --name ${{ env.WEBAPP }} \
           --configuration-source ${{ env.WEBAPP }} \
           --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-          --docker-registry-server-user ${{ env.ACR_USER }} \
-          --docker-registry-server-password ${{ inputs.acr }}
+          --docker-registry-server-user "${{ env.ACR_USER }}" \
+          --docker-registry-server-password "${{ inputs.acr }}"
 
           # Ensure Docker registry credentials are properly set
           echo "Configuring Docker registry credentials for slot..."
+
+          # Store password in variable to handle special characters
+          ACR_PASSWORD='${{ inputs.acr }}'
+
           az webapp config appsettings set \
-          --name ${{ env.WEBAPP }} \
+          --name "${{ env.WEBAPP }}" \
           --slot ${{ github.sha }} \
           --settings \
-          DOCKER_REGISTRY_SERVER_URL=https://${{ env.ACR }} \
-          DOCKER_REGISTRY_SERVER_USERNAME=${{ env.ACR_USER }} \
-          DOCKER_REGISTRY_SERVER_PASSWORD=${{ inputs.acr }} \
-          WEBSITES_ENABLE_APP_SERVICE_STORAGE=false \
-          DOCKER_CUSTOM_IMAGE_NAME=DOCKER\|${{ env.ACR }}/${{ inputs.webapp }}:latest
+          "DOCKER_REGISTRY_SERVER_URL=https://${{ env.ACR }}" \
+          "DOCKER_REGISTRY_SERVER_USERNAME=${{ env.ACR_USER }}" \
+          "DOCKER_REGISTRY_SERVER_PASSWORD=${ACR_PASSWORD}" \
+          "WEBSITES_ENABLE_APP_SERVICE_STORAGE=false" \
+          "DOCKER_CUSTOM_IMAGE_NAME=DOCKER|${{ env.ACR }}/${{ inputs.webapp }}:latest"
 
           # Restart the slot to ensure new settings take effect
           echo "Restarting slot to apply configuration..."
@@ -138,15 +142,20 @@ runs:
 
           # Verify Docker registry credentials are set correctly
           echo "Verifying Docker registry configuration..."
-          DOCKER_PASSWORD_SET=$(az webapp config appsettings list --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query "[?name=='DOCKER_REGISTRY_SERVER_PASSWORD'].value | [0]" -o tsv)
+          DOCKER_PASSWORD_SET=$(az webapp config appsettings list --name "${{ env.WEBAPP }}" --slot ${{ github.sha }} --query "[?name=='DOCKER_REGISTRY_SERVER_PASSWORD'].value | [0]" -o tsv)
           if [ -z "$DOCKER_PASSWORD_SET" ] || [ "$DOCKER_PASSWORD_SET" = "null" ]; then
             echo "Warning: Docker registry password not set correctly. Attempting to fix..."
+
+            # Use the same variable approach for consistency
+            ACR_PASSWORD='${{ inputs.acr }}'
+
             az webapp config appsettings set \
-            --name ${{ env.WEBAPP }} \
+            --name "${{ env.WEBAPP }}" \
             --slot ${{ github.sha }} \
-            --settings DOCKER_REGISTRY_SERVER_PASSWORD=${{ inputs.acr }}
+            --settings "DOCKER_REGISTRY_SERVER_PASSWORD=${ACR_PASSWORD}"
+
             echo "Restarting slot again to apply credentials..."
-            az webapp restart --name ${{ env.WEBAPP }} --slot ${{ github.sha }}
+            az webapp restart --name "${{ env.WEBAPP }}" --slot ${{ github.sha }}
             sleep 30
           else
             echo "Docker registry credentials are properly configured."
