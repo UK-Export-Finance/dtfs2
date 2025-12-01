@@ -80,7 +80,7 @@ runs:
         docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
       shell: bash
 
-    # Step 7: Create and swap deployment slot.
+    # Step 7: Create and configure deployment slot.
     - name: Slot 🔀
       uses: azure/cli@v2
       with:
@@ -93,6 +93,22 @@ runs:
           --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
           --docker-registry-server-user ${{ env.ACR_USER }} \
           --docker-registry-server-password ${{ inputs.acr }}
+
+          # Ensure Docker registry credentials are properly set
+          echo "Configuring Docker registry credentials for slot..."
+          az webapp config appsettings set \
+          --name ${{ env.WEBAPP }} \
+          --slot ${{ github.sha }} \
+          --settings \
+          DOCKER_REGISTRY_SERVER_URL=https://${{ env.ACR }} \
+          DOCKER_REGISTRY_SERVER_USERNAME=${{ env.ACR_USER }} \
+          DOCKER_REGISTRY_SERVER_PASSWORD=${{ inputs.acr }} \
+          WEBSITES_ENABLE_APP_SERVICE_STORAGE=false \
+          DOCKER_CUSTOM_IMAGE_NAME=DOCKER\|${{ env.ACR }}/${{ inputs.webapp }}:latest
+
+          # Restart the slot to ensure new settings take effect
+          echo "Restarting slot to apply configuration..."
+          az webapp restart --name ${{ env.WEBAPP }} --slot ${{ github.sha }}
 
     # Step 8: Wait for slot to be ready.
     - name: Wait ⏳
@@ -118,6 +134,22 @@ runs:
           if [ "$STATE" != "Running" ]; then
             echo "Error: Slot did not start within the timeout period."
             exit 1
+          fi
+
+          # Verify Docker registry credentials are set correctly
+          echo "Verifying Docker registry configuration..."
+          DOCKER_PASSWORD_SET=$(az webapp config appsettings list --name ${{ env.WEBAPP }} --slot ${{ github.sha }} --query "[?name=='DOCKER_REGISTRY_SERVER_PASSWORD'].value | [0]" -o tsv)
+          if [ -z "$DOCKER_PASSWORD_SET" ] || [ "$DOCKER_PASSWORD_SET" = "null" ]; then
+            echo "Warning: Docker registry password not set correctly. Attempting to fix..."
+            az webapp config appsettings set \
+            --name ${{ env.WEBAPP }} \
+            --slot ${{ github.sha }} \
+            --settings DOCKER_REGISTRY_SERVER_PASSWORD=${{ inputs.acr }}
+            echo "Restarting slot again to apply credentials..."
+            az webapp restart --name ${{ env.WEBAPP }} --slot ${{ github.sha }}
+            sleep 30
+          else
+            echo "Docker registry credentials are properly configured."
           fi
 
           # Next, wait for the application to respond to HTTP requests
@@ -165,15 +197,16 @@ runs:
 
               if command -v curl >/dev/null 2>&1; then
                 echo "Trying curl..."
-                # Fix curl command to prevent multiple status codes
-                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "https://$SLOT_URL" 2>/dev/null)
-                if [ -z "$HTTP_STATUS" ]; then
+                # Fix curl command to prevent multiple status codes and handle errors gracefully
+                HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "https://$SLOT_URL" 2>/dev/null || echo "000")
+                # Clean up any non-numeric characters and ensure we have a valid status
+                HTTP_STATUS=$(echo "$HTTP_STATUS" | grep -o '[0-9]*' | tail -1)
+                if [ -z "$HTTP_STATUS" ] || [ "$HTTP_STATUS" = "" ]; then
                   HTTP_STATUS="000"
                 fi
-                # Ensure we only get the last 3 characters (status code)
-                HTTP_STATUS=$(echo "$HTTP_STATUS" | tail -c 4)
                 echo "HTTP Status: $HTTP_STATUS (via curl)"
-                if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 500 ] 2>/dev/null; then
+                # Use safer numeric comparison with error suppression
+                if [ "$HTTP_STATUS" -ge 200 ] 2>/dev/null && [ "$HTTP_STATUS" -lt 500 ] 2>/dev/null; then
                   break
                 fi
               fi
