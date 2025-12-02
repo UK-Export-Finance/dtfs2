@@ -15,4 +15,9 @@ describe(page, () => {
       .expectElement('script[src="/assets/js/printPage.js"]')
       .toHaveAttribute('integrity', 'sha512-COV1ZxdaFcvJFaLBxO/S9vxb6lx0vun8S4gYf82aSfr/OCjWt6yeEWTeaLYS2crz70vNnQEdoDEg9JojLHqU5A==');
   });
+
+  it('should render print page button with type="button" attribute to prevent form submission', () => {
+    wrapper.expectElement('[data-cy="print-button"]').toExist();
+    wrapper.expectElement('[data-cy="print-button"]').toHaveAttribute('type', 'button');
+  });
 });
