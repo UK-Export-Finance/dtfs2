@@ -107,7 +107,7 @@ runs:
           --settings \
           "DOCKER_REGISTRY_SERVER_URL=https://${{ env.ACR }}" \
           "DOCKER_REGISTRY_SERVER_USERNAME=${{ env.ACR_USER }}" \
-          "DOCKER_REGISTRY_SERVER_PASSWORD=${ACR_PASSWORD}" \
+          "DOCKER_REGISTRY_SERVER_PASSWORD=${{ACR_PASSWORD}}" \
           "WEBSITES_ENABLE_APP_SERVICE_STORAGE=false" \
           "DOCKER_CUSTOM_IMAGE_NAME=DOCKER|${{ env.ACR }}/${{ inputs.webapp }}:latest"
 
