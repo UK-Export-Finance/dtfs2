@@ -328,13 +328,14 @@ describe('postReturnAmendmentToMaker', () => {
       expect(updateApplicationMock).toHaveBeenCalledTimes(1);
 
       // Verify the comment was trimmed before being stored
-      const calls = updateApplicationMock.mock.calls as unknown[][];
-      const firstCallArg = calls[0]?.[0] as { application: { comments: Array<{ comment: string }> } };
-      expect(firstCallArg.application.comments[0].comment).toEqual('Valid comment');
+      const mockCalls = updateApplicationMock.mock.calls as unknown[][];
+      const callArg = mockCalls[0][0] as { application: { comments: Array<{ comment: string }> } };
+      const storedComment = callArg.application.comments[0].comment;
+      expect(storedComment).toEqual('Valid comment');
     });
 
     it('should accept comment under limit with whitespace that makes untrimmed version over limit', async () => {
-      // Arrange - 398 'a' chars + whitespace would be over 400 untrimmed, but trimmed is 398
+      // Arrange
       const commentJustUnderLimit = 'a'.repeat(398);
       const commentWithWhitespace = `  ${commentJustUnderLimit}  `;
       const { req, res } = getHttpMocks(commentWithWhitespace);
@@ -342,13 +343,13 @@ describe('postReturnAmendmentToMaker', () => {
       // Act
       await postReturnAmendmentToMaker(req, res);
 
-      // Assert - should succeed because trimmed version is 398 characters
+      // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
       expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
     });
 
     it('should reject comment that is over limit after trimming', async () => {
-      // Arrange - 401 'a' chars with whitespace
+      // Arrange
       const longCommentWithWhitespace = `  ${'a'.repeat(401)}  `;
       const { req, res } = getHttpMocks(longCommentWithWhitespace);
 
@@ -366,7 +367,7 @@ describe('postReturnAmendmentToMaker', () => {
       expect(res._getRenderData()).toEqual(
         expect.objectContaining({
           errors,
-          comment: 'a'.repeat(401), // Should be trimmed in the view model
+          comment: 'a'.repeat(401),
         }),
       );
     });

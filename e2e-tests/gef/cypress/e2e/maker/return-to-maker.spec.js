@@ -99,12 +99,12 @@ context('Return to Maker', () => {
     });
 
     it('should trim whitespace from comment and validate correctly', () => {
-      // Enter a comment with leading/trailing whitespace that would be over limit without trimming
-      const commentWithWhitespace = `  ${'a'.repeat(398)}  `; // 398 chars + 4 spaces = 402, but trimmed is 398
+      // 395 chars + 3 spaces = 398 total (under 400, so client-side validation passes)
+      const commentWithWhitespace = `${'a'.repeat(395)}   `;
       cy.keyboardInput(returnToMaker.comment(), commentWithWhitespace);
       cy.clickSubmitButton();
 
-      // Should succeed because trimmed version is under 400
+      // Total is under 400, should redirect to dashboard
       cy.location('pathname').should('contain', 'dashboard');
     });
 

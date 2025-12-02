@@ -46,7 +46,6 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
       return res.redirect('/not-found');
     }
 
-    // Trim whitespace from comment to ensure accurate character count validation
     const trimmedComment = comment?.trim() || '';
 
     if (trimmedComment.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
