@@ -56,6 +56,7 @@ runs:
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
         echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
+        echo ACR_PASSWORD=$(az acr credential show --name $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query passwords[0].value -o tsv) >> $GITHUB_ENV
       shell: bash
 
     # Step 5: Log in to Azure Container Registry.
@@ -64,7 +65,7 @@ runs:
       with:
         login-server: ${{ env.ACR }}
         username: ${{ env.ACR_USER }}
-        password: ${{ inputs.acr }}
+        password: ${{ env.ACR_PASSWORD }}
 
     # Step 6: Build and push Docker images.
     - name: Artefacts 🗃️
@@ -92,13 +93,13 @@ runs:
           --configuration-source ${{ env.WEBAPP }} \
           --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
           --docker-registry-server-user "${{ env.ACR_USER }}" \
-          --docker-registry-server-password "${{ inputs.acr }}"
+          --docker-registry-server-password "${{ env.ACR_PASSWORD }}" \
 
           # Ensure Docker registry credentials are properly set
           echo "Configuring Docker registry credentials for slot..."
 
           # Store password in variable to handle special characters
-          ACR_PASSWORD='${{ inputs.acr }}'
+          ACR_PASSWORD='${{ env.ACR_PASSWORD }}'
 
           az webapp config appsettings set \
           --name "${{ env.WEBAPP }}" \
@@ -147,7 +148,7 @@ runs:
             echo "Warning: Docker registry password not set correctly. Attempting to fix..."
 
             # Use the same variable approach for consistency
-            ACR_PASSWORD='${{ inputs.acr }}'
+            ACR_PASSWORD='${{ env.ACR_PASSWORD }}'
 
             az webapp config appsettings set \
             --name "${{ env.WEBAPP }}" \
