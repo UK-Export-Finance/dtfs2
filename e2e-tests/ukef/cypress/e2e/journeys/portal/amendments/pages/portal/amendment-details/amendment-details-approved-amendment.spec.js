@@ -92,6 +92,11 @@ context('Amendments - Approved amendments - Amendment details page', () => {
       printButton().should('exist');
     });
 
+    it('should render the print dialogue when clicking the print button', () => {
+      applicationAmendments.amendmentDetailsLink().click();
+      cy.assertPrintDialogue(printButton);
+    });
+
     it('should display a summary list with the correct changes and new facility value', () => {
       applicationAmendments.amendmentDetailsLink().click();
       amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsKey().contains('Changes');
