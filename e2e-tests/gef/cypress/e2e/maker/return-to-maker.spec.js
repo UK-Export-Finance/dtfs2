@@ -79,6 +79,35 @@ context('Return to Maker', () => {
       errorSummary();
     });
 
+    it('should allow submission after reducing comment from over 400 to under 400 characters', () => {
+      // First, enter a comment that's too long
+      const longComment = 'a'.repeat(401);
+      cy.keyboardInput(returnToMaker.comment(), longComment);
+      cy.clickSubmitButton();
+
+      // Verify error is shown
+      errorSummary();
+
+      // Now fix the comment to be under the limit
+      const validComment = 'a'.repeat(399);
+      returnToMaker.comment().clear();
+      cy.keyboardInput(returnToMaker.comment(), validComment);
+      cy.clickSubmitButton();
+
+      // Verify successful submission
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
+    it('should trim whitespace from comment and validate correctly', () => {
+      // Enter a comment with leading/trailing whitespace that would be over limit without trimming
+      const commentWithWhitespace = `  ${'a'.repeat(398)}  `; // 398 chars + 4 spaces = 402, but trimmed is 398
+      cy.keyboardInput(returnToMaker.comment(), commentWithWhitespace);
+      cy.clickSubmitButton();
+
+      // Should succeed because trimmed version is under 400
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
     it('takes checker back to application preview page when cancelled', () => {
       cy.keyboardInput(returnToMaker.comment(), 'Some comments here ....');
       cy.clickCancelLink();

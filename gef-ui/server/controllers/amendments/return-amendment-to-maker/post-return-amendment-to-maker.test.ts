@@ -309,6 +309,69 @@ describe('postReturnAmendmentToMaker', () => {
     });
   });
 
+  describe('when comment has leading/trailing whitespace', () => {
+    beforeEach(() => {
+      mockDeal.comments = [];
+    });
+
+    it('should trim whitespace and accept comment under limit after trimming', async () => {
+      // Arrange
+      const commentWithWhitespace = '  Valid comment  ';
+      const { req, res } = getHttpMocks(commentWithWhitespace);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+      expect(updateApplicationMock).toHaveBeenCalledTimes(1);
+
+      // Verify the comment was trimmed before being stored
+      const calls = updateApplicationMock.mock.calls as unknown[][];
+      const firstCallArg = calls[0]?.[0] as { application: { comments: Array<{ comment: string }> } };
+      expect(firstCallArg.application.comments[0].comment).toEqual('Valid comment');
+    });
+
+    it('should accept comment under limit with whitespace that makes untrimmed version over limit', async () => {
+      // Arrange - 398 'a' chars + whitespace would be over 400 untrimmed, but trimmed is 398
+      const commentJustUnderLimit = 'a'.repeat(398);
+      const commentWithWhitespace = `  ${commentJustUnderLimit}  `;
+      const { req, res } = getHttpMocks(commentWithWhitespace);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Assert - should succeed because trimmed version is 398 characters
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+    });
+
+    it('should reject comment that is over limit after trimming', async () => {
+      // Arrange - 401 'a' chars with whitespace
+      const longCommentWithWhitespace = `  ${'a'.repeat(401)}  `;
+      const { req, res } = getHttpMocks(longCommentWithWhitespace);
+
+      const errors = validationErrorHandler({
+        errRef: 'comment',
+        errMsg: `You have entered more than ${RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT} characters`,
+      });
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getRenderView()).toEqual('partials/return-to-maker.njk');
+      expect(res._getRenderData()).toEqual(
+        expect.objectContaining({
+          errors,
+          comment: 'a'.repeat(401), // Should be trimmed in the view model
+        }),
+      );
+    });
+  });
+
   describe('when the deal is not found', () => {
     beforeEach(() => {
       getApplicationMock.mockResolvedValue(undefined);

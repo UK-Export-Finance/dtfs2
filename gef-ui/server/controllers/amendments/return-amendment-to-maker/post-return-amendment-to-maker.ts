@@ -46,7 +46,10 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
       return res.redirect('/not-found');
     }
 
-    if (comment?.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
+    // Trim whitespace from comment to ensure accurate character count validation
+    const trimmedComment = comment?.trim() || '';
+
+    if (trimmedComment.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
       const errors = validationErrorHandler({
         errRef: 'comment',
         errMsg: `You have entered more than ${RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT} characters`,
@@ -67,14 +70,14 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
         previousPage,
         maxCommentLength,
         errors,
-        comment,
+        comment: trimmedComment,
         isReturningAmendmentToMaker,
       };
 
       return res.render('partials/return-to-maker.njk', viewModel);
     }
 
-    await addCheckerCommentsToApplication(dealId, userToken, user._id, comment);
+    await addCheckerCommentsToApplication(dealId, userToken, user._id, trimmedComment);
 
     const { makersEmail, checkersEmail, emailVariables } = mapReturnToMakerEmailVariables({ deal, facility, amendment, user });
 
