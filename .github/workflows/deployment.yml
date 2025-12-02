@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
@@ -107,7 +107,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
@@ -142,7 +142,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions
