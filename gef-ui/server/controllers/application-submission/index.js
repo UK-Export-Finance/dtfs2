@@ -1,10 +1,9 @@
+const { validateComment, COMMENT_MAX_LENGTH } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
-
-const maxCommentLength = 400;
 
 /**
  * Controller to render the application details comments page.
@@ -26,7 +25,7 @@ const getApplicationSubmission = async (req, res) => {
   return res.render('application-details-comments.njk', {
     dealId,
     submissionType,
-    maxCommentLength,
+    maxCommentLength: COMMENT_MAX_LENGTH,
     hasIssuedFacility,
   });
 };
@@ -55,21 +54,23 @@ const postApplicationSubmission = async (req, res, next) => {
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
-    if (comment.length > maxCommentLength) {
+    const validation = validateComment(comment);
+
+    if (!validation.isValid) {
       const errors = validationErrorHandler({
         errRef: 'comment',
-        errMsg: `You have entered more than ${maxCommentLength} characters`,
+        errMsg: validation.error,
       });
 
       return res.render('application-details-comments.njk', {
         dealId,
-        maxCommentLength,
+        maxCommentLength: COMMENT_MAX_LENGTH,
         errors,
-        comment,
+        comment: validation.trimmedComment,
       });
     }
 
-    if (comment) {
+    if (validation.trimmedComment) {
       const commentObj = {
         roles: user.roles,
         userName: user.username,
@@ -77,7 +78,7 @@ const postApplicationSubmission = async (req, res, next) => {
         surname: user.surname,
         email: user.email,
         createdAt: Date.now(),
-        comment,
+        comment: validation.trimmedComment,
       };
       const comments = application.comments || [];
       comments.push(commentObj);

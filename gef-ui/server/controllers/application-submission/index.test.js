@@ -1,3 +1,4 @@
+import { COMMENT_MAX_LENGTH } from '@ukef/dtfs2-common';
 import { getApplicationSubmission, postApplicationSubmission } from './index';
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
@@ -62,7 +63,7 @@ describe('controllers/application-submission', () => {
     });
 
     it('renders error where comments are too long', async () => {
-      const longComments = 'a'.repeat(410);
+      const longComments = 'a'.repeat(COMMENT_MAX_LENGTH + 1);
       mockRequest.body.comment = longComments;
 
       await postApplicationSubmission(mockRequest, mockResponse);
@@ -72,7 +73,66 @@ describe('controllers/application-submission', () => {
         expect.objectContaining({
           dealId: expect.any(String),
           comment: longComments,
-          maxCommentLength: expect.any(Number),
+          maxCommentLength: COMMENT_MAX_LENGTH,
+          errors: expect.any(Object),
+        }),
+      );
+    });
+
+    it('trims whitespace before storing comment', async () => {
+      mockRequest.body.comment = '  Valid comment with spaces  ';
+      api.updateApplication = jest.fn();
+
+      await postApplicationSubmission(mockRequest, mockResponse);
+
+      expect(api.updateApplication).toHaveBeenCalledWith({
+        dealId: mockApplicationResponse._id,
+        application: expect.objectContaining({
+          comments: [
+            expect.objectContaining({
+              comment: 'Valid comment with spaces',
+            }),
+          ],
+        }),
+        userToken,
+      });
+    });
+
+    it('does not store whitespace-only comment', async () => {
+      mockRequest.body.comment = '     ';
+      api.updateApplication = jest.fn();
+
+      await postApplicationSubmission(mockRequest, mockResponse);
+
+      expect(api.updateApplication).toHaveBeenCalledWith({
+        dealId: mockApplicationResponse._id,
+        application: expect.objectContaining({
+          editorId: expect.any(Number),
+        }),
+        userToken,
+      });
+
+      expect(api.updateApplication).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          application: expect.objectContaining({
+            comments: expect.any(Array),
+          }),
+        }),
+      );
+    });
+
+    it('rejects comment over limit after trimming whitespace', async () => {
+      const longComment = 'a'.repeat(COMMENT_MAX_LENGTH + 1);
+      mockRequest.body.comment = `  ${longComment}  `;
+
+      await postApplicationSubmission(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'application-details-comments.njk',
+        expect.objectContaining({
+          dealId: expect.any(String),
+          comment: longComment,
+          maxCommentLength: COMMENT_MAX_LENGTH,
           errors: expect.any(Object),
         }),
       );
