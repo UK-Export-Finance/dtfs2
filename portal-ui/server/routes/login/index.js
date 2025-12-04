@@ -2,6 +2,7 @@ const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
@@ -334,6 +335,23 @@ router.post('/login/sign-in-link-expired', validatePartialAuthToken, sendNewSign
  *         description: Internal server error
  */
 router.get('/login/sign-in-link', loginWithSignInLink);
+
+/**
+ * @openapi
+ * /login/access-code/:pageUrl:
+ *   get:
+ *     summary: Render the access code page
+ *     tags: [Portal]
+ *     description: Render the access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+router.route('/login/check-your-email-access-code').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getCheckYourEmailAccessCodePage);
 
 /**
  * @openapi
