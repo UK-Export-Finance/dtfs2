@@ -1,0 +1,147 @@
+name: Deploy via Bicep
+
+# We don't want concurrent deploys to the same resource group.
+concurrency: bicep_deploy_${{ inputs.resourceGroupName }}
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: What environment is being deployed
+        required: true
+        type: string
+      resourceGroupName:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      REMOTE_VNET_SUBSCRIPTION_VPN:
+        description: Subscription Id to set up vnet peering for
+        required: true
+      REMOTE_VNET_RESOURCE_GROUP_VPN:
+        description: Resource group the remote vnet resides in that we want to set up peering for
+        required: true
+      REMOTE_VNET_NAME_VPN:
+        description: Name of the remote vnet we want to set up peering for
+        required: true
+      VNET_ADDRESS_PREFIX:
+        description: Remote VNet Peering address space
+        required: true
+      UKEF_VPN_IPS:
+        description: IPs allowed to access restricted services, represented as Json array string
+        required: true
+      APIM_TFS_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_TFS_VALUE:
+        description: webapp environment variable
+        required: true
+      APIM_TFS_URL:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_URL:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_VALUE:
+        description: webapp environment variable
+        required: true
+      CORS_ORIGIN:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_URL:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_VALUE:
+        description: webapp environment variable
+        required: true
+      COMPANIES_HOUSE_API_KEY:
+        description: webapp environment variable
+        required: true
+      ORDNANCE_SURVEY_API_KEY:
+        description: webapp environment variable
+        required: true
+      GOV_NOTIFY_API_KEY:
+        description: webapp environment variable
+        required: true
+      GOV_NOTIFY_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
+      AZURE_PORTAL_EXPORT_FOLDER:
+        description: webapp environment variable
+        required: true
+      AZURE_PORTAL_FILESHARE_NAME:
+        description: webapp environment variable
+        required: true
+      JWT_SIGNING_KEY:
+        description: webapp environment variable
+        required: true
+      JWT_VALIDATING_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_INTERNAL_NOTIFICATION:
+        description: webapp environment variable
+        required: true
+      DTFS_CENTRAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      EXTERNAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      PORTAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      TFM_API_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_TFM_API_SYSTEM_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_TFM_API_REPORTS_KEY:
+        description: webapp environment variable
+        required: true
+      AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE:
+        description: webapp environment variable
+        required: true
+      SESSION_SECRET:
+        description: webapp environment variable
+        required: true
+      ESTORE_URL:
+        description: webapp environment variable
+        required: true
+      PDC_INPUTTERS_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
+      
+jobs:
+  validate:
+    uses: ./.github/workflows/bicep_az_deployment_group.yml
+    with:
+      environment: ${{ inputs.environment }}
+      resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: validate
+    secrets: inherit
+    
+  what_if:
+    needs: validate
+    uses: ./.github/workflows/bicep_az_deployment_group.yml
+    with:
+      environment: ${{ inputs.environment }}
+      resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: what-if
+    secrets: inherit
+
+  deploy:
+    needs: what_if
+    uses: ./.github/workflows/bicep_az_deployment_group.yml
+    with:
+      environment: ${{ inputs.environment }}
+      resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: create
+    secrets: inherit

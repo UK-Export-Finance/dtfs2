@@ -1,0 +1,104 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseAccounts_gremos_feature_check_mongo_db_name": {
+            "defaultValue": "gremos-feature-check-mongo-db",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2023-04-15",
+            "name": "[parameters('databaseAccounts_gremos_feature_check_mongo_db_name')]",
+            "location": "UK South",
+            "tags": {
+                "defaultExperience": "Azure Cosmos DB for MongoDB API",
+                "hidden-cosmos-mmspecial": "",
+                "Environment": "Preproduction"
+            },
+            "kind": "MongoDB",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "enableAutomaticFailover": false,
+                "enableMultipleWriteLocations": false,
+                "isVirtualNetworkFilterEnabled": false,
+                "virtualNetworkRules": [],
+                "disableKeyBasedMetadataWriteAccess": false,
+                "enableFreeTier": false,
+                "enableAnalyticalStorage": false,
+                "analyticalStorageConfiguration": {
+                    "schemaType": "FullFidelity"
+                },
+                "createMode": "Default",
+                "databaseAccountOfferType": "Standard",
+                "defaultIdentity": "FirstPartyIdentity",
+                "networkAclBypass": "None",
+                "disableLocalAuth": false,
+                "enablePartitionMerge": false,
+                "minimalTlsVersion": "Tls12",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "apiProperties": {
+                    "serverVersion": "4.2"
+                },
+                "locations": [
+                    {
+                        "locationName": "UK South",
+                        "provisioningState": "Succeeded",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": false
+                    }
+                ],
+                "cors": [],
+                "capabilities": [
+                    {
+                        "name": "EnableMongo"
+                    },
+                    {
+                        "name": "DisableRateLimitingResponses"
+                    },
+                    {
+                        "name": "EnableServerless"
+                    }
+                ],
+                "ipRules": [
+                    {
+                        "ipAddressOrRange": "104.42.195.92"
+                    },
+                    {
+                        "ipAddressOrRange": "40.76.54.131"
+                    },
+                    {
+                        "ipAddressOrRange": "52.176.6.30"
+                    },
+                    {
+                        "ipAddressOrRange": "52.169.50.45"
+                    },
+                    {
+                        "ipAddressOrRange": "52.187.184.26"
+                    }
+                ],
+                "backupPolicy": {
+                    "type": "Continuous",
+                    "continuousModeProperties": {
+                        "tier": "Continuous7Days"
+                    }
+                },
+                "networkAclBypassResourceIds": [],
+                "capacity": {
+                    "totalThroughputLimit": 4000
+                },
+                "keysMetadata": {}
+            }
+        }
+    ]
+}
