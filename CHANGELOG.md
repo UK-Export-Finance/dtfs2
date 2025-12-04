@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v2.12.0) (2025-12-04)
+
+
+### Features
+
+* **DTFS2-8195:** add route and controller for temporarily suspended access page ([ce32f1a](https://github.com/UK-Export-Finance/dtfs2/commit/ce32f1abd9eeb5d63fd711eefd55589359817d1b))
+
+
+### Bug Fixes
+
+* **DTFS2-8215:** prevent form submit on print page click ([#4571](https://github.com/UK-Export-Finance/dtfs2/issues/4571)) ([999c306](https://github.com/UK-Export-Finance/dtfs2/commit/999c306b6b0f9b36decd7c03e565580be40fa7c9))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
