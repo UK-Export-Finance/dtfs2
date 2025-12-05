@@ -59,6 +59,52 @@ context('Application Details Submission', () => {
       errorSummary();
     });
 
+    it('should allow submission after reducing comment from over 400 to under 400 characters', () => {
+      // First, enter a comment that's too long
+      cy.keyboardInput(applicationSubmission.commentsField(), longComment);
+      cy.clickSubmitButton();
+
+      // Verify error is shown
+      errorSummary();
+
+      // Now fix the comment to be under the limit
+      const validComment = 'a'.repeat(399);
+      applicationSubmission.commentsField().clear();
+      cy.keyboardInput(applicationSubmission.commentsField(), validComment);
+      cy.clickSubmitButton();
+
+      // Verify successful submission
+      applicationSubmission.confirmationPanelTitle();
+    });
+
+    it('should accept comment at 400 characters after normalizing Windows line endings', () => {
+      // User types 399 chars and presses Enter (which creates \r\n in the textarea)
+      // Client sees 401 characters (399 + 2 for \r\n)
+      // Server normalizes \r\n to \n, resulting in exactly 400 characters (valid)
+      const commentText = 'a'.repeat(399);
+      cy.keyboardInput(applicationSubmission.commentsField(), commentText);
+
+      // Simulate pressing Enter which adds line ending
+      applicationSubmission.commentsField().type('{enter}');
+
+      cy.clickSubmitButton();
+
+      // Should successfully submit as server normalizes line endings
+      applicationSubmission.confirmationPanelTitle();
+    });
+
+    it('should normalize multiple Windows line endings correctly', () => {
+      // Test comment with multiple line breaks
+      // Each \r\n (2 chars) becomes \n (1 char) after normalization
+      const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
+      cy.keyboardInput(applicationSubmission.commentsField(), commentWithLineBreaks);
+
+      cy.clickSubmitButton();
+
+      // Should successfully submit with normalized line endings
+      applicationSubmission.confirmationPanelTitle();
+    });
+
     it('takes user back to application details page if cancel link clicked', () => {
       cy.keyboardInput(applicationSubmission.commentsField(), 'test');
       cy.clickCancelLink();

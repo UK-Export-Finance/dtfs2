@@ -79,6 +79,48 @@ context('Return to Maker', () => {
       errorSummary();
     });
 
+    it('should allow submission after reducing comment from over 400 to under 400 characters', () => {
+      // First, enter a comment that's too long
+      const longComment = 'a'.repeat(401);
+      cy.keyboardInput(returnToMaker.comment(), longComment);
+      cy.clickSubmitButton();
+
+      // Verify error is shown
+      errorSummary();
+
+      // Now fix the comment to be under the limit
+      const validComment = 'a'.repeat(399);
+      returnToMaker.comment().clear();
+      cy.keyboardInput(returnToMaker.comment(), validComment);
+      cy.clickSubmitButton();
+
+      // Verify successful submission
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
+    it('should accept comment at 400 characters after normalizing Windows line endings', () => {
+      const commentText = 'a'.repeat(399);
+      cy.keyboardInput(returnToMaker.comment(), commentText);
+
+      // Simulate pressing Enter which adds line ending
+      returnToMaker.comment().type('{enter}');
+
+      cy.clickSubmitButton();
+
+      // Should successfully submit as server normalizes line endings
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
+    it('should normalize multiple Windows line endings correctly', () => {
+      const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
+      cy.keyboardInput(returnToMaker.comment(), commentWithLineBreaks);
+
+      cy.clickSubmitButton();
+
+      // Should successfully submit with normalized line endings
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
     it('takes checker back to application preview page when cancelled', () => {
       cy.keyboardInput(returnToMaker.comment(), 'Some comments here ....');
       cy.clickCancelLink();
