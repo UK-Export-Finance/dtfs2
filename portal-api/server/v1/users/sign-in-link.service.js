@@ -130,7 +130,7 @@ class SignInLinkService {
    */
   #createSignInToken() {
     try {
-      return this.#randomGenerator.randomHexString();
+      return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
     } catch (error) {
       throw new Error('Failed to create a sign in token', { cause: error });
     }

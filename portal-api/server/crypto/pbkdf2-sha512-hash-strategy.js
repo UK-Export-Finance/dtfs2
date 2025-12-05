@@ -1,5 +1,4 @@
-const { CRYPTO } = require('@ukef/dtfs2-common');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 
 class Pbkdf2Sha512HashStrategy {
   #byteGenerator;
@@ -9,11 +8,11 @@ class Pbkdf2Sha512HashStrategy {
   }
 
   generateSalt() {
-    return this.#byteGenerator.randomBytes();
+    return this.#byteGenerator.randomBytes(64);
   }
 
   generateHash(target, salt) {
-    return crypto.pbkdf2Sync(target, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+    return crypto.pbkdf2Sync(target, salt, 210000, 64, 'sha512');
   }
 }
 

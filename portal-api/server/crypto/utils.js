@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { salt: generateSalt, CRYPTO, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ function validPassword(password, hash, salt) {
     return false;
   }
   const hashAsBuffer = Buffer.from(hash, 'hex');
-  const hashVerify = crypto.pbkdf2Sync(password, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+  const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512');
 
   if (!hashVerify || !hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
     // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
@@ -32,7 +32,7 @@ function validPassword(password, hash, salt) {
 }
 
 function genPasswordResetToken(user) {
-  const hash = crypto.pbkdf2Sync(user.email, user.salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM).toString('hex');
+  const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
 
   return {
     hash,
@@ -43,7 +43,7 @@ function genPasswordResetToken(user) {
  * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
  * @returns {object} Token, expires in and session ID
  */
-function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = generateSalt().toString('hex'), expiresIn, additionalPayload }) {
+function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
 
   const payload = {

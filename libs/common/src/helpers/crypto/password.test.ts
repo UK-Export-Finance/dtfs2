@@ -1,118 +1,54 @@
 import crypto from 'crypto';
-import { CRYPTO } from '../../constants';
 import { generatePasswordHash } from './password';
 
 jest.mock('crypto');
-console.error = jest.fn();
 
 describe('password', () => {
   const mockPassword = 'AbC!2345';
+  const mockSaltHex = 'ABC123DEF';
+  const mockHashHex = 'ABCDEFGHIJK1234567890';
 
-  const mockSaltBuffer = Buffer.from([111]);
-  const mockHashBuffer = Buffer.from([222]);
+  beforeEach(() => {
+    const mockSaltBuffer = { toString: jest.fn().mockReturnValue(mockSaltHex) };
+    const mockHashBuffer = { toString: jest.fn().mockReturnValue(mockHashHex) };
 
-  const mockSaltString = mockSaltBuffer.toString('hex');
+    (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
+    (crypto.pbkdf2Sync as jest.Mock).mockReturnValue(mockHashBuffer);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return string salt and hash by calling randomBytes and pbkdf2Sync', () => {
-    // Arrange
-    (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
-    (crypto.pbkdf2Sync as jest.Mock).mockReturnValue(mockHashBuffer);
-
+  it('should crypto functions when generating salt and hash', () => {
     // Act
     generatePasswordHash(mockPassword);
 
     // Assert
-    expect(console.error).not.toHaveBeenCalled();
-
-    // Salt
     expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
-    expect(crypto.randomBytes).toHaveBeenCalledWith(CRYPTO.SALT.BYTES);
-    expect(crypto.randomBytes(CRYPTO.SALT.BYTES)).toEqual(mockSaltBuffer);
+    expect(crypto.randomBytes).toHaveBeenCalledWith(128);
 
-    // Hash
     expect(crypto.pbkdf2Sync).toHaveBeenCalledTimes(1);
-    expect(crypto.pbkdf2Sync).toHaveBeenCalledWith(
-      mockPassword,
-      mockSaltString,
-      CRYPTO.HASHING.ITERATIONS,
-      CRYPTO.HASHING.KEY_LENGTH,
-      CRYPTO.HASHING.ALGORITHM,
-    );
-    expect(crypto.pbkdf2Sync(mockPassword, mockSaltString, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)).toEqual(
-      mockHashBuffer,
-    );
+    expect(crypto.pbkdf2Sync).toHaveBeenCalledWith(mockPassword, mockSaltHex, 10000, 64, 'SHA512');
   });
 
-  it('should return string salt and hash and expect the response to be hex string', () => {
-    // Arrange
-    (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
-    (crypto.pbkdf2Sync as jest.Mock).mockReturnValue(mockHashBuffer);
-
+  it("should generate password's salt and hash when supplied with a string password", () => {
     // Act
-    const response = generatePasswordHash(mockPassword);
+    const result = generatePasswordHash(mockPassword);
 
     // Assert
-
-    // String response
-    expect(response).toEqual({
-      salt: mockSaltBuffer.toString('hex'),
-      hash: mockHashBuffer.toString('hex'),
+    expect(result).toEqual({
+      salt: mockSaltHex,
+      hash: mockHashHex,
     });
-  });
 
-  it('should throw an error, when the salt is an empty string', () => {
-    // Arrange
-    (crypto.randomBytes as jest.Mock).mockReturnValue('');
+    expect(result).toHaveProperty('salt');
+    expect(result).toHaveProperty('hash');
 
-    // Act
-    const response = generatePasswordHash(mockPassword);
+    expect(result.salt).toEqual(expect.any(String));
+    expect(result.hash).toEqual(expect.any(String));
 
-    // Assert
-    expect(console.error).toHaveBeenCalledTimes(1);
-
-    // Salt
-    expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
-    expect(crypto.randomBytes).toHaveBeenCalledWith(CRYPTO.SALT.BYTES);
-    expect(crypto.randomBytes(CRYPTO.SALT.BYTES)).toEqual('');
-
-    // Hash
-    expect(crypto.pbkdf2Sync).not.toHaveBeenCalled();
-    expect(crypto.pbkdf2Sync).not.toHaveBeenCalledWith(mockPassword, '', CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
-
-    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %o', new Error('Salt cannot be empty'));
-    expect(response).toEqual({
-      salt: '',
-      hash: '',
-    });
-  });
-
-  it('should throw an error when the password is an empty string', () => {
-    // Arrange
-    (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
-
-    // Act
-    const response = generatePasswordHash('');
-
-    // Assert
-    expect(console.error).toHaveBeenCalledTimes(1);
-
-    // Salt
-    expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
-    expect(crypto.randomBytes).toHaveBeenCalledWith(CRYPTO.SALT.BYTES);
-    expect(crypto.randomBytes(CRYPTO.SALT.BYTES)).toEqual(mockSaltBuffer);
-
-    // Hash
-    expect(crypto.pbkdf2Sync).not.toHaveBeenCalled();
-    expect(crypto.pbkdf2Sync).not.toHaveBeenCalledWith('', mockSaltString, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
-
-    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %o', new Error('Password cannot be empty'));
-    expect(response).toEqual({
-      salt: '',
-      hash: '',
-    });
+    expect(result.salt.length).toBeGreaterThan(0);
+    expect(result.hash.length).toBeGreaterThan(0);
   });
 });

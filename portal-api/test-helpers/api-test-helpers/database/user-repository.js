@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
-const { salt: generatedSalt, CRYPTO, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../server/drivers/db-client');
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
@@ -48,8 +48,8 @@ function issueValid2faJWT(user, sessionIdentifier) {
 
 const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-  const salt = generatedSalt();
-  const hash = crypto.pbkdf2Sync(newSignInToken, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+  const salt = crypto.randomBytes(64);
+  const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
   const saltHex = salt.toString('hex');
   const hashHex = hash.toString('hex');
   const expiry = Date.now() + thirtyMinutesInMilliseconds;
@@ -62,12 +62,12 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
     const userCollection = await db.getCollection('users');
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
-    const sessionIdentifier = generatedSalt().toString('hex');
+    const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     if (loginStatus === PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
       const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
-      const signInToken = generatedSalt().toString('hex');
+      const signInToken = crypto.randomBytes(32).toString('hex');
       await overridePortalUserSignInTokenWithValidTokenByUsername({
         username: user.username,
         newSignInToken: signInToken,
