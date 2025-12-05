@@ -27,7 +27,7 @@ const getApplicationSubmission = async (req, res) => {
   return res.render('application-details-comments.njk', {
     dealId,
     submissionType,
-    MAX_COMMENT_LENGTH,
+    maxCommentLength: MAX_COMMENT_LENGTH,
     hasIssuedFacility,
   });
 };
@@ -68,7 +68,7 @@ const postApplicationSubmission = async (req, res, next) => {
 
       return res.render('application-details-comments.njk', {
         dealId,
-        MAX_COMMENT_LENGTH,
+        maxCommentLength: MAX_COMMENT_LENGTH,
         errors,
         comment: normalizedComment,
       });
