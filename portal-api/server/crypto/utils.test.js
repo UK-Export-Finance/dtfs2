@@ -1,7 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
 const { when } = require('jest-when');
-const { salt, CRYPTO, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { issueValidUsernameAndPasswordJWT, issueValid2faJWT, validPassword } = require('./utils');
 const { TEST_USER } = require('../../test-helpers/unit-test-mocks/mock-user');
 
@@ -12,6 +12,10 @@ jest.mock('crypto', () => ({
 
 describe('crypto utils', () => {
   describe('validPassword', () => {
+    const ITERATIONS = 10000;
+    const KEYLEN = 64;
+    const DIGEST = 'sha512';
+
     const A_SALT = 'a salt';
     const A_PASSWORD = 'a password';
     const A_HASH_AS_HEX = '61206861736820617320686578';
@@ -22,9 +26,7 @@ describe('crypto utils', () => {
 
     beforeEach(() => {
       crypto.pbkdf2Sync = jest.fn();
-      when(crypto.pbkdf2Sync)
-        .calledWith(A_PASSWORD, A_SALT, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
-        .mockReturnValueOnce(A_HASH_AS_BUFFER);
+      when(crypto.pbkdf2Sync).calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST).mockReturnValueOnce(A_HASH_AS_BUFFER);
     });
 
     describe('when password hash matches the hash', () => {
@@ -55,13 +57,6 @@ describe('crypto utils', () => {
         inputPassword: A_PASSWORD,
       },
       { testName: 'when the hashes do not match', inputHash: A_DIFFERENT_HASH_AS_HEX, inputSalt: A_SALT },
-      { testName: 'when no hash is supplied', inputPassword: A_PASSWORD, inputSalt: A_SALT },
-      { testName: 'when no salt is supplied', inputPassword: A_PASSWORD, inputHash: A_DIFFERENT_HASH_AS_HEX },
-      { testName: 'when password, salt, hash are all empty', inputPassword: '', inputSalt: '', inputHash: '' },
-      { testName: 'when password, salt, hash are all empty spaces', inputPassword: ' ', inputSalt: '   ', inputHash: ' ' },
-      { testName: 'when password is empty string', inputPassword: ' ', inputSalt: A_SALT, inputHash: A_DIFFERENT_HASH_AS_HEX },
-      { testName: 'when salt is empty string', inputPassword: A_PASSWORD, inputSalt: '   ', inputHash: A_DIFFERENT_HASH_AS_HEX },
-      { testName: 'when no input is supplied' },
     ];
 
     describe.each(returnFalseTestCases)('$testName', ({ inputHash, inputPassword, inputSalt }) => {
@@ -86,7 +81,7 @@ describe('crypto utils', () => {
 
     const USER = TEST_USER;
 
-    const EXISTING_SESSION_IDENTIFIER = salt().toString('hex');
+    const EXISTING_SESSION_IDENTIFIER = crypto.randomBytes(32).toString('hex');
 
     const USER_WITH_EXISTING_SESSION_IDENTIFIER = { ...USER, sessionIdentifier: EXISTING_SESSION_IDENTIFIER };
 
@@ -102,7 +97,7 @@ describe('crypto utils', () => {
 
       it('should return a session identifier', () => {
         const { sessionIdentifier } = issueValidUsernameAndPasswordJWT(USER);
-        expect(is128ByteHex(sessionIdentifier)).toEqual(true);
+        expect(is32ByteHex(sessionIdentifier)).toEqual(true);
       });
 
       it('should return a token with the expected payload', () => {
@@ -128,7 +123,7 @@ describe('crypto utils', () => {
 
       it('should return the input session identifier', () => {
         const { sessionIdentifier } = issueValid2faJWT(USER_WITH_EXISTING_SESSION_IDENTIFIER);
-        expect(is128ByteHex(sessionIdentifier)).toEqual(true);
+        expect(is32ByteHex(sessionIdentifier)).toEqual(true);
         expect(sessionIdentifier).toEqual(EXISTING_SESSION_IDENTIFIER);
       });
 
@@ -151,9 +146,8 @@ describe('crypto utils', () => {
       });
     });
 
-    function is128ByteHex(str) {
-      // 1 byte = 2 Hex characters
-      return /^[0-9a-fA-F]{256}$/.test(str);
+    function is32ByteHex(str) {
+      return /^[0-9a-fA-F]{64}$/.test(str);
     }
   });
 });

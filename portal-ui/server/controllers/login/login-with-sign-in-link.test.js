@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { ROLES, PORTAL_LOGIN_STATUS, PORTAL_USER_SIGN_IN_TOKENS } = require('@ukef/dtfs2-common');
+const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { loginWithSignInLink } = require('./login-with-sign-in-link');
 const CONSTANTS = require('../../constants');
 
@@ -8,7 +8,7 @@ const api = require('../../api');
 
 describe('loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
-  const signInToken = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+  const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const loginResponseUserToken = 'a token';
   const a2faToken = 'aToken';
   const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;

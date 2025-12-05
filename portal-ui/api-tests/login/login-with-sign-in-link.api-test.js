@@ -10,7 +10,7 @@ jest.mock('../../server/api', () => ({
 }));
 
 const { when } = require('jest-when');
-const { PORTAL_USER_SIGN_IN_TOKENS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../../server/createApp');
 const api = require('../../server/api');
@@ -19,7 +19,7 @@ const { HTTP_ERROR_CAUSES } = require('../../server/constants');
 const { get } = createApi(app);
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
-  const validSignInToken = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+  const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';
   const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;

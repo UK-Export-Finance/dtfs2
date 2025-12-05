@@ -1,17 +1,12 @@
-const { salt } = require('@ukef/dtfs2-common');
+const crypto = require('node:crypto');
 
-/**
- * A class for generating cryptographically strong random values.
- *
- * @class
- */
 class CryptographicallyStrongGenerator {
-  randomBytes() {
-    return salt();
+  randomBytes(numberOfBytes) {
+    return crypto.randomBytes(numberOfBytes);
   }
 
-  randomHexString() {
-    return this.randomBytes().toString('hex');
+  randomHexString(numberOfBytes) {
+    return this.randomBytes(numberOfBytes).toString('hex');
   }
 }
 
