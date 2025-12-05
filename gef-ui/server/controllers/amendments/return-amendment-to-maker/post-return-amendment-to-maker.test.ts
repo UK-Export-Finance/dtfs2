@@ -72,13 +72,16 @@ const getHttpMocks = (comment = '') =>
 
 describe('postReturnAmendmentToMaker', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'updateAmendmentStatus').mockImplementation(updateAmendmentStatusMock);
     jest.spyOn(api, 'getUserDetails').mockImplementation(getUserDetailsMock);
     jest.spyOn(api, 'updateApplication').mockImplementation(updateApplicationMock);
+
+    // Reset amendment status in case previous tests modified it
+    amendment.status = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
