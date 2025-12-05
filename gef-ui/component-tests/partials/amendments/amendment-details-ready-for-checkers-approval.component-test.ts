@@ -72,6 +72,12 @@ users.forEach((user) => {
         wrapper.expectElement('[data-cy="facility-information-banner"]').toExist();
       });
 
+      it('should render print page button with type="button" attribute to prevent form submission', () => {
+        const wrapper = render(params);
+        wrapper.expectElement('[data-cy="print-button"]').toExist();
+        wrapper.expectElement('[data-cy="print-button"]').toHaveAttribute('type', 'button');
+      });
+
       it('should have the correct integrity for the print button', () => {
         const wrapper = render(params);
 
