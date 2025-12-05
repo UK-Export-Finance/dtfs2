@@ -1,4 +1,5 @@
-const { hash } = require('@ukef/dtfs2-common');
+const { CRYPTO } = require('@ukef/dtfs2-common');
+const crypto = require('crypto');
 
 class Pbkdf2Sha512HashStrategy {
   #byteGenerator;
@@ -11,16 +12,8 @@ class Pbkdf2Sha512HashStrategy {
     return this.#byteGenerator.randomBytes();
   }
 
-  generateHash(password, salt) {
-    try {
-      const passwordString = password.toString('hex');
-      const saltString = salt.toString('hex');
-
-      return hash(passwordString, saltString);
-    } catch (error) {
-      console.error('An error has occurred while generating the hash %o', error);
-      return false;
-    }
+  generateHash(target, salt) {
+    return crypto.pbkdf2Sync(target, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
   }
 }
 

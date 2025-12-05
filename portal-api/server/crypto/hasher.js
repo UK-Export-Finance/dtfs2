@@ -8,34 +8,17 @@ class Hasher {
   }
 
   hash(target) {
-    try {
-      const salt = this.#hashStrategy.generateSalt();
-      const hash = this.#hashStrategy.generateHash(target, salt);
-
-      if (!salt || !hash) {
-        console.error('An error occurred while generating hash');
-        return false;
-      }
-
-      return {
-        hash,
-        salt,
-      };
-    } catch (error) {
-      console.error('An error has occurred while computing the hash %o', error);
-      return false;
-    }
+    const salt = this.#hashStrategy.generateSalt();
+    const hash = this.#hashStrategy.generateHash(target, salt);
+    return {
+      hash,
+      salt,
+    };
   }
 
   verifyHash({ target, salt, hash }) {
-    try {
-      const targetHash = this.#hashStrategy.generateHash(target, salt);
-
-      return crypto.timingSafeEqual(targetHash, hash);
-    } catch (error) {
-      console.error('An error has occurred while verifying the hash %o', error);
-      return false;
-    }
+    const targetHash = this.#hashStrategy.generateHash(target, salt);
+    return crypto.timingSafeEqual(targetHash, hash);
   }
 }
 

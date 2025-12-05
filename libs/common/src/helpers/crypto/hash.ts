@@ -13,11 +13,11 @@ import { CRYPTO } from '../../constants';
  * @throws Error if the salt or password is empty.
  */
 export const hash = (password: string, salt: string): Buffer => {
-  if (!salt?.trim()?.length) {
+  if (!salt.trim().length) {
     throw new Error('Salt cannot be empty');
   }
 
-  if (!password?.trim()?.length) {
+  if (!password.trim().length) {
     throw new Error('Password cannot be empty');
   }
 

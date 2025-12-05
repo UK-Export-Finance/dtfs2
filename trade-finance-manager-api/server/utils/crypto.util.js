@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { salt: generatedSalt, hash: generateHash } = require('@ukef/dtfs2-common');
+const { salt: generatedSalt, CRYPTO } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -17,57 +17,24 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('as
  * the decrypted hash/salt with the password that the user provided at login
  */
 function validPassword(password, hash, salt) {
-  try {
-    if (!password || !hash || !salt) {
-      return false;
-    }
-
-    // Saved hash
-    const savedHash = Buffer.from(hash, 'hex');
-    const passwordString = password.toString('hex');
-    const saltString = salt.toString('hex');
-
-    // Generate hash as Buffer from provided password and salt
-    const generatedHash = generateHash(passwordString, saltString);
-
-    const invalidHash = !savedHash || !generatedHash || savedHash.length !== generatedHash.length;
-
-    if (invalidHash) {
-      // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
-      return false;
-    }
-
-    return crypto.timingSafeEqual(savedHash, generatedHash);
-  } catch (error) {
-    console.error('An error occurred while validating the password %o', error);
+  if (!hash || !salt) {
     return false;
   }
+  const hashAsBuffer = Buffer.from(hash, 'hex');
+  const hashVerify = crypto.pbkdf2Sync(password, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+
+  if (!hashVerify || !hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
+    // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
+    return false;
+  }
+
+  return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
 }
 
-/**
- * Generates a password reset token hash for a given user.
- *
- * @param {Object} user - The user object containing email and salt properties.
- * @param {Buffer|string} user.email - The user's email address as a Buffer or string.
- * @param {Buffer|string} user.salt - The user's salt as a Buffer or string.
- * @returns {{ hash: string }} An object containing the generated hash as a hexadecimal string.
- */
 function genPasswordResetToken(user) {
-  try {
-    const { email, salt } = user;
+  const hash = crypto.pbkdf2Sync(user.email, user.salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM).toString('hex');
 
-    const emailString = email.toString('hex');
-    const saltString = salt.toString('hex');
-
-    const hash = generateHash(emailString, saltString);
-
-    return {
-      hash: hash.toString('hex'),
-    };
-  } catch (error) {
-    console.error('An error occurred while generating reset password token %o', error);
-    return false;
-  }
+  return { hash };
 }
 
 /**
