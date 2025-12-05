@@ -1,9 +1,11 @@
-import { COMMENT_MAX_LENGTH } from '@ukef/dtfs2-common';
+import { MAKER_SUBMIT_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { getApplicationSubmission, postApplicationSubmission } from './index';
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
 import MOCKS from '../mocks/index';
 import { MAKER } from '../../constants/roles';
+
+const MAX_COMMENT_LENGTH = MAKER_SUBMIT_COMMENT_CHARACTER_COUNT;
 
 jest.mock('../../services/api');
 
@@ -63,7 +65,7 @@ describe('controllers/application-submission', () => {
     });
 
     it('renders error where comments are too long', async () => {
-      const longComments = 'a'.repeat(COMMENT_MAX_LENGTH + 1);
+      const longComments = 'a'.repeat(410);
       mockRequest.body.comment = longComments;
 
       await postApplicationSubmission(mockRequest, mockResponse);
@@ -73,66 +75,7 @@ describe('controllers/application-submission', () => {
         expect.objectContaining({
           dealId: expect.any(String),
           comment: longComments,
-          maxCommentLength: COMMENT_MAX_LENGTH,
-          errors: expect.any(Object),
-        }),
-      );
-    });
-
-    it('trims whitespace before storing comment', async () => {
-      mockRequest.body.comment = '  Valid comment with spaces  ';
-      api.updateApplication = jest.fn();
-
-      await postApplicationSubmission(mockRequest, mockResponse);
-
-      expect(api.updateApplication).toHaveBeenCalledWith({
-        dealId: mockApplicationResponse._id,
-        application: expect.objectContaining({
-          comments: [
-            expect.objectContaining({
-              comment: 'Valid comment with spaces',
-            }),
-          ],
-        }),
-        userToken,
-      });
-    });
-
-    it('does not store whitespace-only comment', async () => {
-      mockRequest.body.comment = '     ';
-      api.updateApplication = jest.fn();
-
-      await postApplicationSubmission(mockRequest, mockResponse);
-
-      expect(api.updateApplication).toHaveBeenCalledWith({
-        dealId: mockApplicationResponse._id,
-        application: expect.objectContaining({
-          editorId: expect.any(Number),
-        }),
-        userToken,
-      });
-
-      expect(api.updateApplication).not.toHaveBeenCalledWith(
-        expect.objectContaining({
-          application: expect.objectContaining({
-            comments: expect.any(Array),
-          }),
-        }),
-      );
-    });
-
-    it('rejects comment over limit after trimming whitespace', async () => {
-      const longComment = 'a'.repeat(COMMENT_MAX_LENGTH + 1);
-      mockRequest.body.comment = `  ${longComment}  `;
-
-      await postApplicationSubmission(mockRequest, mockResponse);
-
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'application-details-comments.njk',
-        expect.objectContaining({
-          dealId: expect.any(String),
-          comment: longComment,
-          maxCommentLength: COMMENT_MAX_LENGTH,
+          maxCommentLength: expect.any(Number),
           errors: expect.any(Object),
         }),
       );
@@ -187,6 +130,60 @@ describe('controllers/application-submission', () => {
         dealId: mockApplicationResponse._id,
         status: DEAL_STATUS.READY_FOR_APPROVAL,
         userToken,
+      });
+    });
+
+    describe('Line ending normalization tests', () => {
+      it('should accept comment exactly at 400 characters with Windows line endings', async () => {
+        const commentText = 'a'.repeat(MAX_COMMENT_LENGTH - 1);
+        const commentWithWindowsLineEnding = `${commentText}\r\n`;
+        mockRequest.body.comment = commentWithWindowsLineEnding;
+
+        // Verify original length with Windows line ending is 401 characters
+        expect(commentWithWindowsLineEnding.length).toBe(MAX_COMMENT_LENGTH + 1);
+
+        // After normalization, \r\n becomes \n, so length becomes exactly 400 characters
+        const normalizedComment = `${commentText}\n`;
+        expect(normalizedComment.length).toBe(MAX_COMMENT_LENGTH);
+
+        await postApplicationSubmission(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'application-details-submitted.njk',
+          expect.objectContaining({
+            dealId: expect.any(String),
+            status: expect.any(String),
+          }),
+        );
+      });
+
+      it('should normalize Windows line endings and count as one character', async () => {
+        const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
+        mockRequest.body.comment = commentWithWindowsLineEndings;
+
+        // Verify original length is 22 characters
+        expect(commentWithWindowsLineEndings.length).toBe(22);
+
+        await postApplicationSubmission(mockRequest, mockResponse);
+
+        // Verifying that \r\n was converted to \n (2 chars became 1 char each)
+        const normalizedComment = 'Line 1\nLine 2\nLine 3';
+
+        // Verify normalized length is 20 characters (2 characters less)
+        expect(normalizedComment.length).toBe(20);
+
+        // Verify that api.updateApplication was called with normalized comment
+        expect(api.updateApplication).toHaveBeenCalledWith({
+          dealId: mockApplicationResponse._id,
+          application: expect.objectContaining({
+            comments: [
+              expect.objectContaining({
+                comment: normalizedComment,
+              }),
+            ],
+          }),
+          userToken,
+        });
       });
     });
   });

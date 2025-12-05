@@ -61,4 +61,3 @@ export * from './format';
 export * from './can-submit-to-acbs';
 export * from './is-amendment-declined';
 export * from './errors';
-export * from './validate-comment';

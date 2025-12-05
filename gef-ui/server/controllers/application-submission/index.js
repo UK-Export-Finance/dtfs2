@@ -1,9 +1,11 @@
-const { validateComment, COMMENT_MAX_LENGTH } = require('@ukef/dtfs2-common');
+const { MAKER_SUBMIT_COMMENT_CHARACTER_COUNT } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const Application = require('../../models/application');
 const CONSTANTS = require('../../constants');
+
+const MAX_COMMENT_LENGTH = MAKER_SUBMIT_COMMENT_CHARACTER_COUNT;
 
 /**
  * Controller to render the application details comments page.
@@ -25,7 +27,7 @@ const getApplicationSubmission = async (req, res) => {
   return res.render('application-details-comments.njk', {
     dealId,
     submissionType,
-    maxCommentLength: COMMENT_MAX_LENGTH,
+    MAX_COMMENT_LENGTH,
     hasIssuedFacility,
   });
 };
@@ -54,23 +56,25 @@ const postApplicationSubmission = async (req, res, next) => {
 
   // TODO: DTFS2-4707 - Add some validation here to make sure that the whole application is valid
   try {
-    const validation = validateComment(comment);
+    // Converts Windows-style line endings (\r\n) to Unix-style (\n)
+    // This is necessary because MAX_COMMENT_LENGTH counts \n as 1 character
+    const normalizedComment = comment ? comment.replace(/\r\n/g, '\n') : '';
 
-    if (!validation.isValid) {
+    if (normalizedComment.length > MAX_COMMENT_LENGTH) {
       const errors = validationErrorHandler({
         errRef: 'comment',
-        errMsg: validation.error,
+        errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
       });
 
       return res.render('application-details-comments.njk', {
         dealId,
-        maxCommentLength: COMMENT_MAX_LENGTH,
+        MAX_COMMENT_LENGTH,
         errors,
-        comment: validation.trimmedComment,
+        comment: normalizedComment,
       });
     }
 
-    if (validation.trimmedComment) {
+    if (normalizedComment) {
       const commentObj = {
         roles: user.roles,
         userName: user.username,
@@ -78,7 +82,7 @@ const postApplicationSubmission = async (req, res, next) => {
         surname: user.surname,
         email: user.email,
         createdAt: Date.now(),
-        comment: validation.trimmedComment,
+        comment: normalizedComment,
       };
       const comments = application.comments || [];
       comments.push(commentObj);

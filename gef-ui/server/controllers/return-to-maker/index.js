@@ -46,7 +46,11 @@ const postReturnToMaker = async (req, res, next) => {
   const { comment } = body;
 
   try {
-    if (comment.length > MAX_COMMENT_LENGTH) {
+    // Converts Windows-style line endings (\r\n) to Unix-style (\n)
+    // This is necessary because maxCommentLength counts \n as 1 character
+    const normalizedComment = comment ? comment.replace(/\r\n/g, '\n') : '';
+
+    if (normalizedComment.length > MAX_COMMENT_LENGTH) {
       const errors = validationErrorHandler({
         errRef: 'comment',
         errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
@@ -56,14 +60,15 @@ const postReturnToMaker = async (req, res, next) => {
         dealId,
         maxCommentLength: MAX_COMMENT_LENGTH,
         errors,
-        comment,
+        comment: normalizedComment,
       });
     }
 
-    await addCheckerCommentsToApplication(dealId, userToken, user._id, comment);
+    await addCheckerCommentsToApplication(dealId, userToken, user._id, normalizedComment);
 
     await setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, userToken });
   } catch (error) {
+    console.error('Error in postReturnToMaker:', error);
     return next(error);
   }
 
@@ -71,7 +76,6 @@ const postReturnToMaker = async (req, res, next) => {
 };
 
 module.exports = {
-  MAX_COMMENT_LENGTH,
   getReturnToMaker,
   postReturnToMaker,
 };

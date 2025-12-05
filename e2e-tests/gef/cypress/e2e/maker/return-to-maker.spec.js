@@ -98,13 +98,26 @@ context('Return to Maker', () => {
       cy.location('pathname').should('contain', 'dashboard');
     });
 
-    it('should trim whitespace from comment and validate correctly', () => {
-      // 395 chars + 3 spaces = 398 total (under 400, so client-side validation passes)
-      const commentWithWhitespace = `${'a'.repeat(395)}   `;
-      cy.keyboardInput(returnToMaker.comment(), commentWithWhitespace);
+    it('should accept comment at 400 characters after normalizing Windows line endings', () => {
+      const commentText = 'a'.repeat(399);
+      cy.keyboardInput(returnToMaker.comment(), commentText);
+
+      // Simulate pressing Enter which adds line ending
+      returnToMaker.comment().type('{enter}');
+
       cy.clickSubmitButton();
 
-      // Total is under 400, should redirect to dashboard
+      // Should successfully submit as server normalizes line endings
+      cy.location('pathname').should('contain', 'dashboard');
+    });
+
+    it('should normalize multiple Windows line endings correctly', () => {
+      const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
+      cy.keyboardInput(returnToMaker.comment(), commentWithLineBreaks);
+
+      cy.clickSubmitButton();
+
+      // Should successfully submit with normalized line endings
       cy.location('pathname').should('contain', 'dashboard');
     });
 

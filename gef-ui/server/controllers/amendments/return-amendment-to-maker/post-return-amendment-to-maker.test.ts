@@ -520,4 +520,74 @@ describe('postReturnAmendmentToMaker', () => {
       expect(console.error).toHaveBeenCalledWith('Error posting facility amendment return to maker %o', mockError);
     });
   });
+
+  describe('Line ending normalization tests', () => {
+    beforeEach(() => {
+      mockDeal.comments = [];
+    });
+
+    it('should accept comment exactly at 400 characters with Windows line endings', async () => {
+      const commentText = 'a'.repeat(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT - 1);
+      const commentWithWindowsLineEnding = `${commentText}\r\n`;
+
+      // Arrange
+      const { req, res } = getHttpMocks(commentWithWindowsLineEnding);
+
+      // Verify original length with Windows line ending is 401 characters
+      expect(commentWithWindowsLineEnding.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT + 1);
+
+      // After normalization, \r\n becomes \n, so length becomes exactly 400 characters
+      const normalizedComment = `${commentText}\n`;
+      expect(normalizedComment.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+    });
+
+    it('should normalize Windows line endings and count as one character', async () => {
+      const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
+
+      // Arrange
+      const { req, res } = getHttpMocks(commentWithWindowsLineEndings);
+
+      // Verify original length is 22 characters
+      expect(commentWithWindowsLineEndings.length).toBe(22);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Verifying that \r\n was converted to \n (2 chars became 1 char each)
+      const normalizedComment = 'Line 1\nLine 2\nLine 3';
+
+      // Verify normalized length is 20 characters (2 characters less)
+      expect(normalizedComment.length).toBe(20);
+
+      // Verify that updateApplication was called with normalized comment
+      const expectedApplication = {
+        ...mockDeal,
+        checkerId: mockUser._id,
+        comments: [
+          {
+            roles: mockUser.roles,
+            userName: mockUser.username,
+            firstname: mockUser.firstname,
+            surname: mockUser.surname,
+            email: mockUser.email,
+            createdAt: expect.any(Number) as number,
+            comment: normalizedComment,
+          },
+        ],
+      };
+
+      expect(updateApplicationMock).toHaveBeenCalledWith({
+        dealId,
+        application: expectedApplication,
+        userToken: req.session.userToken,
+      });
+    });
+  });
 });
