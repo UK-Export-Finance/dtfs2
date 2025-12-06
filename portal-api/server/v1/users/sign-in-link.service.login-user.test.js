@@ -2,6 +2,7 @@
 const { when } = require('jest-when');
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');
+const { PORTAL_USER_SIGN_IN_TOKENS } = require('@ukef/dtfs2-common');
 const { UserService } = require('./user.service');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
@@ -13,7 +14,7 @@ const UserDisabledError = require('../errors/user-disabled.error');
 jest.mock('../../crypto/utils');
 
 describe('SignInLinkService', () => {
-  const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
+  const token = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   const sessionIdentifier = 'a session id';
   const tokenObjectWithoutSessionIdentifier = {
     token,
