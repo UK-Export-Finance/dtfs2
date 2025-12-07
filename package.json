@@ -83,8 +83,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
-    "markdownlint-cli": "^0.45.0",
-    "prettier": "3.0.3",
+    "markdownlint-cli": "^0.46.0",
+    "prettier": "3.7.4",
     "sort-package-json": "^2.15.1",
     "yaml-lint": "^1.7.0"
   },
