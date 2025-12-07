@@ -41,14 +41,14 @@ const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
 type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationReport'
   ? UtilisationReportEntity
   : TableName extends 'FeeRecord'
-  ? FeeRecordEntity
-  : TableName extends 'FeeRecordCorrection'
-  ? FeeRecordCorrectionEntity
-  : TableName extends 'AzureFileInfo'
-  ? AzureFileInfoEntity
-  : TableName extends 'FeeRecordCorrectionTransientFormData'
-  ? FeeRecordCorrectionTransientFormDataEntity
-  : never;
+    ? FeeRecordEntity
+    : TableName extends 'FeeRecordCorrection'
+      ? FeeRecordCorrectionEntity
+      : TableName extends 'AzureFileInfo'
+        ? AzureFileInfoEntity
+        : TableName extends 'FeeRecordCorrectionTransientFormData'
+          ? FeeRecordCorrectionTransientFormDataEntity
+          : never;
 
 const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {
