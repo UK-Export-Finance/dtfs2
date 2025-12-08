@@ -71,8 +71,14 @@ const getHttpMocks = (comment = '') =>
   });
 
 describe('postReturnAmendmentToMaker', () => {
+  type UpdateApplicationParams = {
+    application: {
+      comments: Array<{ comment: string }>;
+    };
+  };
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
@@ -536,19 +542,24 @@ describe('postReturnAmendmentToMaker', () => {
       // Arrange
       const { req, res } = getHttpMocks(commentWithWindowsLineEnding);
 
-      // Verify original length with Windows line ending is 401 characters
       expect(commentWithWindowsLineEnding.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT + 1);
-
-      // After normalization, \r\n becomes \n, so length becomes exactly 400 characters
-      const normalizedComment = `${commentText}\n`;
-      expect(normalizedComment.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT);
 
       // Act
       await postReturnAmendmentToMaker(req, res);
 
-      // Assert
+      // Verify that the controller accepted the comment (no validation error)
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
       expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+
+      // Extract the actual normalized comment from the mock call
+      const [updateCall] = updateApplicationMock.mock.calls[0] as [UpdateApplicationParams];
+      const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+      // Assert
+      expect(actualNormalizedComment.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT);
+
+      expect(actualNormalizedComment).not.toContain('\r');
+      expect(actualNormalizedComment.endsWith('\n')).toBe(true);
     });
 
     it('should normalize Windows line endings and count as one character', async () => {
@@ -557,40 +568,23 @@ describe('postReturnAmendmentToMaker', () => {
       // Arrange
       const { req, res } = getHttpMocks(commentWithWindowsLineEndings);
 
-      // Verify original length is 22 characters
       expect(commentWithWindowsLineEndings.length).toBe(22);
 
       // Act
       await postReturnAmendmentToMaker(req, res);
 
-      // Verifying that \r\n was converted to \n (2 chars became 1 char each)
-      const normalizedComment = 'Line 1\nLine 2\nLine 3';
+      // Extract the actual normalized comment from the mock call
+      const [updateCall] = updateApplicationMock.mock.calls[0] as [UpdateApplicationParams];
+      const actualNormalizedComment = updateCall.application.comments[0].comment;
 
-      // Verify normalized length is 20 characters (2 characters less)
-      expect(normalizedComment.length).toBe(20);
+      // Assert
+      expect(actualNormalizedComment.length).toBe(20);
 
-      // Verify that updateApplication was called with normalized comment
-      const expectedApplication = {
-        ...mockDeal,
-        checkerId: mockUser._id,
-        comments: [
-          {
-            roles: mockUser.roles,
-            userName: mockUser.username,
-            firstname: mockUser.firstname,
-            surname: mockUser.surname,
-            email: mockUser.email,
-            createdAt: expect.any(Number) as number,
-            comment: normalizedComment,
-          },
-        ],
-      };
+      expect(actualNormalizedComment).not.toContain('\r');
+      expect(actualNormalizedComment).toContain('\n');
 
-      expect(updateApplicationMock).toHaveBeenCalledWith({
-        dealId,
-        application: expectedApplication,
-        userToken: req.session.userToken,
-      });
+      // Verify the content is preserved (just line endings changed)
+      expect(actualNormalizedComment).toBe('Line 1\nLine 2\nLine 3');
     });
   });
 });

@@ -68,7 +68,7 @@ const postReturnToMaker = async (req, res, next) => {
 
     await setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, userToken });
   } catch (error) {
-    console.error('Error in postReturnToMaker:', error);
+    console.error('Error posting deal return to maker %o', error);
     return next(error);
   }
 

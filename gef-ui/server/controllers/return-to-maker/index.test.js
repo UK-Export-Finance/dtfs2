@@ -161,42 +161,45 @@ describe('controllers/return-to-maker', () => {
         // Verify original length with Windows line ending is 401 characters
         expect(commentWithWindowsLineEnding.length).toBe(MAX_COMMENT_LENGTH + 1);
 
-        // After normalization, \r\n becomes \n, so length becomes exactly 400 characters
-        const normalizedComment = `${commentText}\n`;
-        expect(normalizedComment.length).toBe(MAX_COMMENT_LENGTH);
-
         await postReturnToMaker(mockRequest, mockResponse);
 
+        // Verify that the controller accepted the comment (no validation error)
         expect(mockResponse.render).not.toHaveBeenCalled();
         expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
+
+        // Extract the actual normalized comment from the mock call
+        const updateCall = updateApplication.mock.calls[0][0];
+        const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+        expect(actualNormalizedComment.length).toBe(MAX_COMMENT_LENGTH);
+
+        expect(actualNormalizedComment).not.toContain('\r');
+        expect(actualNormalizedComment.endsWith('\n')).toBe(true);
       });
 
       it('should normalize Windows line endings and count as one character', async () => {
         const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
         mockRequest.body.comment = commentWithWindowsLineEndings;
 
-        // Verify original length is 22 characters
         expect(commentWithWindowsLineEndings.length).toBe(22);
 
         await postReturnToMaker(mockRequest, mockResponse);
 
-        // Verifying that \r\n was converted to \n (2 chars became 1 char each)
-        const normalizedComment = 'Line 1\nLine 2\nLine 3';
+        // Verify no validation error occurred
+        expect(mockResponse.render).not.toHaveBeenCalled();
+        expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
 
-        expect(normalizedComment.length).toBe(20);
+        // Extract the actual normalized comment from the mock call
+        const updateCall = updateApplication.mock.calls[0][0];
+        const actualNormalizedComment = updateCall.application.comments[0].comment;
 
-        // Verify that updateApplication was called with normalized comment
-        expect(updateApplication).toHaveBeenCalledWith({
-          dealId: '1234',
-          application: expect.objectContaining({
-            comments: [
-              expect.objectContaining({
-                comment: normalizedComment,
-              }),
-            ],
-          }),
-          userToken,
-        });
+        expect(actualNormalizedComment.length).toBe(20);
+
+        expect(actualNormalizedComment).not.toContain('\r');
+        expect(actualNormalizedComment).toContain('\n');
+
+        // Verify the content is preserved (just line endings changed)
+        expect(actualNormalizedComment).toBe('Line 1\nLine 2\nLine 3');
       });
     });
 
