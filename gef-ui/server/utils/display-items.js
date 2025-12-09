@@ -1,5 +1,5 @@
 const { format, parseISO } = require('date-fns');
-const { isFacilityEndDateEnabledOnGefVersion } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, PORTAL_AMENDMENT_STATUS, getLatestAmendmentsByFacility } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('./helpers');
 const { BOOLEAN, STAGE, FACILITY_TYPE } = require('../constants');
 
@@ -61,17 +61,33 @@ const eligibilityCriteriaItems = (coverUrl) => [
  * @param {string} facilityUrl url for the facility
  * @param {Facility} details facility details
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {PortalFacilityAmendment[]} amendmentsOnDeal - array of amendments on the deal.
  * @param {number} dealVersion
  * @returns {Array} Array of facility items with label, id, href, method, suffix, and isHidden properties.
  */
-const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
-  const { _id, type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, facilityStage } = details;
+const facilityItems = (facilityUrl, details, latestAmendments, amendmentsOnDeal, dealVersion) => {
+  const { _id, type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, facilityStage } = details;
 
   const stringMongoId = _id?.toString();
+
+  // get the latest amendment for this facility
   const latestAmendment = latestAmendments[stringMongoId];
 
+  const amendmentsOnFacility = amendmentsOnDeal.filter(
+    (amendment) => amendment.facilityId.toString() === stringMongoId && amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+  );
+
+  // get the latest completed amendment for this facility
+  const latestCompletedAmendmentByFacility = getLatestAmendmentsByFacility(amendmentsOnFacility);
+  const latestCompletedAmendment = latestCompletedAmendmentByFacility[stringMongoId];
+
+  const isUsingFacilityEndDate = latestCompletedAmendment ? latestCompletedAmendment.isUsingFacilityEndDate : details.isUsingFacilityEndDate;
+
+  isFacilityEndDateEnabledOnGefVersion(dealVersion);
+
   const AT_MATURITY = 'At maturity';
-  return [
+
+  const items = [
     {
       label: 'Name',
       id: 'name',
@@ -127,8 +143,9 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       id: 'coverEndDate',
       href: `${facilityUrl}/about-facility?status=change`,
       method: (value) => {
+        const coverEndDate = latestCompletedAmendment ? new Date(latestCompletedAmendment.coverEndDate).toISOString() : value;
         // coverEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = parseISO(value);
+        const date = parseISO(coverEndDate);
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !hasBeenIssued,
@@ -144,7 +161,10 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       label: 'Has a facility end date',
       id: 'isUsingFacilityEndDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (value) => (isTrueSet(value) ? BOOLEAN.YES : BOOLEAN.NO),
+      method: (value) => {
+        const isUsingFED = latestCompletedAmendment ? String(latestCompletedAmendment.isUsingFacilityEndDate) : value;
+        return isTrueSet(isUsingFED) ? BOOLEAN.YES : BOOLEAN.NO;
+      },
       isHidden: !isFacilityEndDateEnabledOnGefVersion(dealVersion),
     },
     {
@@ -152,8 +172,9 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       id: 'facilityEndDate',
       href: `${facilityUrl}/facility-end-date?status=change`,
       method: (value) => {
+        const facilityEndDate = latestCompletedAmendment ? latestCompletedAmendment.facilityEndDate : value;
         // facilityEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = parseISO(value);
+        const date = parseISO(facilityEndDate);
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !isUsingFacilityEndDate || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
@@ -163,11 +184,12 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       id: 'bankReviewDate',
       href: `${facilityUrl}/bank-review-date?status=change`,
       method: (value) => {
+        const bankReviewDate = latestCompletedAmendment ? latestCompletedAmendment.bankReviewDate : value;
         // bankReviewDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
-        const date = parseISO(value);
+        const date = parseISO(bankReviewDate);
         return format(date, 'd MMMM yyyy');
       },
-      isHidden: !(isUsingFacilityEndDate === false) || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
+      isHidden: isUsingFacilityEndDate || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
     },
     {
       label: 'Facility provided on',
@@ -179,6 +201,10 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       label: 'Facility value',
       id: 'value',
       href: `${facilityUrl}/facility-currency?status=change`,
+      method: (value) => {
+        const facilityValue = latestCompletedAmendment ? latestCompletedAmendment.value : value;
+        return facilityValue;
+      },
       isCurrency: true,
     },
     {
@@ -217,6 +243,8 @@ const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
       href: `${facilityUrl}/facility-guarantee?status=change`,
     },
   ];
+
+  return items;
 };
 
 module.exports = {
