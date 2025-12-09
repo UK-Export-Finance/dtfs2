@@ -189,7 +189,7 @@ const facilityItems = (facilityUrl, details, latestAmendments, amendmentsOnDeal,
         const date = parseISO(bankReviewDate);
         return format(date, 'd MMMM yyyy');
       },
-      isHidden: isUsingFacilityEndDate || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
+      isHidden: !(isUsingFacilityEndDate === false) || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
     },
     {
       label: 'Facility provided on',
