@@ -1,7 +1,10 @@
-import { getReturnToMaker, postReturnToMaker, MAX_COMMENT_LENGTH } from './index';
+import { RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
+import { getReturnToMaker, postReturnToMaker } from './index';
 import { getApplication, updateApplication, setApplicationStatus, getUserDetails } from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
 import { CHECKER } from '../../constants/roles';
+
+const MAX_COMMENT_LENGTH = RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT;
 
 jest.mock('../../services/api', () => ({
   __esModule: true,
@@ -147,6 +150,57 @@ describe('controllers/return-to-maker', () => {
           errors: expect.any(Object),
         }),
       );
+    });
+
+    describe('Line ending normalization tests', () => {
+      it('should accept comment exactly at 400 characters with Windows line endings', async () => {
+        const commentText = 'a'.repeat(MAX_COMMENT_LENGTH - 1);
+        const commentWithWindowsLineEnding = `${commentText}\r\n`;
+        mockRequest.body.comment = commentWithWindowsLineEnding;
+
+        // Verify original length with Windows line ending is 401 characters
+        expect(commentWithWindowsLineEnding.length).toBe(MAX_COMMENT_LENGTH + 1);
+
+        await postReturnToMaker(mockRequest, mockResponse);
+
+        // Verify that the controller accepted the comment (no validation error)
+        expect(mockResponse.render).not.toHaveBeenCalled();
+        expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
+
+        // Extract the actual normalized comment from the mock call
+        const updateCall = updateApplication.mock.calls[0][0];
+        const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+        expect(actualNormalizedComment.length).toBe(MAX_COMMENT_LENGTH);
+
+        expect(actualNormalizedComment).not.toContain('\r');
+        expect(actualNormalizedComment.endsWith('\n')).toBe(true);
+      });
+
+      it('should normalize Windows line endings and count as one character', async () => {
+        const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
+        mockRequest.body.comment = commentWithWindowsLineEndings;
+
+        expect(commentWithWindowsLineEndings.length).toBe(22);
+
+        await postReturnToMaker(mockRequest, mockResponse);
+
+        // Verify no validation error occurred
+        expect(mockResponse.render).not.toHaveBeenCalled();
+        expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
+
+        // Extract the actual normalized comment from the mock call
+        const updateCall = updateApplication.mock.calls[0][0];
+        const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+        expect(actualNormalizedComment.length).toBe(20);
+
+        expect(actualNormalizedComment).not.toContain('\r');
+        expect(actualNormalizedComment).toContain('\n');
+
+        // Verify the content is preserved (just line endings changed)
+        expect(actualNormalizedComment).toBe('Line 1\nLine 2\nLine 3');
+      });
     });
 
     it('calls next if there is an api error', async () => {

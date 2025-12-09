@@ -19,3 +19,8 @@ export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT = 500;
  * The maximum character count for the return to maker comment field.
  */
 export const RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT = 400;
+
+/**
+ * The maximum character count for the application submit to checker comment field.
+ */
+export const MAKER_SUBMIT_COMMENT_CHARACTER_COUNT = 400;

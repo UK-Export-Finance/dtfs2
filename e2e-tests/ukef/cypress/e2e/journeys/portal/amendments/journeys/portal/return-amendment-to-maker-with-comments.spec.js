@@ -81,6 +81,26 @@ context('Amendments - return amendment to maker with comments', () => {
     errorSummary();
   });
 
+  it('should accept comment at 400 characters after normalizing Windows line endings', () => {
+    const commentText = 'a'.repeat(399);
+    cy.keyboardInput(returnToMaker.comment(), commentText);
+
+    returnToMaker.comment().type('{enter}');
+
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(returnedToMakerUrl));
+  });
+
+  it('should normalize multiple Windows line endings correctly', () => {
+    const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
+    cy.keyboardInput(returnToMaker.comment(), commentWithLineBreaks);
+
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(returnedToMakerUrl));
+  });
+
   it('should redirect to returned to maker confirmation page', () => {
     cy.keyboardInput(returnToMaker.comment(), comment);
     cy.clickSubmitButton();
