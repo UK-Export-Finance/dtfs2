@@ -96,9 +96,7 @@ context('Amendments - return amendment to maker with comments', () => {
     const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
     cy.keyboardInput(returnToMaker.comment(), commentWithLineBreaks);
 
-    cy.clickSubmitButton();
-
-    cy.url().should('eq', relative(returnedToMakerUrl));
+    returnToMaker.comment().should('have.value', 'Line 1\nLine 2\nLine 3');
   });
 
   it('should redirect to returned to maker confirmation page', () => {
