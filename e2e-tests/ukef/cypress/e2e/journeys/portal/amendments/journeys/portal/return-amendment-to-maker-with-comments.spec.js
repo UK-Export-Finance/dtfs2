@@ -12,8 +12,6 @@ const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '20000';
 
-const comment = 'Test comment';
-
 context('Amendments - return amendment to maker with comments', () => {
   let dealId;
   let facilityId;
@@ -81,17 +79,6 @@ context('Amendments - return amendment to maker with comments', () => {
     errorSummary();
   });
 
-  it('should accept comment at 400 characters after normalizing Windows line endings', () => {
-    const commentText = 'a'.repeat(399);
-    cy.keyboardInput(returnToMaker.comment(), commentText);
-
-    returnToMaker.comment().type('{enter}');
-
-    cy.clickSubmitButton();
-
-    cy.url().should('eq', relative(returnedToMakerUrl));
-  });
-
   it('should normalize multiple Windows line endings correctly', () => {
     const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
     cy.keyboardInput(returnToMaker.comment(), commentWithLineBreaks);
@@ -99,10 +86,14 @@ context('Amendments - return amendment to maker with comments', () => {
     returnToMaker.comment().should('have.value', 'Line 1\nLine 2\nLine 3');
   });
 
-  it('should redirect to returned to maker confirmation page', () => {
-    cy.keyboardInput(returnToMaker.comment(), comment);
-    cy.clickSubmitButton();
+  it('should accept and submit comment at 400 characters after normalizing Windows line endings and redirect to returned to maker page', () => {
+    const commentText = 'a'.repeat(399);
+    cy.keyboardInput(returnToMaker.comment(), commentText);
+    returnToMaker.comment().type('{enter}');
 
+    returnToMaker.comment().should('have.value', `${commentText}\n`);
+
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(returnedToMakerUrl));
   });
 
@@ -110,6 +101,6 @@ context('Amendments - return amendment to maker with comments', () => {
     cy.login(BANK1_MAKER1);
     cy.visit(relative(dealUrl));
 
-    applicationDetails.comments().should('contain', comment);
+    applicationDetails.comments().should('contain', 'aaa');
   });
 });
