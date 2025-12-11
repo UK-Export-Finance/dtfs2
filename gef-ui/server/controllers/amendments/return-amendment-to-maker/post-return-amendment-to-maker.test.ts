@@ -71,6 +71,12 @@ const getHttpMocks = (comment = '') =>
   });
 
 describe('postReturnAmendmentToMaker', () => {
+  type UpdateApplicationParams = {
+    application: {
+      comments: Array<{ comment: string }>;
+    };
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
@@ -79,6 +85,9 @@ describe('postReturnAmendmentToMaker', () => {
     jest.spyOn(api, 'updateAmendmentStatus').mockImplementation(updateAmendmentStatusMock);
     jest.spyOn(api, 'getUserDetails').mockImplementation(getUserDetailsMock);
     jest.spyOn(api, 'updateApplication').mockImplementation(updateApplicationMock);
+
+    // Reset amendment status in case previous tests modified it
+    amendment.status = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
@@ -518,6 +527,64 @@ describe('postReturnAmendmentToMaker', () => {
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith('Error posting facility amendment return to maker %o', mockError);
+    });
+  });
+
+  describe('Line ending normalization tests', () => {
+    beforeEach(() => {
+      mockDeal.comments = [];
+    });
+
+    it('should accept comment exactly at 400 characters with Windows line endings', async () => {
+      const commentText = 'a'.repeat(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT - 1);
+      const commentWithWindowsLineEnding = `${commentText}\r\n`;
+
+      // Arrange
+      const { req, res } = getHttpMocks(commentWithWindowsLineEnding);
+
+      expect(commentWithWindowsLineEnding.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT + 1);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Verify that the controller accepted the comment (no validation error)
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+
+      // Extract the actual normalized comment from the mock call
+      const [updateCall] = updateApplicationMock.mock.calls[0] as [UpdateApplicationParams];
+      const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+      // Assert
+      expect(actualNormalizedComment.length).toBe(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT);
+
+      expect(actualNormalizedComment).not.toContain('\r');
+      expect(actualNormalizedComment.endsWith('\n')).toBe(true);
+    });
+
+    it('should normalize Windows line endings and count as one character', async () => {
+      const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
+
+      // Arrange
+      const { req, res } = getHttpMocks(commentWithWindowsLineEndings);
+
+      expect(commentWithWindowsLineEndings.length).toBe(22);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Extract the actual normalized comment from the mock call
+      const [updateCall] = updateApplicationMock.mock.calls[0] as [UpdateApplicationParams];
+      const actualNormalizedComment = updateCall.application.comments[0].comment;
+
+      // Assert
+      expect(actualNormalizedComment.length).toBe(20);
+
+      expect(actualNormalizedComment).not.toContain('\r');
+      expect(actualNormalizedComment).toContain('\n');
+
+      // Verify the content is preserved (just line endings changed)
+      expect(actualNormalizedComment).toBe('Line 1\nLine 2\nLine 3');
     });
   });
 });
