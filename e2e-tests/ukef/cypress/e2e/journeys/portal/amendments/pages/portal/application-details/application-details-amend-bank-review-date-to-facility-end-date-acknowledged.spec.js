@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { PORTAL_AMENDMENT_STATUS, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
+import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { tomorrow, D_MMMM_YYYY_FORMAT } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -10,10 +10,10 @@ import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/p
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 const CHANGED_FACILITY_VALUE_1 = '30000';
 const facilityEndDate = tomorrow.date;
+const coverEndDate = tomorrow.date;
 
-context("Amendments ready for checker's approval - facility end date to bank review date - Deal summary page", () => {
+context('Approved amendments - bank review date to facility end date - Deal summary page', () => {
   let dealId;
-  let coverEndDate;
   let issuedCashFacilityId;
   let amendmentDetailsUrl;
 
@@ -26,7 +26,6 @@ context("Amendments ready for checker's approval - facility end date to bank rev
 
       cy.createGefFacilities(dealId, [issuedCashFacility], BANK1_MAKER1).then((createdFacility) => {
         issuedCashFacilityId = createdFacility.details._id;
-        coverEndDate = new Date(createdFacility.details.coverEndDate);
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -71,20 +70,16 @@ context("Amendments ready for checker's approval - facility end date to bank rev
       cy.clearSessionCookies();
     });
 
-    it('should display the "Amendement details" link in the notification banner', () => {
-      cy.assertText(applicationPreview.amendmentDetailsHeaderReadyForCheckers(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
-
-      applicationPreview.amendmentDetailsReadyForCheckerLink(1).should('have.attr', 'href', amendmentDetailsUrl);
-      cy.assertText(applicationPreview.amendmentDetailsReadyForCheckerLink(1), `Facility (${issuedCashFacility.ukefFacilityId}) amendment details`);
+    it('should not display the "Amendement details" link in the notification banner', () => {
+      applicationPreview.amendmentDetailsHeaderReadyForCheckers().should('not.exist');
     });
 
-    it('should display "Amendment in progress: See details" link in the facility section', () => {
-      applicationPreview.amendmentInProgress().should('have.attr', 'href', amendmentDetailsUrl);
-      cy.assertText(applicationPreview.amendmentInProgress(), 'See details');
+    it('should not display "Amendment in progress: See details" link in the facility section', () => {
+      applicationPreview.amendmentInProgress().should('not.exist');
     });
 
     it('should display the latest updated amendment value on facility summary list', () => {
-      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(2000, false));
+      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, false));
       applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
       applicationPreview.facilitySummaryList().contains(format(facilityEndDate, D_MMMM_YYYY_FORMAT));
     });
@@ -102,20 +97,16 @@ context("Amendments ready for checker's approval - facility end date to bank rev
       cy.clearSessionCookies();
     });
 
-    it('should display the "Check amendment details before submitting to UKEF" link in the notification banner', () => {
-      cy.assertText(applicationPreview.amendmentDetailsHeaderReadyForCheckers(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
-
-      applicationPreview.amendmentDetailsReadyForCheckerLink(1).should('have.attr', 'href', amendmentDetailsUrl);
-      cy.assertText(applicationPreview.amendmentDetailsReadyForCheckerLink(1), `Facility (${issuedCashFacility.ukefFacilityId}) amendment details`);
+    it('should not display the "Check amendment details before submitting to UKEF" link in the notification banner', () => {
+      applicationPreview.amendmentDetailsHeaderReadyForCheckers().should('not.exist');
     });
 
-    it('should display "Amendment in progress: Check amendment details before submitting to UKEF" link in the facility section', () => {
-      applicationPreview.amendmentInProgress().should('have.attr', 'href', amendmentDetailsUrl);
-      cy.assertText(applicationPreview.amendmentInProgress(), 'Check amendment details before submitting to UKEF');
+    it('should not display "Amendment in progress: Check amendment details before submitting to UKEF" link in the facility section', () => {
+      applicationPreview.amendmentInProgress().should('not.exist');
     });
 
     it('should display the latest updated amendment value on facility summary list', () => {
-      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(2000, false));
+      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, false));
       applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
       applicationPreview.facilitySummaryList().contains(format(facilityEndDate, D_MMMM_YYYY_FORMAT));
     });
