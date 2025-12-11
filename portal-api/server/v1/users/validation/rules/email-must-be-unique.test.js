@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-const { produce } = require('immer');
 const emailMustBeUnique = require('./email-must-be-unique');
 
 const userController = require('../../controller');
@@ -29,9 +27,10 @@ describe('emailMustBeUnique', () => {
   const exampleEmail = 'example@ukexportfinance.gov.uk';
   const changeRequest = { email: exampleEmail };
 
-  const testUserWithoutMatchingEmail = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draftRequest) => {
-    draftRequest.email = 'notAMatchingEmail@ukexportfinance.gov.uk';
-  });
+  const testUserWithoutMatchingEmail = {
+    ...TEST_USER_TRANSFORMED_FROM_DATABASE,
+    email: 'notAMatchingEmail@ukexportfinance.gov.uk',
+  };
 
   const testCases = [
     { description: 'when no existing user is provided', user: undefined },
