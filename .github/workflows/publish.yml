@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Create
         uses: googleapis/release-please-action@v4
