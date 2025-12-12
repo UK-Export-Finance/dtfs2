@@ -72,6 +72,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
     const tfmUpdate = {
       ...amendment.tfm,
       bankReviewDate: validationErrorsOrValue.value,
+      isUsingFacilityEndDate: false,
     };
 
     const update = { bankReviewDate: validationErrorsOrValue.value, tfm: tfmUpdate };

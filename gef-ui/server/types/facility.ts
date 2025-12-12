@@ -12,7 +12,7 @@ export type Facility = {
   type: GefFacilityType;
   hasBeenIssued?: boolean | null;
   shouldCoverStartOnSubmission?: boolean | null;
-  coverStartDate?: IsoDateTimeStamp | null;
+  coverStartDate?: IsoDateTimeStamp | number | null;
   coverEndDate?: IsoDateTimeStamp | null;
   issueDate?: IsoDateTimeStamp | null;
   monthsOfCover?: number | null;

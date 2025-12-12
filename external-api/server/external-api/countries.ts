@@ -116,11 +116,6 @@ export const COUNTRIES: CountryInterface[] = [
     code: 'BLZ',
   },
   {
-    id: 204,
-    name: 'Benin',
-    code: 'BEN',
-  },
-  {
     id: 60,
     name: 'Bermuda',
     code: 'BMU',
@@ -200,11 +195,6 @@ export const COUNTRIES: CountryInterface[] = [
     code: 'CAN',
   },
   {
-    id: 132,
-    name: 'Cape Verde',
-    code: 'CPV',
-  },
-  {
     id: 136,
     name: 'Cayman Islands',
     code: 'CYM',
@@ -224,11 +214,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 152,
     name: 'Chile',
     code: 'CHL',
-  },
-  {
-    id: 156,
-    name: 'China',
-    code: 'CHN',
   },
   {
     id: 170,
@@ -266,11 +251,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 188,
     name: 'Costa Rica',
     code: 'CRI',
-  },
-  {
-    id: 384,
-    name: 'Cote d Ivoire',
-    code: 'CIV',
   },
   {
     id: 191,
@@ -393,11 +373,6 @@ export const COUNTRIES: CountryInterface[] = [
     code: 'GAB',
   },
   {
-    id: 270,
-    name: 'Gambia',
-    code: 'GMB',
-  },
-  {
     id: 268,
     name: 'Georgia',
     code: 'GEO',
@@ -406,11 +381,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 276,
     name: 'Germany',
     code: 'DEU',
-  },
-  {
-    id: 288,
-    name: 'Ghana',
-    code: 'GHA',
   },
   {
     id: 292,
@@ -469,11 +439,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 340,
     name: 'Honduras',
     code: 'HND',
-  },
-  {
-    id: 344,
-    name: 'Hong Kong',
-    code: 'HKG',
   },
   {
     id: 348,
@@ -593,11 +558,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 426,
     name: 'Lesotho',
     code: 'LSO',
-  },
-  {
-    id: 430,
-    name: 'Liberia',
-    code: 'LBR',
   },
   {
     id: 434,
@@ -769,11 +729,6 @@ export const COUNTRIES: CountryInterface[] = [
     disabled: true,
   },
   {
-    id: 566,
-    name: 'Nigeria',
-    code: 'NGA',
-  },
-  {
     id: 570,
     name: 'Niue',
     code: 'NIU',
@@ -921,11 +876,6 @@ export const COUNTRIES: CountryInterface[] = [
     code: 'SAU',
   },
   {
-    id: 686,
-    name: 'Senegal',
-    code: 'SEN',
-  },
-  {
     id: 688,
     name: 'Serbia',
     code: 'SCG',
@@ -934,11 +884,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 690,
     name: 'Seychelles',
     code: 'SYC',
-  },
-  {
-    id: 694,
-    name: 'Sierra Leone',
-    code: 'SLE',
   },
   {
     id: 702,
@@ -1037,11 +982,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 626,
     name: 'Timor Leste, Democratic Republic of',
     code: 'TLS',
-  },
-  {
-    id: 768,
-    name: 'Togo',
-    code: 'TGO',
   },
   {
     id: 776,
