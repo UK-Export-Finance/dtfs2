@@ -310,6 +310,7 @@ describe('activity controller', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        api.createActivity = jest.fn(() => Promise.resolve());
       });
 
       it('should return to comment box with errors if longer than 1000 characters', async () => {
@@ -361,6 +362,77 @@ describe('activity controller', () => {
 
         await activityController.postComment(req, res);
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/activity`);
+      });
+
+      describe('Line ending normalization tests', () => {
+        const MAX_COMMENT_LENGTH = 1000;
+
+        it('should accept comment exactly at 1000 characters with Windows line endings', async () => {
+          const commentText = 'a'.repeat(MAX_COMMENT_LENGTH - 1);
+          const commentWithWindowsLineEnding = `${commentText}\r\n`;
+
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              comment: commentWithWindowsLineEnding,
+            },
+            session,
+          };
+
+          // Verify original length with Windows line ending is 1001 characters
+          expect(commentWithWindowsLineEnding.length).toBe(MAX_COMMENT_LENGTH + 1);
+
+          await activityController.postComment(req, res);
+
+          // Verify that the controller accepted the comment (no validation error)
+          expect(res.render).not.toHaveBeenCalled();
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/activity`);
+
+          // Extract the actual normalized comment from the mock call
+          const createActivityCall = api.createActivity.mock.calls[0][1];
+          const actualNormalizedComment = createActivityCall.text;
+
+          expect(actualNormalizedComment.length).toBe(MAX_COMMENT_LENGTH);
+
+          expect(actualNormalizedComment).not.toContain('\r');
+          expect(actualNormalizedComment.endsWith('\n')).toBe(true);
+        });
+
+        it('should normalize Windows line endings and count as one character', async () => {
+          const commentWithWindowsLineEndings = 'Line 1\r\nLine 2\r\nLine 3';
+
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              comment: commentWithWindowsLineEndings,
+            },
+            session,
+          };
+
+          expect(commentWithWindowsLineEndings.length).toBe(22);
+
+          await activityController.postComment(req, res);
+
+          // Verify no validation error occurred
+          expect(res.render).not.toHaveBeenCalled();
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/activity`);
+
+          // Extract the actual normalized comment from the mock call
+          const createActivityCall = api.createActivity.mock.calls[0][1];
+          const actualNormalizedComment = createActivityCall.text;
+
+          expect(actualNormalizedComment.length).toBe(20);
+
+          expect(actualNormalizedComment).not.toContain('\r');
+          expect(actualNormalizedComment).toContain('\n');
+
+          // Verify the content is preserved (just line endings changed)
+          expect(actualNormalizedComment).toBe('Line 1\nLine 2\nLine 3');
+        });
       });
     });
   });
