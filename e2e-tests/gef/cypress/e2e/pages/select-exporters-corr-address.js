@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const selectExportersCorAddress = {
   postcodeTitle: () => cy.get('[data-cy="postcode-title"]'),
   postcode: () => cy.get('[data-cy="postcode"]'),
