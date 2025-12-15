@@ -1,4 +1,4 @@
-import { FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { FACILITY_STAGE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { facilityItems } from './display-items';
 import { MOCK_FACILITY as MOCK_FACILITIES } from './mocks/mock-facilities';
 import { BOOLEAN, STAGE } from '../constants';
@@ -300,6 +300,101 @@ describe('facilityItems', () => {
 
       // Assert
       expect(amendmentStatusResult).toEqual(expected);
+    });
+  });
+
+  describe('when checking the cover end date with amendments', () => {
+    it('should use the amendment cover end date when latestCompletedAmendment has changeCoverEndDate', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const amendmentCoverEndDate = '2026-12-20T00:00:00.000Z';
+      const expectedFormat = '20 December 2026';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        _id: 'test-facility-id',
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      const latestAmendments = {
+        'test-facility-id': {
+          status: 'in-progress',
+          changeCoverEndDate: true,
+        },
+      };
+
+      const amendmentsOnDeal = [
+        {
+          facilityId: 'test-facility-id',
+          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          changeCoverEndDate: true,
+          coverEndDate: amendmentCoverEndDate,
+        },
+      ];
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, amendmentsOnDeal, 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
+    });
+
+    it('should use the original cover end date when there is no latestCompletedAmendment', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const expectedFormat = '15 June 2025';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      // Act
+      const result = facilityItems('testUrl', facility, {}, [], 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
+    });
+
+    it('should use the original cover end date when latestCompletedAmendment does not have changeCoverEndDate', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const amendmentCoverEndDate = '2026-12-20T00:00:00.000Z';
+      const expectedFormat = '15 June 2025';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        _id: 'test-facility-id',
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      const latestAmendments = {
+        'test-facility-id': {
+          status: 'in-progress',
+          changeCoverEndDate: false,
+        },
+      };
+
+      const amendmentsOnDeal = [
+        {
+          facilityId: 'test-facility-id',
+          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          changeCoverEndDate: false,
+          coverEndDate: amendmentCoverEndDate,
+        },
+      ];
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, amendmentsOnDeal, 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
     });
   });
 });
