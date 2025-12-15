@@ -1,7 +1,7 @@
 import { FACILITY_STAGE } from '@ukef/dtfs2-common';
 import { facilityItems } from './display-items';
 import { MOCK_FACILITY as MOCK_FACILITIES } from './mocks/mock-facilities';
-import { STAGE } from '../constants';
+import { BOOLEAN, STAGE } from '../constants';
 
 const MOCK_FACILITY_ONE = MOCK_FACILITIES.items[0].details;
 
@@ -163,6 +163,30 @@ describe('facilityItems', () => {
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').href).toEqual('testUrl/bank-review-date?status=change');
+    });
+
+    describe('when checking the "Has a facility end date" method return value', () => {
+      it(`should return ${BOOLEAN.YES} when isUsingFacilityEndDate is true`, () => {
+        // Arrange
+        const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
+
+        // Act
+        const result = facilityItems('testUrl', facility, {}, [], 1);
+
+        // Assert
+        expect(result.find((item) => item.id === 'isUsingFacilityEndDate').method('true')).toEqual(BOOLEAN.YES);
+      });
+
+      it(`should return ${BOOLEAN.NO} when isUsingFacilityEndDate is false`, () => {
+        // Arrange
+        const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
+
+        // Act
+        const result = facilityItems('testUrl', facility, {}, [], 1);
+
+        // Assert
+        expect(result.find((item) => item.id === 'isUsingFacilityEndDate').method('false')).toEqual(BOOLEAN.NO);
+      });
     });
   });
 
