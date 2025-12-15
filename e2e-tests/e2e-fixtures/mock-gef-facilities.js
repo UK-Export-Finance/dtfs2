@@ -14,10 +14,7 @@ const getFacilityEndDateProperties = ({ facilityEndDateEnabled }) => {
       facilityEndDate: new Date(1830297600000), // 2028-01-01T00:00:00.000Z
     };
   }
-  return {
-    isUsingFacilityEndDate: false,
-    bankReviewDate: new Date(1830297600000), // 2028-01-01T00:00:00.000Z
-  };
+  return {};
 };
 
 /**

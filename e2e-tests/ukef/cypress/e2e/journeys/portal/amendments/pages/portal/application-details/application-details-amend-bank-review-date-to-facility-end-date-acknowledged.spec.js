@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { tomorrow, D_MMMM_YYYY_FORMAT } from '@ukef/dtfs2-common/test-helpers';
+import { tomorrow, today, D_MMMM_YYYY_FORMAT } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -8,19 +8,21 @@ import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mo
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-const CHANGED_FACILITY_VALUE_1 = '30000';
+const CHANGED_FACILITY_VALUE_1 = '20000';
+const CHANGED_FACILITY_VALUE_2 = '30000';
 const facilityEndDate = tomorrow.date;
 const coverEndDate = tomorrow.date;
 
 context('Approved amendments - bank review date to facility end date - Deal summary page', () => {
   let dealId;
   let issuedCashFacilityId;
-  let amendmentDetailsUrl;
+  let applicationDetailsUrl;
 
-  const issuedCashFacility = anIssuedCashFacility({ facilityEndDateEnabled: false });
+  const issuedCashFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
+      applicationDetailsUrl = `/gef/application-details/${dealId}`;
 
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
 
@@ -34,25 +36,31 @@ context('Approved amendments - bank review date to facility end date - Deal summ
         cy.login(BANK1_MAKER1);
         cy.saveSession();
 
-        cy.visit(relative(`/gef/application-details/${dealId}`));
+        cy.visit(relative(applicationDetailsUrl));
         applicationPreview.makeAChangeButton(issuedCashFacilityId).click();
 
-        cy.getAmendmentIdFromUrl().then((amendmentId) => {
-          const submittedUrl = `/gef/application-details/${dealId}/facilities/${issuedCashFacilityId}/amendments/${amendmentId}/approved-by-ukef`;
-          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${issuedCashFacilityId}/amendments/${amendmentId}/amendment-details`;
+        cy.loginAndSubmitPortalAmendmentRequestToUkef({
+          coverEndDateExists: true,
+          facilityValueExists: true,
+          facilityEndDateExists: false,
+          changedFacilityValue: CHANGED_FACILITY_VALUE_1,
+          changedCoverEndDate: tomorrow.date,
+          applicationDetailsUrl,
+          facilityId: issuedCashFacilityId,
+          dealId,
+          effectiveDate: today.date,
+        });
 
-          const confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${issuedCashFacilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
-
-          cy.makerAndCheckerSubmitPortalAmendmentRequest({
-            coverEndDateExists: true,
-            facilityValueExists: true,
-            facilityEndDateExists: true,
-            changedFacilityValue: CHANGED_FACILITY_VALUE_1,
-            changedCoverEndDate: tomorrow.date,
-            amendmentDetailsUrl,
-            submittedUrl,
-            confirmSubmissionToUkefUrl,
-          });
+        cy.loginAndSubmitPortalAmendmentRequestToUkef({
+          coverEndDateExists: true,
+          facilityValueExists: true,
+          facilityEndDateExists: true,
+          changedFacilityValue: CHANGED_FACILITY_VALUE_2,
+          changedCoverEndDate: tomorrow.date,
+          applicationDetailsUrl,
+          facilityId: issuedCashFacilityId,
+          dealId,
+          effectiveDate: today.date,
         });
       });
     });
@@ -62,7 +70,7 @@ context('Approved amendments - bank review date to facility end date - Deal summ
     beforeEach(() => {
       cy.clearSessionCookies();
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/gef/application-details/${dealId}`));
+      cy.visit(relative(applicationDetailsUrl));
     });
 
     after(() => {
@@ -79,7 +87,7 @@ context('Approved amendments - bank review date to facility end date - Deal summ
     });
 
     it('should display the latest updated amendment value on facility summary list', () => {
-      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, false));
+      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, false));
       applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
       applicationPreview.facilitySummaryList().contains(format(facilityEndDate, D_MMMM_YYYY_FORMAT));
     });
@@ -106,7 +114,7 @@ context('Approved amendments - bank review date to facility end date - Deal summ
     });
 
     it('should display the latest updated amendment value on facility summary list', () => {
-      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, false));
+      applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, false));
       applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
       applicationPreview.facilitySummaryList().contains(format(facilityEndDate, D_MMMM_YYYY_FORMAT));
     });
