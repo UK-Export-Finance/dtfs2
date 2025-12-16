@@ -34,19 +34,19 @@ import { Deal } from './deals';
 export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollectionName extends 'banks'
   ? Bank
   : TCollectionName extends 'users'
-  ? PortalUser
-  : TCollectionName extends 'tfm-users'
-  ? TfmUser
-  : TCollectionName extends 'tfm-teams'
-  ? TfmTeam
-  : TCollectionName extends 'deletion-audit-logs'
-  ? DeletionAuditLog
-  : TCollectionName extends 'tfm-facilities'
-  ? TfmFacility
-  : TCollectionName extends 'facilities'
-  ? Facility
-  : TCollectionName extends 'tfm-deals'
-  ? TfmDeal
-  : TCollectionName extends 'deals'
-  ? Deal
-  : WithId<any>;
+    ? PortalUser
+    : TCollectionName extends 'tfm-users'
+      ? TfmUser
+      : TCollectionName extends 'tfm-teams'
+        ? TfmTeam
+        : TCollectionName extends 'deletion-audit-logs'
+          ? DeletionAuditLog
+          : TCollectionName extends 'tfm-facilities'
+            ? TfmFacility
+            : TCollectionName extends 'facilities'
+              ? Facility
+              : TCollectionName extends 'tfm-deals'
+                ? TfmDeal
+                : TCollectionName extends 'deals'
+                  ? Deal
+                  : WithId<any>;
