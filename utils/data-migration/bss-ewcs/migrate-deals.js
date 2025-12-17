@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const xml2js = require('xml2js');
 const { decodeHtmlEntities } = require('@ukef/dtfs2-common');
 const fileshare = require('./helpers/fileshare');
@@ -91,26 +90,6 @@ const mapV2 = async (portalDealId, v1Deal) => {
   return mappedV2;
 };
 
-const archiveFile = async (dealId) => {
-  const filename = `deal_${dealId}.xml`;
-  const folder = `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`;
-
-  const from = {
-    fileshare: 'workflow',
-    folder,
-    filename,
-  };
-
-  const to = {
-    fileshare: 'workflow',
-    folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}_archived_success/${dealId}`,
-    filename,
-  };
-  fileshare.moveFile({ to, from }).then(() => {
-    fileshare.deleteDirectory('workflow', folder);
-  });
-};
-
 const processXml = async (dealId) => {
   const dealXml = await fileshare.readFile({
     fileshare: 'workflow',
@@ -132,7 +111,7 @@ const importSingleDeal = async (dealId) =>
       if (v2Deal) {
         if (shouldMigrateDeal(v2Deal.status)) {
           const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
-            if (completed) {
+            if (success) {
               log.addSuccess(dealId);
             } else if (deal.validationErrors) {
               log.addError(dealId, deal.validationErrors.errorList);
@@ -141,7 +120,7 @@ const importSingleDeal = async (dealId) =>
             } else {
               log.addError(dealId, 'unknown API deal create error');
             }
-            return completed;
+            return success;
           });
           return completed;
         }
