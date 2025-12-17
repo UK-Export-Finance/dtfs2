@@ -26,6 +26,10 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
     const { userToken, user } = asLoggedInUserSession(req.session);
     const { comment } = req.body;
 
+    // Converts Windows-style line endings (\r\n) to Unix-style (\n)
+    // This is necessary because RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT counts \n as 1 character
+    const normalizedComment = comment ? comment.replace(/\r\n/g, '\n') : '';
+
     const deal = await api.getApplication({ dealId, userToken });
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
@@ -46,7 +50,7 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
       return res.redirect('/not-found');
     }
 
-    if (comment?.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
+    if (normalizedComment.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
       const errors = validationErrorHandler({
         errRef: 'comment',
         errMsg: `You have entered more than ${RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT} characters`,
@@ -67,14 +71,14 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
         previousPage,
         maxCommentLength,
         errors,
-        comment,
+        comment: normalizedComment,
         isReturningAmendmentToMaker,
       };
 
       return res.render('partials/return-to-maker.njk', viewModel);
     }
 
-    await addCheckerCommentsToApplication(dealId, userToken, user._id, comment);
+    await addCheckerCommentsToApplication(dealId, userToken, user._id, normalizedComment);
 
     const { makersEmail, checkersEmail, emailVariables } = mapReturnToMakerEmailVariables({ deal, facility, amendment, user });
 
