@@ -47,7 +47,7 @@ describe(page, () => {
   });
 
   it('should render the attempts remaining paragraph', () => {
-    wrapper.expectElement('[data-cy="access-code-attempts-info"]').toContain('You have 2 attempts remaining.');
+    wrapper.expectElement('[data-cy="access-code-attempts-info"]').toContain(`You have ${attemptsLeft} attempts remaining.`);
   });
 
   it('should render the suspend info paragraph', () => {
