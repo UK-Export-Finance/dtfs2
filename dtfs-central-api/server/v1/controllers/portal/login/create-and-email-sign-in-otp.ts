@@ -8,7 +8,7 @@ import { PortalUsersRepo } from '../../../../repositories/users-repo';
 
 export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBody: { user: PortalUser; auditDetails: AuditDetails } }>, res: Response) => {
   const { user, auditDetails } = req.body;
-
+  console.log('hereeeeeeeeeeeeeeeee');
   const doesUserExist = user && user._id && user.email && user.firstname && user.surname;
 
   if (!doesUserExist || !auditDetails) {
@@ -27,7 +27,6 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
   const newSignInLinkCount = await incrementSignInOTPSendCount({ userId, userSignInLinkSendDate, auditDetails });
 
   const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
-  console.log(securityCode);
 
   await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 

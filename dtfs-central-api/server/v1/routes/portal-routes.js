@@ -1462,6 +1462,6 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
 
 portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmailSignInOTP);
 
-portalRouter.route('/users/me/validate-sign-in-code').post(loginController.validateAccountSignInOTP);
+portalRouter.route('/users/me/validate-sign-in-code').post(loginController.validateOTPAndSignIn);
 
 module.exports = portalRouter;

@@ -10,7 +10,7 @@ type variables = {
 export const incrementSignInOTPSendCount = async ({ userId, userSignInLinkSendDate, auditDetails }: variables) => {
   const maxSignInOTPSendCount = OTP.MAX_SIGN_IN_ATTEMPTS;
 
-  await PortalUsersRepo.resetSignInDataIfStale({ userId, userSignInLinkSendDate, auditDetails });
+  await PortalUsersRepo.resetSignInData({ userId, userSignInLinkSendDate, auditDetails });
 
   const signInOTPSendCount = await PortalUsersRepo.incrementSignInOTPSendCount(userId, auditDetails);
 

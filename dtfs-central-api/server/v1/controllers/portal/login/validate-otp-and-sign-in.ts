@@ -1,14 +1,15 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest, AuditDetails, SignInTokens } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, AuditDetails } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
+import { validateOtp } from '../../../../helpers/portal-2fa/validate-otp';
 import { getUserById } from '../../../../repositories/users-repo';
 
-export const validateAccountSignInOTP = async (
-  req: CustomExpressRequest<{ reqBody: { userId: string; securityCode: string; auditDetails: AuditDetails } }>,
+export const validateOTPAndSignIn = async (
+  req: CustomExpressRequest<{ reqBody: { userId: string; signInOTPCode: string; auditDetails: AuditDetails } }>,
   res: Response,
 ) => {
-  const { userId } = req.body;
+  const { userId, signInOTPCode } = req.body;
 
   const user = await getUserById(userId);
 
@@ -24,11 +25,14 @@ export const validateAccountSignInOTP = async (
     return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
   }
 
-  const hasValidToken = (signInToken: SignInTokens) => signInToken?.hashHex && signInToken?.saltHex && signInToken?.expiry;
+  const otpResponse = validateOtp(signInOTPCode, user);
 
-  const latestSignInToken = user.signInTokens.findLastIndex((signInToken) => hasValidToken(signInToken));
+  if (otpResponse.success && otpResponse.isValid) {
+    console.info(`User ${user.email} successfully signed in with OTP.`);
 
-  console.log('Latest sign in token index:', latestSignInToken);
+    return res.status(HttpStatusCode.Ok).send({ message: 'OTP is valid' });
+  }
 
-  return res.status(HttpStatusCode.Ok).send({ latestSignInToken });
+  console.info('Unable to verify account sign in code');
+  return res.status(otpResponse.statusCode).send({ message: 'OTP is invalid' });
 };

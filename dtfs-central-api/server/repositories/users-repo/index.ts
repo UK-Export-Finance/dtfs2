@@ -86,7 +86,7 @@ export class PortalUsersRepo {
     await userCollection.updateOne({ _id: { $eq: new ObjectId(userId) } }, { $set: setUpdate });
   }
 
-  public static async resetSignInDataIfStale({
+  public static async resetSignInData({
     userId,
     auditDetails,
   }: {

@@ -34,7 +34,7 @@ class SignInLinkService {
 
     if (validatePortal2FAFeatureFlagIsEnabled()) {
       const { securityCode } = await api.createSignInOTPCode(user, auditDetails);
-
+      console.log(securityCode);
       await api.verifySignInOTPCode(user, securityCode, auditDetails);
 
       signInCount = '';
