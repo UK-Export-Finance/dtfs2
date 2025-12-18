@@ -54,7 +54,7 @@
   "dependencies": {
     "@azure/msal-node": "^3.8.4",
     "@types/big.js": "^6.2.2",
-    "@types/connect-redis": "^0.0.22",
+    "@types/connect-redis": "^0.0.23",
     "@types/express-session": "^1.18.2",
     "@types/lodash": "^4.17.21",
     "@types/node-cron": "^3.0.11",
