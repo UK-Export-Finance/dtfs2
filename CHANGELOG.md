@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v2.12.0) (2025-12-18)
+
+
+### Features
+
+* **DTFS2-8195:** add route and controller for temporarily suspended access page ([ce32f1a](https://github.com/UK-Export-Finance/dtfs2/commit/ce32f1abd9eeb5d63fd711eefd55589359817d1b))
+
+
+### Bug Fixes
+
+* **DTFS2-8173:** amendments - do you have facility end date ([#4583](https://github.com/UK-Export-Finance/dtfs2/issues/4583)) ([7a8cfba](https://github.com/UK-Export-Finance/dtfs2/commit/7a8cfba27feb09f9c2f4e93a28d7ff000a20b180))
+* **DTFS2-8206:** implement comment normalization ([#4581](https://github.com/UK-Export-Finance/dtfs2/issues/4581)) ([405aa5e](https://github.com/UK-Export-Finance/dtfs2/commit/405aa5ed4e4c85d04adcbafb7cd669976f777e28))
+* **DTFS2-8215:** prevent form submit on print page click ([#4571](https://github.com/UK-Export-Finance/dtfs2/issues/4571)) ([999c306](https://github.com/UK-Export-Finance/dtfs2/commit/999c306b6b0f9b36decd7c03e565580be40fa7c9))
+* **DTFS2-8228:** tfm comment normalization bug fix ([22c8fe4](https://github.com/UK-Export-Finance/dtfs2/commit/22c8fe4b250c560550189dfbf05f332e012cd472))
+
+
+### Reverts
+
+* **DTFS2-6761:** revert hashing changes  ([#4575](https://github.com/UK-Export-Finance/dtfs2/issues/4575)) ([16b80a7](https://github.com/UK-Export-Finance/dtfs2/commit/16b80a74047b7169b3831242e70ae1202afbc49c))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
