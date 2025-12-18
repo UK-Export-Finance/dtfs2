@@ -1,7 +1,7 @@
-import { FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { FACILITY_STAGE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { facilityItems } from './display-items';
 import { MOCK_FACILITY as MOCK_FACILITIES } from './mocks/mock-facilities';
-import { STAGE } from '../constants';
+import { BOOLEAN, STAGE } from '../constants';
 
 const MOCK_FACILITY_ONE = MOCK_FACILITIES.items[0].details;
 
@@ -12,7 +12,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, undefined);
+      const result = facilityItems('testUrl', facility, {}, [], undefined);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(true);
@@ -27,7 +27,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 0);
+      const result = facilityItems('testUrl', facility, {}, [], 0);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(true);
@@ -42,7 +42,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -53,7 +53,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').isHidden).toEqual(true);
@@ -65,7 +65,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -77,7 +77,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').isHidden).toEqual(true);
@@ -88,7 +88,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -100,7 +100,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').isHidden).toEqual(true);
@@ -113,7 +113,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, facilityEndDate: testFacilityEndDate };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').method(testFacilityEndDate)).toEqual(expectedFormat);
@@ -126,7 +126,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, bankReviewDate: testBankReviewDate };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').method(testBankReviewDate)).toEqual(expectedFormat);
@@ -137,7 +137,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').href).toEqual('testUrl/about-facility?status=change');
@@ -148,7 +148,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true, facilityEndDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').href).toEqual('testUrl/facility-end-date?status=change');
@@ -159,10 +159,34 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false, bankReviewDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').href).toEqual('testUrl/bank-review-date?status=change');
+    });
+
+    describe('when checking the "Has a facility end date" method return value', () => {
+      it(`should return ${BOOLEAN.YES} when isUsingFacilityEndDate is true`, () => {
+        // Arrange
+        const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
+
+        // Act
+        const result = facilityItems('testUrl', facility, {}, [], 1);
+
+        // Assert
+        expect(result.find((item) => item.id === 'isUsingFacilityEndDate').method('true')).toEqual(BOOLEAN.YES);
+      });
+
+      it(`should return ${BOOLEAN.NO} when isUsingFacilityEndDate is false`, () => {
+        // Arrange
+        const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
+
+        // Act
+        const result = facilityItems('testUrl', facility, {}, [], 1);
+
+        // Assert
+        expect(result.find((item) => item.id === 'isUsingFacilityEndDate').method('false')).toEqual(BOOLEAN.NO);
+      });
     });
   });
 
@@ -173,7 +197,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, facilityStage };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(facilityStage);
@@ -186,7 +210,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'true' };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(STAGE.ISSUED);
@@ -197,7 +221,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'false' };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(STAGE.UNISSUED);
@@ -210,7 +234,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, latestAmendments: {} };
 
       // Act
-      const result = facilityItems('testUrl', facility, {}, 1);
+      const result = facilityItems('testUrl', facility, {}, [], 1);
 
       const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
 
@@ -237,7 +261,7 @@ describe('facilityItems', () => {
       };
 
       // Act
-      const result = facilityItems('testUrl', facility, latestAmendments, 1);
+      const result = facilityItems('testUrl', facility, latestAmendments, [], 1);
 
       const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
 
@@ -264,7 +288,7 @@ describe('facilityItems', () => {
       };
 
       // Act
-      const result = facilityItems('testUrl', facility, latestAmendments, 1);
+      const result = facilityItems('testUrl', facility, latestAmendments, [], 1);
 
       const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
 
@@ -276,6 +300,101 @@ describe('facilityItems', () => {
 
       // Assert
       expect(amendmentStatusResult).toEqual(expected);
+    });
+  });
+
+  describe('when checking the cover end date with amendments', () => {
+    it('should use the amendment cover end date when latestCompletedAmendment has changeCoverEndDate', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const amendmentCoverEndDate = '2026-12-20T00:00:00.000Z';
+      const expectedFormat = '20 December 2026';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        _id: 'test-facility-id',
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      const latestAmendments = {
+        'test-facility-id': {
+          status: 'in-progress',
+          changeCoverEndDate: true,
+        },
+      };
+
+      const amendmentsOnDeal = [
+        {
+          facilityId: 'test-facility-id',
+          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          changeCoverEndDate: true,
+          coverEndDate: amendmentCoverEndDate,
+        },
+      ];
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, amendmentsOnDeal, 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
+    });
+
+    it('should use the original cover end date when there is no latestCompletedAmendment', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const expectedFormat = '15 June 2025';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      // Act
+      const result = facilityItems('testUrl', facility, {}, [], 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
+    });
+
+    it('should use the original cover end date when latestCompletedAmendment does not have changeCoverEndDate', () => {
+      // Arrange
+      const originalCoverEndDate = '2025-06-15T00:00:00.000Z';
+      const amendmentCoverEndDate = '2026-12-20T00:00:00.000Z';
+      const expectedFormat = '15 June 2025';
+
+      const facility = {
+        ...MOCK_FACILITY_ONE,
+        _id: 'test-facility-id',
+        coverEndDate: originalCoverEndDate,
+        hasBeenIssued: 'true',
+      };
+
+      const latestAmendments = {
+        'test-facility-id': {
+          status: 'in-progress',
+          changeCoverEndDate: false,
+        },
+      };
+
+      const amendmentsOnDeal = [
+        {
+          facilityId: 'test-facility-id',
+          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          changeCoverEndDate: false,
+          coverEndDate: amendmentCoverEndDate,
+        },
+      ];
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, amendmentsOnDeal, 1);
+
+      // Assert
+      const coverEndDateItem = result.find((item) => item.id === 'coverEndDate');
+      expect(coverEndDateItem.method(originalCoverEndDate)).toEqual(expectedFormat);
     });
   });
 });
