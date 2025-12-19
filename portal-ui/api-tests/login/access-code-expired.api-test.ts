@@ -31,7 +31,7 @@ const mockedValidatePartialAuthToken = jest.mocked(validatePartialAuthToken);
 const { get, post } = createApi(app);
 
 const email = 'mock email';
-const password = 'mock password';
+const mockPassword = 'test-credentials';
 const partialAuthToken = 'partial auth token';
 
 describe('GET /login/access-code-expired', () => {
@@ -69,7 +69,7 @@ describe('GET /login/access-code-expired', () => {
         .calledWith(partialAuthToken)
         .mockResolvedValue({} as never);
       mockedLogin.mockImplementation(() => Promise.resolve(mockLogin(partialAuthToken)()));
-      sessionCookie = (await post({ email, password }).to('/login').then(extractSessionCookie)) as string;
+      sessionCookie = (await post({ email, password: mockPassword }).to('/login').then(extractSessionCookie)) as string;
     });
 
     it('should render the page title', async () => {
