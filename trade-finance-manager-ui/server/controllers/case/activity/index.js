@@ -166,7 +166,11 @@ const postComment = async (req, res) => {
   const { comment } = body;
 
   try {
-    if (comment.length > MAX_COMMENT_LENGTH) {
+    // Converts Windows-style line endings (\r\n) to Unix-style (\n)
+    // This is necessary because MAX_COMMENT_LENGTH counts \n as 1 character
+    const normalizedComment = comment ? comment.replace(/\r\n/g, '\n') : '';
+
+    if (normalizedComment.length > MAX_COMMENT_LENGTH) {
       const errorsCount = 0;
       let validationErrors = {};
 
@@ -180,7 +184,7 @@ const postComment = async (req, res) => {
         comment,
       });
     }
-    if (comment.length > 0) {
+    if (normalizedComment.length > 0) {
       const shortUser = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -190,7 +194,7 @@ const postComment = async (req, res) => {
         type: ACTIVITY_TYPES.COMMENT,
         timestamp: getUnixTime(new Date()),
         author: shortUser,
-        text: comment,
+        text: normalizedComment,
         label: CONSTANTS.ACTIVITIES.ACTIVITY_LABEL.COMMENT,
       };
       await api.createActivity(dealId, commentObj, userToken);
