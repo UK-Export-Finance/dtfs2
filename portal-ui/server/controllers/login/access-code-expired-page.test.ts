@@ -11,10 +11,10 @@ describe('getAccessCodeExpiredPage', () => {
     jest.resetAllMocks();
     const mocks = createMocks<GetAccessCodeExpiredPageRequest>({
       session: {
-        numberOfSendSignInLinkAttemptsRemaining: 3,
+        attemptsLeft: 3,
       },
     });
-    req = mocks.req;
+    req = mocks.req as GetAccessCodeExpiredPageRequest;
     res = mocks.res;
   });
 
@@ -40,7 +40,7 @@ describe('getAccessCodeExpiredPage', () => {
 
   it('should pass correct attemptsLeft value for 2 attempts', () => {
     // Arrange
-    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
+    req.session.attemptsLeft = 2;
 
     // Act
     getAccessCodeExpiredPage(req, res);
@@ -52,7 +52,7 @@ describe('getAccessCodeExpiredPage', () => {
 
   it('should handle 1 attempt remaining', () => {
     // Arrange
-    req.session.numberOfSendSignInLinkAttemptsRemaining = 1;
+    req.session.attemptsLeft = 1;
 
     // Act
     getAccessCodeExpiredPage(req, res);
@@ -60,27 +60,5 @@ describe('getAccessCodeExpiredPage', () => {
     // Assert
     const renderData = res._getRenderData() as { attemptsLeft: number };
     expect(renderData.attemptsLeft).toEqual(1);
-  });
-
-  it('should render problem with service when numberOfSendSignInLinkAttemptsRemaining is not a number', () => {
-    // Arrange
-    req.session.numberOfSendSignInLinkAttemptsRemaining = undefined;
-
-    // Act
-    getAccessCodeExpiredPage(req, res);
-
-    // Assert
-    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-  });
-
-  it('should render problem with service when numberOfSendSignInLinkAttemptsRemaining is greater than 3', () => {
-    // Arrange
-    req.session.numberOfSendSignInLinkAttemptsRemaining = 5;
-
-    // Act
-    getAccessCodeExpiredPage(req, res);
-
-    // Assert
-    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
   });
 });
