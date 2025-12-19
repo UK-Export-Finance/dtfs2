@@ -6,14 +6,15 @@ import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
+import { login, sendSignInLink, validatePartialAuthToken } from '../../server/api';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-  verify: jest.fn((req, res, next) => next()),
-}));
+jest.mock('@ukef/dtfs2-common', () => {
+  const actual = jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common');
+  return {
+    ...actual,
+    verify: jest.fn((_req: unknown, _res: unknown, next: () => unknown) => next()),
+  };
+});
 
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
@@ -22,10 +23,6 @@ jest.mock('../../server/api', () => ({
   validateToken: jest.fn(() => false),
   validatePartialAuthToken: jest.fn(),
 }));
-
-// Import mocked API after jest.mock
-// eslint-disable-next-line import/first
-import { login, sendSignInLink, validatePartialAuthToken } from '../../server/api';
 
 const mockedLogin = jest.mocked(login);
 const mockedSendSignInLink = jest.mocked(sendSignInLink);
@@ -52,8 +49,7 @@ describe('GET /login/access-code-expired', () => {
 
   beforeEach(() => {
     // Mock sendSignInLink for all tests to ensure session has attemptsLeft
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    mockedSendSignInLink.mockResolvedValue({ data: { attemptsLeft: 2 } } as any);
+    mockedSendSignInLink.mockResolvedValue({ data: { attemptsLeft: 2 } });
   });
 
   withPartial2faAuthValidationApiTests({
@@ -71,10 +67,8 @@ describe('GET /login/access-code-expired', () => {
       when(mockedValidatePartialAuthToken).resetWhenMocks();
       when(mockedValidatePartialAuthToken)
         .calledWith(partialAuthToken)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        .mockResolvedValue(undefined as any);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      mockedLogin.mockImplementation(mockLogin(partialAuthToken) as any);
+        .mockResolvedValue({} as never);
+      mockedLogin.mockImplementation(() => Promise.resolve(mockLogin(partialAuthToken)()));
       sessionCookie = (await post({ email, password }).to('/login').then(extractSessionCookie)) as string;
     });
 
