@@ -53,7 +53,7 @@ const createAndLogInAsInitialTfmUser = async () => {
 
     return token;
   } catch (error) {
-    console.error('❌ Login failed for primary TFM mock loader user, recreating.');
+    console.error('❌ Login failed for primary TFM mock loader user %o, recreating.');
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
     return api.loginTfmUser(mockDataLoaderTFMUser);
   }
