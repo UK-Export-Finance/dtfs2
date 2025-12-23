@@ -321,7 +321,7 @@ export class TfmFacilitiesRepo {
   public static async findAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByFacilityId(facilityId))
+      .aggregate([...aggregatePipelines.amendmentsByFacilityId(facilityId), { $sort: { 'amendments.referenceNumber': -1, 'amendments.version': -1 } }])
       .map<Document>((doc) => doc.amendments as Document)
       .toArray();
   }
