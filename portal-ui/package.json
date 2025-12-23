@@ -29,7 +29,7 @@
     "start:dev": "npx nodemon server/index.ts --config ../nodemon.json",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js --maxWorkers=1",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.j",
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
