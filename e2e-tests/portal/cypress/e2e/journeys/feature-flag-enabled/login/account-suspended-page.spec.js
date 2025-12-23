@@ -1,5 +1,8 @@
-const accountSuspendedPage = require('../../../pages/login/account-suspended-page');
-const relative = require('../../../relativeURL');
+import accountSuspendedPage from '../../../pages/login/account-suspended-page';
+import relative from '../../../relativeURL';
+
+const url = relative('/login/temporarily-suspended-access-code');
+const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
 
 context('Portal temporarily suspended access code page', () => {
   beforeEach(() => {
@@ -8,29 +11,27 @@ context('Portal temporarily suspended access code page', () => {
 
   describe('when visiting the temporarily suspended access code page', () => {
     beforeEach(() => {
-      accountSuspendedPage.visit();
+      cy.visit(url);
     });
 
     it('should display the correct URL', () => {
-      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
-    });
-
-    it('should render the page with status 200', () => {
-      cy.request('/login/temporarily-suspended-access-code').its('status').should('eq', 200);
+      cy.url().should('eq', url);
     });
 
     it('should display the page heading', () => {
-      accountSuspendedPage.heading().should('exist');
-      accountSuspendedPage.heading().should('be.visible');
+      cy.assertText(accountSuspendedPage.heading(), 'This account has been temporarily suspended');
     });
 
     it('should display the page body text', () => {
-      accountSuspendedPage.bodyText().should('exist');
-      accountSuspendedPage.bodyText().should('be.visible');
+      cy.assertText(accountSuspendedPage.bodyText(), 'This can happen if there are too many failed attempts to login or sign in link requests.');
     });
 
-    it('should display a contact link if present', () => {
-      accountSuspendedPage.contactLink().should('exist');
+    it('should display a contact link', () => {
+      cy.assertText(accountSuspendedPage.contactLink(), contactUsEmailAddress);
+      accountSuspendedPage.contactLink().should('have.attr', 'href', `mailto:${contactUsEmailAddress}`);
     });
   });
+
+  // TODO: 8217: add tests to verify access is blocked to protected routes
+  // it('should block access to protected routes when account is suspended');
 });
