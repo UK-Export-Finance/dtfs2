@@ -11,6 +11,7 @@ const {
   AMENDMENT_TYPES,
   STATUS_TAG_COLOURS,
   isDealCancelled,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
@@ -189,8 +190,12 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
  * @returns {import('@ukef/dtfs2-common').AmendmentWithEligibilityRows[]} - the mapped portal amendments
  */
 const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
-  const amendments = amendmentsArray;
+  let amendments = amendmentsArray;
 
+  if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
+    // sort by reference number and reverse so most recent first
+    amendments = amendmentsArray.sort((a, b) => a.referenceNumber - b.referenceNumber).reverse();
+  }
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
 
