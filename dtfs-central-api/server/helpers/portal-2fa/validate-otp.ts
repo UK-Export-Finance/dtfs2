@@ -2,8 +2,16 @@ import { HttpStatusCode } from 'axios';
 import { PortalUser, SIGN_IN_OTP_STATUS } from '@ukef/dtfs2-common';
 import { signInTokenStatus } from './sign-in-token-status';
 
-export const validateOtp = (securityCode: string, user: PortalUser) => {
-  const status = signInTokenStatus(user, securityCode);
+/**
+ * Validates provided OTP code
+ * if successful, returns success and isValid flag as true and statusCode
+ * if unsuccessful, returns success as false with appropriate flags and statusCode
+ * @param otpCode - provided OTP code
+ * @param user - user object
+ * @returns validation result object
+ */
+export const validateOtp = (otpCode: string, user: PortalUser) => {
+  const status = signInTokenStatus(user, otpCode);
 
   switch (status) {
     case SIGN_IN_OTP_STATUS.VALID:

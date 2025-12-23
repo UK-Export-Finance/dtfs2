@@ -21,6 +21,12 @@ const headers = {
   },
 };
 
+/**
+ * creates a sign in OTP code for the user and emails it to them
+ * @param {import('@ukef/dtfs2-common').PortalUser} user
+ * @param {object} auditDetails
+ * @returns data from the API call
+ */
 const createSignInOTPCode = async (user, auditDetails) => {
   try {
     const response = await axios({
@@ -32,21 +38,28 @@ const createSignInOTPCode = async (user, auditDetails) => {
         auditDetails,
       },
     });
-    console.log(response.data);
+
     return response.data;
   } catch ({ response }) {
     return response?.data;
   }
 };
 
-const verifySignInOTPCode = async (user, signInOTPCode, auditDetails) => {
+/**
+ * verifies the sign in OTP code for the user and signs in the user if valid
+ * @param {string} userId
+ * @param {string} signInOTPCode
+ * @param {object} auditDetails
+ * @returns response from the API call
+ */
+const verifySignInOTPCode = async (userId, signInOTPCode, auditDetails) => {
   try {
     return await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/users/me/validate-sign-in-code`,
       headers: headers.central,
       data: {
-        user,
+        userId,
         signInOTPCode,
         auditDetails,
       },

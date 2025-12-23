@@ -24,3 +24,5 @@ export * from './eligibility-criteria-not-found.error';
 export * from './amendment-incomplete.error';
 export * from './portal-facility-amendment-conflict.error';
 export * from './invalid-amendment-status.error';
+export * from './invalid-user-id.error';
+export * from './invalid-session-identifier.error';

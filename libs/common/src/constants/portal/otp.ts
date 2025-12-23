@@ -18,3 +18,17 @@ export const STATUS_BLOCKED_REASON = {
  * VALID -- Token is both in date and the latest token sent
  * */
 export const SIGN_IN_OTP_STATUS = { NOT_FOUND: 'Not Found', EXPIRED: 'Expired', VALID: 'Valid', INVALID: 'Invalid' };
+
+export const OTP_ERROR_CAUSES = {
+  TOKEN_EXPIRED: 'OTP Expired',
+  OTP_INVALID: 'OTP Invalid',
+  OTP_NOT_FOUND: 'OTP Not Found',
+};
+
+export const SESSION_EXPIRY = '12h';
+
+export const BUFFER_ENCODING = 'base64';
+
+export const KEY_STRING_TYPE = 'ascii';
+
+export const JWT_ALGORITHM = 'RS256';

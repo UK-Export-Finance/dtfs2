@@ -211,7 +211,11 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
+module.exports.createAndEmailSignInOTP = (req, res) => signInLinkController.createAndEmailSignInOTP(req, res);
+
 module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWithSignInLink(req, res);
+
+module.exports.loginWithOTP = (req, res) => signInLinkController.loginWithOTP(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
