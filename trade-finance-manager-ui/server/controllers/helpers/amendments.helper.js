@@ -193,10 +193,9 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
   let amendments = amendmentsArray;
 
   if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
-    // reverses array so most recent first
-    amendments = amendmentsArray.reverse();
+    // sort by reference number and reverse so most recent first
+    amendments = amendmentsArray.sort((a, b) => a.referenceNumber - b.referenceNumber).reverse();
   }
-
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
 
