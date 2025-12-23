@@ -19,7 +19,7 @@ const CHANGED_FACILITY_VALUE_3 = '40000';
 const submittedByString = `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname} - ${BANK1_MAKER1.bank.name}`;
 
 context(
-  'Amendments - TFM - Amendments details page - TFM should display portal amendments and tfm amendments on the amendment details page in correct order',
+  'Amendments - TFM - Amendments details page - TFM should display portal amendments and tfm amendments on the amendment details page in descending order',
   () => {
     let dealId;
     let facilityId;
@@ -94,7 +94,7 @@ context(
       facilityPage.facilityTabAmendments().click();
     });
 
-    it('should display a row for the first portal amendment', () => {
+    it('should display the first row with the newest amendment', () => {
       cy.assertText(amendmentsPage.amendmentDetails.row(3).heading(), `Amendment ${ukefFacilityId}-001`);
       cy.assertText(amendmentsPage.amendmentDetails.row(3).submittedBy(), submittedByString);
       cy.assertText(amendmentsPage.amendmentDetails.row(3).requireApproval(), 'No');
@@ -110,7 +110,7 @@ context(
       cy.assertText(amendmentsPage.amendmentDetails.row(3).effectiveDateTable(), today.dd_MMMM_yyyy);
     });
 
-    it('should display a row for the second portal amendment', () => {
+    it('should display the second row with the 2nd newest amendment', () => {
       cy.assertText(amendmentsPage.amendmentDetails.row(2).heading(), `Amendment ${ukefFacilityId}-002`);
       cy.assertText(amendmentsPage.amendmentDetails.row(2).submittedBy(), submittedByString);
       cy.assertText(amendmentsPage.amendmentDetails.row(2).requireApproval(), 'No');
@@ -126,7 +126,7 @@ context(
       cy.assertText(amendmentsPage.amendmentDetails.row(2).effectiveDateTable(), today.dd_MMMM_yyyy);
     });
 
-    it('should display a row for the third portal amendment', () => {
+    it('should display the third row with the 3rd newest amendment', () => {
       cy.assertText(amendmentsPage.amendmentDetails.row(1).heading(), `Amendment ${ukefFacilityId}-003`);
 
       cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDate(), today.dd_MMMM_yyyy);
