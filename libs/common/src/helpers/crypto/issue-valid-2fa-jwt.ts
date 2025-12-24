@@ -1,5 +1,5 @@
 import jsonwebtoken from 'jsonwebtoken';
-import { PORTAL_LOGIN_STATUS, SESSION_EXPIRY, JWT_ALGORITHM, BUFFER_ENCODING, KEY_STRING_TYPE } from '../../constants';
+import { PORTAL_LOGIN_STATUS, SESSION_EXPIRY, JWT_ALGORITHM, BUFFER_ENCODING, ASCII_STRING_TYPE } from '../../constants';
 import { PortalUser } from '../../types';
 
 /**
@@ -19,7 +19,7 @@ export const issueValid2FAJWT = (user: PortalUser) => {
     throw new Error('JWT signing key is not set in environment variables');
   }
 
-  const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, BUFFER_ENCODING).toString(KEY_STRING_TYPE);
+  const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, BUFFER_ENCODING).toString(ASCII_STRING_TYPE);
 
   const { _id, sessionIdentifier } = user;
 

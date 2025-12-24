@@ -12,7 +12,7 @@ import { hash } from '@ukef/dtfs2-common';
  */
 export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string) => {
   try {
-    console.info('Validating OTP');
+    console.info('Validating OTP hash');
 
     /**
      * generates a hash for the provided OTP code
@@ -25,8 +25,8 @@ export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string) =>
 
     return crypto.timingSafeEqual(new Uint8Array(otpHashBuffer), new Uint8Array(hashVerify));
   } catch (error) {
-    console.error('Error validating OTP %o', error);
+    console.error('Error validating OTP hash %o', error);
 
-    throw new Error(`Error validating OTP`);
+    throw new Error(`Error validating OTP hash`);
   }
 };

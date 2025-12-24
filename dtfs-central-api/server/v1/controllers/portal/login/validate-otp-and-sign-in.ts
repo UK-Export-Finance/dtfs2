@@ -19,13 +19,15 @@ export const validateOTPAndSignIn = async (
   req: CustomExpressRequest<{ reqBody: { userId: string; signInOTPCode: string; auditDetails: AuditDetails } }>,
   res: Response,
 ) => {
+  console.info('Validating OTP and signing in user %s', req.body.userId);
+
   const { userId, signInOTPCode, auditDetails } = req.body;
 
   const user = await getUserById(userId);
 
   // If no user or no sign-in tokens are found, return 404 Not Found
   if (!user || !user?.signInTokens?.length) {
-    console.info('Unable to verify account sign in code - no account exists with the provided ID');
+    console.info('Unable to verify account sign in code - no account exists with the provided ID: %s', userId);
 
     return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
   }
@@ -34,6 +36,7 @@ export const validateOTPAndSignIn = async (
 
   // If the user is blocked or disabled, return 403 Forbidden
   if (userIsBlockedOrDisabled) {
+    console.info('User %s is blocked or disabled', user.email);
     return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
   }
 
@@ -46,7 +49,7 @@ export const validateOTPAndSignIn = async (
    * and return 200 OK with user and token and success flag
    */
   if (otpResponse.success && otpResponse.isValid) {
-    console.info(`User ${user.email} successfully signed in with OTP.`);
+    console.info(`User %s provided a valid OTP, issuing JWT and signing in`, user.email);
 
     const { sessionIdentifier, ...tokenObject } = issueValid2FAJWT(user);
 
@@ -56,6 +59,6 @@ export const validateOTPAndSignIn = async (
   }
 
   // If the OTP is invalid, expired, or not found, return the appropriate response
-  console.info('Unable to verify account sign in code');
+  console.error('Unable to verify account sign in code for user %s', user.email);
   return res.status(otpResponse.statusCode).send(otpResponse);
 };

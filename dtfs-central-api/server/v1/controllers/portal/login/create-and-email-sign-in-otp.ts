@@ -17,17 +17,21 @@ import { PortalUsersRepo } from '../../../../repositories/users-repo';
  */
 export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBody: { user: PortalUser; auditDetails: AuditDetails } }>, res: Response) => {
   try {
+    console.info('Creating and emailing sign in OTP for user %s', req.body.user._id);
+
     const { user, auditDetails } = req.body;
 
     const doesUserExist = user && user._id && user.email && user.firstname && user.surname;
 
     if (!doesUserExist || !auditDetails) {
+      console.info('User or auditDetails not found for user %s', user?._id);
       return res.status(HttpStatusCode.NotFound).send({ message: 'User or auditDetails not found' });
     }
 
     const userIsBlockedOrDisabled = isUserBlockedOrDisabled(user);
 
     if (userIsBlockedOrDisabled) {
+      console.info('User %s is blocked or disabled', user._id);
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
@@ -39,6 +43,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
 
+    console.info('Saving sign in OTP for user %s', user._id);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
@@ -47,7 +52,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {
-    console.error('Failed to create and email sign in OTP %o', error);
+    console.error('Failed to create and email sign in OTP for user %s: %o', req.body.user._id, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({ message: error instanceof Error ? error.message : 'An unexpected error occurred' });
   }

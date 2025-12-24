@@ -5,6 +5,7 @@ export const OTP = {
   SIGN_IN_LINK_DURATION_MINUTES: signInLinkDurationMinutes,
   DURATION_MILLISECONDS: signInLinkDurationMinutes * 60 * 1000,
   MAX_SIGN_IN_ATTEMPTS: 3,
+  TIME_TO_RESET_SIGN_IN_OTP_SEND_COUNT_IN_MILLISECONDS: 12 * 60 * 60 * 1000,
 };
 
 export const STATUS_BLOCKED_REASON = {
@@ -29,6 +30,8 @@ export const SESSION_EXPIRY = '12h';
 
 export const BUFFER_ENCODING = 'base64';
 
-export const KEY_STRING_TYPE = 'ascii';
+export const ASCII_STRING_TYPE = 'ascii';
+
+export const HEX_STRING_TYPE = 'hex';
 
 export const JWT_ALGORITHM = 'RS256';

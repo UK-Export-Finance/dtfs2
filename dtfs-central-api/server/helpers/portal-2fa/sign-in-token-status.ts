@@ -14,37 +14,41 @@ import { isSignInOtpInDate } from './is-sign-in-otp-in-date';
  * @returns status of the sign in token
  */
 export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
+  console.info('Checking sign in token status for user %s', user._id);
+
   const userHasSignInTokens = doesUserHaveSignInTokens(user);
 
   // if no tokens found then return not found
   if (!user?.signInTokens || !userHasSignInTokens) {
+    console.info('No sign in tokens found for user %s', user._id);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
-  const databaseSignInTokens = [...user.signInTokens];
-  // get the latest sign in token index
-  const latestSignInTokensLength = databaseSignInTokens.length - 1;
-
-  const latestSignInToken = databaseSignInTokens[latestSignInTokensLength];
+  const { signInTokens } = user;
+  const latestToken = signInTokens[signInTokens.length - 1];
 
   // if any of the required fields are missing, return not found
-  if (!latestSignInToken?.hashHex || !latestSignInToken?.saltHex || !latestSignInToken?.expiry) {
+  if (!latestToken?.hashHex || !latestToken?.saltHex || !latestToken?.expiry) {
+    console.info('Latest sign in token is missing required fields for user %s', user._id);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
   // verify if the OTP code is correct compared to stored database hash
-  const isOtpCorrect = verifyHash(signInCode, latestSignInToken.saltHex, latestSignInToken.hashHex);
+  const isOtpCorrect = verifyHash(signInCode, latestToken.saltHex, latestToken.hashHex);
 
   if (!isOtpCorrect) {
+    console.info('Sign in OTP is invalid for user %s', user._id);
     return SIGN_IN_OTP_STATUS.INVALID;
   }
 
   // checks if the sign in token is still in date
-  const signInTokenInDate = isSignInOtpInDate(latestSignInToken.expiry);
+  const signInTokenInDate = isSignInOtpInDate(latestToken.expiry);
 
   if (!signInTokenInDate) {
+    console.info('Sign in OTP is expired for user %s', user._id);
     return SIGN_IN_OTP_STATUS.EXPIRED;
   }
 
+  console.info('Sign in OTP is valid for user %s', user._id);
   return SIGN_IN_OTP_STATUS.VALID;
 };
