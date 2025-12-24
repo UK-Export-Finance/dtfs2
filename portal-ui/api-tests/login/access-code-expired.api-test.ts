@@ -94,7 +94,7 @@ describe('GET /login/access-code-expired', () => {
     it('should render the attempts remaining paragraph with correct data-cy attribute and value', async () => {
       const response = await get('/login/access-code-expired', {}, { Cookie: sessionCookie });
       expect(response.text).toContain('data-cy="access-code-expired-attempts-info"');
-      // TEMPORARY: Currently displays default value of 3 until session management is implemented
+      // TODO DTFS2-8222: Remove default value 3 and ensure attemptsLeft is passed from session when session management is implemented
       expect(response.text).toContain('You have 3 attempts remaining');
     });
 

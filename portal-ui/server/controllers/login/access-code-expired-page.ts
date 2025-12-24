@@ -15,7 +15,7 @@ export type GetAccessCodeExpiredPageRequest = BaseRequest & {
  * @param res - the response object
  */
 export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, res: Response) => {
-  // TODO: Uncomment the code below when session management for access code attempts is implemented
+  // TODO DTFS2-8222: Uncomment the code below when session management for access code attempts is implemented
   // and remove the default value workaround
   // const {
   //   session: { attemptsLeft },
@@ -27,7 +27,7 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
   //   return res.render('_partials/problem-with-service.njk');
   // }
 
-  // TEMPORARY: Using default value of 3 until session management is implemented
+  // TODO DTFS2-8222: Remove default value workaround when session management for access code attempts is implemented
   // The attemptsLeft will be set by the login/access code flow
   const attemptsLeft = req.session.attemptsLeft ?? 3;
 

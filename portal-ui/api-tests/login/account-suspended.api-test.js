@@ -1,5 +1,5 @@
-const { createApi } = require('@ukef/dtfs2-common/api-test');
-const app = require('../../server/createApp');
+import { createApi } from '@ukef/dtfs2-common/api-test';
+import app from '../../server/createApp';
 
 const { get } = createApi(app);
 
