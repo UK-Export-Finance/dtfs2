@@ -91,7 +91,6 @@
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "@types/jest-when": "^3.5.5",
-    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.12.13",
     "@types/supertest": "^6.0.2",
     "cross-var": "^1.1.0",
