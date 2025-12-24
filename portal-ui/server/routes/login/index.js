@@ -1,5 +1,4 @@
 const express = require('express');
-const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
@@ -97,19 +96,20 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       /**
        * Send sign in link or OTP depending on whether 2FA feature flag is enabled
        */
-      if (isPortal2FAFeatureFlagEnabled()) {
-        const {
-          data: { numberOfSendSignInLinkAttemptsRemaining },
-        } = await api.sendSignInOTP(req.session.userToken);
+      // TODO: DTFS2-7034 - re-enable when 2FA code can be entered
+      // if (isPortal2FAFeatureFlagEnabled()) {
+      //   const {
+      //     data: { numberOfSendSignInLinkAttemptsRemaining },
+      //   } = await api.sendSignInOTP(req.session.userToken);
 
-        req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-      } else {
-        const {
-          data: { numberOfSendSignInLinkAttemptsRemaining },
-        } = await api.sendSignInLink(req.session.userToken);
+      //   req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+      // } else {
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
 
-        req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-      }
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+      // }
     } catch (sendSignInLinkError) {
       if (sendSignInLinkError.response?.status === 403) {
         req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
