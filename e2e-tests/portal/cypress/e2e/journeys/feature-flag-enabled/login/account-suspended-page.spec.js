@@ -32,6 +32,6 @@ context('Portal temporarily suspended access code page', () => {
     });
   });
 
-  // TODO: DTFS2-8217: add tests to verify access is blocked to protected routes
+  // TODO: DTFS-8217: add tests to verify access is blocked to protected routes
   // it('should block access to protected routes when account is suspended');
 });
