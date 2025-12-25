@@ -39,6 +39,19 @@ runs:
       with:
         ref: ${{ inputs.branch }}
 
+    - name: Sanitise Azure config 🧹
+      run: |
+        mkdir -p "$HOME/.azure"
+        if [ -f "$HOME/.azure/config" ]; then
+          echo "⚠️ Backing up existing Azure config to $HOME/.azure/config.bak.$(date +%s)"
+          cp "$HOME/.azure/config" "$HOME/.azure/config.bak.$(date +%s)" || true
+        fi
+        # create an empty valid INI file to avoid parser errors
+        printf "\n" > "$HOME/.azure/config"
+        chmod 600 "$HOME/.azure/config" || true
+        echo "✅ Azure config sanitized"
+      shell: bash
+
     - name: Defaults Log 📝
       run: echo "🔧 Setting up Azure CLI defaults for region '${{ inputs.region }}' and group '${{ inputs.group }}'"
       shell: bash
