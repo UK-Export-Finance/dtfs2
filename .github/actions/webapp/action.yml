@@ -29,32 +29,24 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Repository Log 📝
-      run: echo "🔍 Checking out repository branch '${{ inputs.branch }}'"
-      shell: bash
-
     # Step 1: Check out the repository.
     - name: Repository 🗃️
       uses: actions/checkout@v6
       with:
         ref: ${{ inputs.branch }}
 
-    - name: Sanitise Azure config 🧹
-      run: |
-        mkdir -p "$HOME/.azure"
-        if [ -f "$HOME/.azure/config" ]; then
-          echo "⚠️ Backing up existing Azure config to $HOME/.azure/config.bak.$(date +%s)"
-          cp "$HOME/.azure/config" "$HOME/.azure/config.bak.$(date +%s)" || true
-        fi
-        # create an empty valid INI file to avoid parser errors
-        printf "\n" > "$HOME/.azure/config"
-        chmod 600 "$HOME/.azure/config" || true
-        echo "✅ Azure config sanitized"
-      shell: bash
-
-    - name: Defaults Log 📝
-      run: echo "🔧 Setting up Azure CLI defaults for region '${{ inputs.region }}' and group '${{ inputs.group }}'"
-      shell: bash
+    # - name: Sanitise Azure config 🧹
+    #   run: |
+    #     mkdir -p "$HOME/.azure"
+    #     if [ -f "$HOME/.azure/config" ]; then
+    #       echo "⚠️ Backing up existing Azure config to $HOME/.azure/config.bak.$(date +%s)"
+    #       cp "$HOME/.azure/config" "$HOME/.azure/config.bak.$(date +%s)" || true
+    #     fi
+    #     # create an empty valid INI file to avoid parser errors
+    #     printf "\n" > "$HOME/.azure/config"
+    #     chmod 600 "$HOME/.azure/config" || true
+    #     echo "✅ Azure config sanitized"
+    #   shell: bash
 
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
@@ -62,15 +54,8 @@ runs:
       with:
         inlineScript: |
           # Basic
-          echo "📝 Configuring location..."
           az configure --defaults location=${{ inputs.region }}
-          echo "📝 Configuring resource group..."
           az configure --defaults group=${{ inputs.group }}
-          echo "✅ Azure CLI defaults configured"
-
-    - name: Azure Login Log 📝
-      run: echo "🔐 Logging in to Azure..."
-      shell: bash
     
     # Step 3: Log in to Azure.
     - name: Azure 🔐
