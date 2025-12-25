@@ -29,11 +29,19 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Repository Log 📝
+      run: echo "🔍 Checking out repository branch '${{ inputs.branch }}'"
+      shell: bash
+
     # Step 1: Check out the repository.
     - name: Repository 🗃️
       uses: actions/checkout@v6
       with:
         ref: ${{ inputs.branch }}
+
+    - name: Defaults Log 📝
+      run: echo "🔧 Setting up Azure CLI defaults for region '${{ inputs.region }}' and group '${{ inputs.group }}'"
+      shell: bash
 
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
@@ -41,9 +49,16 @@ runs:
       with:
         inlineScript: |
           # Basic
+          echo "📝 Configuring location..."
           az configure --defaults location=${{ inputs.region }}
+          echo "📝 Configuring resource group..."
           az configure --defaults group=${{ inputs.group }}
+          echo "✅ Azure CLI defaults configured"
 
+    - name: Azure Login Log 📝
+      run: echo "🔐 Logging in to Azure..."
+      shell: bash
+    
     # Step 3: Log in to Azure.
     - name: Azure 🔐
       uses: azure/login@v2
@@ -53,6 +68,7 @@ runs:
     # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
       run: |
+        echo "🔍 Retrieving Azure Container Registry and WebApp information"
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
         echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
