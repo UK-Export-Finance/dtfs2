@@ -29,11 +29,10 @@ name: Deployment
 run-name: 🚀 Deploying to dev
 
 on:
-  schedule:
-    - cron: '0 19 * * *'
 
   push:
     branches:
+      - chore/deployment-fix-az-cli
       # Manual deployment
       - dev
 
