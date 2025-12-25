@@ -76,6 +76,8 @@ jobs:
           fi
 
       - name: Execute ⚡
+        env:
+          AZURE_CONFIG_DIR: ${{ runner.temp }}/azcli
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
