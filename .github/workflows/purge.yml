@@ -5,8 +5,9 @@ permissions:
   contents: read
 
 on:
-  schedule:
-    - cron: '0 23 * * *'
+  push:
+    branches:
+      - chore/deployment-fix-az-cli
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
@@ -77,6 +78,8 @@ jobs:
 
       - name: Execute ⚡
         uses: ./.github/actions/acr
+        env:
+          AZURE_CONFIG_DIR: ${{ runner.temp }}/azcli
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
           subscription: ${{ env.SUBSCRIPTION }}

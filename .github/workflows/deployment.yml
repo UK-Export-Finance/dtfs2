@@ -32,7 +32,6 @@ on:
 
   push:
     branches:
-      - chore/deployment-fix-az-cli
       # Manual deployment
       - dev
 
