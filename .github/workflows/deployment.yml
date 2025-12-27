@@ -67,12 +67,6 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     steps:
-      - name: Set Azure CLI config dir
-        shell: bash
-        run: |
-          echo "AZURE_CONFIG_DIR=${RUNNER_TEMP}/azcli/${GITHUB_JOB}" >> $GITHUB_ENV
-          mkdir -p "${RUNNER_TEMP}/azcli/${GITHUB_JOB}"
-
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
