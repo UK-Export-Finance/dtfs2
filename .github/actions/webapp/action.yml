@@ -58,12 +58,15 @@ runs:
       shell: bash
       run: |
         echo "AZURE_CONFIG_DIR=$AZURE_CONFIG_DIR"
-        echo "Contents of the AZURE_CONFIG_DIR:"
+        echo "Contents of AZURE_CONFIG_DIR:"
         ls -la "$AZURE_CONFIG_DIR" || true
-        echo "Listing all files in depth 2:"
+        echo "Listing all files recursively (depth 2):"
         find "$AZURE_CONFIG_DIR" -maxdepth 2 -type f || true
-        echo "Check that ~/.azure is NOT being used"
+        echo "Checking home directory ~/.azure"
         ls -la "$HOME/.azure" || true
+        echo "Azure CLI account and configuration:"
+        az account show
+        az configure list
 
     # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
