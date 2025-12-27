@@ -66,7 +66,7 @@ runs:
         ls -la "$HOME/.azure" || true
         echo "Azure CLI account and configuration:"
         az account show
-        az configure list
+        az configure --list-defaults
 
     # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
