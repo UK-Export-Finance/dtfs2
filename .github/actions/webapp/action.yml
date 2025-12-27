@@ -50,6 +50,24 @@ runs:
       with:
         creds: ${{ inputs.credentials }}
 
+    - name: Azure CLI config debug test
+      shell: bash
+      run: |
+        echo "AZURE_CONFIG_DIR=${AZURE_CONFIG_DIR:-not set}"
+        if [ -d "$AZURE_CONFIG_DIR" ]; then
+          echo "Runner temp directory exists:"
+          ls -la "$AZURE_CONFIG_DIR"
+        else
+          echo "Runner temp directory does NOT exist"
+        fi
+
+        echo "Checking home directory ~/.azure"
+        if [ -d "$HOME/.azure" ]; then
+          ls -la "$HOME/.azure"
+        else
+          echo "~/.azure does NOT exist"
+        fi
+
     # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
       run: |
