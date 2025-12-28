@@ -38,6 +38,8 @@ runs:
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
       uses: azure/cli@v2.1.0
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
       with:
         inlineScript: |
           # Basic
@@ -47,11 +49,15 @@ runs:
     # Step 3: Log in to Azure.
     - name: Azure 🔐
       uses: azure/login@v2
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
       with:
         creds: ${{ inputs.credentials }}
 
     # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
@@ -83,6 +89,8 @@ runs:
     # Step 7: Create and swap deployment slot.
     - name: Slot 🔀
       uses: azure/cli@v2.1.0
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
       with:
         inlineScript: |
           # Create new temporary slot
@@ -103,6 +111,8 @@ runs:
     - name: Cleanup 🧹
       if: always()
       uses: azure/cli@v2.1.0
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
       with:
         inlineScript: |
           # Delete temporary slot
