@@ -5,8 +5,9 @@ permissions:
   contents: read
 
 on:
-  schedule:
-    - cron: '0 23 * * *'
+  push:
+    branches:
+      - chore/deployment-fix-az-cli
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
@@ -52,6 +53,12 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Set Azure CLI config dir
+        shell: bash
+        run: |
+          echo "AZURE_CONFIG_DIR=${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.acr }}" >> $GITHUB_ENV
+          mkdir -p "${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.acr }}"
+
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
@@ -78,7 +85,7 @@ jobs:
       - name: Execute ⚡
         uses: ./.github/actions/acr
         env:
-          AZURE_CONFIG_DIR: ${{ runner.temp }}/azcli
+          AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
           subscription: ${{ env.SUBSCRIPTION }}
