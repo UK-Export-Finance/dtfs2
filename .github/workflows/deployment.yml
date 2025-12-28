@@ -106,8 +106,8 @@ jobs:
       - name: Set Azure CLI config dir
         shell: bash
         run: |
-          echo "AZURE_CONFIG_DIR=${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}" >> $GITHUB_ENV
-          mkdir -p "${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}"
+          echo "AZURE_CONFIG_DIR=${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}" >> $GITHUB_ENV
+          mkdir -p "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}"
 
       - name: Repository 🗂️
         uses: actions/checkout@v6
@@ -147,8 +147,8 @@ jobs:
       - name: Set Azure CLI config dir
         shell: bash
         run: |
-          echo "AZURE_CONFIG_DIR=${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.functions }}" >> $GITHUB_ENV
-          mkdir -p "${RUNNER_TEMP}/azcli/${GITHUB_JOB}-${{ matrix.functions }}"
+          echo "AZURE_CONFIG_DIR=${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.functions }}" >> $GITHUB_ENV
+          mkdir -p "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.functions }}"
 
       - name: Repository 🗂️
         uses: actions/checkout@v6

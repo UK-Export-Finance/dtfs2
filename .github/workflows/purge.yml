@@ -5,9 +5,8 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches:
-      - chore/deployment-fix-az-cli
+  schedule:
+    - cron: '0 23 * * *'
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
