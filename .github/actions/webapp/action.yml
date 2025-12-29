@@ -35,6 +35,25 @@ runs:
       with:
         ref: ${{ inputs.branch }}
 
+    - name: Print AZURE_CONFIG_DIR path
+      shell: bash
+      env:
+        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
+      run: |
+        if [ -z "${AZURE_CONFIG_DIR}" ]; then
+          echo "AZURE_CONFIG_DIR is not set"
+          exit 0
+        fi
+        echo "AZURE_CONFIG_DIR (raw): ${AZURE_CONFIG_DIR}"
+        # Print absolute/expanded path without listing files
+        if command -v realpath >/dev/null 2>&1; then
+          realpath "${AZURE_CONFIG_DIR}" || echo "realpath failed"
+        elif command -v readlink >/dev/null 2>&1; then
+          readlink -f "${AZURE_CONFIG_DIR}" || echo "readlink failed"
+        else
+          printf 'Full path (best-effort): %s\n' "${AZURE_CONFIG_DIR}"
+        fi
+
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
       uses: azure/cli@v2.1.0
@@ -55,67 +74,67 @@ runs:
         creds: ${{ inputs.credentials }}
 
     # Step 4: Set environment variables for ACR and WebApp.
-    - name: CLI 📝
-      shell: bash
-      env:
-        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
-      run: |
-        echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-        echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-        echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
+    # - name: CLI 📝
+    #   shell: bash
+    #   env:
+    #     AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
+    #   run: |
+    #     echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+    #     echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+    #     echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
 
-    # Step 5: Log in to Azure Container Registry.
-    - name: ACR 🔐
-      uses: azure/docker-login@v2
-      with:
-        login-server: ${{ env.ACR }}
-        username: ${{ env.ACR_USER }}
-        password: ${{ inputs.acr }}
+    # # Step 5: Log in to Azure Container Registry.
+    # - name: ACR 🔐
+    #   uses: azure/docker-login@v2
+    #   with:
+    #     login-server: ${{ env.ACR }}
+    #     username: ${{ env.ACR_USER }}
+    #     password: ${{ inputs.acr }}
 
-    # Step 6: Build and push Docker images.
-    - name: Artefacts 🗃️
-      working-directory: .
-      shell: bash
-      run: |
-        # Build images
-        docker build -f ./${{ inputs.webapp }}/Dockerfile . \
-        -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }} \
-        -t ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-        --build-arg GITHUB_SHA=${{ github.sha }}
-        # Push images
-        docker push ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }}
-        docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
+    # # Step 6: Build and push Docker images.
+    # - name: Artefacts 🗃️
+    #   working-directory: .
+    #   shell: bash
+    #   run: |
+    #     # Build images
+    #     docker build -f ./${{ inputs.webapp }}/Dockerfile . \
+    #     -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }} \
+    #     -t ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+    #     --build-arg GITHUB_SHA=${{ github.sha }}
+    #     # Push images
+    #     docker push ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }}
+    #     docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
 
-    # Step 7: Create and swap deployment slot.
-    - name: Slot 🔀
-      uses: azure/cli@v2.1.0
-      env:
-        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
-      with:
-        inlineScript: |
-          # Create new temporary slot
-          az webapp deployment slot create \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --configuration-source ${{ env.WEBAPP }} \
-          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-          --docker-registry-server-user ${{ env.ACR_USER }} \
-          --docker-registry-server-password ${{ inputs.acr }}
-          # Swap slot
-          az webapp deployment slot swap \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --action swap
+    # # Step 7: Create and swap deployment slot.
+    # - name: Slot 🔀
+    #   uses: azure/cli@v2.1.0
+    #   env:
+    #     AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
+    #   with:
+    #     inlineScript: |
+    #       # Create new temporary slot
+    #       az webapp deployment slot create \
+    #       --slot ${{ github.sha }} \
+    #       --name ${{ env.WEBAPP }} \
+    #       --configuration-source ${{ env.WEBAPP }} \
+    #       --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+    #       --docker-registry-server-user ${{ env.ACR_USER }} \
+    #       --docker-registry-server-password ${{ inputs.acr }}
+    #       # Swap slot
+    #       az webapp deployment slot swap \
+    #       --slot ${{ github.sha }} \
+    #       --name ${{ env.WEBAPP }} \
+    #       --action swap
 
-    # Step 8: Cleanup temporary slot.
-    - name: Cleanup 🧹
-      if: always()
-      uses: azure/cli@v2.1.0
-      env:
-        AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
-      with:
-        inlineScript: |
-          # Delete temporary slot
-          az webapp deployment slot delete \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }}
+    # # Step 8: Cleanup temporary slot.
+    # - name: Cleanup 🧹
+    #   if: always()
+    #   uses: azure/cli@v2.1.0
+    #   env:
+    #     AZURE_CONFIG_DIR: ${{ env.AZURE_CONFIG_DIR }}
+    #   with:
+    #     inlineScript: |
+    #       # Delete temporary slot
+    #       az webapp deployment slot delete \
+    #       --slot ${{ github.sha }} \
+    #       --name ${{ env.WEBAPP }}

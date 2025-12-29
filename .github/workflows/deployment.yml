@@ -70,16 +70,16 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
-      - name: Deploy ⚡
-        uses: ./.github/actions/mssql
-        with:
-          host: ${{ secrets.SQL_DB_HOST }}
-          port: ${{ secrets.SQL_DB_PORT }}
-          username: ${{ secrets.SQL_DB_USERNAME }}
-          password: ${{ secrets.SQL_DB_PASSWORD }}
-          database: ${{ secrets.SQL_DB_NAME }}
-          node: ${{ vars.NODE_VERSION }}
-          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+      # - name: Deploy ⚡
+      #   uses: ./.github/actions/mssql
+      #   with:
+      #     host: ${{ secrets.SQL_DB_HOST }}
+      #     port: ${{ secrets.SQL_DB_PORT }}
+      #     username: ${{ secrets.SQL_DB_USERNAME }}
+      #     password: ${{ secrets.SQL_DB_PASSWORD }}
+      #     database: ${{ secrets.SQL_DB_NAME }}
+      #     node: ${{ vars.NODE_VERSION }}
+      #     log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   # 3. micro-serices WebApp deployments
   webapp:
@@ -108,6 +108,14 @@ jobs:
         run: |
           echo "AZURE_CONFIG_DIR=${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}" >> $GITHUB_ENV
           mkdir -p "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}"
+
+      - name: Print Azure CLI config dir path
+        shell: bash
+        run: |
+          printf 'Computed AZURE_CONFIG_DIR: %s\n' "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}"
+          echo "AZURE_CONFIG_DIR (env): $AZURE_CONFIG_DIR"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          printf 'Full path (runtime): %s\n' "$AZURE_CONFIG_DIR"
 
       - name: Repository 🗂️
         uses: actions/checkout@v6
@@ -150,6 +158,14 @@ jobs:
           echo "AZURE_CONFIG_DIR=${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.functions }}" >> $GITHUB_ENV
           mkdir -p "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.functions }}"
 
+      - name: Print Azure CLI config dir path
+        shell: bash
+        run: |
+          printf 'Computed AZURE_CONFIG_DIR: %s\n' "${GITHUB_WORKSPACE}/azcli/${GITHUB_JOB}-${{ matrix.webapp }}"
+          echo "AZURE_CONFIG_DIR (env): $AZURE_CONFIG_DIR"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          printf 'Full path (runtime): %s\n' "$AZURE_CONFIG_DIR"
+
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
@@ -163,48 +179,48 @@ jobs:
           functions: ${{ matrix.functions }}
 
   # 5. Notification
-  notify:
-    name: Notification 🔔
-    needs: [setup, database, webapp, functions]
-    environment: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, DTFS, deployment]
+  # notify:
+  #   name: Notification 🔔
+  #   needs: [setup, database, webapp, functions]
+  #   environment: ${{ needs.setup.outputs.environment }}
+  #   runs-on: [self-hosted, DTFS, deployment]
 
-    steps:
-      - name: Notification  🔔
-        uses: ./.github/actions/notify
-        with:
-          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
-          content: '
-                      {
-              "@type": "MessageCard",
-              "@context": "http://schema.org/extensions",
-              "themeColor": "00703c",
-              "title": "🚀 main : ${{ env.ENVIRONMENT }}",
-              "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
-              "sections": [
-                {
-                  "activityTitle": "Branch deployment",
-                  "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
-                  "facts": [
-                    { "name": "Branch", "value": "main" },
-                    { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
-                    { "name": "Commit", "value": "${{ github.sha }}" },
-                    { "name": "Status", "value": "Successful" }
-                  ],
-                  "markdown": true
-                }
-              ],
-              "potentialAction": [
-                {
-                  "@type": "OpenUri",
-                  "name": "Deployment",
-                  "targets": [
-                    {
-                      "os": "default",
-                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
-                }
-              ]
-            }
-            '
+  #   steps:
+  #     - name: Notification  🔔
+  #       uses: ./.github/actions/notify
+  #       with:
+  #         webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+  #         content: '
+  #                     {
+  #             "@type": "MessageCard",
+  #             "@context": "http://schema.org/extensions",
+  #             "themeColor": "00703c",
+  #             "title": "🚀 main : ${{ env.ENVIRONMENT }}",
+  #             "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
+  #             "sections": [
+  #               {
+  #                 "activityTitle": "Branch deployment",
+  #                 "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+  #                 "facts": [
+  #                   { "name": "Branch", "value": "main" },
+  #                   { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
+  #                   { "name": "Commit", "value": "${{ github.sha }}" },
+  #                   { "name": "Status", "value": "Successful" }
+  #                 ],
+  #                 "markdown": true
+  #               }
+  #             ],
+  #             "potentialAction": [
+  #               {
+  #                 "@type": "OpenUri",
+  #                 "name": "Deployment",
+  #                 "targets": [
+  #                   {
+  #                     "os": "default",
+  #                     "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+  #                   }
+  #                 ]
+  #               }
+  #             ]
+  #           }
+  #           '
