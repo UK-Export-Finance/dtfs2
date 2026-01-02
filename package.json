@@ -85,7 +85,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
-    "markdownlint-cli": "^0.46.0",
+    "markdownlint-cli": "^0.47.0",
     "prettier": "3.7.4",
     "sort-package-json": "^2.15.1",
     "yaml-lint": "^1.7.0"
@@ -96,7 +96,7 @@
   },
   "engineStrict": true,
   "overrides": {
-    "axios": "1.12.0",
+    "axios": "1.13.2",
     "express": "^4.21.2",
     "ts-node": "^10.9.2",
     "@azure/msal-node": "^2.16.3"
