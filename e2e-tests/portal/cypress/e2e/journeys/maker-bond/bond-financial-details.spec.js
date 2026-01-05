@@ -89,6 +89,30 @@ context('Bond Financial Details', () => {
     });
   });
 
+  describe('riskMarginFee validation', () => {
+    const assertRiskMarginValidationError = (value, expectedMessage) => {
+      goToBondFinancialDetailsPage(bssDealId);
+      cy.keyboardInput(pages.bondFinancialDetails.riskMarginFeeInput(), value);
+      cy.clickSubmitButton();
+      // User is navigated away, so return to the page
+      partials.taskListHeader.itemLink('financial-details').click();
+      cy.url().should('include', '/financial-details');
+      pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible').and('contain', expectedMessage);
+    };
+
+    it('should show error for value 0 after returning to the page', () => {
+      assertRiskMarginValidationError('0', 'Risk Margin % must be between 1 and 99');
+    });
+
+    it('should show error for negative value after returning to the page', () => {
+      assertRiskMarginValidationError('-1', 'Risk Margin % must be between 1 and 99');
+    });
+
+    it('should show error for value above 99 after returning to the page', () => {
+      assertRiskMarginValidationError('100', 'Risk Margin % must be between 1 and 99');
+    });
+  });
+
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.login(BANK1_MAKER1);
