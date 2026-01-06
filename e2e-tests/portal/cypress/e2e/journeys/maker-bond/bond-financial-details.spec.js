@@ -101,15 +101,15 @@ context('Bond Financial Details', () => {
     };
 
     it('should show error for value 0 after returning to the page', () => {
-      assertRiskMarginValidationError('0', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('0', 'Risk Margin Fee % must be between 1 and 99');
     });
 
     it('should show error for negative value after returning to the page', () => {
-      assertRiskMarginValidationError('-1', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('-1', 'Risk Margin Fee % must be between 1 and 99');
     });
 
     it('should show error for value above 99 after returning to the page', () => {
-      assertRiskMarginValidationError('100', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('100', 'Risk Margin Fee % must be between 1 and 99');
     });
   });
 

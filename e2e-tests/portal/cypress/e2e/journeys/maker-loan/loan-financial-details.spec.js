@@ -157,27 +157,27 @@ context('Loan Financial Details', () => {
     });
   });
 
-  describe('riskMarginFee validation', () => {
+  describe('interestMarginFee validation', () => {
     const assertRiskMarginValidationError = (value, expectedMessage) => {
       goToPageWithUnconditionalFacilityStage(bssDealId);
-      cy.keyboardInput(pages.loanFinancialDetails.riskMarginFeeInput(), value);
+      cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), value);
       cy.clickSubmitButton();
       // User is navigated away, so return to the page
       partials.taskListHeader.itemLink('loan-financial-details').click();
       cy.url().should('include', '/financial-details');
-      pages.loanFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible').and('contain', expectedMessage);
+      pages.loanFinancialDetails.interestMarginFeeInputErrorMessage().should('be.visible').and('contain', expectedMessage);
     };
 
     it('should show error for value 0 after returning to the page', () => {
-      assertRiskMarginValidationError('0', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('0', 'Interest Margin % must be between 1 and 99');
     });
 
     it('should show error for negative value after returning to the page', () => {
-      assertRiskMarginValidationError('-1', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('-1', 'Interest Margin % must be between 1 and 99');
     });
 
     it('should show error for value above 99 after returning to the page', () => {
-      assertRiskMarginValidationError('100', 'Risk Margin % must be between 1 and 99');
+      assertRiskMarginValidationError('100', 'Interest Margin % must be between 1 and 99');
     });
   });
 
