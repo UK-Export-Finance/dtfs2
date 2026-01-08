@@ -20,7 +20,21 @@ type MappedFacilityAmendmentWithUkefId = {
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
-  return amendments.map((amendment) => {
+  // sort by reference number with the most recent first
+  const sortedAmendments = amendments.sort((a, b) => {
+    if (a.referenceNumber && b.referenceNumber) {
+      return b.referenceNumber.localeCompare(a.referenceNumber);
+    }
+    if (a.referenceNumber && !b.referenceNumber) {
+      return -1;
+    }
+    if (!a.referenceNumber && b.referenceNumber) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return sortedAmendments.map((amendment) => {
     const today = new Date();
     const referenceNumber = amendment.referenceNumber ?? '';
     const amendmentRows = getAmendmentCreatedByRow(amendment);
