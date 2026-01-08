@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import { HttpStatusCode } from 'axios';
 import type { CustomExpressRequest } from '@ukef/dtfs2-common';
 
 type BaseRequest = CustomExpressRequest<Record<string, never>>;
@@ -24,7 +25,7 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
   // if (typeof attemptsLeft !== 'number') {
   //   // Log for debugging production issues
   //   console.error('Number of send access code attempts remaining was not present in the session.');
-  //   return res.render('_partials/problem-with-service.njk');
+  //   return res.status(HttpStatusCode.InternalServerError).render('_partials/problem-with-service.njk');
   // }
 
   // TODO DTFS2-8222: Remove default value workaround when session management for access code attempts is implemented
@@ -32,12 +33,11 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
   const attemptsLeft = req.session.attemptsLeft ?? 3;
 
   if (attemptsLeft < 1 || attemptsLeft > 3) {
-    // Log for monitoring unexpected session state
-    console.error('Number of send access code attempts remaining was not within expected bounds');
-    return res.render('_partials/problem-with-service.njk');
+    console.error('Number of send access code attempts remaining was not within expected limits %s', attemptsLeft);
+    return res.status(HttpStatusCode.InternalServerError).render('_partials/problem-with-service.njk');
   }
 
-  return res.render('login/access-code-expired.njk', {
+  return res.status(HttpStatusCode.Ok).render('login/access-code-expired.njk', {
     attemptsLeft,
   });
 };

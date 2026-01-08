@@ -1,41 +1,40 @@
-import { HttpStatusCode } from 'axios';
-import { MockResponse, createMocks } from 'node-mocks-http';
 import { Response } from 'express';
+import { HttpStatusCode } from 'axios';
 import { getAccessCodeExpiredPage, GetAccessCodeExpiredPageRequest } from './access-code-expired-page';
 
 describe('getAccessCodeExpiredPage', () => {
   let req: GetAccessCodeExpiredPageRequest;
-  let res: MockResponse<Response>;
+  let res: Partial<Response>;
 
   beforeEach(() => {
     jest.resetAllMocks();
-    const mocks = createMocks<GetAccessCodeExpiredPageRequest>({
+    req = {
       session: {
         attemptsLeft: 3,
       },
-    });
-    req = mocks.req as GetAccessCodeExpiredPageRequest;
-    res = mocks.res;
+    } as GetAccessCodeExpiredPageRequest;
+    res = {
+      status: jest.fn().mockReturnThis(),
+      render: jest.fn(),
+    } as Partial<Response>;
   });
 
   it('should render the access code expired template', () => {
     // Act
-    getAccessCodeExpiredPage(req, res);
+    getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('login/access-code-expired.njk');
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
   });
 
   it('should pass attemptsLeft to the template', () => {
     // Act
-    getAccessCodeExpiredPage(req, res);
+    getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    const renderData = res._getRenderData() as { attemptsLeft: number };
-    expect(renderData).toEqual({
-      attemptsLeft: 3,
-    });
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
   });
 
   it('should pass correct attemptsLeft value for 2 attempts', () => {
@@ -43,11 +42,11 @@ describe('getAccessCodeExpiredPage', () => {
     req.session.attemptsLeft = 2;
 
     // Act
-    getAccessCodeExpiredPage(req, res);
+    getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    const renderData = res._getRenderData() as { attemptsLeft: number };
-    expect(renderData.attemptsLeft).toEqual(2);
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 2 }));
   });
 
   it('should handle 1 attempt remaining', () => {
@@ -55,10 +54,10 @@ describe('getAccessCodeExpiredPage', () => {
     req.session.attemptsLeft = 1;
 
     // Act
-    getAccessCodeExpiredPage(req, res);
+    getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    const renderData = res._getRenderData() as { attemptsLeft: number };
-    expect(renderData.attemptsLeft).toEqual(1);
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 1 }));
   });
 });
