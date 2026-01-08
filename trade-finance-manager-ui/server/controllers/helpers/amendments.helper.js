@@ -193,8 +193,19 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
   let amendments = amendmentsArray;
 
   if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
-    // sort by reference number and reverse so most recent first
-    amendments = amendmentsArray.sort((a, b) => a.referenceNumber - b.referenceNumber).reverse();
+    // sort by reference number with the most recent first, fallback to version if referenceNumber doesn't exist
+    amendments = amendmentsArray.sort((a, b) => {
+      if (a.referenceNumber && b.referenceNumber) {
+        return b.referenceNumber.localeCompare(a.referenceNumber);
+      }
+      if (a.referenceNumber && !b.referenceNumber) {
+        return -1;
+      }
+      if (!a.referenceNumber && b.referenceNumber) {
+        return 1;
+      }
+      return (b.version || 0) - (a.version || 0);
+    });
   }
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
