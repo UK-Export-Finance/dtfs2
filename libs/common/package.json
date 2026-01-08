@@ -69,6 +69,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.22.1",
     "express-session": "^1.18.2",
+    "express-validator": "^7.3.1",
     "html-entities": "^2.6.0",
     "lodash": "^4.17.21",
     "lodash.difference": "^4.5.0",
