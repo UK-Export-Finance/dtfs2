@@ -5,6 +5,7 @@ const assertLoanFormValues = require('./assert-loan-form-values');
 const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const relative = require('../../relativeURL');
+const { assertRiskMarginValidationError } = require('../../../support/portal/assertRiskMarginValidationError');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -158,26 +159,23 @@ context('Loan Financial Details', () => {
   });
 
   describe('interestMarginFee validation', () => {
-    const assertRiskMarginValidationError = (value, expectedMessage) => {
-      goToPageWithUnconditionalFacilityStage(bssDealId);
-      cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), value);
-      cy.clickSubmitButton();
-      // User is navigated away, so return to the page
-      partials.taskListHeader.itemLink('loan-financial-details').click();
-      cy.url().should('include', '/financial-details');
-      pages.loanFinancialDetails.interestMarginFeeInputErrorMessage().should('be.visible').and('contain', expectedMessage);
-    };
-
-    it('should show error for value 0 after returning to the page', () => {
-      assertRiskMarginValidationError('0', 'Interest Margin % must be between 1 and 99');
-    });
-
-    it('should show error for negative value after returning to the page', () => {
-      assertRiskMarginValidationError('-1', 'Interest Margin % must be between 1 and 99');
-    });
-
-    it('should show error for value above 99 after returning to the page', () => {
-      assertRiskMarginValidationError('100', 'Interest Margin % must be between 1 and 99');
+    [
+      { value: '0', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '-1', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '100', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+    ].forEach(({ value, expectedMessage }) => {
+      it(`should show error when interest margin fee is '${value}' (outside 1 to 99)`, () => {
+        assertRiskMarginValidationError({
+          value,
+          expectedMessage,
+          goToPage: goToPageWithUnconditionalFacilityStage,
+          facilityId: bssDealId,
+          inputSelector: () => pages.loanFinancialDetails.interestMarginFeeInput(),
+          errorSelector: () => pages.loanFinancialDetails.interestMarginFeeInputErrorMessage(),
+          partials,
+          detailsTabName: 'loan-financial-details',
+        });
+      });
     });
   });
 

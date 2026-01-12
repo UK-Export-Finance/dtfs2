@@ -1,3 +1,5 @@
+import { assertRiskMarginValidationError } from '../../../support/portal/assertRiskMarginValidationError';
+
 const { yearWithZeroLetter } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../pages');
 const partials = require('../../partials');
@@ -90,26 +92,23 @@ context('Bond Financial Details', () => {
   });
 
   describe('riskMarginFee validation', () => {
-    const assertRiskMarginValidationError = (value, expectedMessage) => {
-      goToBondFinancialDetailsPage(bssDealId);
-      cy.keyboardInput(pages.bondFinancialDetails.riskMarginFeeInput(), value);
-      cy.clickSubmitButton();
-      // User is navigated away, so return to the page
-      partials.taskListHeader.itemLink('financial-details').click();
-      cy.url().should('include', '/financial-details');
-      pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible').and('contain', expectedMessage);
-    };
-
-    it('should show error for value 0 after returning to the page', () => {
-      assertRiskMarginValidationError('0', 'Risk Margin Fee % must be between 1 and 99');
-    });
-
-    it('should show error for negative value after returning to the page', () => {
-      assertRiskMarginValidationError('-1', 'Risk Margin Fee % must be between 1 and 99');
-    });
-
-    it('should show error for value above 99 after returning to the page', () => {
-      assertRiskMarginValidationError('100', 'Risk Margin Fee % must be between 1 and 99');
+    [
+      { value: '0', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+      { value: '-1', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+      { value: '100', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+    ].forEach(({ value, expectedMessage }) => {
+      it(`should show error when risk margin fee is '${value}' (outside 1 to 99)`, () => {
+        assertRiskMarginValidationError({
+          value,
+          expectedMessage,
+          goToPage: goToBondFinancialDetailsPage,
+          facilityId: bssDealId,
+          inputSelector: () => pages.bondFinancialDetails.riskMarginFeeInput(),
+          errorSelector: () => pages.bondFinancialDetails.riskMarginFeeInputErrorMessage(),
+          partials,
+          detailsTabName: 'financial-details',
+        });
+      });
     });
   });
 
