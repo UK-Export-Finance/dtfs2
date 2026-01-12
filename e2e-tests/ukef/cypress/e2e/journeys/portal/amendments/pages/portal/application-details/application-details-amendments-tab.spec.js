@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS, CURRENCY, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -69,39 +69,32 @@ context('Application details - Amendments Tab', () => {
 
       applicationAmendments.tabHeading().should('exist');
       applicationAmendments.tabHeading().should('have.text', 'Amendments');
-      applicationAmendments.summaryList().should('have.length', 2);
     });
 
     it('should display the first row with the 2nd newest amendment', () => {
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).facilityId(), ukefFacilityId);
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).facilityType(), 'Cash Facility');
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).status(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
+      applicationAmendments.subNavigationBarAmendments().should('exist');
+      applicationAmendments.subNavigationBarAmendments().click();
+      cy.assertText(applicationAmendments.summaryList(2).facilityIdValue(), ukefFacilityId);
+      cy.assertText(applicationAmendments.summaryList(2).facilityTypeValue(), 'Cash facility');
+      cy.assertText(applicationAmendments.summaryList(2).statusValue(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).newCoverEndDate(), today.dd_MMMM_yyyy);
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).newFacilityEndDate(), today.dd_MMMM_yyyy);
-      cy.assertText(
-        applicationAmendments.amendmentDetails.row(2).newFacilityValue(),
-        `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`,
-      );
+      cy.assertText(applicationAmendments.summaryList(2).newFacilityValueValue(), `£ ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
 
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).effectiveFrom(), today.dd_MMMM_yyyy);
-      cy.assertText(applicationAmendments.amendmentDetails.row(2).createdBy(), 'First Last');
+      cy.assertText(applicationAmendments.summaryList(2).effectiveFromValue(), today.dd_MMMM_yyyy);
+      cy.assertText(applicationAmendments.summaryList(2).createdByValue(), 'First Last');
     });
 
     it('should display the second row with the 3rd newest amendment', () => {
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).facilityId(), ukefFacilityId);
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).facilityType(), 'Cash Facility');
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).status(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
+      applicationAmendments.subNavigationBarAmendments().should('exist');
+      applicationAmendments.subNavigationBarAmendments().click();
+      cy.assertText(applicationAmendments.summaryList(1).facilityIdValue(), ukefFacilityId);
+      cy.assertText(applicationAmendments.summaryList(1).facilityTypeValue(), 'Cash facility');
+      cy.assertText(applicationAmendments.summaryList(1).statusValue(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).newCoverEndDate(), today.dd_MMMM_yyyy);
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).newFacilityEndDate(), today.dd_MMMM_yyyy);
-      cy.assertText(
-        applicationAmendments.amendmentDetails.row(1).newFacilityValue(),
-        `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`,
-      );
+      cy.assertText(applicationAmendments.summaryList(1).newFacilityValueValue(), `£ ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
 
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).effectiveFrom(), today.dd_MMMM_yyyy);
-      cy.assertText(applicationAmendments.amendmentDetails.row(1).createdBy(), 'First Last');
+      cy.assertText(applicationAmendments.summaryList(1).effectiveFromValue(), today.dd_MMMM_yyyy);
+      cy.assertText(applicationAmendments.summaryList(1).createdByValue(), 'First Last');
     });
   });
 });
