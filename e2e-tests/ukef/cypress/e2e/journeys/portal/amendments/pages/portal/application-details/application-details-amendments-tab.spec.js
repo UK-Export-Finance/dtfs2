@@ -13,7 +13,8 @@ context('Application details - Amendments Tab', () => {
   let dealId;
   let issuedCashFacilityId;
   let issuedContingentFacilityId;
-  let ukefFacilityId;
+  let ukefFacilityId1;
+  let ukefFacilityId2;
   const issuedCashFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
   const issuedContingentFacility = anIssuedContingentFacility({ facilityEndDateEnabled: true });
 
@@ -25,10 +26,11 @@ context('Application details - Amendments Tab', () => {
 
       cy.createGefFacilities(dealId, [issuedCashFacility], BANK1_MAKER1).then((createdCashFacility) => {
         issuedCashFacilityId = createdCashFacility.details._id;
-        ukefFacilityId = createdCashFacility.details.ukefFacilityId;
+        ukefFacilityId1 = createdCashFacility.details.ukefFacilityId;
 
         cy.createGefFacilities(dealId, [issuedContingentFacility], BANK1_MAKER1).then((createdContingentFacility) => {
           issuedContingentFacilityId = createdContingentFacility.details._id;
+          ukefFacilityId2 = createdContingentFacility.details.ukefFacilityId;
 
           cy.makerLoginSubmitGefDealForReview(insertedDeal);
           cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -74,7 +76,7 @@ context('Application details - Amendments Tab', () => {
     it('should display the first row with the 2nd newest amendment', () => {
       applicationAmendments.subNavigationBarAmendments().should('exist');
       applicationAmendments.subNavigationBarAmendments().click();
-      cy.assertText(applicationAmendments.summaryList(2).facilityIdValue(), ukefFacilityId);
+      cy.assertText(applicationAmendments.summaryList(2).facilityIdValue(), ukefFacilityId1);
       cy.assertText(applicationAmendments.summaryList(2).facilityTypeValue(), 'Cash facility');
       cy.assertText(applicationAmendments.summaryList(2).statusValue(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
@@ -87,7 +89,7 @@ context('Application details - Amendments Tab', () => {
     it('should display the second row with the 3rd newest amendment', () => {
       applicationAmendments.subNavigationBarAmendments().should('exist');
       applicationAmendments.subNavigationBarAmendments().click();
-      cy.assertText(applicationAmendments.summaryList(1).facilityIdValue(), ukefFacilityId);
+      cy.assertText(applicationAmendments.summaryList(1).facilityIdValue(), ukefFacilityId2);
       cy.assertText(applicationAmendments.summaryList(1).facilityTypeValue(), 'Cash facility');
       cy.assertText(applicationAmendments.summaryList(1).statusValue(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
