@@ -49,9 +49,7 @@
       },
       {
         html: span((correction.additionalInfo | replaceNewLinesWithBrTags | safe), "additional-info"),
-        attributes: { 
-        "data-cy": "pending-corrections-row--error-summary"
-        }
+        attributes: { "data-cy": "pending-corrections-row--error-summary" }
       }
     ] %}
     {% set rows = rows.concat([row]) %}
