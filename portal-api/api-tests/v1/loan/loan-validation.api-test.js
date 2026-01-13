@@ -822,7 +822,7 @@ describe('/v1/deals/:id/loan', () => {
           expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
         });
 
-        it('should return validationError for value below 1', async () => {
+        it('should return validationError for value below 0', async () => {
           const loan = {
             interestMarginFee: '-1',
           };
