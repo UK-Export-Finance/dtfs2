@@ -20,7 +20,23 @@ type MappedFacilityAmendmentWithUkefId = {
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
-  // sort by reference number with the most recent first
+  /**
+   * Sorted view of the provided amendments array, ordered by their
+   * `referenceNumber` in descending lexicographical order.
+   *
+   * Sorting behavior:
+   * - Amendments with a defined `referenceNumber` are ordered before those
+   *   without one.
+   * - When both amendments have a `referenceNumber`, they are compared using
+   *   `localeCompare`, placing higher / later reference numbers first.
+   * - When neither amendment has a `referenceNumber`, their relative order is
+   *   left unchanged.
+   *
+   * @remarks
+   * This operation sorts the original `amendments` array in place; the
+   * `sortedAmendments` reference points to the same array instance after the
+   * sort has been applied.
+   */
   const sortedAmendments = amendments.sort((a, b) => {
     if (a.referenceNumber && b.referenceNumber) {
       return b.referenceNumber.localeCompare(a.referenceNumber);

@@ -193,7 +193,23 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
   let amendments = amendmentsArray;
 
   if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
-    // sort by reference number with the most recent first, fallback to version if referenceNumber doesn't exist
+    /**
+     * Sorted view of the provided amendments array, ordered by their
+     * `referenceNumber` in descending lexicographical order.
+     *
+     * Sorting behavior:
+     * - Amendments with a defined `referenceNumber` are ordered before those
+     *   without one.
+     * - When both amendments have a `referenceNumber`, they are compared using
+     *   `localeCompare`, placing higher / later reference numbers first.
+     * - When neither amendment has a `referenceNumber`, their order based on their
+     *   `version` property in descending numerical order.
+     *
+     * @remarks
+     * This operation sorts the original `amendments` array in place; the
+     * `sortedAmendments` reference points to the same array instance after the
+     * sort has been applied.
+     */
     amendments = amendmentsArray.sort((a, b) => {
       if (a.referenceNumber && b.referenceNumber) {
         return b.referenceNumber.localeCompare(a.referenceNumber);

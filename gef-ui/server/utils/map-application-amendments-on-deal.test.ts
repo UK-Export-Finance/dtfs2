@@ -10,6 +10,37 @@ const amendmentId = '6597dffeb5ef5ff4267e5046';
 const today = startOfDay(new Date());
 const tomorrow = add(today, { days: 1 });
 
+const amendment1 = 'ukefFacilityId-01';
+const amendment2 = 'ukefFacilityId-02';
+const amendment3 = 'ukefFacilityId-03';
+
+const amendment1WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
+  .withDealId(dealId)
+  .withFacilityId(facilityId)
+  .withAmendmentId(`${amendmentId}-1`)
+  .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+  .withEffectiveDate(getUnixTime(today))
+  .withReferenceNumber(amendment1)
+  .build();
+
+const amendment2WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
+  .withDealId(dealId)
+  .withFacilityId(facilityId)
+  .withAmendmentId(`${amendmentId}-2`)
+  .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+  .withEffectiveDate(getUnixTime(today))
+  .withReferenceNumber(amendment2)
+  .build();
+
+const amendment3WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
+  .withDealId(dealId)
+  .withFacilityId(facilityId)
+  .withAmendmentId(`${amendmentId}-3`)
+  .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+  .withEffectiveDate(getUnixTime(today))
+  .withReferenceNumber(amendment3)
+  .build();
+
 describe('mapApplicationAmendmentsOnDeal', () => {
   const facilityEndDate = new Date();
   const bankReviewDate = new Date();
@@ -97,38 +128,6 @@ describe('mapApplicationAmendmentsOnDeal', () => {
   ];
 
   it('should sort amendments by referenceNumber with the most recent first', () => {
-    // Arrange
-    const amendment1 = 'ukefFacilityId-01';
-    const amendment2 = 'ukefFacilityId-02';
-    const amendment3 = 'ukefFacilityId-03';
-
-    const amendment1WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
-      .withDealId(dealId)
-      .withFacilityId(facilityId)
-      .withAmendmentId(`${amendmentId}-1`)
-      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
-      .withEffectiveDate(getUnixTime(today))
-      .withReferenceNumber(amendment1)
-      .build();
-
-    const amendment2WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
-      .withDealId(dealId)
-      .withFacilityId(facilityId)
-      .withAmendmentId(`${amendmentId}-2`)
-      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
-      .withEffectiveDate(getUnixTime(today))
-      .withReferenceNumber(amendment2)
-      .build();
-
-    const amendment3WithReference: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
-      .withDealId(dealId)
-      .withFacilityId(facilityId)
-      .withAmendmentId(`${amendmentId}-3`)
-      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
-      .withEffectiveDate(getUnixTime(today))
-      .withReferenceNumber(amendment3)
-      .build();
-
     // Act
     const result = mapApplicationAmendmentsOnDeal([amendment1WithReference, amendment3WithReference, amendment2WithReference]);
 

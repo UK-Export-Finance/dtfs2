@@ -73,7 +73,7 @@ context('Application details - Amendments Tab', () => {
       applicationAmendments.tabHeading().should('have.text', 'Amendments');
     });
 
-    it('should display the first row with the 2nd newest amendment', () => {
+    it('should display the 2nd newest amendment on the first row', () => {
       applicationAmendments.subNavigationBarAmendments().should('exist');
       applicationAmendments.subNavigationBarAmendments().click();
       cy.assertText(applicationAmendments.summaryList(2).facilityIdValue(), ukefFacilityId1);
@@ -86,7 +86,7 @@ context('Application details - Amendments Tab', () => {
       cy.assertText(applicationAmendments.summaryList(2).createdByValue(), 'First Last');
     });
 
-    it('should display the second row with the 3rd newest amendment', () => {
+    it('should display the 3rd newest amendment on the second row', () => {
       applicationAmendments.subNavigationBarAmendments().should('exist');
       applicationAmendments.subNavigationBarAmendments().click();
       cy.assertText(applicationAmendments.summaryList(1).facilityIdValue(), ukefFacilityId2);
