@@ -90,7 +90,7 @@ context('Application details - Amendments Tab', () => {
       applicationAmendments.subNavigationBarAmendments().should('exist');
       applicationAmendments.subNavigationBarAmendments().click();
       cy.assertText(applicationAmendments.summaryList(1).facilityIdValue(), ukefFacilityId2);
-      cy.assertText(applicationAmendments.summaryList(1).facilityTypeValue(), 'Cash facility');
+      cy.assertText(applicationAmendments.summaryList(1).facilityTypeValue(), 'Contingent facility');
       cy.assertText(applicationAmendments.summaryList(1).statusValue(), PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
       cy.assertText(applicationAmendments.summaryList(1).newFacilityValueValue(), `£ ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
