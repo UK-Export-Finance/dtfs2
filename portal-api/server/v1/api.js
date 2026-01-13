@@ -41,6 +41,8 @@ const createSignInOTPCode = async (user, auditDetails) => {
 
     return response.data;
   } catch ({ response }) {
+    console.error('Error creating sign in OTP code: %o', response?.data || response);
+
     return response?.data;
   }
 };
@@ -65,6 +67,8 @@ const verifySignInOTPCode = async (userId, signInOTPCode, auditDetails) => {
       },
     });
   } catch ({ response }) {
+    console.error('Error verifying sign in OTP code: %o', response?.data || response);
+
     return response;
   }
 };

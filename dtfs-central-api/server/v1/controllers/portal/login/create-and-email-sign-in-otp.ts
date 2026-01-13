@@ -24,20 +24,21 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     const doesUserExist = user && user._id && user.email && user.firstname && user.surname;
 
     if (!doesUserExist || !auditDetails) {
-      console.info('User or auditDetails not found for user %s', user?._id);
+      console.error('User or auditDetails not found');
+
       return res.status(HttpStatusCode.NotFound).send({ message: 'User or auditDetails not found' });
     }
 
     const userIsBlockedOrDisabled = isUserBlockedOrDisabled(user);
 
     if (userIsBlockedOrDisabled) {
-      console.info('User %s is blocked or disabled', user._id);
+      console.error('User %s is blocked or disabled', user._id);
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
     const userId = user._id.toString();
 
-    const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : null;
+    const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
     const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
 

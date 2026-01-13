@@ -211,10 +211,16 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
+/**
+ * Creates and emails a sign-in OTP to the user associated with the provided email address.
+ */
 module.exports.createAndEmailSignInOTP = (req, res) => signInLinkController.createAndEmailSignInOTP(req, res);
 
 module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWithSignInLink(req, res);
 
+/**
+ * Verifies and logs in a user using a sign-in OTP.
+ */
 module.exports.loginWithOTP = (req, res) => signInLinkController.loginWithOTP(req, res);
 
 module.exports.resetPassword = async (req, res) => {

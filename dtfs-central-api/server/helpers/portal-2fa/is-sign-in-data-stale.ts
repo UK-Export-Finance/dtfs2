@@ -7,7 +7,7 @@ import { OTP } from '@ukef/dtfs2-common';
  * @param signInOTPSendDate - date when the sign in OTP was sent
  * @returns boolean indicating if sign in data is stale
  */
-export const isSignInDataStale = (signInOTPSendDate: Date | null): boolean => {
+export const isSignInDataStale = (signInOTPSendDate?: Date): boolean => {
   console.info('Checking if sign in data is stale');
 
   const currentDate = Date.now();

@@ -4,7 +4,7 @@ import { isSignInDataStale } from './is-sign-in-data-stale';
 
 type variables = {
   userId: string;
-  signInOTPSendDate: Date | null;
+  signInOTPSendDate?: Date;
   auditDetails: AuditDetails;
 };
 
@@ -41,7 +41,7 @@ export const incrementSignInOTPSendCount = async ({ userId, signInOTPSendDate, a
     }
 
     if (signInOTPSendCount === 1) {
-      await PortalUsersRepo.setSignInLinkSendDate({ userId, auditDetails });
+      await PortalUsersRepo.setSignInOTPSendDate({ userId, auditDetails });
     }
 
     const remainingAttempts = maxSignInOTPSendCount - signInOTPSendCount;

@@ -14,13 +14,15 @@ import { isSignInOtpInDate } from './is-sign-in-otp-in-date';
  * @returns status of the sign in token
  */
 export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
-  console.info('Checking sign in token status for user %s', user._id);
+  const { _id: userId } = user;
+
+  console.info('Checking sign in token status for user %s', userId);
 
   const userHasSignInTokens = doesUserHaveSignInTokens(user);
 
   // if no tokens found then return not found
   if (!user?.signInTokens || !userHasSignInTokens) {
-    console.info('No sign in tokens found for user %s', user._id);
+    console.info('No sign in tokens found for user %s', userId);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
@@ -29,15 +31,15 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
 
   // if any of the required fields are missing, return not found
   if (!latestToken?.hashHex || !latestToken?.saltHex || !latestToken?.expiry) {
-    console.info('Latest sign in token is missing required fields for user %s', user._id);
+    console.info('Latest sign in token is missing required fields for user %s', userId);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
   // verify if the OTP code is correct compared to stored database hash
-  const isOtpCorrect = verifyHash(signInCode, latestToken.saltHex, latestToken.hashHex);
+  const isOtpCorrect = verifyHash(signInCode, latestToken.saltHex, latestToken.hashHex, userId.toString());
 
   if (!isOtpCorrect) {
-    console.info('Sign in OTP is invalid for user %s', user._id);
+    console.info('Sign in OTP is invalid for user %s', userId);
     return SIGN_IN_OTP_STATUS.INVALID;
   }
 
@@ -45,10 +47,10 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
   const signInTokenInDate = isSignInOtpInDate(latestToken.expiry);
 
   if (!signInTokenInDate) {
-    console.info('Sign in OTP is expired for user %s', user._id);
+    console.info('Sign in OTP is expired for user %s', userId);
     return SIGN_IN_OTP_STATUS.EXPIRED;
   }
 
-  console.info('Sign in OTP is valid for user %s', user._id);
+  console.info('Sign in OTP is valid for user %s', userId);
   return SIGN_IN_OTP_STATUS.VALID;
 };

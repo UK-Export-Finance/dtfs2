@@ -214,10 +214,10 @@ openRouter
 
 /**
  * @openapi
- * /users/:userId/sign-in-link/:signInOTP/login:
+ * /users/:userId/sign-in-otp/:signInOTP/login:
  *    post:
- *      summary: Login with sign in link
- *      description: Login a user using a sign in link
+ *      summary: Login with sign in OTP
+ *      description: Login a user using a sign in OTP
  *      tags: [Portal]
  *      parameters:
  *        - in: path
@@ -225,7 +225,7 @@ openRouter
  *          schema:
  *            type: string
  *        - in: path
- *          name: signInToken
+ *          name: signInOTP
  *          schema:
  *            type: string
  *      responses:
@@ -275,7 +275,7 @@ openRouter.route('/users/me/sign-in-link').post(passport.authenticate(partial2fa
  *      tags: [Portal]
  *      description: Create and email a sign-in OTP to the user associated with the provided email address.
  *      responses:
- *        201:
+ *        200:
  *          description: Sign-in OTP created and emailed successfully
  *        403:
  *          description: Forbidden

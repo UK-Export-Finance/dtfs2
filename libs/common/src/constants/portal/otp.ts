@@ -1,9 +1,9 @@
-const signInLinkDurationMinutes = 30;
+const signInOTPDurationMinutes = 30;
 
 export const OTP = {
   DIGITS: 6,
-  SIGN_IN_LINK_DURATION_MINUTES: signInLinkDurationMinutes,
-  DURATION_MILLISECONDS: signInLinkDurationMinutes * 60 * 1000,
+  SIGN_IN_OTP_DURATION_MINUTES: signInOTPDurationMinutes,
+  DURATION_MILLISECONDS: signInOTPDurationMinutes * 60 * 1000,
   MAX_SIGN_IN_ATTEMPTS: 3,
   TIME_TO_RESET_SIGN_IN_OTP_SEND_COUNT_IN_MILLISECONDS: 12 * 60 * 60 * 1000,
 };
