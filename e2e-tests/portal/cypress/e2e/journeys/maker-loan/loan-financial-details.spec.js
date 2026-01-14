@@ -5,7 +5,6 @@ const assertLoanFormValues = require('./assert-loan-form-values');
 const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const relative = require('../../relativeURL');
-const { assertRiskMarginValidationError } = require('../../../support/portal/assertRiskMarginValidationError');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -164,8 +163,8 @@ context('Loan Financial Details', () => {
       { value: '-1', expectedMessage: 'Interest Margin % must be between 1 and 99' },
       { value: '100', expectedMessage: 'Interest Margin % must be between 1 and 99' },
     ].forEach(({ value, expectedMessage }) => {
-      it(`should show error when interest margin fee is '${value}' (outside 1 to 99)`, () => {
-        assertRiskMarginValidationError({
+      it(`should show error when interest margin fee is '${value}'`, () => {
+        cy.assertRiskMarginValidationError({
           value,
           expectedMessage,
           goToPage: goToPageWithUnconditionalFacilityStage,

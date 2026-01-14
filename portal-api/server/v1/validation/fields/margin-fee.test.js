@@ -8,6 +8,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Enter the Margin Fee');
   });
 
@@ -15,6 +16,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: 'abc' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Margin Fee must be a number, like 1 or 12.65');
   });
 
@@ -22,6 +24,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '0' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Margin Fee must be between 1 and 99');
   });
 
@@ -29,6 +32,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '-1' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Margin Fee must be between 1 and 99');
   });
 
@@ -36,6 +40,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '100' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Margin Fee must be between 1 and 99');
   });
 
@@ -43,6 +48,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '12.12345' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName].text).toEqual('Margin Fee must have less than 5 decimals, like 12 or 12.0010');
   });
 
@@ -50,6 +56,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '5' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName]).toBeUndefined();
   });
 
@@ -57,6 +64,7 @@ describe('validateMarginFee', () => {
     const entity = { [fieldName]: '12.1234' };
     const errorList = {};
     const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
     expect(result[fieldName]).toBeUndefined();
   });
 
@@ -65,6 +73,7 @@ describe('validateMarginFee', () => {
       const entity = { [fieldName]: i.toString() };
       const errorList = {};
       const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
+
       expect(result[fieldName]).toBeUndefined();
     }
   });

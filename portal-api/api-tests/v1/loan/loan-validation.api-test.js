@@ -817,7 +817,9 @@ describe('/v1/deals/:id/loan', () => {
           const loan = {
             interestMarginFee: '100',
           };
+
           const body = await updateLoanInDeal(dealId, loan);
+
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
           expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
         });
@@ -826,7 +828,9 @@ describe('/v1/deals/:id/loan', () => {
           const loan = {
             interestMarginFee: '-1',
           };
+
           const body = await updateLoanInDeal(dealId, loan);
+
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
           expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
         });
@@ -835,7 +839,9 @@ describe('/v1/deals/:id/loan', () => {
           const loan = {
             interestMarginFee: '0',
           };
+
           const body = await updateLoanInDeal(dealId, loan);
+
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
           expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
         });
