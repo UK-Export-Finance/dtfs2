@@ -24,7 +24,7 @@ export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, us
     // compare generated hash to stored hash
     return crypto.timingSafeEqual(new Uint8Array(storedOTPHash), new Uint8Array(generatedOTPHash));
   } catch (error) {
-    console.error('Error validating OTP hash %o', error);
+    console.error('Error validating OTP hash for user %s: %o', userId, error);
 
     throw new Error(`Error validating OTP hash`);
   }

@@ -9,7 +9,8 @@ type variables = {
 };
 
 /**
- * increments the count for the number of times the sign in OTP has been sent for the user
+ * Increments the sign in OTP "send count" for the user.
+ * The "send count" is the number of times the OTP has been sent to the user
  * if the sign in data is stale, resets the sign in data before incrementing the count
  * if the count exceeds the maximum allowed attempts, blocks the user
  * returns the number of remaining attempts

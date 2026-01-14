@@ -17,8 +17,6 @@ import { PortalUsersRepo } from '../../../../repositories/users-repo';
  */
 export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBody: { user: PortalUser; auditDetails: AuditDetails } }>, res: Response) => {
   try {
-    console.info('Creating and emailing sign in OTP for user %s', req.body.user._id);
-
     const { user, auditDetails } = req.body;
 
     const doesUserExist = user && user._id && user.email && user.firstname && user.surname;
@@ -28,6 +26,8 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
       return res.status(HttpStatusCode.NotFound).send({ message: 'User or auditDetails not found' });
     }
+
+    console.info('Creating and emailing sign in OTP for user %s', req.body.user._id);
 
     const userIsBlockedOrDisabled = isUserBlockedOrDisabled(user);
 
