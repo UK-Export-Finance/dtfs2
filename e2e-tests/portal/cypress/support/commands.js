@@ -15,6 +15,7 @@ import { completeAboutBuyerSection } from './portal/completeAboutBuyerSection';
 import { completeAboutFinancialSection } from './portal/completeAboutFinancialSection';
 import { inCompleteAboutSupplierSection } from './portal/inCompleteAboutSupplierSection';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
+import { assertRiskMarginValidationError } from './portal/assertRiskMarginValidationError';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
@@ -94,7 +95,6 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
-Cypress.Commands.add('assertRiskMarginValidationError', require('./portal/assertRiskMarginValidationError'));
 
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
@@ -114,6 +114,7 @@ Cypress.Commands.add('completeAboutSupplierSection', completeAboutSupplierSectio
 Cypress.Commands.add('completeAboutBuyerSection', completeAboutBuyerSection);
 Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSection);
 Cypress.Commands.add('inCompleteAboutSupplierSection', inCompleteAboutSupplierSection);
+Cypress.Commands.add('assertRiskMarginValidationError', assertRiskMarginValidationError);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

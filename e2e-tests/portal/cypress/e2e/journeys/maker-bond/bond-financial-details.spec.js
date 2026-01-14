@@ -1,5 +1,3 @@
-import { assertRiskMarginValidationError } from '../../../support/portal/assertRiskMarginValidationError';
-
 const { yearWithZeroLetter } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../pages');
 const partials = require('../../partials');
@@ -98,7 +96,7 @@ context('Bond Financial Details', () => {
       { value: '100', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
     ].forEach(({ value, expectedMessage }) => {
       it(`should show error when risk margin fee is '${value}'`, () => {
-        assertRiskMarginValidationError({
+        cy.assertRiskMarginValidationError({
           value,
           expectedMessage,
           goToPage: goToBondFinancialDetailsPage,
