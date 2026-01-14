@@ -97,7 +97,7 @@ context('Bond Financial Details', () => {
       { value: '-1', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
       { value: '100', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
     ].forEach(({ value, expectedMessage }) => {
-      it(`should show error when risk margin fee is '${value}' (outside 1 to 99)`, () => {
+      it(`should show error when risk margin fee is '${value}'`, () => {
         assertRiskMarginValidationError({
           value,
           expectedMessage,
