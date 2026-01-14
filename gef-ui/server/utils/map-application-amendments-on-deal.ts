@@ -1,4 +1,4 @@
-import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId, AMENDMENT_TYPES, sortAmendmentsByReferenceNumber } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { getAmendmentCreatedByRow } from '../helpers/get-amendment-created-by-row';
 
@@ -20,37 +20,11 @@ type MappedFacilityAmendmentWithUkefId = {
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
-  /**
-   * Sorted view of the provided amendments array, ordered by their
-   * `referenceNumber` in descending lexicographical order.
-   *
-   * Sorting behavior:
-   * - Amendments with a defined `referenceNumber` are ordered before those
-   *   without one.
-   * - When both amendments have a `referenceNumber`, they are compared using
-   *   `localeCompare`, placing higher / later reference numbers first.
-   * - When neither amendment has a `referenceNumber`, their relative order is
-   *   left unchanged.
-   *
-   * @remarks
-   * This operation sorts the original `amendments` array in place; the
-   * `sortedAmendments` reference points to the same array instance after the
-   * sort has been applied.
-   */
-  const sortedAmendments = amendments.sort((a, b) => {
-    if (a.referenceNumber && b.referenceNumber) {
-      return b.referenceNumber.localeCompare(a.referenceNumber);
-    }
-    if (a.referenceNumber && !b.referenceNumber) {
-      return -1;
-    }
-    if (!a.referenceNumber && b.referenceNumber) {
-      return 1;
-    }
-    return 0;
+  const sortedAmendments = sortAmendmentsByReferenceNumber(amendments, {
+    sortByVersionWhenNoReferenceNumber: false,
   });
 
-  return sortedAmendments.map((amendment) => {
+  return sortedAmendments.map((amendment: FacilityAllTypeAmendmentWithUkefId) => {
     const today = new Date();
     const referenceNumber = amendment.referenceNumber ?? '';
     const amendmentRows = getAmendmentCreatedByRow(amendment);
