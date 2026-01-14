@@ -194,8 +194,10 @@ describe(page, () => {
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-type"]`).toRead(firstCorrection.formattedReasons);
 
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead('Line 1Line 2');
+      wrapper.expectElement(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toContain('Line 1<br>Line 2');
 
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead('Should not render  here');
+      wrapper.expectElement(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toContain('Should not render <br> here');
 
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"]`).toRead(secondCorrection.facilityId);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--exporter"]`).toRead(secondCorrection.exporter);
