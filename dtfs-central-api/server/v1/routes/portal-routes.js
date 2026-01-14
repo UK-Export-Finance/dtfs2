@@ -54,6 +54,8 @@ const getPortalFacilityAmendmentsForDealController = require('../controllers/por
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
 
+const loginController = require('../controllers/portal/login/login.controller');
+
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
 const { ROUTES } = require('../../constants');
@@ -1457,5 +1459,9 @@ portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLa
  *         description: No mandatory criteria found
  */
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
+
+portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmailSignInOTP);
+
+portalRouter.route('/users/me/validate-sign-in-code').post(loginController.validateOTPAndSignIn);
 
 module.exports = portalRouter;

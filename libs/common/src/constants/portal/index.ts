@@ -5,3 +5,4 @@ export * from './deal-status';
 export * from './facility-status';
 export * from './facility-stage';
 export * from './date-validation';
+export * from './otp';

@@ -2,6 +2,7 @@ const { HttpStatusCode } = require('axios');
 const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
+const { OTP } = require('@ukef/dtfs2-common');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
@@ -213,6 +214,44 @@ openRouter
 
 /**
  * @openapi
+ * /users/:userId/sign-in-otp/:signInOTP/login:
+ *    post:
+ *      summary: Login with sign in OTP
+ *      description: Login a user using a sign in OTP
+ *      tags: [Portal]
+ *      parameters:
+ *        - in: path
+ *          name: userId
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: signInOTP
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: Login successful
+ *        404:
+ *          description: Not found
+ *        403:
+ *          description: Forbidden
+ */
+openRouter
+  .route('/users/:userId/sign-in-otp/:signInOTP/login')
+  .post(
+    passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
+    param('userId').isMongoId().withMessage('Value must be a valid MongoId'),
+    param('signInOTP')
+      .isNumeric()
+      .withMessage('Value must be a numeric string')
+      .isLength({ min: OTP.DIGITS, max: OTP.DIGITS })
+      .withMessage(`Value must be ${OTP.DIGITS} characters long`),
+    handleExpressValidatorResult,
+    users.loginWithOTP,
+  );
+
+/**
+ * @openapi
  * /users/me/sign-in-link:
  *    post:
  *      summary: Create and email a sign-in link to the user
@@ -227,6 +266,23 @@ openRouter
  *          description: Internal server error
  */
 openRouter.route('/users/me/sign-in-link').post(passport.authenticate(partial2faTokenPassportStrategy, { session: false }), users.createAndEmailSignInLink);
+
+/**
+ * @openapi
+ * /users/me/sign-in-otp:
+ *    post:
+ *      summary: Create and email a sign-in OTP to the user
+ *      tags: [Portal]
+ *      description: Create and email a sign-in OTP to the user associated with the provided email address.
+ *      responses:
+ *        200:
+ *          description: Sign-in OTP created and emailed successfully
+ *        403:
+ *          description: Forbidden
+ *        500:
+ *          description: Internal server error
+ */
+openRouter.route('/users/me/sign-in-otp').post(passport.authenticate(partial2faTokenPassportStrategy, { session: false }), users.createAndEmailSignInOTP);
 
 // Auth router requires authentication
 const authRouter = express.Router();
