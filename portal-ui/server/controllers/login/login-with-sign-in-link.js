@@ -47,6 +47,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
     }
 
     const loginResponse = await api.loginWithSignInLink({ token: userToken, userId, signInToken });
+
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
     updateSessionAfterLogin({
