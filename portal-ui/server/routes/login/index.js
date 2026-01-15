@@ -94,10 +94,23 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
     try {
+      /**
+       * Send sign in link or OTP depending on whether 2FA feature flag is enabled
+       */
+      // TODO: DTFS2-7034 - re-enable when 2FA code can be entered
+      // if (isPortal2FAFeatureFlagEnabled()) {
+      //   const {
+      //     data: { numberOfSendSignInLinkAttemptsRemaining },
+      //   } = await api.sendSignInOTP(req.session.userToken);
+
+      //   req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+      // } else {
       const {
         data: { numberOfSendSignInLinkAttemptsRemaining },
       } = await api.sendSignInLink(req.session.userToken);
+
       req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+      // }
     } catch (sendSignInLinkError) {
       if (sendSignInLinkError.response?.status === 403) {
         req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
@@ -105,6 +118,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       }
       console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', sendSignInLinkError);
     }
+
     return res.redirect('/login/check-your-email');
   } catch (loginError) {
     console.info('Failed to login %o', loginError);
