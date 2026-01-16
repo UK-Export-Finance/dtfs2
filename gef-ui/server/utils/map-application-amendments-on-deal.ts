@@ -1,4 +1,4 @@
-import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId, AMENDMENT_TYPES, sortAmendmentsByReferenceNumber } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { getAmendmentCreatedByRow } from '../helpers/get-amendment-created-by-row';
 
@@ -20,7 +20,11 @@ type MappedFacilityAmendmentWithUkefId = {
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
-  return amendments.map((amendment) => {
+  const sortedAmendments = sortAmendmentsByReferenceNumber(amendments, {
+    sortByVersionWhenNoReferenceNumber: false,
+  });
+
+  return sortedAmendments.map((amendment: FacilityAllTypeAmendmentWithUkefId) => {
     const today = new Date();
     const referenceNumber = amendment.referenceNumber ?? '';
     const amendmentRows = getAmendmentCreatedByRow(amendment);

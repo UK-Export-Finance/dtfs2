@@ -37,6 +37,7 @@ class SignInLinkService {
     if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
+
     const signInToken = this.#createSignInToken();
 
     await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
