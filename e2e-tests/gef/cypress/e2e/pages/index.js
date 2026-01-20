@@ -1,41 +1,79 @@
-/* eslint-disable global-require */
+const signInLink = require('./login/sign-in-link');
+const aboutExporter = require('./about-exporter');
+const aboutFacility = require('./about-facility');
+const applicationActivities = require('./application-activities');
+const applicationDetails = require('./application-details');
+const applicationAmendments = require('./application-amendments');
+const applicationPreview = require('./application-preview');
+const applicationStatusBanner = require('./application-status-banner');
+const applicationSubmission = require('./application-submission');
+const automaticCover = require('./automatic-cover');
+const bankReviewDate = require('./bank-review-date');
+const cloneDeal = require('./clone-deal');
+const companiesHouse = require('./companies-house');
+const coverStartDate = require('./cover-start-date');
+const dashboardPage = require('./dashboard-page');
+const enterExportersCorrAddress = require('./enter-exporters-corr-address');
+const exportersAddress = require('./exporters-address');
+const facilities = require('./facilities');
+const facilityConfirmDeletion = require('./facility-confirm-deletion');
+const facilityCurrency = require('./facility-currency');
+const facilityEndDate = require('./facility-end-date');
+const facilityGuarantee = require('./facility-guarantee');
+const facilityValue = require('./facility-value');
+const ineligibleAutomaticCover = require('./ineligible-automatic-cover');
+const ineligibleGef = require('./ineligible-gef');
+const landingPage = require('./landingPage');
+const mandatoryCriteria = require('./mandatory-criteria');
+const nameApplication = require('./name-application');
+const header = require('./header');
+const footer = require('./footer');
+const providedFacility = require('./provided-facility');
+const returnToMaker = require('./return-to-maker');
+const securityDetails = require('./security-details');
+const selectExportersCorrAddress = require('./select-exporters-corr-address');
+const submitToUkef = require('./submit-to-ukef');
+const unissuedFacilitiesAboutFacility = require('./unissued-facilities-about-facility');
+const unissuedFacilities = require('./unissued-facilities');
+const contact = require('./contact');
+
 module.exports = {
-  signInLink: require('./login/sign-in-link'),
-  aboutExporter: require('./about-exporter'),
-  aboutFacility: require('./about-facility'),
-  applicationActivities: require('./application-activities'),
-  applicationDetails: require('./application-details'),
-  applicationAmendments: require('./application-amendments'),
-  applicationPreview: require('./application-preview'),
-  applicationStatusBanner: require('./application-status-banner'),
-  applicationSubmission: require('./application-submission'),
-  automaticCover: require('./automatic-cover'),
-  bankReviewDate: require('./bank-review-date'),
-  cloneDeal: require('./clone-deal'),
-  companiesHouse: require('./companies-house'),
-  coverStartDate: require('./cover-start-date'),
-  dashboardPage: require('./dashboard-page'),
-  enterExportersCorrAddress: require('./enter-exporters-corr-address'),
-  exportersAddress: require('./exporters-address'),
-  facilities: require('./facilities'),
-  facilityConfirmDeletion: require('./facility-confirm-deletion'),
-  facilityCurrency: require('./facility-currency'),
-  facilityEndDate: require('./facility-end-date'),
-  facilityGuarantee: require('./facility-guarantee'),
-  facilityValue: require('./facility-value'),
-  ineligibleAutomaticCover: require('./ineligible-automatic-cover'),
-  ineligibleGef: require('./ineligible-gef'),
-  landingPage: require('./landingPage'),
-  mandatoryCriteria: require('./mandatory-criteria'),
-  nameApplication: require('./name-application'),
-  header: require('./header'),
-  footer: require('./footer'),
-  providedFacility: require('./provided-facility'),
-  returnToMaker: require('./return-to-maker'),
-  securityDetails: require('./security-details'),
-  selectExportersCorrAddress: require('./select-exporters-corr-address'),
-  submitToUkef: require('./submit-to-ukef'),
-  unissuedFacilitiesAboutFacility: require('./unissued-facilities-about-facility'),
-  unissuedFacilities: require('./unissued-facilities'),
-  contact: require('./contact'),
+  signInLink,
+  aboutExporter,
+  aboutFacility,
+  applicationActivities,
+  applicationDetails,
+  applicationAmendments,
+  applicationPreview,
+  applicationStatusBanner,
+  applicationSubmission,
+  automaticCover,
+  bankReviewDate,
+  cloneDeal,
+  companiesHouse,
+  coverStartDate,
+  dashboardPage,
+  enterExportersCorrAddress,
+  exportersAddress,
+  facilities,
+  facilityConfirmDeletion,
+  facilityCurrency,
+  facilityEndDate,
+  facilityGuarantee,
+  facilityValue,
+  ineligibleAutomaticCover,
+  ineligibleGef,
+  landingPage,
+  mandatoryCriteria,
+  nameApplication,
+  header,
+  footer,
+  providedFacility,
+  returnToMaker,
+  securityDetails,
+  selectExportersCorrAddress,
+  submitToUkef,
+  unissuedFacilitiesAboutFacility,
+  unissuedFacilities,
+  contact,
 };

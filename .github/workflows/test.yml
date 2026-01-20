@@ -806,7 +806,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-portal-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -913,7 +913,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-gef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1040,7 +1040,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-tfm-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1121,7 +1121,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1212,7 +1212,7 @@ jobs:
 
       - name: Screenshots
 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-ukef-mocked-calls-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1416,7 +1416,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-ukef-ff-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1496,7 +1496,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: e2e-tests-maintenance-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
