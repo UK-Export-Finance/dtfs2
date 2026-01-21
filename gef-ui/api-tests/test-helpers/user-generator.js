@@ -1,4 +1,4 @@
-const { salt } = require('@ukef/dtfs2-common');
+const crypto = require('crypto');
 
 const BANK_1 = {
   id: '9',
@@ -13,7 +13,7 @@ const BANK_1 = {
 export const getUserWithRoles = (roles) => {
   const email = `${roles.join('').toLowerCase()}@ukexportfinance.gov.uk`;
   const username = email;
-  const userId = salt().toString('hex');
+  const userId = crypto.randomBytes(8).toString('hex');
   const lastLogin = Date.now().toString();
   return {
     username,

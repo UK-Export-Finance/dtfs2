@@ -80,12 +80,12 @@ function buildHeader(app) {
  * @async
  * @function buildBody
  * @param {object} app - The application object containing all deal and facility data.
- * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {PortalFacilityAmendment[]} amendmentsOnDeal - array of amendments on the deal.
  * @param {boolean} previewMode - Indicates if the application is in preview mode.
  * @param {object} user - The user object representing the current user.
  * @returns {Promise<object>} The constructed application body object with all relevant details for rendering.
  */
-const buildBody = async (app, latestAmendments, previewMode, user) => {
+const buildBody = async (app, amendmentsOnDeal, previewMode, user) => {
   try {
     const exporterUrl = `/gef/application-details/${app._id}`;
     const facilityUrl = `/gef/application-details/${app._id}/facilities`;
@@ -117,6 +117,9 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
       hasUkefDecisionAccepted,
     });
 
+    // Get the latest amendment for each facility on the deal for all amendment statuses.
+    const latestAmendments = getLatestAmendmentsByFacility(amendmentsOnDeal);
+
     const appBody = {
       application: app,
       status: app.status,
@@ -144,7 +147,7 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
             heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
             rows: mapSummaryList(
               item,
-              facilityItems(`${facilityUrl}/${item.details._id}`, item.details, latestAmendments, app.version),
+              facilityItems(`${facilityUrl}/${item.details._id}`, item.details, latestAmendments, amendmentsOnDeal, app.version),
               mapSummaryParams,
               latestAmendments,
               previewMode,
@@ -222,15 +225,15 @@ const buildActions = (app) => {
  * @async
  * @function
  * @param {object} app - The application data object.
- * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {PortalFacilityAmendment[]} amendmentsOnDeal - array of amendments on the deal.
  * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
  * @param {object} user - The user object requesting the view.
  * @returns {Promise<object>} The combined view object containing header, body, and actions.
  */
-const buildView = async (app, latestAmendments, previewMode, user) => {
+const buildView = async (app, amendmentsOnDeal, previewMode, user) => {
   try {
     const header = buildHeader(app);
-    const body = await buildBody(app, latestAmendments, previewMode, user);
+    const body = await buildBody(app, amendmentsOnDeal, previewMode, user);
     const actions = buildActions(app);
 
     return { ...header, ...body, ...actions };
@@ -333,7 +336,6 @@ const applicationDetails = async (req, res, next) => {
       PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
     ];
     const amendmentsOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: amendmentStatusesToFind, userToken });
-    const latestAmendments = getLatestAmendmentsByFacility(amendmentsOnDeal);
 
     const applicationData = {
       ...application,
@@ -357,7 +359,7 @@ const applicationDetails = async (req, res, next) => {
     }
 
     const partial = stateToPartial(application.status, url);
-    const view = await buildView(applicationData, latestAmendments, previewMode, user);
+    const view = await buildView(applicationData, amendmentsOnDeal, previewMode, user);
 
     const params = {
       user,

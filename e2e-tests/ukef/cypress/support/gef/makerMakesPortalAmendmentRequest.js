@@ -10,6 +10,8 @@ import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility
  * @param {boolean} param.facilityEndDateExists - if facility end date is changed
  * @param {string} param.changedFacilityValue - the new value for the facility
  * @param {string} param.changedCoverEndDate - the new cover end date
+ * @param {string} param.changedBankReviewDate - the new bank review date
+ * @param {string} param.effectiveDate - the effective date of the amendment
  */
 export const makerMakesPortalAmendmentRequest = ({
   coverEndDateExists = false,

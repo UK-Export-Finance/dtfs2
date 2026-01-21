@@ -89,6 +89,27 @@ context('Bond Financial Details', () => {
     });
   });
 
+  describe('riskMarginFee validation', () => {
+    [
+      { value: '0', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+      { value: '-1', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+      { value: '100', expectedMessage: 'Risk Margin Fee % must be between 1 and 99' },
+    ].forEach(({ value, expectedMessage }) => {
+      it(`should show error when risk margin fee is '${value}'`, () => {
+        cy.assertRiskMarginValidationError({
+          value,
+          expectedMessage,
+          goToPage: goToBondFinancialDetailsPage,
+          facilityId: bssDealId,
+          inputSelector: () => pages.bondFinancialDetails.riskMarginFeeInput(),
+          errorSelector: () => pages.bondFinancialDetails.riskMarginFeeInputErrorMessage(),
+          partials,
+          detailsTabName: 'financial-details',
+        });
+      });
+    });
+  });
+
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.login(BANK1_MAKER1);
