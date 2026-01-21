@@ -1,7 +1,7 @@
 import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 
-import { D_MMMM_YYYY_FORMAT, twoDays, tomorrow } from '@ukef/dtfs2-common/test-helpers';
+import { D_MMMM_YYYY_FORMAT, twoDays, tomorrow, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -11,13 +11,13 @@ import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/p
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
+const facilityEndDate = format(today.date, D_MMMM_YYYY_FORMAT);
 
 context('Amendments - Multiple cover end date amendments - Application details displays amendment values on facility summary list', () => {
   let dealId;
   let facilityId;
   let applicationDetailsUrl;
   let facilityValue;
-  let facilityEndDate;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -29,7 +29,6 @@ context('Amendments - Multiple cover end date amendments - Application details d
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
         facilityValue = createdFacility.details.value;
-        facilityEndDate = format(new Date(createdFacility.details.facilityEndDate), D_MMMM_YYYY_FORMAT);
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -41,6 +40,7 @@ context('Amendments - Multiple cover end date amendments - Application details d
           facilityValueExists: false,
           coverEndDateExists: true,
           changedCoverEndDate: tomorrow.date,
+          facilityEndDateExists: true,
           applicationDetailsUrl,
           facilityId,
           dealId,
@@ -51,6 +51,7 @@ context('Amendments - Multiple cover end date amendments - Application details d
           facilityValueExists: false,
           coverEndDateExists: true,
           changedCoverEndDate: twoDays.date,
+          facilityEndDateExists: true,
           applicationDetailsUrl,
           facilityId,
           dealId,

@@ -66,20 +66,20 @@ const deleteAll = async (): Promise<void> => {
 type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationReport'
   ? UtilisationReportEntity
   : TableName extends 'FeeRecord'
-  ? FeeRecordEntity
-  : TableName extends 'AzureFileInfo'
-  ? AzureFileInfoEntity
-  : TableName extends 'Payment'
-  ? PaymentEntity
-  : TableName extends 'PaymentMatchingTolerance'
-  ? PaymentMatchingToleranceEntity
-  : TableName extends 'FeeRecordCorrection'
-  ? FeeRecordCorrectionEntity
-  : TableName extends 'FeeRecordCorrectionTransientFormData'
-  ? FeeRecordCorrectionTransientFormDataEntity
-  : TableName extends 'FeeRecordCorrectionRequestTransientFormData'
-  ? FeeRecordCorrectionRequestTransientFormDataEntity
-  : never;
+    ? FeeRecordEntity
+    : TableName extends 'AzureFileInfo'
+      ? AzureFileInfoEntity
+      : TableName extends 'Payment'
+        ? PaymentEntity
+        : TableName extends 'PaymentMatchingTolerance'
+          ? PaymentMatchingToleranceEntity
+          : TableName extends 'FeeRecordCorrection'
+            ? FeeRecordCorrectionEntity
+            : TableName extends 'FeeRecordCorrectionTransientFormData'
+              ? FeeRecordCorrectionTransientFormDataEntity
+              : TableName extends 'FeeRecordCorrectionRequestTransientFormData'
+                ? FeeRecordCorrectionRequestTransientFormDataEntity
+                : never;
 
 const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {

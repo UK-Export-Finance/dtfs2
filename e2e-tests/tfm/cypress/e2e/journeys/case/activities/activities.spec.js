@@ -130,5 +130,33 @@ context('Users can create and submit comments', () => {
       errorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');
     });
+
+    it('should normalize multiple Windows line endings correctly', () => {
+      activitiesPage.addACommentButton().click();
+
+      const commentWithLineBreaks = 'Line 1{enter}Line 2{enter}Line 3';
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), commentWithLineBreaks);
+
+      activityCommentBoxPage.activityCommentBox().should('have.value', 'Line 1\nLine 2\nLine 3');
+    });
+
+    it('should accept and submit comment at 1000 characters after normalizing Windows line endings and display on timeline', () => {
+      const commentText = 'b'.repeat(999);
+
+      activitiesPage.addACommentButton().click();
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), commentText);
+      activityCommentBoxPage.activityCommentBox().type('{enter}');
+
+      activityCommentBoxPage.activityCommentBox().should(($textarea) => {
+        expect($textarea.val()).to.have.length(1000);
+      });
+
+      activityCommentBoxPage.addCommentButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/activity`));
+
+      // Verify the 1000-character comment is displayed, partial match confirms comment is present
+      activitiesPage.activitiesTimeline().contains('bbb');
+    });
   });
 });

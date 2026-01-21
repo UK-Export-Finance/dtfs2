@@ -41,6 +41,20 @@ const sendSignInLink = async (token) =>
   });
 
 /**
+ * Sends a new sign in OTP to a user
+ * @param {string} token auth token
+ * @returns {Promise<object>} Response object
+ */
+const sendSignInOTP = async (token) =>
+  axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-otp`,
+    headers: {
+      Authorization: token,
+    },
+  });
+
+/**
  * Logs in a user using a sign in link
  * @param {object} parameters token, userId and signInToken
  * @returns {Promise<object>} loginStatus, token and user
@@ -49,6 +63,29 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+    headers: {
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+      Authorization: requestAuthToken,
+    },
+  });
+
+  const { token, loginStatus, user } = response.data;
+  return {
+    loginStatus,
+    token,
+    user,
+  };
+};
+
+/**
+ * Logs in a user using a sign in OTP
+ * @param {object} parameters token, userId and signInOTP
+ * @returns {Promise<object>} loginStatus, token and user
+ */
+const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-otp/${signInOTP}/login`,
     headers: {
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Authorization: requestAuthToken,
@@ -1227,7 +1264,9 @@ module.exports = {
   user,
   createUser,
   sendSignInLink,
+  sendSignInOTP,
   loginWithSignInLink,
+  loginWithSignInOtp,
   updateUser,
   getCurrencies,
   getCountries,
