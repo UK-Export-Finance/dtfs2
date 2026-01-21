@@ -157,6 +157,27 @@ context('Loan Financial Details', () => {
     });
   });
 
+  describe('interestMarginFee validation', () => {
+    [
+      { value: '0', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '-1', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '100', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+    ].forEach(({ value, expectedMessage }) => {
+      it(`should show error when interest margin fee is '${value}'`, () => {
+        cy.assertRiskMarginValidationError({
+          value,
+          expectedMessage,
+          goToPage: goToPageWithUnconditionalFacilityStage,
+          facilityId: bssDealId,
+          inputSelector: () => pages.loanFinancialDetails.interestMarginFeeInput(),
+          errorSelector: () => pages.loanFinancialDetails.interestMarginFeeInputErrorMessage(),
+          partials,
+          detailsTabName: 'loan-financial-details',
+        });
+      });
+    });
+  });
+
   describe('when changing the `value` or `coveredPercentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       goToPage(bssDealId);
