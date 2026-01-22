@@ -119,7 +119,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', sendSignInLinkError);
     }
 
-    return res.redirect('/login/check-your-email');
+    return res.redirect('/login/new-access-code');
   } catch (loginError) {
     console.info('Failed to login %o', loginError);
 
@@ -272,7 +272,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.route('/login/new-access-code').get(validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
+router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
 
 /**
  * @openapi
