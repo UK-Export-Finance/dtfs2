@@ -59,7 +59,7 @@
     "joi": "^17.13.3",
     "jquery": "^3.7.1",
     "json2csv": "^5.0.7",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash.isequal": "^4.5.0",
     "morgan": "^1.10.1",
     "multer": "2.0.2",

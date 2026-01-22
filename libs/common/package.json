@@ -72,7 +72,7 @@
     "express-validator": "^7.3.1",
     "html-entities": "^2.6.0",
     "jsonwebtoken": "^9.0.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash.difference": "^4.5.0",
     "mongodb": "^4.17.2",
     "mssql": "^11.0.1",
