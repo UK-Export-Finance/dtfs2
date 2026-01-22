@@ -309,7 +309,7 @@ class SignInLinkController {
 
       const { signInOTPSendCount } = await api.createSignInOTPCode(req.user, auditDetails);
 
-      return res.status(HttpStatusCode.Ok).json({ numberOfSendSignInOtpAttemptsRemaining: signInOTPSendCount });
+      return res.status(HttpStatusCode.Ok).json({ numberOfSignInOtpAttemptsRemaining: signInOTPSendCount });
     } catch (error) {
       console.error('Error creating email sign in OTP %o', error);
       if (error instanceof UserBlockedError) {
