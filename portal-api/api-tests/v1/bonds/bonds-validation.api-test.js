@@ -921,7 +921,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 1 and 99');
 
           bond.riskMarginFee = '-1';
 
@@ -929,7 +929,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 1 and 99');
         });
       });
 
