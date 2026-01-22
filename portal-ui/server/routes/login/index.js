@@ -1,6 +1,6 @@
 const express = require('express');
-const api = require('../../api');
 const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, getNextAccessCodePage } = require('../../helpers');
 
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
@@ -104,14 +104,12 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       /**
        * Send sign in link or OTP depending on whether 2FA feature flag is enabled
        */
-      // TODO: DTFS2-7034 - re-enable when 2FA code can be entered
       if (is2FAEnabled) {
         const {
           data: { numberOfSendSignInOtpAttemptsRemaining },
         } = await api.sendSignInOTP(req.session.userToken);
 
         req.session.numberOfSendSignInOtpAttemptsRemaining = numberOfSendSignInOtpAttemptsRemaining;
-        console.log('numberOfSendSignInOtpAttemptsRemaining:', numberOfSendSignInOtpAttemptsRemaining);
       } else {
         const {
           data: { numberOfSendSignInLinkAttemptsRemaining },
@@ -436,6 +434,6 @@ router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled
  *       403:
  *         description: Forbidden
  */
-router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, getAccountSuspendedPage);
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
 
 module.exports = router;
