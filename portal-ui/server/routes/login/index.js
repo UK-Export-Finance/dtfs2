@@ -86,6 +86,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   }
 
   const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
+  let loginCompleted = false;
 
   try {
     const loginResponse = await api.login(email, password);
@@ -95,66 +96,82 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       loginStatus,
       user: { email: userEmail },
     } = loginResponse;
+
+    loginCompleted = true;
+
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
 
-    try {
-      /**
-       * Send sign in link or OTP depending on whether 2FA feature flag is enabled
-       */
-      if (is2FAEnabled) {
-        const {
-          data: { numberOfSendSignInOtpAttemptsRemaining },
-        } = await api.sendSignInOTP(req.session.userToken);
+    /**
+     * Send sign in link or OTP depending on whether 2FA feature flag is enabled
+     */
+    if (is2FAEnabled) {
+      const {
+        data: { numberOfSignInOtpAttemptsRemaining },
+      } = await api.sendSignInOTP(req.session.userToken);
 
-        req.session.numberOfSendSignInOtpAttemptsRemaining = numberOfSendSignInOtpAttemptsRemaining;
-      } else {
-        const {
-          data: { numberOfSendSignInLinkAttemptsRemaining },
-        } = await api.sendSignInLink(req.session.userToken);
+      req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
+    } else {
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
 
-        req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-      }
-    } catch (sendSignInError) {
-      if (sendSignInError.response?.status === 403) {
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    }
+
+    if (is2FAEnabled) {
+      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+      return res.redirect(nextAccessCodePage);
+    }
+
+    return res.redirect('/login/check-your-email');
+  } catch (error) {
+    const status = error.response?.status;
+
+    if (!loginCompleted) {
+      console.info('Failed to login %o', error);
+
+      if (status === 403) {
         if (is2FAEnabled) {
-          req.session.numberOfSendSignInOtpAttemptsRemaining = -1;
           return res.status(403).render('login/temporarily-suspended-access-code.njk');
         }
-
-        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
         return res.status(403).render('login/temporarily-suspended.njk');
       }
 
-      const message = is2FAEnabled
-        ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
-        : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
+      loginErrors.push(emailError);
+      loginErrors.push(passwordError);
 
-      console.info(message, sendSignInError);
+      return res.render('login/index.njk', {
+        errors: validationErrorHandler(loginErrors),
+      });
     }
-    if (is2FAEnabled) {
-      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSendSignInOtpAttemptsRemaining);
-      return res.redirect(nextAccessCodePage);
-    }
-    return res.redirect('/login/check-your-email');
-  } catch (loginError) {
-    console.info('Failed to login %o', loginError);
 
-    if (loginError.response?.status === 403) {
+    // Error sending sign-in link or OTP
+    if (status === 403) {
       if (is2FAEnabled) {
+        req.session.numberOfSignInOtpAttemptsRemaining = -1;
         return res.status(403).render('login/temporarily-suspended-access-code.njk');
       }
+
+      req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
       return res.status(403).render('login/temporarily-suspended.njk');
     }
 
-    loginErrors.push(emailError);
-    loginErrors.push(passwordError);
+    const message = is2FAEnabled
+      ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
+      : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
 
-    return res.render('login/index.njk', {
-      errors: validationErrorHandler(loginErrors),
-    });
+    console.info(message, error);
+
+    // Continue login flow so the user can retry sending OTP / sign-in link
+    if (is2FAEnabled) {
+      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+      return res.redirect(nextAccessCodePage);
+    }
+
+    return res.redirect('/login/check-your-email');
   }
 });
 
