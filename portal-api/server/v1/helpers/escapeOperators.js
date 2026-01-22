@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const escapeStringRegexp = require('escape-string-regexp');
 const { FACILITY_STAGE, CHECKERS_AMENDMENTS_DEAL_ID } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
