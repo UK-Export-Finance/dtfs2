@@ -4,11 +4,11 @@ const page = 'login/access-code-expired.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const attemptsLeft = 2;
+  const numberOfSendSignInOtpAttemptsRemaining = 2;
   let wrapper;
 
   beforeEach(() => {
-    wrapper = render({ attemptsLeft });
+    wrapper = render({ numberOfSendSignInOtpAttemptsRemaining });
   });
 
   it('should render the heading', () => {
@@ -22,7 +22,7 @@ describe(page, () => {
   });
 
   it('should render the attempts remaining paragraph', () => {
-    wrapper.expectText('[data-cy="access-code-expired-attempts-info"]').toRead(`You have ${attemptsLeft} attempts remaining.`);
+    wrapper.expectText('[data-cy="access-code-expired-attempts-info"]').toRead(`You have ${numberOfSendSignInOtpAttemptsRemaining} attempts remaining.`);
   });
 
   it('should render the suspend info paragraph', () => {

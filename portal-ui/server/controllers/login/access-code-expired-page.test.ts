@@ -10,7 +10,7 @@ describe('getAccessCodeExpiredPage', () => {
     jest.resetAllMocks();
     req = {
       session: {
-        attemptsLeft: 3,
+        numberOfSignInOtpAttemptsRemaining: 3,
       },
     } as GetAccessCodeExpiredPageRequest;
     res = {
@@ -25,39 +25,39 @@ describe('getAccessCodeExpiredPage', () => {
 
     // Assert
     expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ numberOfSignInOtpAttemptsRemaining: 3 }));
   });
 
-  it('should pass attemptsLeft to the template', () => {
+  it('should pass numberOfSignInOtpAttemptsRemaining to the template', () => {
     // Act
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
     expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ numberOfSignInOtpAttemptsRemaining: 3 }));
   });
 
-  it('should pass correct attemptsLeft value for 2 attempts', () => {
+  it('should pass correct numberOfSignInOtpAttemptsRemaining value for 2 attempts', () => {
     // Arrange
-    req.session.attemptsLeft = 2;
+    req.session.numberOfSignInOtpAttemptsRemaining = 2;
 
     // Act
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
     expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 2 }));
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ numberOfSignInOtpAttemptsRemaining: 2 }));
   });
 
   it('should handle 1 attempt remaining', () => {
     // Arrange
-    req.session.attemptsLeft = 1;
+    req.session.numberOfSignInOtpAttemptsRemaining = 1;
 
     // Act
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
     expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 1 }));
+    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ numberOfSignInOtpAttemptsRemaining: 1 }));
   });
 });
