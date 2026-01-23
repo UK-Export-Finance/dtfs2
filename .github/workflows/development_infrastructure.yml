@@ -1121,7 +1121,7 @@ jobs:
                 APIM_ESTORE_URL="${{ secrets.APIM_ESTORE_URL }}" \
                 APIM_ESTORE_KEY="${{ secrets.APIM_ESTORE_KEY }}" \
                 APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}" \
-                GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+                GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
                 AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
@@ -1265,6 +1265,7 @@ jobs:
                 PORT=5000 \
                 WEBSITES_PORT=5000 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                DTFS_CENTRAL_API_KEY=${{ secrets.DTFS_CENTRAL_API_KEY }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
                 TZ=${{ vars.TIMEZONE_LONDON }}
@@ -1276,19 +1277,13 @@ jobs:
             mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
             echo "Mongo connection string: $mongo_connection_string"
 
-            EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
-
             portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
-
-            echo "External API url: http://$EXTERNAL_API_URL"
 
             az webapp config connection-string set --name tfs-${{ env.environment }}-dtfs-central-api \
               --connection-string-type custom \
               --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-                MONGODB_URI="$mongo_connection_string" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL"
+                MONGODB_URI="$mongo_connection_string"
 
   portal-api:
     name: Portal API
@@ -1640,7 +1635,6 @@ jobs:
             az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --connection-string-type custom \
               --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
