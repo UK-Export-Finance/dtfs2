@@ -1,0 +1,615 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseAccounts_tfs_dev_mongo_name": {
+            "defaultValue": "tfs-dev-mongo",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/digital-dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        },
+        "privateEndpoints_tfs_dev_mongo_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/privateEndpoints/tfs-dev-mongo",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2023-04-15",
+            "name": "[parameters('databaseAccounts_tfs_dev_mongo_name')]",
+            "location": "UK South",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "kind": "MongoDB",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "enableAutomaticFailover": false,
+                "enableMultipleWriteLocations": false,
+                "isVirtualNetworkFilterEnabled": true,
+                "virtualNetworkRules": [
+                    {
+                        "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                        "ignoreMissingVNetServiceEndpoint": false
+                    },
+                    {
+                        "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/digital-dev-vm')]",
+                        "ignoreMissingVNetServiceEndpoint": false
+                    }
+                ],
+                "disableKeyBasedMetadataWriteAccess": false,
+                "enableFreeTier": false,
+                "enableAnalyticalStorage": false,
+                "analyticalStorageConfiguration": {},
+                "createMode": "Default",
+                "databaseAccountOfferType": "Standard",
+                "defaultIdentity": "FirstPartyIdentity",
+                "networkAclBypass": "None",
+                "disableLocalAuth": false,
+                "enablePartitionMerge": false,
+                "minimalTlsVersion": "Tls12",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                },
+                "apiProperties": {
+                    "serverVersion": "4.2"
+                },
+                "locations": [
+                    {
+                        "locationName": "UK South",
+                        "provisioningState": "Succeeded",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": false
+                    }
+                ],
+                "cors": [],
+                "capabilities": [
+                    {
+                        "name": "EnableMongo"
+                    }
+                ],
+                "ipRules": [
+                    {
+                        "ipAddressOrRange": "104.42.195.92"
+                    },
+                    {
+                        "ipAddressOrRange": "40.76.54.131"
+                    },
+                    {
+                        "ipAddressOrRange": "52.176.6.30"
+                    },
+                    {
+                        "ipAddressOrRange": "52.169.50.45"
+                    },
+                    {
+                        "ipAddressOrRange": "52.187.184.26"
+                    },
+                    {
+                        "ipAddressOrRange": "0.0.0.0"
+                    }
+                ],
+                "backupPolicy": {
+                    "type": "Continuous",
+                    "continuousModeProperties": {
+                        "tier": "Continuous30Days"
+                    }
+                },
+                "networkAclBypassResourceIds": [],
+                "capacity": {
+                    "totalThroughputLimit": 4000
+                },
+                "keysMetadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "dtfs-submissions"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/privateEndpointConnections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/', parameters('databaseAccounts_tfs_dev_mongo_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "provisioningState": "Succeeded",
+                "groupId": "MongoDB",
+                "privateEndpoint": {
+                    "id": "[parameters('privateEndpoints_tfs_dev_mongo_externalid')]"
+                },
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/banks')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "banks",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/cron-job-logs')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "cron-job-logs",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/deals')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "deals",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/durable-functions-log')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "durable-functions-log",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        },
+                        {
+                            "key": {
+                                "keys": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/eligibilityCriteria')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "eligibilityCriteria",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        },
+                        {
+                            "key": {
+                                "keys": [
+                                    "version"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/facilities')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "facilities",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/feedback')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "feedback",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/files')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "files",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/gef-eligibilityCriteria')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "gef-eligibilityCriteria",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        },
+                        {
+                            "key": {
+                                "keys": [
+                                    "version"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/gef-mandatoryCriteriaVersioned')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "gef-mandatoryCriteriaVersioned",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        },
+                        {
+                            "key": {
+                                "keys": [
+                                    "version"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/mandatoryCriteria')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "mandatoryCriteria",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        },
+                        {
+                            "key": {
+                                "keys": [
+                                    "version"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/tfm-deals')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "tfm-deals",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/tfm-facilities')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "tfm-facilities",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/tfm-feedback')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "tfm-feedback",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/tfm-teams')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "tfm-teams",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/tfm-users')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "tfm-users",
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/users')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "users",
+                    "shardKey": {
+                        "_id": "Hash"
+                    },
+                    "indexes": [
+                        {
+                            "key": {
+                                "keys": [
+                                    "_id"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings",
+            "apiVersion": "2023-04-15",
+            "name": "[concat(parameters('databaseAccounts_tfs_dev_mongo_name'), '/dtfs-submissions/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', parameters('databaseAccounts_tfs_dev_mongo_name'), 'dtfs-submissions')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_tfs_dev_mongo_name'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "throughput": 400,
+                    "autoscaleSettings": {
+                        "maxThroughput": 4000
+                    }
+                }
+            }
+        }
+    ]
+}

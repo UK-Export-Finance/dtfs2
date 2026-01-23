@@ -1,0 +1,1895 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_tfs_dev_trade_finance_manager_ui_name": {
+            "defaultValue": "tfs-dev-trade-finance-manager-ui",
+            "type": "String"
+        },
+        "serverfarms_dev_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Web/serverfarms/dev",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('sites_tfs_dev_trade_finance_manager_ui_name')]",
+            "location": "UK South",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_dev_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": true,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/trade-finance-manager-ui:latest",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": true,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "799591A29BF706E656906E134F41DABB87DFAD60A3D5E73B22B7E45E5A356B5C",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "virtualNetworkSubnetId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/ftp')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/scm')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/web')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/trade-finance-manager-ui:latest",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 100,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$tfs-dev-trade-finance-manager-ui",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetName": "5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress",
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.0",
+                "ftpsState": "Disabled",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/', parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '.azurewebsites.net')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "properties": {
+                "siteName": "tfs-dev-trade-finance-manager-ui",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/privateEndpointConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/', parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '-cfa9e601-b967-43e8-ba60-a35ada21fd5c')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "properties": {
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-26T18_45_07_2888284')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-27T03_45_07_4829442')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-27T12_45_07_7669567')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-27T18_45_07_8656200')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-28T03_45_08_1606037')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-28T12_45_08_3599887')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-28T18_45_08_4925357')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-29T03_45_08_6889572')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-29T12_45_08_9179869')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-29T18_45_09_0575925')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-30T03_45_09_3201980')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-30T12_45_09_5241758')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-06-30T18_45_09_7062498')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-01T03_45_09_8822893')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-01T12_45_10_0389955')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-01T18_45_10_1985072')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-02T03_45_10_4225177')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-02T12_45_10_6569928')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-02T18_45_10_7956534')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-03T03_45_11_0152299')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-03T12_45_11_2132156')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-03T18_45_11_3922772')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-04T03_45_11_5920050')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-04T12_45_11_8442831')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-04T18_45_11_9606353')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-05T03_45_12_1668666')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-05T12_45_12_3706290')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-05T18_45_12_5029359')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-06T03_45_13_3778347')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-06T12_45_13_2885794')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-06T18_45_13_4496237')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-07T03_45_13_6100160')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-07T12_45_13_8293309')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-07T18_45_13_9838144')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-08T03_45_14_2102703')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-08T12_45_14_4444019')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-08T18_45_14_6191884')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-09T03_45_14_7912401')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-09T12_45_14_9770420')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-09T18_45_15_1294128')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-10T03_45_15_3343933')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-10T12_45_15_5409689')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-10T18_45_15_6757018')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-11T03_45_15_8757980')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-11T12_45_16_1041311')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-11T18_45_16_2582123')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-12T03_45_16_4630965')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-12T12_45_16_6804361')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-12T15_45_16_7330624')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-12T18_45_16_8328707')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-12T21_45_16_8975490')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T00_45_16_9399272')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T03_45_17_0297917')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T12_45_17_2881562')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T15_45_17_3110620')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T18_45_17_7184138')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-13T21_45_17_7885000')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T00_45_17_8707776')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T03_45_17_9279775')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T12_45_18_1497987')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T15_45_18_2212436')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T18_45_18_2852723')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-14T21_45_18_3630884')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T00_45_18_4253428')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T03_45_18_5042391')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T12_45_18_7472933')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T15_45_18_8440749')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T18_45_18_8676109')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-15T21_45_18_9513176')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T00_45_19_0457356')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T03_45_19_1325566')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T12_45_19_3291582')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T15_45_19_4158243')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T18_45_19_4587960')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-16T21_45_19_5090699')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T00_45_19_6094897')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T03_45_19_6664340')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T12_45_19_9204741')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T15_45_19_9908446')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T18_45_20_0557639')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-17T21_45_20_0963361')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T00_45_20_1614590')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T03_45_20_2241002')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T12_45_20_4320353')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T15_45_20_5178159')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T18_45_20_9986356')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-18T21_45_21_0459986')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T00_45_21_1642372')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T03_45_21_2108147')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T12_45_21_4020409')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T15_45_21_4626016')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T18_45_21_5327441')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-19T21_45_21_6081227')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T00_45_21_6828067')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T03_45_21_7472303')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T12_45_21_9332259')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T15_45_22_3655265')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T18_45_22_1054867')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-20T21_45_22_1851890')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T00_45_22_2441564')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T03_45_22_3326773')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T12_45_22_5445672')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T15_45_22_6360612')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T18_45_22_7219278')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-21T21_45_22_7982112')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T00_45_22_8744660')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T03_45_22_9236726')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T10_45_23_1431106')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T11_45_23_1443714')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T12_45_23_2056300')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T13_45_23_2190328')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T14_45_23_8660876')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T15_45_23_2492602')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T16_45_23_2426610')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T17_45_23_3053620')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T18_45_23_3077866')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T19_45_23_3320147')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T20_45_23_3462026')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T21_45_23_3595988')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T22_45_23_3968631')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-22T23_45_23_4492341')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T00_45_23_4407463')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T01_45_23_4713059')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T02_45_23_4806713')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T03_45_23_5521375')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T04_45_23_5325132')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T05_45_23_5458868')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T06_45_23_5914077')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T07_45_23_6120961')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T08_45_23_6256775')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T09_45_23_6464859')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T10_45_23_7219206')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T11_45_23_6824119')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T12_45_24_6943842')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T13_45_24_7078052')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T14_45_24_7740433')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T15_45_24_7683788')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T16_45_24_8018616')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T17_45_24_8152802')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T18_45_24_8357936')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T19_45_24_8519808')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T20_45_24_8933694')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T21_45_24_8968560')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T22_45_24_9321494')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-23T23_45_24_9553394')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T00_45_25_0016479')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T01_45_25_0034027')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T02_45_25_0413916')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T03_45_25_0862004')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T04_45_25_0631862')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T05_45_25_1090077')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T06_45_25_1260100')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T07_45_25_1479443')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T08_45_25_2166809')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T09_45_25_2243768')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T10_45_25_2960634')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T11_45_25_2355062')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T12_45_26_1499172')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T13_45_25_2733836')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T14_45_25_3035120')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T15_45_25_3196004')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T16_45_25_3437319')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T17_45_25_3808308')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T18_45_25_4268618')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T19_45_25_5040254')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T20_45_25_4704122')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T21_45_25_4756186')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T22_45_25_5356388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-24T23_45_25_5276829')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T00_45_25_5607677')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T01_45_25_5747596')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T02_45_25_6079663')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T03_45_26_3785970')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T04_45_26_4016539')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T05_45_26_4177284')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T06_45_26_4738340')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T07_45_27_4487932')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T08_45_26_5022589')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T09_45_26_5263978')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T10_45_26_6035499')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T11_45_26_5676405')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T12_45_26_8637463')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T13_45_26_6009017')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T14_45_26_6409827')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T15_45_26_6500364')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T16_45_26_6687242')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T17_45_26_6977992')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T18_45_26_7040153')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T19_45_26_7124375')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T20_45_26_7323739')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T21_45_26_7551454')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T22_45_26_8136095')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-25T23_45_26_8266674')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T00_45_27_2825010')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T01_45_26_8679019')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T02_45_26_8778484')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T03_45_26_9253837')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T04_45_27_0422373')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T05_45_27_0286857')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T06_45_27_0005484')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T07_45_27_0013401')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T08_45_27_0231297')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T09_45_27_0776218')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T10_45_27_5359299')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T11_45_27_1449375')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T12_45_27_1334777')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T13_45_27_1601448')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/2023-07-26T14_45_27_1885064')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_trade_finance_manager_ui_name'), '/5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_trade_finance_manager_ui_name'))]"
+            ],
+            "properties": {
+                "vnetResourceId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "isSwift": true
+            }
+        }
+    ]
+}

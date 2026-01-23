@@ -1,0 +1,1615 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_tfs_dev_external_api_name": {
+            "defaultValue": "tfs-dev-external-api",
+            "type": "String"
+        },
+        "serverfarms_dev_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Web/serverfarms/dev",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('sites_tfs_dev_external_api_name')]",
+            "location": "UK South",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_dev_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": true,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/external-api:dev",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": true,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "799591A29BF706E656906E134F41DABB87DFAD60A3D5E73B22B7E45E5A356B5C",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "virtualNetworkSubnetId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/ftp')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/scm')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/web')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/external-api:dev",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 100,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$tfs-dev-external-api",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetName": "5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress",
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/', parameters('sites_tfs_dev_external_api_name'), '.azurewebsites.net')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "properties": {
+                "siteName": "tfs-dev-external-api",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/privateEndpointConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/', parameters('sites_tfs_dev_external_api_name'), '-38e7c058-44a5-42e1-8c83-f7623f631d51')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "properties": {
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-15T12_44_58_9928466')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-15T18_44_59_1975370')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-16T03_45_00_1974429')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-16T12_45_00_4578894')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-16T18_45_00_8023388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-17T03_45_00_7746998')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-17T12_45_00_9107935')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-17T18_45_01_1045841')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-18T03_45_01_2679022')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-18T12_45_01_5400044')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-18T18_45_01_6442916')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-19T03_45_01_8679860')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-19T12_45_02_0965434')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-19T15_45_02_1525737')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-19T18_45_02_2609350')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-19T21_45_02_3055811')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T00_45_02_3551048')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T03_45_02_4675831')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T12_45_03_1820692')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T15_45_03_2655081')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T18_45_03_3480604')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-20T21_45_03_3710878')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T00_45_03_4407910')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T03_45_03_5335381')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T12_45_04_0806411')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T15_45_03_8285649')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T18_45_03_8548785')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-21T21_45_03_9483671')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T00_45_04_0315740')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T03_45_04_1991228')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T12_45_04_3236438')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T15_45_04_5385699')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T18_45_04_4647622')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-22T21_45_04_5533744')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T00_45_04_6195136')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T03_45_04_6757763')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T12_45_04_8831274')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T15_45_04_9472590')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T18_45_05_0132738')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-23T21_45_05_0785617')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T00_45_05_7174309')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T03_45_05_8023528')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T12_45_06_0188785')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T15_45_06_0356227')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T18_45_06_1223846')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-24T21_45_06_1899529')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T00_45_06_2726884')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T03_45_06_3389392')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T12_45_06_5568137')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T15_45_06_6406331')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T18_45_06_7039439')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-25T21_45_06_7915477')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T00_45_06_8622858')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T03_45_06_9277556')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T12_45_07_1467223')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T15_45_07_2359353')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T18_45_07_2888284')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-26T21_45_07_3493049')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T00_45_07_4299819')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T03_45_07_4829442')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T12_45_07_7669567')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T15_45_07_7917040')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T18_45_07_8656200')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-27T21_45_07_9896003')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T00_45_08_0264384')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T03_45_08_1606037')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T12_45_08_3599887')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T15_45_08_3883604')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T18_45_08_4925357')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-28T21_45_08_5682929')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T00_45_08_6231883')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T03_45_08_6889572')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T10_45_08_9003496')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T11_45_08_9027405')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T12_45_08_9179869')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T13_45_09_0235850')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T14_45_08_9921142')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T15_45_09_0347790')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T16_45_09_0205709')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T17_45_09_0460324')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T18_45_09_0575925')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T19_45_09_0954473')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T20_45_09_1220978')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T21_45_09_1810795')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T22_45_09_1755277')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-29T23_45_09_2154777')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T00_45_09_2278993')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T01_45_09_2741741')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T02_45_09_3654548')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T03_45_09_3201980')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T04_45_09_3385399')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T05_45_10_2918198')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T06_45_13_1835486')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T07_45_09_4386677')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T08_45_09_4175138')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T09_45_09_6679570')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T10_45_09_4580496')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T11_45_09_5152530')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T12_45_09_5241758')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T13_45_09_5527502')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T14_45_09_5855835')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T15_45_09_9009349')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T16_45_09_6318668')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T17_45_10_0289987')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T18_45_09_7062498')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T19_45_09_7026033')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T20_45_09_7187054')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T21_45_09_7299539')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T22_45_09_7964010')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-06-30T23_45_09_8281371')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T00_45_09_8249355')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T01_45_09_8402890')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T02_45_09_8631013')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T03_45_09_8822893')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T04_45_09_9362813')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T05_45_09_9648781')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T06_45_09_9404672')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T07_45_09_9589057')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T08_45_09_9735421')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T09_45_09_9900465')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T10_45_10_0606917')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T11_45_10_0729921')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T12_45_10_0389955')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T13_45_10_0717603')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T14_45_10_0818003')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T15_45_10_1158477')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T16_45_10_1694735')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T17_45_10_1718635')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T18_45_10_1985072')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T19_45_10_2136941')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T20_45_10_2463909')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T21_45_10_2496158')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T22_45_10_2794941')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-01T23_45_10_3130863')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T00_45_10_3353507')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T01_45_10_3519277')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T02_45_10_3902291')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T03_45_10_4225177')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T04_45_10_4467471')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T05_45_10_4670056')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T06_45_10_5299538')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T07_45_10_5465324')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T08_45_10_5741382')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T09_45_10_5783763')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T10_45_10_5769158')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T11_45_10_6186909')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T12_45_10_6569928')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T13_45_10_6712813')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T14_45_10_7034473')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T15_45_10_7197436')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T16_45_10_7629417')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T17_45_10_7953211')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T18_45_10_7956534')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T19_45_10_8248791')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T20_45_10_8510102')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T21_45_10_8736632')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T22_45_10_9109418')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-02T23_45_10_9477488')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T00_45_10_9492888')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T01_45_11_0427407')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T02_45_11_0019748')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T03_45_11_0152299')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T04_45_11_0533257')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T05_45_11_1038234')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T06_45_11_1347651')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T07_45_11_1464418')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T08_45_11_1629830')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T09_45_11_1842915')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T10_45_11_2079447')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T11_45_11_8459876')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T12_45_11_2132156')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T13_45_11_2429836')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/2023-07-03T14_45_11_2852623')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_external_api_name'), '/5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_external_api_name'))]"
+            ],
+            "properties": {
+                "vnetResourceId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "isSwift": true
+            }
+        }
+    ]
+}
