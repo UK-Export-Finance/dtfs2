@@ -37,7 +37,7 @@ env:
   PRODUCT: dtfs2
   ENVIRONMENT: feature
   TIMEZONE: '${{ vars.TIMEZONE }}'
-  # Deployment environment target i.e., `development`, `staging`, `production`, `feature`
+  # Deployment environment target i.e., `dev`, `staging`, `production`, `feature`
   TARGET: ${{ vars.TARGET_FEAT }}
 
 jobs:
