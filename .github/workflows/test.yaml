@@ -1,0 +1,15 @@
+name: Test Manual Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        type: environment
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Env: ${{ github.event.inputs.environment }}"
