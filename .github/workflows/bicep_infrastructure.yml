@@ -38,7 +38,7 @@ env:
   ENVIRONMENT: feature
   TIMEZONE: '${{ vars.TIMEZONE }}'
   # Deployment environment target i.e., `development`, `staging`, `production`, `feature`
-  TARGET: ${{ vars.TARGET }}
+  TARGET: ${{ vars.TARGET_FEAT }}
 
 jobs:
 
