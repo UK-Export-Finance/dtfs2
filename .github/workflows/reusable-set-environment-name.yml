@@ -1,0 +1,36 @@
+# This shared workflow sets the environment name based on the provided input or the branch name.
+
+name: Set Environment Name
+
+on:
+  workflow_call:
+    inputs:
+      INPUT_ENVIRONMENT:
+        description: 'Manually specified environment name'
+        required: false
+        type: string
+    outputs:
+      github_environment:
+        description: 'The determined environment name'
+        value: ${{ jobs.set-environment-name.outputs.github_environment }}
+
+jobs:
+  set-environment-name:
+    name: Set environment name 🔧
+    runs-on: [self-hosted, GIFT, deployment]
+    outputs:
+      github_environment: ${{ env.ENVIRONMENT_NAME }}
+    steps:
+      - name: Set environment name 💾
+        id: set-environment-name
+        run: |
+          if [[ "${{ inputs.INPUT_ENVIRONMENT }}" != "" ]]; then
+            echo ENVIRONMENT_NAME=${{ inputs.INPUT_ENVIRONMENT }} >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo ENVIRONMENT_NAME=dev >> $GITHUB_ENV
+          else
+            echo ENVIRONMENT_NAME=${{ github.ref_name }} >> $GITHUB_ENV
+          fi
+
+      - name: Test environment name 🧪
+        run: echo "Environment is set to ${{ env.ENVIRONMENT_NAME }}"

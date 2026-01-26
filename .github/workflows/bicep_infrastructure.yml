@@ -41,12 +41,17 @@ env:
   TARGET: ${{ vars.TARGET }}
 
 jobs:
+  set-environment-name:
+    name: Set environment name 🔧
+    uses: ./.github/workflows/reusable-set-environment-name.yml
+    with:
+      INPUT_ENVIRONMENT: ${{ inputs.environment }}
 # 1. Setup infrastructure variables
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
     outputs:
-      environment: ${{ env.ENVIRONMENT }}
+      environment: ${{ steps.set-environment-name.outputs.github_environment }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Repository 🗃️
