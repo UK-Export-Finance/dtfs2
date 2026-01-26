@@ -41,142 +41,144 @@ env:
   TARGET: ${{ vars.TARGET }}
 
 jobs:
-  set-environment-name:
-    name: Set environment name 🔧
-    uses: ./.github/workflows/reusable-set-environment-name.yml
-    with:
-      INPUT_ENVIRONMENT: ${{ inputs.environment }}
+  # set-environment-name:
+  #   name: Set environment name 🔧
+  #   uses: ./.github/workflows/reusable-set-environment-name.yml
+  #   with:
+  #     INPUT_ENVIRONMENT: ${{ inputs.environment }}
 # 1. Setup infrastructure variables
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
     outputs:
-      environment: ${{ steps.set-environment-name.outputs.github_environment }}
+      environment: ${{ needs.set-environment-name.outputs.github_environment }}
       timezone: ${{ env.TIMEZONE }}
     steps:
-      - name: Repository 🗃️
-        uses: actions/checkout@v4
 
-      - name: Environment 🧪
-        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+      - run: echo "Deploying to ${{ inputs.environment }}"
+#       - name: Repository 🗃️
+#         uses: actions/checkout@v4
 
-      - name: Timezone 🌐
-        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+#       - name: Environment 🧪
+#         run: echo "Environment set to ${{ needs.set-environment-name.outputs.github_environment }}"
 
-      - name: Login 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
+#       - name: Timezone 🌐
+#         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-      - name: Azure defaults ✨
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            # Basic
-            az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+#       - name: Login 🔐
+#         uses: azure/login@v2
+#         with:
+#           creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
 
-      - name: Create Resource group 🏗️
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az group create \
-            --location ${{ vars.REGION }} \
-            --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+#       - name: Azure defaults ✨
+#         uses: azure/cli@v2
+#         with:
+#           inlineScript: |
+#             # Basic
+#             az configure --defaults location=${{ vars.REGION }}
+#             az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
-      - name: Set Resource Group Name
-        run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
+#       - name: Create Resource group 🏗️
+#         uses: azure/cli@v2
+#         with:
+#           inlineScript: |
+#             az group create \
+#             --location ${{ vars.REGION }} \
+#             --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
+#             --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
-
-
-# 2. Validate infrastructure resources
-  Resource-Deploy:
-    name: Deploy Resources 📊
-    needs: setup
-    runs-on: [self-hosted, linux, deployment]
-    steps:
-      - name: Repository 🗃️
-        uses: actions/checkout@v4
-
-      - name: Login 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
-
-      - name: Replace GitHub variables into parameters.json
-        run: |
-          # Replace GitHub variables into parameters.json
-          sed -i "s|{{ENVIRONMENT}}|${{ vars.ENVIRONMENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}|${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PROD_SUBNET_CIDR}}|${{ secrets.PROD_SUBNET_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOPE_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_VPN_IPS}}|${{ secrets.UKEF_VPN_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_PORTAL_IPS}}|${{ secrets.AZ_PORTAL_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_KEY}}|${{ secrets.APIM_TFS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_VALUE}}|${{ secrets.APIM_TFS_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_URL}}|${{ secrets.APIM_TFS_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_KEY}}|${{ secrets.APIM_MDM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_URL}}|${{ secrets.APIM_MDM_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_VALUE}}|${{ secrets.APIM_MDM_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_KEY_VAULT_NAME}}|${{ secrets.APIM_MDM_KEY_VAULT_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{COMPANIES_HOUSE_API_URL}}|${{ secrets.COMPANIES_HOUSE_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ORDNANCE_SURVEY_API_URL}}|${{ secrets.ORDNANCE_SURVEY_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{RATE_LIMIT_THRESHOLD}}|${{ secrets.RATE_LIMIT_THRESHOLD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_URL}}|${{ secrets.APIM_ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{CORS_ORIGIN}}|${{ secrets.CORS_ORIGIN }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_KEY}}|${{ secrets.APIM_ESTORE_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_VALUE}}|${{ secrets.APIM_ESTORE_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{COMPANIES_HOUSE_API_KEY}}|${{ secrets.COMPANIES_HOUSE_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{GOV_NOTIFY_EMAIL_RECIPIENT}}|${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{GOV_NOTIFY_API_KEY}}|${{ secrets.GOV_NOTIFY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{EXTERNAL_API_KEY}}|${{ secrets.EXTERNAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ORDNANCE_SURVEY_API_KEY}}|${{ secrets.ORDNANCE_SURVEY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE}}|${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{DTFS_CENTRAL_API_KEY}}|${{ secrets.DTFS_CENTRAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PORTAL_UI_URL}}|${{ vars.PORTAL_UI_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_UTILISATION_REPORTS_FILESHARE_NAME}}|${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PDC_INPUTTERS_EMAIL_RECIPIENT}}|${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_PORTAL_EXPORT_FOLDER}}|${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_PORTAL_FILESHARE_NAME}}|${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{JWT_VALIDATING_KEY}}|${{ secrets.JWT_VALIDATING_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PORTAL_API_KEY}}|${{ secrets.PORTAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TFM_API_KEY}}|${{ secrets.TFM_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}|${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{SESSION_SECRET}}|${{ secrets.SESSION_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_SYSTEM_KEY}}|${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ESTORE_URL}}|${{ secrets.ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_REPORTS_KEY}}|${{ secrets.UKEF_TFM_API_REPORTS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#       - name: Set Resource Group Name
+#         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
 
-      - name: Install Bicep
-        run: |
-          az config set bicep.use_binary_from_path=False
-          az bicep install
-          az bicep upgrade
-          az bicep version
 
-      - name: Deploy Azure Resources
-        uses: azure/arm-deploy@v2
-        with:
-          subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
-          resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
-          template: ./infrastructure/resource_group_level/main.bicep
-          parameters: ./infrastructure/resource_group_level/parameters_dev.json
-          scope: resourcegroup
+# # 2. Validate infrastructure resources
+#   Resource-Deploy:
+#     name: Deploy Resources 📊
+#     needs: setup
+#     runs-on: [self-hosted, linux, deployment]
+#     steps:
+#       - name: Repository 🗃️
+#         uses: actions/checkout@v4
+
+#       - name: Login 🔐
+#         uses: azure/login@v2
+#         with:
+#           creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
+
+#       - name: Replace GitHub variables into parameters.json
+#         run: |
+#           # Replace GitHub variables into parameters.json
+#           sed -i "s|{{ENVIRONMENT}}|${{ vars.ENVIRONMENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}|${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PROD_SUBNET_CIDR}}|${{ secrets.PROD_SUBNET_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOPE_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UKEF_VPN_IPS}}|${{ secrets.UKEF_VPN_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZ_PORTAL_IPS}}|${{ secrets.AZ_PORTAL_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_TFS_KEY}}|${{ secrets.APIM_TFS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_TFS_VALUE}}|${{ secrets.APIM_TFS_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_TFS_URL}}|${{ secrets.APIM_TFS_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_MDM_KEY}}|${{ secrets.APIM_MDM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_MDM_URL}}|${{ secrets.APIM_MDM_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_MDM_VALUE}}|${{ secrets.APIM_MDM_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_MDM_KEY_VAULT_NAME}}|${{ secrets.APIM_MDM_KEY_VAULT_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{COMPANIES_HOUSE_API_URL}}|${{ secrets.COMPANIES_HOUSE_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{ORDNANCE_SURVEY_API_URL}}|${{ secrets.ORDNANCE_SURVEY_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{RATE_LIMIT_THRESHOLD}}|${{ secrets.RATE_LIMIT_THRESHOLD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_ESTORE_URL}}|${{ secrets.APIM_ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{CORS_ORIGIN}}|${{ secrets.CORS_ORIGIN }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_ESTORE_KEY}}|${{ secrets.APIM_ESTORE_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{APIM_ESTORE_VALUE}}|${{ secrets.APIM_ESTORE_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{COMPANIES_HOUSE_API_KEY}}|${{ secrets.COMPANIES_HOUSE_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{GOV_NOTIFY_EMAIL_RECIPIENT}}|${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{GOV_NOTIFY_API_KEY}}|${{ secrets.GOV_NOTIFY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{EXTERNAL_API_KEY}}|${{ secrets.EXTERNAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{ORDNANCE_SURVEY_API_KEY}}|${{ secrets.ORDNANCE_SURVEY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE}}|${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{DTFS_CENTRAL_API_KEY}}|${{ secrets.DTFS_CENTRAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PORTAL_UI_URL}}|${{ vars.PORTAL_UI_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZURE_UTILISATION_REPORTS_FILESHARE_NAME}}|${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PDC_INPUTTERS_EMAIL_RECIPIENT}}|${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZURE_PORTAL_EXPORT_FOLDER}}|${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZURE_PORTAL_FILESHARE_NAME}}|${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{JWT_VALIDATING_KEY}}|${{ secrets.JWT_VALIDATING_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{PORTAL_API_KEY}}|${{ secrets.PORTAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{TFM_API_KEY}}|${{ secrets.TFM_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}|${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{SESSION_SECRET}}|${{ secrets.SESSION_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UKEF_TFM_API_SYSTEM_KEY}}|${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{ESTORE_URL}}|${{ secrets.ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UKEF_TFM_API_REPORTS_KEY}}|${{ secrets.UKEF_TFM_API_REPORTS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+#           sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+
+
+#       - name: Install Bicep
+#         run: |
+#           az config set bicep.use_binary_from_path=False
+#           az bicep install
+#           az bicep upgrade
+#           az bicep version
+
+#       - name: Deploy Azure Resources
+#         uses: azure/arm-deploy@v2
+#         with:
+#           subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+#           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+#           template: ./infrastructure/resource_group_level/main.bicep
+#           parameters: ./infrastructure/resource_group_level/parameters_dev.json
+#           scope: resourcegroup
 
