@@ -12,4 +12,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Env: ${{ github.event.inputs.environment }}"
+      - name: Environment 🧪
+        run: |
+          echo "Env: ${{ github.event.inputs.environment || 'feature' }}"
