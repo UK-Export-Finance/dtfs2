@@ -17,7 +17,7 @@ on:
 jobs:
   set-environment-name:
     name: Set environment name 🔧
-    runs-on: [self-hosted, GIFT, deployment]
+    runs-on: [ubuntu-latest]
     outputs:
       github_environment: ${{ env.ENVIRONMENT_NAME }}
     steps:
