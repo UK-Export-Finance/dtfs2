@@ -22,17 +22,22 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 on:
   push:
     branches:
-      - feat/DTFS2-16188-bicep-templates
+      - feat/DTFS2-19579/feature-infrastructure-deployment
     paths:
       - '.github/workflows/bicep_infrastructure.yml'
       - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target deployment environment'
+        type: environment
+        required: true
 
 env:
   PRODUCT: dtfs2
   ENVIRONMENT: infrastructure
   TIMEZONE: '${{ vars.TIMEZONE }}'
-  # Deployment environment target i.e., `development`, `staging`, `production`
+  # Deployment environment target i.e., `development`, `staging`, `production`, `feature`
   TARGET: ${{ vars.TARGET }}
 
 jobs:
@@ -56,7 +61,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
 
       - name: Azure defaults ✨
         uses: azure/cli@v2
@@ -92,7 +97,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
 
       - name: Replace GitHub variables into parameters.json
         run: |
