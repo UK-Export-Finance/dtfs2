@@ -17,7 +17,8 @@ describe('getNewAccessCodePage', () => {
   it('should render the new access code template with attemptsLeft from the session', () => {
     const req = {
       session: {
-        numberOfSignInOtpAttemptsRemaining: 2,
+        numberOfSendSignInOtpAttemptsRemaining: 2,
+        userEmail: 'test@example.com',
       },
     } as unknown as GetNewAccessCodePageRequest;
 
@@ -26,6 +27,7 @@ describe('getNewAccessCodePage', () => {
     expect(renderMock).toHaveBeenCalledWith('login/new-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',
+      email: 'test@example.com',
     });
   });
 
