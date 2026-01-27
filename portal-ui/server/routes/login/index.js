@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, getNextAccessCodePage } = require('../../helpers');
@@ -12,6 +13,8 @@ const { validatePartialAuthToken } = require('../middleware/validatePartialAuthT
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
 const { LANDING_PAGES } = require('../../constants');
+
+const { HttpStatusCode } = axios;
 
 const router = express.Router();
 
@@ -133,11 +136,11 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     if (!loginCompleted) {
       console.info('Failed to login %o', error);
 
-      if (status === 403) {
+      if (status === HttpStatusCode.Forbidden) {
         if (is2FAEnabled) {
-          return res.status(403).render('login/temporarily-suspended-access-code.njk');
+          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
         }
-        return res.status(403).render('login/temporarily-suspended.njk');
+        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
       loginErrors.push(emailError);
@@ -149,14 +152,14 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     }
 
     // Error sending sign-in link or OTP
-    if (status === 403) {
+    if (status === HttpStatusCode.Forbidden) {
       if (is2FAEnabled) {
         req.session.numberOfSignInOtpAttemptsRemaining = -1;
-        return res.status(403).render('login/temporarily-suspended-access-code.njk');
+        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
       }
 
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
-      return res.status(403).render('login/temporarily-suspended.njk');
+      return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
     }
 
     const message = is2FAEnabled

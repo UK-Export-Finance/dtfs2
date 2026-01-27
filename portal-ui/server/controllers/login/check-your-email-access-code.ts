@@ -5,8 +5,9 @@ type ViewModel = {
   attemptsLeft?: number;
   requestNewCodeUrl?: string;
 };
-type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSendSignInOtpAttemptsRemaining?: number };
-export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<{}> & {
+
+type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number };
+export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetCheckYourEmailAccessCodePageRequestSession;
 };
 
@@ -17,7 +18,7 @@ export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<{}> & 
  */
 export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCodePageRequest, res: Response) => {
   const {
-    session: { numberOfSendSignInOtpAttemptsRemaining: attemptsLeft },
+    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
   } = req;
 
   if (typeof attemptsLeft === 'undefined') {
