@@ -99,9 +99,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
       http20Enabled: true
       functionAppScaleLimit: 0
       minimumElasticInstanceCount: 1
-      // The following Fields have been added after comparing the generated insance export with dev
       vnetRouteAllEnabled: true
-      // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2022'
