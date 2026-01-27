@@ -13,7 +13,6 @@ export {
   isPortalFacilityAmendmentsFeatureFlagEnabled,
   isSalesforceCustomerCreationEnabled,
   isPortal2FAFeatureFlagEnabled,
-  isMdmV2FeatureFlagEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
 export * from './monetary-value';

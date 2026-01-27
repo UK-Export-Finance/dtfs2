@@ -156,7 +156,6 @@ services:
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
-      - FF_MDM_V2_ENABLED
 
   trade-finance-manager-api:
     build:
@@ -210,7 +209,6 @@ services:
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
-      - FF_MDM_V2_ENABLED
 
   portal-ui:
     build:
@@ -316,7 +314,6 @@ services:
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - FF_PORTAL_2FA_ENABLED
-      - FF_MDM_V2_ENABLED
 
   external-api:
     build:
@@ -362,7 +359,6 @@ services:
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
       - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
-      - FF_MDM_V2_ENABLED
 
   gef-ui:
     build:
