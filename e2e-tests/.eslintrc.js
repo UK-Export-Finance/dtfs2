@@ -85,7 +85,6 @@ module.exports = {
   env: {
     jest: true,
     browser: true,
-    'cypress/globals': true,
   },
   root: true,
   ignorePatterns: ['**/node_modules/**'],
