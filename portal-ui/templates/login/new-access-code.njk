@@ -1,5 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
 
@@ -10,6 +11,15 @@
 {% endblock %}
 
 {% block content %}
+{% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l" data-cy="new-access-code-email-sent-heading">
@@ -21,18 +31,28 @@
       </p>
 
       <form method="POST" autocomplete="off">
-        <div class="govuk-form-group govuk-!-width-one-third">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        <div class="govuk-form-group">
           {{ govukInput({
             label: {
               text: "Enter access code:"
             },
-            id: "accessCode",
-            name: "accessCode",
+            classes: "govuk-!-width-one-third",
+            id: "signInOTP",
+            name: "signInOTP",
             spellcheck: false,
             type: "text",
             autocomplete: "off",
             attributes: {
-              "placeholder": "e.g. 123A5C"
+              "placeholder": "e.g. 123A5C",
+              "data-cy": "access-code-input"
+            },
+            errorMessage: errors and errors.fieldErrors.signInOTP and {
+              text: errors.fieldErrors.signInOTP.text,
+              attributes: {
+                  'data-cy': 'access-code-inline-error'
+              }
             }
           }) }}
         </div>

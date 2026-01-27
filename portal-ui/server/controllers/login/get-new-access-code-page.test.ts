@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './new-access-code-page';
+import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
 describe('getNewAccessCodePage', () => {
   let res: Response;
@@ -12,10 +12,12 @@ describe('getNewAccessCodePage', () => {
     } as unknown as Response;
   });
 
+  console.error = jest.fn();
+
   it('should render the new access code template with attemptsLeft from the session', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 2,
+        numberOfSignInOtpAttemptsRemaining: 2,
       },
     } as unknown as GetNewAccessCodePageRequest;
 
@@ -40,7 +42,7 @@ describe('getNewAccessCodePage', () => {
   it('should render problem with service template when an error occurs while rendering', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 1,
+        numberOfSignInOtpAttemptsRemaining: 1,
       },
     } as unknown as GetNewAccessCodePageRequest;
 
