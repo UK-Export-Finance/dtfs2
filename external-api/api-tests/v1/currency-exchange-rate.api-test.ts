@@ -172,7 +172,7 @@ const currencyMockCases = [
 
 // Axios mock possible currencies responses
 currencyMockCases.forEach(({ endpoint, mockResponse }) => {
-  const url = `${APIM_MDM_URL}currencies/exchange?${endpoint}`;
+  const url = `${APIM_MDM_URL}v1/currencies/exchange?${endpoint}`;
   axiosMock.onGet(url).reply(HttpStatusCode.Ok, mockResponse);
 });
 

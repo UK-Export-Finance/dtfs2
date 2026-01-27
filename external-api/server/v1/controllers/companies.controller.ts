@@ -33,7 +33,7 @@ export const getCompanyByRegistrationNumber = async (req: Request, res: Response
       },
     };
   } else {
-    const url: string = `${APIM_MDM_URL}companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
+    const url: string = `${APIM_MDM_URL}v1/companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
 
     response = await axios.get(url, { headers }).catch((error: AxiosError) => {
       console.error(`Error calling MDM API 'GET /companies?registrationNumber=': %o`, error);

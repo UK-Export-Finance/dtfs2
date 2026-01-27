@@ -70,7 +70,7 @@ const mockResponse = {
 const axiosMock = new MockAdapter(axios);
 
 axiosMock
-  .onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
+  .onGet(`${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
   .reply(HttpStatusCode.Ok, mockResponse.data);
 
 describe('/geospatial/addresses/postcode', () => {
@@ -84,7 +84,7 @@ describe('/geospatial/addresses/postcode', () => {
 
     it('returns a 500 response when MDM returns 500', async () => {
       axiosMock
-        .onGet(`${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
+        .onGet(`${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
         .reply(HttpStatusCode.InternalServerError, '');
 
       const { status, body } = await get(`/geospatial/addresses/postcode/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);

@@ -79,19 +79,19 @@ describe('/acbs', () => {
 
   describe('GET /v1/acbs/:dealId', () => {
     it('should return status code from ACBS response for a deal', async () => {
-      axiosMock.onGet(`${APIM_TFS_URL}deals/1234567890`).reply(HttpStatusCode.Ok, {});
+      axiosMock.onGet(`${APIM_TFS_URL}v1/deals/1234567890`).reply(HttpStatusCode.Ok, {});
       const { status } = await testApi.get('/acbs/deal/1234567890');
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('should return status code from ACBS response for a facility', async () => {
-      axiosMock.onGet(`${APIM_TFS_URL}facilities/1234567890`).reply(HttpStatusCode.Ok, {});
+      axiosMock.onGet(`${APIM_TFS_URL}v1/facilities/1234567890`).reply(HttpStatusCode.Ok, {});
       const { status } = await testApi.get('/acbs/facility/1234567890');
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('should return 404 for a facility which does not exist', async () => {
-      axiosMock.onGet(`${APIM_TFS_URL}facilities/0000000000`).reply(HttpStatusCode.NotFound, {});
+      axiosMock.onGet(`${APIM_TFS_URL}v1/facilities/0000000000`).reply(HttpStatusCode.NotFound, {});
       const { status } = await testApi.get('/acbs/facility/0000000000');
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
