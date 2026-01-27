@@ -64,7 +64,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS1 }}
 
 
       - name: Azure defaults ✨
