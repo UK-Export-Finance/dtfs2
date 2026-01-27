@@ -119,7 +119,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', sendSignInLinkError);
     }
 
-    return res.redirect('/login/new-access-code');
+    return res.redirect('/login/check-your-email');
   } catch (loginError) {
     console.info('Failed to login %o', loginError);
 
