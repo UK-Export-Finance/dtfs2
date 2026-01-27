@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 
 const createTestCasesFromRules = ({ allRules }) =>
