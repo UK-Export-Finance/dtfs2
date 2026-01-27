@@ -3,7 +3,7 @@ import { LANDING_PAGES } from '../constants/landing-pages';
 
 /**
  * Gets the next access code page.
- * @param currentPage - the current access code page
+ * @param attemptsLeft - the attemptsLeft
  * @returns the next access code page details
  */
 export const getNextAccessCodePage = (attemptsLeft: number): { nextAccessCodePage: string } => {
@@ -20,7 +20,7 @@ export const getNextAccessCodePage = (attemptsLeft: number): { nextAccessCodePag
       return {
         nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.ANOTHER_ACCESS_CODE}`,
       };
-      case -1:
+    case -1:
       return {
         nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`,
       };
