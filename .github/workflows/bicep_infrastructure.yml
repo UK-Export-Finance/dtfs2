@@ -62,7 +62,7 @@ jobs:
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
       - name: Login 🔐
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
 
@@ -75,7 +75,7 @@ jobs:
             az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
       - name: Create Resource group 🏗️
-        uses: azure/cli@v1
+        uses: azure/cli@v2
         with:
           inlineScript: |
             az group create \
