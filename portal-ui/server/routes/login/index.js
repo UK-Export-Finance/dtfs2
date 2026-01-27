@@ -2,6 +2,8 @@ const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { getNewAccessCodePage } = require('../../controllers/login/get-new-access-code-page');
+const { postNewAccessCodePage } = require('../../controllers/login/post-new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
@@ -118,7 +120,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', sendSignInLinkError);
     }
 
-    return res.redirect('/login/check-your-email');
+    return res.redirect('/login/new-access-code');
   } catch (loginError) {
     console.info('Failed to login %o', loginError);
 
@@ -255,6 +257,38 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
 
   return res.redirect('/login?passwordupdated=1');
 });
+
+/**
+ * @openapi
+ * /login/new-access-code:
+ *   get:
+ *     summary: Render the new access code page
+ *     tags: [Portal]
+ *     description: Render the new access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
+
+/**
+ * @openapi
+ * /login/new-access-code:
+ *   post:
+ *     summary: Post the new access code page
+ *     tags: [Portal]
+ *     description: Post the new access code page
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad Request
+ */
+router.post('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postNewAccessCodePage);
 
 /**
  * @openapi
