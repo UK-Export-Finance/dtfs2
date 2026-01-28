@@ -64,7 +64,6 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          auth-type: service-principal
           creds: ${{ secrets.AZURE_CREDENTIALS1 }}
 
 
