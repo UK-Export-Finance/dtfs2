@@ -64,7 +64,8 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: wOE8Q~2gt1-RYPasNLbDkxUSSBieF2I3m-~EabNT
+          auth-type: service-principal
+          creds: ${{ secrets.AZURE_CREDENTIALS1 }}
 
 
       - name: Azure defaults ✨
@@ -75,17 +76,20 @@ jobs:
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
-      - name: Create Resource group 🏗️
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az group create \
-            --location ${{ vars.REGION }} \
-            --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+      - name: List Azure resources
+        run: az resource list --output table
 
-      - name: Set Resource Group Name
-        run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
+      # - name: Create Resource group 🏗️
+      #   uses: azure/cli@v2
+      #   with:
+      #     inlineScript: |
+      #       az group create \
+      #       --location ${{ vars.REGION }} \
+      #       --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
+      #       --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+
+      # - name: Set Resource Group Name
+      #   run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
 
 
