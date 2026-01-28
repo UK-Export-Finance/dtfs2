@@ -61,11 +61,12 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-      - name: Login 🔐
-        uses: azure/login@v1
+      - name: Azure Login (client secret)
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS1 }}
-
+          client-id: '3df0935f-9375-4fd9-a1db-d8e177810390'
+          tenant-id: '8084138e-9400-409e-a6da-46b5281e0b0a'
+          subscription-id: '2584cb68-6a9f-4387-b7f7-65c6124b4422'
 
       - name: Azure defaults ✨
         uses: azure/cli@v2
