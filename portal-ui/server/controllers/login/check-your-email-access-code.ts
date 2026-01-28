@@ -4,9 +4,10 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 type ViewModel = {
   attemptsLeft?: number;
   requestNewCodeUrl?: string;
+  email?: string;
 };
 
-type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number };
+type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userEmail?: string };
 export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetCheckYourEmailAccessCodePageRequestSession;
 };
@@ -18,7 +19,7 @@ export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record
  */
 export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCodePageRequest, res: Response) => {
   const {
-    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
+    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
   if (typeof attemptsLeft === 'undefined') {
@@ -29,6 +30,7 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
   const viewModel: ViewModel = {
     attemptsLeft,
     requestNewCodeUrl: '/login/request-new-access-code',
+    email: userEmail,
   };
 
   try {

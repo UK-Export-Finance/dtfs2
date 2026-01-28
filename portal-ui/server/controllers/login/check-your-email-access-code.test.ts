@@ -16,6 +16,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: 2,
+        userEmail: 'test@example.com',
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
@@ -24,6 +25,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
     expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',
+      email: 'test@example.com',
     });
   });
 
@@ -41,6 +43,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: 1,
+        userEmail: 'test@example.com',
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
