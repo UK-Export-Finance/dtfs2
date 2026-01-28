@@ -64,7 +64,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v2
         with:
-          creds: 'wOE8Q~2gt1-RYPasNLbDkxUSSBieF2I3m-~EabNT'
+          creds: wOE8Q~2gt1-RYPasNLbDkxUSSBieF2I3m-~EabNT
 
 
       - name: Azure defaults ✨
