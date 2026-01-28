@@ -6,6 +6,7 @@ const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, 
 
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
+const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
@@ -296,6 +297,23 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
 
   return res.redirect('/login?passwordupdated=1');
 });
+
+/**
+ * @openapi
+ * /login/new-access-code:
+ *   get:
+ *     summary: Render the new access code page
+ *     tags: [Portal]
+ *     description: Render the new access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
 
 /**
  * @openapi
