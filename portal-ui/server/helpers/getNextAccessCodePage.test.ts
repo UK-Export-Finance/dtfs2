@@ -9,7 +9,7 @@ describe('getNextAccessCodePage', () => {
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`,
+      nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`,
     });
   });
 
@@ -19,7 +19,7 @@ describe('getNextAccessCodePage', () => {
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/${ACCESS_CODE_PAGES.NEW_ACCESS_CODE}`,
+      nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.NEW_ACCESS_CODE}`,
     });
   });
 
@@ -29,7 +29,7 @@ describe('getNextAccessCodePage', () => {
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/${ACCESS_CODE_PAGES.ANOTHER_ACCESS_CODE}`,
+      nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.ANOTHER_ACCESS_CODE}`,
     });
   });
 
@@ -39,7 +39,7 @@ describe('getNextAccessCodePage', () => {
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`,
+      nextAccessCodePage: `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`,
     });
   });
 
@@ -52,7 +52,7 @@ describe('getNextAccessCodePage', () => {
 
     // Assert
     expect(result).toEqual({
-      requestNewCodeUrl: LANDING_PAGES.LOGIN,
+      nextAccessCodePage: LANDING_PAGES.LOGIN,
     });
   });
 });
