@@ -9,6 +9,7 @@ const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controlle
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
 const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
+const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
