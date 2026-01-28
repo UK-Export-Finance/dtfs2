@@ -50,5 +50,5 @@ module.exports = {
   convertUserFormDataToRequest,
   getRecordCorrectionCancelLinkHref,
   mapFacilityProperties,
-  getNextAccessCodePage
+  getNextAccessCodePage,
 };
