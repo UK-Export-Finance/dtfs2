@@ -22,7 +22,6 @@ resource routeTable 'Microsoft.Network/routeTables@2024-10-01' = {
       addressPrefix: productionSubnetCidr
       nextHopType: 'VirtualAppliance'
       nextHopIpAddress: nextHopIpAddress
-      //hasBgpOverride: false
     }
   }
 }

@@ -551,8 +551,8 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
   }
   kind: 'linux'
   properties: {
-    // Linux ASPs need to have reserved as true:
-    // https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties
+    /* Linux ASPs need to have reserved as true:
+    https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties */
     reserved: true
   }
 }
@@ -562,7 +562,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
   location: location
   sku: parametersMap[environment].acr.sku
   properties: {
-    // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
   }
 }
@@ -736,7 +735,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
   }
-} */
+} 
 
 module cosmosDb 'modules/cosmosdb.bicep' = {
   name: 'mongoDb'

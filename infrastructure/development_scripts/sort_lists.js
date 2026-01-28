@@ -5,14 +5,14 @@ const path = require('path');
 
 const files = fs
   .readdirSync(__dirname)
-  .filter((fn) => fs.lstatSync(fn).isFile())
+  .filter((fn) => fs.lstatSync(path.join(__dirname, fn)).isFile())
   .filter((fn) => fn.endsWith('.json'));
 console.log(fs.readdirSync(__dirname));
 files.forEach((file) => {
     console.log(`processing ${file}`);
     const new_fn = file.replace('.json', '_sorted.json');
 
-    const data = fs.readFileSync(file)
+    const data = fs.readFileSync(path.join(__dirname, file), 'utf8')
     const list = JSON.parse(data)
 
     list.sort((a, b) => (a.name > b.name) ? 1 : -1)

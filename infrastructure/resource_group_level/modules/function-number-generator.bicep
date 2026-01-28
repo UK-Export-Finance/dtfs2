@@ -75,8 +75,8 @@ var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragmen
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
 
-// Minimal setup from MS example
-// See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
+/* Minimal setup from MS example
+See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep */
 
 resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
   name: functionNumberGeneratorName
@@ -84,10 +84,9 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
   tags: {}
   kind: 'functionapp,linux,container'
   properties: {
-    httpsOnly: false
+    httpsOnly: true
     serverFarmId: appServicePlanId
     siteConfig: {
-      // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
       linuxFxVersion: 'DOCKER|${dockerImageName}'
       acrUseManagedIdentityCreds: false
@@ -95,9 +94,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
       http20Enabled: true
       functionAppScaleLimit: 0
       minimumElasticInstanceCount: 1
-      // The following Fields have been added after comparing the generated insance export with dev
       vnetRouteAllEnabled: true
-      // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2022'

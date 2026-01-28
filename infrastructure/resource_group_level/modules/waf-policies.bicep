@@ -37,7 +37,7 @@ var cleanIpsString = trim(allowedIpsString)
 var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
 // Parse JSON if valid format, otherwise use empty array
 var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
-var unauthorisedMessageBody = base64('Unathorised access!')
+var unauthorisedMessageBody = base64('Unauthorised access!')
 
 // Note that by default, some rules are disabled by default because they have been superceded.
 // These don't appear in ruleGroupOverrides.
