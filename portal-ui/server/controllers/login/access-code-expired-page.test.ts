@@ -19,16 +19,7 @@ describe('getAccessCodeExpiredPage', () => {
     } as Partial<Response>;
   });
 
-  it('should render the access code expired template', () => {
-    // Act
-    getAccessCodeExpiredPage(req, res as Response);
-
-    // Assert
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
-  });
-
-  it('should pass attemptsLeft to the template', () => {
+  it('should render the access code expired template with attemptsLeft', () => {
     // Act
     getAccessCodeExpiredPage(req, res as Response);
 
@@ -59,5 +50,23 @@ describe('getAccessCodeExpiredPage', () => {
     // Assert
     expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 1 }));
+  });
+
+  it('should handle errors thrown during rendering', () => {
+    // Arrange
+    req.session.numberOfSendSignInOtpAttemptsRemaining = 2;
+
+    const renderMock = res.render as unknown as jest.Mock;
+    renderMock.mockImplementationOnce(() => {
+      throw new Error('Render error');
+    });
+
+    // Act
+    getAccessCodeExpiredPage(req, res as Response);
+
+    // Assert
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+    expect(renderMock).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 2 }));
+    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
   });
 });
