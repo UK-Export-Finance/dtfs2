@@ -54,7 +54,7 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
   try {
     const { entityType, dealId } = req.body;
     const numberTypeId = getNumberTypeId(String(entityType));
-    const endpoint = `${APIM_MDM_URL}numbers`;
+    const endpoint = `${APIM_MDM_URL}v1/numbers`;
     const payload = {
       numberTypeId,
       createdBy: USER.DTFS,

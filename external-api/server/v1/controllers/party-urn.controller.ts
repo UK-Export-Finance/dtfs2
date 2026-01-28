@@ -33,7 +33,7 @@ export const lookup = async (req: Request, res: Response) => {
 
     const response = await axios({
       method: 'get',
-      url: `${APIM_MDM_URL}customers?partyUrn=${urn}`,
+      url: `${APIM_MDM_URL}v1/customers?partyUrn=${urn}`,
       headers,
     }).catch((error: any) => {
       console.error('Error calling Party URN lookup %o', error);
