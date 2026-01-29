@@ -1,5 +1,46 @@
 # Changelog
 
+## [2.12.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v2.12.0) (2026-01-14)
+
+
+### Features
+
+* **DTFS2-7033:** add controllers for OTP generation ([7a951ae](https://github.com/UK-Export-Finance/dtfs2/commit/7a951ae4c73c43785ef73f7c31b65b622b35625e))
+* **DTFS2-7033:** add verifying OTP and documentation ([ac46f9b](https://github.com/UK-Export-Finance/dtfs2/commit/ac46f9bb79e1387cbcdfe2a6de2aa946f1908daa))
+* **DTFS2-7033:** added salt and hash libs/common ([000aa70](https://github.com/UK-Export-Finance/dtfs2/commit/000aa70cc41bb81acb7db18d77e247958c4f20c7))
+* **DTFS2-7033:** added validation ([cc556db](https://github.com/UK-Export-Finance/dtfs2/commit/cc556db258620db3a0b29d0a1da2f518a26d3673))
+* **DTFS2-7033:** change import type package.json ([adf6e4e](https://github.com/UK-Export-Finance/dtfs2/commit/adf6e4ec629a6cd4c0cbc77f60b1b43441c5b689))
+* **DTFS2-7033:** disable 2fa from portal until ticket ready ([9f12944](https://github.com/UK-Export-Finance/dtfs2/commit/9f12944bc8bf78f6958c1665b97ef8cc64c87144))
+* **DTFS2-7033:** generate and validate OTP for 2FA ([#4592](https://github.com/UK-Export-Finance/dtfs2/issues/4592)) ([022db03](https://github.com/UK-Export-Finance/dtfs2/commit/022db03cddc45e9d001773c07ff7a89f406b34a7))
+* **DTFS2-7033:** review markups ([057307c](https://github.com/UK-Export-Finance/dtfs2/commit/057307c91e6bd7850615c4fad313efbcac6d16c7))
+* **DTFS2-7033:** review markups ([83e60ea](https://github.com/UK-Export-Finance/dtfs2/commit/83e60ea4b63043be301f5dc7e103081fa3891a2f))
+* **DTFS2-7033:** review markups ([6cf726d](https://github.com/UK-Export-Finance/dtfs2/commit/6cf726d811112671ee5ca5bb10a9c09b944302cc))
+* **DTFS2-8195:** add route and controller for temporarily suspended access page ([ce32f1a](https://github.com/UK-Export-Finance/dtfs2/commit/ce32f1abd9eeb5d63fd711eefd55589359817d1b))
+
+
+### Bug Fixes
+
+* **DTFS2-8173:** amendments - do you have facility end date ([#4583](https://github.com/UK-Export-Finance/dtfs2/issues/4583)) ([7a8cfba](https://github.com/UK-Export-Finance/dtfs2/commit/7a8cfba27feb09f9c2f4e93a28d7ff000a20b180))
+* **DTFS2-8206:** implement comment normalization ([#4581](https://github.com/UK-Export-Finance/dtfs2/issues/4581)) ([405aa5e](https://github.com/UK-Export-Finance/dtfs2/commit/405aa5ed4e4c85d04adcbafb7cd669976f777e28))
+* **DTFS2-8215:** prevent form submit on print page click ([#4571](https://github.com/UK-Export-Finance/dtfs2/issues/4571)) ([999c306](https://github.com/UK-Export-Finance/dtfs2/commit/999c306b6b0f9b36decd7c03e565580be40fa7c9))
+* **DTFS2-8220:** add expectElement component test ([21814e4](https://github.com/UK-Export-Finance/dtfs2/commit/21814e46c1e7800e7ee92d7e54f00033796607d6))
+* **DTFS2-8220:** address pr comments ([ba6e9df](https://github.com/UK-Export-Finance/dtfs2/commit/ba6e9df192254d2e2e5f556771a8471d9e4acf1e))
+* **DTFS2-8220:** change integrity ([c319cdb](https://github.com/UK-Export-Finance/dtfs2/commit/c319cdbb6bec6264e65b1546d69caa5b1602a05e))
+* **DTFS2-8220:** change integrity ([b1aa885](https://github.com/UK-Export-Finance/dtfs2/commit/b1aa885ad68c0cbaa75e5f4573236a867db2c1c7))
+* **DTFS2-8220:** change integrity component tests ([dc2ed01](https://github.com/UK-Export-Finance/dtfs2/commit/dc2ed01dd389eb4585f05ef3c3022190e20a98a1))
+* **DTFS2-8220:** change integrity for portal ui ([ec82122](https://github.com/UK-Export-Finance/dtfs2/commit/ec821229a38bd7387f6e634401ac5e0f904959b5))
+* **DTFS2-8220:** error summary record correction single line ([5b9aa36](https://github.com/UK-Export-Finance/dtfs2/commit/5b9aa36cf2ce9c70a8888a93f9ad490c354a2028))
+* **DTFS2-8220:** fix error summary record correction displaying on single line ([#4601](https://github.com/UK-Export-Finance/dtfs2/issues/4601)) ([2905610](https://github.com/UK-Export-Finance/dtfs2/commit/290561010402675dd7d5efb8da00598253c63c65))
+* **DTFS2-8220:** fix integrity ([6043335](https://github.com/UK-Export-Finance/dtfs2/commit/6043335880d322906f1cc8af747df8f98527aee6))
+* **DTFS2-8228:** tfm comment normalization bug fix ([22c8fe4](https://github.com/UK-Export-Finance/dtfs2/commit/22c8fe4b250c560550189dfbf05f332e012cd472))
+* **DTFS2-8242:** add 2027 and 2028 bank holidays to backup file ([#4603](https://github.com/UK-Export-Finance/dtfs2/issues/4603)) ([932e5e4](https://github.com/UK-Export-Finance/dtfs2/commit/932e5e4964ab7732a72806607a37abd7a23f1729))
+* **DTFS2-8242:** add 2027 to backup bank holiday file ([a628da3](https://github.com/UK-Export-Finance/dtfs2/commit/a628da346d934d25c4bd3fb3acb94d1eda330690))
+
+
+### Reverts
+
+* **DTFS2-6761:** revert hashing changes  ([#4575](https://github.com/UK-Export-Finance/dtfs2/issues/4575)) ([16b80a7](https://github.com/UK-Export-Finance/dtfs2/commit/16b80a74047b7169b3831242e70ae1202afbc49c))
+
 ## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-27)
 
 
