@@ -8,7 +8,7 @@ module.exports = (opts) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
   cy.enterUsernameAndPassword({ username, password });
 
-  // cy.url().should('eq', relative('/login/check-your-email'));
+  cy.url().should('eq', relative('/login/check-your-email'));
 
   const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
