@@ -25,14 +25,18 @@ param resourceNameFragment string = 'portal-api'
 
 param settings object
 
+// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
 
+// These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
 param additionalSecureSettings object
 
+// These values are inlined in the CLI scripts
 param connectionStrings object
 
+// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureConnectionStrings object
 
@@ -45,22 +49,29 @@ var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:$
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var staticSettings = {
+  // derived
   CLAMAV_HOST: clamAvSettings.ipAddress
   CLAMAV_PORT: clamAvSettings.port
   CLAMAV_DEBUG_MODE_ENABLED: 'true'
   CLAMAV_SCANNING_ENABLED: 'true'
 
+  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
 
-var dtfsCentralApiUrl = 'https://${dtfsCentralApiHostname}'
+// TODO:FN-741 - access APIs over HTTPS.
+var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// Note that in the CLI script, http was used, but the value in the exported config was https.
 var externalApiUrl = 'https://${externalApiHostname}'
+// TODO:FN-741 - access APIs over HTTPS.
 var tfmApiUrl = 'https://${tfmApiHostname}'
 
+// These values are taken from an export of Configuration on Dev (& validating with staging).
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
@@ -71,7 +82,7 @@ var additionalSettings = {
   WEBSITE_DYNAMIC_CACHE: '0'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
-  WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' 
+  WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' // TODO:DTFS2-6422 consider making parameterisable
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
@@ -92,8 +103,8 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 } )
 
 
-var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
-var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
+// Then there are the calculated values.
+var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
@@ -121,14 +132,14 @@ module portalApiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsProperties
-    deployApplicationInsights: false 
+    deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
-    scmMinTlsVersion: '1.2'
+    scmMinTlsVersion: '1.0'
     product: product
     version: version
     target: target
