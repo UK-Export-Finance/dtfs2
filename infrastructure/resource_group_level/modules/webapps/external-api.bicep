@@ -19,12 +19,9 @@ param resourceNameFragment string = 'external-api'
 
 param settings object
 
-// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
 
-// These values are taken from an export of Configuration on Dev (& validating with staging),
-// that look like they need to be kept secure.
 @secure()
 param additionalSecureSettings object
 
@@ -37,27 +34,22 @@ var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:$
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
+var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
+var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
 
-// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var staticSettings = {
-    // derived
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
   AZURE_ACBS_FUNCTION_URL: 'https://${acbsFunctionDefaultHostName}'
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
 
-  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
 
-// These values are taken from an export of Configuration on Dev (& validating with staging).
 var additionalSettings = {
-  // Note that the config didn't have AI enabled
-  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
 
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer

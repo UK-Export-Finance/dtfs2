@@ -17,10 +17,8 @@ param resourceNameFragment string = 'dtfs-central-api'
 
 param settings object
 
-// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
-// These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
 param additionalSecureSettings object
 
@@ -33,22 +31,14 @@ var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:$
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var staticSettings = {
-  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
 
-// These values are taken from an export of Configuration on Dev (& validating with staging).
 var additionalSettings = {
-  // Note that the `webapp` module will add:
-  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-  // Note that the config has APPINSIGHTS_INSTRUMENTATIONKEY as a slot setting, though the advice
-  // is not to use at the same time as its replacement - APPLICATIONINSIGHTS_CONNECTION_STRING
-  // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
@@ -61,8 +51,8 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-// These have come from the CLI scripts
-var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
+var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
+var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
 var calculatedSettings = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
