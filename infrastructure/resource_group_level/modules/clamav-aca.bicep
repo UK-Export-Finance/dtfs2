@@ -66,9 +66,6 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
           image: 'mkodockx/docker-clamav:1.1.2-alpine'
           name: containerName
           resources: {
-            // We need minimal CPU, but 4GiB of memory.
-            // However, currently only some combinations of CPU and memory are allowed.
-            // See https://learn.microsoft.com/en-us/azure/container-apps/containers
             cpu: 2
             memory: '4Gi'
           }

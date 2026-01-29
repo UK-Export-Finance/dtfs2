@@ -1,5 +1,4 @@
 param location string
-//param environment string
 param gatewaySubnetId string
 param tfsIpId string
 param portalApiHostname string
