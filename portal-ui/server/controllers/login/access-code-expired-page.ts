@@ -5,7 +5,7 @@ import type { CustomExpressRequest } from '@ukef/dtfs2-common';
 type BaseRequest = CustomExpressRequest<Record<string, never>>;
 
 type GetAccessCodeExpiredPageRequestSession = {
-  numberOfSendSignInOtpAttemptsRemaining?: number;
+  numberOfSignInOtpAttemptsRemaining?: number;
   userEmail?: string;
 };
 export type GetAccessCodeExpiredPageRequest = BaseRequest & {
@@ -19,7 +19,7 @@ export type GetAccessCodeExpiredPageRequest = BaseRequest & {
  */
 export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, res: Response) => {
   const {
-    session: { numberOfSendSignInOtpAttemptsRemaining: attemptsLeft },
+    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
   } = req;
 
   if (typeof attemptsLeft === 'undefined') {
