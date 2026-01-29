@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+// const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -89,7 +89,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     });
   }
 
-  const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
+  // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
   let loginCompleted = false;
 
   try {
@@ -158,10 +158,11 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
     }
 
-    const message = is2FAEnabled
-      ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
-      : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
+    // const message = is2FAEnabled
+    //   ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
+    //   : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
 
+    const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
     console.info(message, error);
 
     // Continue login flow so the user can retry sending OTP / sign-in link
