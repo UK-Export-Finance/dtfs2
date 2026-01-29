@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, getNextAccessCodePage } = require('../../helpers');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { getNewAccessCodePage } = require('../../controllers/login/get-new-access-code-page');
@@ -108,24 +108,24 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     /**
      * Send sign in link or OTP depending on whether 2FA feature flag is enabled
      */
-    if (is2FAEnabled) {
-      const {
-        data: { numberOfSignInOtpAttemptsRemaining },
-      } = await api.sendSignInOTP(req.session.userToken);
+    // if (is2FAEnabled) {
+    //   const {
+    //     data: { numberOfSignInOtpAttemptsRemaining },
+    //   } = await api.sendSignInOTP(req.session.userToken);
 
-      req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
-    } else {
-      const {
-        data: { numberOfSendSignInLinkAttemptsRemaining },
-      } = await api.sendSignInLink(req.session.userToken);
+    //   req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
+    // } else {
+    const {
+      data: { numberOfSendSignInLinkAttemptsRemaining },
+    } = await api.sendSignInLink(req.session.userToken);
 
-      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-    }
+    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    // }
 
-    if (is2FAEnabled) {
-      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-      return res.redirect(nextAccessCodePage);
-    }
+    // if (is2FAEnabled) {
+    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   return res.redirect(nextAccessCodePage);
+    // }
 
     return res.redirect('/login/check-your-email');
   } catch (error) {
@@ -135,9 +135,9 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       console.info('Failed to login %o', error);
 
       if (status === HttpStatusCode.Forbidden) {
-        if (is2FAEnabled) {
-          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-        }
+        // if (is2FAEnabled) {
+        //   return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+        // }
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
@@ -149,10 +149,10 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       });
     }
     if (status === HttpStatusCode.Forbidden) {
-      if (is2FAEnabled) {
-        req.session.numberOfSignInOtpAttemptsRemaining = -1;
-        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-      }
+      // if (is2FAEnabled) {
+      //   req.session.numberOfSignInOtpAttemptsRemaining = -1;
+      //   return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+      // }
 
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
       return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
@@ -165,10 +165,10 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     console.info(message, error);
 
     // Continue login flow so the user can retry sending OTP / sign-in link
-    if (is2FAEnabled) {
-      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-      return res.redirect(nextAccessCodePage);
-    }
+    // if (is2FAEnabled) {
+    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   return res.redirect(nextAccessCodePage);
+    // }
     return res.redirect('/login/check-your-email');
   }
 });
