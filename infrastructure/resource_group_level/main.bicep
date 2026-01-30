@@ -737,23 +737,6 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
   }
 } 
 
-module cosmosDb 'modules/cosmosdb.bicep' = {
-  name: 'mongoDb'
-  params: {
-    location: location
-    product: product
-    version: version
-    target: target
-    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
-    databaseName: parametersMap[environment].cosmosDb.databaseName
-    allowedIpsString: onPremiseNetworkIpsString
-    capacityMode: parametersMap[environment].cosmosDb.capacityMode
-    backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
-  }
-}
-
 module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
   params: {
