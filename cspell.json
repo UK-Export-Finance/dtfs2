@@ -273,7 +273,17 @@
     "APPGW",
     "dfts",
     "whatif",
-    "ltra"
+    "ltra",
+    "UPRN",
+    "upserted",
+    "upserts",
+    "vaue",
+    "venv",
+    "VNET",
+    "WCAG",
+    "whatwg",
+    "wovens",
+    "XLXS"
   ],
   "dictionaries": [
     "en-gb",
