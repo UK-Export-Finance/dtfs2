@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { subDays } from 'date-fns';
 import { produce } from 'immer';
 import { sendReportDueEmailsJob } from '.';
