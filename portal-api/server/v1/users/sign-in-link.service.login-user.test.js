@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const { when } = require('jest-when');
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');

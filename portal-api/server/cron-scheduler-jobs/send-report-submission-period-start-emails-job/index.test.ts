@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { produce } from 'immer';
 import { sendReportSubmissionPeriodStartEmailsJob } from './index';
 import api from '../../v1/api';
