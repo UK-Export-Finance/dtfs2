@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getCheckYourEmailAccessCodePage, GetCheckYourEmailAccessCodePageRequest } from './check-your-email-access-code';
+import { getCheckYourEmailAccessCodePage, GetCheckYourEmailAccessCodePageRequest } from './get-check-your-email-access-code';
 
 describe('getCheckYourEmailAccessCodePage', () => {
   let res: Response;
