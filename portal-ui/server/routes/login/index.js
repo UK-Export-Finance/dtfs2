@@ -90,14 +90,14 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   }
 
   // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
-  let loginCompleted = false;
+  let loginApiCallSucceeded = false;
 
   try {
     const loginResponse = await api.login(email, password);
 
     const { token, loginStatus, user } = loginResponse;
 
-    loginCompleted = true;
+    loginApiCallSucceeded = true;
 
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
@@ -131,7 +131,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   } catch (error) {
     const status = error.response?.status;
 
-    if (!loginCompleted) {
+    if (!loginApiCallSucceeded) {
       console.info('Failed to login %o', error);
 
       if (status === HttpStatusCode.Forbidden) {
