@@ -1,0 +1,244 @@
+name: Perform action for an Az Deployment Group via Bicep
+
+# We don't want concurrent deploys to the same resource group.
+concurrency: bicep_az_deployment_group_${{ inputs.resourceGroupName }}
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: What environment is being deployed
+        required: true
+        type: string
+      resourceGroupName:
+        required: true
+        type: string
+      action:
+        description: What action to perform - validate, what-if or create
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      REMOTE_VNET_SUBSCRIPTION_VPN:
+        description: Subscription Id to set up vnet peering for
+        required: true
+      REMOTE_VNET_RESOURCE_GROUP_VPN:
+        description: Resource group the remote vnet resides in that we want to set up peering for
+        required: true
+      REMOTE_VNET_NAME_VPN:
+        description: Name of the remote vnet we want to set up peering for
+        required: true
+      VNET_ADDRESS_PREFIX:
+        description: Remote VNet Peering address space
+        required: true
+      UKEF_VPN_IPS:
+        description: IPs allowed to access restricted services, represented as Json array string
+        required: true
+      APIM_TFS_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_TFS_VALUE:
+        description: webapp environment variable
+        required: true
+      APIM_TFS_URL:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_URL:
+        description: webapp environment variable
+        required: true
+      APIM_MDM_VALUE:
+        description: webapp environment variable
+        required: true
+      CORS_ORIGIN:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_URL:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_KEY:
+        description: webapp environment variable
+        required: true
+      APIM_ESTORE_VALUE:
+        description: webapp environment variable
+        required: true
+      COMPANIES_HOUSE_API_KEY:
+        description: webapp environment variable
+        required: true
+      ORDNANCE_SURVEY_API_KEY:
+        description: webapp environment variable
+        required: true
+      GOV_NOTIFY_API_KEY:
+        description: webapp environment variable
+        required: true
+      GOV_NOTIFY_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
+      AZURE_PORTAL_EXPORT_FOLDER:
+        description: webapp environment variable
+        required: true
+      AZURE_PORTAL_FILESHARE_NAME:
+        description: webapp environment variable
+        required: true
+      JWT_SIGNING_KEY:
+        description: webapp environment variable
+        required: true
+      JWT_VALIDATING_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_INTERNAL_NOTIFICATION:
+        description: webapp environment variable
+        required: true
+      DTFS_CENTRAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      EXTERNAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      PORTAL_API_KEY:
+        description: webapp environment variable
+        required: true
+      TFM_API_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_TFM_API_SYSTEM_KEY:
+        description: webapp environment variable
+        required: true
+      UKEF_TFM_API_REPORTS_KEY:
+        description: webapp environment variable
+        required: true
+      AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE:
+        description: webapp environment variable
+        required: true
+      SESSION_SECRET:
+        description: webapp environment variable
+        required: true
+      ESTORE_URL:
+        description: webapp environment variable
+        required: true
+      PDC_INPUTTERS_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
+
+jobs:
+  configure-command:
+    name: Configure ${{ inputs.environment }} ${{ inputs.action }} command
+    runs-on: [self-hosted, linux, deployment]
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
+    # environment: ${{ inputs.environment }}
+    environment: dev
+    outputs:
+      command: ${{ steps.config-command.outputs.command }}
+    steps:
+      - id: config-command
+        run: |
+          if [[ ${{ inputs.action }} == "validate" ]] ; then
+            echo "command=validate" >> $GITHUB_OUTPUT
+          elif [[ ${{ inputs.action }} == "what-if" ]] ; then
+            echo "command=what-if" >> $GITHUB_OUTPUT
+          elif [[ ${{ inputs.action }} == "create" ]] ; then
+            echo "command=create" >> $GITHUB_OUTPUT
+          else
+            echo "::error title=invalid action specified::'${{ inputs.action }}' is not a valid action. Choose from 'validate', 'what-if' or 'create'."
+            exit 1
+          fi
+
+  run-command:
+    name: Run ${{ inputs.environment }} ${{ needs.configure-command.outputs.command }} command
+    needs: configure-command
+    runs-on: [self-hosted, linux, deployment]
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
+    # environment: ${{ inputs.environment }}
+    environment: dev
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # We install Bicep ourselves and make sure it works on Alpine linux which is what the runners use.
+      # (See note below for more information.)
+      - name: Install Bicep
+        run: |
+          az version
+          az config set bicep.use_binary_from_path=False
+          az bicep install --target-platform linux-musl-x64
+          az bicep upgrade
+          az bicep version
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Perform deployment ${{ needs.configure-command.outputs.command }} command
+        env:
+          # Note the leading space. We need this to stop Bicep what-if validation failing due to the "["
+          # of the string needing to be escaped if the string is not multi-line (which I believe adds leading spaces as a side effect).
+          # See https://stackoverflow.com/questions/74817321/how-to-escape-leading-square-bracket-in-a-parameter-array-in-bicep
+          # and the issue it mentions for details.
+          UKEF_VPN_IPS_RAW: ${{ secrets.UKEF_VPN_IPS }}
+          AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
+          COMMAND: ${{ needs.configure-command.outputs.command }}
+
+        # Note that we use the plain run command here, having installed Bicep above.
+        # - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
+        # I have tried foo=${{ secrets.bar }}, setting the secret to an env and doing foo="$env", escaping values and lots of other things.
+        # - We don't use the azure/cli action because with the latest versions on 13/9/23 it doesn't seem
+        # to have the bicep dependencies (Alpine Linux) available and so fails with
+        # "ERROR: Error loading shared library ld-linux-x86-64.so.2: No such file or directory (needed by /root/.azure/bin/bicep)"
+        # This seems to be: https://github.com/Azure/bicep/issues/1683
+        # - We can just use a normal run command, but will need to keep an eye on the Azure CLI version as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
+        # - Note that for the secrets with special characters, I have used the indirection recommended here:
+        # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
+        run: |
+          az deployment group ${{ env.COMMAND }} \
+            --name ${{ github.run_number }} \
+            --resource-group ${{ inputs.resourceGroupName }} \
+            --template-file ./infrastructure/resource_group_level/main.bicep \
+            --parameters \
+              environment=${{ inputs.environment }} \
+              peeringRemoteVnetSubscriptionId=${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }} \
+              peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}} \
+              peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }} \
+              peeringAddressSpace=${{ secrets.VNET_ADDRESS_PREFIX }} \
+              onPremiseNetworkIpsString="$UKEF_VPN_IPS_RAW" \
+              APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
+              APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
+              APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
+              APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
+              APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
+              APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }} \
+              CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+              APIM_ESTORE_URL=${{ secrets.APIM_ESTORE_URL }} \
+              APIM_ESTORE_KEY=${{ secrets.APIM_ESTORE_KEY }} \
+              APIM_ESTORE_VALUE=${{ secrets.APIM_ESTORE_VALUE }} \
+              COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }} \
+              ORDNANCE_SURVEY_API_KEY=${{ secrets.ORDNANCE_SURVEY_API_KEY }} \
+              GOV_NOTIFY_API_KEY=${{ secrets.GOV_NOTIFY_API_KEY }} \
+              GOV_NOTIFY_EMAIL_RECIPIENT=${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }} \
+              AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }} \
+              AZURE_PORTAL_FILESHARE_NAME=${{ secrets.AZURE_PORTAL_FILESHARE_NAME }} \
+              JWT_SIGNING_KEY=${{ secrets.JWT_SIGNING_KEY }} \
+              JWT_VALIDATING_KEY=${{ secrets.JWT_VALIDATING_KEY }} \
+              UKEF_INTERNAL_NOTIFICATION=${{ secrets.UKEF_INTERNAL_NOTIFICATION }} \
+              DTFS_CENTRAL_API_KEY=${{ secrets.DTFS_CENTRAL_API_KEY }} \
+              EXTERNAL_API_KEY=${{ secrets.EXTERNAL_API_KEY }} \
+              PORTAL_API_KEY=${{ secrets.PORTAL_API_KEY }} \
+              TFM_API_KEY=${{ secrets.TFM_API_KEY }} \
+              UKEF_TFM_API_SYSTEM_KEY=${{ secrets.UKEF_TFM_API_SYSTEM_KEY }} \
+              UKEF_TFM_API_REPORTS_KEY=${{ secrets.UKEF_TFM_API_REPORTS_KEY }} \
+              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV" \
+              SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+              ESTORE_URL=${{ secrets.ESTORE_URL }} \
+              PDC_INPUTTERS_EMAIL_RECIPIENT=${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }} \
+              RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}} \
+              UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
+              PORTAL_UI_URL=${{ vars.PORTAL_UI_URL }} \
+              UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+              UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+              UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE='${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }}' \
+              UTILISATION_REPORT_DUE_EMAIL_SCHEDULE='${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}' \
+              UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE='${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}' \
+              AZURE_UTILISATION_REPORTS_FILESHARE_NAME=${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }} \
+              UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE='${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}'
