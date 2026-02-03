@@ -7,7 +7,9 @@ const { requestParams, generateErrorSummary, errorHref, validationErrorHandler }
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
 const { getResendAnotherAccessCodePage } = require('../../controllers/login/get-resend-another-access-code');
-const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
+const { getNewAccessCodePage } = require('../../controllers/login/get-new-access-code-page');
+const { postNewAccessCodePage } = require('../../controllers/login/post-new-access-code-page');
+const { postResendAnotherAccessCodePage } = require('../../controllers/login/post-resend-another-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
@@ -313,6 +315,21 @@ router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAu
 
 /**
  * @openapi
+ * /login/new-access-code:
+ *   post:
+ *     summary: Post the new access code page
+ *     tags: [Portal]
+ *     description: Post the new access code page
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad Request
+ */
+router.post('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postNewAccessCodePage);
+
+/**
+ * @openapi
  * /login/check-your-email:
  *   get:
  *     summary: Render check your email page
@@ -437,6 +454,21 @@ router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled
  *         description: Internal server error
  */
 router.get('/login/resend-another-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getResendAnotherAccessCodePage);
+
+/**
+ * @openapi
+ * /login/resend-another-access-code:
+ *   post:
+ *     summary: Post the resend another access code page
+ *     tags: [Portal]
+ *     description: Post the resend another access code page
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad Request
+ */
+router.post('/login/resend-another-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postResendAnotherAccessCodePage);
 
 /**
  * @openapi
