@@ -11,6 +11,7 @@ const { getNewAccessCodePage } = require('../../controllers/login/get-new-access
 const { postNewAccessCodePage } = require('../../controllers/login/post-new-access-code-page');
 const { postResendAnotherAccessCodePage } = require('../../controllers/login/post-resend-another-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
+const { requestNewAccessCode } = require('../../controllers/login/post-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
@@ -484,5 +485,20 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
  *         description: Forbidden
  */
 router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
+
+/**
+ * @openapi
+ * /login/request-new-sign-in-otp:
+ *   post:
+ *     summary: Request a new sign-in OTP and navigate to the appropriate page
+ *     tags: [Portal]
+ *     description: Request a new sign-in OTP and navigate to the appropriate page
+ *     responses:
+ *       302:
+ *         description: Resource moved temporarily
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
 
 module.exports = router;
