@@ -8,7 +8,7 @@ const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controlle
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
 const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
-const { requestNewSignInOtp } = require('../../controllers/login/request-new-sign-in-otp');
+const { requestNewAccessCode } = require('../../controllers/login/post-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
@@ -449,6 +449,6 @@ router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled,
  *       500:
  *         description: Internal server error
  */
-router.post('/login/request-new-sign-in-otp', validatePortal2FAEnabled, validatePartialAuthToken, requestNewSignInOtp);
+router.post('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
 
 module.exports = router;

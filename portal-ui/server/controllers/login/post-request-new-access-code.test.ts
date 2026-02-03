@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { requestNewSignInOtp, PostNewAccessCodePageRequest } from './request-new-sign-in-otp';
+import { requestNewAccessCode, PostNewAccessCodePageRequest } from './post-request-new-access-code';
 import * as api from '../../api';
 import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
@@ -8,7 +8,7 @@ jest.mock('../../helpers/getNextAccessCodePage');
 
 console.error = jest.fn();
 
-describe('requestNewSignInOtp', () => {
+describe('requestNewAccessCode', () => {
   let res: Response;
   let redirectMock: jest.Mock;
   let renderMock: jest.Mock;
@@ -39,7 +39,7 @@ describe('requestNewSignInOtp', () => {
       nextAccessCodePage: '/next-access-code-page',
     });
 
-    await requestNewSignInOtp(req, res);
+    await requestNewAccessCode(req, res);
 
     expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
     expect(getNextAccessCodePage).toHaveBeenCalledWith(2);
@@ -57,7 +57,7 @@ describe('requestNewSignInOtp', () => {
       data: {},
     });
 
-    await requestNewSignInOtp(req, res);
+    await requestNewAccessCode(req, res);
 
     expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
@@ -73,7 +73,7 @@ describe('requestNewSignInOtp', () => {
 
     (api.sendSignInOTP as jest.Mock).mockRejectedValue(new Error('API error'));
 
-    await requestNewSignInOtp(req, res);
+    await requestNewAccessCode(req, res);
 
     expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');

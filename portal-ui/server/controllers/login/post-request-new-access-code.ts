@@ -14,7 +14,7 @@ export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, n
  * @param req - the request object
  * @param res - the response object
  */
-export const requestNewSignInOtp = async (req: PostNewAccessCodePageRequest, res: Response) => {
+export const requestNewAccessCode = async (req: PostNewAccessCodePageRequest, res: Response) => {
   const {
     session: { userToken },
   } = req;
