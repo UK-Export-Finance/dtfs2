@@ -5,7 +5,7 @@ const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
-const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email-access-code');
+const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
 const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
@@ -88,14 +88,14 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   }
 
   // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
-  let loginCompleted = false;
+  let loginApiCallSucceeded = false;
 
   try {
     const loginResponse = await api.login(email, password);
 
     const { token, loginStatus, user } = loginResponse;
 
-    loginCompleted = true;
+    loginApiCallSucceeded = true;
 
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
@@ -129,7 +129,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   } catch (error) {
     const status = error.response?.status;
 
-    if (!loginCompleted) {
+    if (!loginApiCallSucceeded) {
       console.info('Failed to login %o', error);
 
       if (status === HttpStatusCode.Forbidden) {
