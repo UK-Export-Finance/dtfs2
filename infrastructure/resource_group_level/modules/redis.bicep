@@ -6,13 +6,6 @@ param version string
 
 var redisName = '${product}-${target}-${version}-redis'
 
-// See https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-redis-cache-bicep-provision?tabs=CLI
-// for an example Bicep file
-
-// TODO:FN-504 Configure private link.
-// See line 718 in developmentinfrastructure.yml
-// and https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
-
 resource redis 'Microsoft.Cache/redis@2024-11-01' = {
   name: redisName
   location: location

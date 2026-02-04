@@ -5,7 +5,6 @@ param product string
 param target string
 param version string
 
-// TODO:DTFS-6422 consider resource naming convention
 var routeTableName = 'rt-ukef-uks-${product}-${target}-${version}'
 
 resource routeTable 'Microsoft.Network/routeTables@2024-10-01' = {
