@@ -17,38 +17,42 @@
       <p class="govuk-body govuk-!-margin-bottom-6" data-cy="check-your-email-description">
         We have sent you a 6-digit access code to your email {{ email }}.
       </p>
+
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
  
-      {{ govukInput({
-        label: {
-          text: "Enter access code:"
-        },
-        id: "sixDigitAccessCode",
-        classes: "govuk-input--width-10",
-        name: "sixDigitAccessCode",
-        value: sixDigitAccessCode,
-        spellcheck: false,
-        attributes: {
-          "data-cy": "six-digit-access-code-input",
-          "placeholder": "e.g. 123456"
-        },
-        errorMessage: errors and errors.fieldErrors.sixDigitAccessCode and {
-          text: errors.fieldErrors.sixDigitAccessCode.text,
+        {{ govukInput({
+          label: {
+            text: "Enter access code:"
+          },
+          id: "signInOTP",
+          classes: "govuk-input--width-10",
+          name: "signInOTP",
+          value: signInOTP,
+          spellcheck: false,
           attributes: {
-              'data-cy': 'six-digit-access-code-inline-error'
+            "data-cy": "six-digit-access-code-input",
+            "placeholder": "e.g. 123456"
+          },
+          errorMessage: errors and errors.fieldErrors.signInOTP and {
+            text: errors.fieldErrors.signInOTP.text,
+            attributes: {
+                'data-cy': 'six-digit-access-code-inline-error'
+            }
           }
-        }
-      }) }}
+        }) }}
 
-      <p class="govuk-body" data-cy="access-code-expiry-info">
-        This code will expire after 30 minutes.
-      </p>
+        <p class="govuk-body" data-cy="access-code-expiry-info">
+          This code will expire after 30 minutes.
+        </p>
 
-      {{ accessCodeAttempts.render({
-        isSupportInfo: false,
-        attemptsLeft: attemptsLeft,
-        requestNewCodeUrl: requestNewCodeUrl,
-        isAccessCodeLink: true
-      }) }}
+        {{ accessCodeAttempts.render({
+          isSupportInfo: false,
+          attemptsLeft: attemptsLeft,
+          requestNewCodeUrl: requestNewCodeUrl,
+          isAccessCodeLink: true
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}
