@@ -44,7 +44,7 @@ export const emailNotification = async (req: Request, res: Response) => {
 
   const response: { status: number | undefined; data: unknown } = await axios({
     method: 'post',
-    url: `${APIM_MDM_URL}emails`,
+    url: `${APIM_MDM_URL}v1/emails`,
     headers,
     data: {
       templateId,
