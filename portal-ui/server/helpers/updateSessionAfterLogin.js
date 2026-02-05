@@ -23,7 +23,6 @@ const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
     delete req.session.numberOfSendSignInLinkAttemptsRemaining;
     delete req.session.numberOfSignInOtpAttemptsRemaining;
     delete req.session.userEmail;
-    delete req.session.userId;
 
     return {
       success: true,

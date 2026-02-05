@@ -18,7 +18,7 @@
         We have sent you a 6-digit access code to your email {{ email }}.
       </p>
 
-      <form method="POST" autocomplete="off">
+      <form method="POST" action="/login/check-your-email-access-code" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
  
         {{ govukInput({

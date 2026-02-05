@@ -1,15 +1,11 @@
 const express = require('express');
 const axios = require('axios');
-// COMMENT THIS LINE
-const jwt = require('jsonwebtoken');
-const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+// const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-// COMMENT THIS getNextAccessCodePage import
-const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, getNextAccessCodePage } = require('../../helpers');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
-const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { renderCheckYourEmailPage, sendNewSignInLink, postCheckYourEmailAccessCodePage } = require('../../controllers/login/check-your-email');
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
-const { postSubmitSignInOtp } = require('../../controllers/login/post-check-your-email-access-code');
 const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
@@ -91,8 +87,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     });
   }
 
-  // COMMENT THIS LINE
-  const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
+  // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
   let loginApiCallSucceeded = false;
 
   try {
@@ -105,45 +100,30 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
-    req.session.userEmail = user?.email || req.session.userEmail;
+    req.session.userEmail = user.email;
+    req.session.userId = user._id;
 
-    // COMMENT THIS LINE
-    // Always set userId from JWT sub to ensure it matches the token used for OTP validation
-    let jwtSub;
-    if (is2FAEnabled) {
-      try {
-        const decoded = jwt.decode(token);
-        jwtSub = decoded?.sub;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Could not decode JWT to get sub:', e);
-      }
-    }
-    req.session.userId = jwtSub || user?.userId || user?._id;
-
-    // COMMENT THIS LINE
     /**
      * Send sign in link or OTP depending on whether 2FA feature flag is enabled
      */
-    if (is2FAEnabled) {
-      const {
-        data: { numberOfSignInOtpAttemptsRemaining },
-      } = await api.sendSignInOTP(req.session.userToken);
+    // if (is2FAEnabled) {
+    //   const {
+    //     data: { numberOfSignInOtpAttemptsRemaining },
+    //   } = await api.sendSignInOTP(req.session.userToken);
 
-      req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
-    } else {
-      const {
-        data: { numberOfSendSignInLinkAttemptsRemaining },
-      } = await api.sendSignInLink(req.session.userToken);
+    //   req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
+    // } else {
+    const {
+      data: { numberOfSendSignInLinkAttemptsRemaining },
+    } = await api.sendSignInLink(req.session.userToken);
 
-      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-    }
+    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    // }
 
-    // COMMENT THIS LINE
-    if (is2FAEnabled) {
-      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-      return res.redirect(nextAccessCodePage);
-    }
+    // if (is2FAEnabled) {
+    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   return res.redirect(nextAccessCodePage);
+    // }
 
     return res.redirect('/login/check-your-email');
   } catch (error) {
@@ -153,10 +133,9 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       console.info('Failed to login %o', error);
 
       if (status === HttpStatusCode.Forbidden) {
-        // COMMENT THIS LINE
-        if (is2FAEnabled) {
-          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-        }
+        // if (is2FAEnabled) {
+        //   return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+        // }
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
@@ -168,31 +147,27 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       });
     }
     if (status === HttpStatusCode.Forbidden) {
-      // COMMENT THIS LINE
-      if (is2FAEnabled) {
-        req.session.numberOfSignInOtpAttemptsRemaining = -1;
-        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-      }
+      // if (is2FAEnabled) {
+      //   req.session.numberOfSignInOtpAttemptsRemaining = -1;
+      //   return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+      // }
 
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
       return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
     }
 
-    // COMMENT THIS LINE
-    const message = is2FAEnabled
-      ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
-      : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
+    // const message = is2FAEnabled
+    //   ? 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o'
+    //   : 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
 
-    // ENABLE THIS LINE
-    // const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
+    const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
     console.info(message, error);
 
     // Continue login flow so the user can retry sending OTP / sign-in link
-    // COMMENT THIS LINE
-    if (is2FAEnabled) {
-      const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-      return res.redirect(nextAccessCodePage);
-    }
+    // if (is2FAEnabled) {
+    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   return res.redirect(nextAccessCodePage);
+    // }
     return res.redirect('/login/check-your-email');
   }
 });
@@ -355,6 +330,35 @@ router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourE
 
 /**
  * @openapi
+ * /login/check-your-email-access-code:
+ *   post:
+ *     summary: Submit the check your email access code form
+ *     tags: [Portal]
+ *     description: Submit the check your email access code form
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               signInOTP:
+ *                 type: string
+ *                 description: The one-time passcode sent to the user
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postCheckYourEmailAccessCodePage);
+
+/**
+ * @openapi
  * /login/check-your-email:
  *   post:
  *     summary: Get new sign-in link
@@ -444,35 +448,6 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *         description: Internal server error
  */
 router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled, validatePartialAuthToken, getCheckYourEmailAccessCodePage);
-
-/**
- * @openapi
- * /login/check-your-email-access-code:
- *   post:
- *     summary: Submit the check your email access code form
- *     tags: [Portal]
- *     description: Submit the check your email access code form
- *     requestBody:
- *       required: true
- *       content:
- *         application/x-www-form-urlencoded:
- *           schema:
- *             type: object
- *             properties:
- *               signInOTP:
- *                 type: string
- *                 description: The one-time passcode sent to the user
- *     responses:
- *       200:
- *         description: Ok
- *       400:
- *         description: Bad Request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.post('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postSubmitSignInOtp);
 
 /**
  * @openapi
