@@ -97,10 +97,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
         }
       }
     ]
-    sslCertificates: []
-    trustedRootCertificates: []
-    trustedClientCertificates: []
-    sslProfiles: []
     frontendIPConfigurations: [
       {
         name: 'appGatewayFrontendIP'
