@@ -47,7 +47,7 @@
     "express-rate-limit": "^6.11.2",
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash.orderby": "^4.6.0",
     "mongo-dot-notation": "3.1.1",
     "mongodb": "^4.17.2",
