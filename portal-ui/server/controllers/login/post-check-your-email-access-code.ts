@@ -1,14 +1,9 @@
-import { CustomExpressRequest, PORTAL_LOGIN_STATUS, PortalSessionUser } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
+import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
 import * as api from '../../api';
 import updateSessionAfterLogin from '../../helpers/updateSessionAfterLogin';
-import { AccessCodeViewModel } from '../../types/2fa/sign-in-access-code-types';
-
-type LoginWithSignInOtpResponse = {
-  loginStatus?: string;
-  token?: string;
-  user?: PortalSessionUser;
-};
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 
 type PostCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
 export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
@@ -37,12 +32,9 @@ export const postCheckYourEmailAccessCodePage = async (req: PostCheckYourEmailAc
   try {
     if (typeof attemptsLeft === 'undefined') {
       console.error('No remaining OTP attempts found in session when rendering check your email access code page');
-      return res.render('_partials/problem-with-service.njk', {
-        message: 'No remaining OTP attempts found in session.',
-      });
+      return res.render('_partials/problem-with-service.njk');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP });
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
@@ -56,7 +48,7 @@ export const postCheckYourEmailAccessCodePage = async (req: PostCheckYourEmailAc
     if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
       console.error('Invalid sign-in OTP entered for user %s', userId);
 
-      const viewModel: AccessCodeViewModel = {
+      const viewModel: CheckYourEmailAccessCodeViewModel = {
         attemptsLeft,
         requestNewCodeUrl: '/login/request-new-access-code',
         email: userEmail,
@@ -72,39 +64,9 @@ export const postCheckYourEmailAccessCodePage = async (req: PostCheckYourEmailAc
 
     // Only delete userId after successful 2FA login
     delete req.session.userId;
-    return res.redirect('/dashboard');
-  } catch (error: unknown) {
-    let apiError = 'There was a problem validating your access code. Please try again.';
-    let errorDetails: string[] = [];
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'response' in error &&
-      typeof (error as { response?: { data?: { message?: string; errors?: unknown[] } } }).response === 'object'
-    ) {
-      const responseData = (error as { response?: { data?: { message?: string; errors?: unknown[] } } }).response?.data;
-      if (responseData?.message) {
-        apiError = responseData.message;
-      }
-      if (Array.isArray(responseData?.errors)) {
-        errorDetails = responseData.errors.map((err) => {
-          if (typeof err === 'string') return err;
-          if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as { message?: string }).message === 'string') {
-            return (err as { message?: string }).message as string;
-          }
-          return JSON.stringify(err);
-        });
-      }
-    } else if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as { message?: string }).message === 'string') {
-      apiError = (error as { message?: string }).message as string;
-    }
-    // eslint-disable-next-line no-console
+    return res.redirect(`/login/sign-in-link?t=${newUserToken}&u=${user?._id}`);
+  } catch (error) {
     console.error('Error during login with sign-in OTP:', error);
-    return res.render('_partials/problem-with-service.njk', {
-      error: {
-        message: apiError,
-        details: errorDetails,
-      },
-    });
+    return res.render('_partials/problem-with-service.njk');
   }
 };
