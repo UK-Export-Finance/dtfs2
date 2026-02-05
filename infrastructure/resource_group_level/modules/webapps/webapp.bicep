@@ -50,7 +50,6 @@ var appSettingsWithAppInsights = union(
 resource site 'Microsoft.Web/sites@2024-04-01' = {
   name: appName
   location: location
-  tags: {}
   kind: 'app,linux,container'
   properties: {
     httpsOnly: true
@@ -69,6 +68,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
       remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging, true in prod
       healthCheckPath: '/healthcheck'
+      clientCertEnabled: false
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }

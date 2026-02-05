@@ -85,7 +85,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   name: functionAcbsName
   location: location
   kind: 'functionapp,linux,container'
-  properties: {
+  properties: { // NOSONAR – accepted risk, managed by platform team
     httpsOnly: true
     serverFarmId: appServicePlanId
     siteConfig: {

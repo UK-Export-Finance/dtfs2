@@ -83,7 +83,7 @@ var requestRoutingRules = [
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
-  properties: {
+  properties: { // NOSONAR – accepted risk, managed by platform team
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {

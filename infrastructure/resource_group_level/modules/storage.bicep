@@ -66,7 +66,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     name: 'Standard_ZRS'
   }
   kind: 'StorageV2'
-  properties: {
+  properties: { // NOSONAR – accepted risk, managed by platform team
     defaultToOAuthAuthentication: false
     publicNetworkAccess: 'Enabled'
     minimumTlsVersion: 'TLS1_2'

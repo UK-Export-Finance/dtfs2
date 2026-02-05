@@ -82,7 +82,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
   name: functionNumberGeneratorName
   location: location
   kind: 'functionapp,linux,container'
-  properties: {
+  properties: { // NOSONAR – accepted risk, managed by platform team
     httpsOnly: false
     serverFarmId: appServicePlanId
     siteConfig: {

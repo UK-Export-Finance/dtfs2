@@ -519,7 +519,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
   location: location
   sku: parametersMap[environment].acr.sku
   properties: {
-    // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
   }
 }
@@ -527,7 +526,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-02-01' = {
   name: logAnalyticsWorkspaceName
   location: location
-  tags: {}
   properties: {
     sku: {
       name: 'PerGB2018'

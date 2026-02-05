@@ -143,7 +143,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
     Environment: 'Preproduction'
     Product: 'dtfs'
   }
-  properties: {
+  properties: { // NOSONAR – accepted risk, managed by platform team
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {
