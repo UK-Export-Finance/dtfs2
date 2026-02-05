@@ -22,6 +22,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
 
     getCheckYourEmailAccessCodePage(req, res);
 
+    expect(renderMock).toHaveBeenCalledTimes(1);
     expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',

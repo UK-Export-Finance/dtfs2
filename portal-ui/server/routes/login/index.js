@@ -87,6 +87,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     });
   }
 
+  // DTFS2-8199 : Remove the commented-out 2FA-related login code in this file
   // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
   let loginApiCallSucceeded = false;
 
@@ -121,7 +122,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     // }
 
     // if (is2FAEnabled) {
-    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
     //   return res.redirect(nextAccessCodePage);
     // }
 
@@ -165,7 +166,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
 
     // Continue login flow so the user can retry sending OTP / sign-in link
     // if (is2FAEnabled) {
-    //   const { nextAccessCodePage } = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+    //   const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
     //   return res.redirect(nextAccessCodePage);
     // }
     return res.redirect('/login/check-your-email');
