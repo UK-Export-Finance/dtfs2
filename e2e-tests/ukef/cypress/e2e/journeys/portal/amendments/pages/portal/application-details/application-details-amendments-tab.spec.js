@@ -82,7 +82,7 @@ context('Application details - Amendments Tab', () => {
 
       cy.assertText(applicationAmendments.summaryList(2).newFacilityValueValue(), `£ ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
 
-      cy.assertText(applicationAmendments.summaryList(2).effectiveFromValue(), today.dd_MMMM_yyyy);
+      cy.assertText(applicationAmendments.summaryList(2).effectiveFromValue(), today.d_MMMM_yyyy);
       cy.assertText(applicationAmendments.summaryList(2).createdByValue(), 'First Last');
     });
 
@@ -95,7 +95,7 @@ context('Application details - Amendments Tab', () => {
 
       cy.assertText(applicationAmendments.summaryList(1).newFacilityValueValue(), `£ ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
 
-      cy.assertText(applicationAmendments.summaryList(1).effectiveFromValue(), today.dd_MMMM_yyyy);
+      cy.assertText(applicationAmendments.summaryList(1).effectiveFromValue(), today.d_MMMM_yyyy);
       cy.assertText(applicationAmendments.summaryList(1).createdByValue(), 'First Last');
     });
   });
