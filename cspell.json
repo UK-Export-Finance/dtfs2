@@ -278,7 +278,8 @@
     "APPGW",
     "dfts",
     "whatif",
-    "ltra"
+    "ltra",
+    "NOSONAR"
   ],
   "dictionaries": [
     "en-gb",
