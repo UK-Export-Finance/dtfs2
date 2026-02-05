@@ -58,6 +58,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
         targetPort: 3310
         external: true
         transport: 'tcp'
+        clientCertificateMode: 'Ignore'
       }
     }
     template: {

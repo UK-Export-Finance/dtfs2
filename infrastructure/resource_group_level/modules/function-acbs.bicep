@@ -101,6 +101,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true // false in staging
+      clientCertEnabled: false
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
