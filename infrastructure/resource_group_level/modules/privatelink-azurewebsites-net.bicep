@@ -4,7 +4,6 @@ param vnetId string
 resource azureWebsitesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: azureWebsitesDnsZoneName
   location: 'global'
-  tags: {}
 }
 
 resource azureDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
@@ -28,7 +27,6 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
   parent: azureWebsitesDnsZone
   name: 'app-service-dns'
   location: 'global'
-  tags: {}
   properties: {
     registrationEnabled: false
     virtualNetwork: {

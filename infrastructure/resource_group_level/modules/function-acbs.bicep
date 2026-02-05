@@ -84,7 +84,6 @@ var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFra
 resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   name: functionAcbsName
   location: location
-  tags: {}
   kind: 'functionapp,linux,container'
   properties: {
     httpsOnly: true
@@ -118,7 +117,6 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
-  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {
@@ -131,12 +129,9 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
         }
       }
     ]
-    manualPrivateLinkServiceConnections: []
     subnet: {
       id: privateEndpointsSubnetId
     }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
 

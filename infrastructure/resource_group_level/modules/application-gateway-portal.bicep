@@ -136,12 +136,6 @@ var requestRoutingRules = concat([
   }] : []
 )
 
-/* NOTE: Until the following issue is resolved, we need to self-reference the applicationGateway
-using resourceId() for the various sub-components that need to be created.
-https://github.com/Azure/bicep/issues/1852
-See the following for example usage.
-https://github.com/Azure/azure-quickstart-templates/blob/master/demos/ag-docs-qs/main.bicep */
-
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
@@ -174,7 +168,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
     ]
     frontendPorts: frontendPorts
     backendAddressPools: backendPools
-    loadDistributionPolicies: []
     backendHttpSettingsCollection: [
       {
         name: 'appGatewayBackendHttpSettings'
@@ -204,9 +197,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
         }
       }
     ]
-    backendSettingsCollection: []
     httpListeners: httpListeners
-    listeners: []
     urlPathMaps: [
       {
         name: 'gef-url-path-map'
@@ -237,7 +228,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
       }
     ]
     requestRoutingRules: requestRoutingRules
-    routingRules: []
     probes: [
       {
         name: 'healthcheck'
@@ -249,7 +239,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
           unhealthyThreshold: 8
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
-          match: {}
         }
       }
       {
@@ -262,20 +251,14 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
           unhealthyThreshold: 8
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
-          match: {}
         }
       }
     ]
-    rewriteRuleSets: []
-    redirectConfigurations: []
-    privateLinkConfigurations: []
     webApplicationFirewallConfiguration: {
       enabled: true
       firewallMode: 'Prevention'
       ruleSetType: 'OWASP'
       ruleSetVersion: '3.2'
-      disabledRuleGroups: []
-      exclusions: []
       requestBodyCheck: false
       maxRequestBodySizeInKb: 128
       fileUploadLimitInMb: 100

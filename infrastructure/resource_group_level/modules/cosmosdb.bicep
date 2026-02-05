@@ -51,7 +51,6 @@ var capabilities = capacityMode == 'Provisioned Throughput' ? [
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
   name: cosmosDbAccountName
   location: location
-  tags: {}
   kind: 'MongoDB'
   identity: {
     type: 'None'
@@ -70,7 +69,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     disableKeyBasedMetadataWriteAccess: false
     enableFreeTier: false
     enableAnalyticalStorage: false
-    analyticalStorageConfiguration: {}
     createMode: 'Default'
     databaseAccountOfferType: 'Standard'
     defaultIdentity: 'FirstPartyIdentity'
@@ -93,7 +91,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
         isZoneRedundant: false
       }
     ]
-    cors: []
     capabilities: capabilities
     ipRules: [for ip in allAllowedIps: {
       ipAddressOrRange: ip
@@ -104,7 +101,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
         tier: backupPolicyTier
       }
     }
-    networkAclBypassResourceIds: []
     capacity: {
       totalThroughputLimit: 8500
     }
@@ -586,7 +582,6 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
-  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {
@@ -599,11 +594,9 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
         }
       }
     ]
-    manualPrivateLinkServiceConnections: []
     subnet: {
       id: privateEndpointsSubnetId
     }
-    ipConfigurations: []
   }
 }
 

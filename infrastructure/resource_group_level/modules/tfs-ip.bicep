@@ -14,7 +14,6 @@ var ipNames = [
 resource publicIps 'Microsoft.Network/publicIPAddresses@2024-10-01' = [for ipName in ipNames: {
   name: ipName
   location: location
-  tags: {}
   sku: {
     name: 'Standard'
     tier: 'Regional'

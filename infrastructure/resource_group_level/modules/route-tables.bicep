@@ -10,7 +10,6 @@ var routeTableName = 'rt-ukef-uks-${product}-${target}-${version}'
 resource routeTable 'Microsoft.Network/routeTables@2024-10-01' = {
   name: routeTableName
   location: location
-  tags: {}
   properties: {
     disableBgpRoutePropagation: false
   }

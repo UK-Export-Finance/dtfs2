@@ -18,7 +18,6 @@ resource afdProfile 'Microsoft.Cdn/profiles@2025-06-01' = {
   sku: {
     name: 'Standard_AzureFrontDoor'
   }
-  tags: {}
 }
 
 // -------------------------------------------

@@ -12,9 +12,7 @@ param version string
 /* Allowed frontDoorAccess values: 'Allow', 'Deny' */
 var frontDoorAccess = 'Allow'
 param productionSubnetCidr string
-/* routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts. */
 param routeTableNextHopIpAddress string
-// Enable network access from an external subscription.
 @secure()
 // REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
@@ -38,9 +36,6 @@ param azurePortalIpsString string
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
-/* The following settings have not been made part of the parameters map
-as they are the same for all environments and don't look like they will change.
-The following parameters come from GH environment variables, rather than secrets */
 @secure()
 param RATE_LIMIT_THRESHOLD string
 @secure()
@@ -126,12 +121,6 @@ var storageLocations = [
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
-/* This parameters map holds the per-environment settings.
-Some notes from initial networking conversations:
-Dev uses 172.16.4x.xx
-Demo (legacy?) uses 172.16.6x.xx
-Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
-Feature can use 172.16.2x.xx */
 var parametersMap = {
   dev: {
     acr: {

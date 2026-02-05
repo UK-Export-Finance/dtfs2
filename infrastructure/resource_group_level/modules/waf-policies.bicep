@@ -31,18 +31,11 @@ type RuleSet = {
 }
 param ruleSet RuleSet
 
-// Parse the allowedIpsString parameter safely
 var cleanIpsString = trim(allowedIpsString)
-// Validate that it looks like a JSON array format before parsing
 var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
-// Parse JSON if valid format, otherwise use empty array
 var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
 var unauthorisedMessageBody = base64('Unauthorised access!')
 
-/* Note that by default, some rules are disabled by default because they have been superceded.
-These don't appear in ruleGroupOverrides.
-See https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-drs?tabs=drs10
-However, Dev appears to have considerably more rules disabled, which we replicate here. */
 var devRuleOverrides = applyWafRuleOverrides ? [
   {
     ruleGroupName: 'SQLI'
@@ -299,7 +292,6 @@ var wafCustomRules = restrictAccessToUkefIps ? [
 resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2024-02-01' = {
   name: wafPoliciesName
   location: 'Global'
-  tags: {}
   sku: {
     name: wafSku
   }
@@ -318,9 +310,6 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     managedRules: wafSku == 'Premium_AzureFrontDoor' ? {
       managedRuleSets: [
         {
-          /* Note that if using the "Classic" Front Door tier, the rule sets available are:
-          ruleSetType 'DefaultRuleSet' with ruleSetType '1.0' corresponding to 'DefaultRuleSet_1.0' in the UI
-          ruleSetType 'Microsoft_DefaultRuleSet' with ruleSetType '1.1' corresponding to 'Microsoft_DefaultRuleSet_1.1' in the UI */
           ruleSetType: ruleSet.ruleSetType
           ruleSetVersion: ruleSet.ruleSetVersion
           ruleGroupOverrides: devRuleOverrides
@@ -328,7 +317,6 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
         }
       ]
     } : {
-      // Required by API for Standard SKU, but ignored by the service
       managedRuleSets: []
     }
   }

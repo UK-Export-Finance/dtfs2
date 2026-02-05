@@ -50,7 +50,6 @@ var httpListeners = [
         id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGatewayName, 'appGatewayFrontendPort')
       }
       protocol: 'Http'
-      hostNames: []
       requireServerNameIndication: false
     }
   }
@@ -84,7 +83,6 @@ var requestRoutingRules = [
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
-  tags: {}
   properties: {
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
@@ -110,7 +108,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
     ]
     frontendPorts: frontendPorts
     backendAddressPools: backendPools
-    loadDistributionPolicies: []
     backendHttpSettingsCollection: [
       {
         name: 'appGatewayBackendHttpSettings'
@@ -126,12 +123,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
         }
       }
     ]
-    backendSettingsCollection: []
     httpListeners: httpListeners
-    listeners: []
-    urlPathMaps: []
     requestRoutingRules: requestRoutingRules
-    routingRules: []
     probes: [
       {
         name: 'healthcheck'
@@ -143,20 +136,14 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
           unhealthyThreshold: 8
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
-          match: {}
         }
       }
     ]
-    rewriteRuleSets: []
-    redirectConfigurations: []
-    privateLinkConfigurations: []
     webApplicationFirewallConfiguration: {
       enabled: true
       firewallMode: 'Prevention'
       ruleSetType: 'OWASP'
       ruleSetVersion: '3.2'
-      disabledRuleGroups: []
-      exclusions: []
       requestBodyCheck: false
       maxRequestBodySizeInKb: 128
       fileUploadLimitInMb: 100
