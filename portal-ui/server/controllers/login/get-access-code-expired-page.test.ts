@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { getAccessCodeExpiredPage, GetAccessCodeExpiredPageRequest } from './access-code-expired-page';
+import { getAccessCodeExpiredPage, GetAccessCodeExpiredPageRequest } from './get-access-code-expired-page';
 
 describe('getAccessCodeExpiredPage', () => {
   let req: GetAccessCodeExpiredPageRequest;

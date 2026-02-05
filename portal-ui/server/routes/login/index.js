@@ -7,7 +7,7 @@ const { loginWithSignInLink } = require('../../controllers/login/login-with-sign
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
-const { getAccessCodeExpiredPage } = require('../../controllers/login/access-code-expired-page');
+const { getAccessCodeExpiredPage } = require('../../controllers/login/get-access-code-expired-page');
 const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
