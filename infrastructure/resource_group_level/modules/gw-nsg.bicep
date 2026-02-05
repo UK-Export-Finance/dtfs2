@@ -67,43 +67,6 @@ var staticRules = [
       destinationAddressPrefixes: []
     }
   }
-  // Note that we don't need a 'vm-ips-feature'
-  {
-    name: 'vm-ips-test'
-    type: 'Microsoft.Network/networkSecurityGroups/securityRules'
-    properties: {
-      protocol: '*'
-      sourcePortRange: '*'
-      destinationPortRange: '*'
-      sourceAddressPrefix: '51.11.144.7'
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 998
-      direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
-    }
-  }
-  {
-    name: 'vm-ips-prod'
-    type: 'Microsoft.Network/networkSecurityGroups/securityRules'
-    properties: {
-      protocol: '*'
-      sourcePortRange: '*'
-      destinationPortRange: '*'
-      sourceAddressPrefix: '51.145.36.44'
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 999
-      direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
-    }
-  }
   {
     name: 'team-ips-ukef'
     type: 'Microsoft.Network/networkSecurityGroups/securityRules'

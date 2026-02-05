@@ -53,7 +53,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
   tags: {}
   kind: 'app,linux,container'
   properties: {
-    httpsOnly: false
+    httpsOnly: true
     serverFarmId: appServicePlanId
     siteConfig: {
       numberOfWorkers: 1

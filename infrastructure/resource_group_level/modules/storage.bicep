@@ -13,7 +13,7 @@ param privateEndpointsSubnetId string
 @secure()
 param onPremiseNetworkIpsString string
 
-@description('Is public access to the storage account allowed or denied for evertone')
+@description('Is public access to the storage account allowed or denied for everyone')
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
 

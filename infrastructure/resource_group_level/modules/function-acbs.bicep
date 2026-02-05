@@ -87,11 +87,9 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   tags: {}
   kind: 'functionapp,linux,container'
   properties: {
-    httpsOnly: false
+    httpsOnly: true
     serverFarmId: appServicePlanId
-    //state: state
     siteConfig: {
-      // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
       linuxFxVersion: 'DOCKER|${dockerImageName}'
       acrUseManagedIdentityCreds: false

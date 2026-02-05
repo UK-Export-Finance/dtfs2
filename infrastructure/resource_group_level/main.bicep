@@ -1,15 +1,12 @@
 param location string  = resourceGroup().location
-
 /* Expected values are 'feature', 'dev', 'staging' & 'prod'
   Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'. */
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 @description('The product name for resource naming')
 param product string
-
 @description('The target environment for resource naming')
 param target string
-
 @description('The version for resource naming')
 param version string
 /* Allowed frontDoorAccess values: 'Allow', 'Deny' */
@@ -17,7 +14,6 @@ var frontDoorAccess = 'Allow'
 param productionSubnetCidr string
 /* routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts. */
 param routeTableNextHopIpAddress string
-
 // Enable network access from an external subscription.
 @secure()
 // REMOTE_VNET_SUBSCRIPTION_VPN
@@ -28,36 +24,23 @@ param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 // VNET_ADDRESS_PREFIX
 param peeringAddressSpace string = '10.50.0.0/16'
-
-@description('IPs allowed to access restricted services, represented as Json array string')
-@secure()
-// UKEF_VPN_IPS
-
 param vnetAddressPrefix string
 param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
+@description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 param onPremiseNetworkIpsString string
 @description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
 @secure()
 param azurePortalIpsString string
-
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
-
-///////////////////////////////////////////////////////////////////////////////
-// We have some non-secret parameters, which we can keep in the code here.
-// - values that vary based on the environment are managed with a map
-// - values that aren't that likely to change are just simple variables.
-///////////////////////////////////////////////////////////////////////////////
-
-// The following settings have not been made part of the parameters map
-// as they are the same for all environments and don't look like they will change.
-// The following parameters come from GH environment variables, rather than secrets
+/* The following settings have not been made part of the parameters map
+as they are the same for all environments and don't look like they will change.
+The following parameters come from GH environment variables, rather than secrets */
 @secure()
 param RATE_LIMIT_THRESHOLD string
 @secure()
@@ -117,7 +100,6 @@ param JWT_SIGNING_KEY string
 param JWT_VALIDATING_KEY string
 @secure()
 param PORTAL_API_KEY string
-
 @secure()
 param TFM_API_KEY string
 @secure()
@@ -126,7 +108,6 @@ param SESSION_SECRET string
 param ESTORE_URL string
 @secure()
 param UKEF_TFM_API_SYSTEM_KEY string
-
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
@@ -193,7 +174,7 @@ var parametersMap = {
     }
     wafPolicies: {
       matchVariable: 'SocketAddr'
-      redirectUrl: 'https://ukexportfinance.gov.uk/'
+      redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
       rejectAction: 'Block'
       wafPoliciesName: 'vpn'
       applyWafRuleOverrides: true
@@ -202,8 +183,6 @@ var parametersMap = {
   }
   feature: {
     acr: {
-      // Note that containerRegistryName needs to be globally unique. However,
-      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
@@ -236,8 +215,6 @@ var parametersMap = {
     vnet: {
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
-      // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
-      // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       privateEndpointsCidr: privateEndpointsCidr
@@ -290,7 +267,6 @@ var parametersMap = {
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
       privateEndpointsCidr: privateEndpointsCidr
-      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
