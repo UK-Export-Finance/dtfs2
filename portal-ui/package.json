@@ -99,7 +99,7 @@
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.15",
     "ts-jest": "^29.4.6",
-    "webpack": "^5.103.0",
+    "webpack": "^5.104.1",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0"
   },
