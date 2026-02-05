@@ -136,14 +136,14 @@ var requestRoutingRules = concat([
   }] : []
 )
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = { // NOSONAR – accepted risk, managed by platform team
   name: applicationGatewayName
   location: location
   tags: {
     Environment: 'Preproduction'
     Product: 'dtfs'
   }
-  properties: { // NOSONAR – accepted risk, managed by platform team
+  properties: { 
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {

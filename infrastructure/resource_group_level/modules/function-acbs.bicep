@@ -81,11 +81,11 @@ var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFra
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
+resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = { // NOSONAR – accepted risk, managed by platform team
   name: functionAcbsName
   location: location
   kind: 'functionapp,linux,container'
-  properties: { // NOSONAR – accepted risk, managed by platform team
+  properties: { 
     httpsOnly: true
     serverFarmId: appServicePlanId
     siteConfig: {

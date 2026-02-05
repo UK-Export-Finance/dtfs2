@@ -80,10 +80,10 @@ var requestRoutingRules = [
 // See the following for example usage.
 // https://github.com/Azure/azure-quickstart-templates/blob/master/demos/ag-docs-qs/main.bicep
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = { // NOSONAR – accepted risk, managed by platform team
   name: applicationGatewayName
   location: location
-  properties: { // NOSONAR – accepted risk, managed by platform team
+  properties: { 
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {

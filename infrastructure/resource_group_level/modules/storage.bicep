@@ -59,14 +59,14 @@ var blobContainerNames = [
   'numbergenerator-leases'
 ]
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = { // NOSONAR – accepted risk, managed by platform team
   name: storageAccountName
   location: location
   sku: {
     name: 'Standard_ZRS'
   }
   kind: 'StorageV2'
-  properties: { // NOSONAR – accepted risk, managed by platform team
+  properties: { 
     defaultToOAuthAuthentication: false
     publicNetworkAccess: 'Enabled'
     minimumTlsVersion: 'TLS1_2'
