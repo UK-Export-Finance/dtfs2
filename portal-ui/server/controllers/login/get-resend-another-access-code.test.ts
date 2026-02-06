@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './new-access-code-page';
+import { getResendAnotherAccessCodePage, GetResendAnotherAccessCodePageRequest } from './get-resend-another-access-code';
 
-describe('getNewAccessCodePage', () => {
+describe('getResendAnotherAccessCodePage', () => {
   let res: Response;
   let renderMock: jest.Mock;
 
@@ -12,17 +12,17 @@ describe('getNewAccessCodePage', () => {
     } as unknown as Response;
   });
 
-  it('should render the new access code template with attemptsLeft from the session', () => {
+  it('should render the resend another access code template with attemptsLeft from the session', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 2,
+        numberOfSignInOtpAttemptsRemaining: 2,
         userEmail: 'test@example.com',
       },
-    } as unknown as GetNewAccessCodePageRequest;
+    } as unknown as GetResendAnotherAccessCodePageRequest;
 
-    getNewAccessCodePage(req, res);
+    getResendAnotherAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenCalledWith('login/new-access-code.njk', {
+    expect(renderMock).toHaveBeenCalledWith('login/resend-another-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',
       email: 'test@example.com',
@@ -32,9 +32,9 @@ describe('getNewAccessCodePage', () => {
   it('should render problem with service template when attemptsLeft is not present in the session', () => {
     const req = {
       session: {},
-    } as unknown as GetNewAccessCodePageRequest;
+    } as unknown as GetResendAnotherAccessCodePageRequest;
 
-    getNewAccessCodePage(req, res);
+    getResendAnotherAccessCodePage(req, res);
 
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
@@ -42,16 +42,16 @@ describe('getNewAccessCodePage', () => {
   it('should render problem with service template when an error occurs while rendering', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 1,
+        numberOfSignInOtpAttemptsRemaining: 1,
         userEmail: 'test@example.com',
       },
-    } as unknown as GetNewAccessCodePageRequest;
+    } as unknown as GetResendAnotherAccessCodePageRequest;
 
     renderMock.mockImplementationOnce(() => {
       throw new Error('Render error');
     });
 
-    getNewAccessCodePage(req, res);
+    getResendAnotherAccessCodePage(req, res);
 
     expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
   });
