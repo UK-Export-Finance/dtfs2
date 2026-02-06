@@ -4,7 +4,7 @@ import { LANDING_PAGES } from '../constants/landing-pages';
 /**
  * Gets the next access code page based on the number of attempts left.
  * @param attemptsLeft - The number of access code attempts remaining.
- * @returns The path of the next access code page, or the default login pag
+ * @returns The path of the next access code page, or the default login page
  */
 export const getNextAccessCodePage = (attemptsLeft: number): string | undefined => {
   switch (attemptsLeft) {
