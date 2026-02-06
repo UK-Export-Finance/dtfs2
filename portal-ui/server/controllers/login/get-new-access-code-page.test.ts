@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './new-access-code-page';
+import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
 describe('getNewAccessCodePage', () => {
   let res: Response;
