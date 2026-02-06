@@ -341,17 +341,19 @@ router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourE
  *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
+ *             required:
+ *               - signInOTP
  *             properties:
  *               signInOTP:
  *                 type: string
  *                 description: The one-time passcode sent to the user
  *     responses:
- *       200:
- *         description: Ok
+ *       302:
+ *         description: Redirect on successful code entry
  *       400:
- *         description: Bad Request
+ *         description: Bad Request - invalid or missing code
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - invalid or expired session
  *       500:
  *         description: Internal server error
  */
