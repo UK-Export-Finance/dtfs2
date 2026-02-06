@@ -1,7 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 // const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
-// const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -9,6 +8,7 @@ const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controlle
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
 const { getNewAccessCodePage } = require('../../controllers/login/new-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
+const { requestNewAccessCode } = require('../../controllers/login/post-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
@@ -457,5 +457,20 @@ router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled
  *         description: Forbidden
  */
 router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
+
+/**
+ * @openapi
+ * /login/request-new-sign-in-otp:
+ *   post:
+ *     summary: Request a new sign-in OTP and navigate to the appropriate page
+ *     tags: [Portal]
+ *     description: Request a new sign-in OTP and navigate to the appropriate page
+ *     responses:
+ *       302:
+ *         description: Resource moved temporarily
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
 
 module.exports = router;
