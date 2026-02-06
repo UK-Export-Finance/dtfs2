@@ -37,6 +37,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
 
     getCheckYourEmailAccessCodePage(req, res);
 
+    expect(renderMock).toHaveBeenCalledTimes(1);
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 
@@ -54,6 +55,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
 
     getCheckYourEmailAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
+    expect(renderMock).toHaveBeenCalledTimes(2);
+    expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
