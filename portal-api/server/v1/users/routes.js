@@ -199,12 +199,12 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.error);
   }
 
-  const { tokenObject, userEmail } = loginResult;
+  const { tokenObject, userEmail, userId } = loginResult;
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
     loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
-    user: { email: userEmail },
+    user: { email: userEmail, userId },
     expiresIn: tokenObject.expires,
   });
 };
