@@ -22,6 +22,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
 
     getCheckYourEmailAccessCodePage(req, res);
 
+    expect(renderMock).toHaveBeenCalledTimes(1);
     expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',
@@ -29,30 +30,46 @@ describe('getCheckYourEmailAccessCodePage', () => {
     });
   });
 
-  it('should render problem with service template when attemptsLeft is not present in the session', () => {
+  it('should render problem with service template when numberOfSignInOtpAttemptsRemaining is not present in the session', () => {
     const req = {
       session: {},
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
     getCheckYourEmailAccessCodePage(req, res);
 
+    expect(renderMock).toHaveBeenCalledTimes(1);
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 
-  it('should render problem with service template when an error occurs while rendering', () => {
+  it('should render problem with service template when numberOfSignInOtpAttemptsRemaining is negative', () => {
     const req = {
       session: {
-        numberOfSignInOtpAttemptsRemaining: 1,
+        numberOfSignInOtpAttemptsRemaining: -1,
         userEmail: 'test@example.com',
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
-    renderMock.mockImplementationOnce(() => {
-      throw new Error('Render error');
-    });
+    getCheckYourEmailAccessCodePage(req, res);
+
+    expect(renderMock).toHaveBeenCalledTimes(1);
+    expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+
+  it('should render the check your email access code template when attemptsLeft is 0', () => {
+    const req = {
+      session: {
+        numberOfSignInOtpAttemptsRemaining: 0,
+        userEmail: 'test@example.com',
+      },
+    } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
     getCheckYourEmailAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
+    expect(renderMock).toHaveBeenCalledTimes(1);
+    expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
+      attemptsLeft: 0,
+      requestNewCodeUrl: '/login/request-new-access-code',
+      email: 'test@example.com',
+    });
   });
 });
