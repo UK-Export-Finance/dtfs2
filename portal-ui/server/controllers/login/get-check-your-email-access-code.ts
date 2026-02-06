@@ -22,6 +22,7 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
+  // we check if typeof attemptsLeft is undefined rather than falsy as it can be 0 when the user has used all their attempts
   if (typeof attemptsLeft === 'undefined') {
     console.error('No remaining OTP attempts found in session when rendering check your email access code page');
     return res.render('partials/problem-with-service.njk');
