@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "frontdoors_tfs_dev_tfm_fd_name": {
+            "value": null
+        },
+        "FrontDoorWebApplicationFirewallPolicies_vpn_externalid": {
+            "value": null
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpoints_tfs_dev_portal_ui_name": {
+            "defaultValue": "tfs-dev-portal-ui",
+            "type": "String"
+        },
+        "sites_tfs_dev_portal_ui_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Web/sites/tfs-dev-portal-ui",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        },
+        "applicationSecurityGroups_tfs_dev_ui_asg_001_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationSecurityGroups/tfs-dev-ui-asg-001",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2022-11-01",
+            "name": "[parameters('privateEndpoints_tfs_dev_portal_ui_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateEndpoints_tfs_dev_portal_ui_name')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_tfs_dev_portal_ui_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_tfs_dev_portal_ui_name')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[parameters('sites_tfs_dev_portal_ui_externalid')]",
+                            "groupIds": [
+                                "sites"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-private-endpoints')]"
+                },
+                "ipConfigurations": [],
+                "applicationSecurityGroups": [
+                    {
+                        "id": "[parameters('applicationSecurityGroups_tfs_dev_ui_asg_001_externalid')]"
+                    }
+                ],
+                "customDnsConfigs": [
+                    {
+                        "fqdn": "[concat(parameters('privateEndpoints_tfs_dev_portal_ui_name'), '.azurewebsites.net')]",
+                        "ipAddresses": [
+                            "172.16.40.13"
+                        ]
+                    },
+                    {
+                        "fqdn": "[concat(parameters('privateEndpoints_tfs_dev_portal_ui_name'), '.scm.azurewebsites.net')]",
+                        "ipAddresses": [
+                            "172.16.40.13"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

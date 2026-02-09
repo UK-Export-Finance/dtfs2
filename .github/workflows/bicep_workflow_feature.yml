@@ -1,0 +1,79 @@
+name: Deploy Feature Infrastructure using Bicep
+
+on:
+  push:
+    branches:
+      - feat/stbr-infra
+      - feat/FN-1261/add-healthcheck-on-webapps
+    paths:
+      - '.github/workflows/bicep_az_deployment_group.yml'
+      - '.github/workflows/bicep_deploy.yml'
+      - '.github/workflows/bicep_workflow_feature.yml'
+      - 'infrastructure/resource_group_level/**'
+  workflow_dispatch:
+
+# TODO:FN-944 Set permissions to restrict to Workload Identities
+
+jobs:
+  lint:
+    name: Lint Bicep code
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Bicep
+      run: |
+        az config set bicep.use_binary_from_path=False
+        az bicep install
+        az bicep upgrade
+
+    - name: Lint Bicep Code
+      run: |
+        az bicep version
+        az bicep build --file infrastructure/resource_group_level/main.bicep
+
+  deploy-feature:
+    name: Deploy to Feature Environment
+    
+    uses:  ./.github/workflows/bicep_deploy.yml
+    needs: lint
+    with:
+      environment: feature
+      resourceGroupName: Digital-Feature
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_DIGITAL_DEV }}
+      REMOTE_VNET_SUBSCRIPTION_VPN: ${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}
+      REMOTE_VNET_RESOURCE_GROUP_VPN: ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }}
+      REMOTE_VNET_NAME_VPN: ${{ secrets.REMOTE_VNET_NAME_VPN }}
+      VNET_ADDRESS_PREFIX: ${{secrets.VNET_ADDRESS_PREFIX}}
+      UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
+
+      APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+      APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+      APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+      APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+      APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+      APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+      APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+      APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+      APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
+      DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
+      EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
+      PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
+      TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
+      PDC_INPUTTERS_EMAIL_RECIPIENT: ${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}

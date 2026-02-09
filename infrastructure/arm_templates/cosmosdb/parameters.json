@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseAccounts_tfs_dev_mongo_name": {
+            "value": null
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "value": null
+        },
+        "privateEndpoints_tfs_dev_mongo_externalid": {
+            "value": null
+        }
+    }
+}
