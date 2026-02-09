@@ -23,7 +23,7 @@ export const lookup = async (req: Request, res: Response) => {
 
     const response: { status: number; data: unknown } = await axios({
       method: 'get',
-      url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
+      url: `${APIM_MDM_URL}v1/customers?companyReg=${companyReg}`,
       headers,
     });
 
@@ -89,7 +89,7 @@ export const getOrCreateParty = async (
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
-      url: `${APIM_MDM_URL}customers`,
+      url: `${APIM_MDM_URL}v1/customers`,
       headers,
       data: {
         companyRegistrationNumber,
