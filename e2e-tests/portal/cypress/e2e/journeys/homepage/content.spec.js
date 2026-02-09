@@ -33,6 +33,7 @@ context('Portal homepage', () => {
     login.banks().contains('LDF Operations (trading as White Oak)');
     login.banks().contains('KBC Bank');
     login.banks().contains('Banco Santander');
+    login.banks().contains('Nighthawk Partners');
   });
 
   it('Ensure product text is visible on the portal login page', () => {
