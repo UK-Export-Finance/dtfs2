@@ -7,5 +7,6 @@
     "extra-label": "Type: chore, Type: Docs",
     "extra-files": [
         "CHANGELOG.md"
-    ]
+    ],
+    "skip-merge-commits": true
 }

@@ -16,7 +16,7 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches: [chore/fix-release-please]
 
 jobs:
   # 1. Setup test infrastructure
