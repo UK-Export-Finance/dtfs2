@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publicIPAddresses_tfs_dev_nat_ip_name": {
+            "defaultValue": "tfs-dev-nat-ip",
+            "type": "String"
+        },
+        "natGateways_tfs_dev_nat_gw_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/natGateways/tfs-dev-nat-gw",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2022-11-01",
+            "name": "[parameters('publicIPAddresses_tfs_dev_nat_ip_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "zones": [
+                "1",
+                "2",
+                "3"
+            ],
+            "properties": {
+                "natGateway": {
+                    "id": "[parameters('natGateways_tfs_dev_nat_gw_externalid')]"
+                },
+                "ipAddress": "51.132.155.239",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            }
+        }
+    ]
+}

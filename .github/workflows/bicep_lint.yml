@@ -1,0 +1,30 @@
+name: Bicep Quality Assurance - Lint
+
+on:
+  pull_request:
+    branches:
+      - feat/DTFS2-16188-bicep-templates
+    paths:
+      - '.github/workflows/bicep_az_deployment_group.yml'
+      - '.github/workflows/bicep_deploy.yml'
+      - '.github/workflows/bicep_workflow_feature.yml'
+      - 'infrastructure/**'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint Bicep code
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Bicep
+      run: |
+        az config set bicep.use_binary_from_path=False
+        az bicep install
+        az bicep upgrade
+
+    - name: Lint Bicep Code
+      run: |
+        az bicep version
+        az bicep build --file infrastructure/resource_group_level/main.bicep

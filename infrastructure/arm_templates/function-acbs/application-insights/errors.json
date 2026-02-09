@@ -1,0 +1,26 @@
+{
+    "code": "ExportTemplateCompletedWithErrors",
+    "message": "Export template operation completed with errors. Some resources were not exported. Please see details for more information.",
+    "details": [
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Insights/components/Annotations",
+        "message": "Could not get resources of the type 'Microsoft.Insights/components/Annotations'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "microsoft.insights/components/pricingPlans",
+        "message": "Could not get resources of the type 'microsoft.insights/components/pricingPlans'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "microsoft.insights/components/myanalyticsItems",
+        "message": "Could not get resources of the type 'microsoft.insights/components/myanalyticsItems'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Insights/components/currentbillingfeatures",
+        "message": "Could not get resources of the type 'Microsoft.Insights/components/currentbillingfeatures'. Resources of this type will not be exported."
+      }
+    ]
+  }

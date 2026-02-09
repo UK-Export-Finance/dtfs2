@@ -1,0 +1,31 @@
+{
+    "code": "ExportTemplateCompletedWithErrors",
+    "message": "Export template operation completed with errors. Some resources were not exported. Please see details for more information.",
+    "details": [
+        {
+            "code": "ExportTemplateProviderError",
+            "target": "Microsoft.DocumentDB/databaseAccounts/graphs",
+            "message": "Could not get resources of the type 'Microsoft.DocumentDB/databaseAccounts/graphs'. Resources of this type will not be exported."
+        },
+        {
+            "code": "ExportTemplateProviderError",
+            "target": "Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments",
+            "message": "Could not get resources of the type 'Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments'. Resources of this type will not be exported."
+        },
+        {
+            "code": "ExportTemplateProviderError",
+            "target": "Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions",
+            "message": "Could not get resources of the type 'Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions'. Resources of this type will not be exported."
+        },
+        {
+            "code": "ExportTemplateProviderError",
+            "target": "Microsoft.DocumentDB/databaseAccounts/mongodbRoleDefinitions",
+            "message": "Could not get resources of the type 'Microsoft.DocumentDB/databaseAccounts/mongodbRoleDefinitions'. Resources of this type will not be exported."
+        },
+        {
+            "code": "ExportTemplateProviderError",
+            "target": "Microsoft.DocumentDB/databaseAccounts/mongodbUserDefinitions",
+            "message": "Could not get resources of the type 'Microsoft.DocumentDB/databaseAccounts/mongodbUserDefinitions'. Resources of this type will not be exported."
+        }
+    ]
+}

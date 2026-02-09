@@ -1,0 +1,12 @@
+{
+  "analyzers": {
+    "core": {
+      "rules": {
+        "no-unused-params": { "level": "off" },
+        "no-hardcoded-env-urls": { "level": "warning" },
+        "BCP081": { "level": "off" },
+        "no-unused-vars": { "level": "off" }
+      }
+    }
+  }
+}
