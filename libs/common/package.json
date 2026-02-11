@@ -61,7 +61,7 @@
     "@types/sanitize-html": "^2.16.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "axios": "1.12.0",
+    "axios": "1.13.5",
     "big.js": "^6.2.2",
     "connect-redis": "^5.2.0",
     "date-fns": "^3.3.1",
