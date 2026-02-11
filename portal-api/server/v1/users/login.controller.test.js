@@ -38,6 +38,7 @@ describe('login', () => {
   const USERNAME = 'aUsername';
   const PASSWORD = 'aPassword';
   const EMAIL = 'anEmail@aDomain.com';
+  const USERID = 'aUserId';
   const ERROR = 'an error';
   const SALT = 'aSalt';
   const HASH = 'aHash';
@@ -50,9 +51,10 @@ describe('login', () => {
     hash: HASH,
     salt: SALT,
     email: EMAIL,
+    _id: USERID,
   };
 
-  it('returns the user email and token when the user exists and the password is correct', async () => {
+  it('returns user email, id and token when the user exists and the password is correct', async () => {
     mockFindByUsernameSuccess(USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
@@ -60,7 +62,7 @@ describe('login', () => {
 
     const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
-    expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
+    expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT, userId: USERID });
   });
 
   it("returns a 'usernameOrPasswordIncorrect' error when the user doesn't exist", async () => {

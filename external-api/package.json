@@ -48,7 +48,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "joi": "^17.13.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mongodb": "^4.17.2",
     "supertest": "^6.3.4",
     "ts-node": "^10.9.2",

@@ -45,7 +45,7 @@ export const premiumScheduleCalls = {
     try {
       const response = await axios({
         method: 'post',
-        url: `${APIM_MDM_URL}premium/schedule`,
+        url: `${APIM_MDM_URL}v1/premium/schedule`,
         headers,
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
@@ -71,7 +71,7 @@ export const premiumScheduleCalls = {
    * @returns {Array} Array of premium schedule segments
    */
   getScheduleData: async (facilityId: any) => {
-    const url = `${APIM_MDM_URL}premium/segments/${facilityId}`;
+    const url = `${APIM_MDM_URL}v1/premium/segments/${facilityId}`;
 
     const response = await axios({
       method: 'get',

@@ -87,7 +87,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       targetCurrency = source;
     }
 
-    let url = `${APIM_MDM_URL}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
+    let url = `${APIM_MDM_URL}v1/currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
 
     if (date) {
       url = `${url}&exchangeRateDate=${date}`;
