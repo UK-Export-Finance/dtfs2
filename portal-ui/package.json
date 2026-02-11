@@ -39,7 +39,7 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^1.4.13",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "1.12.0",
+    "axios": "1.13.5",
     "cheerio": "1.0.0-rc.12",
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
