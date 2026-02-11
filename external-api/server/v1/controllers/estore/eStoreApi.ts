@@ -56,7 +56,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, {
+    const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}v1//sites?exporterName=${exporterName}`, {
       validateStatus(status) {
         return customValidateStatus(status);
       },
@@ -153,7 +153,7 @@ const postToEstore = async (
  */
 export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
   try {
-    const response: EstoreResponse = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
+    const response: EstoreResponse = await postToEstore(`v1/${ENDPOINT.SITE}`, [exporterName], oneMinute);
 
     if (!response) {
       throw new Error('❌ Invalid response received');
@@ -174,7 +174,7 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
  */
 export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
   try {
-    const response: EstoreResponse = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
+    const response: EstoreResponse = await postToEstore(`v1/${ENDPOINT.TERM}`, [facilityId], oneMinute);
 
     if (!response) {
       throw new Error('❌ Invalid response received');
@@ -201,7 +201,7 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
       throw new Error('Invalid site ID');
     }
 
-    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
+    const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
     return postToEstore(endpoint, [buyerName], oneMinute);
   } catch (error: unknown) {
     console.error('❌ eStore create buyer folder request has failed %o', error);
@@ -223,7 +223,7 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
       throw new Error('Invalid site ID');
     }
 
-    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
+    const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: unknown) {
     console.error('❌ eStore create deal folder request has failed %o', error);
@@ -250,7 +250,7 @@ export const createFacilityFolder = async (
       throw new Error('Invalid site or deal ID');
     }
 
-    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
+    const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
     return postToEstore(endpoint, [data], twoMinutes);
   } catch (error: unknown) {
     console.error('❌ eStore create facility folder request has failed %o', error);
@@ -277,7 +277,7 @@ export const uploadSupportingDocuments = async (
       throw new Error('Invalid site or deal ID');
     }
 
-    const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
+    const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
     return postToEstore(endpoint, [file], oneMinute);
   } catch (error: unknown) {
     console.error('❌ eStore uploading document has failed %o', error);
