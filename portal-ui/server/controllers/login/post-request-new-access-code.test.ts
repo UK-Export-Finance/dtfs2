@@ -35,7 +35,7 @@ describe('requestNewAccessCode', () => {
       data: { numberOfSignInOtpAttemptsRemaining: 2 },
     });
 
-    (getNextAccessCodePage as jest.Mock).mockReturnValue({ nextAccessCodePage: '/next-access-code-page' });
+    (getNextAccessCodePage as jest.Mock).mockReturnValue('/next-access-code-page');
 
     await requestNewAccessCode(req, res);
 
