@@ -20,7 +20,7 @@ describe(page, () => {
   });
 
   it('should render the description paragraph with email', () => {
-    wrapper.expectText('[data-cy="resend-access-code-email-sent-description"]').toRead(`We've sent you another email with a access code to ${email}`);
+    wrapper.expectText('[data-cy="resend-another-access-code-email-sent-description"]').toRead(`We've sent you another email with a access code to ${email}`);
   });
 
   it('should render the access code input', () => {
@@ -40,21 +40,23 @@ describe(page, () => {
 
   it('should render the spam or junk info paragraph', () => {
     wrapper
-      .expectText('[data-cy="resend-another-access-code-spam-or-junk"]')
+      .expectText('[data-cy="access-code-spam-or-junk"]')
       .toRead('Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.');
   });
 
   it('should render the support info paragraph', () => {
-    wrapper.expectText('[data-cy="resend-another-access-code-support-info"]').toRead('If you are still having problems signing in, contact us for support.');
+    wrapper
+      .expectText('[data-cy="resend-another-access-code-email-sent-expiry-info"]')
+      .toRead('This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.');
   });
 
   it('should render the attempts remaining paragraph', () => {
-    wrapper.expectText('[data-cy="resend-another-access-code-attempts-info"]').toRead(`You have ${attemptsRemaining} attempts remaining.`);
+    wrapper.expectText('[data-cy="access-code-attempts-info"]').toRead(`You have ${attemptsRemaining} attempts remaining.`);
   });
 
   it('should render the suspend info paragraph', () => {
     wrapper
-      .expectText('[data-cy="resend-another-access-code-suspend-info"]')
+      .expectText('[data-cy="access-code-suspend-info"]')
       .toRead('If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.');
   });
 
