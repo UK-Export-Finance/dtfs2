@@ -67,7 +67,7 @@ describe('postResendAnotherAccessCodePage', () => {
     it('should render the new access code template with validation errors', () => {
       expect(renderMock).toHaveBeenCalledWith('login/resend-another-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         errors: { some: 'error' },
       });
     });
