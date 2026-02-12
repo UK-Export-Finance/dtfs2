@@ -1,8 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 // const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { postSubmitAccessCode } = require('../../controllers/login/post-submit-access-code');
 // const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
-// some change
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -107,7 +107,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   //     req.session.loginStatus = loginStatus;
   //     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
   //     req.session.userEmail = user.email;
-  //     req.session.userId = user._id;
+  //     req.session.userId = user.userId;
   //     const {
   //       data: { numberOfSignInOtpAttemptsRemaining },
   //     } = await api.sendSignInOTP(req.session.userToken);
@@ -351,6 +351,25 @@ router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAu
  *
  */
 router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
+
+/**
+ * @openapi
+ * /login/check-your-email-access-code:
+ *   post:
+ *     summary: Submit the check your email access code form
+ *     tags: [Portal]
+ *     description: Submit the check your email access code form
+ *     responses:
+ *       302:
+ *         description: Redirect on successful code entry
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postSubmitAccessCode);
 
 /**
  * @openapi
