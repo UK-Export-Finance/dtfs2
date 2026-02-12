@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './new-access-code-page';
+import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
 describe('getNewAccessCodePage', () => {
   let res: Response;
@@ -37,22 +37,5 @@ describe('getNewAccessCodePage', () => {
     getNewAccessCodePage(req, res);
 
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-
-  it('should render problem with service template when an error occurs while rendering', () => {
-    const req = {
-      session: {
-        numberOfSendSignInOtpAttemptsRemaining: 1,
-        userEmail: 'test@example.com',
-      },
-    } as unknown as GetNewAccessCodePageRequest;
-
-    renderMock.mockImplementationOnce(() => {
-      throw new Error('Render error');
-    });
-
-    getNewAccessCodePage(req, res);
-
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
   });
 });

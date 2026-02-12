@@ -44,7 +44,7 @@ describe('getCheckYourEmailAccessCodePage', () => {
   it('should render problem with service template when numberOfSignInOtpAttemptsRemaining is negative', () => {
     const req = {
       session: {
-        numberOfSignInOtpAttemptsRemaining: -1,
+        numberOfSignInOtpAttemptsRemaining: -2,
         userEmail: 'test@example.com',
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;

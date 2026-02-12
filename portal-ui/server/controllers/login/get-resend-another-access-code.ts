@@ -7,17 +7,17 @@ type ViewModel = {
   email?: string;
 };
 
-type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
-export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
-  session: GetCheckYourEmailAccessCodePageRequestSession;
+type GetResendAnotherAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
+export type GetResendAnotherAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
+  session: GetResendAnotherAccessCodePageRequestSession;
 };
 
 /**
- * Controller to get the check your email access code page
+ * Controller to get the resend another access code page
  * @param req - the request object
  * @param res - the response object
  */
-export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCodePageRequest, res: Response) => {
+export const getResendAnotherAccessCodePage = (req: GetResendAnotherAccessCodePageRequest, res: Response) => {
   const {
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
@@ -29,10 +29,10 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
   };
 
   if (attemptsLeft >= -1) {
-    return res.render('login/check-your-email-access-code.njk', viewModel);
+    return res.render('login/resend-another-access-code.njk', viewModel);
   }
 
-  console.error('Error getting check your email access code page');
+  console.error('Error getting resend another access code page');
 
   return res.render('partials/problem-with-service.njk');
 };

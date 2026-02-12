@@ -12,11 +12,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l" data-cy="resend-access-code-email-sent-heading">
+      <h1 class="govuk-heading-l" data-cy="resend-another-access-code-email-sent-heading">
         We've sent you another access code
       </h1>
 
-      <p class="govuk-body" data-cy="resend-access-code-email-sent-description">
+      <p class="govuk-body" data-cy="resend-another-access-code-email-sent-description">
         We've sent you another email with a access code to {{ email }}
       </p>
 
@@ -37,14 +37,14 @@
           }) }}
         </div>
 
-        <p class="govuk-body" data-cy="resend-access-code-email-sent-expiry-info">
+        <p class="govuk-body" data-cy="resend-another-access-code-email-sent-expiry-info">
           This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.
         </p>
 
         {{ renderAccessCodeAttempts.render({
           isSupportInfo: true,
           attemptsLeft: attemptsRemaining,
-          requestNewCodeUrl: '/login/request-new-code',
+          requestNewCodeUrl: requestNewCodeUrl,
           isAccessCodeLink: false
         }) }}
       </form>

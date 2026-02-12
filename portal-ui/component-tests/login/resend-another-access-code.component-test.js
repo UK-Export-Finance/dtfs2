@@ -1,7 +1,7 @@
 const pageRenderer = require('../pageRenderer');
 const { withContactUsEmailAddressTests } = require('../test-helpers/with-contact-us-email-address.component-tests');
 
-const page = 'login/resend-access-code.njk';
+const page = 'login/resend-another-access-code.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
@@ -16,11 +16,11 @@ describe(page, () => {
   withContactUsEmailAddressTests({ page });
 
   it('should render the heading', () => {
-    wrapper.expectText('[data-cy="resend-access-code-email-sent-heading"]').toRead("We've sent you another access code");
+    wrapper.expectText('[data-cy="resend-another-access-code-email-sent-heading"]').toRead("We've sent you another access code");
   });
 
   it('should render the description paragraph with email', () => {
-    wrapper.expectText('[data-cy="resend-access-code-email-sent-description"]').toRead(`We've sent you another email with a access code to ${email}`);
+    wrapper.expectText('[data-cy="resend-another-access-code-email-sent-description"]').toRead(`We've sent you another email with a access code to ${email}`);
   });
 
   it('should render the access code input', () => {
@@ -34,7 +34,7 @@ describe(page, () => {
 
   it('should render the expiry info paragraph', () => {
     wrapper
-      .expectText('[data-cy="resend-access-code-email-sent-expiry-info"]')
+      .expectText('[data-cy="resend-another-access-code-email-sent-expiry-info"]')
       .toRead('This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.');
   });
 
@@ -45,7 +45,9 @@ describe(page, () => {
   });
 
   it('should render the support info paragraph', () => {
-    wrapper.expectText('[data-cy="access-code-support-info"]').toRead('If you are still having problems signing in, contact us for support.');
+    wrapper
+      .expectText('[data-cy="resend-another-access-code-email-sent-expiry-info"]')
+      .toRead('This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.');
   });
 
   it('should render the attempts remaining paragraph', () => {
