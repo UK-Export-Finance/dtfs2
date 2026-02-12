@@ -28,7 +28,7 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     email: userEmail,
   };
 
-  if (attemptsLeft >= 0) {
+  if (attemptsLeft >= -1) {
     return res.render('login/check-your-email-access-code.njk', viewModel);
   }
 

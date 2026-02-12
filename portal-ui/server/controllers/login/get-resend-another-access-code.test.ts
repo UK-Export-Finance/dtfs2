@@ -38,21 +38,4 @@ describe('getResendAnotherAccessCodePage', () => {
 
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
-
-  it('should render problem with service template when an error occurs while rendering', () => {
-    const req = {
-      session: {
-        numberOfSignInOtpAttemptsRemaining: 1,
-        userEmail: 'test@example.com',
-      },
-    } as unknown as GetResendAnotherAccessCodePageRequest;
-
-    renderMock.mockImplementationOnce(() => {
-      throw new Error('Render error');
-    });
-
-    getResendAnotherAccessCodePage(req, res);
-
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
-  });
 });

@@ -3,7 +3,7 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import * as api from '../../api';
 import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
-type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining?: number } };
+type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
 type PostRequestNewAccessCodePageSession = { userToken: string };
 export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: PostRequestNewAccessCodePageSession;
@@ -23,16 +23,15 @@ export const requestNewAccessCode = async (req: PostNewAccessCodePageRequest, re
       data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = (await api.sendSignInOTP(userToken)) as SendSignInOtpResponse;
 
-    if (typeof attemptsLeft === 'undefined') {
-      console.error('No remaining OTP attempts found in session when rendering new access code page');
-      return res.render('partials/problem-with-service.njk');
+    if (attemptsLeft >= -1) {
+      const nextAccessCodePage = getNextAccessCodePage(attemptsLeft);
+
+      return res.redirect(nextAccessCodePage);
     }
-
-    const { nextAccessCodePage } = getNextAccessCodePage(attemptsLeft);
-
-    return res.redirect(nextAccessCodePage);
+    console.error('Error requesting new access code');
+    return res.render('partials/problem-with-service.njk');
   } catch (error) {
-    console.error('Error requesting new access code %o', error);
+    console.error('Error requesting new access code:', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

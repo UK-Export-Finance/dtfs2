@@ -35,18 +35,17 @@ describe('requestNewAccessCode', () => {
       data: { numberOfSignInOtpAttemptsRemaining: 2 },
     });
 
-    (getNextAccessCodePage as jest.Mock).mockReturnValue({
-      nextAccessCodePage: '/next-access-code-page',
-    });
+    (getNextAccessCodePage as jest.Mock).mockReturnValue({ nextAccessCodePage: '/next-access-code-page' });
 
     await requestNewAccessCode(req, res);
 
     expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
     expect(getNextAccessCodePage).toHaveBeenCalledWith(2);
     expect(redirectMock).toHaveBeenCalledWith('/next-access-code-page');
+    expect(renderMock).not.toHaveBeenCalled();
   });
 
-  it('should render problem with service template when attemptsLeft is not returned', async () => {
+  it('should render problem with service template when attemptsLeft is undefined', async () => {
     const req = {
       session: {
         userToken: 'test-token',
@@ -60,6 +59,7 @@ describe('requestNewAccessCode', () => {
     await requestNewAccessCode(req, res);
 
     expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
+    expect(getNextAccessCodePage).not.toHaveBeenCalled();
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
     expect(redirectMock).not.toHaveBeenCalled();
   });

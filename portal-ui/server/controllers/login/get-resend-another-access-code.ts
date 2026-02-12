@@ -7,7 +7,7 @@ type ViewModel = {
   email?: string;
 };
 
-type GetResendAnotherAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userEmail?: string };
+type GetResendAnotherAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetResendAnotherAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetResendAnotherAccessCodePageRequestSession;
 };
@@ -22,21 +22,17 @@ export const getResendAnotherAccessCodePage = (req: GetResendAnotherAccessCodePa
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  if (typeof attemptsLeft === 'undefined') {
-    console.error('No remaining OTP attempts found in session when rendering resend another access code page');
-    return res.render('partials/problem-with-service.njk');
-  }
-
   const viewModel: ViewModel = {
     attemptsLeft,
     requestNewCodeUrl: '/login/request-new-access-code',
     email: userEmail,
   };
 
-  try {
+  if (attemptsLeft >= -1) {
     return res.render('login/resend-another-access-code.njk', viewModel);
-  } catch (error) {
-    console.error('Error getting resend another access code page %o', error);
-    return res.render('partials/problem-with-service.njk');
   }
+
+  console.error('Error getting resend another access code page');
+
+  return res.render('partials/problem-with-service.njk');
 };
