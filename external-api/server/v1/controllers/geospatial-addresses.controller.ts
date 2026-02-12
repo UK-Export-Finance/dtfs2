@@ -28,7 +28,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response = await axios({
     method: 'get',
-    url: `${APIM_MDM_URL}geospatial/addresses/postcode?postcode=${postcode}`,
+    url: `${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${postcode}`,
     headers,
   }).catch((error: any) => {
     console.error('Error calling MDM Geospatial Addresses API %o', error);

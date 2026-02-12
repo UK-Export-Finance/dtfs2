@@ -95,7 +95,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${APIM_MDM_URL}exposure-period?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
+      url: `${APIM_MDM_URL}v1/exposure-period?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
       headers,
     });
 
