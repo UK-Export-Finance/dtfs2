@@ -28,7 +28,7 @@ export const validateOTPAndSignIn = async (
 
     // If no user or no sign-in tokens are found, return 404 Not Found
     if (!user || !user?.signInTokens?.length) {
-      console.info('Unable to verify account sign in code - no account exists with the provided ID: %s', userId);
+      console.error('Unable to verify account sign in code - no account exists with the provided ID: %s', userId);
 
       return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
     }
@@ -37,7 +37,7 @@ export const validateOTPAndSignIn = async (
 
     // If the user is blocked or disabled, return 403 Forbidden
     if (userIsBlockedOrDisabled) {
-      console.info('User %s is blocked or disabled', user.email);
+      console.error('User %s is blocked or disabled', user.email);
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
