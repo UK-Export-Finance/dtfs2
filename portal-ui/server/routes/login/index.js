@@ -1,8 +1,8 @@
 const express = require('express');
 const axios = require('axios');
-// const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { postSubmitAccessCode } = require('../../controllers/login/post-submit-access-code');
-// const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
+const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -93,107 +93,107 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
    * Send sign in link or OTP depending on whether 2FA feature flag is enabled
    */
   // DTFS2-8199 : Remove the commented-out 2FA-related login code in this file
-  // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
-  // if (is2FAEnabled) {
-  //   let loginApiOtpSucceeded = false;
-  //   try {
-  //     const loginResponse = await api.login(email, password);
+  const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
+  if (is2FAEnabled) {
+    let loginApiOtpSucceeded = false;
+    try {
+      const loginResponse = await api.login(email, password);
 
-  //     const { token, loginStatus, user } = loginResponse;
+      const { token, loginStatus, user } = loginResponse;
 
-  //     loginApiOtpSucceeded = true;
+      loginApiOtpSucceeded = true;
 
-  //     req.session.userToken = token;
-  //     req.session.loginStatus = loginStatus;
-  //     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
-  //     req.session.userEmail = user.email;
-  //     req.session.userId = user.userId;
-  //     const {
-  //       data: { numberOfSignInOtpAttemptsRemaining },
-  //     } = await api.sendSignInOTP(req.session.userToken);
+      req.session.userToken = token;
+      req.session.loginStatus = loginStatus;
+      // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
+      req.session.userEmail = user.email;
+      req.session.userId = user.userId;
+      const {
+        data: { numberOfSignInOtpAttemptsRemaining },
+      } = await api.sendSignInOTP(req.session.userToken);
 
-  //     req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
+      req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
 
-  //     const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-  //     return res.redirect(nextAccessCodePage);
-  //   } catch (error) {
-  //     const status = error.response?.status;
+      const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+      return res.redirect(nextAccessCodePage);
+    } catch (error) {
+      const status = error.response?.status;
 
-  //     if (!loginApiOtpSucceeded) {
-  //       console.info('Failed to login %o', error);
+      if (!loginApiOtpSucceeded) {
+        console.info('Failed to login %o', error);
 
-  //       if (status === HttpStatusCode.Forbidden) {
-  //         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-  //       }
+        if (status === HttpStatusCode.Forbidden) {
+          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+        }
 
-  //       loginErrors.push(emailError);
-  //       loginErrors.push(passwordError);
+        loginErrors.push(emailError);
+        loginErrors.push(passwordError);
 
-  //       return res.render('login/index.njk', {
-  //         errors: validationErrorHandler(loginErrors),
-  //       });
-  //     }
-  //     if (status === HttpStatusCode.Forbidden) {
-  //       req.session.numberOfSignInOtpAttemptsRemaining = -1;
-  //       return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-  //     }
-
-  //     const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o';
-  //     console.info(message, error);
-
-  //     // Continue login flow so the user can retry sending OTP code
-  //     const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-  //     return res.redirect(nextAccessCodePage);
-  //   }
-  // } else {
-  let loginApiLinkSucceeded = false;
-  try {
-    const loginResponse = await api.login(email, password);
-
-    const { token, loginStatus, user } = loginResponse;
-
-    loginApiLinkSucceeded = true;
-
-    req.session.userToken = token;
-    req.session.loginStatus = loginStatus;
-    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
-    req.session.userEmail = user.email;
-    req.session.userId = user._id;
-    const {
-      data: { numberOfSendSignInLinkAttemptsRemaining },
-    } = await api.sendSignInLink(req.session.userToken);
-
-    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-    return res.redirect('/login/check-your-email');
-  } catch (error) {
-    const status = error.response?.status;
-
-    if (!loginApiLinkSucceeded) {
-      console.info('Failed to login %o', error);
-
+        return res.render('login/index.njk', {
+          errors: validationErrorHandler(loginErrors),
+        });
+      }
       if (status === HttpStatusCode.Forbidden) {
+        req.session.numberOfSignInOtpAttemptsRemaining = -1;
+        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
+      }
+
+      const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o';
+      console.info(message, error);
+
+      // Continue login flow so the user can retry sending OTP code
+      const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+      return res.redirect(nextAccessCodePage);
+    }
+  } else {
+    let loginApiLinkSucceeded = false;
+    try {
+      const loginResponse = await api.login(email, password);
+
+      const { token, loginStatus, user } = loginResponse;
+
+      loginApiLinkSucceeded = true;
+
+      req.session.userToken = token;
+      req.session.loginStatus = loginStatus;
+      // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
+      req.session.userEmail = user.email;
+      req.session.userId = user._id;
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
+
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+      return res.redirect('/login/check-your-email');
+    } catch (error) {
+      const status = error.response?.status;
+
+      if (!loginApiLinkSucceeded) {
+        console.info('Failed to login %o', error);
+
+        if (status === HttpStatusCode.Forbidden) {
+          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
+        }
+
+        loginErrors.push(emailError);
+        loginErrors.push(passwordError);
+
+        return res.render('login/index.njk', {
+          errors: validationErrorHandler(loginErrors),
+        });
+      }
+      if (status === HttpStatusCode.Forbidden) {
+        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
+      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
+      console.info(message, error);
 
-      return res.render('login/index.njk', {
-        errors: validationErrorHandler(loginErrors),
-      });
+      // Continue login flow so the user can retry sending sign-in link
+      return res.redirect('/login/check-your-email');
     }
-    if (status === HttpStatusCode.Forbidden) {
-      req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
-      return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
-    }
-
-    const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
-    console.info(message, error);
-
-    // Continue login flow so the user can retry sending sign-in link
-    return res.redirect('/login/check-your-email');
   }
-  // }
 });
 
 /**

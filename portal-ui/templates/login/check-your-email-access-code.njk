@@ -1,17 +1,33 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as accessCodeAttempts %}
 
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  Check your email
+  {% if validationErrors %}Error: {% endif %}Check your email
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
+      {% if validationErrors %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: validationErrors.signInOTP.text,
+              href: "#signInOTP"
+            }
+          ] if validationErrors.signInOTP,
+          attributes: {
+            "data-cy": "error-summary"
+          }
+        }) }}
+      {% endif %}
+
       <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>
 
       <p class="govuk-body govuk-!-margin-bottom-6" data-cy="check-your-email-description">
@@ -34,7 +50,12 @@
             "data-cy": "six-digit-access-code-input",
             "placeholder": "e.g. 123456"
           },
-          errorMessage: errors and errors.fieldErrors.signInOTP and {
+          errorMessage: (validationErrors and validationErrors.signInOTP) and {
+            text: validationErrors.signInOTP.text,
+            attributes: {
+                'data-cy': 'six-digit-access-code-inline-error'
+            }
+          } or (errors and errors.fieldErrors.signInOTP) and {
             text: errors.fieldErrors.signInOTP.text,
             attributes: {
                 'data-cy': 'six-digit-access-code-inline-error'
