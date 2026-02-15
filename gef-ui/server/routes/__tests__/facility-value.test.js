@@ -15,9 +15,8 @@ jest.doMock('express', () => ({
 }));
 
 describe('Routes', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line global-require
-    require('../facilities/facility-currency');
+  beforeEach(async () => {
+    await import('../facilities/facility-currency');
   });
 
   afterEach(() => {

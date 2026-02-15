@@ -10,9 +10,8 @@ jest.doMock('express', () => ({
 }));
 
 describe('Routes', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line global-require
-    require('../eligible-automatic-cover');
+  beforeEach(async () => {
+    await import('../eligible-automatic-cover');
   });
 
   afterEach(() => {
