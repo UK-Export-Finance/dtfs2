@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const aboutExporter = {
   industryTitle: () => cy.get('[data-cy="industry-title"]'),
   industry: () => cy.get('[data-cy="industry"]'),

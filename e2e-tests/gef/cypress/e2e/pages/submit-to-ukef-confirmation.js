@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const submitToUkefConfirmation = {
   confirmation: () => cy.get('[data-cy="ukef-submission-confirmation"]'),
   confirmationPanelTitle: () => cy.get('[data-cy="submit-confirmation-title"]'),

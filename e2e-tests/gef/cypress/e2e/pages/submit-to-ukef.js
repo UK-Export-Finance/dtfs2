@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const submitToUkef = {
   mainText: () => cy.get('[data-cy="main-text"]'),
   confirmSubmission: () => cy.get('[data-cy="confirm-submit-ukef"]'),
