@@ -1,16 +1,11 @@
-type FieldError = {
-  text: string;
-  order?: string;
-};
-
-type ValidationErrorsObject = Record<string, FieldError>;
+import { ValidationErrorsObject } from '../../../../types/view-models/2fa/submit-access-code-view-model';
 
 /**
  * Access code validation rule
  * Validates that the access code field is not empty
- * @param {Object} formBody - The submitted form data
- * @param {Object} errors - Existing validation errors
- * @returns {Object} Updated validation errors object
+ * @param formBody - The submitted form data
+ * @param errors - Existing validation errors
+ * @returns Updated validation errors object
  */
 const accessCodeRule = (formBody: { signInOTP?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors } as ValidationErrorsObject;

@@ -37,7 +37,7 @@ describe(page, () => {
     });
 
     it('should render the label for the access code input', () => {
-      wrapper.expectText('label[for="signInOTP"]').toRead('Enter access code:');
+      wrapper.expectText('[data-cy="six-digit-access-code-label"]').toRead('Enter access code:');
     });
 
     it('should not render inline error message for access code input', () => {
@@ -107,8 +107,7 @@ describe(page, () => {
     });
 
     it('should render inline error message for access code input', () => {
-      wrapper.expectElement('[data-cy="six-digit-access-code-inline-error"]').toExist();
-      wrapper.expectElement('[data-cy="six-digit-access-code-inline-error"]').toContain('Enter the access code');
+      wrapper.expectText('[data-cy="six-digit-access-code-inline-error"]').toRead('Error: Enter the access code');
     });
 
     it('should render the access code input with error styling', () => {
@@ -117,6 +116,24 @@ describe(page, () => {
 
     it('should render the form group with error styling', () => {
       wrapper.expectElement('.govuk-form-group').hasClass('govuk-form-group--error');
+    });
+  });
+
+  describe('when the access code entered is incorrect', () => {
+    let wrapper;
+    const validationErrors = {
+      signInOTP: {
+        text: 'The access code you have entered is incorrect',
+        href: '#signInOTP',
+      },
+    };
+
+    beforeEach(() => {
+      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors });
+    });
+
+    it('should render inline error message indicating the access code is incorrect', () => {
+      wrapper.expectText('[data-cy="six-digit-access-code-inline-error"]').toRead('Error: The access code you have entered is incorrect');
     });
   });
 });

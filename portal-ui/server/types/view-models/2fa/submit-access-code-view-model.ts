@@ -5,12 +5,12 @@ type FieldError = {
   order?: string;
 };
 
-type ValidationErrorsObject = Record<string, FieldError>;
+export type ValidationErrorsObject = Record<string, FieldError>;
 
-export type submitAccessCodeViewModel = {
+export type SubmitAccessCodeViewModel = {
   attemptsLeft?: number;
   requestNewCodeUrl: string;
-  errors?: false | { errorSummary: ValidationErrors[]; fieldErrors: object };
+  errors?: { errorSummary: ValidationErrors[]; fieldErrors: ValidationErrorsObject } | null;
   validationErrors?: ValidationErrorsObject | null;
   email?: string;
   signInOTP?: string;

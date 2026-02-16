@@ -1,3 +1,4 @@
+import axios, { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 
@@ -14,6 +15,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
   let res: Response;
   let renderMock: jest.Mock;
   let redirectMock: jest.Mock;
+  let statusMock: jest.Mock;
 
   const mockLoginWithSignInOtp = api.loginWithSignInOtp as jest.Mock;
   const mockGenerateValidationErrors = generateValidationErrors as jest.Mock;
@@ -23,9 +25,11 @@ describe('postCheckYourEmailAccessCodePage', () => {
     jest.resetAllMocks();
     renderMock = jest.fn();
     redirectMock = jest.fn();
+    statusMock = jest.fn().mockReturnThis();
     res = {
       render: renderMock,
       redirect: redirectMock,
+      status: statusMock,
     } as unknown as Response;
     console.error = jest.fn();
 
@@ -77,6 +81,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
 
     it('should render the check your email access code template with validation errors', () => {
       // Assert
+      expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
@@ -128,7 +133,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       });
     });
 
-    it('should redirect to sign-in-link after successful OTP', () => {
+    it('should redirect to dashboard after successful OTP', () => {
       // Assert
       expect(redirectMock).toHaveBeenCalledWith('/dashboard');
     });
@@ -136,7 +141,6 @@ describe('postCheckYourEmailAccessCodePage', () => {
 
   describe('when an error occurs', () => {
     let req: PostSubmitAccessCodePageRequest;
-
     beforeEach(async () => {
       // Arrange
       req = {
@@ -151,7 +155,13 @@ describe('postCheckYourEmailAccessCodePage', () => {
         },
       } as unknown as PostSubmitAccessCodePageRequest;
 
-      mockLoginWithSignInOtp.mockRejectedValue(new Error('API error'));
+      jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+
+      mockLoginWithSignInOtp.mockRejectedValue({
+        response: {
+          status: HttpStatusCode.Forbidden,
+        },
+      });
       mockIncorrectAccessCodeRule.mockReturnValue({
         signInOTP: {
           text: 'The access code you have entered is incorrect',
@@ -165,6 +175,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
     // Assert
 
     it('should render the check your email access code template with validation errors for API errors (incorrect code)', () => {
+      expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 1,
         requestNewCodeUrl: '/login/new-access-code',
@@ -240,6 +251,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
 
     it('should render the check your email access code template with validation errors', () => {
       // Assert
+      expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',

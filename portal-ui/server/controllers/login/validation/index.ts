@@ -1,16 +1,10 @@
+import { ValidationErrorsObject } from '../../../types/view-models/2fa/submit-access-code-view-model';
 import validationRules from './rules';
-
-type FieldError = {
-  text: string;
-  order?: string;
-};
-
-type ValidationErrorsObject = Record<string, FieldError>;
 
 /**
  * Combines validation rules and returns validation errors
- * @param {Object} formBody - The submitted form data
- * @returns {Object|null} Validation errors object or null if no errors
+ * @param formBody - The submitted form data
+ * @returns Validation errors object or null if no errors
  */
 const generateValidationErrors = (formBody: Record<string, unknown>): ValidationErrorsObject | null => {
   let errors: ValidationErrorsObject = {};

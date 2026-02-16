@@ -1,13 +1,15 @@
+import axios, { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
 import * as api from '../../api';
 import updateSessionAfterLogin from '../../helpers/updateSessionsAfterLogin';
-import { submitAccessCodeViewModel } from '../../types/view-models/2fa/submit-access-code-view-model';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
+import { renderAccessCodeErrorView } from './helpers/render-access-code-error';
 
 type PostSubmitAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
+
 export type PostSubmitAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: PostSubmitAccessCodePageRequestSession;
   body: {
@@ -25,9 +27,9 @@ export type PostSubmitAccessCodePageRequest = CustomExpressRequest<Record<string
  * - Updates the session on successful login and redirects to dashboard.
  * - Handles missing session data and API errors gracefully.
  *
- * @param {PostSubmitAccessCodePageRequest} req Express request, expects session with userId, userToken, attemptsLeft, and userEmail.
- * @param {Response} res Express response.
- * @returns {Promise<void>} Renders a view or redirects; does not return a value.
+ * @param req Express request, expects session with userId, userToken, attemptsLeft, and userEmail.
+ * @param res Express response.
+ * @returns Renders a view or redirects; does not return a value.
  */
 export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest, res: Response) => {
   const { signInOTP } = req.body;
@@ -51,14 +53,13 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
   const validationErrors = generateValidationErrors(req.body);
 
   if (validationErrors) {
-    const viewModel: submitAccessCodeViewModel = {
+    return renderAccessCodeErrorView({
+      res,
       attemptsLeft,
-      requestNewCodeUrl: '/login/new-access-code',
       email: userEmail,
       signInOTP,
       validationErrors,
-    };
-    return res.render('login/check-your-email-access-code.njk', viewModel);
+    });
   }
 
   // Attempt to verify the access code with the API
@@ -67,29 +68,28 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
   try {
     loginResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP });
   } catch (error) {
-    // API error for incorrect OTP - show validation error
-    console.error('Invalid sign-in OTP entered for user %s (API error)', userId);
+    const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
-    const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
+    if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
+      console.error('Invalid sign-in OTP entered for user %s (API error)', userId);
 
-    const viewModel: submitAccessCodeViewModel = {
-      attemptsLeft,
-      requestNewCodeUrl: '/login/new-access-code',
-      email: userEmail,
-      signInOTP,
-      validationErrors: incorrectCodeErrors,
-    };
-    return res.render('login/check-your-email-access-code.njk', viewModel);
+      const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
+
+      return renderAccessCodeErrorView({
+        res,
+        attemptsLeft,
+        email: userEmail,
+        signInOTP,
+        validationErrors: incorrectCodeErrors,
+      });
+    }
+
+    console.error('Unexpected error validating sign-in OTP for user %s', userId, error);
+
+    return res.render('_partials/problem-with-service.njk');
   }
 
   const { token: newUserToken, loginStatus, user } = loginResponse;
-
-  updateSessionAfterLogin({
-    req,
-    newUserToken,
-    loginStatus,
-    user,
-  });
 
   if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
     // Incorrect access code - API returned invalid status
@@ -97,15 +97,21 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
 
     const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-    const viewModel: submitAccessCodeViewModel = {
+    return renderAccessCodeErrorView({
+      res,
       attemptsLeft,
-      requestNewCodeUrl: '/login/new-access-code',
       email: userEmail,
       signInOTP,
       validationErrors: incorrectCodeErrors,
-    };
-    return res.render('login/check-your-email-access-code.njk', viewModel);
+    });
   }
+
+  updateSessionAfterLogin({
+    req,
+    newUserToken,
+    loginStatus,
+    user,
+  });
 
   // Successful login
   return res.redirect('/dashboard');

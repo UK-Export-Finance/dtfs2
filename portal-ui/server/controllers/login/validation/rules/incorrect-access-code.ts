@@ -1,16 +1,11 @@
-type FieldError = {
-  text: string;
-  order?: string;
-};
-
-type ValidationErrorsObject = Record<string, FieldError>;
+import { ValidationErrorsObject } from '../../../../types/view-models/2fa/submit-access-code-view-model';
 
 /**
  * Generates validation error for incorrect access code
  * This is used when the API verifies the code is incorrect
- * @param {Object} formBody - The submitted form data
- * @param {Object} errors - Existing validation errors
- * @returns {Object} Updated validation errors object with incorrect code message
+ * @param formBody - The submitted form data
+ * @param errors - Existing validation errors
+ * @returns Updated validation errors object with incorrect code message
  */
 const incorrectAccessCodeRule = (formBody: Record<string, unknown>, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors };
