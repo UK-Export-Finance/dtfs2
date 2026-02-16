@@ -4,7 +4,7 @@ import * as api from '../../api';
 import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
 type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
-type GetRequestNewAccessCodePageSession = { userToken: string };
+type GetRequestNewAccessCodePageSession = { userToken: string; numberOfSignInOtpAttemptsRemaining?: number };
 export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetRequestNewAccessCodePageSession;
 };
@@ -25,6 +25,8 @@ export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res
     } = (await api.sendSignInOTP(userToken)) as SendSignInOtpResponse;
 
     if (attemptsLeft >= -1) {
+      // persist latest attempts in session so the next page can read it
+      req.session.numberOfSignInOtpAttemptsRemaining = attemptsLeft;
       const nextAccessCodePage = getNextAccessCodePage(attemptsLeft);
 
       return res.redirect(nextAccessCodePage);
