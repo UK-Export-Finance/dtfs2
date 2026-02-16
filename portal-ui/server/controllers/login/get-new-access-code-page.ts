@@ -6,7 +6,7 @@ type ViewModel = {
   requestNewCodeUrl?: string;
   email?: string;
 };
-type GetNewAccessCodePageRequestSession = { numberOfSendSignInOtpAttemptsRemaining: number; userEmail?: string };
+type GetNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetNewAccessCodePageRequestSession;
 };
@@ -18,7 +18,7 @@ export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, ne
  */
 export const getNewAccessCodePage = (req: GetNewAccessCodePageRequest, res: Response) => {
   const {
-    session: { numberOfSendSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
+    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
   const viewModel: ViewModel = {

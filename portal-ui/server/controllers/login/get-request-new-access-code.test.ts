@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { requestNewAccessCode, PostNewAccessCodePageRequest } from './post-request-new-access-code';
+import { requestNewAccessCode, GetNewAccessCodePageRequest } from './get-request-new-access-code';
 import * as api from '../../api';
 import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
@@ -29,7 +29,7 @@ describe('requestNewAccessCode', () => {
       session: {
         userToken: 'test-token',
       },
-    } as unknown as PostNewAccessCodePageRequest;
+    } as unknown as GetNewAccessCodePageRequest;
 
     (api.sendSignInOTP as jest.Mock).mockResolvedValue({
       data: { numberOfSignInOtpAttemptsRemaining: 2 },
@@ -50,7 +50,7 @@ describe('requestNewAccessCode', () => {
       session: {
         userToken: 'test-token',
       },
-    } as unknown as PostNewAccessCodePageRequest;
+    } as unknown as GetNewAccessCodePageRequest;
 
     (api.sendSignInOTP as jest.Mock).mockResolvedValue({
       data: {},
@@ -69,7 +69,7 @@ describe('requestNewAccessCode', () => {
       session: {
         userToken: 'test-token',
       },
-    } as unknown as PostNewAccessCodePageRequest;
+    } as unknown as GetNewAccessCodePageRequest;
 
     (api.sendSignInOTP as jest.Mock).mockRejectedValue(new Error('API error'));
 

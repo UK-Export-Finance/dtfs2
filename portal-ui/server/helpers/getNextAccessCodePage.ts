@@ -13,7 +13,7 @@ export const getNextAccessCodePage = (attemptsLeft: number): string => {
     case 1:
       return `/login/${ACCESS_CODE_PAGES.NEW_ACCESS_CODE}`;
     case 0:
-      return `/login/${ACCESS_CODE_PAGES.ANOTHER_ACCESS_CODE}`;
+      return `/login/${ACCESS_CODE_PAGES.RESEND_ANOTHER_ACCESS_CODE}`;
     case -1:
       return `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`;
     default:

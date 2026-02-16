@@ -21,6 +21,7 @@
       </p>
 
       <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" data-cy="csrf-input">
         <div class="govuk-form-group govuk-!-width-one-third">
           {{ govukInput({
             label: {
@@ -43,7 +44,7 @@
 
         {{ renderAccessCodeAttempts.render({
           isSupportInfo: true,
-          attemptsLeft: attemptsRemaining,
+          attemptsLeft: attemptsLeft,
           requestNewCodeUrl: requestNewCodeUrl,
           isAccessCodeLink: false
         }) }}

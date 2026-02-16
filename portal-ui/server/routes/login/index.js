@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 // const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
-// const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');nst
+// const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -12,7 +12,7 @@ const { getNewAccessCodePage } = require('../../controllers/login/get-new-access
 const { postNewAccessCodePage } = require('../../controllers/login/post-new-access-code-page');
 const { postResendAnotherAccessCodePage } = require('../../controllers/login/post-resend-another-access-code-page');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
-const { requestNewAccessCode } = require('../../controllers/login/post-request-new-access-code');
+const { requestNewAccessCode } = require('../../controllers/login/get-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
@@ -111,6 +111,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   //     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
   //     req.session.userEmail = user.email;
   //     req.session.userId = user._id;
+  //     console.log('req.session', req.session);
   //     const {
   //       data: { numberOfSignInOtpAttemptsRemaining },
   //     } = await api.sendSignInOTP(req.session.userToken);
@@ -322,38 +323,6 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
 
 /**
  * @openapi
- * /login/new-access-code:
- *   get:
- *     summary: Render the new access code page
- *     tags: [Portal]
- *     description: Render the new access code page
- *     responses:
- *       200:
- *         description: Ok
- *       400:
- *         description: Bad Request
- *       500:
- *         description: Internal server error
- */
-router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
-
-/**
- * @openapi
- * /login/new-access-code:
- *   post:
- *     summary: Post the new access code page
- *     tags: [Portal]
- *     description: Post the new access code page
- *     responses:
- *       301:
- *         description: Resource moved permanently
- *       400:
- *         description: Bad Request
- */
-router.post('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postNewAccessCodePage);
-
-/**
- * @openapi
  * /login/check-your-email:
  *   get:
  *     summary: Render check your email page
@@ -464,6 +433,38 @@ router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled
 
 /**
  * @openapi
+ * /login/new-access-code:
+ *   get:
+ *     summary: Render the new access code page
+ *     tags: [Portal]
+ *     description: Render the new access code page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getNewAccessCodePage);
+
+/**
+ * @openapi
+ * /login/new-access-code:
+ *   post:
+ *     summary: Post the new access code page
+ *     tags: [Portal]
+ *     description: Post the new access code page
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad Request
+ */
+router.post('/login/new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postNewAccessCodePage);
+
+/**
+ * @openapi
  * /login/resend-another-access-code:
  *   get:
  *     summary: Render the resend another access code page
@@ -511,9 +512,9 @@ router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled,
 
 /**
  * @openapi
- * /login/request-new-sign-in-otp:
- *   post:
- *     summary: Request a new sign-in OTP and navigate to the appropriate page
+ * /login/request-new-access-code:
+ *   get:
+ *     summary: Request a new access code and navigate to the appropriate page
  *     tags: [Portal]
  *     description: Request a new sign-in OTP and navigate to the appropriate page
  *     responses:
@@ -522,6 +523,6 @@ router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled,
  *       500:
  *         description: Internal server error
  */
-router.post('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
+router.get('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
 
 module.exports = router;

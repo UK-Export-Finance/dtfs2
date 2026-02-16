@@ -15,7 +15,7 @@ type PostNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?
 export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: PostNewAccessCodePageRequestSession;
   reqBody: {
-    signInOTP: string;
+    accessCode: string;
   };
 };
 
@@ -25,7 +25,7 @@ export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, n
  * @param res - the response object
  */
 export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, res: Response) => {
-  const { signInOTP } = req.body;
+  const { accessCode } = req.body;
 
   const {
     session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft },
@@ -38,7 +38,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP });
+    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: accessCode });
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
     updateSessionAfterLogin({

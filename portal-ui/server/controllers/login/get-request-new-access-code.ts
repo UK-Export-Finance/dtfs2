@@ -4,9 +4,9 @@ import * as api from '../../api';
 import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
 type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
-type PostRequestNewAccessCodePageSession = { userToken: string };
-export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
-  session: PostRequestNewAccessCodePageSession;
+type GetRequestNewAccessCodePageSession = { userToken: string };
+export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
+  session: GetRequestNewAccessCodePageSession;
 };
 
 /**
@@ -14,10 +14,11 @@ export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, n
  * @param req - the request object
  * @param res - the response object
  */
-export const requestNewAccessCode = async (req: PostNewAccessCodePageRequest, res: Response) => {
+export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res: Response) => {
   const {
     session: { userToken },
   } = req;
+
   try {
     const {
       data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
@@ -28,6 +29,7 @@ export const requestNewAccessCode = async (req: PostNewAccessCodePageRequest, re
 
       return res.redirect(nextAccessCodePage);
     }
+
     console.error('Error requesting new access code');
     return res.render('partials/problem-with-service.njk');
   } catch (error) {
