@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { getResendAnotherAccessCodePage, GetResendAnotherAccessCodePageRequest } from './get-resend-another-access-code';
 
-describe('getResendAnotherAccessCodePage', () => {
+describe('controllers/login/get-resend-another-access-code', () => {
   let res: Response;
   let renderMock: jest.Mock;
 
@@ -11,6 +11,8 @@ describe('getResendAnotherAccessCodePage', () => {
       render: renderMock,
     } as unknown as Response;
   });
+
+  console.error = jest.fn();
 
   it('should render the resend another access code template with attemptsLeft from the session', () => {
     const req = {
@@ -36,6 +38,7 @@ describe('getResendAnotherAccessCodePage', () => {
 
     getResendAnotherAccessCodePage(req, res);
 
+    expect(console.error).toHaveBeenCalledWith('Error getting resend another access code page');
     expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });

@@ -7,7 +7,7 @@ import { validationErrorHandler } from '../../helpers';
 jest.mock('../../api');
 jest.mock('../../helpers');
 
-describe('postResendAnotherAccessCodePage', () => {
+describe('controllers/login/post-resend-another-access-code-page', () => {
   let res: Response;
   let renderMock: jest.Mock;
   let redirectMock: jest.Mock;

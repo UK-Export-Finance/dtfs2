@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
-describe('getNewAccessCodePage', () => {
+describe('controllers/login/get-new-access-code-page', () => {
   let res: Response;
   let renderMock: jest.Mock;
 

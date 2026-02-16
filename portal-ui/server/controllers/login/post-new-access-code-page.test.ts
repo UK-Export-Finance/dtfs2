@@ -7,7 +7,7 @@ import { validationErrorHandler } from '../../helpers';
 jest.mock('../../api');
 jest.mock('../../helpers');
 
-describe('postNewAccessCodePage', () => {
+describe('controllers/login/post-new-access-code-page', () => {
   let res: Response;
   let renderMock: jest.Mock;
   let redirectMock: jest.Mock;
@@ -131,6 +131,7 @@ describe('postNewAccessCodePage', () => {
     });
 
     it('should render the problem with service template', () => {
+      expect(console.error).toHaveBeenCalledWith('Error during login with sign-in OTP:', new Error('API error'));
       expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });

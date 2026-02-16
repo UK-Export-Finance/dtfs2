@@ -1,15 +1,9 @@
-import { CustomExpressRequest, PORTAL_LOGIN_STATUS, PortalSessionUser } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { validationErrorHandler } from '../../helpers';
 import * as api from '../../api';
 import { NewAccessCodeViewModel } from '../../types/view-models/2fa/new-access-code-view-model';
-import updateSessionAfterLogin from '../../helpers/updateSessionAfterLogin';
-
-type LoginWithSignInOtpResponse = {
-  loginStatus?: string;
-  token?: string;
-  user?: PortalSessionUser;
-};
+import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 
 type PostNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userId?: string };
 export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
@@ -34,8 +28,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
   try {
     if (attemptsLeft >= -1) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: sixDigitAccessCode });
-      const { token: newUserToken, loginStatus, user } = loginResponse;
+      const { token: newUserToken, loginStatus, user } = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
       updateSessionAfterLogin({
         req,

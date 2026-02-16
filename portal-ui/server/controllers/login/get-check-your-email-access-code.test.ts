@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { getCheckYourEmailAccessCodePage, GetCheckYourEmailAccessCodePageRequest } from './get-check-your-email-access-code';
 
-describe('getCheckYourEmailAccessCodePage', () => {
+describe('controllers/login/get-check-your-email-access-code', () => {
   let res: Response;
   let renderMock: jest.Mock;
 
