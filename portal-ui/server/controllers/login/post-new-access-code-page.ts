@@ -11,11 +11,11 @@ type LoginWithSignInOtpResponse = {
   user?: PortalSessionUser;
 };
 
-type PostNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string };
+type PostNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userId?: string };
 export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: PostNewAccessCodePageRequestSession;
   reqBody: {
-    accessCode: string;
+    sixDigitAccessCode: string;
   };
 };
 
@@ -25,45 +25,44 @@ export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, n
  * @param res - the response object
  */
 export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, res: Response) => {
-  const { accessCode } = req.body;
+  const { sixDigitAccessCode } = req.body;
 
   const {
     session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft },
   } = req;
 
   try {
-    if (typeof attemptsLeft === 'undefined') {
-      console.error('No remaining OTP attempts found in session when rendering new access code page');
-      return res.render('partials/problem-with-service.njk');
+    if (attemptsLeft >= -1) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: sixDigitAccessCode });
+      const { token: newUserToken, loginStatus, user } = loginResponse;
+
+      updateSessionAfterLogin({
+        req,
+        newUserToken,
+        loginStatus,
+        user,
+      });
+
+      if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
+        console.error('Invalid sign-in OTP entered for user %s', userId);
+
+        const viewModel: NewAccessCodeViewModel = {
+          attemptsLeft,
+          requestNewCodeUrl: '/login/new-access-code',
+          errors: validationErrorHandler({
+            errMsg: 'The access code you have entered is incorrect',
+            errRef: 'sixDigitAccessCode',
+          }),
+        };
+
+        return res.render('login/new-access-code.njk', viewModel);
+      }
+
+      return res.redirect(`/login/sign-in-link?t=${newUserToken}&u=${userId}`);
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: accessCode });
-    const { token: newUserToken, loginStatus, user } = loginResponse;
-
-    updateSessionAfterLogin({
-      req,
-      newUserToken,
-      loginStatus,
-      user,
-    });
-
-    if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
-      console.error('Invalid sign-in OTP entered for user %s', userId);
-
-      const viewModel: NewAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: '/login/new-access-code',
-        errors: validationErrorHandler({
-          errMsg: 'The access code you have entered is incorrect',
-          errRef: 'signInOTP',
-        }),
-      };
-
-      return res.render('login/new-access-code.njk', viewModel);
-    }
-
-    return res.redirect(`/login/sign-in-link?t=${newUserToken}&u=${user?._id}`);
+    console.error('No remaining OTP attempts found in session when rendering new access code page');
+    return res.render('partials/problem-with-service.njk');
   } catch (error) {
     console.error('Error during login with sign-in OTP:', error);
     return res.render('partials/problem-with-service.njk');

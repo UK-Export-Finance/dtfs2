@@ -110,8 +110,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   //     req.session.loginStatus = loginStatus;
   //     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
   //     req.session.userEmail = user.email;
-  //     req.session.userId = user._id;
-  //     console.log('req.session', req.session);
+  //     req.session.userId = user.userId;
   //     const {
   //       data: { numberOfSignInOtpAttemptsRemaining },
   //     } = await api.sendSignInOTP(req.session.userToken);

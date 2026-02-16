@@ -1,5 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
 
@@ -10,6 +11,15 @@
 {% endblock %}
 
 {% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l" data-cy="resend-another-access-code-email-sent-heading">
@@ -27,13 +37,19 @@
             label: {
               text: "Enter access code:"
             },
-            id: "accessCode",
-            name: "accessCode",
+            id: "sixDigitAccessCode",
+            name: "sixDigitAccessCode",
             spellcheck: false,
             type: "text",
             autocomplete: "off",
             attributes: {
               "placeholder": "e.g. 123A5C"
+            },
+            errorMessage: errors and errors.fieldErrors.sixDigitAccessCode and {
+              text: errors.fieldErrors.sixDigitAccessCode.text,
+              attributes: {
+                  'data-cy': 'access-code-inline-error'
+              }
             }
           }) }}
         </div>

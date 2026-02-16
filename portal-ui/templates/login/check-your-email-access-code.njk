@@ -1,5 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as accessCodeAttempts %}
 
@@ -10,6 +11,15 @@
 {% endblock %}
 
 {% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>

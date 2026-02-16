@@ -34,7 +34,7 @@ describe('postNewAccessCodePage', () => {
     beforeEach(async () => {
       req = {
         body: {
-          signInOTP: '123456',
+          sixDigitAccessCode: '123456',
         },
         session: {
           userToken: 'Bearer test-token',
@@ -60,7 +60,7 @@ describe('postNewAccessCodePage', () => {
     it('should call validationErrorHandler with correct arguments', () => {
       expect(mockValidationErrorHandler).toHaveBeenCalledWith({
         errMsg: 'The access code you have entered is incorrect',
-        errRef: 'signInOTP',
+        errRef: 'sixDigitAccessCode',
       });
     });
 
@@ -79,7 +79,7 @@ describe('postNewAccessCodePage', () => {
     beforeEach(async () => {
       req = {
         body: {
-          signInOTP: '123456',
+          sixDigitAccessCode: '123456',
         },
         session: {
           userToken: 'Bearer valid-token',
@@ -106,7 +106,7 @@ describe('postNewAccessCodePage', () => {
     });
 
     it('should redirect to sign in link page', () => {
-      expect(redirectMock).toHaveBeenCalledWith('/login/sign-in-link?t=new-user-token&u=user-from-response-id');
+      expect(redirectMock).toHaveBeenCalledWith('/login/sign-in-link?t=new-user-token&u=user-456');
     });
   });
 
@@ -116,7 +116,7 @@ describe('postNewAccessCodePage', () => {
     beforeEach(async () => {
       req = {
         body: {
-          signInOTP: '123456',
+          sixDigitAccessCode: '123456',
         },
         session: {
           userToken: 'Bearer error-token',

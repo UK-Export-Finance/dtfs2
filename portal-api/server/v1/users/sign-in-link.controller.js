@@ -159,7 +159,7 @@ class SignInLinkController {
 
       switch (true) {
         case isExpired:
-          return res.status(HttpStatusCode.Forbidden).json({
+          return res.status(HttpStatusCode.Ok).json({
             message: 'Forbidden',
             errors: [
               {
@@ -170,7 +170,7 @@ class SignInLinkController {
           });
 
         case isInvalid:
-          return res.status(HttpStatusCode.Forbidden).json({
+          return res.status(HttpStatusCode.Ok).json({
             message: 'Forbidden',
             errors: [
               {
@@ -181,7 +181,7 @@ class SignInLinkController {
           });
 
         case notFound:
-          return res.status(HttpStatusCode.NotFound).json({
+          return res.status(HttpStatusCode.Ok).json({
             message: 'Not Found',
             errors: [
               {
