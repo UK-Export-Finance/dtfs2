@@ -33,14 +33,12 @@ export const verify = (
     return next();
   }
 
-  const excludedSSOUrl = SSO_URL;
-
   /**
    * Exclude SSO redirect URL from CSRF verification
    * as the request is initiated by an external identity provider
    * This allows users to be redirected back to the application after authentication without encountering CSRF verification errors.
    */
-  if (req.originalUrl.includes(excludedSSOUrl)) {
+  if (req.originalUrl.includes(SSO_URL)) {
     return next();
   }
 
