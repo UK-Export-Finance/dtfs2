@@ -43,9 +43,9 @@ describe('party-db.controller feature flag', () => {
   beforeEach(() => {
     axiosMock = new MockAdapter(axios);
 
-    axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
-    axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
-    axiosMock.onPost(`${APIM_MDM_URL}customers`).reply(HttpStatusCode.Ok);
+    axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
+    axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+    axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);
   });
 
   afterEach(() => {
