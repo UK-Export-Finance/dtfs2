@@ -3,7 +3,7 @@ import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
 import * as api from '../../api';
-import updateSessionAfterLogin from '../../helpers/updateSessionsAfterLogin';
+import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { renderAccessCodeErrorView } from './helpers/render-access-code-error';
@@ -39,6 +39,12 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
 
   if (!userId) {
     console.error('userId missing from session:', req.session);
+
+    return res.redirect('/login');
+  }
+
+  if (!userToken) {
+    console.error('userToken missing from session for user %s', userId);
 
     return res.redirect('/login');
   }
@@ -104,6 +110,12 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
       signInOTP,
       validationErrors: incorrectCodeErrors,
     });
+  }
+
+  if (!newUserToken || !user) {
+    console.error('Missing user token or user details after successful OTP validation for user %s', userId);
+
+    return res.render('_partials/problem-with-service.njk');
   }
 
   updateSessionAfterLogin({
