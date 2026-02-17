@@ -19,7 +19,7 @@ param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 // REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 // VNET_ADDRESS_PREFIX
-param peeringAddressSpace string = '10.50.0.0/16'
+param peeringAddressSpace string
 
 param vnetAddressPrefix string
 param applicationGatewayCidr string
@@ -166,7 +166,6 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
@@ -257,7 +256,6 @@ var parametersMap = {
     }
     nodeDeveloperMode: false
     nsg: {
-      // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
       storageNetworkAccessDefaultAction: 'Deny'
     }
     apiPortalAccessPort: 0
@@ -269,13 +267,11 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
       privateEndpointsCidr: privateEndpointsCidr
-      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -312,9 +308,6 @@ var parametersMap = {
     }
     apiPortalAccessPort: 0
     redis: {
-      // TODO:FN-504 decide what sku to use.
-      // Note that it isn't recommended to use Basic or C0 in production
-      // See https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-best-practices-development
       sku:{
         name: 'Basic'
         family: 'C'
@@ -322,7 +315,6 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
@@ -421,7 +413,7 @@ var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
 var portalUiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD 
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
