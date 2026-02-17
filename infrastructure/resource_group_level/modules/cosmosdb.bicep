@@ -6,8 +6,6 @@ param databaseName string
 param product string
 param target string
 param version string
-
-
 @description('Network IPs to permit access to CosmosDB')
 @secure()
 param allowedIpsString string
@@ -22,8 +20,6 @@ param backupPolicyTier string
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
-@description('Provisioned RU/s throughput for the collection')
-param defaultThroughput int = 400
 
 
 var allowedIps = json(allowedIpsString)
@@ -139,7 +135,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -159,7 +155,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -179,7 +175,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -206,7 +202,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -236,7 +232,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -256,7 +252,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -276,7 +272,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -299,7 +295,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -329,7 +325,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -359,7 +355,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -389,7 +385,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -412,7 +408,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -435,7 +431,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -455,7 +451,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -475,7 +471,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -495,7 +491,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -518,7 +514,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -541,7 +537,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }
@@ -564,7 +560,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: 400 
       }
     }
   }

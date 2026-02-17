@@ -13,44 +13,36 @@ param nodeDeveloperMode bool
 param product string
 param target string
 param version string
-
 param resourceNameFragment string = 'gef-ui'
-
 param settings object
-
 @secure()
 param secureSettings object
 @secure()
 param additionalSecureSettings object
-
 @secure()
 param secureConnectionStrings object
-
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
+
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
-var containerRegistryLoginServer = containerRegistry.properties.loginServer
-var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 resource redis 'Microsoft.Cache/redis@2024-11-01' existing = {
   name: redisName
 }
 
 var portalApiUrl = 'https://${portalApiHostname}'
-
-// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
-var azureDnsServerIp = '168.63.129.16'
-
 var staticSettings = {
   PORTAL_API_URL: portalApiUrl
   REDIS_HOSTNAME: redis.properties.hostName
   REDIS_PORT: redis.properties.sslPort
   REDIS_KEY: redis.listKeys().primaryKey
   HTTPS: 1
-
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
@@ -82,7 +74,6 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
   type: 'Custom'
   value: item.value
 } )
-
 
 var connectionStringsCalculated = { }
 

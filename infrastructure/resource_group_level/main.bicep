@@ -1,6 +1,4 @@
 param location string  = resourceGroup().location
-/* Expected values are 'feature', 'dev', 'staging' & 'prod'
-  Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'. */
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 @description('The product name for resource naming')
@@ -9,10 +7,10 @@ param product string
 param target string
 @description('The version for resource naming')
 param version string
-/* Allowed frontDoorAccess values: 'Allow', 'Deny' */
 var frontDoorAccess = 'Allow'
 param productionSubnetCidr string
 param routeTableNextHopIpAddress string
+
 @secure()
 // REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
@@ -22,19 +20,22 @@ param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 // VNET_ADDRESS_PREFIX
 param peeringAddressSpace string = '10.50.0.0/16'
+
 param vnetAddressPrefix string
 param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string')
+@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
 @secure()
 param onPremiseNetworkIpsString string
 @description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
 @secure()
 param azurePortalIpsString string
+
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
+
 
 @secure()
 param RATE_LIMIT_THRESHOLD string
@@ -95,6 +96,7 @@ param JWT_SIGNING_KEY string
 param JWT_VALIDATING_KEY string
 @secure()
 param PORTAL_API_KEY string
+
 @secure()
 param TFM_API_KEY string
 @secure()
@@ -103,6 +105,7 @@ param SESSION_SECRET string
 param ESTORE_URL string
 @secure()
 param UKEF_TFM_API_SYSTEM_KEY string
+
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
@@ -111,7 +114,10 @@ param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
 @secure()
 param UKEF_INTERNAL_NOTIFICATION string
-
+param azureDnsServerIp string
+param nsgSourceAddressPrefix string 
+param ukefSourceAddressPrefix string 
+param testSourceAddressPrefix string 
 
 var storageLocations = [
   'uksouth'
@@ -121,6 +127,12 @@ var storageLocations = [
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
+/* This parameters map holds the per-environment settings.
+Some notes from initial networking conversations:
+Dev uses 172.16.4x.xx
+Demo (legacy?) uses 172.16.6x.xx
+Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
+Feature can use 172.16.2x.xx */
 var parametersMap = {
   dev: {
     acr: {
@@ -154,6 +166,7 @@ var parametersMap = {
       }
     }
     vnet: {
+      // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
@@ -163,7 +176,7 @@ var parametersMap = {
     }
     wafPolicies: {
       matchVariable: 'SocketAddr'
-      redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
+      redirectUrl: 'https://ukexportfinance.gov.uk/'
       rejectAction: 'Block'
       wafPoliciesName: 'vpn'
       applyWafRuleOverrides: true
@@ -172,6 +185,8 @@ var parametersMap = {
   }
   feature: {
     acr: {
+      // Note that containerRegistryName needs to be globally unique. However,
+      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
@@ -204,6 +219,8 @@ var parametersMap = {
     vnet: {
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
+      // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
+      // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       privateEndpointsCidr: privateEndpointsCidr
@@ -240,6 +257,7 @@ var parametersMap = {
     }
     nodeDeveloperMode: false
     nsg: {
+      // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
       storageNetworkAccessDefaultAction: 'Deny'
     }
     apiPortalAccessPort: 0
@@ -251,11 +269,13 @@ var parametersMap = {
       }
     }
     vnet: {
+      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
       privateEndpointsCidr: privateEndpointsCidr
+      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -292,6 +312,9 @@ var parametersMap = {
     }
     apiPortalAccessPort: 0
     redis: {
+      // TODO:FN-504 decide what sku to use.
+      // Note that it isn't recommended to use Basic or C0 in production
+      // See https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-best-practices-development
       sku:{
         name: 'Basic'
         family: 'C'
@@ -299,6 +322,7 @@ var parametersMap = {
       }
     }
     vnet: {
+      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
@@ -328,8 +352,6 @@ var functionSecureSettings = {
   APIM_MDM_VALUE: APIM_MDM_VALUE
 }
 
-/* These values are taken from an export of Configuration on Dev
-Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
 var functionAdditionalSecureSettings = { }
 
 var dtfsCentralApiSettings = {
@@ -381,7 +403,6 @@ var portalApiSettings = {
 
 var portalApiSecureSettings = {
   PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
   AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
@@ -400,7 +421,7 @@ var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
 var portalUiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD 
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
@@ -475,6 +496,9 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
     target: target
     frontDoorAccess: frontDoorAccess
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
+    nsgSourceAddressPrefix: nsgSourceAddressPrefix  
+    ukefSourceAddressPrefix: ukefSourceAddressPrefix  
+    testSourceAddressPrefix: testSourceAddressPrefix
   }
 }
 
@@ -508,8 +532,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
   }
   kind: 'linux'
   properties: {
-    // Linux ASPs need to have reserved as true:
-    // https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties
     reserved: true
   }
 }
@@ -669,6 +691,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -690,8 +713,9 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
-} 
+}
 
 module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
@@ -715,6 +739,7 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     settings: externalApiSettings
     secureSettings: externalApiSecureSettings
     additionalSecureSettings: externalApiAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -738,6 +763,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     settings: dtfsCentralApiSettings
     secureSettings: dtfsCentralApiSecureSettings
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -771,6 +797,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -798,7 +825,6 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
@@ -819,6 +845,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -829,7 +856,6 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
@@ -845,6 +871,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     additionalSecureSettings: tfmUiAdditionalSecureSettings
     secureConnectionStrings: tfmUiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -870,6 +897,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     additionalSecureSettings: gefUiAdditionalSecureSettings
     secureConnectionStrings: gefUiSecureConnectionStrings
     additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -973,7 +1001,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
-    //environment: environment
     product: product
     version: version
     target: target
@@ -989,5 +1016,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     settings: tmfApiSettings
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }

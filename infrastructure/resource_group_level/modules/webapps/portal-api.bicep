@@ -20,21 +20,16 @@ param clamAvSettings {
 param product string
 param target string
 param version string
-
 param resourceNameFragment string = 'portal-api'
-
 param settings object
-
 @secure()
 param secureSettings object
-
 @secure()
 param additionalSecureSettings object
-
 param connectionStrings object
-
 @secure()
 param secureConnectionStrings object
+param azureDnsServerIp string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
@@ -42,15 +37,11 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' e
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
-// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
-var azureDnsServerIp = '168.63.129.16'
-
 var staticSettings = {
   CLAMAV_HOST: clamAvSettings.ipAddress
   CLAMAV_PORT: clamAvSettings.port
   CLAMAV_DEBUG_MODE_ENABLED: 'true'
   CLAMAV_SCANNING_ENABLED: 'true'
-
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
@@ -91,8 +82,8 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
   value: item.value
 } )
 
-var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
-var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
+
+var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
@@ -127,7 +118,7 @@ module portalApiWebapp 'webapp.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
-    scmMinTlsVersion: '1.2'
+    scmMinTlsVersion: '1.0'
     product: product
     version: version
     target: target

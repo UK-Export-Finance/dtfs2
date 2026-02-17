@@ -2,7 +2,6 @@ param location string
 param product string
 param target string
 param version string
-
 param appServicePlanEgressSubnetId string
 param gatewaySubnetId string
 param privateEndpointsSubnetId string
@@ -11,7 +10,7 @@ param privateEndpointsSubnetId string
 @secure()
 param onPremiseNetworkIpsString string
 
-@description('Is public access to the storage account allowed or denied for everyone')
+@description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
 
@@ -59,14 +58,14 @@ var blobContainerNames = [
   'numbergenerator-leases'
 ]
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = { // NOSONAR – accepted risk, managed by platform team
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
   location: location
   sku: {
     name: 'Standard_ZRS'
   }
   kind: 'StorageV2'
-  properties: { 
+  properties: {
     defaultToOAuthAuthentication: false
     publicNetworkAccess: 'Enabled'
     minimumTlsVersion: 'TLS1_2'
@@ -203,7 +202,6 @@ resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2025-01-
   name: tableName
 }]
 
-// This resource definition is taken from the storage-private-endpoint export
 resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: storageAccountName
   location: location

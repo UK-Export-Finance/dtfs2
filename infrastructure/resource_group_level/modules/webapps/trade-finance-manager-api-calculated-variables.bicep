@@ -15,7 +15,6 @@ param version string
 var tfmApiNameFragment = 'trade-finance-manager-api'
 var tfmApiName = '${product}-${target}-${version}-${tfmApiNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${tfmApiNameFragment}'
-
 var deployApplicationInsights = false 
 var selfHostnameEnvironmentVariable = ''
 
@@ -23,20 +22,17 @@ var selfHostnameEnvironmentVariable = ''
 param secureSettings object
 @secure()
 param secureConnectionStrings object
-
 @secure()
 param additionalSecureSettings object
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
 
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
-var containerRegistryLoginServer = containerRegistry.properties.loginServer
-
-// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
-var azureDnsServerIp = '168.63.129.16'
 
 var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
@@ -44,8 +40,7 @@ var staticSettings = {
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
-
-var dtfsCentralApiUrl = 'https://${dtfsCentralApiHostname}'
+var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 var externalApiUrl = 'https://${externalApiHostname}'
 
 var additionalSettings = {
@@ -76,8 +71,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' exis
   name: cosmosDbAccountName
 }
 
-var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
-var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
+var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName

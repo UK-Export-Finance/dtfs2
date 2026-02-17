@@ -9,8 +9,6 @@ param target string
 param version string
 
 param networkSecurityGroupId string
-
-// Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
 param peeringVnetName string = 'vnet-peer-uks-${product}-${target}-${version}'
 @secure()
 param peeringRemoteVnetSubscriptionId string
@@ -44,7 +42,6 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-10-01' 
     '3'
   ]
   properties: {
-    // the ipAddress value is assigned by Azure
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Static'
     idleTimeoutInMinutes: 4
@@ -73,6 +70,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
   properties: {
     addressSpace: {
       addressPrefixes: addressPrefixes
+    }
+    dhcpOptions: {
+      dnsServers: []
     }
     subnets: [
       {

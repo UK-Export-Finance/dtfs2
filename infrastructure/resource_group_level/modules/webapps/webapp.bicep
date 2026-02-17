@@ -1,29 +1,22 @@
 param resourceNameFragment string
 param location string
-
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string 
 param scmMinTlsVersion string 
 param appServicePlanEgressSubnetId string
-
 @secure()
 param appSettings object
-
 @secure()
 param connectionStrings object
 @description('The product name for resource naming')
 param product string
-
 @description('The target environment for resource naming')
 param target string
-
 @description('The version for resource naming')
 param version string
-
 param privateEndpointsSubnetId string
 param azureWebsitesDnsZoneId string
-
 param logAnalyticsWorkspaceId string
 param deployApplicationInsights bool
 
@@ -32,11 +25,9 @@ param selfHostnameEnvironmentVariable string = ''
 var appName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
-
 var appInsightsConfig = deployApplicationInsights ? {
   APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights!.properties.ConnectionString
 } : {}
-
 var selfHostnameConfig = selfHostnameEnvironmentVariable == '' ? {} : {
   '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
 }
@@ -52,7 +43,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
   location: location
   kind: 'app,linux,container'
   properties: {
-    httpsOnly: true
+    httpsOnly: false
     serverFarmId: appServicePlanId
     siteConfig: {
       numberOfWorkers: 1
@@ -61,14 +52,13 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
       alwaysOn: true
       http20Enabled: true
       functionAppScaleLimit: 0
-      logsDirectorySizeLimit: 100 
+      logsDirectorySizeLimit: 100 // default is 35
       vnetRouteAllEnabled: true
       ftpsState: ftpsState
       scmMinTlsVersion: scmMinTlsVersion
       remoteDebuggingVersion: 'VS2022'
-      httpLoggingEnabled: true // false in staging, true in prod
+      httpLoggingEnabled: true 
       healthCheckPath: '/healthcheck'
-      clientCertEnabled: false
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
@@ -89,7 +79,6 @@ resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
   name: privateEndpointName
   location: location
-  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {
@@ -110,6 +99,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
   }
 }
 
+// Adding the Zone group sets up automatic DNS for the private link.
 resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = {
   parent: privateEndpoint
   name: 'default'
@@ -128,7 +118,6 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
   name: applicationInsightsName
   location: location
-  tags: {}
   kind: 'web'
   properties: {
     Application_Type: 'web'

@@ -4,7 +4,6 @@ param vnetId string
 resource redisDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: redisDnsZoneName
   location: 'global'
-  tags: {}
 }
 
 resource redisSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
@@ -28,7 +27,6 @@ resource redisStorageVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkL
   parent: redisDnsZone
   name: 'storage-dns'
   location: 'global'
-  tags: {}
   properties: {
     registrationEnabled: false
     virtualNetwork: {

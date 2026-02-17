@@ -4,7 +4,6 @@ param vnetId string
 resource filesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: filesDnsZoneName
   location: 'global'
-  tags: {}
 }
 
 resource azureDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
@@ -28,7 +27,6 @@ resource filesVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@20
   parent: filesDnsZone
   name: 'storage-dns'
   location: 'global'
-  tags: {}
   properties: {
     registrationEnabled: false
     virtualNetwork: {

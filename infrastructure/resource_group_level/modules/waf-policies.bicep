@@ -1,26 +1,20 @@
 @description('The product name for resource naming')
 param product string
-
 @description('The target environment for resource naming')
 param target string
-
 @description('The version for resource naming')
 param version string
 param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
-
 @description('IPs which are not blocked/redirected')
 @secure()
 param allowedIpsString string
-
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
 param matchVariable string
-
 @allowed(['Redirect','Block'])
 param rejectAction string
 param applyWafRuleOverrides bool = false
 param restrictAccessToUkefIps bool
-
 @allowed(['Standard_AzureFrontDoor', 'Premium_AzureFrontDoor'])
 param wafSku string = 'Standard_AzureFrontDoor'
 
@@ -34,7 +28,7 @@ param ruleSet RuleSet
 var cleanIpsString = trim(allowedIpsString)
 var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
 var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
-var unauthorisedMessageBody = base64('Unauthorised access!')
+var unauthorisedMessageBody = base64('Unathorised access!')
 
 var devRuleOverrides = applyWafRuleOverrides ? [
   {

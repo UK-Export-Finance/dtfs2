@@ -12,6 +12,7 @@ param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
+param azureDnsServerIp string
 
 param resourceNameFragment string = 'dtfs-central-api'
 
@@ -27,9 +28,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' e
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-
-// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
-var azureDnsServerIp = '168.63.129.16'
 
 var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
@@ -51,8 +49,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
-var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
+var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 var calculatedSettings = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
@@ -84,7 +81,7 @@ module dtfsCentralApiWebapp 'webapp.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
-    scmMinTlsVersion: '1.2'
+    scmMinTlsVersion: '1.0'
   }
 }
 

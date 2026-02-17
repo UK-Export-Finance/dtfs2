@@ -8,21 +8,21 @@ param apiPortalAccessPort int = 0
 param product string
 param target string
 param version string
-
 param applicationGatewaySku object = {
   name: 'WAF_v2'
   tier: 'WAF_v2'
 }
-
 param autoscaleConfiguration object = {
   minCapacity: 1
   maxCapacity: 5
 }
-
 var applicationGatewayName = '${product}-${target}-${version}-gw'
-
 var tfsPortApi = '${product}-${target}-${version}-port-api'
-
+var tags = {
+  Environment: target
+  Product: product
+  Team: 'development'
+}
 var frontendPorts = concat([
   {
     name: 'appGatewayFrontendPort'
@@ -136,14 +136,11 @@ var requestRoutingRules = concat([
   }] : []
 )
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = { // NOSONAR – accepted risk, managed by platform team
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-    Product: 'dtfs'
-  }
-  properties: { 
+  tags: tags
+  properties: {
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {
@@ -239,6 +236,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
           unhealthyThreshold: 8
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
+          match: {}
         }
       }
       {

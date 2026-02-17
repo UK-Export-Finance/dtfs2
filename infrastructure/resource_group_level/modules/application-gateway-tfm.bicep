@@ -5,20 +5,20 @@ param tfmUiHostname string
 param product string
 param target string
 param version string
-
-
 param applicationGatewaySku object = {
   name: 'WAF_v2'
   tier: 'WAF_v2'
 }
-
 param autoscaleConfiguration object = {
   minCapacity: 1
   maxCapacity: 5
 }
-
 var applicationGatewayName = '${product}-${target}-${version}-tfm-gw'
-
+var tags = {
+  Environment: target
+  Product: product
+  Team: 'development'
+}
 var frontendPorts = [
   {
     name: 'appGatewayFrontendPort'
@@ -26,7 +26,6 @@ var frontendPorts = [
       port: 80
     }
   }]
-
 var backendPools = [
   {
     name: 'appGatewayBackendPool'
@@ -74,16 +73,11 @@ var requestRoutingRules = [
   }]
 
 
-// NOTE: Until the following issue is resolved, we need to self-reference the applicationGateway
-// using resourceId() for the various sub-components that need to be created.
-// https://github.com/Azure/bicep/issues/1852
-// See the following for example usage.
-// https://github.com/Azure/azure-quickstart-templates/blob/master/demos/ag-docs-qs/main.bicep
-
-resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = { // NOSONAR – accepted risk, managed by platform team
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
-  properties: { 
+  tags: tags
+  properties: {
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {
