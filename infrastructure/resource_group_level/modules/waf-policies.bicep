@@ -28,7 +28,7 @@ param ruleSet RuleSet
 var cleanIpsString = trim(allowedIpsString)
 var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
 var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
-var unauthorisedMessageBody = base64('Unathorised access!')
+var unauthorisedMessageBody = base64('Unauthorised access!')
 
 var devRuleOverrides = applyWafRuleOverrides ? [
   {
