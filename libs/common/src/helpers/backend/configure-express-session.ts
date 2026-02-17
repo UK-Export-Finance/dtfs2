@@ -48,7 +48,7 @@ export const expressSession = (): RequestHandler => {
     secret: SESSION_SECRET,
     store: redisStore(),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Keep false to avoid a new empty session being created during SSO flow
   };
 
   return session(options);
