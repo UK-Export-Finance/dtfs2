@@ -31,7 +31,7 @@ describe('renderAccessCodeErrorView', () => {
     validationErrors,
   };
 
-  it('sets the response status to BadRequest before rendering the template', () => {
+  it('should set the response status to BadRequest before rendering the template', () => {
     // Arrange
     const { res, status } = mockRes();
 
@@ -46,7 +46,7 @@ describe('renderAccessCodeErrorView', () => {
     expect(status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
   });
 
-  it('renders the access code template with the expected view model', () => {
+  it('should render the access code template with the expected view model', () => {
     // Arrange
     const { res, render } = mockRes();
 

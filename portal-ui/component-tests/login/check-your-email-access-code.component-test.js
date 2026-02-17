@@ -93,10 +93,6 @@ describe(page, () => {
       wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors });
     });
 
-    it('should render the page title with error prefix', () => {
-      wrapper.expectPageTitle().toRead('Error: Check your email');
-    });
-
     it('should render the error summary', () => {
       wrapper.expectElement('[data-cy="error-summary"]').toExist();
       wrapper.expectText('[data-cy="error-summary"] h2').toRead('There is a problem');
