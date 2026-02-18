@@ -27,11 +27,10 @@ export const getNewAccessCodePage = (req: GetNewAccessCodePageRequest, res: Resp
     email: userEmail,
   };
 
-  if (attemptsLeft >= -1) {
+  if (attemptsLeft === 1) {
     return res.render('login/new-access-code.njk', viewModel);
   }
 
-  console.error('Error getting new access code page');
-
-  return res.render('partials/problem-with-service.njk');
+  console.error('Invalid OTP attempts: expected 1 remaining attempt but found %d for user %s', attemptsLeft, userEmail);
+  return res.redirect('/not-found');
 };

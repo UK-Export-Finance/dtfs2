@@ -28,11 +28,10 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     email: userEmail,
   };
 
-  if (attemptsLeft >= -1) {
+  if (attemptsLeft === 2) {
     return res.render('login/check-your-email-access-code.njk', viewModel);
   }
 
-  console.error('Error getting check your email access code page');
-
-  return res.render('partials/problem-with-service.njk');
+  console.error('Invalid OTP attempts: expected 2 remaining attempts but found %d for user %s', attemptsLeft, userEmail);
+  return res.redirect('/not-found');
 };

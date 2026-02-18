@@ -28,11 +28,10 @@ export const getResendAnotherAccessCodePage = (req: GetResendAnotherAccessCodePa
     email: userEmail,
   };
 
-  if (attemptsLeft >= -1) {
+  if (attemptsLeft === 0) {
     return res.render('login/resend-another-access-code.njk', viewModel);
   }
 
-  console.error('Error getting resend another access code page');
-
-  return res.render('partials/problem-with-service.njk');
+  console.error('Invalid OTP attempts: expected 0 remaining attempts but found %d for user %s', attemptsLeft, userEmail);
+  return res.redirect('/not-found');
 };
