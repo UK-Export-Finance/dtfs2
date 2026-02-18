@@ -65,7 +65,7 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
         return res.render('login/resend-another-access-code.njk', viewModel);
       }
 
-      return res.redirect(`/login/sign-in-link?t=${newUserToken}&u=${userId}`);
+      return res.redirect(`/dashboard`);
     }
 
     console.error('Invalid OTP attempts: expected 0 remaining attempts but found %d for user %s', attemptsLeft, userId);
