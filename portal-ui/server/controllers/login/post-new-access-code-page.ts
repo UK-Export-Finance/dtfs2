@@ -70,7 +70,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     console.error('Invalid OTP attempts: expected 1 remaining attempt but found %d for user %s', attemptsLeft, userId);
     return res.redirect('/not-found');
   } catch (error) {
-    console.error('Error during login with sign-in OTP:', error);
+    console.error('Error during login with sign-in OTP %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

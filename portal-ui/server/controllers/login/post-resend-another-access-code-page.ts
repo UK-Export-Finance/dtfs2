@@ -71,7 +71,7 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
     console.error('Invalid OTP attempts: expected 0 remaining attempts but found %d for user %s', attemptsLeft, userId);
     return res.redirect('/not-found');
   } catch (error) {
-    console.error('Error during login with sign-in OTP:', error);
+    console.error('Error during login with sign-in OTP %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
