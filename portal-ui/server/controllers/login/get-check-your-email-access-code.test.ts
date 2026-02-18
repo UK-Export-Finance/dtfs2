@@ -4,11 +4,14 @@ import { getCheckYourEmailAccessCodePage, GetCheckYourEmailAccessCodePageRequest
 describe('controllers/login/get-check-your-email-access-code', () => {
   let res: Response;
   let renderMock: jest.Mock;
+  let redirectMock: jest.Mock;
 
   beforeEach(() => {
     renderMock = jest.fn();
+    redirectMock = jest.fn();
     res = {
       render: renderMock,
+      redirect: redirectMock,
     } as unknown as Response;
   });
 
@@ -30,18 +33,18 @@ describe('controllers/login/get-check-your-email-access-code', () => {
     });
   });
 
-  it('should render problem with service template when numberOfSignInOtpAttemptsRemaining is not present in the session', () => {
+  it('should redirect to not-found when attemptsLeft is not present in the session', () => {
     const req = {
       session: {},
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
     getCheckYourEmailAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenCalledTimes(1);
-    expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(redirectMock).toHaveBeenCalledTimes(1);
+    expect(redirectMock).toHaveBeenCalledWith('/not-found');
   });
 
-  it('should render problem with service template when numberOfSignInOtpAttemptsRemaining is negative', () => {
+  it('should redirect to not-found when attemptsLeft is negative', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: -2,
@@ -51,25 +54,7 @@ describe('controllers/login/get-check-your-email-access-code', () => {
 
     getCheckYourEmailAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenCalledTimes(1);
-    expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  });
-
-  it('should render the check your email access code template when attemptsLeft is 0', () => {
-    const req = {
-      session: {
-        numberOfSignInOtpAttemptsRemaining: 0,
-        userEmail: 'test@example.com',
-      },
-    } as unknown as GetCheckYourEmailAccessCodePageRequest;
-
-    getCheckYourEmailAccessCodePage(req, res);
-
-    expect(renderMock).toHaveBeenCalledTimes(1);
-    expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
-      attemptsLeft: 0,
-      requestNewCodeUrl: '/login/request-new-access-code',
-      email: 'test@example.com',
-    });
+    expect(redirectMock).toHaveBeenCalledTimes(1);
+    expect(redirectMock).toHaveBeenCalledWith('/not-found');
   });
 });

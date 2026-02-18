@@ -3,14 +3,17 @@ import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { postNewAccessCodePage, PostNewAccessCodePageRequest } from './post-new-access-code-page';
 import * as api from '../../api';
 import { validationErrorHandler } from '../../helpers';
+import * as updateSessionModule from '../../helpers/updateSessionAfterLogin';
 
 jest.mock('../../api');
 jest.mock('../../helpers');
+jest.mock('../../helpers/updateSessionAfterLogin');
 
 describe('controllers/login/post-new-access-code-page', () => {
   let res: Response;
   let renderMock: jest.Mock;
   let redirectMock: jest.Mock;
+  const mockUpdateSessionAfterLogin = updateSessionModule.updateSessionAfterLogin as jest.Mock;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -22,6 +25,8 @@ describe('controllers/login/post-new-access-code-page', () => {
       render: renderMock,
       redirect: redirectMock,
     } as unknown as Response;
+
+    mockUpdateSessionAfterLogin.mockImplementation(() => {});
   });
 
   const mockLoginWithSignInOtp = api.loginWithSignInOtp as jest.Mock;
@@ -39,7 +44,7 @@ describe('controllers/login/post-new-access-code-page', () => {
         session: {
           userToken: 'Bearer test-token',
           userId: 'user-123',
-          numberOfSignInOtpAttemptsRemaining: 2,
+          numberOfSignInOtpAttemptsRemaining: 1,
         },
       } as unknown as PostNewAccessCodePageRequest;
 
@@ -66,7 +71,7 @@ describe('controllers/login/post-new-access-code-page', () => {
 
     it('should render the new access code template with validation errors', () => {
       expect(renderMock).toHaveBeenCalledWith('login/new-access-code.njk', {
-        attemptsLeft: 2,
+        attemptsLeft: 1,
         requestNewCodeUrl: '/login/new-access-code',
         errors: { some: 'error' },
       });
@@ -84,7 +89,7 @@ describe('controllers/login/post-new-access-code-page', () => {
         session: {
           userToken: 'Bearer valid-token',
           userId: 'user-456',
-          numberOfSignInOtpAttemptsRemaining: 3,
+          numberOfSignInOtpAttemptsRemaining: 1,
         },
       } as unknown as PostNewAccessCodePageRequest;
 
@@ -105,8 +110,8 @@ describe('controllers/login/post-new-access-code-page', () => {
       });
     });
 
-    it('should redirect to sign in link page', () => {
-      expect(redirectMock).toHaveBeenCalledWith('/login/sign-in-link?t=new-user-token&u=user-456');
+    it('should redirect to dashboard', () => {
+      expect(redirectMock).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -131,7 +136,7 @@ describe('controllers/login/post-new-access-code-page', () => {
     });
 
     it('should render the problem with service template', () => {
-      expect(console.error).toHaveBeenCalledWith('Error during login with sign-in OTP:', new Error('API error'));
+      expect(console.error).toHaveBeenCalledWith('Error during login with sign-in OTP %o', expect.any(Error));
       expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });

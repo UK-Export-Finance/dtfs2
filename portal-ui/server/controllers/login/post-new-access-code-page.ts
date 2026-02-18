@@ -25,13 +25,8 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft },
   } = req;
 
-  if (!userId) {
-    console.error('UserId was not found', userId);
-    return res.redirect('/not-found');
-  }
-
-  if (!userToken) {
-    console.error('userToken was not found', userToken);
+  if (!userId || !userToken) {
+    console.error('UserId %s or userToken %s was not found', userId, userToken);
     return res.redirect('/not-found');
   }
 
