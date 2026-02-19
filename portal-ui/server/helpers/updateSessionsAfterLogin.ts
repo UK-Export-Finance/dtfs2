@@ -27,7 +27,7 @@ type UpdateSessionAfterLoginParams = {
  * @param params.newUserToken - Freshly issued user token after authentication.
  * @param params.loginStatus - Current login status to persist in the session.
  * @param params.user - User details to store in the session.
- * @returns void.
+
  */
 export const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }: UpdateSessionAfterLoginParams): void => {
   req.session.userToken = newUserToken;

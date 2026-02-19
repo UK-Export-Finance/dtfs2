@@ -4,7 +4,7 @@ import validationRules from './rules';
 /**
  * Combines validation rules and returns validation errors
  * @param formBody - The submitted form data
- * @returns Validation errors object or null if no errors
+ * @returns Validation errors when present; otherwise no errors
  */
 const generateValidationErrors = (formBody: Record<string, unknown>): ValidationErrorsObject | null => {
   let errors: ValidationErrorsObject = {};

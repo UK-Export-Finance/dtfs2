@@ -31,9 +31,9 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
  * - Updates the session on successful login and redirects to dashboard.
  * - Handles missing session data and API errors gracefully.
  *
- * @param req Express request, expects session with userId, userToken, attemptsLeft, and userEmail.
- * @param res Express response.
- * @returns Renders a view or redirects; does not return a value.
+ * @param req Request containing the submitted access code and session data such as userId, userToken, attemptsLeft, and userEmail.
+ * @param res Response used to render views or perform redirects.
+ * @returns Renders a view or redirects based on validation and login status.
  */
 export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccessCodePageRequest, res: Response) => {
   const { sixDigitAccessCode } = req.body;
