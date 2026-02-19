@@ -109,7 +109,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
         session: {
           userToken: 'Bearer valid-token',
           userId: 'user-def',
-          numberOfSignInOtpAttemptsRemaining: 3,
+          numberOfSignInOtpAttemptsRemaining: 2,
           userEmail: 'valid@example.com',
         },
       } as unknown as PostCheckYourEmailAccessCodePageRequest;
@@ -196,7 +196,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
         session: {
           userToken: 'Bearer error-token',
           userId: 'user-err',
-          numberOfSignInOtpAttemptsRemaining: 1,
+          numberOfSignInOtpAttemptsRemaining: 2,
           userEmail: 'err@example.com',
         },
       } as unknown as PostCheckYourEmailAccessCodePageRequest;
@@ -213,28 +213,62 @@ describe('postCheckYourEmailAccessCodePage', () => {
     });
   });
 
-  describe('when numberOfSignInOtpAttemptsRemaining is undefined', () => {
-    let req: PostCheckYourEmailAccessCodePageRequest;
-    beforeEach(async () => {
-      // Arrange
-      req = {
-        body: {
-          sixDigitAccessCode: '654321',
-        },
-        session: {
-          userToken: 'Bearer missing-attempts-token',
-          userId: 'user-missing',
-          userEmail: 'missing@example.com',
-        },
-      } as unknown as PostCheckYourEmailAccessCodePageRequest;
+  describe('when numberOfSignInOtpAttemptsRemaining is not 2', () => {
+    describe('when it is undefined', () => {
+      let req: PostCheckYourEmailAccessCodePageRequest;
+      beforeEach(async () => {
+        // Arrange
+        req = {
+          body: {
+            sixDigitAccessCode: '654321',
+          },
+          session: {
+            userToken: 'Bearer missing-attempts-token',
+            userId: 'user-missing',
+            userEmail: 'missing@example.com',
+          },
+        } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
-      // Act
-      await postCheckYourEmailAccessCode(req, res);
+        // Act
+        await postCheckYourEmailAccessCode(req, res);
+      });
+
+      it('should redirect to /not-found', () => {
+        // Assert
+        expect(redirectMock).toHaveBeenCalledWith('/not-found');
+      });
     });
 
-    it('should render the problem with service template', () => {
-      // Assert
-      expect(renderMock).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+    describe('when it is 1 (new-access-code page)', () => {
+      let req: PostCheckYourEmailAccessCodePageRequest;
+      beforeEach(async () => {
+        // Arrange — attemptsLeft === 1 means getNextAccessCodePage routes the user to
+        // /login/new-access-code, so this POST handler should never be reached
+        req = {
+          body: {
+            sixDigitAccessCode: '654321',
+          },
+          session: {
+            userToken: 'Bearer wrong-page-token',
+            userId: 'user-wrong-page',
+            numberOfSignInOtpAttemptsRemaining: 1,
+            userEmail: 'wrong@example.com',
+          },
+        } as unknown as PostCheckYourEmailAccessCodePageRequest;
+
+        // Act
+        await postCheckYourEmailAccessCode(req, res);
+      });
+
+      it('should redirect to /not-found', () => {
+        // Assert
+        expect(redirectMock).toHaveBeenCalledWith('/not-found');
+      });
+
+      it('should not call the API', () => {
+        // Assert
+        expect(mockLoginWithSignInOtp).not.toHaveBeenCalled();
+      });
     });
   });
 

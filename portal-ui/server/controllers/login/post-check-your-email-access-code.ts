@@ -77,10 +77,14 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
       return res.redirect('/not-found');
     }
 
-    if (typeof attemptsLeft === 'undefined') {
-      console.error('No remaining OTP attempts found in session when rendering check your email access code page');
+    if (attemptsLeft !== 2) {
+      // This POST handler is only reachable from the check-your-email page, which
+      // getNextAccessCodePage routes to exclusively when attemptsLeft === 2.
+      // Any other value means the user arrived via the wrong page (stale session,
+      // tampered URL, etc.) — treat it as a bad request rather than a service error.
+      console.error('Unexpected numberOfSignInOtpAttemptsRemaining value %s in check-your-email access code handler, expected 2', attemptsLeft);
 
-      return res.render('_partials/problem-with-service.njk');
+      return res.redirect('/not-found');
     }
 
     // Validate form input first (empty field check)
