@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 
-import { PostCheckYourEmailAccessCodePageRequest, postCheckYourEmailAccessCode } from './post-submit-access-code';
+import { PostCheckYourEmailAccessCodePageRequest, postCheckYourEmailAccessCode } from './post-check-your-email-access-code';
 import * as api from '../../api';
 import generateValidationErrors from './validation';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
