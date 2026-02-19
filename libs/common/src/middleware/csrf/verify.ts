@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { Response, NextFunction } from 'express';
 import { getEpochMs } from '../../helpers/date';
 import { CustomExpressRequest } from '../../types';
-import { CSRF, SSO_URL } from '../../constants';
+import { CSRF } from '../../constants';
 
 /**
  * Middleware to verify CSRF tokens for an incoming requests.
@@ -30,15 +30,6 @@ export const verify = (
   }
 
   if (CSRF.VERIFY.SAFE.HTTP_METHODS.includes(req.method)) {
-    return next();
-  }
-
-  /**
-   * Exclude SSO redirect URL from CSRF verification
-   * as the request is initiated by an external identity provider
-   * This allows users to be redirected back to the application after authentication without encountering CSRF verification errors.
-   */
-  if (req.originalUrl.includes(SSO_URL)) {
     return next();
   }
 

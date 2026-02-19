@@ -7,4 +7,3 @@ export * from './activity-types';
 export * from './comment-type';
 export * from './underwriter-manager-decisions';
 export * from './user-status';
-export * from './sso';
