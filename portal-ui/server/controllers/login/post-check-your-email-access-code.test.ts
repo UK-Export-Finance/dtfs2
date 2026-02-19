@@ -213,6 +213,42 @@ describe('postCheckYourEmailAccessCodePage', () => {
     });
   });
 
+  describe('when login response is missing required fields after successful OTP validation', () => {
+    let req: PostCheckYourEmailAccessCodePageRequest;
+
+    beforeEach(async () => {
+      req = {
+        body: {
+          sixDigitAccessCode: '654321',
+        },
+        session: {
+          userToken: 'Bearer missing-fields-token',
+          userId: 'user-missing-fields',
+          numberOfSignInOtpAttemptsRemaining: 2,
+          userEmail: 'missing-fields@example.com',
+        },
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
+
+      mockLoginWithSignInOtp.mockResolvedValue({
+        loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
+        user: { _id: 'user-missing-fields' },
+      });
+
+      await postCheckYourEmailAccessCode(req, res);
+    });
+
+    it('should log a specific error before throwing', () => {
+      expect(console.error).toHaveBeenCalledWith(
+        'Missing user token, login status, or user details after successful OTP validation for user %s',
+        'user-missing-fields',
+      );
+    });
+
+    it('should render the problem with service template', () => {
+      expect(renderMock).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+    });
+  });
+
   describe('when numberOfSignInOtpAttemptsRemaining is not 2', () => {
     describe('when it is undefined', () => {
       let req: PostCheckYourEmailAccessCodePageRequest;

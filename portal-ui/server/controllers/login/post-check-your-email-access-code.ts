@@ -38,7 +38,7 @@ type OtpLoginResult = { type: typeof OTP_RESULT_TYPE.SUCCESS; loginResponse: Log
  */
 const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
   try {
-    const loginResponse = (await api.loginWithSignInOtp({ token, userId, signInOTP })) as LoginWithSignInOtpResponse;
+    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token, userId, signInOTP });
 
     if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
       return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
@@ -83,12 +83,6 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     }
 
     if (attemptsLeft !== 2) {
-      /**
-       * This POST handler is only reachable from the check-your-email page, which
-       * getNextAccessCodePage routes to exclusively when attemptsLeft === 2.
-       * Any other value means the user arrived via the wrong page (stale session,
-       * tampered URL, etc.) — treat it as a bad request rather than a service error.
-       */
       console.error('Unexpected numberOfSignInOtpAttemptsRemaining value %s in check-your-email access code handler, expected 2', attemptsLeft);
 
       return res.redirect('/not-found');
@@ -130,6 +124,8 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
     if (!newUserToken || !loginStatus || !user) {
+      console.error('Missing user token, login status, or user details after successful OTP validation for user %s', userId);
+
       throw new Error(`Missing user token, login status, or user details after successful OTP validation for user ${userId}`);
     }
 
