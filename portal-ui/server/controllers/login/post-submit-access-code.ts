@@ -6,14 +6,18 @@ import * as api from '../../api';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
-import { renderAccessCodeErrorView } from './helpers/render-access-code-error';
+import { SubmitAccessCodeViewModel } from '../../types/view-models/2fa/submit-access-code-view-model';
+
+const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
+
+const REQUEST_NEW_CODE_URL = '/login/new-access-code';
 
 type PostSubmitAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
 
-export type PostSubmitAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
+export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: PostSubmitAccessCodePageRequestSession;
   body: {
-    signInOTP: string;
+    sixDigitAccessCode: string;
   };
 };
 
@@ -31,22 +35,16 @@ export type PostSubmitAccessCodePageRequest = CustomExpressRequest<Record<string
  * @param res Express response.
  * @returns Renders a view or redirects; does not return a value.
  */
-export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest, res: Response) => {
-  const { signInOTP } = req.body;
+export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccessCodePageRequest, res: Response) => {
+  const { sixDigitAccessCode } = req.body;
   const {
     session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  if (!userId) {
-    console.error('userId missing from session:', req.session);
+  if (!userId || !userToken) {
+    console.error('UserId %s or userToken %s were not found', userId, userToken);
 
-    return res.redirect('/login');
-  }
-
-  if (!userToken) {
-    console.error('userToken missing from session for user %s', userId);
-
-    return res.redirect('/login');
+    return res.redirect('/not-found');
   }
 
   if (typeof attemptsLeft === 'undefined') {
@@ -59,20 +57,22 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
   const validationErrors = generateValidationErrors(req.body);
 
   if (validationErrors) {
-    return renderAccessCodeErrorView({
-      res,
+    const viewModel: SubmitAccessCodeViewModel = {
       attemptsLeft,
+      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
       email: userEmail,
-      signInOTP,
+      sixDigitAccessCode,
       validationErrors,
-    });
+    };
+
+    return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
   }
 
   // Attempt to verify the access code with the API
   let loginResponse: LoginWithSignInOtpResponse;
 
   try {
-    loginResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP });
+    loginResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: sixDigitAccessCode });
   } catch (error) {
     const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
@@ -81,13 +81,15 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      return renderAccessCodeErrorView({
-        res,
+      const errorViewModel: SubmitAccessCodeViewModel = {
         attemptsLeft,
+        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
         email: userEmail,
-        signInOTP,
+        sixDigitAccessCode,
         validationErrors: incorrectCodeErrors,
-      });
+      };
+
+      return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, errorViewModel);
     }
 
     console.error('Unexpected error validating sign-in OTP for user %s', userId, error);
@@ -103,13 +105,15 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
 
     const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-    return renderAccessCodeErrorView({
-      res,
+    const invalidStatusViewModel: SubmitAccessCodeViewModel = {
       attemptsLeft,
+      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
       email: userEmail,
-      signInOTP,
+      sixDigitAccessCode,
       validationErrors: incorrectCodeErrors,
-    });
+    };
+
+    return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, invalidStatusViewModel);
   }
 
   if (!newUserToken || !user) {
@@ -125,6 +129,5 @@ export const postSubmitAccessCode = async (req: PostSubmitAccessCodePageRequest,
     user,
   });
 
-  // Successful login
   return res.redirect('/dashboard');
 };

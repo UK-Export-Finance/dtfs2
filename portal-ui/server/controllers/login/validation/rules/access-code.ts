@@ -7,13 +7,13 @@ import { ValidationErrorsObject } from '../../../../types/view-models/2fa/submit
  * @param errors - Existing validation errors
  * @returns Updated validation errors object
  */
-const accessCodeRule = (formBody: { signInOTP?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
+const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors } as ValidationErrorsObject;
 
-  const { signInOTP } = formBody;
+  const { sixDigitAccessCode } = formBody;
 
-  if (!signInOTP || signInOTP.trim() === '') {
-    newErrors.signInOTP = {
+  if (!sixDigitAccessCode || sixDigitAccessCode.trim() === '') {
+    newErrors.sixDigitAccessCode = {
       text: 'Enter the access code',
       order: '1',
     };

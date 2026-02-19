@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 
-import { PostSubmitAccessCodePageRequest, postSubmitAccessCode } from './post-submit-access-code';
+import { PostCheckYourEmailAccessCodePageRequest, postCheckYourEmailAccessCode } from './post-submit-access-code';
 import * as api from '../../api';
 import generateValidationErrors from './validation';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
@@ -42,13 +42,13 @@ describe('postCheckYourEmailAccessCodePage', () => {
   });
 
   describe('when login status is not VALID_2FA', () => {
-    let req: PostSubmitAccessCodePageRequest;
+    let req: PostCheckYourEmailAccessCodePageRequest;
 
     beforeEach(async () => {
       // Arrange
       req = {
         body: {
-          signInOTP: '654321',
+          sixDigitAccessCode: '654321',
         },
         session: {
           userToken: 'Bearer test-token',
@@ -56,18 +56,18 @@ describe('postCheckYourEmailAccessCodePage', () => {
           numberOfSignInOtpAttemptsRemaining: 2,
           userEmail: 'test@example.com',
         },
-      } as unknown as PostSubmitAccessCodePageRequest;
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
       mockLoginWithSignInOtp.mockResolvedValue({ loginStatus: 'INVALID' });
       mockIncorrectAccessCodeRule.mockReturnValue({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'The access code you have entered is incorrect',
           order: '1',
         },
       });
 
       // Act
-      await postSubmitAccessCode(req, res);
+      await postCheckYourEmailAccessCode(req, res);
     });
 
     it('should call loginWithSignInOtp with correct arguments', () => {
@@ -86,9 +86,9 @@ describe('postCheckYourEmailAccessCodePage', () => {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
         email: 'test@example.com',
-        signInOTP: '654321',
+        sixDigitAccessCode: '654321',
         validationErrors: {
-          signInOTP: {
+          sixDigitAccessCode: {
             text: 'The access code you have entered is incorrect',
             order: '1',
           },
@@ -98,13 +98,13 @@ describe('postCheckYourEmailAccessCodePage', () => {
   });
 
   describe('when login status is VALID_2FA', () => {
-    let req: PostSubmitAccessCodePageRequest;
+    let req: PostCheckYourEmailAccessCodePageRequest;
 
     beforeEach(async () => {
       // Arrange
       req = {
         body: {
-          signInOTP: '654321',
+          sixDigitAccessCode: '654321',
         },
         session: {
           userToken: 'Bearer valid-token',
@@ -112,7 +112,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
           numberOfSignInOtpAttemptsRemaining: 3,
           userEmail: 'valid@example.com',
         },
-      } as unknown as PostSubmitAccessCodePageRequest;
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
       mockLoginWithSignInOtp.mockResolvedValue({
         loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
@@ -121,7 +121,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       });
 
       // Act
-      await postSubmitAccessCode(req, res);
+      await postCheckYourEmailAccessCode(req, res);
     });
     // Assert
 
@@ -140,12 +140,12 @@ describe('postCheckYourEmailAccessCodePage', () => {
   });
 
   describe('when an error occurs', () => {
-    let req: PostSubmitAccessCodePageRequest;
+    let req: PostCheckYourEmailAccessCodePageRequest;
     beforeEach(async () => {
       // Arrange
       req = {
         body: {
-          signInOTP: '654321',
+          sixDigitAccessCode: '654321',
         },
         session: {
           userToken: 'Bearer error-token',
@@ -153,7 +153,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
           numberOfSignInOtpAttemptsRemaining: 1,
           userEmail: 'err@example.com',
         },
-      } as unknown as PostSubmitAccessCodePageRequest;
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
       jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
 
@@ -163,14 +163,14 @@ describe('postCheckYourEmailAccessCodePage', () => {
         },
       });
       mockIncorrectAccessCodeRule.mockReturnValue({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'The access code you have entered is incorrect',
           order: '1',
         },
       });
 
       // Act
-      await postSubmitAccessCode(req, res);
+      await postCheckYourEmailAccessCode(req, res);
     });
     // Assert
 
@@ -180,9 +180,9 @@ describe('postCheckYourEmailAccessCodePage', () => {
         attemptsLeft: 1,
         requestNewCodeUrl: '/login/new-access-code',
         email: 'err@example.com',
-        signInOTP: '654321',
+        sixDigitAccessCode: '654321',
         validationErrors: {
-          signInOTP: {
+          sixDigitAccessCode: {
             text: 'The access code you have entered is incorrect',
             order: '1',
           },
@@ -192,22 +192,22 @@ describe('postCheckYourEmailAccessCodePage', () => {
   });
 
   describe('when numberOfSignInOtpAttemptsRemaining is undefined', () => {
-    let req: PostSubmitAccessCodePageRequest;
+    let req: PostCheckYourEmailAccessCodePageRequest;
     beforeEach(async () => {
       // Arrange
       req = {
         body: {
-          signInOTP: '654321',
+          sixDigitAccessCode: '654321',
         },
         session: {
           userToken: 'Bearer missing-attempts-token',
           userId: 'user-missing',
           userEmail: 'missing@example.com',
         },
-      } as unknown as PostSubmitAccessCodePageRequest;
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
       // Act
-      await postSubmitAccessCode(req, res);
+      await postCheckYourEmailAccessCode(req, res);
     });
 
     it('should render the problem with service template', () => {
@@ -217,13 +217,13 @@ describe('postCheckYourEmailAccessCodePage', () => {
   });
 
   describe('when access code is empty', () => {
-    let req: PostSubmitAccessCodePageRequest;
+    let req: PostCheckYourEmailAccessCodePageRequest;
 
     beforeEach(async () => {
       // Arrange
       req = {
         body: {
-          signInOTP: '',
+          sixDigitAccessCode: '',
         },
         session: {
           userToken: 'Bearer test-token',
@@ -231,17 +231,17 @@ describe('postCheckYourEmailAccessCodePage', () => {
           numberOfSignInOtpAttemptsRemaining: 2,
           userEmail: 'test@example.com',
         },
-      } as unknown as PostSubmitAccessCodePageRequest;
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
 
       mockGenerateValidationErrors.mockReturnValue({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'Enter the access code',
           order: '1',
         },
       });
 
       // Act
-      await postSubmitAccessCode(req, res);
+      await postCheckYourEmailAccessCode(req, res);
     });
 
     it('should not call the API', () => {
@@ -256,9 +256,9 @@ describe('postCheckYourEmailAccessCodePage', () => {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
         email: 'test@example.com',
-        signInOTP: '',
+        sixDigitAccessCode: '',
         validationErrors: {
-          signInOTP: {
+          sixDigitAccessCode: {
             text: 'Enter the access code',
             order: '1',
           },

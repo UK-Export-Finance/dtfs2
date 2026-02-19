@@ -18,10 +18,10 @@
           titleText: "There is a problem",
           errorList: [
             {
-              text: validationErrors.signInOTP.text,
-              href: "#signInOTP"
+              text: validationErrors.sixDigitAccessCode.text,
+              href: "#sixDigitAccessCode"
             }
-          ] if validationErrors.signInOTP,
+          ] if validationErrors.sixDigitAccessCode,
           attributes: {
             "data-cy": "error-summary"
           }
@@ -44,22 +44,22 @@
               "data-cy": "six-digit-access-code-label"
             }
           },
-          id: "signInOTP",
+          id: "sixDigitAccessCode",
           classes: "govuk-input--width-10",
-          name: "signInOTP",
-          value: signInOTP,
+          name: "sixDigitAccessCode",
+          value: sixDigitAccessCode,
           spellcheck: false,
           attributes: {
             "data-cy": "six-digit-access-code-input",
             "placeholder": "e.g. 123456"
           },
-          errorMessage: (validationErrors and validationErrors.signInOTP) and {
-            text: validationErrors.signInOTP.text,
+          errorMessage: (validationErrors and validationErrors.sixDigitAccessCode) and {
+            text: validationErrors.sixDigitAccessCode.text,
             attributes: {
                 'data-cy': 'six-digit-access-code-inline-error'
             }
-          } or (errors and errors.fieldErrors.signInOTP) and {
-            text: errors.fieldErrors.signInOTP.text,
+          } or (errors and errors.fieldErrors.sixDigitAccessCode) and {
+            text: errors.fieldErrors.sixDigitAccessCode.text,
             attributes: {
                 'data-cy': 'six-digit-access-code-inline-error'
             }

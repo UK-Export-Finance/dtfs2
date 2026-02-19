@@ -13,5 +13,5 @@ export type SubmitAccessCodeViewModel = {
   errors?: { errorSummary: ValidationErrors[]; fieldErrors: ValidationErrorsObject } | null;
   validationErrors?: ValidationErrorsObject | null;
   email?: string;
-  signInOTP?: string;
+  sixDigitAccessCode?: string;
 };

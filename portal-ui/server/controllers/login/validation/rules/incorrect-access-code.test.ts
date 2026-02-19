@@ -12,24 +12,24 @@ describe('controllers/login/validation/rules/incorrect-access-code', () => {
 
       // Assert
       expect(result).toEqual({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'The access code you have entered is incorrect',
           order: '1',
         },
       });
     });
 
-    it('should override existing signInOTP error', () => {
+    it('should override existing sixDigitAccessCode error', () => {
       // Arrange
       const formBody = {};
-      const errors = { signInOTP: { text: 'Some other error' } };
+      const errors = { sixDigitAccessCode: { text: 'Some other error' } };
 
       // Act
       const result = incorrectAccessCodeRule(formBody, errors);
 
       // Assert
       expect(result).toEqual({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'The access code you have entered is incorrect',
           order: '1',
         },
@@ -47,7 +47,7 @@ describe('controllers/login/validation/rules/incorrect-access-code', () => {
       // Assert
       expect(result).toEqual({
         otherField: { text: 'Some other error' },
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'The access code you have entered is incorrect',
           order: '1',
         },

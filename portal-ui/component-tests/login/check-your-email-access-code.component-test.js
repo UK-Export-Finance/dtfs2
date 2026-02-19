@@ -83,9 +83,9 @@ describe(page, () => {
   describe('when there are validation errors', () => {
     let wrapper;
     const validationErrors = {
-      signInOTP: {
+      sixDigitAccessCode: {
         text: 'Enter the access code',
-        href: '#signInOTP',
+        href: '#sixDigitAccessCode',
       },
     };
 
@@ -99,7 +99,7 @@ describe(page, () => {
     });
 
     it('should render the error summary with correct link', () => {
-      wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#signInOTP', 'Enter the access code');
+      wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#sixDigitAccessCode', 'Enter the access code');
     });
 
     it('should render inline error message for access code input', () => {
@@ -107,7 +107,7 @@ describe(page, () => {
     });
 
     it('should render the access code input with error styling', () => {
-      wrapper.expectElement('#signInOTP').hasClass('govuk-input--error');
+      wrapper.expectElement('#sixDigitAccessCode').hasClass('govuk-input--error');
     });
 
     it('should render the form group with error styling', () => {
@@ -118,9 +118,9 @@ describe(page, () => {
   describe('when the access code entered is incorrect', () => {
     let wrapper;
     const validationErrors = {
-      signInOTP: {
+      sixDigitAccessCode: {
         text: 'The access code you have entered is incorrect',
-        href: '#signInOTP',
+        href: '#sixDigitAccessCode',
       },
     };
 

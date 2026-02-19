@@ -10,7 +10,7 @@ import { ValidationErrorsObject } from '../../../../types/view-models/2fa/submit
 const incorrectAccessCodeRule = (formBody: Record<string, unknown>, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors };
 
-  newErrors.signInOTP = {
+  newErrors.sixDigitAccessCode = {
     text: 'The access code you have entered is incorrect',
     order: '1',
   };

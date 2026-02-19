@@ -2,7 +2,7 @@ import accessCodeRule from './access-code';
 
 describe('controllers/login/validation/rules/access-code', () => {
   describe('accessCodeRule', () => {
-    it('should return an error if signInOTP is missing', () => {
+    it('should return an error if sixDigitAccessCode is missing', () => {
       // Arrange
       const formBody = {};
       const errors = {};
@@ -12,16 +12,16 @@ describe('controllers/login/validation/rules/access-code', () => {
 
       // Assert
       expect(result).toEqual({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'Enter the access code',
           order: '1',
         },
       });
     });
 
-    it('should return an error if signInOTP is empty string', () => {
+    it('should return an error if sixDigitAccessCode is empty string', () => {
       // Arrange
-      const formBody = { signInOTP: '' };
+      const formBody = { sixDigitAccessCode: '' };
       const errors = {};
 
       // Act
@@ -29,16 +29,16 @@ describe('controllers/login/validation/rules/access-code', () => {
 
       // Assert
       expect(result).toEqual({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'Enter the access code',
           order: '1',
         },
       });
     });
 
-    it('should return an error if signInOTP is only whitespace', () => {
+    it('should return an error if sixDigitAccessCode is only whitespace', () => {
       // Arrange
-      const formBody = { signInOTP: '   ' };
+      const formBody = { sixDigitAccessCode: '   ' };
       const errors = {};
 
       // Act
@@ -46,16 +46,16 @@ describe('controllers/login/validation/rules/access-code', () => {
 
       // Assert
       expect(result).toEqual({
-        signInOTP: {
+        sixDigitAccessCode: {
           text: 'Enter the access code',
           order: '1',
         },
       });
     });
 
-    it('should not return an error if signInOTP has a value', () => {
+    it('should not return an error if sixDigitAccessCode has a value', () => {
       // Arrange
-      const formBody = { signInOTP: '123456' };
+      const formBody = { sixDigitAccessCode: '123456' };
       const errors = {};
 
       // Act
@@ -67,7 +67,7 @@ describe('controllers/login/validation/rules/access-code', () => {
 
     it('should preserve existing errors', () => {
       // Arrange
-      const formBody = { signInOTP: '123456' };
+      const formBody = { sixDigitAccessCode: '123456' };
       const errors = { otherField: { text: 'Some other error' } };
 
       // Act
