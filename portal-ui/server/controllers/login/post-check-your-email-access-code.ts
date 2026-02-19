@@ -6,7 +6,7 @@ import * as api from '../../api';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
-import { SubmitAccessCodeViewModel } from '../../types/view-models/2fa/submit-access-code-view-model';
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -57,7 +57,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
   const validationErrors = generateValidationErrors(req.body);
 
   if (validationErrors) {
-    const viewModel: SubmitAccessCodeViewModel = {
+    const viewModel: CheckYourEmailAccessCodeViewModel = {
       attemptsLeft,
       requestNewCodeUrl: REQUEST_NEW_CODE_URL,
       email: userEmail,
@@ -81,7 +81,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: SubmitAccessCodeViewModel = {
+      const errorViewModel: CheckYourEmailAccessCodeViewModel = {
         attemptsLeft,
         requestNewCodeUrl: REQUEST_NEW_CODE_URL,
         email: userEmail,
@@ -105,7 +105,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
     const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-    const invalidStatusViewModel: SubmitAccessCodeViewModel = {
+    const invalidStatusViewModel: CheckYourEmailAccessCodeViewModel = {
       attemptsLeft,
       requestNewCodeUrl: REQUEST_NEW_CODE_URL,
       email: userEmail,

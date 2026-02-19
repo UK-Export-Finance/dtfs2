@@ -1,4 +1,4 @@
-import { ValidationErrorsObject } from '../../../../types/view-models/2fa/submit-access-code-view-model';
+import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-your-email-access-code-view-model';
 
 /**
  * Access code validation rule
