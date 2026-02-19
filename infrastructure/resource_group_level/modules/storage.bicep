@@ -136,8 +136,6 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2025
 resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2025-01-01' = {
   parent: storageAccount
   name: 'default'
-  // TODO:FN-693 Note that the extant environments don't have
-  // 7 day soft deletes enabled. We may want to enable this functionality.
   properties: {
     shareDeleteRetentionPolicy: {
       enabled: shareDeleteRetentionEnabled
@@ -232,15 +230,9 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' 
       id: privateEndpointsSubnetId
     }
     ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
 
-// We add this config in the "zone group" to trigger automatic CNAME (A Record) generation in the
-// Private DNS Zone in the private link.
-// https://stackoverflow.com/questions/69810938/what-is-azure-private-dns-zone-group
-// https://learn.microsoft.com/en-us/azure/private-link/create-private-endpoint-bicep?tabs=CLI
-// https://bhabalajinkya.medium.com/azure-bicep-private-communication-between-azure-resources-f4a17c171cfb
 resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
   parent: storagePrivateEndpoint
   name: 'default'
