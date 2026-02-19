@@ -37,7 +37,7 @@ export const checkDealId = async (dealId: any) => {
   const response: any = await axios({
     method: 'get',
     headers,
-    url: `${apimUrl}v1/deals/${ukefId}`,
+    url: `${apimUrl}deals/${ukefId}`,
   });
 
   if (response.status) {
@@ -63,7 +63,7 @@ export const checkFacilityId = async (facilityId: any) => {
   const response = await axios({
     method: 'get',
     headers,
-    url: `${apimUrl}v1/facilities/${ukefId}`,
+    url: `${apimUrl}facilities/${ukefId}`,
   }).catch((catchErr: any) => catchErr);
 
   if (response.status) {
