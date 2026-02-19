@@ -21,7 +21,12 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
   };
 };
 
-type OtpLoginResult = { type: 'success'; loginResponse: LoginWithSignInOtpResponse } | { type: 'incorrect-code' };
+const OTP_RESULT_TYPE = {
+  SUCCESS: 'success',
+  INCORRECT_CODE: 'incorrect-code',
+} as const;
+
+type OtpLoginResult = { type: typeof OTP_RESULT_TYPE.SUCCESS; loginResponse: LoginWithSignInOtpResponse } | { type: typeof OTP_RESULT_TYPE.INCORRECT_CODE };
 
 /**
  * Calls the sign-in OTP API and returns a typed result.
@@ -36,15 +41,15 @@ const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; us
     const loginResponse = (await api.loginWithSignInOtp({ token, userId, signInOTP })) as LoginWithSignInOtpResponse;
 
     if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
-      return { type: 'incorrect-code' };
+      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
     }
 
-    return { type: 'success', loginResponse };
+    return { type: OTP_RESULT_TYPE.SUCCESS, loginResponse };
   } catch (apiError) {
     const status = axios.isAxiosError(apiError) ? apiError.response?.status : undefined;
 
     if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
-      return { type: 'incorrect-code' };
+      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
     }
 
     throw apiError;
@@ -78,16 +83,17 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     }
 
     if (attemptsLeft !== 2) {
-      // This POST handler is only reachable from the check-your-email page, which
-      // getNextAccessCodePage routes to exclusively when attemptsLeft === 2.
-      // Any other value means the user arrived via the wrong page (stale session,
-      // tampered URL, etc.) — treat it as a bad request rather than a service error.
+      /**
+       * This POST handler is only reachable from the check-your-email page, which
+       * getNextAccessCodePage routes to exclusively when attemptsLeft === 2.
+       * Any other value means the user arrived via the wrong page (stale session,
+       * tampered URL, etc.) — treat it as a bad request rather than a service error.
+       */
       console.error('Unexpected numberOfSignInOtpAttemptsRemaining value %s in check-your-email access code handler, expected 2', attemptsLeft);
 
       return res.redirect('/not-found');
     }
 
-    // Validate form input first (empty field check)
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
@@ -104,7 +110,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
-    if (otpResult.type === 'incorrect-code') {
+    if (otpResult.type === OTP_RESULT_TYPE.INCORRECT_CODE) {
       console.error('Invalid sign-in OTP entered for user %s', userId);
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
