@@ -12,13 +12,43 @@ const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
 const REQUEST_NEW_CODE_URL = '/login/new-access-code';
 
-type PostSubmitAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
+type PostCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
 
 export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
-  session: PostSubmitAccessCodePageRequestSession;
+  session: PostCheckYourEmailAccessCodePageRequestSession;
   body: {
     sixDigitAccessCode: string;
   };
+};
+
+type OtpLoginResult = { type: 'success'; loginResponse: LoginWithSignInOtpResponse } | { type: 'incorrect-code' };
+
+/**
+ * Calls the sign-in OTP API and returns a typed result.
+ * Returns `incorrect-code` if the API responds with 401/403, or if the login status is not VALID_2FA.
+ * Re-throws any other errors so the caller's catch block handles them as genuine failures.
+ * @param token - The partial auth token.
+ * @param userId - The user's ID.
+ * @param signInOTP - The submitted OTP code.
+ */
+const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
+  try {
+    const loginResponse = (await api.loginWithSignInOtp({ token, userId, signInOTP })) as LoginWithSignInOtpResponse;
+
+    if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
+      return { type: 'incorrect-code' };
+    }
+
+    return { type: 'success', loginResponse };
+  } catch (apiError) {
+    const status = axios.isAxiosError(apiError) ? apiError.response?.status : undefined;
+
+    if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
+      return { type: 'incorrect-code' };
+    }
+
+    throw apiError;
+  }
 };
 
 /**
@@ -26,58 +56,52 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
  *
  * - Validates the access code is not empty (client-side validation).
  * - If validation passes, calls API to verify the code.
- * - If API rejects the code (incorrect OTP), renders validation error.
- * - If login status is not VALID_2FA, renders incorrect access code error.
+ * - If the user enters the wrong code (login status not VALID_2FA), renders a validation error.
  * - Updates the session on successful login and redirects to dashboard.
- * - Handles missing session data and API errors gracefully.
+ * - Any unexpected errors (API failures, missing session data) are caught and render problem-with-service.
  *
  * @param req Request containing the submitted access code and session data such as userId, userToken, attemptsLeft, and userEmail.
  * @param res Response used to render views or perform redirects.
  * @returns Renders a view or redirects based on validation and login status.
  */
 export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccessCodePageRequest, res: Response) => {
-  const { sixDigitAccessCode } = req.body;
-  const {
-    session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
-  } = req;
-
-  if (!userId || !userToken) {
-    console.error('UserId %s or userToken %s were not found', userId, userToken);
-
-    return res.redirect('/not-found');
-  }
-
-  if (typeof attemptsLeft === 'undefined') {
-    console.error('No remaining OTP attempts found in session when rendering check your email access code page');
-
-    return res.render('_partials/problem-with-service.njk');
-  }
-
-  // Validate form input first (empty field check)
-  const validationErrors = generateValidationErrors(req.body);
-
-  if (validationErrors) {
-    const viewModel: CheckYourEmailAccessCodeViewModel = {
-      attemptsLeft,
-      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
-      email: userEmail,
-      sixDigitAccessCode,
-      validationErrors,
-    };
-
-    return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
-  }
-
-  // Attempt to verify the access code with the API
-  let loginResponse: LoginWithSignInOtpResponse;
-
   try {
-    loginResponse = await api.loginWithSignInOtp({ token: userToken, userId, signInOTP: sixDigitAccessCode });
-  } catch (error) {
-    const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+    const { sixDigitAccessCode } = req.body;
+    const {
+      session: { userToken, userId, numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
+    } = req;
 
-    if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
-      console.error('Invalid sign-in OTP entered for user %s (API error)', userId);
+    if (!userId || !userToken) {
+      console.error('UserId %s or userToken %s were not found', userId, userToken);
+
+      return res.redirect('/not-found');
+    }
+
+    if (typeof attemptsLeft === 'undefined') {
+      console.error('No remaining OTP attempts found in session when rendering check your email access code page');
+
+      return res.render('_partials/problem-with-service.njk');
+    }
+
+    // Validate form input first (empty field check)
+    const validationErrors = generateValidationErrors(req.body);
+
+    if (validationErrors) {
+      const viewModel: CheckYourEmailAccessCodeViewModel = {
+        attemptsLeft,
+        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+        email: userEmail,
+        sixDigitAccessCode,
+        validationErrors,
+      };
+
+      return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
+    }
+
+    const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
+
+    if (otpResult.type === 'incorrect-code') {
+      console.error('Invalid sign-in OTP entered for user %s', userId);
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
@@ -92,42 +116,24 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, errorViewModel);
     }
 
-    console.error('Unexpected error validating sign-in OTP for user %s', userId, error);
+    const { loginResponse } = otpResult;
+    const { token: newUserToken, loginStatus, user } = loginResponse;
+
+    if (!newUserToken || !loginStatus || !user) {
+      throw new Error(`Missing user token, login status, or user details after successful OTP validation for user ${userId}`);
+    }
+
+    updateSessionAfterLogin({
+      req,
+      newUserToken,
+      loginStatus,
+      user,
+    });
+
+    return res.redirect('/dashboard');
+  } catch (error) {
+    console.error('Error submitting access code %o', error);
 
     return res.render('_partials/problem-with-service.njk');
   }
-
-  const { token: newUserToken, loginStatus, user } = loginResponse;
-
-  if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
-    // Incorrect access code - API returned invalid status
-    console.error('Invalid sign-in OTP entered for user %s', userId);
-
-    const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
-
-    const invalidStatusViewModel: CheckYourEmailAccessCodeViewModel = {
-      attemptsLeft,
-      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
-      email: userEmail,
-      sixDigitAccessCode,
-      validationErrors: incorrectCodeErrors,
-    };
-
-    return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, invalidStatusViewModel);
-  }
-
-  if (!newUserToken || !user) {
-    console.error('Missing user token or user details after successful OTP validation for user %s', userId);
-
-    return res.render('_partials/problem-with-service.njk');
-  }
-
-  updateSessionAfterLogin({
-    req,
-    newUserToken,
-    loginStatus,
-    user,
-  });
-
-  return res.redirect('/dashboard');
 };
