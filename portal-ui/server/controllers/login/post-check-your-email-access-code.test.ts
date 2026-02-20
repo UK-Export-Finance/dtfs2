@@ -327,7 +327,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
 
       mockGenerateValidationErrors.mockReturnValue({
         sixDigitAccessCode: {
-          text: 'Enter the access code',
+          text: 'Enter access code',
           order: '1',
         },
       });
@@ -351,7 +351,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
         sixDigitAccessCode: '',
         validationErrors: {
           sixDigitAccessCode: {
-            text: 'Enter the access code',
+            text: 'Enter access code',
             order: '1',
           },
         },

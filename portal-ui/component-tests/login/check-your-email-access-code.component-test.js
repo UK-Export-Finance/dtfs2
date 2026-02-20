@@ -84,7 +84,7 @@ describe(page, () => {
     let wrapper;
     const validationErrors = {
       sixDigitAccessCode: {
-        text: 'Enter the access code',
+        text: 'Enter access code',
         href: '#sixDigitAccessCode',
       },
     };
@@ -99,11 +99,11 @@ describe(page, () => {
     });
 
     it('should render the error summary with correct link', () => {
-      wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#sixDigitAccessCode', 'Enter the access code');
+      wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#sixDigitAccessCode', 'Enter access code');
     });
 
     it('should render inline error message for access code input', () => {
-      wrapper.expectText('[data-cy="six-digit-access-code-inline-error"]').toRead('Error: Enter the access code');
+      wrapper.expectText('[data-cy="six-digit-access-code-inline-error"]').toRead('Error: Enter access code');
     });
 
     it('should render the access code input with error styling', () => {

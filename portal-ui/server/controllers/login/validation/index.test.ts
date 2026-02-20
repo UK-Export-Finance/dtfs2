@@ -17,7 +17,7 @@ describe('controllers/login/validation', () => {
 
       expect(result).toEqual({
         sixDigitAccessCode: {
-          text: 'Enter the access code',
+          text: 'Enter access code',
           order: '1',
         },
       });
@@ -30,7 +30,7 @@ describe('controllers/login/validation', () => {
 
       expect(result).toEqual({
         sixDigitAccessCode: {
-          text: 'Enter the access code',
+          text: 'Enter access code',
           order: '1',
         },
       });
@@ -43,7 +43,7 @@ describe('controllers/login/validation', () => {
 
       expect(result).toEqual({
         sixDigitAccessCode: {
-          text: 'Enter the access code',
+          text: 'Enter access code',
           order: '1',
         },
       });

@@ -14,7 +14,7 @@ const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Recor
 
   if (!sixDigitAccessCode || sixDigitAccessCode.trim() === '') {
     newErrors.sixDigitAccessCode = {
-      text: 'Enter the access code',
+      text: 'Enter access code',
       order: '1',
     };
   }
