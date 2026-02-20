@@ -10,6 +10,8 @@ export type ValidationErrorsObject = Record<string, FieldError>;
 export type CheckYourEmailAccessCodeViewModel = {
   attemptsLeft?: number;
   requestNewCodeUrl: string;
+  isSupportInfo: boolean;
+  isAccessCodeLink: boolean;
   errors?: { errorSummary: ValidationErrors[]; fieldErrors: ValidationErrorsObject } | null;
   validationErrors?: ValidationErrorsObject | null;
   email?: string;

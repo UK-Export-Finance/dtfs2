@@ -85,6 +85,8 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
+        isSupportInfo: false,
+        isAccessCodeLink: true,
         email: 'test@example.com',
         sixDigitAccessCode: '654321',
         validationErrors: {
@@ -172,6 +174,8 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
+        isSupportInfo: false,
+        isAccessCodeLink: true,
         email: 'test@example.com',
         sixDigitAccessCode: '111111',
         validationErrors: {
@@ -347,6 +351,8 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/new-access-code',
+        isSupportInfo: false,
+        isAccessCodeLink: true,
         email: 'test@example.com',
         sixDigitAccessCode: '',
         validationErrors: {

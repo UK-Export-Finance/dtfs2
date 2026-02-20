@@ -100,6 +100,8 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
       const viewModel: CheckYourEmailAccessCodeViewModel = {
         attemptsLeft,
         requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+        isSupportInfo: false,
+        isAccessCodeLink: true,
         email: userEmail,
         sixDigitAccessCode,
         validationErrors,
@@ -118,6 +120,8 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
       const errorViewModel: CheckYourEmailAccessCodeViewModel = {
         attemptsLeft,
         requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+        isSupportInfo: false,
+        isAccessCodeLink: true,
         email: userEmail,
         sixDigitAccessCode,
         validationErrors: incorrectCodeErrors,

@@ -12,7 +12,7 @@ describe(page, () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = render({ email, attemptsLeft, requestNewCodeUrl });
+      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, isSupportInfo: false, isAccessCodeLink: true });
     });
 
     it('should render the page title without error prefix', () => {
@@ -90,7 +90,7 @@ describe(page, () => {
     };
 
     beforeEach(() => {
-      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors });
+      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors, isSupportInfo: false, isAccessCodeLink: true });
     });
 
     it('should render the error summary', () => {
@@ -125,7 +125,7 @@ describe(page, () => {
     };
 
     beforeEach(() => {
-      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors });
+      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors, isSupportInfo: false, isAccessCodeLink: true });
     });
 
     it('should render inline error message indicating the access code is incorrect', () => {

@@ -71,10 +71,10 @@
         </p>
 
         {{ accessCodeAttempts.render({
-          isSupportInfo: false,
+          isSupportInfo: isSupportInfo,
           attemptsLeft: attemptsLeft,
           requestNewCodeUrl: requestNewCodeUrl,
-          isAccessCodeLink: true
+          isAccessCodeLink: isAccessCodeLink
         }) }}
       </form>
     </div>
