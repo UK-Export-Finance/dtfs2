@@ -1478,6 +1478,16 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
       - name: Project
         id: project
         run: |
