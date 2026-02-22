@@ -1478,6 +1478,9 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
+      - name: Initialise
+        run: sleep 100s
+
       - name: Project
         id: project
         run: |
