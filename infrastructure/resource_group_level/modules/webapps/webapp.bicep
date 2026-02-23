@@ -43,7 +43,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
   location: location
   kind: 'app,linux,container'
   properties: {
-    httpsOnly: false
+    httpsOnly: true
     serverFarmId: appServicePlanId
     siteConfig: {
       numberOfWorkers: 1
@@ -52,7 +52,7 @@ resource site 'Microsoft.Web/sites@2024-04-01' = {
       alwaysOn: true
       http20Enabled: true
       functionAppScaleLimit: 0
-      logsDirectorySizeLimit: 100 // default is 35
+      logsDirectorySizeLimit: 100 
       vnetRouteAllEnabled: true
       ftpsState: ftpsState
       scmMinTlsVersion: scmMinTlsVersion
