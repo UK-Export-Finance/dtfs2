@@ -26,9 +26,9 @@ param secureConnectionStrings object
 param additionalSecureSettings object
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
-var azureDnsServerIp = '168.63.129.16'
 var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'

@@ -22,21 +22,11 @@ param additionalSecureSettings object
 param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
-  name: containerRegistryName
-}
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-
-resource redis 'Microsoft.Cache/redis@2024-11-01' existing = {
-  name: redisName
-}
-
 var portalApiUrl = 'https://${portalApiHostname}'
-
-var azureDnsServerIp = '168.63.129.16'
-
 var staticSettings = {
   PORTAL_API_URL: portalApiUrl
   REDIS_HOSTNAME: redis.properties.hostName
@@ -72,6 +62,15 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
   type: 'Custom'
   value: item.value
 } )
+
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+  name: containerRegistryName
+}
+
+resource redis 'Microsoft.Cache/redis@2024-11-01' existing = {
+  name: redisName
+}
 
 module gefUiWebapp 'webapp.bicep' = {
   name: 'gefUiWebapp'

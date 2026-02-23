@@ -10,24 +10,33 @@ param version string
 var frontDoorAccess = 'Allow'
 param productionSubnetCidr string
 param routeTableNextHopIpAddress string
+
 @secure()
+// REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
+// REMOTE_VNET_RESOURCE_GROUP_VPN
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
+// REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
-param peeringAddressSpace string = '10.50.0.0/16'
+// VNET_ADDRESS_PREFIX
+param peeringAddressSpace string
+
 param vnetAddressPrefix string
 param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string')
+@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
 @secure()
 param onPremiseNetworkIpsString string
 @description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
 @secure()
 param azurePortalIpsString string
+
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
+
+
 @secure()
 param RATE_LIMIT_THRESHOLD string
 @secure()
@@ -105,7 +114,10 @@ param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
 @secure()
 param UKEF_INTERNAL_NOTIFICATION string
-
+param azureDnsServerIp string
+param nsgSourceAddressPrefix string 
+param ukefSourceAddressPrefix string 
+param testSourceAddressPrefix string 
 
 var storageLocations = [
   'uksouth'
@@ -114,6 +126,13 @@ var storageLocations = [
 
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
+
+/* This parameters map holds the per-environment settings.
+Some notes from initial networking conversations:
+Dev uses 172.16.4x.xx
+Demo (legacy?) uses 172.16.6x.xx
+Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
+Feature can use 172.16.2x.xx */
 var parametersMap = {
   dev: {
     acr: {
@@ -147,7 +166,6 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
@@ -166,8 +184,6 @@ var parametersMap = {
   }
   feature: {
     acr: {
-      // Note that containerRegistryName needs to be globally unique. However,
-      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
@@ -238,7 +254,6 @@ var parametersMap = {
     }
     nodeDeveloperMode: false
     nsg: {
-      // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
       storageNetworkAccessDefaultAction: 'Deny'
     }
     apiPortalAccessPort: 0
@@ -250,13 +265,11 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       applicationGatewayCidr: applicationGatewayCidr
       privateEndpointsCidr: privateEndpointsCidr
-      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -293,9 +306,6 @@ var parametersMap = {
     }
     apiPortalAccessPort: 0
     redis: {
-      // TODO:FN-504 decide what sku to use.
-      // Note that it isn't recommended to use Basic or C0 in production
-      // See https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-best-practices-development
       sku:{
         name: 'Basic'
         family: 'C'
@@ -303,7 +313,6 @@ var parametersMap = {
       }
     }
     vnet: {
-      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: [vnetAddressPrefix]
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
@@ -332,6 +341,7 @@ var functionSecureSettings = {
   APIM_MDM_URL: APIM_MDM_URL
   APIM_MDM_VALUE: APIM_MDM_VALUE
 }
+
 var functionAdditionalSecureSettings = { }
 
 var dtfsCentralApiSettings = {
@@ -476,6 +486,9 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
     target: target
     frontDoorAccess: frontDoorAccess
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
+    nsgSourceAddressPrefix: nsgSourceAddressPrefix  
+    ukefSourceAddressPrefix: ukefSourceAddressPrefix  
+    testSourceAddressPrefix: testSourceAddressPrefix
   }
 }
 
@@ -525,7 +538,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-02-01' = {
   name: logAnalyticsWorkspaceName
   location: location
-  tags: {}
   properties: {
     sku: {
       name: 'PerGB2018'
@@ -669,6 +681,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -690,8 +703,9 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
-} 
+}
 
 module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
@@ -715,6 +729,7 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     settings: externalApiSettings
     secureSettings: externalApiSecureSettings
     additionalSecureSettings: externalApiAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -738,6 +753,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     settings: dtfsCentralApiSettings
     secureSettings: dtfsCentralApiSecureSettings
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -771,6 +787,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -818,6 +835,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -843,6 +861,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     additionalSecureSettings: tfmUiAdditionalSecureSettings
     secureConnectionStrings: tfmUiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -868,6 +887,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     additionalSecureSettings: gefUiAdditionalSecureSettings
     secureConnectionStrings: gefUiSecureConnectionStrings
     additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
+    azureDnsServerIp: azureDnsServerIp
   }
 }
 
@@ -986,5 +1006,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     settings: tmfApiSettings
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
+    azureDnsServerIp: azureDnsServerIp
   }
 }

@@ -14,24 +14,19 @@ param acbsFunctionDefaultHostName string
 param numberGeneratorFunctionDefaultHostName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
-
 param resourceNameFragment string = 'external-api'
-
 param settings object
-
 @secure()
 param secureSettings object
 @secure()
 param additionalSecureSettings object
+param azureDnsServerIp string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-
-var azureDnsServerIp = '168.63.129.16'
-
 var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
 var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
 

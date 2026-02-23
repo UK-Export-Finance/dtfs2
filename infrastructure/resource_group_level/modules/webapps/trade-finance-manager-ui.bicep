@@ -22,11 +22,11 @@ param additionalSecureSettings object
 param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 var tfmApiUrl = 'https://${tfmApiHostname}'
-var azureDnsServerIp = '168.63.129.16'
 var staticSettings = {
   TFM_API_URL: tfmApiUrl
   REDIS_HOSTNAME: redis.properties.hostName

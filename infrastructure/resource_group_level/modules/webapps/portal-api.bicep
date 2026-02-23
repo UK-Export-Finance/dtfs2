@@ -29,12 +29,10 @@ param additionalSecureSettings object
 param connectionStrings object
 @secure()
 param secureConnectionStrings object
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
-  name: containerRegistryName
-}
+param azureDnsServerIp string
+
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-var azureDnsServerIp = '168.63.129.16'
 var staticSettings = {
   CLAMAV_HOST: clamAvSettings.ipAddress
   CLAMAV_PORT: clamAvSettings.port
@@ -85,6 +83,10 @@ var settingsCalculated = {
   MONGODB_URI: mongoDbConnectionString
 }
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+  name: containerRegistryName
+}
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName

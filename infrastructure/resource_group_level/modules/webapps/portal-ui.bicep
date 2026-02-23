@@ -27,11 +27,11 @@ param additionalSecureSettings object
 param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
+param azureDnsServerIp string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 var portalApiUrl = 'https://${portalApiHostname}'
-var azureDnsServerIp = '168.63.129.16'
 var staticSettings = {
   PORTAL_API_URL: portalApiUrl
   REDIS_HOSTNAME: redis.properties.hostName

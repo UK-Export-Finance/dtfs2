@@ -16,10 +16,10 @@ param settings object
 param secureSettings object
 @secure()
 param additionalSecureSettings object
+param azureDnsServerIp string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
-var azureDnsServerIp = '168.63.129.16'
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 var staticSettings = {
   FUNCTIONS_WORKER_RUNTIME: 'node'

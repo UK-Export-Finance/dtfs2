@@ -12,24 +12,19 @@ param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
-
 param resourceNameFragment string = 'dtfs-central-api'
-
 param settings object
-
 @secure()
 param secureSettings object
 @secure()
 param additionalSecureSettings object
+param azureDnsServerIp string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-
-var azureDnsServerIp = '168.63.129.16'
-
 var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
