@@ -5,6 +5,9 @@ param apiPortalAccessPort int
 param product string
 param target string
 param version string
+param nsgSourceAddressPrefix string 
+param ukefSourceAddressPrefix string 
+param testSourceAddressPrefix string 
 
 var nsgName = '${product}-${target}-${version}-gw-nsg'
 var staticRules = [
@@ -20,10 +23,6 @@ var staticRules = [
       access: 'Allow'
       priority: 100
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
   {
@@ -38,10 +37,6 @@ var staticRules = [
       access: frontDoorAccess
       priority: 200
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
   {
@@ -51,15 +46,11 @@ var staticRules = [
       protocol: '*'
       sourcePortRange: '*'
       destinationPortRange: '*'
-      sourceAddressPrefix: '51.104.202.42'
+      sourceAddressPrefix: nsgSourceAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 997
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
   {
@@ -69,33 +60,11 @@ var staticRules = [
       protocol: '*'
       sourcePortRange: '*'
       destinationPortRange: '*'
-      sourceAddressPrefix: '51.11.144.7'
+      sourceAddressPrefix: testSourceAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 998
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
-    }
-  }
-  {
-    name: 'vm-ips-prod'
-    type: 'Microsoft.Network/networkSecurityGroups/securityRules'
-    properties: {
-      protocol: '*'
-      sourcePortRange: '*'
-      destinationPortRange: '*'
-      sourceAddressPrefix: '51.145.36.44'
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 999
-      direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
   {
@@ -105,15 +74,11 @@ var staticRules = [
       protocol: '*'
       sourcePortRange: '*'
       destinationPortRange: '*'
-      sourceAddressPrefix: '51.140.76.208'
+      sourceAddressPrefix: ukefSourceAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 3000
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
 ]
@@ -144,7 +109,6 @@ var securityRulesCombined = concat(staticRules, optionalRules)
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2024-10-01' = {
   name: nsgName
   location: location
-  tags: {}
   properties: {
     securityRules: securityRulesCombined
   }
