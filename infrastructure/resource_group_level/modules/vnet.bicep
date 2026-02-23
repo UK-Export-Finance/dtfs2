@@ -7,10 +7,7 @@ param acaClamAvCidr string
 param product string
 param target string
 param version string
-
 param networkSecurityGroupId string
-
-// Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
 param peeringVnetName string = 'vnet-peer-uks-${product}-${target}-${version}'
 @secure()
 param peeringRemoteVnetSubscriptionId string
@@ -45,7 +42,6 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-10-01' 
     '3'
   ]
   properties: {
-    // the ipAddress value is assigned by Azure
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Static'
     idleTimeoutInMinutes: 4
@@ -81,14 +77,10 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
     dhcpOptions: {
       dnsServers: []
     }
-    // We define the subnets inline to avoid https://github.com/Azure/bicep/issues/4653
     subnets: [
       {
         name: appServicePlanEgressSubnetName
         properties: {
-          // TODO:DTFS-6422 if using test / prod as our template, this should be linked with the following nat gateway.
-          // It isn't clear why dev does not have this and links with sub-prototypekit-dev-001 in the
-          // rg-prototypekit-dev-001 RG instead
           natGateway: {
             id: natGateway.id
           }
@@ -151,7 +143,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
           networkSecurityGroup: {
             id: networkSecurityGroupId
           }
-          // Note that applicationGatewayIPConfigurations that appear here get populated when setting up the Application Gateway
           serviceEndpoints: [
             {
               service: 'Microsoft.Storage'
@@ -165,7 +156,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
       {
-        // We need to define a subnet for the ClamAV Azure Container App to live in.
         name: acaClamAvSubnetName
         properties: {
           addressPrefix: acaClamAvCidr
@@ -188,7 +178,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
       }
     ]
     virtualNetworkPeerings: [
-      // Note that we only set up our side of the peering.
       {
         name: peeringVnetName
         properties: {

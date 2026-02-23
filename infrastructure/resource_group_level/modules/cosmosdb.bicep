@@ -6,29 +6,21 @@ param databaseName string
 param product string
 param target string
 param version string
-
-
 @description('Network IPs to permit access to CosmosDB')
 @secure()
 param allowedIpsString string
 @secure()
 param azurePortalIpsString string
-
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
-
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
-
-
 var allowedIps = json(allowedIpsString)
 var azureAllowedIps = json(azurePortalIpsString)
-
 var allAllowedIps = concat(allowedIps, azureAllowedIps)
-
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
     name: 'EnableMongo'
@@ -580,7 +572,6 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 }]
 
 
-/*  The private endpoint is taken from the cosmosdb/private-endpoint export */
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
@@ -605,7 +596,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   }
 }
 
-/* Adding the Zone group sets up automatic DNS for the private link. */
 resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
   parent: privateEndpoint
   name: 'default'

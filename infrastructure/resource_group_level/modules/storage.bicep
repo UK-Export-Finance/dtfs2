@@ -2,29 +2,20 @@ param location string
 param product string
 param target string
 param version string
-
-// TODO:FN-931 Add access from external accounts if appropriate.
-
 param appServicePlanEgressSubnetId string
 param gatewaySubnetId string
 param privateEndpointsSubnetId string
-
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
 @secure()
 param onPremiseNetworkIpsString string
-
 @description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
-
 param shareDeleteRetentionEnabled bool
-
 param filesDnsZoneId string
 
 var storageAccountName = '${product}${target}${version}storage'
-
 var allowedIps = json(onPremiseNetworkIpsString)
-
 var queueNames = [
   'acbs-control-00'
   'acbs-control-01'
@@ -42,18 +33,15 @@ var queueNames = [
   'numbergenerator-control-03'
   'numbergenerator-workitems'
 ]
-
 var tableNames = [
   'acbsHistory'
   'acbsInstances'
-  // TODO:FN-417 Is this needed? It seems rather transitory.
   'AzureFunctionsDiagnosticEvents202304'
   'DurableFunctionsHubHistory'
   'DurableFunctionsHubInstances'
   'numbergeneratorHistory'
   'numbergeneratorInstances'
 ]
-
 var blobContainerNames = [
   'acbs-largemessages'
   'acbs-leases'
@@ -208,7 +196,6 @@ resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2025-01-
   name: tableName
 }]
 
-// This resource definition is taken from the storage-private-endpoint export
 resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: storageAccountName
   location: location

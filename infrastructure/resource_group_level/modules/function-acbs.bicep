@@ -1,8 +1,5 @@
 param location string
 param environment string
-
-/* @allowed(['Stopped', 'Running'])
-param state string */
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -13,47 +10,22 @@ param nodeDeveloperMode bool
 param product string
 param target string
 param version string
-
-// Note that the name fragment has "azure-" prepended to it when used for the docker image!
 param resourceNameFragment string = 'function-acbs'
-
 param settings object
-
-// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
-
-// These values are taken from an export of Configuration on Dev
 @secure()
 param additionalSecureSettings object
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
-  name: containerRegistryName
-}
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
-// NOTE: this differs from the webapp names as we prepend "azure-" to the image name.
 var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
-
-// This is the IP address Azure uses for its DNS server.
-// https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances?tabs=redhat#considerations
-// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
-
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
-  name: storageAccountName
-}
-
 var storageAccountKey = storageAccount.listKeys().keys[0].value
-
-// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var staticSettings = {
-  // hard coded
   FUNCTIONS_WORKER_RUNTIME: 'node'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
 }
-
-// These values are taken from an export of Configuration on Dev
 var additionalSettings = {
   APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
@@ -78,8 +50,13 @@ var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragmen
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
 
 
-// Minimal setup from MS example
-// See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+  name: containerRegistryName
+}
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageAccountName
+}
 
 resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
   name: functionAcbsName
@@ -99,9 +76,9 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
       minimumElasticInstanceCount: 1
       vnetRouteAllEnabled: true
       ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
+      scmMinTlsVersion: '1.2'
       remoteDebuggingVersion: 'VS2022'
-      httpLoggingEnabled: true // false in staging
+      httpLoggingEnabled: true 
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
@@ -113,8 +90,6 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
   properties: appSettings
 }
 
-
-// The private endpoint is taken from the function-acbs/private-endpoint export
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   name: privateEndpointName
   location: location
@@ -136,7 +111,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
       id: privateEndpointsSubnetId
     }
     ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
 

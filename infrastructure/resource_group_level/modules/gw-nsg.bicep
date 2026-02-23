@@ -7,13 +7,8 @@ param target string
 param version string
 
 var nsgName = '${product}-${target}-${version}-gw-nsg'
-
-
 var staticRules = [
   {
-    // The "GatewayManager" rule is explained in the Application Gateway FAQ:
-    // https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-    // See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
     name: 'gateway-manager'
     type: 'Microsoft.Network/networkSecurityGroups/securityRules'
     properties: {
@@ -67,7 +62,6 @@ var staticRules = [
       destinationAddressPrefixes: []
     }
   }
-  // Note that we don't need a 'vm-ips-feature'
   {
     name: 'vm-ips-test'
     type: 'Microsoft.Network/networkSecurityGroups/securityRules'

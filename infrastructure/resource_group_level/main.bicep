@@ -1,64 +1,33 @@
 param location string  = resourceGroup().location
-
-/* Expected values are 'feature', 'dev', 'staging' & 'prod'
-  Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'. */
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 @description('The product name for resource naming')
 param product string
-
 @description('The target environment for resource naming')
 param target string
-
 @description('The version for resource naming')
 param version string
-/* Allowed frontDoorAccess values: 'Allow', 'Deny' */
 var frontDoorAccess = 'Allow'
 param productionSubnetCidr string
-/* routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts. */
 param routeTableNextHopIpAddress string
-
-// Enable network access from an external subscription.
 @secure()
-// REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
-// REMOTE_VNET_RESOURCE_GROUP_VPN
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
-// REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
-// VNET_ADDRESS_PREFIX
 param peeringAddressSpace string = '10.50.0.0/16'
-
-@description('IPs allowed to access restricted services, represented as Json array string')
-@secure()
-// UKEF_VPN_IPS
-
 param vnetAddressPrefix string
 param applicationGatewayCidr string
 param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
+@description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 param onPremiseNetworkIpsString string
 @description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
 @secure()
 param azurePortalIpsString string
-
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
-
-
-///////////////////////////////////////////////////////////////////////////////
-// We have some non-secret parameters, which we can keep in the code here.
-// - values that vary based on the environment are managed with a map
-// - values that aren't that likely to change are just simple variables.
-///////////////////////////////////////////////////////////////////////////////
-
-// The following settings have not been made part of the parameters map
-// as they are the same for all environments and don't look like they will change.
-// The following parameters come from GH environment variables, rather than secrets
-// TODO:FN-938 check is ukwest is used anywhere
 @secure()
 param RATE_LIMIT_THRESHOLD string
 @secure()
@@ -145,13 +114,6 @@ var storageLocations = [
 
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
-
-/* This parameters map holds the per-environment settings.
-Some notes from initial networking conversations:
-Dev uses 172.16.4x.xx
-Demo (legacy?) uses 172.16.6x.xx
-Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
-Feature can use 172.16.2x.xx */
 var parametersMap = {
   dev: {
     acr: {
@@ -370,9 +332,6 @@ var functionSecureSettings = {
   APIM_MDM_URL: APIM_MDM_URL
   APIM_MDM_VALUE: APIM_MDM_VALUE
 }
-
-/* These values are taken from an export of Configuration on Dev
-Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed. */
 var functionAdditionalSecureSettings = { }
 
 var dtfsCentralApiSettings = {
@@ -424,7 +383,6 @@ var portalApiSettings = {
 
 var portalApiSecureSettings = {
   PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
   AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
@@ -443,7 +401,7 @@ var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
 var portalUiSettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD 
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
@@ -551,8 +509,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
   }
   kind: 'linux'
   properties: {
-    /* Linux ASPs need to have reserved as true:
-    https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties */
     reserved: true
   }
 }
@@ -842,7 +798,6 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
@@ -873,7 +828,6 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    //externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     product: product
     version: version
@@ -1017,7 +971,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
-    //environment: environment
     product: product
     version: version
     target: target
