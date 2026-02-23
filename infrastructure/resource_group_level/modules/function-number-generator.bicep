@@ -73,7 +73,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
       minimumElasticInstanceCount: 1
       vnetRouteAllEnabled: true
       ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
+      scmMinTlsVersion: '1.2'
       remoteDebuggingVersion: 'VS2022'
       httpLoggingEnabled: true 
     }

@@ -8,7 +8,7 @@ param privateEndpointsSubnetId string
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
 @secure()
 param onPremiseNetworkIpsString string
-@description('Is public access to the storage account allowed or denied for evertone')
+@description('Is public access to the storage account allowed or denied for everyone')
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
 param shareDeleteRetentionEnabled bool

@@ -83,7 +83,7 @@ module dtfsCentralApiWebapp 'webapp.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
-    scmMinTlsVersion: '1.0'
+    scmMinTlsVersion: '1.2'
   }
 }
 

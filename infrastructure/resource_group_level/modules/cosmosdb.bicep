@@ -15,6 +15,8 @@ param azurePortalIpsString string
 param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
+@description('Provisioned RU/s throughput for the collection')
+param defaultThroughput int = 400
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
@@ -133,7 +135,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -153,7 +155,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -173,7 +175,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -200,7 +202,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -230,7 +232,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -250,7 +252,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -270,7 +272,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -293,7 +295,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -323,7 +325,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -353,7 +355,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -383,7 +385,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -406,7 +408,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -429,7 +431,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -449,7 +451,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -469,7 +471,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -489,7 +491,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -512,7 +514,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -535,7 +537,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
@@ -558,7 +560,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: 400 
+        throughput: defaultThroughput 
       }
     }
   }
