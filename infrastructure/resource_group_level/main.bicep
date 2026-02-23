@@ -184,8 +184,6 @@ var parametersMap = {
   }
   feature: {
     acr: {
-      // Note that containerRegistryName needs to be globally unique. However,
-      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
