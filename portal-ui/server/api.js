@@ -80,7 +80,7 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
 /**
  * Logs in a user using a sign in OTP
  * @param {object} parameters token, userId and signInOTP
- * @returns {Promise<object>} loginStatus, token and user
+ * @returns {Promise<object>} loginStatus, token, user, and isExpired (if present)
  */
 const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
   const response = await axios({
@@ -92,11 +92,12 @@ const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }
     },
   });
 
-  const { token, loginStatus, user } = response.data;
+  const { token, loginStatus, user, isExpired } = response.data;
   return {
     loginStatus,
     token,
     user,
+    isExpired,
   };
 };
 

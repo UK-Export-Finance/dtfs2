@@ -2,11 +2,16 @@ import axios, { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
+import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
 import * as api from '../../api';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
+
+type ApiErrorResponse = {
+  errors?: Array<{ msg?: string }>;
+};
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -21,24 +26,26 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
   };
 };
 
-const OTP_RESULT_TYPE = {
-  SUCCESS: 'success',
-  INCORRECT_CODE: 'incorrect-code',
-} as const;
-
-type OtpLoginResult = { type: typeof OTP_RESULT_TYPE.SUCCESS; loginResponse: LoginWithSignInOtpResponse } | { type: typeof OTP_RESULT_TYPE.INCORRECT_CODE };
-
 /**
  * Calls the sign-in OTP API and returns a typed result.
- * Returns `incorrect-code` if the API responds with 401/403, or if the login status is not VALID_2FA.
- * Re-throws any other errors so the caller's catch block handles them as genuine failures.
- * @param token - The partial auth token.
- * @param userId - The user's ID.
- * @param signInOTP - The submitted OTP code.
+ *
+ * - Returns `{ type: 'expired' }` if the API response indicates the access code is expired (via isExpired property, loginStatus 'EXPIRED', or error message containing 'expired').
+ * - Returns `{ type: 'incorrect-code' }` if the API responds with 401/403 or login status is not VALID_2FA.
+ * - Returns `{ type: 'success', loginResponse }` on successful login.
+ * - Re-throws any other errors so the caller's catch block handles them as genuine failures.
+ *
+ * @param token The partial auth token.
+ * @param userId The user's ID.
+ * @param signInOTP The submitted OTP code.
+ * @returns OtpLoginResult indicating expired, incorrect, or successful login.
  */
 const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
   try {
     const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token, userId, signInOTP });
+
+    if (loginResponse.isExpired || loginResponse.loginStatus === 'EXPIRED') {
+      return { type: OTP_RESULT_TYPE.EXPIRED };
+    }
 
     if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
       return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
@@ -46,12 +53,33 @@ const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; us
 
     return { type: OTP_RESULT_TYPE.SUCCESS, loginResponse };
   } catch (apiError) {
-    const status = axios.isAxiosError(apiError) ? apiError.response?.status : undefined;
+    if (axios.isAxiosError(apiError)) {
+      let status: number | undefined;
+      let data: unknown;
 
-    if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
-      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
+      if (apiError.response && typeof apiError.response === 'object') {
+        status = apiError.response?.status;
+        data = apiError.response?.data;
+      }
+
+      let errors: ApiErrorResponse['errors'];
+
+      if (data && typeof data === 'object' && !Array.isArray(data) && 'errors' in data) {
+        const { errors: extractedErrors } = data as ApiErrorResponse;
+        errors = extractedErrors;
+      }
+
+      // Detect expired OTP by error message text
+      const expiredMsg = errors && Array.isArray(errors) ? errors.find((e) => typeof e.msg === 'string' && e.msg.includes('expired')) : undefined;
+
+      if ((status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) && expiredMsg) {
+        return { type: OTP_RESULT_TYPE.EXPIRED };
+      }
+
+      if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
+        return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
+      }
     }
-
     throw apiError;
   }
 };
@@ -62,12 +90,13 @@ const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; us
  * - Validates the access code is not empty (client-side validation).
  * - If validation passes, calls API to verify the code.
  * - If the user enters the wrong code (login status not VALID_2FA), renders a validation error.
+ * - If the access code is expired (API returns EXPIRED or error message contains 'expired'), redirects to the access code expired page.
  * - Updates the session on successful login and redirects to dashboard.
  * - Any unexpected errors (API failures, missing session data) are caught and render problem-with-service.
  *
  * @param req Request containing the submitted access code and session data such as userId, userToken, attemptsLeft, and userEmail.
  * @param res Response used to render views or perform redirects.
- * @returns Renders a view or redirects based on validation and login status.
+ * @returns Renders a view, redirects to dashboard, access code expired page, or not-found based on validation and login status.
  */
 export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccessCodePageRequest, res: Response) => {
   try {
@@ -111,6 +140,12 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     }
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
+
+    if (otpResult.type === OTP_RESULT_TYPE.EXPIRED) {
+      console.error('Access code expired for user %s', userId);
+
+      return res.redirect('/login/access-code-expired');
+    }
 
     if (otpResult.type === OTP_RESULT_TYPE.INCORRECT_CODE) {
       console.error('Invalid sign-in OTP entered for user %s', userId);
