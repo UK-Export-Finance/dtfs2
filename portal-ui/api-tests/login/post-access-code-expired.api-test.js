@@ -2,45 +2,64 @@ jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
+
 jest.mock('../../server/api', () => ({
+  login: jest.fn(),
   loginWithSignInOtp: jest.fn(),
+  validateToken: jest.fn(() => false),
+  validatePartialAuthToken: jest.fn(),
+  sendSignInOTP: jest.fn(),
 }));
 
-const request = require('supertest');
+const { when, resetAllWhenMocks } = require('jest-when');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { HttpStatusCode } = require('axios');
 const api = require('../../server/api');
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
+const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 
-describe('POST /login/check-your-email-access-code (access code expired journey)', () => {
-  beforeEach(() => {
-    api.loginWithSignInOtp.mockReset();
-    api.loginWithSignInOtp.mockResolvedValue({ isExpired: true });
+const { post } = createApi(app);
+
+const partialAuthToken = 'partial auth token';
+const email = 'email@example.com';
+const password = 'a password';
+
+describe('POST /login/check-your-email-access-code', () => {
+  withPartial2faAuthValidationApiTests({
+    makeRequestWithHeaders: (headers) => post({ sixDigitAccessCode: '123456' }, headers).to('/login/check-your-email-access-code'),
+    validateResponseWasSuccessful: (response) => {
+      expect(response.status).toEqual(HttpStatusCode.Found);
+    },
   });
 
-  it('should redirect to /login/access-code-expired when access code is expired', async () => {
-    // Arrange: log in to get a valid session cookie
-    const agent = request.agent(app);
+  describe('when the user has a valid partial auth token and an expired access code', () => {
+    let sessionCookie;
 
-    // Use a real login to set up the session (user must exist in test data with attemptsLeft = 2)
-    const loginRes = await agent.post('/login').send({ email: 'maker1@ukexportfinance.gov.uk', password: 'Password123' });
-    const cookie = extractSessionCookie(loginRes);
+    beforeEach(async () => {
+      // Arrange
+      resetAllWhenMocks();
+      jest.clearAllMocks();
+      // Use a custom login mock that includes userId, which is required by the controller
+      api.login.mockResolvedValue({
+        token: partialAuthToken,
+        user: { email, userId: 'mock-user-id' },
+        loginStatus: 'Valid username and password',
+      });
+      api.sendSignInOTP.mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: 2 } });
+      api.loginWithSignInOtp.mockResolvedValue({ isExpired: true });
+      when(api.validatePartialAuthToken).calledWith(partialAuthToken).mockResolvedValue(undefined);
 
-    // Go to check-your-email-access-code page to ensure session is correct
-    const checkRes = await agent.get('/login/check-your-email-access-code').set('Cookie', cookie);
+      sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+    });
 
-    // If the session is not correct, skip the test with a helpful error
-    if (checkRes.status !== HttpStatusCode.Ok) {
-      // eslint-disable-next-line no-console
-      console.warn('Session not set up as expected. Ensure the test user has numberOfSignInOtpAttemptsRemaining = 2 after login.');
-      return;
-    }
+    it('should redirect to /login/access-code-expired', async () => {
+      // Act
+      const response = await post({ sixDigitAccessCode: '000000' }, { Cookie: sessionCookie }).to('/login/check-your-email-access-code');
 
-    // Act: submit an expired code
-    const res = await agent.post('/login/check-your-email-access-code').send({ sixDigitAccessCode: '000000' }).set('Cookie', cookie).redirects(0);
-
-    // Assert: should redirect to expired page
-    expect(res.status).toBe(HttpStatusCode.Found);
-    expect(res.headers.location).toBe('/login/access-code-expired');
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/login/access-code-expired');
+    });
   });
 });
