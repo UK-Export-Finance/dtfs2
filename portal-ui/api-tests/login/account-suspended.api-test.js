@@ -2,6 +2,15 @@ import { createApi } from '@ukef/dtfs2-common/api-test';
 import { HttpStatusCode } from 'axios';
 import app from '../../server/createApp';
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  verify: jest.fn((req, res, next) => next()),
+}));
+
+jest.mock('../../server/routes/middleware/validatePartialAuthToken', () => ({
+  validatePartialAuthToken: jest.fn((req, res, next) => next()),
+}));
+
 const { get } = createApi(app);
 
 describe('GET /login/temporarily-suspended-access-code', () => {
