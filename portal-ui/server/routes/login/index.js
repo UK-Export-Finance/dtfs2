@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 // const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { postCheckYourEmailAccessCode } = require('../../controllers/login/post-check-your-email-access-code');
 // const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
@@ -337,6 +338,25 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
  *
  */
 router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
+
+/**
+ * @openapi
+ * /login/check-your-email-access-code:
+ *   post:
+ *     summary: Submit the check your email access code form
+ *     tags: [Portal]
+ *     description: Submit the check your email access code form
+ *     responses:
+ *       302:
+ *         description: Redirect on successful code entry
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, postCheckYourEmailAccessCode);
 
 /**
  * @openapi
