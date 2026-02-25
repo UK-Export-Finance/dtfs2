@@ -19,6 +19,9 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 param azureDnsServerIp string
+param port string
+param websitesPort string
+param websiteHttploggingRetentionDays string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
@@ -28,8 +31,8 @@ var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:$
 var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
-  PORT: '5000'
-  WEBSITES_PORT: '5000'
+  PORT: port
+  WEBSITES_PORT: websitesPort
 }
 
 var additionalSettings = {
@@ -39,7 +42,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
-  WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
+  WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 

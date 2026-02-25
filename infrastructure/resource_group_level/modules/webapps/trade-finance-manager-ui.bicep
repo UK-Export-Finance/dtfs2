@@ -23,6 +23,9 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 param azureDnsServerIp string
+param port string
+param websitesPort string
+param websiteHttploggingRetentionDays string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -35,8 +38,8 @@ var staticSettings = {
   HTTPS: 1
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
-  PORT: '5000'
-  WEBSITES_PORT: '5000'
+  PORT: port
+  WEBSITES_PORT: websitesPort
 }
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
@@ -46,7 +49,7 @@ var additionalSettings = {
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
   WEBSITE_HEALTHCHECK_MAXPINGFAILURES: 10
-  WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
+  WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
