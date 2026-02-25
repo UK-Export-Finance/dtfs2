@@ -199,13 +199,13 @@ jobs:
             UKEF_INTERNAL_NOTIFICATION=$UKEF_INTERNAL_NOTIFICATION \
             azureDnsServerIp=$AZURE_DNS_SERVER_IP \
             nsgSourceAddressPrefix=$NSG_SOURCE_ADDRESS_PREFIX \
-            ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX 
-            port=${{ vars.PORT }} \
-            websitesPort=${{ vars.WEBSITES_PORT }} \
-            websiteHttploggingRetentionDays=${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }} \
-            websiteDynamicCache=${{ vars.WEBSITE_DYNAMIC_CACHE }} \
-            websiteNodeDefaultVersion=${{ vars.WEBSITE_NODE_DEFAULT_VERSION }} \
-            websiteHealthcheckingMax=${{ vars.WEBSITE_HEALTHCHECKING_MAX }} " 
+            ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX \
+            port=$PORT \
+            websitesPort=$WEBSITES_PORT \
+            websiteHttploggingRetentionDays=$WEBSITE_HTTPLOGGING_RETENTION_DAYS \
+            websiteDynamicCache=$WEBSITE_DYNAMIC_CACHE \
+            websiteNodeDefaultVersion=$WEBSITE_NODE_DEFAULT_VERSION \
+            websiteHealthcheckingMax=$WEBSITE_HEALTHCHECKING_MAX " 
 
           echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> "$GITHUB_ENV"
 
