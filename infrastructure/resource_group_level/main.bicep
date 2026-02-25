@@ -118,6 +118,12 @@ param azureDnsServerIp string
 param nsgSourceAddressPrefix string 
 param ukefSourceAddressPrefix string 
 param testSourceAddressPrefix string 
+param port string
+param websitesPort string
+param websiteHttploggingRetentionDays string
+param websiteHealthchekingMax int
+param websiteDynamicCache string
+param websiteNodeDefaultVersion string
 
 var storageLocations = [
   'uksouth'
@@ -788,6 +794,11 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
       port: clamAv.outputs.exposedPort
     }
     azureDnsServerIp: azureDnsServerIp
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    websiteDynamicCache: websiteDynamicCache
+    websiteNodeDefaultVersion: websiteNodeDefaultVersion
   }
 }
 
@@ -836,6 +847,10 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
       port: clamAv.outputs.exposedPort
     }
     azureDnsServerIp: azureDnsServerIp
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    websiteHealthchekingMax: websiteHealthchekingMax
   }
 }
 

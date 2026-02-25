@@ -30,6 +30,11 @@ param connectionStrings object
 @secure()
 param secureConnectionStrings object
 param azureDnsServerIp string
+param port string
+param websitesPort string
+param websiteDynamicCache string
+param websiteHttploggingRetentionDays string
+param websiteNodeDefaultVersion string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -40,8 +45,8 @@ var staticSettings = {
   CLAMAV_SCANNING_ENABLED: 'true'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
-  PORT: '5000'
-  WEBSITES_PORT: '5000'
+  PORT: port
+  WEBSITES_PORT: websitesPort
 }
 var dtfsCentralApiUrl = 'https://${dtfsCentralApiHostname}'
 var externalApiUrl = 'https://${externalApiHostname}'
@@ -54,10 +59,10 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
-  WEBSITE_DYNAMIC_CACHE: '0'
-  WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
+  WEBSITE_DYNAMIC_CACHE: websiteDynamicCache
+  WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
-  WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' 
+  WEBSITE_NODE_DEFAULT_VERSION: websiteNodeDefaultVersion
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
   EXTERNAL_API_URL: externalApiUrl
