@@ -159,7 +159,7 @@ class SignInLinkController {
 
       switch (true) {
         case isExpired:
-          return res.status(HttpStatusCode.Ok).json({
+          return res.status(HttpStatusCode.Forbidden).json({
             message: 'Forbidden',
             errors: [
               {
@@ -171,7 +171,7 @@ class SignInLinkController {
 
         case isInvalid:
           return res.status(HttpStatusCode.Ok).json({
-            message: 'Forbidden',
+            message: 'Ok',
             errors: [
               {
                 cause: OTP_ERROR_CAUSES.OTP_INVALID,
@@ -182,7 +182,7 @@ class SignInLinkController {
 
         case notFound:
           return res.status(HttpStatusCode.Ok).json({
-            message: 'Not Found',
+            message: 'Ok',
             errors: [
               {
                 msg: `No OTP found for user with id ${req.params.userId}`,

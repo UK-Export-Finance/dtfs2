@@ -35,7 +35,8 @@ export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res
     console.error('Error requesting new access code');
     return res.render('partials/problem-with-service.njk');
   } catch (error) {
-    console.error('Error requesting new access code:', error);
+    console.error('Error requesting new access code: %o', error);
+
     return res.render('partials/problem-with-service.njk');
   }
 };
