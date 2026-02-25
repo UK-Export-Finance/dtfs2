@@ -84,7 +84,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',
@@ -173,7 +173,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',
@@ -350,7 +350,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',

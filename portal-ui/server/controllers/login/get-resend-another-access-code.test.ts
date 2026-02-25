@@ -29,7 +29,8 @@ describe('controllers/login/get-resend-another-access-code', () => {
 
     expect(renderMock).toHaveBeenCalledWith('login/resend-another-access-code.njk', {
       attemptsLeft: 0,
-      requestNewCodeUrl: '/login/request-new-access-code',
+      isAccessCodeLink: false,
+      isSupportInfo: true,
       email: 'test@example.com',
     });
   });

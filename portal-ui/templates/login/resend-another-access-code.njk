@@ -11,17 +11,22 @@
 {% endblock %}
 
 {% block content %}
-  {% if errors %}
+  {% if validationErrors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errors.errorSummary,
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] if validationErrors.sixDigitAccessCode,
       attributes: {
-        'data-cy': 'error-summary'
+        "data-cy": "error-summary"
       }
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
       <h1 class="govuk-heading-l" data-cy="resend-another-access-code-email-sent-heading">
         We've sent you another access code
       </h1>
@@ -45,10 +50,15 @@
             attributes: {
               "placeholder": "e.g. 123A5C"
             },
-            errorMessage: errors and errors.fieldErrors.sixDigitAccessCode and {
+            errorMessage: (validationErrors and validationErrors.sixDigitAccessCode) and {
+              text: validationErrors.sixDigitAccessCode.text,
+              attributes: {
+                  'data-cy': 'six-digit-access-code-inline-error'
+              }
+            } or (errors and errors.fieldErrors.sixDigitAccessCode) and {
               text: errors.fieldErrors.sixDigitAccessCode.text,
               attributes: {
-                  'data-cy': 'access-code-inline-error'
+                  'data-cy': 'six-digit-access-code-inline-error'
               }
             }
           }) }}
@@ -59,10 +69,10 @@
         </p>
 
         {{ renderAccessCodeAttempts.render({
-          isSupportInfo: true,
+          isSupportInfo:  isSupportInfo,
           attemptsLeft: attemptsLeft,
           requestNewCodeUrl: requestNewCodeUrl,
-          isAccessCodeLink: false
+          isAccessCodeLink: isAccessCodeLink
         }) }}
       </form>
      

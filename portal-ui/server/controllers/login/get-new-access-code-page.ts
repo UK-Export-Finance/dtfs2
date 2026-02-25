@@ -1,11 +1,9 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { NewAccessCodeViewModel } from '../../types/view-models/2fa/new-access-code-view-model';
 
-type ViewModel = {
-  attemptsLeft?: number;
-  requestNewCodeUrl?: string;
-  email?: string;
-};
+const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
+
 type GetNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
   session: GetNewAccessCodePageRequestSession;
@@ -21,9 +19,11 @@ export const getNewAccessCodePage = (req: GetNewAccessCodePageRequest, res: Resp
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: ViewModel = {
+  const viewModel: NewAccessCodeViewModel = {
     attemptsLeft,
-    requestNewCodeUrl: '/login/request-new-access-code',
+    requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+    isSupportInfo: false,
+    isAccessCodeLink: true,
     email: userEmail,
   };
 

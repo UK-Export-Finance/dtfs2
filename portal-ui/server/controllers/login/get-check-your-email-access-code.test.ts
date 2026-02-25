@@ -29,6 +29,8 @@ describe('controllers/login/get-check-your-email-access-code', () => {
     expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
       attemptsLeft: 2,
       requestNewCodeUrl: '/login/request-new-access-code',
+      isAccessCodeLink: true,
+      isSupportInfo: false,
       email: 'test@example.com',
     });
   });

@@ -11,36 +11,26 @@
 {% endblock %}
 
 {% block content %}
-  {% if errors %}
+  {% if validationErrors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errors.errorSummary,
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] if validationErrors.sixDigitAccessCode,
       attributes: {
-        'data-cy': 'error-summary'
+        "data-cy": "error-summary"
       }
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      {% if validationErrors %}
-        {{ govukErrorSummary({
-          titleText: "There is a problem",
-          errorList: [
-            {
-              text: validationErrors.sixDigitAccessCode.text,
-              href: "#sixDigitAccessCode"
-            }
-          ] if validationErrors.sixDigitAccessCode,
-          attributes: {
-            "data-cy": "error-summary"
-          }
-        }) }}
-      {% endif %}
-
       <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>
 
       <p class="govuk-body govuk-!-margin-bottom-6" data-cy="check-your-email-description">
-        We have sent you a 6-digit access code to your email {{ email }}.
+        We have sent you a 6-digit access code to your email {{ email }} {{ isAccessCodeLink }}.
       </p>
 
       <form method="POST" action="/login/check-your-email-access-code" autocomplete="off">

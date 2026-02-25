@@ -1,11 +1,8 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 
-type ViewModel = {
-  attemptsLeft?: number;
-  requestNewCodeUrl?: string;
-  email?: string;
-};
+const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 
 type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
@@ -22,9 +19,11 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: ViewModel = {
+  const viewModel: CheckYourEmailAccessCodeViewModel = {
     attemptsLeft,
-    requestNewCodeUrl: '/login/request-new-access-code',
+    requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+    isSupportInfo: false,
+    isAccessCodeLink: true,
     email: userEmail,
   };
 

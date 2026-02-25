@@ -28,6 +28,8 @@ describe('controllers/login/get-new-access-code-page', () => {
     expect(renderMock).toHaveBeenCalledWith('login/new-access-code.njk', {
       attemptsLeft: 1,
       requestNewCodeUrl: '/login/request-new-access-code',
+      isAccessCodeLink: true,
+      isSupportInfo: false,
       email: 'test@example.com',
     });
   });
