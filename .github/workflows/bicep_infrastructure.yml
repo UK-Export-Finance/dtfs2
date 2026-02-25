@@ -142,6 +142,12 @@ jobs:
           AZURE_DNS_SERVER_IP: ${{ vars.AZURE_DNS_SERVER_IP }}
           NSG_SOURCE_ADDRESS_PREFIX: ${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}
           UKEF_SOURCE_ADDRESS_PREFIX: ${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}
+          PORT: ${{ vars.PORT }}
+          WEBSITES_PORT: ${{ vars.WEBSITES_PORT }}
+          WEBSITE_HTTPLOGGING_RETENTION_DAYS: ${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}
+          WEBSITE_DYNAMIC_CACHE: ${{ vars.WEBSITE_DYNAMIC_CACHE }}  
+          WEBSITE_NODE_DEFAULT_VERSION: ${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}
+          WEBSITE_HEALTHCHECKING_MAX: ${{ vars.WEBSITE_HEALTHCHECKING_MAX }}
 
         run: |
           BICEP_PARAMETERS="version=${{ vars.VERSION }} \
@@ -193,7 +199,13 @@ jobs:
             UKEF_INTERNAL_NOTIFICATION=$UKEF_INTERNAL_NOTIFICATION \
             azureDnsServerIp=$AZURE_DNS_SERVER_IP \
             nsgSourceAddressPrefix=$NSG_SOURCE_ADDRESS_PREFIX \
-            ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX " 
+            ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX 
+            port=${{ vars.PORT }} \
+            websitesPort=${{ vars.WEBSITES_PORT }} \
+            websiteHttploggingRetentionDays=${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }} \
+            websiteDynamicCache=${{ vars.WEBSITE_DYNAMIC_CACHE }} \
+            websiteNodeDefaultVersion=${{ vars.WEBSITE_NODE_DEFAULT_VERSION }} \
+            websiteHealthcheckingMax=${{ vars.WEBSITE_HEALTHCHECKING_MAX }} " 
 
           echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> "$GITHUB_ENV"
 
