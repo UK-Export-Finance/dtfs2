@@ -26,6 +26,7 @@ param azureDnsServerIp string
 param port string
 param websitesPort string
 param websiteHttploggingRetentionDays string
+param timeZone string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -47,7 +48,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London'
+  TZ: timeZone
   WEBSITE_HEALTHCHECK_MAXPINGFAILURES: 10
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'

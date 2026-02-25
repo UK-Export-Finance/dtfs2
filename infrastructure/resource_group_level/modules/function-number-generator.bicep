@@ -17,6 +17,7 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 param azureDnsServerIp string
+param timeZone string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
@@ -36,7 +37,7 @@ var additionalSettings = {
   FUNCTION_APP_EDIT_MODE: 'readOnly'
   FUNCTIONS_EXTENSION_VERSION: '~3'
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London'
+  TZ: timeZone
   WEBSITE_USE_PLACEHOLDER: '0'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }

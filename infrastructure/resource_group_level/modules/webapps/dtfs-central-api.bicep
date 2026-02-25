@@ -22,6 +22,7 @@ param azureDnsServerIp string
 param port string
 param websitesPort string
 param websiteHttploggingRetentionDays string
+param timeZone string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
@@ -41,7 +42,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London'
+  TZ: timeZone
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }

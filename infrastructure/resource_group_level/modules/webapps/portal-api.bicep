@@ -35,6 +35,7 @@ param websitesPort string
 param websiteDynamicCache string
 param websiteHttploggingRetentionDays string
 param websiteNodeDefaultVersion string
+param timeZone string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -58,7 +59,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London'
+  TZ: timeZone
   WEBSITE_DYNAMIC_CACHE: websiteDynamicCache
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
