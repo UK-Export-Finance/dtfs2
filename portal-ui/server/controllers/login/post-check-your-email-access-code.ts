@@ -1,17 +1,12 @@
-import axios, { HttpStatusCode } from 'axios';
-import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
-import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
-import * as api from '../../api';
+import { attemptOtpLogin } from './attempt-otp-login';
+import { OTP_RESULT_TYPE } from '../../types/2fa/otp-login-result';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
-
-type ApiErrorResponse = {
-  errors?: Array<{ msg?: string }>;
-};
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -24,64 +19,6 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
   body: {
     sixDigitAccessCode: string;
   };
-};
-
-/**
- * Calls the sign-in OTP API and returns a typed result.
- *
- * - Returns `{ type: 'expired' }` if the API response indicates the access code is expired (via isExpired property, loginStatus 'EXPIRED', or error message containing 'expired').
- * - Returns `{ type: 'incorrect-code' }` if the API responds with 401/403 or login status is not VALID_2FA.
- * - Returns `{ type: 'success', loginResponse }` on successful login.
- * - Re-throws any other errors so the caller's catch block handles them as genuine failures.
- *
- * @param token The partial auth token.
- * @param userId The user's ID.
- * @param signInOTP The submitted OTP code.
- * @returns OtpLoginResult indicating expired, incorrect, or successful login.
- */
-const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
-  try {
-    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token, userId, signInOTP });
-
-    if (loginResponse.isExpired || loginResponse.loginStatus === 'EXPIRED') {
-      return { type: OTP_RESULT_TYPE.EXPIRED };
-    }
-
-    if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
-      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
-    }
-
-    return { type: OTP_RESULT_TYPE.SUCCESS, loginResponse };
-  } catch (apiError) {
-    if (axios.isAxiosError(apiError)) {
-      let status: number | undefined;
-      let data: unknown;
-
-      if (apiError.response && typeof apiError.response === 'object') {
-        status = apiError.response?.status;
-        data = apiError.response?.data;
-      }
-
-      let errors: ApiErrorResponse['errors'];
-
-      if (data && typeof data === 'object' && !Array.isArray(data) && 'errors' in data) {
-        const { errors: extractedErrors } = data as ApiErrorResponse;
-        errors = extractedErrors;
-      }
-
-      // Detect expired OTP by error message text
-      const expiredMsg = errors && Array.isArray(errors) ? errors.find((e) => typeof e.msg === 'string' && e.msg.includes('expired')) : undefined;
-
-      if ((status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) && expiredMsg) {
-        return { type: OTP_RESULT_TYPE.EXPIRED };
-      }
-
-      if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
-        return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
-      }
-    }
-    throw apiError;
-  }
 };
 
 /**
