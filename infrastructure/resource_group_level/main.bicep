@@ -124,6 +124,7 @@ param websiteHttploggingRetentionDays string
 param websiteHealthchekingMax int
 param websiteDynamicCache string
 param websiteNodeDefaultVersion string
+param timeZone string
 
 var storageLocations = [
   'uksouth'
@@ -688,6 +689,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
   }
 }
 
@@ -710,6 +712,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
   }
 }
 
@@ -736,6 +739,10 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     secureSettings: externalApiSecureSettings
     additionalSecureSettings: externalApiAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
 
@@ -760,6 +767,10 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     secureSettings: dtfsCentralApiSecureSettings
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
 
@@ -799,6 +810,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
     websiteDynamicCache: websiteDynamicCache
     websiteNodeDefaultVersion: websiteNodeDefaultVersion
+    timeZone: timeZone
   }
 }
 
@@ -877,6 +889,10 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     secureConnectionStrings: tfmUiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
 
@@ -903,6 +919,10 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     secureConnectionStrings: gefUiSecureConnectionStrings
     additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
 
@@ -1022,5 +1042,9 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
+    timeZone: timeZone
+    port:port
+    websitesPort: websitesPort
+    websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
