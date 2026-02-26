@@ -181,8 +181,8 @@ class SignInLinkController {
           });
 
         case notFound:
-          return res.status(HttpStatusCode.Ok).json({
-            message: 'Ok',
+          return res.status(HttpStatusCode.NotFound).json({
+            message: 'Not Found',
             errors: [
               {
                 msg: `No OTP found for user with id ${req.params.userId}`,
