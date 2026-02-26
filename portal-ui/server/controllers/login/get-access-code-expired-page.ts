@@ -24,7 +24,7 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
 
   if (typeof attemptsLeft === 'undefined') {
     console.error('No remaining OTP attempts found in session when rendering access code expired page');
-    return res.status(HttpStatusCode.InternalServerError).render('partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 
   const viewModel = {

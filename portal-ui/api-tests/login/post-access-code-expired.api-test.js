@@ -57,8 +57,10 @@ describe.skip('POST /login/check-your-email-access-code', () => {
     });
 
     it('should redirect to /login/access-code-expired', async () => {
+      const requestBody = { sixDigitAccessCode: '000000' };
+
       // Act
-      const response = await post({ sixDigitAccessCode: '000000' }, { Cookie: sessionCookie }).to('/login/check-your-email-access-code');
+      const response = await post(requestBody, { Cookie: sessionCookie }).to('/login/check-your-email-access-code');
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);

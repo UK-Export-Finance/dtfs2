@@ -52,6 +52,19 @@ describe('getAccessCodeExpiredPage', () => {
     expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 1 }));
   });
 
+  it('should render problem with service page when attemptsLeft is undefined', () => {
+    // Arrange
+    req.session.numberOfSignInOtpAttemptsRemaining = undefined;
+
+    // Act
+    getAccessCodeExpiredPage(req, res as Response);
+
+    // Assert
+    expect(res.render).toHaveBeenCalledTimes(1);
+    expect(res.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(res.status).not.toHaveBeenCalled();
+  });
+
   it('should handle errors thrown during rendering', () => {
     // Arrange
     req.session.numberOfSignInOtpAttemptsRemaining = 2;
