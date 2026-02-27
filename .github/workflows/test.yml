@@ -251,7 +251,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -354,7 +354,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -466,7 +466,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -795,7 +795,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -905,7 +905,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1036,7 +1036,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1123,7 +1123,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1217,7 +1217,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1419,7 +1419,7 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: npm run load
+          command: docker compose ps && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
