@@ -1480,7 +1480,7 @@ jobs:
 
       - name: Initialise
         run: |
-          timeout 3m bash -c 'until ! docker compose ps | grep -q "starting"; do sleep 5; done'
+          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
 
       - name: Project
         id: project
