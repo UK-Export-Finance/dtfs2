@@ -21,5 +21,9 @@ export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)
     securityCode,
   };
 
-  await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, email, emailVariables);
+  try {
+    await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, email, emailVariables);
+  } catch (error) {
+    console.error('Failed to send access code email to user %s: %o', _id, error);
+  }
 };
