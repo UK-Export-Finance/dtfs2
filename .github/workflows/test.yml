@@ -1479,7 +1479,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
-        run: sleep 4m
+        run: sleep 2m
 
       - name: Check containers are up
         run: docker ps --format "table {{.Names}}\t{{.Status}}"
