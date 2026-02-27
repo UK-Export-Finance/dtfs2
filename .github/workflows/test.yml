@@ -1481,6 +1481,22 @@ jobs:
       - name: Initialise
         run: sleep 100s
 
+      - name: Healthcheck
+        run: |
+          for service in \
+            "portal-ui:5000" \
+            "portal-api:5001" \
+            "external-api:5002" \
+            "trade-finance-manager-ui:5003" \
+            "trade-finance-manager-api:5004" \
+            "dtfs-central-api:5005" \
+            "gef-ui:5006"; do
+            name="${service%%:*}"
+            port="${service##*:}"
+            echo -n "Checking $name... "
+            curl --silent --fail --max-time 10 "http://localhost:${port}/healthcheck" && echo "OK" || echo "FAILED"
+          done
+
       - name: Project
         id: project
         run: |
