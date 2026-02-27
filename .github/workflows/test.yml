@@ -1494,7 +1494,7 @@ jobs:
             name="${service%%:*}"
             port="${service##*:}"
             echo -n "Checking $name... "
-            curl --silent --fail --max-time 10 "http://localhost:${port}/healthcheck" && echo "OK" || echo "FAILED"
+            curl --silent --fail --max-time 10 "http://${name}:${port}/healthcheck" && echo "OK" || echo "FAILED"
           done
 
       - name: Project
