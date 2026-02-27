@@ -1491,7 +1491,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          command: docker compose ps && npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
