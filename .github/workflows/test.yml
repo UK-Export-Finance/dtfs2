@@ -1481,6 +1481,9 @@ jobs:
       - name: Initialise
         run: sleep 100s
 
+      - name: Check containers are up
+        run: docker ps --format "table {{.Names}}\t{{.Status}}"
+
       - name: Healthcheck
         run: |
           for service in \
