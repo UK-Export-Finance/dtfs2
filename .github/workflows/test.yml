@@ -1479,26 +1479,10 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
-        run: sleep 2m
+        run: sleep 3m
 
       - name: Check containers are up
         run: docker ps --format "table {{.Names}}\t{{.Status}}"
-
-      - name: Healthcheck
-        run: |
-          for service in \
-            "portal-ui:5000" \
-            "portal-api:5001" \
-            "external-api:5002" \
-            "trade-finance-manager-ui:5003" \
-            "trade-finance-manager-api:5004" \
-            "dtfs-central-api:5005" \
-            "gef-ui:5006"; do
-            name="${service%%:*}"
-            port="${service##*:}"
-            echo -n "Checking $name... "
-            curl --silent --fail --max-time 10 "http://${name}:${port}/healthcheck" && echo "OK" || echo "FAILED"
-          done
 
       - name: Project
         id: project
