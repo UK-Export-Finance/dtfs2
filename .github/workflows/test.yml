@@ -819,7 +819,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
