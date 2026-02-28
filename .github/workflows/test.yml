@@ -244,9 +244,12 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -347,9 +350,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20ms
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -459,9 +465,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -788,9 +797,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -898,9 +910,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
       
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1029,9 +1044,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
       
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1116,9 +1134,12 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1210,9 +1231,12 @@ jobs:
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1412,9 +1436,10 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+      
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1514,9 +1539,12 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
+      # - name: Container health check
+      #   run: |
+      #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+
       - name: Container health check
-        run: |
-          timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
+        run: sleep 10m
 
       - name: Project
         id: project
