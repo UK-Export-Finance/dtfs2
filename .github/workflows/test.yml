@@ -1479,7 +1479,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
-        run: npx wait-on tcp:5001 --timeout 300000
+        run: npx wait-on http://localhost:5001/healthcheck --timeout 300000
 
       - name: Load data
         uses: ./.github/actions/rerun
