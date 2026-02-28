@@ -5,6 +5,8 @@ services:
     restart: always
     ports:
       - "3310:3310"
+    healthcheck:
+      test: ["NONE"]
 
   dtfs-sql:
     build: ./libs/common/src/sql-db-connection
