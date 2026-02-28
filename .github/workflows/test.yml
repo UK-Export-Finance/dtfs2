@@ -184,7 +184,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       environment: ${{ env.environment }}
       TZ: ${{ env.TZ }}
@@ -205,7 +205,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -286,7 +286,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -387,7 +387,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -495,7 +495,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -553,7 +553,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -628,7 +628,7 @@ jobs:
       FF_PORTAL_2FA_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -695,7 +695,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -819,7 +819,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -926,7 +926,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1053,7 +1053,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1134,7 +1134,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1233,7 +1233,7 @@ jobs:
       FF_PORTAL_2FA_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1432,7 +1432,7 @@ jobs:
       MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1512,7 +1512,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1558,7 +1558,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       # Do not cancel in-progress jobs upon failure
