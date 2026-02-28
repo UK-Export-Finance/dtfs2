@@ -1479,7 +1479,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
-        run: timeout 3m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
 
       - name: Check containers are up
         run: docker ps --format "table {{.Names}}\t{{.Status}}"
