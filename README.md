@@ -11,7 +11,7 @@ essential information for the developers.
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 [![Test coverage](https://codecov.io/github/UK-Export-Finance/dtfs2/graph/badge.svg?token=9NMTKAD9AP)](https://codecov.io/github/UK-Export-Finance/dtfs2)
 
-**CI** 💫
+**CI** 💫 test
 
 ![Lint](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/lint.yml/badge.svg)
 ![SCA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/sca.yml/badge.svg)
