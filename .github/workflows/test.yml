@@ -1479,9 +1479,12 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
+        run: npx wait-on tcp:5001 --timeout 300000
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
