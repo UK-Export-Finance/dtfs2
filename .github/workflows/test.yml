@@ -355,7 +355,7 @@ jobs:
       #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
 
       - name: Container health check
-        run: sleep 20ms
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1440,6 +1440,8 @@ jobs:
       #   run: |
       #     timeout 5m bash -c 'until ! docker compose ps | grep -q "starting"; do docker compose ps; sleep 5; done'
       
+      - name: Container health check
+        run: sleep 20m
 
       - name: Initialise
         uses: ./.github/actions/rerun
