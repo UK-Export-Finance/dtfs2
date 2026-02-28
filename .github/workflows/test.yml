@@ -245,9 +245,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -344,9 +347,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -452,9 +458,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -777,9 +786,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -883,9 +895,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1010,9 +1025,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1093,9 +1111,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1183,9 +1204,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1381,9 +1405,12 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
+        run: timeout 10m bash -c 'while docker compose ps | grep -qiE "starting|unhealthy"; do echo "Waiting for containers..."; sleep 5; done'
+
+      - name: Load data
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
