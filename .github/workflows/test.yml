@@ -44,7 +44,7 @@
 # Since ACBS pertinent tests do not require `acbs` docker service initialisation
 # any build failure would be missed without this Quality Assurance - Tests job.
 
-name: Quality Assurance - Tests
+name: Quality Assurance - Tests latest ubuntu
 run-name: ✅ Executing test QA on ${{ github.event.number }}
 
 permissions:
