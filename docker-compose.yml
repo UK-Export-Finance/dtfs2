@@ -20,19 +20,7 @@ services:
     volumes:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "/opt/mssql-tools18/bin/sqlcmd",
-          "-C -S",
-          "localhost",
-          "-U",
-          "sa",
-          "-P",
-          "$MSSQL_SA_PASSWORD",
-          "-Q",
-          "SELECT 1;",
-        ]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $$MSSQL_SA_PASSWORD -Q 'SELECT 1;'"]
       retries: 3
       interval: 60s
       timeout: 10s
