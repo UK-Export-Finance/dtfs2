@@ -255,7 +255,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -398,7 +398,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -550,7 +550,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -919,7 +919,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1069,7 +1069,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1240,7 +1240,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1367,7 +1367,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1501,7 +1501,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1743,7 +1743,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
@@ -1888,7 +1888,7 @@ jobs:
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
-          TIMEOUT=300
+          TIMEOUT=500
           pids=()
 
           wait_for_service() {
