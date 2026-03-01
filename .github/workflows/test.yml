@@ -248,12 +248,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -375,12 +375,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -514,9 +514,9 @@ jobs:
             ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -864,12 +864,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -998,12 +998,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -1153,12 +1153,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -1264,12 +1264,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -1382,12 +1382,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -1608,12 +1608,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
@@ -1737,12 +1737,12 @@ jobs:
         run: |
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["portal-api"]="Portal API micro-service initialised on 5001"
             ["external-api"]="External micro-service initialised on 8084"
-            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI initialised on 5000"
-            ["gef-ui"]="GEF UI initialised on 5003"
-            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI micro-service initialised on 5000"
+            ["gef-ui"]="GEF UI micro-service initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
           for service in "${!services[@]}"; do
