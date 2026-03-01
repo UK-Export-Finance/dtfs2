@@ -247,7 +247,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -346,7 +349,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -454,7 +460,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -779,7 +788,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -885,7 +897,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1012,7 +1027,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1095,7 +1113,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1185,7 +1206,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1383,7 +1407,10 @@ jobs:
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && docker ps && npm run load
+          command: |
+            sleep 100s && docker ps && \
+            docker compose logs dtfs-central-api && \
+            npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
