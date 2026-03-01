@@ -49,7 +49,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
-      console.info('Sign in OTP code for user: %s is: %s', user.email, securityCode);
+      console.info('🔑 Sign in OTP code for user: %s is: %s', user.email, securityCode);
     }
 
     await sendSignInOtpEmail(user, securityCode);

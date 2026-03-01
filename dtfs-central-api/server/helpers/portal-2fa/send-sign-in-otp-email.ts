@@ -1,4 +1,5 @@
 import { PortalUser } from '@ukef/dtfs2-common';
+import { isAxiosError } from 'axios';
 import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 import externalApi from '../../external-api/api';
 
@@ -10,8 +11,11 @@ import externalApi from '../../external-api/api';
 export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string): Promise<void> => {
   const { _id, email, firstname, surname } = user;
 
+  // Sanitise the user ID by stripping newline characters to prevent log injection attacks
+  const sanitisedId = String(_id).replace(/[\n\r]/g, '');
+
   if (!email || !firstname || !surname) {
-    console.error('Unable to send access code email: user %s is missing required fields', _id);
+    console.error('Unable to send access code email: user %s is missing required fields', sanitisedId);
     return;
   }
 
@@ -24,6 +28,9 @@ export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)
   try {
     await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, email, emailVariables);
   } catch (error) {
-    console.error('Failed to send access code email to user %s: %o', _id, error);
+    const status = isAxiosError(error) ? error.response?.status : undefined;
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.error('Failed to send access code email to user %s: %s%s', sanitisedId, message, status ? ` (HTTP ${status})` : '');
   }
 };
