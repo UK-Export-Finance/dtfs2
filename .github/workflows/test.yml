@@ -249,13 +249,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -392,13 +392,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -544,13 +544,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -913,13 +913,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1063,13 +1063,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1234,13 +1234,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1361,13 +1361,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1495,13 +1495,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1737,13 +1737,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
@@ -1882,13 +1882,13 @@ jobs:
           declare -A services=(
             ["dtfs-central-api"]="Central micro-service initialised on 5005"
             ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on on 5002"
+            ["external-api"]="External micro-service initialised on 5002"
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
-          TIMEOUT=500
+          TIMEOUT=300
           pids=()
 
           wait_for_service() {
