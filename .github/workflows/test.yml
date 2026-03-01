@@ -253,7 +253,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -396,7 +396,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -548,7 +548,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -917,7 +917,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1067,7 +1067,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1238,7 +1238,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1365,7 +1365,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1499,7 +1499,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1741,7 +1741,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
@@ -1886,7 +1886,7 @@ jobs:
             ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
             ["portal-ui"]="Portal UI micro-service initialised on 5000"
             ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5006"
+            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5004"
           )
           TIMEOUT=300
           pids=()
