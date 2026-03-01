@@ -1,0 +1,49 @@
+name: 'Wait for Microservices'
+description: 'Waits for all microservices to be ready to receive requests by checking logs for status up log'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Wait for microservices to be ready
+      shell: bash
+      run: |
+        # Success messages to look for in logs for each micro
+        declare -A services=(
+          ["dtfs-central-api"]="Central micro-service initialised on 5005"
+          ["portal-api"]="Portal API micro-service initialised on 5001"
+          ["external-api"]="External micro-service initialised on 5002"
+          ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
+          ["portal-ui"]="Portal UI micro-service initialised on 5000"
+          ["gef-ui"]="GEF UI micro-service initialised on 5006"
+          ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
+        )
+        # timeout in seconds for waiting for all services to be ready
+        TIMEOUT=300
+        services=()
+
+        # function to wait for each service to be ready by checking logs for the expected message
+        wait_for_service() {
+          local service=$1
+          local message=$2
+          echo "⏳ Waiting for $service to be ready"
+          if timeout $TIMEOUT bash -c "until docker compose logs '$service' 2>&1 | grep -q '$message'; do sleep 5; done"; then
+            echo "✅ $service is ready"
+          else
+            echo "❌ Timeout waiting for $service"
+            docker compose logs "$service"
+            return 1
+          fi
+        }
+
+        for service in "${!services[@]}"; do
+          wait_for_service "$service" "${services[$service]}" &
+          services+=($!)
+        done
+
+        # Wait for all background checks and capture any failures
+        failed=0
+        for pid in "${services[@]}"; do
+          wait "$pid" || failed=1
+        done
+
+        exit $failed
