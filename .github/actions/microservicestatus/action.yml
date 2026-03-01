@@ -19,7 +19,7 @@ runs:
         )
         # timeout in seconds for waiting for all services to be ready
         TIMEOUT=300
-        services=()
+        each_microservice=()
 
         # function to wait for each service to be ready by checking logs for the expected message
         wait_for_service() {
@@ -41,12 +41,12 @@ runs:
 
           for service in "${!services[@]}"; do
             wait_for_service "$service" "${services[$service]}" &
-            services+=($!)
+            each_microservice+=($!)
           done
 
           # Wait for all background checks and capture any failures
           failed=0
-          for pid in "${services[@]}"; do
+          for pid in "${each_microservice[@]}"; do
             wait "$pid" || failed=1
           done
 

@@ -244,49 +244,8 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -387,49 +346,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -539,49 +457,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1017,49 +894,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1188,49 +1024,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
       
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1315,49 +1110,8 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1449,49 +1203,8 @@ jobs:
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1691,49 +1404,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
       
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1836,49 +1508,8 @@ jobs:
       # - name: Initialise
       #   run: sleep 100s
 
-      - name: Wait
-        run: |
-          declare -A services=(
-            ["dtfs-central-api"]="Central micro-service initialised on 5005"
-            ["portal-api"]="Portal API micro-service initialised on 5001"
-            ["external-api"]="External micro-service initialised on 5002"
-            ["trade-finance-manager-api"]="TFM API micro-service initialised on 5004"
-            ["portal-ui"]="Portal UI micro-service initialised on 5000"
-            ["gef-ui"]="GEF UI micro-service initialised on 5006"
-            ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
-          )
-          TIMEOUT=300
-          pids=()
-
-          wait_for_service() {
-            local service=$1
-            local message=$2
-            local elapsed=0
-            echo "⏳ Waiting for $service..."
-            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
-              if [ $elapsed -ge $TIMEOUT ]; then
-                echo "❌ Timeout waiting for $service"
-                docker compose logs "$service"
-                exit 1
-              fi
-              sleep 5
-              elapsed=$((elapsed + 5))
-            done
-            echo "✅ $service is ready"
-          }
-
-          for service in "${!services[@]}"; do
-            wait_for_service "$service" "${services[$service]}" &
-            pids+=($!)
-          done
-
-          # Wait for all background checks and capture any failures
-          failed=0
-          for pid in "${pids[@]}"; do
-            wait "$pid" || failed=1
-          done
-
-          exit $failed
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Project
         id: project
