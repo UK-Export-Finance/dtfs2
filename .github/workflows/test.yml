@@ -1479,26 +1479,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
-        run: npx wait-on http://localhost:5001/healthcheck --timeout 300000
-
-      - name: Load data
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Wait for services
-        run: npx wait-on tcp:5000 tcp:5003 tcp:5006 --timeout 120000
+        run: npx wait-on tcp:5000 tcp:5003 tcp:5006 --timeout 300000
 
       - name: Check containers are up
         run: docker ps --format "table {{.Names}}\t{{.Status}}"
