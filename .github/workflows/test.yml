@@ -244,13 +244,38 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -346,13 +371,38 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -457,13 +507,38 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -785,13 +860,38 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -894,13 +994,38 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1023,14 +1148,39 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1110,13 +1260,38 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1202,14 +1377,39 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1403,14 +1603,39 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1505,8 +1730,36 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
-      - name: Initialise
-        run: sleep 100s
+      # - name: Initialise
+      #   run: sleep 100s
+
+      - name: Wait
+        run: |
+          declare -A services=(
+            ["dtfs-central-api"]="Central micro-service initialised on 5005"
+            ["portal-api"]="Portal micro-service initialised on 5001"
+            ["external-api"]="External micro-service initialised on 8084"
+            ["trade-finance-manager-api"]="TFM micro-service initialised on 5004"
+            ["portal-ui"]="Portal UI initialised on 5000"
+            ["gef-ui"]="GEF UI initialised on 5003"
+            ["trade-finance-manager-ui"]="TFM UI initialised on 5003"
+          )
+          TIMEOUT=300
+          for service in "${!services[@]}"; do
+            message="${services[$service]}"
+            echo "⏳ Waiting for $service..."
+            elapsed=0
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
+            echo "✅ $service is ready"
+          done
 
       - name: Project
         id: project
