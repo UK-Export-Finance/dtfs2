@@ -256,10 +256,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -270,7 +273,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -383,10 +399,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -397,7 +416,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -519,10 +551,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -533,7 +568,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -872,10 +920,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -886,7 +937,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1006,10 +1070,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1020,7 +1087,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1161,10 +1241,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1175,7 +1258,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1272,10 +1368,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1286,7 +1385,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1390,10 +1502,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1404,7 +1519,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1616,10 +1744,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1630,7 +1761,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1745,10 +1889,13 @@ jobs:
             ["trade-finance-manager-ui"]="TFM UI micro-service initialised on 5003"
           )
           TIMEOUT=300
-          for service in "${!services[@]}"; do
-            message="${services[$service]}"
+          pids=()
+
+          wait_for_service() {
+            local service=$1
+            local message=$2
+            local elapsed=0
             echo "⏳ Waiting for $service..."
-            elapsed=0
             until docker compose logs "$service" 2>&1 | grep -q "$message"; do
               if [ $elapsed -ge $TIMEOUT ]; then
                 echo "❌ Timeout waiting for $service"
@@ -1759,7 +1906,20 @@ jobs:
               elapsed=$((elapsed + 5))
             done
             echo "✅ $service is ready"
+          }
+
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            pids+=($!)
           done
+
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || failed=1
+          done
+
+          exit $failed
 
       - name: Project
         id: project
