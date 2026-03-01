@@ -44,7 +44,7 @@
 # Since ACBS pertinent tests do not require `acbs` docker service initialisation
 # any build failure would be missed without this Quality Assurance - Tests job.
 
-name: Quality Assurance - Tests latest ubuntu
+name: Quality Assurance - Tests
 run-name: ✅ Executing test QA on ${{ github.event.number }}
 
 permissions:
@@ -244,13 +244,13 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -346,13 +346,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -457,13 +457,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -785,13 +785,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -894,13 +894,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1023,14 +1023,14 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1110,13 +1110,13 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1202,14 +1202,14 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1403,14 +1403,14 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: |
-            sleep 100s && docker ps && \
-            docker compose logs dtfs-central-api && \
-            npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1505,8 +1505,11 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
-      - name: Initialise
-        run: sleep 100s
+      # - name: Initialise
+      #   run: sleep 100s
+
+      - name: Wait for microservices to be up
+        uses: ./.github/actions/microservicestatus
 
       - name: Project
         id: project
