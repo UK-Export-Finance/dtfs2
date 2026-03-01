@@ -23,27 +23,31 @@ runs:
 
         # function to wait for each service to be ready by checking logs for the expected message
         wait_for_service() {
-          local service=$1
-          local message=$2
-          echo "⏳ Waiting for $service to be ready"
-          if timeout $TIMEOUT bash -c "until docker compose logs '$service' 2>&1 | grep -q '$message'; do sleep 5; done"; then
+            local service=$1
+            local message=$2
+            local elapsed=0
+            echo "⏳ Waiting for $service..."
+            until docker compose logs "$service" 2>&1 | grep -q "$message"; do
+              if [ $elapsed -ge $TIMEOUT ]; then
+                echo "❌ Timeout waiting for $service"
+                docker compose logs "$service"
+                exit 1
+              fi
+              sleep 5
+              elapsed=$((elapsed + 5))
+            done
             echo "✅ $service is ready"
-          else
-            echo "❌ Timeout waiting for $service"
-            docker compose logs "$service"
-            return 1
-          fi
-        }
+          }
 
-        for service in "${!services[@]}"; do
-          wait_for_service "$service" "${services[$service]}" &
-          services+=($!)
-        done
+          for service in "${!services[@]}"; do
+            wait_for_service "$service" "${services[$service]}" &
+            services+=($!)
+          done
 
-        # Wait for all background checks and capture any failures
-        failed=0
-        for pid in "${services[@]}"; do
-          wait "$pid" || failed=1
-        done
+          # Wait for all background checks and capture any failures
+          failed=0
+          for pid in "${services[@]}"; do
+            wait "$pid" || failed=1
+          done
 
-        exit $failed
+          exit $failed
