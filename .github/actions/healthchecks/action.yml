@@ -1,6 +1,16 @@
 name: 'Microservice Health Checks'
 description: 'Waits for all microservices to be ready by calling healthcheck endpoints'
 
+inputs:
+  timeout:
+    description: 'Maximum time to wait for each microservice to be ready (in milliseconds)'
+    required: false
+    default: '300000' # 5 minutes
+  interval:
+    description: 'Interval between healthcheck attempts (in milliseconds)'
+    required: false
+    default: '5000' # 5 seconds
+
 runs:
   using: 'composite'
   steps:
@@ -29,7 +39,7 @@ runs:
           url="${services[$service]}"
           echo "⏳ Waiting for $service at $url"
           (
-            if npx wait-on "$url" --timeout 300000 --interval 5000; then
+            if npx wait-on "$url" --timeout ${{ inputs.timeout }} --interval ${{ inputs.interval }}; then
               echo "✅ $service is ready"
             else
               echo "❌ $service failed to respond at $url"

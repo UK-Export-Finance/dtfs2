@@ -246,6 +246,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -348,6 +351,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -459,6 +465,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -787,6 +796,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -896,6 +908,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1026,6 +1041,9 @@ jobs:
       
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1112,6 +1130,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1205,6 +1226,9 @@ jobs:
           
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1406,6 +1430,9 @@ jobs:
       
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1507,6 +1534,9 @@ jobs:
 
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Project
         id: project
