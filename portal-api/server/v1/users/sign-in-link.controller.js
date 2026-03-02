@@ -170,8 +170,8 @@ class SignInLinkController {
           });
 
         case isInvalid:
-          return res.status(HttpStatusCode.Ok).json({
-            message: 'Ok',
+          return res.status(HttpStatusCode.Forbidden).json({
+            message: 'Forbidden',
             errors: [
               {
                 cause: OTP_ERROR_CAUSES.OTP_INVALID,
