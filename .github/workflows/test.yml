@@ -244,10 +244,16 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -343,10 +349,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -451,10 +463,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -776,10 +794,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -882,10 +906,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1008,11 +1038,17 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1092,10 +1128,16 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1181,11 +1223,17 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1338,13 +1386,19 @@ jobs:
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/return-amendment-to-maker/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/all-facilities-page/*.spec.js', 
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/amendment-values/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/status/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/portal-amendments/*.spec.js',
           ]
 
     concurrency:
@@ -1379,11 +1433,17 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1478,8 +1538,11 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
-      - name: Initialise
-        run: sleep 100s
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 300000 # 5 minutes
+          interval: 5000 # 5 seconds
 
       - name: Project
         id: project
