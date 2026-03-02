@@ -1386,13 +1386,19 @@ jobs:
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/return-amendment-to-maker/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/all-facilities-page/*.spec.js', 
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/amendment-values/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/status/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/portal-amendments/*.spec.js',
           ]
 
     concurrency:
