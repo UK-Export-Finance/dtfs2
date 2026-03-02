@@ -11,8 +11,8 @@ import externalApi from '../../external-api/api';
 export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string): Promise<void> => {
   const { _id, email, firstname, surname } = user;
 
-  // Sanitise the user ID by stripping newline characters to prevent log injection attacks
-  const sanitisedId = String(_id).replace(/[\n\r]/g, '');
+  // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
+  const sanitisedId = String(_id).replace(/[^a-zA-Z0-9-_]/g, '');
 
   if (!email || !firstname || !surname) {
     console.error('Unable to send access code email: user %s is missing required fields', sanitisedId);
