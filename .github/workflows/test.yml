@@ -199,10 +199,6 @@ jobs:
         id: timestamp
         run: echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
 
-      - name: Install wait-on
-        shell: bash
-        run: npm install -g wait-on
-
   # 2.1. API tests
   api-tests:
     name: API 👷
