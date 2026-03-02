@@ -14,10 +14,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install wait-on
-      shell: bash
-      run: npm install -g wait-on
-
     - name: Wait for microservices to be ready
       shell: bash
       run: |
