@@ -1,0 +1,47 @@
+name: 'Microservice Health Checks'
+description: 'Waits for all microservices to be ready by calling healthcheck endpoints'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Wait for microservices to be ready
+      shell: bash
+      run: |
+        # Healthcheck URLs for each microservice
+        declare -A services=(
+          ["dtfs-central-api"]="http://localhost:5005/healthcheck"
+          ["portal-api"]="http://localhost:5001/healthcheck"
+          ["external-api"]="http://localhost:5002/healthcheck"
+          ["trade-finance-manager-api"]="http://localhost:5004/healthcheck"
+          ["portal-ui"]="http://localhost:5000/healthcheck"
+          ["gef-ui"]="http://localhost:5006/healthcheck"
+          ["trade-finance-manager-ui"]="http://localhost:5003/healthcheck"
+        )
+
+        declare -A each_microservice
+
+        # Run healthcheck for each service in parallel
+        for service in "${!services[@]}"; do
+          url="${services[$service]}"
+          echo "⏳ Waiting for $service at $url"
+          (
+            if npx wait-on "$url" --timeout 300000 --interval 5000; then
+              echo "✅ $service is ready"
+            else
+              echo "❌ $service failed to respond at $url"
+              exit 1
+            fi
+          ) &
+          each_microservice[$service]=$!
+        done
+
+        failed=0
+        # Waits for all healthchecks to complete exits if any failures
+        for service in "${!each_microservice[@]}"; do
+          if ! wait "${each_microservice[$service]}"; then
+            echo "❌ $service did not become healthy in time"
+            failed=1
+          fi
+        done
+
+        exit $failed

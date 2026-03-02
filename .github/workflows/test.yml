@@ -244,10 +244,13 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -343,10 +346,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -451,10 +457,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -776,10 +785,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -882,10 +894,13 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1008,11 +1023,14 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1092,10 +1110,13 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1181,11 +1202,14 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1379,11 +1403,14 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1478,8 +1505,8 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
-      - name: Initialise
-        run: sleep 100s
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
 
       - name: Project
         id: project
