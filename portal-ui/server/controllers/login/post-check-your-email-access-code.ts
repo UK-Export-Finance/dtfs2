@@ -6,7 +6,7 @@ import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin'
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
-import { generateViewModel } from '../../helpers/generate-view-model';
+import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -60,7 +60,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
-      const viewModel: CheckYourEmailAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
+      const viewModel: CheckYourEmailAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
       });
@@ -75,7 +75,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: CheckYourEmailAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
+      const errorViewModel: CheckYourEmailAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
       });

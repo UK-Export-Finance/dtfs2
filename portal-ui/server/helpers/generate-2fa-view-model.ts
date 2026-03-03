@@ -13,7 +13,7 @@ interface ViewModelConfig {
  * @param errors        The validation errors or null
  * @param config        Configuration for the page (isSupportInfo, isAccessCodeLink)
  */
-export const generateViewModel = (
+export const generate2FAViewModel = (
   attemptsLeft: number | undefined,
   userEmail: string | undefined,
   sixDigitAccessCode: string,

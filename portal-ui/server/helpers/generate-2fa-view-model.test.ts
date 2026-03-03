@@ -1,6 +1,6 @@
-import { generateViewModel } from './generate-view-model';
+import { generate2FAViewModel } from './generate-2fa-view-model';
 
-describe('generateViewModel', () => {
+describe('generate2FAViewModel', () => {
   const mockErrors = {
     sixDigitAccessCode: {
       text: 'The access code you have entered is incorrect',
@@ -9,8 +9,8 @@ describe('generateViewModel', () => {
   };
 
   describe('with validation errors', () => {
-    it('should generate a view model with validation errors', () => {
-      const result = generateViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
+    it('should generate a 2FA view model with validation errors', () => {
+      const result = generate2FAViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
 
       expect(result).toEqual({
         attemptsLeft: 2,
@@ -26,8 +26,8 @@ describe('generateViewModel', () => {
   });
 
   describe('with no errors', () => {
-    it('should generate a view model with null accessCodeError when errors is null', () => {
-      const result = generateViewModel(1, 'user@example.com', '123456', null, { isSupportInfo: true, isAccessCodeLink: false });
+    it('should generate a 2FA view model with null accessCodeError when errors is null', () => {
+      const result = generate2FAViewModel(1, 'user@example.com', '123456', null, { isSupportInfo: true, isAccessCodeLink: false });
 
       expect(result).toEqual({
         attemptsLeft: 1,
@@ -51,7 +51,7 @@ describe('generateViewModel', () => {
         },
       };
 
-      const result = generateViewModel(0, 'another@example.com', '789012', errorsWithoutAccessCode, { isSupportInfo: true, isAccessCodeLink: false });
+      const result = generate2FAViewModel(0, 'another@example.com', '789012', errorsWithoutAccessCode, { isSupportInfo: true, isAccessCodeLink: false });
 
       expect(result.validationErrors).toEqual(errorsWithoutAccessCode);
       expect(result.accessCodeError).toBeNull();
@@ -60,7 +60,7 @@ describe('generateViewModel', () => {
 
   describe('with undefined attemptsLeft and userEmail', () => {
     it('should handle undefined values gracefully', () => {
-      const result = generateViewModel(undefined, undefined, '', null, { isSupportInfo: false, isAccessCodeLink: true });
+      const result = generate2FAViewModel(undefined, undefined, '', null, { isSupportInfo: false, isAccessCodeLink: true });
 
       expect(result).toEqual({
         attemptsLeft: undefined,
@@ -85,7 +85,7 @@ describe('generateViewModel', () => {
       ];
 
       configs.forEach((config) => {
-        const result = generateViewModel(1, 'test@example.com', '000000', null, config);
+        const result = generate2FAViewModel(1, 'test@example.com', '000000', null, config);
 
         expect(result.isSupportInfo).toBe(config.isSupportInfo);
         expect(result.isAccessCodeLink).toBe(config.isAccessCodeLink);
@@ -95,7 +95,7 @@ describe('generateViewModel', () => {
 
   describe('requestNewCodeUrl', () => {
     it('should always set requestNewCodeUrl to /login/request-new-access-code', () => {
-      const result = generateViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
+      const result = generate2FAViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
 
       expect(result.requestNewCodeUrl).toBe('/login/request-new-access-code');
     });
@@ -110,7 +110,7 @@ describe('generateViewModel', () => {
         },
       };
 
-      const result = generateViewModel(1, 'test@example.com', '123456', errorsWithOrder, { isSupportInfo: false, isAccessCodeLink: false });
+      const result = generate2FAViewModel(1, 'test@example.com', '123456', errorsWithOrder, { isSupportInfo: false, isAccessCodeLink: false });
 
       expect(result.accessCodeError).toEqual({
         text: 'Invalid code',
@@ -127,7 +127,7 @@ describe('generateViewModel', () => {
         },
       };
 
-      const result = generateViewModel(1, 'test@example.com', '123456', errorsWithoutOrder, { isSupportInfo: false, isAccessCodeLink: false });
+      const result = generate2FAViewModel(1, 'test@example.com', '123456', errorsWithoutOrder, { isSupportInfo: false, isAccessCodeLink: false });
 
       expect(result.accessCodeError).toEqual({
         text: 'Invalid code',

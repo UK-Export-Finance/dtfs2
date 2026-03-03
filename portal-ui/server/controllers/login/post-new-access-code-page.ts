@@ -6,7 +6,7 @@ import { NewAccessCodeViewModel } from '../../types/view-models/2fa/new-access-c
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
-import { generateViewModel } from '../../helpers/generate-view-model';
+import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 
 const NEW_ACCESS_CODE_TEMPLATE = 'login/new-access-code.njk';
 
@@ -51,7 +51,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
-      const viewModel: NewAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
+      const viewModel: NewAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
       });
@@ -66,7 +66,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: NewAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
+      const errorViewModel: NewAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
       });
