@@ -1,21 +1,24 @@
 import { Response } from 'express';
-import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './new-access-code-page';
+import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
-describe('getNewAccessCodePage', () => {
+describe('controllers/login/get-new-access-code-page', () => {
   let res: Response;
   let renderMock: jest.Mock;
+  let redirectMock: jest.Mock;
 
   beforeEach(() => {
     renderMock = jest.fn();
+    redirectMock = jest.fn();
     res = {
       render: renderMock,
+      redirect: redirectMock,
     } as unknown as Response;
   });
 
   it('should render the new access code template with attemptsLeft from the session', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 2,
+        numberOfSignInOtpAttemptsRemaining: 1,
         userEmail: 'test@example.com',
       },
     } as unknown as GetNewAccessCodePageRequest;
@@ -23,36 +26,36 @@ describe('getNewAccessCodePage', () => {
     getNewAccessCodePage(req, res);
 
     expect(renderMock).toHaveBeenCalledWith('login/new-access-code.njk', {
-      attemptsLeft: 2,
+      attemptsLeft: 1,
       requestNewCodeUrl: '/login/request-new-access-code',
+      isAccessCodeLink: true,
+      isSupportInfo: false,
       email: 'test@example.com',
     });
   });
 
-  it('should render problem with service template when attemptsLeft is not present in the session', () => {
+  it('should redirect to not-found when attemptsLeft is not present in the session', () => {
     const req = {
       session: {},
     } as unknown as GetNewAccessCodePageRequest;
 
     getNewAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(redirectMock).toHaveBeenCalledTimes(1);
+    expect(redirectMock).toHaveBeenCalledWith('/not-found');
   });
 
-  it('should render problem with service template when an error occurs while rendering', () => {
+  it('should redirect to not-found when attemptsLeft is negative', () => {
     const req = {
       session: {
-        numberOfSendSignInOtpAttemptsRemaining: 1,
+        numberOfSignInOtpAttemptsRemaining: -1,
         userEmail: 'test@example.com',
       },
     } as unknown as GetNewAccessCodePageRequest;
 
-    renderMock.mockImplementationOnce(() => {
-      throw new Error('Render error');
-    });
-
     getNewAccessCodePage(req, res);
 
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
+    expect(redirectMock).toHaveBeenCalledTimes(1);
+    expect(redirectMock).toHaveBeenCalledWith('/not-found');
   });
 });

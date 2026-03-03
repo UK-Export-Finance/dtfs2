@@ -7,7 +7,7 @@ type FieldError = {
 
 export type ValidationErrorsObject = Record<string, FieldError>;
 
-export type CheckYourEmailAccessCodeViewModel = {
+export type NewAccessCodeViewModel = {
   attemptsLeft?: number;
   requestNewCodeUrl: string;
   isSupportInfo: boolean;
