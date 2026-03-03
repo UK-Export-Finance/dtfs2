@@ -1,16 +1,14 @@
-import axios, { HttpStatusCode } from 'axios';
-import { CustomExpressRequest, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
-import * as api from '../../api';
+import { attemptOtpLogin, OTP_RESULT_TYPE } from './attempt-otp-login';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
-
-const REQUEST_NEW_CODE_URL = '/login/new-access-code';
 
 type PostCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
 
@@ -19,41 +17,6 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
   body: {
     sixDigitAccessCode: string;
   };
-};
-
-const OTP_RESULT_TYPE = {
-  SUCCESS: 'success',
-  INCORRECT_CODE: 'incorrect-code',
-} as const;
-
-type OtpLoginResult = { type: typeof OTP_RESULT_TYPE.SUCCESS; loginResponse: LoginWithSignInOtpResponse } | { type: typeof OTP_RESULT_TYPE.INCORRECT_CODE };
-
-/**
- * Calls the sign-in OTP API and returns a typed result.
- * Returns `incorrect-code` if the API responds with 401/403, or if the login status is not VALID_2FA.
- * Re-throws any other errors so the caller's catch block handles them as genuine failures.
- * @param token - The partial auth token.
- * @param userId - The user's ID.
- * @param signInOTP - The submitted OTP code.
- */
-const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
-  try {
-    const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token, userId, signInOTP });
-
-    if (loginResponse.loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
-      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
-    }
-
-    return { type: OTP_RESULT_TYPE.SUCCESS, loginResponse };
-  } catch (apiError) {
-    const status = axios.isAxiosError(apiError) ? apiError.response?.status : undefined;
-
-    if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
-      return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
-    }
-
-    throw apiError;
-  }
 };
 
 /**
@@ -97,15 +60,10 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
-      const viewModel: CheckYourEmailAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const viewModel: CheckYourEmailAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
     }
@@ -117,15 +75,10 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: CheckYourEmailAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const errorViewModel: CheckYourEmailAccessCodeViewModel = generate2FAViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors: incorrectCodeErrors,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, errorViewModel);
     }
