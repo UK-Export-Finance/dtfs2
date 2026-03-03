@@ -19,15 +19,14 @@ export const getNewAccessCodePage = (req: GetNewAccessCodePageRequest, res: Resp
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: NewAccessCodeViewModel = {
-    attemptsLeft,
-    requestNewCodeUrl: REQUEST_NEW_CODE_URL,
-    isSupportInfo: false,
-    isAccessCodeLink: true,
-    email: userEmail,
-  };
-
   if (attemptsLeft === 1) {
+    const viewModel: NewAccessCodeViewModel = {
+      attemptsLeft,
+      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      isSupportInfo: false,
+      isAccessCodeLink: true,
+      email: userEmail,
+    };
     return res.render('login/new-access-code.njk', viewModel);
   }
 

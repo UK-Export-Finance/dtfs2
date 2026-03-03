@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-your-email-access-code-view-model';
 
 /**
@@ -13,11 +14,14 @@ const accessCodeNumericRule = (formBody: { sixDigitAccessCode?: string }, errors
   const { sixDigitAccessCode } = formBody;
 
   // Only validate if the field has content (empty validation is handled by accessCodeRule)
-  if (sixDigitAccessCode && sixDigitAccessCode.trim() !== '' && !/^\d{6}$/.test(sixDigitAccessCode.trim())) {
-    newErrors.sixDigitAccessCode = {
-      text: 'Access code must be 6 numbers',
-      order: '1',
-    };
+  if (sixDigitAccessCode && sixDigitAccessCode.trim() !== '') {
+    const { error } = Joi.string().length(6).pattern(/^\d+$/).validate(sixDigitAccessCode.trim());
+    if (error) {
+      newErrors.sixDigitAccessCode = {
+        text: 'Access code must be 6 numbers',
+        order: '1',
+      };
+    }
   }
 
   return newErrors;

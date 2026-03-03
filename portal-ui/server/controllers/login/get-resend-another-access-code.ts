@@ -17,14 +17,13 @@ export const getResendAnotherAccessCodePage = (req: GetResendAnotherAccessCodePa
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: ResendAnotherAccessCodeViewModel = {
-    attemptsLeft,
-    isSupportInfo: true,
-    isAccessCodeLink: false,
-    email: userEmail,
-  };
-
   if (attemptsLeft === 0) {
+    const viewModel: ResendAnotherAccessCodeViewModel = {
+      attemptsLeft,
+      isSupportInfo: true,
+      isAccessCodeLink: false,
+      email: userEmail,
+    };
     return res.render('login/resend-another-access-code.njk', viewModel);
   }
 

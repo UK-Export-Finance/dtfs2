@@ -60,7 +60,6 @@ const sendSignInOTP = async (token) =>
  * @returns {Promise<object>} loginStatus, token and user
  */
 const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToken }) => {
-  /** @type {import('axios').AxiosResponse<{ token?: string; loginStatus?: string; user?: import('@ukef/dtfs2-common').PortalSessionUser }>} */
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,

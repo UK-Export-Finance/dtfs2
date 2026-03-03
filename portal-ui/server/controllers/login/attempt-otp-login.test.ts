@@ -10,6 +10,10 @@ describe('controllers/login/attempt-otp-login', () => {
   const mockToken = 'test-token';
   const mockUserId = 'test-user-id';
   const mockSignInOTP = '123456';
+  const mockLoginResponse = {
+    loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
+    userId: mockUserId,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -17,19 +21,19 @@ describe('controllers/login/attempt-otp-login', () => {
 
   describe('attemptOtpLogin', () => {
     it('should return success when login API responds with VALID_2FA status', async () => {
-      const mockLoginResponse = {
-        loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
-        userId: mockUserId,
-      };
-
       jest.spyOn(api, 'loginWithSignInOtp').mockResolvedValue(mockLoginResponse);
 
       const result = await attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP });
 
       expect(result.type).toBe(OTP_RESULT_TYPE.SUCCESS);
-      if (result.type === OTP_RESULT_TYPE.SUCCESS) {
-        expect(result.loginResponse).toEqual(mockLoginResponse);
-      }
+      expect((result as { type: typeof OTP_RESULT_TYPE.SUCCESS; loginResponse: typeof mockLoginResponse }).loginResponse).toEqual(mockLoginResponse);
+    });
+
+    it('should call loginWithSignInOtp with correct parameters', async () => {
+      jest.spyOn(api, 'loginWithSignInOtp').mockResolvedValue(mockLoginResponse);
+
+      await attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP });
+
       expect(api.loginWithSignInOtp).toHaveBeenCalledWith({
         token: mockToken,
         userId: mockUserId,
@@ -38,7 +42,7 @@ describe('controllers/login/attempt-otp-login', () => {
       expect(api.loginWithSignInOtp).toHaveBeenCalledTimes(1);
     });
 
-    it('should return incorrect-code when API throws 401 Unauthorized error', async () => {
+    it(`should return incorrect-code when API throws ${HttpStatusCode.Unauthorized} Unauthorized error`, async () => {
       const axiosError = {
         response: {
           status: HttpStatusCode.Unauthorized,
@@ -53,7 +57,7 @@ describe('controllers/login/attempt-otp-login', () => {
       expect(result.type).toBe(OTP_RESULT_TYPE.INCORRECT_CODE);
     });
 
-    it('should return incorrect-code when API throws 403 Forbidden error', async () => {
+    it(`should return incorrect-code when API throws ${HttpStatusCode.Forbidden} Forbidden error`, async () => {
       const axiosError = {
         response: {
           status: HttpStatusCode.Forbidden,
@@ -68,7 +72,7 @@ describe('controllers/login/attempt-otp-login', () => {
       expect(result.type).toBe(OTP_RESULT_TYPE.INCORRECT_CODE);
     });
 
-    it('should re-throw error when API throws non-401/403 axios error', async () => {
+    it(`should re-throw error when API throws non-${HttpStatusCode.Unauthorized}/${HttpStatusCode.Forbidden} axios error`, async () => {
       const axiosError = new Error('Server error');
 
       jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
@@ -86,7 +90,7 @@ describe('controllers/login/attempt-otp-login', () => {
       await expect(attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP })).rejects.toThrow(genericError);
     });
 
-    it('should re-throw axios error with 500 status code', async () => {
+    it(`should re-throw axios error with ${HttpStatusCode.InternalServerError} status code`, async () => {
       const axiosError = {
         response: {
           status: HttpStatusCode.InternalServerError,

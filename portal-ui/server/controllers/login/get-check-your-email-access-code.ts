@@ -19,15 +19,14 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: CheckYourEmailAccessCodeViewModel = {
-    attemptsLeft,
-    requestNewCodeUrl: REQUEST_NEW_CODE_URL,
-    isSupportInfo: false,
-    isAccessCodeLink: true,
-    email: userEmail,
-  };
-
   if (attemptsLeft === 2) {
+    const viewModel: CheckYourEmailAccessCodeViewModel = {
+      attemptsLeft,
+      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      isSupportInfo: false,
+      isAccessCodeLink: true,
+      email: userEmail,
+    };
     return res.render('login/check-your-email-access-code.njk', viewModel);
   }
 
