@@ -16,4 +16,5 @@ export type ResendAnotherAccessCodeViewModel = {
   validationErrors?: ValidationErrorsObject | null;
   email?: string;
   sixDigitAccessCode?: string;
+  accessCodeError?: FieldError | null;
 };

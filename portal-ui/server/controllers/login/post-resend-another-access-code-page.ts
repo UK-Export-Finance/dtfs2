@@ -60,6 +60,7 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
         email: userEmail,
         sixDigitAccessCode,
         validationErrors,
+        accessCodeError: validationErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(RESEND_ANOTHER_ACCESS_CODE_TEMPLATE, viewModel);
@@ -80,6 +81,7 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
         email: userEmail,
         sixDigitAccessCode,
         validationErrors: incorrectCodeErrors,
+        accessCodeError: incorrectCodeErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(RESEND_ANOTHER_ACCESS_CODE_TEMPLATE, errorViewModel);

@@ -60,6 +60,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
         email: userEmail,
         sixDigitAccessCode,
         validationErrors,
+        accessCodeError: validationErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(NEW_ACCESS_CODE_TEMPLATE, viewModel);
@@ -80,6 +81,7 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
         email: userEmail,
         sixDigitAccessCode,
         validationErrors: incorrectCodeErrors,
+        accessCodeError: incorrectCodeErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(NEW_ACCESS_CODE_TEMPLATE, errorViewModel);

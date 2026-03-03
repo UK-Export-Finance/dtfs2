@@ -69,6 +69,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
         email: userEmail,
         sixDigitAccessCode,
         validationErrors,
+        accessCodeError: validationErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
@@ -89,6 +90,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
         email: userEmail,
         sixDigitAccessCode,
         validationErrors: incorrectCodeErrors,
+        accessCodeError: incorrectCodeErrors.sixDigitAccessCode || null,
       };
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, errorViewModel);

@@ -50,13 +50,8 @@
             attributes: {
               "placeholder": "e.g. 123456"
             },
-            errorMessage: (validationErrors and validationErrors.sixDigitAccessCode) and {
-              text: validationErrors.sixDigitAccessCode.text,
-              attributes: {
-                  'data-cy': 'six-digit-access-code-inline-error'
-              }
-            } or (errors and errors.fieldErrors.sixDigitAccessCode) and {
-              text: errors.fieldErrors.sixDigitAccessCode.text,
+            errorMessage: accessCodeError and {
+              text: accessCodeError.text,
               attributes: {
                   'data-cy': 'six-digit-access-code-inline-error'
               }
