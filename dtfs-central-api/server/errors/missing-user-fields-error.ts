@@ -1,6 +1,11 @@
-export class MissingUserFieldsError extends Error {
+import { HttpStatusCode } from 'axios';
+import { ApiError } from './api.error';
+
+export class MissingUserFieldsError extends ApiError {
   constructor(userId: string) {
-    super(`Missing required user fields for user ${userId}`);
-    this.name = 'MissingUserFieldsError';
+    super({
+      status: HttpStatusCode.BadRequest,
+      message: `Missing required user fields for user ${userId}`,
+    });
   }
 }
