@@ -95,6 +95,10 @@ describe('postCheckYourEmailAccessCodePage', () => {
             order: '1',
           },
         },
+        accessCodeError: {
+          text: 'The access code you have entered is incorrect',
+          order: '1',
+        },
       });
     });
   });
@@ -181,6 +185,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
         validationErrors: {
           sixDigitAccessCode: { text: 'The access code you have entered is incorrect', order: '1' },
         },
+        accessCodeError: { text: 'The access code you have entered is incorrect', order: '1' },
       });
     });
 
@@ -360,6 +365,10 @@ describe('postCheckYourEmailAccessCodePage', () => {
             text: 'Enter access code',
             order: '1',
           },
+        },
+        accessCodeError: {
+          text: 'Enter access code',
+          order: '1',
         },
       });
     });

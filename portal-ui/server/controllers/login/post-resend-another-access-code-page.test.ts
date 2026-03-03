@@ -95,6 +95,10 @@ describe('postResendAnotherAccessCodePage', () => {
             order: '1',
           },
         },
+        accessCodeError: {
+          text: 'The access code you have entered is incorrect',
+          order: '1',
+        },
       });
     });
   });
@@ -181,6 +185,7 @@ describe('postResendAnotherAccessCodePage', () => {
         validationErrors: {
           sixDigitAccessCode: { text: 'The access code you have entered is incorrect', order: '1' },
         },
+        accessCodeError: { text: 'The access code you have entered is incorrect', order: '1' },
       });
     });
 
@@ -253,7 +258,7 @@ describe('postResendAnotherAccessCodePage', () => {
     });
   });
 
-  describe('when numberOfSignInOtpAttemptsRemaining is not 2', () => {
+  describe('when numberOfSignInOtpAttemptsRemaining is not 0', () => {
     describe('when it is undefined', () => {
       let req: PostResendAnotherAccessCodePageRequest;
       beforeEach(async () => {
@@ -328,6 +333,10 @@ describe('postResendAnotherAccessCodePage', () => {
             text: 'Enter access code',
             order: '1',
           },
+        },
+        accessCodeError: {
+          text: 'Enter access code',
+          order: '1',
         },
       });
     });
