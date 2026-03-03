@@ -27,9 +27,11 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
       isAccessCodeLink: true,
       email: userEmail,
     };
+
     return res.render('login/check-your-email-access-code.njk', viewModel);
   }
 
   console.error('Invalid OTP attempts: expected 2 remaining attempts but found %d for user %s', attemptsLeft, userEmail);
+
   return res.redirect('/not-found');
 };

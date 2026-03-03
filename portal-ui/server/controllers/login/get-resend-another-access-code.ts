@@ -24,9 +24,11 @@ export const getResendAnotherAccessCodePage = (req: GetResendAnotherAccessCodePa
       isAccessCodeLink: false,
       email: userEmail,
     };
+
     return res.render('login/resend-another-access-code.njk', viewModel);
   }
 
   console.error('Invalid OTP attempts: expected 0 remaining attempts but found %d for user %s', attemptsLeft, userEmail);
+
   return res.redirect('/not-found');
 };
