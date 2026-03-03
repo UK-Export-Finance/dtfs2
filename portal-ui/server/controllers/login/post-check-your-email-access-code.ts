@@ -6,10 +6,9 @@ import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin'
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { generateViewModel } from '../../helpers/generate-view-model';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
-
-const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 
 type PostCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining?: number; userId?: string; userToken?: string; userEmail?: string };
 
@@ -61,16 +60,10 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
-      const viewModel: CheckYourEmailAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const viewModel: CheckYourEmailAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors,
-        accessCodeError: validationErrors.sixDigitAccessCode || null,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, viewModel);
     }
@@ -82,16 +75,10 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: CheckYourEmailAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const errorViewModel: CheckYourEmailAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors: incorrectCodeErrors,
-        accessCodeError: incorrectCodeErrors.sixDigitAccessCode || null,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(CHECK_YOUR_EMAIL_TEMPLATE, errorViewModel);
     }

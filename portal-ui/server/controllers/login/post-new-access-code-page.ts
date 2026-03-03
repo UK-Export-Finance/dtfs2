@@ -6,10 +6,9 @@ import { NewAccessCodeViewModel } from '../../types/view-models/2fa/new-access-c
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
+import { generateViewModel } from '../../helpers/generate-view-model';
 
 const NEW_ACCESS_CODE_TEMPLATE = 'login/new-access-code.njk';
-
-const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 
 type PostNewAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userId?: string; userToken?: string; userEmail?: string };
 export type PostNewAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
@@ -52,16 +51,10 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     const validationErrors = generateValidationErrors(req.body);
 
     if (validationErrors) {
-      const viewModel: NewAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const viewModel: NewAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, validationErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors,
-        accessCodeError: validationErrors.sixDigitAccessCode || null,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(NEW_ACCESS_CODE_TEMPLATE, viewModel);
     }
@@ -73,16 +66,10 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
 
       const incorrectCodeErrors = incorrectAccessCodeRule({}, {});
 
-      const errorViewModel: NewAccessCodeViewModel = {
-        attemptsLeft,
-        requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      const errorViewModel: NewAccessCodeViewModel = generateViewModel(attemptsLeft, userEmail, sixDigitAccessCode, incorrectCodeErrors, {
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: userEmail,
-        sixDigitAccessCode,
-        validationErrors: incorrectCodeErrors,
-        accessCodeError: incorrectCodeErrors.sixDigitAccessCode || null,
-      };
+      });
 
       return res.status(HttpStatusCode.BadRequest).render(NEW_ACCESS_CODE_TEMPLATE, errorViewModel);
     }
