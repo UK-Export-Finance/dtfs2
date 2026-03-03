@@ -90,7 +90,15 @@ describe(page, () => {
     };
 
     beforeEach(() => {
-      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors, isSupportInfo: false, isAccessCodeLink: true });
+      wrapper = render({
+        email,
+        attemptsLeft,
+        requestNewCodeUrl,
+        validationErrors,
+        accessCodeError: validationErrors.sixDigitAccessCode,
+        isSupportInfo: false,
+        isAccessCodeLink: true,
+      });
     });
 
     it('should render the error summary', () => {
@@ -125,7 +133,15 @@ describe(page, () => {
     };
 
     beforeEach(() => {
-      wrapper = render({ email, attemptsLeft, requestNewCodeUrl, validationErrors, isSupportInfo: false, isAccessCodeLink: true });
+      wrapper = render({
+        email,
+        attemptsLeft,
+        requestNewCodeUrl,
+        validationErrors,
+        accessCodeError: validationErrors.sixDigitAccessCode,
+        isSupportInfo: false,
+        isAccessCodeLink: true,
+      });
     });
 
     it('should render inline error message indicating the access code is incorrect', () => {
