@@ -48,11 +48,8 @@ describe('sendSignInOtpEmail', () => {
       // Arrange
       const user = { ...aPortalUser(), ...overrides };
 
-      // Act
-      const sendOtpToEmail = sendSignInOtpEmail(user, '000000');
-
-      // Assert
-      await expect(sendOtpToEmail).rejects.toThrow(MissingUserFieldsError);
+      // Act + Assert
+      await expect(sendSignInOtpEmail(user, '000000')).rejects.toThrow(MissingUserFieldsError);
     });
 
     it('should not call externalApi.sendEmail when required fields are missing', async () => {
@@ -75,22 +72,16 @@ describe('sendSignInOtpEmail', () => {
       // Arrange
       const user = aPortalUser();
 
-      // Act
-      const sendOtpToUser = sendSignInOtpEmail(user, '123456');
-
-      // Assert
-      await expect(sendOtpToUser).rejects.toThrow(EmailSendError);
+      // Act + Assert
+      await expect(sendSignInOtpEmail(user, '123456')).rejects.toThrow(EmailSendError);
     });
 
     it('should throw an EmailSendError without an HTTP status', async () => {
       // Arrange
       const user = aPortalUser();
 
-      // Act
-      const sendOtpToUser = sendSignInOtpEmail(user, '123456');
-
-      // Assert
-      await expect(sendOtpToUser).rejects.toThrow('send failed');
+      // Act + Assert
+      await expect(sendSignInOtpEmail(user, '123456')).rejects.toThrow('send failed');
     });
   });
 
@@ -108,11 +99,8 @@ describe('sendSignInOtpEmail', () => {
       // Arrange
       const user = aPortalUser();
 
-      // Act
-      const sendOtpToUser = sendSignInOtpEmail(user, '123456');
-
-      // Assert
-      await expect(sendOtpToUser).rejects.toThrow(`(HTTP ${HttpStatusCode.BadGateway})`);
+      // Act + Assert
+      await expect(sendSignInOtpEmail(user, '123456')).rejects.toThrow(`(HTTP ${HttpStatusCode.BadGateway})`);
     });
   });
 });
