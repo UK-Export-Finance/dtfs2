@@ -11,23 +11,22 @@
 {% endblock %}
 
 {% block content %}
+  {% if validationErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] if validationErrors.sixDigitAccessCode,
+      attributes: {
+        "data-cy": "error-summary"
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      {% if validationErrors %}
-        {{ govukErrorSummary({
-          titleText: "There is a problem",
-          errorList: [
-            {
-              text: validationErrors.sixDigitAccessCode.text,
-              href: "#sixDigitAccessCode"
-            }
-          ] if validationErrors.sixDigitAccessCode,
-          attributes: {
-            "data-cy": "error-summary"
-          }
-        }) }}
-      {% endif %}
-
       <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>
 
       <p class="govuk-body govuk-!-margin-bottom-6" data-cy="check-your-email-description">
@@ -53,16 +52,11 @@
             "data-cy": "six-digit-access-code-input",
             "placeholder": "e.g. 123456"
           },
-          errorMessage: (validationErrors and validationErrors.sixDigitAccessCode) and {
-            text: validationErrors.sixDigitAccessCode.text,
-            attributes: {
-                'data-cy': 'six-digit-access-code-inline-error'
-            }
-          } or (errors and errors.fieldErrors.sixDigitAccessCode) and {
-            text: errors.fieldErrors.sixDigitAccessCode.text,
-            attributes: {
-                'data-cy': 'six-digit-access-code-inline-error'
-            }
+          errorMessage: accessCodeError and {
+              text: accessCodeError.text,
+              attributes: {
+                  'data-cy': 'six-digit-access-code-inline-error'
+              }
           }
         }) }}
 
