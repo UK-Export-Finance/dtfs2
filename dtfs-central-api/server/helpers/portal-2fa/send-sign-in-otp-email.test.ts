@@ -59,11 +59,8 @@ describe('sendSignInOtpEmail', () => {
       // Arrange
       const user = { ...aPortalUser(), email: '' };
 
-      // Act
-      const sendOtpToEmail = sendSignInOtpEmail(user, '000000');
-
       // Assert
-      await expect(sendOtpToEmail).rejects.toThrow();
+      await expect(sendSignInOtpEmail(user, '000000')).rejects.toThrow();
 
       expect(sendEmailSpy).not.toHaveBeenCalled();
     });
