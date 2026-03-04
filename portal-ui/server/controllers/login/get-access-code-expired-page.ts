@@ -18,23 +18,23 @@ export type GetAccessCodeExpiredPageRequest = BaseRequest & {
  * @param res - the response object
  */
 export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, res: Response) => {
-  const {
-    session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
-  } = req;
-
-  if (typeof attemptsLeft === 'undefined') {
-    console.error('No remaining OTP attempts found in session when rendering access code expired page');
-    return res.render('partials/problem-with-service.njk');
-  }
-
-  const viewModel = {
-    attemptsLeft,
-  };
-
   try {
+    const {
+      session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
+    } = req;
+
+    if (typeof attemptsLeft === 'undefined') {
+      console.error('No remaining OTP attempts found in session when rendering access code expired page');
+      return res.render('partials/problem-with-service.njk');
+    }
+
+    const viewModel = {
+      attemptsLeft,
+    };
+
     return res.status(HttpStatusCode.Ok).render('login/access-code-expired.njk', viewModel);
   } catch (error) {
     console.error('Error getting access code expired page %o', error);
-    return res.status(HttpStatusCode.InternalServerError).render('partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };

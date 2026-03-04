@@ -12,16 +12,12 @@ type ApiErrorResponse = {
 
 /**
  * Calls the sign-in OTP API and returns a typed result.
- *
- * - Returns `{ type: 'expired' }` if the API response indicates the access code is expired (via isExpired property, loginStatus 'EXPIRED', or error message containing 'expired').
- * - Returns `{ type: 'incorrect-code' }` if the API responds with 401/403 or login status is not VALID_2FA.
- * - Returns `{ type: 'success', loginResponse }` on successful login.
- * - Re-throws any other errors so the caller's catch block handles them as genuine failures.
- *
- * @param token The partial auth token.
- * @param userId The user's ID.
- * @param signInOTP The submitted OTP code.
- * @returns OtpLoginResult indicating expired, incorrect, or successful login.
+ * Returns `expired` if the API response indicates the access code is expired.
+ * Returns `incorrect-code` if the API responds with 401/403, or if the login status is not VALID_2FA.
+ * Re-throws any other errors so the caller's catch block handles them as genuine failures.
+ * @param token - The partial auth token.
+ * @param userId - The user's ID.
+ * @param signInOTP - The submitted OTP code.
  */
 export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: string; userId: string; signInOTP: string }): Promise<OtpLoginResult> => {
   try {

@@ -65,11 +65,9 @@ describe('getAccessCodeExpiredPage', () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it('should handle errors thrown during rendering', () => {
+  it('should render problem with service page when an unexpected error is thrown', () => {
     // Arrange
-    req.session.numberOfSignInOtpAttemptsRemaining = 2;
-
-    const renderMock = res.render as unknown as jest.Mock;
+    const renderMock = res.render as jest.Mock;
     renderMock.mockImplementationOnce(() => {
       throw new Error('Render error');
     });
@@ -78,8 +76,10 @@ describe('getAccessCodeExpiredPage', () => {
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-    expect(renderMock).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 2 }));
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(renderMock).toHaveBeenCalledTimes(2);
+    expect(renderMock).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
     expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
   });
 });
