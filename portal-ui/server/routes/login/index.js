@@ -97,8 +97,10 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
    * Send sign in link or OTP depending on whether 2FA feature flag is enabled
    */
   const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
+
   if (is2FAEnabled) {
     let loginApiOtpSucceeded = false;
+
     try {
       const loginResponse = await api.login(email, password);
 
@@ -119,6 +121,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
 
       const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+
       return res.redirect(nextAccessCodePage);
     } catch (error) {
       const status = error.response?.status;
@@ -139,6 +142,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       }
       if (status === HttpStatusCode.Forbidden) {
         req.session.numberOfSignInOtpAttemptsRemaining = -1;
+
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
       }
 
@@ -147,10 +151,12 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
 
       // Continue login flow so the user can retry sending OTP code
       const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
+
       return res.redirect(nextAccessCodePage);
     }
   } else {
     let loginApiLinkSucceeded = false;
+
     try {
       const loginResponse = await api.login(email, password);
 
@@ -169,6 +175,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       } = await api.sendSignInLink(req.session.userToken);
 
       req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+
       return res.redirect('/login/check-your-email');
     } catch (error) {
       const status = error.response?.status;
@@ -187,8 +194,10 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
           errors: validationErrorHandler(loginErrors),
         });
       }
+
       if (status === HttpStatusCode.Forbidden) {
         req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
+
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
