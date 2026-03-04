@@ -9,7 +9,6 @@ param target string
 param version string
 param networkSecurityGroupId string
 param peeringVnetName string = 'vnet-peer-uks-${product}-${target}-${version}'
-@secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string
 param peeringRemoteVnetName string

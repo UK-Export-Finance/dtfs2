@@ -221,8 +221,6 @@ var parametersMap = {
     vnet: {
       addressPrefixes: [vnetAddressPrefix]
       applicationGatewayCidr: applicationGatewayCidr
-      // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
-      // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
       acaClamAvCidr: acaClamAvCidr
       privateEndpointsCidr: privateEndpointsCidr
@@ -246,7 +244,6 @@ var parametersMap = {
     }
     asp: {
       name: 'test'
-      // Note that the CLI scripts used p2v2 for staging/test, but the deployed sku is p3v2
       sku: 'p3v2'
     }
     cosmosDb: {
@@ -478,10 +475,8 @@ var tfmApiAdditionalSecureSettings = {
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
 
-///////////////////////////////////////////////////////////////////////////////
-// We now define the resources, mostly via modules but some are simple enough
-// not to need their own module.
-///////////////////////////////////////////////////////////////////////////////
+/*  We now define the resources, mostly via modules but some are simple enough
+    not to need their own module. */
 module networkSecurityGroup 'modules/gw-nsg.bicep' = {
   name: 'networkSecurityGroup'
   params: {
