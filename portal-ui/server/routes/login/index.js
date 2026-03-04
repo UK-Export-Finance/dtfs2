@@ -16,7 +16,7 @@ const { loginWithSignInLink } = require('../../controllers/login/login-with-sign
 const { requestNewAccessCode } = require('../../controllers/login/get-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
-const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
+const { getAccountSuspendedPage } = require('../../controllers/login/get-account-suspended');
 const { LANDING_PAGES } = require('../../constants');
 
 const { HttpStatusCode } = axios;
