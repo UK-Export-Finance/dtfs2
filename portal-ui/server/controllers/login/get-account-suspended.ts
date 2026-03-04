@@ -1,17 +1,17 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 
-type GetAccountSuspendedAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number };
-export type GetAccountSuspendedAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
-  session: GetAccountSuspendedAccessCodePageRequestSession;
+type GetAccountSuspendedPageRequestSession = { numberOfSignInOtpAttemptsRemaining: number };
+export type GetAccountSuspendedPageRequest = CustomExpressRequest<Record<string, never>> & {
+  session: GetAccountSuspendedPageRequestSession;
 };
 
 /**
- * Controller to get the temporarily suspended access code page.
+ * Controller to get the temporarily suspended page.
  * @param req - the request object
  * @param res - the response object
  */
-export const getAccountSuspendedAccessCodePage = (req: GetAccountSuspendedAccessCodePageRequest, res: Response) => {
+export const getAccountSuspendedPage = (req: GetAccountSuspendedPageRequest, res: Response) => {
   const {
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
   } = req;

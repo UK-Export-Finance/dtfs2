@@ -16,7 +16,7 @@ const { loginWithSignInLink } = require('../../controllers/login/login-with-sign
 const { requestNewAccessCode } = require('../../controllers/login/get-request-new-access-code');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
-const { getAccountSuspendedAccessCodePage } = require('../../controllers/login/get-account-suspended-access-code');
+const { getAccountSuspendedPage } = require('../../controllers/login/get-account-suspended');
 const { LANDING_PAGES } = require('../../constants');
 
 const { HttpStatusCode } = axios;
@@ -527,7 +527,7 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
  *       403:
  *         description: Forbidden
  */
-router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedAccessCodePage);
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
 
 /**
  * @openapi

@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { getAccountSuspendedAccessCodePage, GetAccountSuspendedAccessCodePageRequest } from './get-account-suspended-access-code';
+import { getAccountSuspendedPage, GetAccountSuspendedPageRequest } from './get-account-suspended';
 
-describe('controllers/login/get-account-suspended-access-code', () => {
+describe('controllers/login/get-account-suspended', () => {
   let res: Response;
   let renderMock: jest.Mock;
   let redirectMock: jest.Mock;
@@ -20,9 +20,9 @@ describe('controllers/login/get-account-suspended-access-code', () => {
       session: {
         numberOfSignInOtpAttemptsRemaining: -1,
       },
-    } as unknown as GetAccountSuspendedAccessCodePageRequest;
+    } as unknown as GetAccountSuspendedPageRequest;
 
-    getAccountSuspendedAccessCodePage(req, res);
+    getAccountSuspendedPage(req, res);
 
     expect(renderMock).toHaveBeenCalledTimes(1);
     expect(renderMock).toHaveBeenCalledWith('login/temporarily-suspended-access-code.njk');
@@ -31,9 +31,9 @@ describe('controllers/login/get-account-suspended-access-code', () => {
   it('should redirect to not-found when attemptsLeft is not present in the session', () => {
     const req = {
       session: {},
-    } as unknown as GetAccountSuspendedAccessCodePageRequest;
+    } as unknown as GetAccountSuspendedPageRequest;
 
-    getAccountSuspendedAccessCodePage(req, res);
+    getAccountSuspendedPage(req, res);
 
     expect(redirectMock).toHaveBeenCalledTimes(1);
     expect(redirectMock).toHaveBeenCalledWith('/not-found');
@@ -44,9 +44,9 @@ describe('controllers/login/get-account-suspended-access-code', () => {
       session: {
         numberOfSignInOtpAttemptsRemaining: 2,
       },
-    } as unknown as GetAccountSuspendedAccessCodePageRequest;
+    } as unknown as GetAccountSuspendedPageRequest;
 
-    getAccountSuspendedAccessCodePage(req, res);
+    getAccountSuspendedPage(req, res);
 
     expect(redirectMock).toHaveBeenCalledTimes(1);
     expect(redirectMock).toHaveBeenCalledWith('/not-found');
