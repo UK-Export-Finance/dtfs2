@@ -118,8 +118,6 @@ param azureDnsServerIp string
 param nsgSourceAddressPrefix string 
 param ukefSourceAddressPrefix string 
 param testSourceAddressPrefix string 
-param port string
-param websitesPort string
 param websiteHttploggingRetentionDays string
 param websiteHealthchekingMax int
 param websiteDynamicCache string
@@ -740,8 +738,6 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     additionalSecureSettings: externalApiAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
@@ -768,8 +764,6 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
@@ -805,8 +799,6 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
       port: clamAv.outputs.exposedPort
     }
     azureDnsServerIp: azureDnsServerIp
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
     websiteDynamicCache: websiteDynamicCache
     websiteNodeDefaultVersion: websiteNodeDefaultVersion
@@ -859,8 +851,6 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
       port: clamAv.outputs.exposedPort
     }
     azureDnsServerIp: azureDnsServerIp
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
     websiteHealthchekingMax: websiteHealthchekingMax
   }
@@ -890,8 +880,6 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
@@ -920,8 +908,6 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
@@ -1043,8 +1029,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     additionalSecureSettings: tfmApiAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
-    port:port
-    websitesPort: websitesPort
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }

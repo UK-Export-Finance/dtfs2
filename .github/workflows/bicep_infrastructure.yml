@@ -142,8 +142,6 @@ jobs:
           AZURE_DNS_SERVER_IP: ${{ vars.AZURE_DNS_SERVER_IP }}
           NSG_SOURCE_ADDRESS_PREFIX: ${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}
           UKEF_SOURCE_ADDRESS_PREFIX: ${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}
-          PORT: ${{ vars.PORT }}
-          WEBSITES_PORT: ${{ vars.WEBSITES_PORT }}
           WEBSITE_HTTPLOGGING_RETENTION_DAYS: ${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}
           WEBSITE_DYNAMIC_CACHE: ${{ vars.WEBSITE_DYNAMIC_CACHE }}  
           WEBSITE_NODE_DEFAULT_VERSION: ${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}
@@ -200,8 +198,6 @@ jobs:
             azureDnsServerIp=$AZURE_DNS_SERVER_IP \
             nsgSourceAddressPrefix=$NSG_SOURCE_ADDRESS_PREFIX \
             ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX \
-            port=$PORT \
-            websitesPort=$WEBSITES_PORT \
             websiteHttploggingRetentionDays=$WEBSITE_HTTPLOGGING_RETENTION_DAYS \
             websiteDynamicCache=$WEBSITE_DYNAMIC_CACHE \
             websiteNodeDefaultVersion=$WEBSITE_NODE_DEFAULT_VERSION \

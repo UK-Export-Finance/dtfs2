@@ -21,8 +21,6 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 param azureDnsServerIp string
-param port string
-param websitesPort string
 param websiteHttploggingRetentionDays string
 param timeZone string
 
@@ -41,8 +39,8 @@ var staticSettings = {
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
-  PORT: port
-  WEBSITES_PORT: websitesPort
+  PORT: '5000'
+  WEBSITES_PORT: '5000'
 }
 
 var additionalSettings = {

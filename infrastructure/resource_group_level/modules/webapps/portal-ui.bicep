@@ -28,8 +28,6 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 param azureDnsServerIp string
-param port string
-param websitesPort string
 param websiteHttploggingRetentionDays string
 param websiteHealthchekingMax int
 
@@ -48,8 +46,8 @@ var staticSettings = {
   CLAMAV_SCANNING_ENABLED: 'true'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
-  PORT: port
-  WEBSITES_PORT: websitesPort
+  PORT: '5000'
+  WEBSITES_PORT: '5000'
 }
 var tfmApiUrl = 'https://${tfmApiHostname}'
 var additionalSettings = {
