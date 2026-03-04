@@ -102,6 +102,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
     let loginApiOtpSucceeded = false;
 
     try {
+      console.info('Portal-UI - Attempting to login user %s', email);
       const loginResponse = await api.login(email, password);
 
       const { token, loginStatus, user } = loginResponse;
@@ -122,14 +123,17 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
 
       const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
 
+      console.info('Portal-UI - Login successful for user %s. Redirecting to %s', email, nextAccessCodePage);
+
       return res.redirect(nextAccessCodePage);
     } catch (error) {
       const status = error.response?.status;
 
       if (!loginApiOtpSucceeded) {
-        console.info('Failed to login %o', error);
+        console.error('Failed to login %o', error);
 
         if (status === HttpStatusCode.Forbidden) {
+          console.error('Access temporarily suspended for user %s', email);
           return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
         }
 
@@ -140,14 +144,16 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
           errors: validationErrorHandler(loginErrors),
         });
       }
+
       if (status === HttpStatusCode.Forbidden) {
+        console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1, loginApiOtpSucceeded is false', email);
         req.session.numberOfSignInOtpAttemptsRemaining = -1;
 
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
       }
 
-      const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o';
-      console.info(message, error);
+      const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was';
+      console.error('%s %o', message, error);
 
       // Continue login flow so the user can retry sending OTP code
       const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
