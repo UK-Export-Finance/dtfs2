@@ -17,6 +17,7 @@ const { requestNewAccessCode } = require('../../controllers/login/get-request-ne
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccountSuspendedPage } = require('../../controllers/login/account-suspended-page');
+const { getAccessCodeExpiredPage } = require('../../controllers/login/get-access-code-expired-page');
 const { LANDING_PAGES } = require('../../constants');
 
 const { HttpStatusCode } = axios;
@@ -543,5 +544,20 @@ router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled,
  *         description: Internal server error
  */
 router.get('/login/request-new-access-code', validatePortal2FAEnabled, validatePartialAuthToken, requestNewAccessCode);
+
+/**
+ * @openapi
+ * /login/access-code-expired:
+ *   get:
+ *     summary: Render access code expired page
+ *     tags: [Portal]
+ *     description: Render access code expired page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       302:
+ *         description: Redirect to /login if partial auth token is invalid or to /not-found if feature flag is disabled
+ */
+router.route('/login/access-code-expired').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getAccessCodeExpiredPage);
 
 module.exports = router;
