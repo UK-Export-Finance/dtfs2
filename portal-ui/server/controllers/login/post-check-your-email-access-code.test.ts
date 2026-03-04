@@ -84,7 +84,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',
@@ -94,6 +94,10 @@ describe('postCheckYourEmailAccessCodePage', () => {
             text: 'The access code you have entered is incorrect',
             order: '1',
           },
+        },
+        accessCodeError: {
+          text: 'The access code you have entered is incorrect',
+          order: '1',
         },
       });
     });
@@ -173,7 +177,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',
@@ -181,6 +185,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
         validationErrors: {
           sixDigitAccessCode: { text: 'The access code you have entered is incorrect', order: '1' },
         },
+        accessCodeError: { text: 'The access code you have entered is incorrect', order: '1' },
       });
     });
 
@@ -350,7 +355,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       expect(statusMock).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
       expect(renderMock).toHaveBeenCalledWith('login/check-your-email-access-code.njk', {
         attemptsLeft: 2,
-        requestNewCodeUrl: '/login/new-access-code',
+        requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
         email: 'test@example.com',
@@ -360,6 +365,10 @@ describe('postCheckYourEmailAccessCodePage', () => {
             text: 'Enter access code',
             order: '1',
           },
+        },
+        accessCodeError: {
+          text: 'Enter access code',
+          order: '1',
         },
       });
     });

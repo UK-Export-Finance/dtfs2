@@ -80,7 +80,7 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
 /**
  * Logs in a user using a sign in OTP
  * @param {object} parameters token, userId and signInOTP
- * @returns {Promise<object>} loginStatus, token, user, and isExpired (if present)
+ * @returns {Promise<{ token?: string; loginStatus?: string; user?: import('@ukef/dtfs2-common').PortalSessionUser}>} loginStatus, token and user
  */
 const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
   const response = await axios({

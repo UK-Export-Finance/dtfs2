@@ -6,11 +6,14 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   const email = 'user@example.com';
-  const attemptsRemaining = 2;
+  const attemptsLeft = 1;
+  const isSupportInfo = false;
+  const requestNewCodeUrl = '/request-new-code';
+  const isAccessCodeLink = true;
   let wrapper;
 
   beforeEach(() => {
-    wrapper = render({ email, attemptsRemaining });
+    wrapper = render({ email, isSupportInfo, attemptsLeft, requestNewCodeUrl, isAccessCodeLink });
   });
 
   withContactUsEmailAddressTests({ page });
@@ -29,7 +32,7 @@ describe(page, () => {
   });
 
   it('should render the label for the access code input', () => {
-    wrapper.expectText('label[for="accessCode"]').toRead('Enter access code:');
+    wrapper.expectText('label[for="sixDigitAccessCode"]').toRead('Enter access code:');
   });
 
   it('should render the expiry info paragraph', () => {
@@ -49,7 +52,7 @@ describe(page, () => {
   });
 
   it('should render the attempts remaining paragraph', () => {
-    wrapper.expectText('[data-cy="access-code-attempts-info"]').toRead(`You have ${attemptsRemaining} attempts remaining.`);
+    wrapper.expectText('[data-cy="access-code-attempts-info"]').toRead(`You have ${attemptsLeft} attempts remaining.`);
   });
 
   it('should render the suspend info paragraph', () => {

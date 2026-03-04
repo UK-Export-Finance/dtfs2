@@ -1,5 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
 
@@ -10,8 +11,23 @@
 {% endblock %}
 
 {% block content %}
+  {% if validationErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] 
+      if validationErrors.sixDigitAccessCode,
+      attributes: {
+        "data-cy": "error-summary"
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
       <h1 class="govuk-heading-l" data-cy="new-access-code-email-sent-heading">
         New access code sent
       </h1>
@@ -21,18 +37,25 @@
       </p>
 
       <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" data-cy="csrf-input">
         <div class="govuk-form-group govuk-!-width-one-third">
           {{ govukInput({
             label: {
               text: "Enter access code:"
             },
-            id: "accessCode",
-            name: "accessCode",
+            id: "sixDigitAccessCode",
+            name: "sixDigitAccessCode",
             spellcheck: false,
             type: "text",
             autocomplete: "off",
             attributes: {
-              "placeholder": "e.g. 123A5C"
+              "placeholder": "e.g. 123456"
+            },
+            errorMessage: accessCodeError and {
+              text: accessCodeError.text,
+              attributes: {
+                  'data-cy': 'six-digit-access-code-inline-error'
+              }
             }
           }) }}
         </div>
@@ -42,10 +65,10 @@
         </p>
 
         {{ renderAccessCodeAttempts.render({
-          isSupportInfo: false,
-          attemptsLeft: attemptsRemaining,
+          isSupportInfo: isSupportInfo,
+          attemptsLeft: attemptsLeft,
           requestNewCodeUrl: requestNewCodeUrl,
-          isAccessCodeLink: true
+          isAccessCodeLink: isAccessCodeLink
         }) }}
       </form>
      

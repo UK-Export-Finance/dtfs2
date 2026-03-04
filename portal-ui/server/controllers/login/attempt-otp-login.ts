@@ -4,6 +4,8 @@ import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-o
 import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
 import * as api from '../../api';
 
+export { OTP_RESULT_TYPE } from '../../types/2fa/otp-login-result';
+
 type ApiErrorResponse = {
   errors?: Array<{ msg?: string }>;
 };
@@ -36,13 +38,8 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
     return { type: OTP_RESULT_TYPE.SUCCESS, loginResponse };
   } catch (apiError) {
     if (axios.isAxiosError(apiError)) {
-      let status: number | undefined;
-      let data: unknown;
-
-      if (apiError.response && typeof apiError.response === 'object') {
-        status = apiError.response?.status;
-        data = apiError.response?.data;
-      }
+      const status = apiError.response?.status;
+      const data: unknown = apiError.response?.data;
 
       let errors: ApiErrorResponse['errors'];
 

@@ -1,11 +1,8 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 
-type ViewModel = {
-  attemptsLeft?: number;
-  requestNewCodeUrl?: string;
-  email?: string;
-};
+const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 
 type GetCheckYourEmailAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {
@@ -22,17 +19,19 @@ export const getCheckYourEmailAccessCodePage = (req: GetCheckYourEmailAccessCode
     session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft, userEmail },
   } = req;
 
-  const viewModel: ViewModel = {
-    attemptsLeft,
-    requestNewCodeUrl: '/login/request-new-access-code',
-    email: userEmail,
-  };
+  if (attemptsLeft === 2) {
+    const viewModel: CheckYourEmailAccessCodeViewModel = {
+      attemptsLeft,
+      requestNewCodeUrl: REQUEST_NEW_CODE_URL,
+      isSupportInfo: false,
+      isAccessCodeLink: true,
+      email: userEmail,
+    };
 
-  if (attemptsLeft >= 0) {
     return res.render('login/check-your-email-access-code.njk', viewModel);
   }
 
-  console.error('Error getting check your email access code page');
+  console.error('Invalid OTP attempts: expected 2 remaining attempts but found %d for user %s', attemptsLeft, userEmail);
 
-  return res.render('partials/problem-with-service.njk');
+  return res.redirect('/not-found');
 };
