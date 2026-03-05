@@ -65,6 +65,7 @@ services:
     depends_on:
       - dtfs-sql
       - dtfs-mongo
+      - external-api
     ports:
       - "5005:5005" # http
       - "9223:9223" # debug
@@ -115,6 +116,8 @@ services:
       context: .
       dockerfile: ./trade-finance-manager-ui/Dockerfile
     image: dtfs/trade-finance-manager-ui
+    depends_on:
+      - trade-finance-manager-api
     ports:
       - "5003:5003" # http
       - "9224:9224" # debug
@@ -160,6 +163,10 @@ services:
       dockerfile: ./trade-finance-manager-api/Dockerfile
     image: dtfs/trade-finance-manager-api
     restart: always
+    depends_on:
+      - portal-api
+      - dtfs-central-api
+      - external-api
     ports:
       - "5004:5004" # http
       - "9225:9225" # debug
@@ -209,6 +216,10 @@ services:
       dockerfile: ./portal-ui/Dockerfile
     image: dtfs/portal-ui
     restart: always
+    depends_on:
+      - redis
+      - portal-api
+      - clamav
     ports:
       - "5000:5000" # http
       - "9226:9226" # debug
@@ -249,6 +260,9 @@ services:
       dockerfile: ./portal-api/Dockerfile
     image: dtfs/portal-api
     restart: always
+    depends_on:
+      - dtfs-central-api
+      - external-api
     ports:
       - "5001:5001" # http
       - "9227:9227" # debug
@@ -307,6 +321,8 @@ services:
       dockerfile: ./external-api/Dockerfile
     image: dtfs/external-api
     restart: always
+    depends_on:
+      - dtfs-mongo
     ports:
       - "5002:5002" # http
       - "9228:9228" # debug
@@ -350,6 +366,9 @@ services:
       dockerfile: ./gef-ui/Dockerfile
     image: dtfs/gef-ui
     restart: always
+    depends_on:
+      - redis
+      - portal-api
     ports:
       - "5006:5006" # http
       - "9229:9229" # debug
@@ -394,6 +413,9 @@ services:
   reverse-proxy:
     build: ./reverse-proxy
     image: "dtfs/reverse-proxy"
+    depends_on:
+      - portal-ui
+      - gef-ui
     ports:
       - "80:80"
     environment:
