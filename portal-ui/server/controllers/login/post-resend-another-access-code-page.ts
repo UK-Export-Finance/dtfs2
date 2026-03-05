@@ -7,6 +7,7 @@ import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
+import { isOtpExpired } from '../../helpers/is-otp-expired';
 
 const RESEND_ANOTHER_ACCESS_CODE_TEMPLATE = 'login/resend-another-access-code.njk';
 
@@ -61,9 +62,7 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
-    if (otpResult.type === OTP_RESULT_TYPE.EXPIRED) {
-      console.error('Access code expired for user %s', userId);
-
+    if (isOtpExpired(otpResult, userId)) {
       return res.redirect('/login/access-code-expired');
     }
 

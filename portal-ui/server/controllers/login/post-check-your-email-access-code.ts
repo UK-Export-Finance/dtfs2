@@ -8,6 +8,7 @@ import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
+import { isOtpExpired } from '../../helpers/is-otp-expired';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -72,9 +73,7 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
-    if (otpResult.type === OTP_RESULT_TYPE.EXPIRED) {
-      console.error('Access code expired for user %s', userId);
-
+    if (isOtpExpired(otpResult, userId)) {
       return res.redirect('/login/access-code-expired');
     }
 

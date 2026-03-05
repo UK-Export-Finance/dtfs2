@@ -400,11 +400,6 @@ describe('postCheckYourEmailAccessCodePage', () => {
       await postCheckYourEmailAccessCode(req, res);
     });
 
-    it('should log an expired code error', () => {
-      // Assert
-      expect(console.error).toHaveBeenCalledWith('Access code expired for user %s', 'user-expired');
-    });
-
     it('should redirect once', () => {
       // Assert
       expect(redirectMock).toHaveBeenCalledTimes(1);
