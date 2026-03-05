@@ -1,6 +1,8 @@
 const { when } = require('jest-when');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
-const { login, validatePartialAuthToken } = require('../../server/api');
+const api = require('../../server/api');
+
+const { login, validatePartialAuthToken } = api;
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
@@ -12,13 +14,28 @@ const password = 'mock password';
 
 const partialAuthToken = 'partial auth token';
 
-const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validateResponseWasSuccessful }) => {
+const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validateResponseWasSuccessful, numberOfSignInOtpAttemptsRemaining }) => {
   describe('partial 2fa auth validation', () => {
     let sessionCookie;
 
     beforeEach(async () => {
       when(validatePartialAuthToken).resetWhenMocks();
       login.mockImplementation(mockLogin(partialAuthToken));
+
+      // Mock sendSignInOTP if it exists (for 2FA OTP flow)
+      if (api.sendSignInOTP && typeof api.sendSignInOTP.mockResolvedValue === 'function') {
+        api.sendSignInOTP.mockResolvedValue({
+          data: { numberOfSignInOtpAttemptsRemaining },
+        });
+      }
+
+      // Mock sendSignInLink if it exists (for sign-in link flow)
+      if (api.sendSignInLink && typeof api.sendSignInLink.mockResolvedValue === 'function') {
+        api.sendSignInLink.mockResolvedValue({
+          data: { numberOfSendSignInLinkAttemptsRemaining: 5 },
+        });
+      }
+
       sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
     });
 

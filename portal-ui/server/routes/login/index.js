@@ -448,7 +448,7 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *       500:
  *         description: Internal server error
  */
-router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled, validatePartialAuthToken, getCheckYourEmailAccessCodePage);
+router.get('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getCheckYourEmailAccessCodePage);
 
 /**
  * @openapi
@@ -516,18 +516,18 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
 
 /**
  * @openapi
- * /login/temporarily-suspended-access-code:
+ * /login/suspended-access-code:
  *   get:
- *     summary: Render temporarily suspended access code page
+ *     summary: Render suspended access code page
  *     tags: [Portal]
- *     description: Render temporarily suspended access code page
+ *     description: Render suspended access code page
  *     responses:
  *       200:
  *         description: Ok
  *       403:
  *         description: Forbidden
  */
-router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
+router.get('/login/suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
 
 /**
  * @openapi
