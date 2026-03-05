@@ -80,8 +80,7 @@ export const postLogin = async (req, res) => {
           return res.redirect('/login/temporarily-suspended-access-code');
         }
 
-        loginErrors.push(emailError);
-        loginErrors.push(passwordError);
+        loginErrors.push(emailError, passwordError);
 
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),
@@ -119,12 +118,14 @@ export const postLogin = async (req, res) => {
       req.session.userEmail = user.email;
       req.session.userId = user._id;
 
+      console.info('Portal-UI - API login successful for user %s. Attempting to send sign in link', user._id);
       const {
         data: { numberOfSendSignInLinkAttemptsRemaining },
       } = await api.sendSignInLink(req.session.userToken);
 
       req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
 
+      console.info('Portal-UI - Login and sign-in link sending successful for user %s. Redirecting to /login/check-your-email', user._id);
       return res.redirect('/login/check-your-email');
     } catch (error) {
       const status = error.response?.status;
@@ -133,11 +134,11 @@ export const postLogin = async (req, res) => {
         console.error('Failed to login %o', error);
 
         if (status === HttpStatusCode.Forbidden) {
+          console.error('Access temporarily suspended for user');
           return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
         }
 
-        loginErrors.push(emailError);
-        loginErrors.push(passwordError);
+        loginErrors.push(emailError, passwordError);
 
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),

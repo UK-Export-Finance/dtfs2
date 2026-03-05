@@ -11,16 +11,23 @@ console.error = jest.fn();
 
 const token = 'mock-token';
 
+const body = {
+  email: 'test@example.com',
+  password: 'password123',
+};
+
+const user = {
+  ...MOCK_PORTAL_SESSION_USER,
+  userId: 'mock-user-id',
+};
+
 describe('postLogin', () => {
   let req;
   let res;
 
   beforeEach(() => {
     req = {
-      body: {
-        email: 'test@example.com',
-        password: 'password123',
-      },
+      body,
       session: {},
     };
 
@@ -31,9 +38,18 @@ describe('postLogin', () => {
   });
 
   describe('email and password validation', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should render login page with errors if email and password are missing', async () => {
-      req.body.email = '';
-      req.body.password = '';
+      req = {
+        body: {
+          email: '',
+          password: '',
+        },
+        session: {},
+      };
 
       await postLogin(req, res);
 
@@ -48,13 +64,19 @@ describe('postLogin', () => {
         },
       ];
 
-      expect(res.render).toHaveBeenCalledWith('login/index.njk', {
+      expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
       });
     });
 
     it('should render login page with email error if email is missing', async () => {
-      req.body.email = '';
+      req = {
+        body: {
+          ...body,
+          email: '',
+        },
+        session: {},
+      };
 
       await postLogin(req, res);
 
@@ -65,13 +87,19 @@ describe('postLogin', () => {
         },
       ];
 
-      expect(res.render).toHaveBeenCalledWith('login/index.njk', {
+      expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
       });
     });
 
     it('should render login page with password error if password is missing', async () => {
-      req.body.password = '';
+      req = {
+        body: {
+          ...body,
+          password: '',
+        },
+        session: {},
+      };
 
       await postLogin(req, res);
 
@@ -82,7 +110,7 @@ describe('postLogin', () => {
         },
       ];
 
-      expect(res.render).toHaveBeenCalledWith('login/index.njk', {
+      expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
       });
     });
@@ -96,7 +124,14 @@ describe('postLogin', () => {
     describe('when api login in successful', () => {
       describe('when OTP sending is successful', () => {
         beforeEach(() => {
-          jest.mocked(api.login).mockResolvedValue({ token, loginStatus: 'success', user: MOCK_PORTAL_SESSION_USER });
+          jest.clearAllMocks();
+
+          req = {
+            body,
+            session: {},
+          };
+
+          jest.mocked(api.login).mockResolvedValue({ token, loginStatus: 'success', user });
           jest.mocked(api.sendSignInOTP).mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: 2 } });
         });
 
@@ -123,7 +158,7 @@ describe('postLogin', () => {
 
           const expected = `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`;
 
-          expect(res.redirect).toHaveBeenCalledWith(expected);
+          expect(res.redirect).toHaveBeenNthCalledWith(1, expected);
         });
 
         it(`should redirect to ${ACCESS_CODE_PAGES.NEW_ACCESS_CODE} when 1 attempt is remaining`, async () => {
@@ -133,7 +168,7 @@ describe('postLogin', () => {
 
           const expected = `/login/${ACCESS_CODE_PAGES.NEW_ACCESS_CODE}`;
 
-          expect(res.redirect).toHaveBeenCalledWith(expected);
+          expect(res.redirect).toHaveBeenNthCalledWith(1, expected);
         });
 
         it(`should redirect to ${ACCESS_CODE_PAGES.RESEND_ANOTHER_ACCESS_CODE} when 0 attempts are remaining`, async () => {
@@ -143,7 +178,7 @@ describe('postLogin', () => {
 
           const expected = `/login/${ACCESS_CODE_PAGES.RESEND_ANOTHER_ACCESS_CODE}`;
 
-          expect(res.redirect).toHaveBeenCalledWith(expected);
+          expect(res.redirect).toHaveBeenNthCalledWith(1, expected);
         });
 
         it(`it should redirect to ${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT} when -1 attempts are remaining`, async () => {
@@ -153,7 +188,7 @@ describe('postLogin', () => {
 
           const expected = `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`;
 
-          expect(res.redirect).toHaveBeenCalledWith(expected);
+          expect(res.redirect).toHaveBeenNthCalledWith(1, expected);
         });
       });
 
@@ -161,6 +196,13 @@ describe('postLogin', () => {
         const error = new Error('OTP sending failed');
 
         beforeEach(() => {
+          jest.clearAllMocks();
+
+          req = {
+            body,
+            session: {},
+          };
+
           jest.mocked(api.login).mockResolvedValue({ token, loginStatus: 'success', user: MOCK_PORTAL_SESSION_USER });
           jest.mocked(api.sendSignInOTP).mockRejectedValue(error);
         });
@@ -169,9 +211,9 @@ describe('postLogin', () => {
           await postLogin(req, res);
 
           const expectedMessage = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was ';
-          expect(console.error).toHaveBeenCalledWith('%s %o', expectedMessage, error);
+          expect(console.error).toHaveBeenNthCalledWith(1, '%s %o', expectedMessage, error);
 
-          expect(res.redirect).toHaveBeenCalledWith('/login');
+          expect(res.redirect).toHaveBeenNthCalledWith(1, '/login');
         });
 
         it(`should redirect to login/temporarily-suspended-access-code when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {
@@ -180,12 +222,13 @@ describe('postLogin', () => {
 
           await postLogin(req, res);
 
-          expect(console.error).toHaveBeenCalledWith(
+          expect(console.error).toHaveBeenNthCalledWith(
+            1,
             'Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1',
             req.body.email,
           );
 
-          expect(res.redirect).toHaveBeenCalledWith('/login/temporarily-suspended-access-code');
+          expect(res.redirect).toHaveBeenNthCalledWith(1, '/login/temporarily-suspended-access-code');
         });
       });
 
@@ -193,13 +236,20 @@ describe('postLogin', () => {
         const error = new Error('Login failed');
 
         beforeEach(() => {
+          jest.clearAllMocks();
+
+          req = {
+            body,
+            session: {},
+          };
+
           jest.mocked(api.login).mockRejectedValue(error);
         });
 
         it('should log the error and render the login page with errors', async () => {
           await postLogin(req, res);
 
-          expect(console.error).toHaveBeenCalledWith('Failed to login %o', error);
+          expect(console.error).toHaveBeenNthCalledWith(1, 'Failed to login %o', error);
 
           const expectedErrors = [
             {
@@ -212,7 +262,7 @@ describe('postLogin', () => {
             },
           ];
 
-          expect(res.render).toHaveBeenCalledWith('login/index.njk', {
+          expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
             errors: validationErrorHandler(expectedErrors),
           });
         });
@@ -223,12 +273,9 @@ describe('postLogin', () => {
 
           await postLogin(req, res);
 
-          expect(console.error).toHaveBeenCalledWith(
-            'Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1',
-            req.body.email,
-          );
+          expect(console.error).toHaveBeenNthCalledWith(2, 'Access temporarily suspended for user %s', req.body.email);
 
-          expect(res.redirect).toHaveBeenCalledWith('/login/temporarily-suspended-access-code');
+          expect(res.redirect).toHaveBeenNthCalledWith(1, '/login/temporarily-suspended-access-code');
         });
       });
     });
