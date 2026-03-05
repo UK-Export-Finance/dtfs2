@@ -146,7 +146,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       }
 
       if (status === HttpStatusCode.Forbidden) {
-        console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1, loginApiOtpSucceeded is false', email);
+        console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1', email);
         req.session.numberOfSignInOtpAttemptsRemaining = -1;
 
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
@@ -187,7 +187,7 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
       const status = error.response?.status;
 
       if (!loginApiLinkSucceeded) {
-        console.info('Failed to login %o', error);
+        console.error('Failed to login %o', error);
 
         if (status === HttpStatusCode.Forbidden) {
           return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
@@ -207,8 +207,8 @@ router.post(LANDING_PAGES.LOGIN, async (req, res) => {
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
-      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
-      console.info(message, error);
+      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was ';
+      console.error('%s %o', message, error);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');
