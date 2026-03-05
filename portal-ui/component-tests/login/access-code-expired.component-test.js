@@ -31,7 +31,7 @@ describe(page, () => {
       .toRead('If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.');
   });
 
-  it('should render the request new code button', () => {
-    wrapper.expectText('[data-cy="submit-button"]').toRead('Request a new code');
+  it('should render the request new code button linking to /login/request-new-access-code', () => {
+    wrapper.expectPrimaryButton('[data-cy="access-code-expired-request-new-code"]').toLinkTo('/login/request-new-access-code', 'Request a new code');
   });
 });
