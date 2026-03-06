@@ -26,7 +26,7 @@ describe('facilityCreation', () => {
 
     const params = {
       dealId: '123',
-      exporterPartyUrn: 'urn:tdm:party:123',
+      exporterPartyUrn: '12345',
       facility: mockFacility,
     };
 
@@ -41,7 +41,7 @@ describe('facilityCreation', () => {
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
         exporterPartyUrn: params.exporterPartyUrn,
-        facilityAmount: String(tfm.ukefExposure),
+        facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
         productTypeCode: 'BSS', // TODO - mapping (via constants?) no hard coding.
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),

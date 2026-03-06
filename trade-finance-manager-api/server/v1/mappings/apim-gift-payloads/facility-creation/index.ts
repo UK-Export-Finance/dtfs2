@@ -33,7 +33,7 @@ export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: Facilit
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = String(tfm.ukefExposure);
+  const facilityAmount = Number(tfm.ukefExposure);
   const productTypeCode = 'BSS'; // TODO - mapping (via constants?) no hard coding.
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
