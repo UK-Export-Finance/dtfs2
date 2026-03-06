@@ -11,6 +11,8 @@ import externalApi from '../../external-api/api';
  * @param securityCode - the one-time security code to include in the email
  */
 export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string): Promise<void> => {
+  console.info('Sending sign-in OTP email to user %s', user._id);
+
   const { _id, email, firstname, surname } = user;
 
   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
