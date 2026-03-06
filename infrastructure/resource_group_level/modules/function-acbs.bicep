@@ -1,0 +1,140 @@
+param location string
+param environment string
+param containerRegistryName string
+param appServicePlanEgressSubnetId string
+param appServicePlanId string
+param privateEndpointsSubnetId string
+param storageAccountName string
+param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
+param product string
+param target string
+param version string
+param resourceNameFragment string = 'function-acbs'
+param settings object
+param secureSettings object
+param additionalSecureSettings object
+param azureDnsServerIp string
+param timeZone string
+
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
+var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
+var storageAccountKey = storageAccount.listKeys().keys[0].value
+var staticSettings = {
+  FUNCTIONS_WORKER_RUNTIME: 'node'
+  WEBSITE_DNS_SERVER: azureDnsServerIp
+  WEBSITE_VNET_ROUTE_ALL: '1'
+}
+var additionalSettings = {
+  APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
+  AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
+  DOCKER_ENABLE_CI: 'true'
+  DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
+  DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
+  DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
+  FUNCTION_APP_EDIT_MODE: 'readOnly'
+  FUNCTIONS_EXTENSION_VERSION: '~3'
+  LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
+  TZ: timeZone
+  WEBSITE_USE_PLACEHOLDER: '0'
+  WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
+}
+
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+
+var functionAcbsName = '${product}-${target}-${version}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
+
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+  name: containerRegistryName
+}
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageAccountName
+}
+
+resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
+  name: functionAcbsName
+  location: location
+  tags: {}
+  kind: 'functionapp,linux,container'
+  properties: {
+    httpsOnly: true
+    serverFarmId: appServicePlanId
+    siteConfig: {
+      numberOfWorkers: 1
+      linuxFxVersion: 'DOCKER|${dockerImageName}'
+      acrUseManagedIdentityCreds: false
+      alwaysOn: true
+      http20Enabled: true
+      functionAppScaleLimit: 0
+      minimumElasticInstanceCount: 1
+      vnetRouteAllEnabled: true
+      ftpsState: 'Disabled'
+      scmMinTlsVersion: '1.2'
+      remoteDebuggingVersion: 'VS2022'
+      httpLoggingEnabled: true 
+    }
+    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+  }
+}
+
+resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-11-01' = {
+  parent: functionAcbs
+  name: 'appsettings'
+  properties: appSettings
+}
+
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-10-01' = {
+  name: privateEndpointName
+  location: location
+  tags: {}
+  properties: {
+    privateLinkServiceConnections: [
+      {
+        name: privateEndpointName
+        properties: {
+          privateLinkServiceId: functionAcbs.id
+          groupIds: [
+            'sites'
+          ]
+        }
+      }
+    ]
+    manualPrivateLinkServiceConnections: []
+    subnet: {
+      id: privateEndpointsSubnetId
+    }
+    ipConfigurations: []
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
+  parent: privateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
+  }
+}
+
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightsName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+  }
+}
+
+output defaultHostName string = functionAcbs.properties.defaultHostName
