@@ -1,8 +1,5 @@
 const express = require('express');
-const axios = require('axios');
-// const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { postCheckYourEmailAccessCode } = require('../../controllers/login/post-check-your-email-access-code');
-// const { getNextAccessCodePage } = require('../../helpers/getNextAccessCodePage');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 
@@ -18,9 +15,8 @@ const { validatePartialAuthToken } = require('../middleware/validatePartialAuthT
 const { validatePortal2FAEnabled } = require('../../middleware/feature-flags/portal-2fa');
 const { getAccessCodeExpiredPage } = require('../../controllers/login/get-access-code-expired-page');
 const { getAccountSuspendedPage } = require('../../controllers/login/get-account-suspended');
+const { postLogin } = require('../../controllers/login/post-login');
 const { LANDING_PAGES } = require('../../constants');
-
-const { HttpStatusCode } = axios;
 
 const router = express.Router();
 
@@ -72,134 +68,7 @@ router.get(LANDING_PAGES.LOGIN, (req, res) => {
  *         description: Internal server error
  *
  */
-router.post(LANDING_PAGES.LOGIN, async (req, res) => {
-  const { email, password } = req.body;
-  const loginErrors = [];
-
-  const emailError = {
-    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
-    errRef: 'email',
-  };
-  const passwordError = {
-    errMsg: 'Enter a valid password',
-    errRef: 'password',
-  };
-
-  if (!email || !password) {
-    if (!email) loginErrors.push(emailError);
-    if (!password) loginErrors.push(passwordError);
-
-    return res.render('login/index.njk', {
-      errors: validationErrorHandler(loginErrors),
-    });
-  }
-
-  /**
-   * Send sign in link or OTP depending on whether 2FA feature flag is enabled
-   */
-  // DTFS2-8199 : Remove the commented-out 2FA-related login code in this file
-  // const is2FAEnabled = isPortal2FAFeatureFlagEnabled();
-  // if (is2FAEnabled) {
-  //   let loginApiOtpSucceeded = false;
-  //   try {
-  //     const loginResponse = await api.login(email, password);
-
-  //     const { token, loginStatus, user } = loginResponse;
-
-  //     loginApiOtpSucceeded = true;
-
-  //     req.session.userToken = token;
-  //     req.session.loginStatus = loginStatus;
-  //     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
-  //     req.session.userEmail = user.email;
-  //     req.session.userId = user.userId;
-  //     const {
-  //       data: { numberOfSignInOtpAttemptsRemaining },
-  //     } = await api.sendSignInOTP(req.session.userToken);
-
-  //     req.session.numberOfSignInOtpAttemptsRemaining = numberOfSignInOtpAttemptsRemaining;
-
-  //     const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-  //     return res.redirect(nextAccessCodePage);
-  //   } catch (error) {
-  //     const status = error.response?.status;
-
-  //     if (!loginApiOtpSucceeded) {
-  //       console.info('Failed to login %o', error);
-
-  //       if (status === HttpStatusCode.Forbidden) {
-  //         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-  //       }
-
-  //       loginErrors.push(emailError);
-  //       loginErrors.push(passwordError);
-
-  //       return res.render('login/index.njk', {
-  //         errors: validationErrorHandler(loginErrors),
-  //       });
-  //     }
-  //     if (status === HttpStatusCode.Forbidden) {
-  //       req.session.numberOfSignInOtpAttemptsRemaining = -1;
-  //       return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended-access-code.njk');
-  //     }
-
-  //     const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was %o';
-  //     console.info(message, error);
-
-  //     // Continue login flow so the user can retry sending OTP code
-  //     const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-  //     return res.redirect(nextAccessCodePage);
-  //   }
-  // } else {
-  let loginApiLinkSucceeded = false;
-  try {
-    const loginResponse = await api.login(email, password);
-
-    const { token, loginStatus, user } = loginResponse;
-
-    loginApiLinkSucceeded = true;
-
-    req.session.userToken = token;
-    req.session.loginStatus = loginStatus;
-    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
-    req.session.userEmail = user.email;
-    req.session.userId = user._id;
-    const {
-      data: { numberOfSendSignInLinkAttemptsRemaining },
-    } = await api.sendSignInLink(req.session.userToken);
-
-    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
-    return res.redirect('/login/check-your-email');
-  } catch (error) {
-    const status = error.response?.status;
-
-    if (!loginApiLinkSucceeded) {
-      console.info('Failed to login %o', error);
-
-      if (status === HttpStatusCode.Forbidden) {
-        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
-      }
-
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
-
-      return res.render('login/index.njk', {
-        errors: validationErrorHandler(loginErrors),
-      });
-    }
-    if (status === HttpStatusCode.Forbidden) {
-      req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
-      return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
-    }
-
-    const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o';
-    console.info(message, error);
-
-    // Continue login flow so the user can retry sending sign-in link
-    return res.redirect('/login/check-your-email');
-  }
-  // }
-});
+router.post(LANDING_PAGES.LOGIN, postLogin);
 
 /**
  * @openapi
