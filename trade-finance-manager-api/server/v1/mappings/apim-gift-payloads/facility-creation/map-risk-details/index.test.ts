@@ -33,17 +33,14 @@ describe('mapFacilityCategoryCode', () => {
   describe('when productTypeCode is "GEF"', () => {
     it('should return the provided facilityCategoryCode', () => {
       // Arrange
-      const params = {
-        dealId: '123',
-        facilityCategoryCode: 'Mock facility category code',
-        productTypeCode: 'GEF',
-      };
+      const mockProductTypeCode = 'GEF';
+      const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
-      const result = mapRiskDetails(params);
+      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
 
       // Assert
-      const expected = params.facilityCategoryCode;
+      const expected = mockFacilityCategoryCode;
 
       expect(result).toEqual(expected);
     });
@@ -52,14 +49,11 @@ describe('mapFacilityCategoryCode', () => {
   describe('when productTypeCode is NOT "GEF"', () => {
     it('should return null', () => {
       // Arrange
-      const params = {
-        dealId: '123',
-        facilityCategoryCode: 'Mock facility category code',
-        productTypeCode: 'NOT GEF',
-      };
+      const mockProductTypeCode = 'NOT GEF';
+      const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
-      const result = mapRiskDetails(params);
+      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
 
       // Assert
       expect(result).toEqual(null);

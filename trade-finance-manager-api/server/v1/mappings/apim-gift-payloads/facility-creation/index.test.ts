@@ -1,8 +1,9 @@
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
-import { mapOverview } from './map-overview';
 import { APIM_GIFT_INTEGRATION } from '../constants';
+import { mapOverview } from './map-overview';
+import { mapRiskDetails } from './map-risk-details';
 import { facilityCreation } from '.';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
@@ -49,6 +50,11 @@ describe('facilityCreation', () => {
       counterparties: [], // TODO: DTFS2-8314
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: [], // TODO: DTFS2-8316
+      riskDetails: mapRiskDetails({
+        dealId: params.dealId,
+        productTypeCode: 'BSS', // TODO - mapping (via constants?) no hard coding.
+        facilityCategoryCode: String(facilitySnapshot.type),
+      }),
     };
 
     expect(result).toEqual(expected);
