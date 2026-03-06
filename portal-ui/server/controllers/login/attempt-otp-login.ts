@@ -2,13 +2,10 @@ import axios, { HttpStatusCode } from 'axios';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
 import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
+import { hasErrorsProperty } from '../../helpers/has-errors-property';
 import * as api from '../../api';
 
 export { OTP_RESULT_TYPE } from '../../types/2fa/otp-login-result';
-
-type ApiErrorResponse = {
-  errors?: Array<{ msg?: string }>;
-};
 
 /**
  * Calls the sign-in OTP API and returns a typed result.
@@ -37,10 +34,10 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
       const status = apiError.response?.status;
       const data: unknown = apiError.response?.data;
 
-      let errors: ApiErrorResponse['errors'];
+      let errors: Array<{ msg?: string }> | undefined;
 
-      if (data && typeof data === 'object' && !Array.isArray(data) && 'errors' in data) {
-        const { errors: extractedErrors } = data as ApiErrorResponse;
+      if (hasErrorsProperty(data)) {
+        const { errors: extractedErrors } = data;
         errors = extractedErrors;
       }
 
