@@ -1,12 +1,12 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
-import { mapOverview, MapOverviewParams } from '.';
+import { mapOverview } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
     // Arrange
-    const params: MapOverviewParams = {
+    const params = {
       currency: 'GBP',
       effectiveDate: '2026-01-30',
       expiryDate: '2026-12-31',

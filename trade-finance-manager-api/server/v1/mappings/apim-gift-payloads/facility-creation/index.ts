@@ -2,6 +2,7 @@ import { TfmFacility } from '@ukef/dtfs2-common';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION } from '../constants';
+import { ApimGiftFacilityCreationPayload } from '../types';
 
 export type FacilityCreationParams = {
   dealId: string;
@@ -9,18 +10,15 @@ export type FacilityCreationParams = {
   facility: TfmFacility;
 };
 
-// TODO:
-// export type FacilityCreationReturnType = ReturnType<typeof facilityCreation>;
-
 /**
- * Map DTFS facility data to the format expected by APIM GIFT for facility creation
- * @param {FacilityCreationParams} params - Data required to build the APIM GIFT "facility creation" payload.
+ * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
+ * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
  * @param {string} params.dealId - The TFM deal ID.
  * @param {string} params.exporterPartyUrn - The TFM exporter party URN, from deal data.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
- * @returns TODO
+ * @returns {ApimGiftFacilityCreationPayload} The APIM "GIFT facility creation" payload.
  */
-export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: FacilityCreationParams) => {
+export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: FacilityCreationParams): ApimGiftFacilityCreationPayload => {
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;

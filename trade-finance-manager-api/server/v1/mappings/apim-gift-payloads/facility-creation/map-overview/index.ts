@@ -1,8 +1,9 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { ApimGiftFacilityOverviewPayload } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
-export type MapOverviewParams = {
+type MapOverviewParams = {
   facilityAmount: number;
   facilityName: string;
   currency: string;
@@ -11,19 +12,6 @@ export type MapOverviewParams = {
   exporterPartyUrn: string;
   productTypeCode: string;
   ukefFacilityId: string;
-};
-
-type MappedOverview = {
-  creditType: string;
-  currency: string;
-  effectiveDate: string;
-  expiryDate: string;
-  facilityAmount: number;
-  facilityId: string;
-  facilityName: string;
-  isRevolving: boolean;
-  obligorUrn: string;
-  productTypeCode: string; // TODO: DTFS2-8307 - typing
 };
 
 /**
@@ -37,7 +25,7 @@ type MappedOverview = {
  * @param {string} params.facilityName - The facility name.
  * @param {string} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
- * @returns {MappedOverview} The mapped facility overview data.
+ * @returns {ApimGiftFacilityOverviewPayload} The mapped facility overview data.
  */
 export const mapOverview = ({
   currency,
@@ -48,7 +36,7 @@ export const mapOverview = ({
   facilityName,
   productTypeCode,
   ukefFacilityId,
-}: MapOverviewParams): MappedOverview => ({
+}: MapOverviewParams): ApimGiftFacilityOverviewPayload => ({
   creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS, // TODO: DTFS2-8307 - based on product type
   currency,
   facilityAmount,

@@ -1,4 +1,5 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { ApimGiftFacilityRiskDetailsPayload } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -7,8 +8,6 @@ type MapRiskDetailsParams = {
   facilityCategoryCode?: string;
   productTypeCode: string;
 };
-
-// TODO: mapRiskDetails return type.
 
 /**
  * Map the facility category code based on product type code and facility category code.
@@ -27,9 +26,9 @@ export const mapFacilityCategoryCode = (productTypeCode: string, facilityCategor
  * @param {string} params.dealId - The TFM deal ID.
  * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {string} params.productTypeCode - The facility/product type code (e.g. "BSS", "GEF", "EWCS").
- * @returns {object} The mapped risk details.
+ * @returns {ApimGiftFacilityRiskDetailsPayload} The mapped risk details.
  */
-export const mapRiskDetails = ({ dealId, facilityCategoryCode, productTypeCode }: MapRiskDetailsParams) => {
+export const mapRiskDetails = ({ dealId, facilityCategoryCode, productTypeCode }: MapRiskDetailsParams): ApimGiftFacilityRiskDetailsPayload => {
   const mapped = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
