@@ -1,7 +1,7 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
-import { APIM_GIFT_INTEGRATION } from '../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 
 export type FacilityCreationParams = {
@@ -32,7 +32,8 @@ export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: Facilit
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
   const facilityAmount = Number(tfm.ukefExposure);
-  const productTypeCode = 'BSS'; // TODO - mapping (via constants?) no hard coding.
+  const productTypeCode = PRODUCT_TYPES.BSS; // TODO
+
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
   const mapped = {

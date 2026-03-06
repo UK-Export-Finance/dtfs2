@@ -1,4 +1,6 @@
-export type ApimGiftFacilityOverviewPayload = {
+import { PRODUCT_TYPES } from './constants';
+
+export type ApimGiftFacilityOverview = {
   creditType: string;
   currency: string;
   facilityAmount: number;
@@ -8,10 +10,10 @@ export type ApimGiftFacilityOverviewPayload = {
   expiryDate: string;
   isRevolving: boolean;
   obligorUrn: string;
-  productTypeCode: string; // TODO: typeof
+  productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
 };
 
-export type ApimGiftFacilityRiskDetailsPayload = {
+export type ApimGiftFacilityRiskDetails = {
   account: string;
   dealId: string;
   facilityCategoryCode: string | null;
@@ -20,12 +22,11 @@ export type ApimGiftFacilityRiskDetailsPayload = {
   ukefIndustryCode: string;
 };
 
-// TODO: rename/mention APIM payload?
 export type ApimGiftFacilityCreationPayload = {
   consumer: string; // TODO: typeof
-  overview: ApimGiftFacilityOverviewPayload;
+  overview: ApimGiftFacilityOverview;
   counterparties: any[]; // TODO: DTFS2-8314
   obligations: any[]; // TODO: DTFS2-8315
   repaymentProfiles: any[]; // TODO: DTFS2-8316
-  riskDetails: ApimGiftFacilityRiskDetailsPayload;
+  riskDetails: ApimGiftFacilityRiskDetails;
 };

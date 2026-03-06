@@ -1,3 +1,9 @@
+export const PRODUCT_TYPES = {
+  BSS: 'BSS',
+  GEF: 'GEF',
+} as const;
+
+// TODO - typings for below
 export const APIM_GIFT_INTEGRATION = {
   CONSUMER: 'DTFS',
   DEFAULTS: {

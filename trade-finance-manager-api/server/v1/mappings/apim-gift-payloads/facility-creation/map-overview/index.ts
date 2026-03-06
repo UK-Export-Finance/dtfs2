@@ -1,5 +1,5 @@
-import { APIM_GIFT_INTEGRATION } from '../../constants';
-import { ApimGiftFacilityOverviewPayload } from '../../types';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
+import { ApimGiftFacilityOverview } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -10,7 +10,7 @@ type MapOverviewParams = {
   effectiveDate: string;
   expiryDate: string;
   exporterPartyUrn: string;
-  productTypeCode: string;
+  productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
   ukefFacilityId: string;
 };
 
@@ -23,9 +23,9 @@ type MapOverviewParams = {
  * @param {string} params.exporterPartyUrn - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.
  * @param {number} params.facilityAmount - The total facility amount.
  * @param {string} params.facilityName - The facility name.
- * @param {string} params.productTypeCode - The APIM GIFT product type code for the facility.
+ * @param {(typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES]} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
- * @returns {ApimGiftFacilityOverviewPayload} The mapped facility overview data.
+ * @returns {ApimGiftFacilityOverview} The mapped facility overview data.
  */
 export const mapOverview = ({
   currency,
@@ -36,15 +36,15 @@ export const mapOverview = ({
   facilityName,
   productTypeCode,
   ukefFacilityId,
-}: MapOverviewParams): ApimGiftFacilityOverviewPayload => ({
-  creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS, // TODO: DTFS2-8307 - based on product type
+}: MapOverviewParams): ApimGiftFacilityOverview => ({
+  creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE[productTypeCode],
   currency,
   facilityAmount,
   facilityId: ukefFacilityId,
   facilityName,
   effectiveDate,
   expiryDate,
-  isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.BSS, // TODO: DTFS2-8308 - based on product type
+  isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING[productTypeCode],
   obligorUrn: exporterPartyUrn,
   productTypeCode,
 });

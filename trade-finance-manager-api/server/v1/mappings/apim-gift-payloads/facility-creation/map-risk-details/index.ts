@@ -1,12 +1,12 @@
-import { APIM_GIFT_INTEGRATION } from '../../constants';
-import { ApimGiftFacilityRiskDetailsPayload } from '../../types';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
+import { ApimGiftFacilityRiskDetails } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapRiskDetailsParams = {
   dealId: string;
   facilityCategoryCode?: string;
-  productTypeCode: string;
+  productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
 };
 
 /**
@@ -17,8 +17,8 @@ type MapRiskDetailsParams = {
  * @param {string} [facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @returns {string | null}
  */
-export const mapFacilityCategoryCode = (productTypeCode: string, facilityCategoryCode?: string): string | null =>
-  productTypeCode === 'GEF' ? String(facilityCategoryCode) : null;
+export const mapFacilityCategoryCode = (productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES], facilityCategoryCode?: string): string | null =>
+  productTypeCode === PRODUCT_TYPES.GEF ? String(facilityCategoryCode) : null;
 
 /**
  * Map the facility "risk details"
@@ -26,9 +26,9 @@ export const mapFacilityCategoryCode = (productTypeCode: string, facilityCategor
  * @param {string} params.dealId - The TFM deal ID.
  * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {string} params.productTypeCode - The facility/product type code (e.g. "BSS", "GEF", "EWCS").
- * @returns {ApimGiftFacilityRiskDetailsPayload} The mapped risk details.
+ * @returns {ApimGiftFacilityRiskDetails} The mapped risk details.
  */
-export const mapRiskDetails = ({ dealId, facilityCategoryCode, productTypeCode }: MapRiskDetailsParams): ApimGiftFacilityRiskDetailsPayload => {
+export const mapRiskDetails = ({ dealId, facilityCategoryCode, productTypeCode }: MapRiskDetailsParams): ApimGiftFacilityRiskDetails => {
   const mapped = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
