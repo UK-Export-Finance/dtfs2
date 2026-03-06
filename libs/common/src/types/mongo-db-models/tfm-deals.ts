@@ -23,7 +23,7 @@ export type TfmDeal = {
     exporterCreditRating: string;
     lastUpdated: number;
     lossGivenDefault: number;
-    parties: AnyObject;
+    parties: AnyObject; // TODO: populate
     probabilityOfDefault: number;
     product: string;
     stage: TfmDealStage;
