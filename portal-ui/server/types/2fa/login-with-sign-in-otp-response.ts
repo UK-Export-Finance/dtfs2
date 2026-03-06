@@ -4,4 +4,5 @@ export type LoginWithSignInOtpResponse = {
   loginStatus?: string;
   token?: string;
   user?: PortalSessionUser;
+  isExpired?: boolean;
 };
