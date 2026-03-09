@@ -26,7 +26,7 @@ export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
   dealId: string;
   facilityCategoryCode: string | null;
-  facilityCreditRating: string;
+  facilityCreditRating: string | null;
   riskStatus: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['RISK_STATUS'];
   ukefIndustryCode: string;
 };

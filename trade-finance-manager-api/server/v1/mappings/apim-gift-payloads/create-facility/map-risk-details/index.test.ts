@@ -1,31 +1,39 @@
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
-import { mapRiskDetails, mapFacilityCategoryCode } from '.';
+import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
-describe('mapRiskDetails', () => {
-  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
-    // Arrange
-    const params = {
-      dealId: '123',
-      facilityCategoryCode: '',
-      productTypeCode: PRODUCT_TYPES.GEF,
-    };
+describe('mapFacilityCreditRating', () => {
+  describe('when the exporter credit rating is in the list of credit risk ratings', () => {
+    it('should return the mapped credit rating', () => {
+      // Arrange
+      const mockCreditRiskRatings = ['AAA', 'AA+', 'AA'];
+      const mockExporterCreditRating = 'AAA';
 
-    // Act
-    const result = mapRiskDetails(params);
+      // Act
+      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
 
-    // Assert
-    const expected = {
-      account: DEFAULTS.RISK_DETAILS.ACCOUNT,
-      dealId: params.dealId,
-      facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
-      facilityCreditRating: '', // TODO: DTFS2-8318
-      riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-      ukefIndustryCode: '', // TODO: DTFS2-8319
-    };
+      // Assert
+      const expected = 'AAA';
 
-    expect(result).toEqual(expected);
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
+    it('should return the mapped credit rating', () => {
+      // Arrange
+      const mockCreditRiskRatings = ['BB-', 'B+'];
+      const mockExporterCreditRating = 'Good (BB-)';
+
+      // Act
+      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
+
+      // Assert
+      const expected = 'BB-';
+
+      expect(result).toEqual(expected);
+    });
   });
 });
 
@@ -71,5 +79,33 @@ describe('mapFacilityCategoryCode', () => {
       // Assert
       expect(result).toBeNull();
     });
+  });
+});
+
+describe('mapRiskDetails', () => {
+  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
+    // Arrange
+    const params = {
+      dealId: '123',
+      facilityCategoryCode: '',
+      productTypeCode: PRODUCT_TYPES.GEF,
+      creditRiskRatings: ['AAA', 'AA+', 'AA'],
+      exporterCreditRating: 'AAA',
+    };
+
+    // Act
+    const result = mapRiskDetails(params);
+
+    // Assert
+    const expected = {
+      account: DEFAULTS.RISK_DETAILS.ACCOUNT,
+      dealId: params.dealId,
+      facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
+      facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
+      riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
+      ukefIndustryCode: '', // TODO: DTFS2-8319
+    };
+
+    expect(result).toEqual(expected);
   });
 });

@@ -925,7 +925,7 @@ const getCreditRiskRatings = async () => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/party-db/credit-risk-ratings`,
+      url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
       headers: headers.external,
     });
 
