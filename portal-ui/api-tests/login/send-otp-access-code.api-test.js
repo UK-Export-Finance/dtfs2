@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
@@ -68,7 +69,7 @@ const withSendNewOtpApiTests = (endpoint, attemptsLeft) => {
         it('redirects the user to /login', async () => {
           const { status, headers } = await post().to(`/login/${endpoint}`);
 
-          expect(status).toEqual(302);
+          expect(status).toEqual(HttpStatusCode.Found);
           expect(headers.location).toEqual('/login');
         });
       });
@@ -97,14 +98,14 @@ const withSendNewOtpApiTests = (endpoint, attemptsLeft) => {
           beforeEachSetUp();
         });
 
-        itRedirectsTheUserToCheckYourEmailAccessCode();
+        itRedirectsTheUserToDashboard();
       });
 
-      function itRedirectsTheUserToCheckYourEmailAccessCode() {
+      function itRedirectsTheUserToDashboard() {
         it('redirects the user to /dashboard', async () => {
           const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
-          expect(status).toEqual(302);
+          expect(status).toEqual(HttpStatusCode.Found);
           expect(headers.location).toEqual('/dashboard');
         });
       }

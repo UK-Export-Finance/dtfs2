@@ -22,19 +22,13 @@ const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validate
       when(validatePartialAuthToken).resetWhenMocks();
       login.mockImplementation(mockLogin(partialAuthToken));
 
-      // Mock sendSignInOTP if it exists (for 2FA OTP flow)
-      if (api.sendSignInOTP && typeof api.sendSignInOTP.mockResolvedValue === 'function') {
-        api.sendSignInOTP.mockResolvedValue({
-          data: { numberOfSignInOtpAttemptsRemaining },
-        });
-      }
+      api.sendSignInOTP?.mockResolvedValue?.({
+        data: { numberOfSignInOtpAttemptsRemaining },
+      });
 
-      // Mock sendSignInLink if it exists (for sign-in link flow)
-      if (api.sendSignInLink && typeof api.sendSignInLink.mockResolvedValue === 'function') {
-        api.sendSignInLink.mockResolvedValue({
-          data: { numberOfSendSignInLinkAttemptsRemaining: 5 },
-        });
-      }
+      api.sendSignInLink?.mockResolvedValue?.({
+        data: { numberOfSendSignInLinkAttemptsRemaining: 5 },
+      });
 
       sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
     });
