@@ -920,6 +920,7 @@ const getCompanyInfo = async (partyUrn) => {
 /**
  * Get credit risk ratings
  * @returns {Promise<import('./api-response-types').CreditRiskRating[]>}
+ * @throws {Error} If an unexpected error occurs during the request.
  */
 const getCreditRiskRatings = async () => {
   try {
@@ -936,6 +937,12 @@ const getCreditRiskRatings = async () => {
   }
 };
 
+/**
+ * Find a TFM user by username
+ * @param {string} username TFM username
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findUser = async (username) => {
   try {
     const sanitizedUsername = sanitizeUsername(username);
@@ -952,6 +959,12 @@ const findUser = async (username) => {
   }
 };
 
+/**
+ * Find a TFM user by ID
+ * @param {string} userId TFM user ID
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findUserById = async (userId) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -973,6 +986,12 @@ const findUserById = async (userId) => {
   }
 };
 
+/**
+ * Find a Portal user by ID
+ * @param {string} userId Portal user ID
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findPortalUserById = async (userId) => {
   try {
     const isValidUserId = isValidMongoId(userId);
