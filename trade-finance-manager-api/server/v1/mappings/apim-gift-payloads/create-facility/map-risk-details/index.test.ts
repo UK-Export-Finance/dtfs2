@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
 import { mapRiskDetails, mapFacilityCategoryCode } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
@@ -9,7 +9,7 @@ describe('mapRiskDetails', () => {
     const params = {
       dealId: '123',
       facilityCategoryCode: '',
-      productTypeCode: 'GEF',
+      productTypeCode: PRODUCT_TYPES.GEF,
     };
 
     // Act
@@ -20,9 +20,9 @@ describe('mapRiskDetails', () => {
       account: DEFAULTS.RISK_DETAILS.ACCOUNT,
       dealId: params.dealId,
       facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
-      facilityCreditRating: '', // TODO
+      facilityCreditRating: '', // TODO: DTFS2-8318
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-      ukefIndustryCode: '', // TODO
+      ukefIndustryCode: '', // TODO: DTFS2-8319
     };
 
     expect(result).toEqual(expected);
@@ -30,10 +30,10 @@ describe('mapRiskDetails', () => {
 });
 
 describe('mapFacilityCategoryCode', () => {
-  describe('when productTypeCode is "GEF"', () => {
+  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}"`, () => {
     it('should return the provided facilityCategoryCode', () => {
       // Arrange
-      const mockProductTypeCode = 'GEF';
+      const mockProductTypeCode = PRODUCT_TYPES.GEF;
       const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
@@ -49,7 +49,7 @@ describe('mapFacilityCategoryCode', () => {
   describe('when productTypeCode is NOT "GEF"', () => {
     it('should return null', () => {
       // Arrange
-      const mockProductTypeCode = 'NOT GEF';
+      const mockProductTypeCode = PRODUCT_TYPES.BSS;
       const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act

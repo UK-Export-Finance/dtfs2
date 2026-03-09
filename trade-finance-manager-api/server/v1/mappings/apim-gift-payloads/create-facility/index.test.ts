@@ -1,14 +1,14 @@
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
-import { APIM_GIFT_INTEGRATION } from '../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
-import { facilityCreation } from '.';
+import { createFacility } from '.';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 
-describe('facilityCreation', () => {
+describe('createFacility', () => {
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
     // Arrange
     const mockFacility: TfmFacility = {
@@ -32,7 +32,7 @@ describe('facilityCreation', () => {
     };
 
     // Act
-    const result = facilityCreation(params);
+    const result = createFacility(params);
 
     // Assert
     const expected = {
@@ -44,7 +44,7 @@ describe('facilityCreation', () => {
         exporterPartyUrn: params.exporterPartyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
-        productTypeCode: 'BSS', // TODO - mapping (via constants?) no hard coding.
+        productTypeCode: PRODUCT_TYPES.BSS,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       counterparties: [], // TODO: DTFS2-8314
@@ -52,7 +52,7 @@ describe('facilityCreation', () => {
       repaymentProfiles: [], // TODO: DTFS2-8316
       riskDetails: mapRiskDetails({
         dealId: params.dealId,
-        productTypeCode: 'BSS', // TODO - mapping (via constants?) no hard coding.
+        productTypeCode: PRODUCT_TYPES.BSS,
         facilityCategoryCode: String(facilitySnapshot.type),
       }),
     };

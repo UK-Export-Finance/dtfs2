@@ -1,5 +1,5 @@
-import { facilityCreation } from './facility-creation';
+import { createFacility } from './create-facility';
 
 export const APIM_GIFT_PAYLOADS = {
-  facilityCreation, // TODO: or, createFacility?
+  createFacility,
 };

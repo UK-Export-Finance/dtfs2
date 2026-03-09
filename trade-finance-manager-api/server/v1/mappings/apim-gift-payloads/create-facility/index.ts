@@ -18,7 +18,7 @@ export type FacilityCreationParams = {
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @returns {ApimGiftFacilityCreationPayload} The APIM "GIFT facility creation" payload.
  */
-export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: FacilityCreationParams): ApimGiftFacilityCreationPayload => {
+export const createFacility = ({ dealId, exporterPartyUrn, facility }: FacilityCreationParams): ApimGiftFacilityCreationPayload => {
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -32,7 +32,7 @@ export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: Facilit
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
   const facilityAmount = Number(tfm.ukefExposure);
-  const productTypeCode = PRODUCT_TYPES.BSS; // TODO
+  const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
@@ -60,12 +60,3 @@ export const facilityCreation = ({ dealId, exporterPartyUrn, facility }: Facilit
 
   return mapped;
 };
-
-// TODO
-// Tony temporary notes
-// BSS - deal has dealType - BSS/EWCS. Facility has facilities[0].type = 'Bond' < only ever this or 'Loan'?
-// GEF - deal has dealType GEF. Facility has facilities[0].type = 'Bond' | 'Cash' | 'Contingent' | 'Loan' < more variety of types than BSS, but still a defined list of types. Note - these types are not necessarily the same as the facility types in BSS, e.g. BSS has 'Bond' but not 'Cash', GEF has both.
-// So - we can determine whether it's a BSS or GEF facility based on the dealType, and then determine the productTypeCode based on the facility type, but we will need to do some mapping as the facility types in DTFS don't necessarily match the product types expected by APIM GIFT. For example, a BSS Bond facility would have type 'Bond' in DTFS, but the productTypeCode expected by APIM GIFT might be 'BSS_BOND' or something like that. We will need to create a mapping function to map from DTFS facility types to APIM GIFT productTypeCodes, and this mapping function will need to take into account the dealType as well as the facility type.
-
-// BSS - deal.dealSnapshot.details.ukefDealId
-// GEF - deal.dealSnapshot.ukefDealId
