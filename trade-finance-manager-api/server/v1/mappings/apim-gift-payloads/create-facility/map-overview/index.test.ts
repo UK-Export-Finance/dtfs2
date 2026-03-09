@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
 import { mapOverview } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
@@ -13,7 +13,7 @@ describe('mapOverview', () => {
       exporterPartyUrn: '12345',
       facilityAmount: 20000,
       facilityName: 'Mock facility name',
-      productTypeCode: 'BSS', // TODO - mapping (via constants?) no hard coding.
+      productTypeCode: PRODUCT_TYPES.BSS,
       ukefFacilityId: '123',
     };
 
