@@ -1656,7 +1656,8 @@ jobs:
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
                 JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
                 FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}" \
-                FF_TFM_SSO_ONLY="${{ vars.FF_TFM_SSO_ONLY }}"
+                FF_TFM_SSO_ONLY="${{ vars.FF_TFM_SSO_ONLY }}" \
+                FF_TFM_APIM_GIFT_INTEGRATION ="${{ vars.FF_TFM_APIM_GIFT_INTEGRATION }}"
 
   # END API setup
 
