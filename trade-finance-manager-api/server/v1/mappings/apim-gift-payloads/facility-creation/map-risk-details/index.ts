@@ -33,9 +33,9 @@ export const mapRiskDetails = ({ dealId, facilityCategoryCode, productTypeCode }
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
     facilityCategoryCode: mapFacilityCategoryCode(productTypeCode, facilityCategoryCode),
-    facilityCreditRating: '', // TODO
+    facilityCreditRating: '', // TODO: DTFS2-8318
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-    ukefIndustryCode: '', // TODO
+    ukefIndustryCode: '', // TODO: DTFS2-8319
   };
 
   return mapped;
