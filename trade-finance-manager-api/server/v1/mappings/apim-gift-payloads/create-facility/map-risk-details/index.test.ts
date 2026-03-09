@@ -59,7 +59,7 @@ describe('mapFacilityCategoryCode', () => {
     });
   });
 
-  describe('when productTypeCode is NOT "GEF"', () => {
+  describe(`when productTypeCode is NOT "${PRODUCT_TYPES.GEF}"`, () => {
     it('should return null', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPES.BSS;
