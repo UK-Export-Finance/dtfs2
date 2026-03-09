@@ -1,7 +1,10 @@
-import { PRODUCT_TYPES } from './constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from './constants';
+
+type CreditTypeMap = (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['OVERVIEW']['CREDIT_TYPE'];
+type CreditTypeValue = CreditTypeMap[keyof CreditTypeMap];
 
 export type ApimGiftFacilityOverview = {
-  creditType: string;
+  creditType: CreditTypeValue;
   currency: string;
   facilityAmount: number;
   facilityId: string;
@@ -14,16 +17,16 @@ export type ApimGiftFacilityOverview = {
 };
 
 export type ApimGiftFacilityRiskDetails = {
-  account: string;
+  account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
   dealId: string;
   facilityCategoryCode: string | null;
   facilityCreditRating: string;
-  riskStatus: string;
+  riskStatus: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['RISK_STATUS'];
   ukefIndustryCode: string;
 };
 
 export type ApimGiftFacilityCreationPayload = {
-  consumer: string; // TODO: typeof
+  consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
   overview: ApimGiftFacilityOverview;
   counterparties: any[]; // TODO: DTFS2-8314
   obligations: any[]; // TODO: DTFS2-8315

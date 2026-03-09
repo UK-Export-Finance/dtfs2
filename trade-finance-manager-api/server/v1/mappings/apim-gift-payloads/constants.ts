@@ -7,7 +7,7 @@ export const PRODUCT_TYPES = {
  * Consumer name for APIM TFS - GIFT facility integration.
  * This is required to indicate which service/consumer is sending data to APIM/GIFT.
  */
-const CONSUMER = 'DTFS';
+const CONSUMER = 'DTFS' as const;
 
 /**
  * BSS = default credit type to "Term".
@@ -29,13 +29,13 @@ const IS_REVOLVING = {
  * For BSS/GEF/EWCS,
  * default account to "2" (Corporate) for the "account" field in GIFT.
  */
-const ACCOUNT = 2;
+const ACCOUNT = 2 as const;
 
 /**
  * For BSS/GEF/EWCS,
  * default risk status to "Corporate" for the "riskStatus" field in GIFT.
  */
-const RISK_STATUS = 'Corporate';
+const RISK_STATUS = 'Corporate' as const;
 
 export const APIM_GIFT_INTEGRATION = {
   CONSUMER,
