@@ -12,6 +12,7 @@ import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
 import * as companies from '../controllers/companies.controller';
+import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
 import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
@@ -578,6 +579,31 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  */
 
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
+
+/**
+ * @openapi
+ * /credit-risk-ratings:
+ *   get:
+ *     summary: Get credit risk ratings from MDM API.
+ *     tags: [APIM, Credit Risk Ratings]
+ *     description: >-
+ *       Get credit risk ratings from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/CreditRiskRating'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+
+apiRoutes.get('/credit-risk-ratings', creditRiskRatings.findAll);
 
 /**
  * @openapi
