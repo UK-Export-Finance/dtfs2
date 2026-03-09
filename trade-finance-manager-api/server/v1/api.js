@@ -917,6 +917,25 @@ const getCompanyInfo = async (partyUrn) => {
   }
 };
 
+/**
+ * Get credit risk ratings
+ * @returns {Promise<import('./api-response-types').CreditRiskRating[]>}
+ */
+const getCreditRiskRatings = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/party-db/credit-risk-ratings`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get credit risk ratings %o', error);
+    return false;
+  }
+};
+
 const findUser = async (username) => {
   try {
     const sanitizedUsername = sanitizeUsername(username);
@@ -1871,6 +1890,7 @@ module.exports = {
   getPartyDbInfo,
   getOrCreatePartyDbInfo,
   getCompanyInfo,
+  getCreditRiskRatings,
   findUser,
   findUserById,
   updateDealCancellation,
