@@ -35,14 +35,21 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
 
 module.exports.sendNewSignInLink = async (req, res) => {
   try {
-    const {
-      data: { numberOfSendSignInLinkAttemptsRemaining },
-    } = await api.sendSignInLink(req.session.userToken);
-    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    const signInLinkResponse = await api.sendSignInLink(req.session.userToken);
+
+    if (signInLinkResponse?.data && typeof signInLinkResponse.data.numberOfSendSignInLinkAttemptsRemaining === 'number') {
+      req.session.numberOfSendSignInLinkAttemptsRemaining = signInLinkResponse.data.numberOfSendSignInLinkAttemptsRemaining;
+    } else {
+      console.info('sendSignInLink returned unexpected shape', { response: signInLinkResponse });
+    }
   } catch (error) {
     if (error.response?.status === 403) {
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
     }
+    if (error.response?.data && typeof error.response.data.numberOfSendSignInLinkAttemptsRemaining === 'number') {
+      req.session.numberOfSendSignInLinkAttemptsRemaining = error.response.data.numberOfSendSignInLinkAttemptsRemaining;
+    }
+
     console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', error);
   }
 
