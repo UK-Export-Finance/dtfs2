@@ -3,28 +3,50 @@ export const PRODUCT_TYPES = {
   GEF: 'GEF',
 } as const;
 
-// TODO - typings for below
+/**
+ * Consumer name for APIM TFS - GIFT facility integration.
+ * This is required to indicate which service/consumer is sending data to APIM/GIFT.
+ */
+const CONSUMER = 'DTFS';
+
+/**
+ * BSS = default credit type to "Term".
+ * GEF/EWCS = default to "Revolving".
+ */
+const CREDIT_TYPE = {
+  BSS: 'Term',
+  EWCS: 'Revolving',
+  GEF: 'Revolving',
+} as const;
+
+const IS_REVOLVING = {
+  BSS: false,
+  EWCS: true,
+  GEF: true,
+} as const;
+
+/**
+ * For BSS/GEF/EWCS,
+ * default account to "2" (Corporate) for the "account" field in GIFT.
+ */
+const ACCOUNT = 2;
+
+/**
+ * For BSS/GEF/EWCS,
+ * default risk status to "Corporate" for the "riskStatus" field in GIFT.
+ */
+const RISK_STATUS = 'Corporate';
+
 export const APIM_GIFT_INTEGRATION = {
-  CONSUMER: 'DTFS',
+  CONSUMER,
   DEFAULTS: {
     OVERVIEW: {
-      // For BSS, default credit type to "Term". For GEF/EWCS, default to "Revolving".
-      CREDIT_TYPE: {
-        BSS: 'Term',
-        EWCS: 'Revolving',
-        GEF: 'Revolving',
-      },
-      IS_REVOLVING: {
-        BSS: false,
-        EWCS: true,
-        GEF: true,
-      },
+      CREDIT_TYPE,
+      IS_REVOLVING,
     },
     RISK_DETAILS: {
-      // For BSS/GEF/EWCS, default account to "2" (Corporate) for the "account" field in GIFT.
-      ACCOUNT: '2',
-      // For BSS/GEF/EWCS, default risk status to "Corporate" for the "riskStatus" field in GIFT.
-      RISK_STATUS: 'Corporate',
+      ACCOUNT,
+      RISK_STATUS,
     },
   },
 };
