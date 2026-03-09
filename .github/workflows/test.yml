@@ -206,6 +206,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -293,6 +294,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -400,6 +402,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -514,6 +517,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -572,6 +576,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -647,6 +652,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -714,6 +720,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -844,6 +851,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -957,6 +965,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1090,6 +1099,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1177,6 +1187,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1278,10 +1289,10 @@ jobs:
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'false'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
-      FF_PORTAL_2FA_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1493,6 +1504,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1576,6 +1588,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1622,6 +1635,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
