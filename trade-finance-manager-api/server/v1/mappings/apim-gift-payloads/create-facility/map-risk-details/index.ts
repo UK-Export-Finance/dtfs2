@@ -18,7 +18,7 @@ type MapRiskDetailsParams = {
  * @returns {string | null}
  */
 export const mapFacilityCategoryCode = (productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES], facilityCategoryCode?: string): string | null =>
-  productTypeCode === PRODUCT_TYPES.GEF ? String(facilityCategoryCode) : null;
+  productTypeCode === PRODUCT_TYPES.GEF && facilityCategoryCode ? String(facilityCategoryCode) : null;
 
 /**
  * Map the facility "risk details"

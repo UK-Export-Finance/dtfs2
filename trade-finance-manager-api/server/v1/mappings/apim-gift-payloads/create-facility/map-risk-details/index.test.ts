@@ -30,7 +30,7 @@ describe('mapRiskDetails', () => {
 });
 
 describe('mapFacilityCategoryCode', () => {
-  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}"`, () => {
+  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}" and a facilityCategoryCode is provided`, () => {
     it('should return the provided facilityCategoryCode', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPES.GEF;
@@ -43,6 +43,19 @@ describe('mapFacilityCategoryCode', () => {
       const expected = mockFacilityCategoryCode;
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}" and a facilityCategoryCode is NOT provided`, () => {
+    it('should return null', () => {
+      // Arrange
+      const mockProductTypeCode = PRODUCT_TYPES.GEF;
+
+      // Act
+      const result = mapFacilityCategoryCode(mockProductTypeCode);
+
+      // Assert
+      expect(result).toEqual(null);
     });
   });
 

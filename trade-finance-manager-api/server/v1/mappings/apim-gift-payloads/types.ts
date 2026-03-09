@@ -16,6 +16,12 @@ export type ApimGiftFacilityOverview = {
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
 };
 
+export type ApimGiftCounterparty = unknown; // TODO: DTFS2-8314 Define concrete shape
+
+export type ApimGiftObligation = unknown; // TODO: DTFS2-8315 Define concrete shape
+
+export type ApimGiftRepaymentProfile = unknown; // TODO: DTFS2-8316 Define concrete shape
+
 export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
   dealId: string;
@@ -28,8 +34,8 @@ export type ApimGiftFacilityRiskDetails = {
 export type ApimGiftFacilityCreationPayload = {
   consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
   overview: ApimGiftFacilityOverview;
-  counterparties: any[]; // TODO: DTFS2-8314
-  obligations: any[]; // TODO: DTFS2-8315
-  repaymentProfiles: any[]; // TODO: DTFS2-8316
+  counterparties: ApimGiftCounterparty[];
+  obligations: ApimGiftObligation[];
+  repaymentProfiles: ApimGiftRepaymentProfile[];
   riskDetails: ApimGiftFacilityRiskDetails;
 };

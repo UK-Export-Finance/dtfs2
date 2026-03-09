@@ -15,13 +15,11 @@ const CONSUMER = 'DTFS' as const;
  */
 const CREDIT_TYPE = {
   BSS: 'Term',
-  EWCS: 'Revolving',
   GEF: 'Revolving',
 } as const;
 
 const IS_REVOLVING = {
   BSS: false,
-  EWCS: true,
   GEF: true,
 } as const;
 
