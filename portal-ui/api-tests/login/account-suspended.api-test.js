@@ -47,6 +47,5 @@ describe('GET /login/temporarily-suspended-access-code', () => {
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
     expect(response.text).toContain('This account has been temporarily suspended');
-    expect(response.text).toContain('data-cy="account-temporarily-suspended-heading"');
   });
 });

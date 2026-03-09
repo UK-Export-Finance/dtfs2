@@ -28,7 +28,7 @@ const partialAuthToken = 'partial auth token';
 const email = 'email@example.com';
 const password = 'a password';
 
-describe.skip('POST /login/check-your-email-access-code', () => {
+describe('POST /login/check-your-email-access-code', () => {
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => post({ sixDigitAccessCode: '123456' }, headers).to('/login/check-your-email-access-code'),
     validateResponseWasSuccessful: (response) => {
@@ -36,7 +36,7 @@ describe.skip('POST /login/check-your-email-access-code', () => {
     },
   });
 
-  describe.skip('when the user has a valid partial auth token and an expired access code', () => {
+  describe('when the user has a valid partial auth token and an expired access code', () => {
     let sessionCookie;
 
     beforeEach(async () => {

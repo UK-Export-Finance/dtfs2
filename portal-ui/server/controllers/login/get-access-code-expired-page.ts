@@ -23,7 +23,7 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
       session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = req;
 
-    if (typeof attemptsLeft === 'undefined') {
+    if (attemptsLeft === undefined) {
       console.error('No remaining OTP attempts found in session when rendering access code expired page');
       return res.render('partials/problem-with-service.njk');
     }

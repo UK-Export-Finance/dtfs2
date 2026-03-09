@@ -1,8 +1,3 @@
-/**
- * Shared OTP result types and interfaces for 2FA controllers.
- *
- * Use these types for consistent handling of OTP login results across controllers.
- */
 import { LoginWithSignInOtpResponse } from './login-with-sign-in-otp-response';
 
 export const OTP_RESULT_TYPE = {
