@@ -76,20 +76,20 @@ describe('Mapping tenor dates across products', () => {
       const { tfm } = mockGefFacilityUnissued;
       const result = mapTenorDate(null, tfm.exposurePeriodInMonths);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
 
     it('Upon void argument sets', () => {
       const { tfm } = mockGefFacilityUnissued;
       const result = mapTenorDate(null, tfm.exposurePeriodInMonths);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
 
     it('Upon void argument sets', () => {
       const result = mapTenorDate(null, null);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

@@ -19,6 +19,7 @@ describe('mapOverview', () => {
 
     // Act
     const result = mapOverview(params);
+
     // Assert
     const expected = {
       creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS, // TODO: DTFS2-8307 - based on product type
@@ -32,6 +33,7 @@ describe('mapOverview', () => {
       obligorUrn: params.exporterPartyUrn,
       productTypeCode: params.productTypeCode,
     };
+
     expect(result).toEqual(expected);
   });
 });

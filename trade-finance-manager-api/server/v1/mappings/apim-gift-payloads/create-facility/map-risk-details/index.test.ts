@@ -55,7 +55,7 @@ describe('mapFacilityCategoryCode', () => {
       const result = mapFacilityCategoryCode(mockProductTypeCode);
 
       // Assert
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 
@@ -69,7 +69,7 @@ describe('mapFacilityCategoryCode', () => {
       const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
 
       // Assert
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

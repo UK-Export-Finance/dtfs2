@@ -73,6 +73,6 @@ describe('validateWhatNeedsToChange', () => {
     const result = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
 
     // Assert
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });

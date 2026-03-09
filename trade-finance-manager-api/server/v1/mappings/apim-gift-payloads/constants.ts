@@ -27,7 +27,7 @@ const IS_REVOLVING = {
  * For BSS/GEF/EWCS,
  * default account to "2" (Corporate) for the "account" field in GIFT.
  */
-const ACCOUNT = 2 as const;
+const GIFT_ACCOUNT = 2 as const;
 
 /**
  * For BSS/GEF/EWCS,
@@ -43,7 +43,7 @@ export const APIM_GIFT_INTEGRATION = {
       IS_REVOLVING,
     },
     RISK_DETAILS: {
-      ACCOUNT,
+      ACCOUNT: GIFT_ACCOUNT,
       RISK_STATUS,
     },
   },
