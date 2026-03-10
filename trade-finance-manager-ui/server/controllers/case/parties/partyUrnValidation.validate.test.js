@@ -33,7 +33,7 @@ describe('validatePartyURN()', () => {
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
-    expect(response.urn).toEqual(null);
+    expect(response.urn).toBeNull();
   });
 
   it('should return validation error if partyUrn is undefined and partyUrnRequired', () => {

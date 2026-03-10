@@ -230,7 +230,7 @@ describe('/v1/deals', () => {
 
             const unissuedFacility = body.facilities.find((facility) => !facility.hasBeenIssued);
 
-            expect(unissuedFacility.tfm.feeRecord).toEqual(null);
+            expect(unissuedFacility.tfm.feeRecord).toBeNull();
           });
         });
 
