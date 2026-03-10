@@ -33,7 +33,7 @@ context('Portal to TFM deal submission - null currencies', () => {
   });
 
   after(() => {
-    // cy.clearSessionCookies();
+    cy.clearSessionCookies();
   });
 
   it('Portal deal is submitted to UKEF, with facilities having null and non-null currencies - all currencies are handled correctly', () => {
