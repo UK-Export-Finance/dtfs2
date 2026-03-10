@@ -3,7 +3,7 @@ import { getTfmUkefDealId } from './get-tfm-ukef-deal-id';
 import { DEAL_TYPE } from '../constants';
 
 describe('getTfmUkefDealId', () => {
-  it('returns ukefDealId on a TFM BSS/EWCS deal', () => {
+  it('should return ukefDealId on a TFM BSS/EWCS deal', () => {
     // Arrange
     const ukefDealId = 'mockDealId';
 
@@ -23,7 +23,7 @@ describe('getTfmUkefDealId', () => {
     expect(result).toEqual(ukefDealId);
   });
 
-  it('returns ukefDealId on a TFM GEF deal', () => {
+  it('should return ukefDealId on a TFM GEF deal', () => {
     // Arrange
     const ukefDealId = 'mockDealId';
 
