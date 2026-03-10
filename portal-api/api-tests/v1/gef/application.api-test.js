@@ -561,7 +561,7 @@ describe(baseUrl, () => {
         const facilityId = createFacilityResponse.body.details._id;
 
         // check that the facility does not already have ukefFacilityId
-        expect(createFacilityResponse.body.details.ukefFacilityId).toEqual(null);
+        expect(createFacilityResponse.body.details.ukefFacilityId).toBeNull();
 
         // change deal status to submitted
         const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
@@ -588,7 +588,7 @@ describe(baseUrl, () => {
         const facilityId = createFacilityResponse.body.details._id;
 
         // check that the facility does not already have submittedAsIssuedDate
-        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toBeNull();
 
         // change deal status to submitted
         const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${body._id}`);
@@ -614,9 +614,9 @@ describe(baseUrl, () => {
 
         const facilityId = createFacilityResponse.body.details._id;
         // check that the facility does not already have submittedAsIssuedDate
-        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toBeNull();
         // ensures that should shouldCoverStartOnSubmission is null
-        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(null);
+        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toBeNull();
 
         // update facility so that shouldCoverStartOnSubmission and coverStartDate are added to the facility
         const facilityWithDates = await as(maker1).put(issuedFacility).to(`${facilitiesUrl}/${facilityId}`);
@@ -653,9 +653,9 @@ describe(baseUrl, () => {
 
         const facilityId = createFacilityResponse.body.details._id;
         // adds a submittedAsIssuedDate
-        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toEqual(null);
+        expect(createFacilityResponse.body.details.submittedAsIssuedDate).toBeNull();
         // ensures that should shouldCoverStartOnSubmission is null
-        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toEqual(null);
+        expect(createFacilityResponse.body.details.shouldCoverStartOnSubmission).toBeNull();
 
         // update facility so that shouldCoverStartOnSubmission and coverStartDate are added to the facility
         const facilityWithDates = await as(maker1).put(issuedFacility).to(`${facilitiesUrl}/${facilityId}`);

@@ -173,7 +173,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockRequest.session.address).toEqual(null);
+      expect(mockRequest.session.address).toBeNull();
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/about-exporter');
     });
 

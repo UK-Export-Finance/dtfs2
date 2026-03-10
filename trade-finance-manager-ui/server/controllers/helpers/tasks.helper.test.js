@@ -35,7 +35,7 @@ describe('case - helpers', () => {
         },
       ];
       const result = getTask(2, 1, mockTasks);
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
 
     it('should return null when task does not exist', () => {
@@ -46,7 +46,7 @@ describe('case - helpers', () => {
         },
       ];
       const result = getTask(1, 2, mockTasks);
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });
