@@ -22,5 +22,5 @@ export const mapApimCreditRiskRatings = (creditRiskRatingsResponse: any): string
     return [];
   }
 
-  return creditRiskRatingsResponse.map((creditRiskRating: CreditRiskRating) => creditRiskRating?.description);
+  return creditRiskRatingsResponse.map((creditRiskRating: CreditRiskRating) => creditRiskRating?.description).filter(Boolean);
 };

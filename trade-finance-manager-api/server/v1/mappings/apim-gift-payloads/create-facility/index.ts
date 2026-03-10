@@ -47,7 +47,7 @@ export const createFacility = async ({ deal, dealId, exporterPartyUrn, facility 
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
    *
-   * NOTE: if this API call fails, we NOT want to throw an error.
+   * NOTE: if this API call fails, we do NOT want to throw an error.
    * Instead, continue with an empty array of credit risk ratings, which could result in the facility credit rating not being mapped.
    * But at least the facility can still be created in GIFT and the issue can be investigated separately.
    * If the credit risk rating mapping fails, the facility credit rating will simply not be sent to GIFT, which is preferable to the entire facility creation failing.

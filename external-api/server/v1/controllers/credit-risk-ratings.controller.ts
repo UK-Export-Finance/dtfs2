@@ -46,7 +46,7 @@ const headers = {
  */
 export const findAll = async (req: Request, res: Response) => {
   try {
-    console.info('⚡️ Invoking MDM credit risk ratings endpoint %s %s');
+    console.info('⚡️ Invoking MDM credit risk ratings endpoint');
 
     const url = `${APIM_MDM_URL}v2/dom/credit-risk-ratings`;
 

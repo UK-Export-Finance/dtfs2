@@ -4,6 +4,22 @@ import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapFacilityCreditRating', () => {
+  describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
+    it('should return the mapped credit rating', () => {
+      // Arrange
+      const mockCreditRiskRatings = ['BB-', 'B+'];
+      const mockExporterCreditRating = 'Good (BB-)';
+
+      // Act
+      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
+
+      // Assert
+      const expected = 'BB-';
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe('when the exporter credit rating is in the list of credit risk ratings', () => {
     it('should return the mapped credit rating', () => {
       // Arrange
@@ -20,19 +36,17 @@ describe('mapFacilityCreditRating', () => {
     });
   });
 
-  describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
-    it('should return the mapped credit rating', () => {
+  describe('when the exporter credit rating is NOT inTFM_CREDIT_RATING_MAP or the list of credit risk ratings', () => {
+    it('should return null', () => {
       // Arrange
-      const mockCreditRiskRatings = ['BB-', 'B+'];
-      const mockExporterCreditRating = 'Good (BB-)';
+      const mockCreditRiskRatings = [''];
+      const mockExporterCreditRating = 'AAA';
 
       // Act
       const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
 
       // Assert
-      const expected = 'BB-';
-
-      expect(result).toEqual(expected);
+      expect(result).toBeNull();
     });
   });
 });

@@ -919,8 +919,7 @@ const getCompanyInfo = async (partyUrn) => {
 
 /**
  * Get credit risk ratings
- * @returns {Promise<import('./api-response-types').CreditRiskRating[]>}
- * @throws {Error} If an unexpected error occurs during the request.
+ * @returns {Promise<import('./api-response-types').CreditRiskRating[] | false>}
  */
 const getCreditRiskRatings = async () => {
   try {
