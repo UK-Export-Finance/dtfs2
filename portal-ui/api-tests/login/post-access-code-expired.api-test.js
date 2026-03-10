@@ -29,6 +29,14 @@ const email = 'email@example.com';
 const password = 'a password';
 
 describe('POST /login/check-your-email-access-code', () => {
+  beforeAll(() => {
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
+
+  afterAll(() => {
+    delete process.env.FF_PORTAL_2FA_ENABLED;
+  });
+
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => post({ sixDigitAccessCode: '123456' }, headers).to('/login/check-your-email-access-code'),
     validateResponseWasSuccessful: (response) => {
