@@ -36,11 +36,11 @@ describe('mapFacilityCreditRating', () => {
     });
   });
 
-  describe('when the exporter credit rating is NOT inTFM_CREDIT_RATING_MAP or the list of credit risk ratings', () => {
+  describe('when the exporter credit rating is NOT in TFM_CREDIT_RATING_MAP or the list of credit risk ratings', () => {
     it('should return null', () => {
       // Arrange
-      const mockCreditRiskRatings = [''];
-      const mockExporterCreditRating = 'AAA';
+      const mockCreditRiskRatings = ['AAA'];
+      const mockExporterCreditRating = 'CCC';
 
       // Act
       const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);

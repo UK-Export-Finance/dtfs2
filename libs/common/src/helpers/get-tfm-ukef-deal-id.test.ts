@@ -3,14 +3,16 @@ import { getTfmUkefDealId } from './get-tfm-ukef-deal-id';
 import { DEAL_TYPE } from '../constants';
 
 describe('getTfmUkefDealId', () => {
-  it('returns ukefDealId on a TFM GEF deal', () => {
+  it('returns ukefDealId on a TFM BSS/EWCS deal', () => {
     // Arrange
     const ukefDealId = 'mockDealId';
 
     const mockDeal = {
       dealSnapshot: {
-        dealType: DEAL_TYPE.GEF,
-        ukefDealId,
+        dealType: DEAL_TYPE.BSS_EWCS,
+        details: {
+          ukefDealId,
+        },
       },
     } as TfmDeal;
 
@@ -21,15 +23,14 @@ describe('getTfmUkefDealId', () => {
     expect(result).toEqual(ukefDealId);
   });
 
-  it('returns ukefDealId on a TFM BSS/EWCS deal', () => {
+  it('returns ukefDealId on a TFM GEF deal', () => {
     // Arrange
     const ukefDealId = 'mockDealId';
 
     const mockDeal = {
       dealSnapshot: {
-        details: {
-          ukefDealId,
-        },
+        dealType: DEAL_TYPE.GEF,
+        ukefDealId,
       },
     } as TfmDeal;
 

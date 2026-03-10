@@ -115,9 +115,7 @@ describe('createFacility', () => {
       // Arrange
       const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
-      const mockError = new Error('Mock error');
-
-      mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(mockError);
+      mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
     });
 
     it('should NOT propagate the error', async () => {

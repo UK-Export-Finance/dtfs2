@@ -84,6 +84,32 @@ describe('findAll', () => {
     expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during credit risk ratings endpoint call' });
   });
 
+  it(`should forward non-${HttpStatusCode.Ok} status and body when APIM MDM returns an HTTP error response`, async () => {
+    // Arrange
+    const mockAxiosError = {
+      response: {
+        status: HttpStatusCode.BadGateway,
+        data: {
+          status: HttpStatusCode.BadGateway,
+          message: 'MDM upstream error',
+          errors: [{ code: 'UPSTREAM_FAILURE' }],
+        },
+      },
+    };
+
+    jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+    // Act
+    await findAll(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error calling Credit Risk Ratings API, %o', mockAxiosError);
+
+    expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
+    expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);
+  });
+
   it(`should return ${HttpStatusCode.Ok}`, async () => {
     // Arrange
     jest.mocked(axios).mockResolvedValueOnce({
