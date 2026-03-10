@@ -360,10 +360,10 @@ router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }),
    * this will set them to the supply contract value as happens if done in order
    */
   try {
-    const bonds = req.apiData.deal?.bondTransactions?.items;
-    const loans = req.apiData.deal?.loanTransactions?.items;
-
-    const { supplyContractCurrency } = req.apiData.deal.submissionDetails;
+    const { bondTransactions, loanTransactions, submissionDetails } = req.apiData.deal;
+    const bonds = bondTransactions?.items;
+    const loans = loanTransactions?.items;
+    const { supplyContractCurrency } = submissionDetails ?? {};
 
     await fixNullCurrencyOnBondAndLoans(bonds, loans, supplyContractCurrency, _id, req.session.userToken);
   } catch (error) {

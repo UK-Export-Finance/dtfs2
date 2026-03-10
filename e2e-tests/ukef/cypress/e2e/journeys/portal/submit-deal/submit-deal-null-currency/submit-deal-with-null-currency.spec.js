@@ -81,13 +81,13 @@ context('Portal to TFM deal submission - null currencies', () => {
     //---------------------------------------------------------------
     let facilityRow;
 
-    const nullBonds = dealFacilities.filter((facility) => facility.type === 'Bond' && facility.currencySameAsSupplyContractCurrency === 'true');
+    const filterFacilities = (type, currencySameAsSupplyContractCurrency) =>
+      dealFacilities.filter((facility) => facility.type === type && facility.currencySameAsSupplyContractCurrency === currencySameAsSupplyContractCurrency);
 
-    const notNullBonds = dealFacilities.filter((facility) => facility.type === 'Bond' && facility.currencySameAsSupplyContractCurrency === 'false');
-
-    const nullLoans = dealFacilities.filter((facility) => facility.type === 'Loan' && facility.currencySameAsSupplyContractCurrency === 'true');
-
-    const notNullLoans = dealFacilities.filter((facility) => facility.type === 'Loan' && facility.currencySameAsSupplyContractCurrency === 'false');
+    const nullBonds = filterFacilities('Bond', 'true');
+    const notNullBonds = filterFacilities('Bond', 'false');
+    const nullLoans = filterFacilities('Loan', 'true');
+    const notNullLoans = filterFacilities('Loan', 'false');
 
     nullBonds.forEach((bond) => {
       facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(bond._id);
