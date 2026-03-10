@@ -1,4 +1,4 @@
-import { Facility, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
@@ -55,8 +55,6 @@ describe('createFacility', () => {
 
   const params = {
     deal: mockDeal,
-    dealId: '123',
-    exporterPartyUrn: '12345',
     facility: mockFacility,
   };
 
@@ -91,7 +89,7 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-        exporterPartyUrn: params.exporterPartyUrn,
+        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
         productTypeCode: PRODUCT_TYPES.BSS,
@@ -102,7 +100,7 @@ describe('createFacility', () => {
       repaymentProfiles: [], // TODO: DTFS2-8316
       riskDetails: mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
-        dealId: params.dealId,
+        dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         productTypeCode: PRODUCT_TYPES.BSS,
         facilityCategoryCode: String(facilitySnapshot.type),

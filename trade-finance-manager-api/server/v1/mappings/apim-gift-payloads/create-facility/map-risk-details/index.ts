@@ -5,7 +5,7 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapRiskDetailsParams = {
   creditRiskRatings: string[];
-  dealId: string;
+  dealId: string | null;
   exporterCreditRating: string;
   facilityCategoryCode?: string;
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
@@ -46,7 +46,7 @@ export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCre
  * Map the facility "risk details"
  * @param {MapRiskDetailsParams} params - Data required to build the APIM GIFT "facility risk details" data.
  * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
- * @param {string} params.dealId - The TFM deal ID.
+ * @param {string | null} params.dealId - The TFM deal ID.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
  * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {(typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES]} params.productTypeCode - The APIM GIFT product type code for the facility.

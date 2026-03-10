@@ -1,4 +1,4 @@
-import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
@@ -7,24 +7,18 @@ import api from '../../../api';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 
 export type FacilityCreationParams = {
-  dealId: string;
   deal: TfmDeal;
-  exporterPartyUrn: string;
   facility: TfmFacility;
 };
-
-// TODO - dealId, exporterPartyUrn, have e.g "dealData" param instead?
 
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
- * @param {string} params.dealId - The TFM deal ID.
  * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
- * @param {string} params.exporterPartyUrn - The TFM exporter party URN, from deal data.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
-export const createFacility = async ({ deal, dealId, exporterPartyUrn, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
+export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -35,14 +29,17 @@ export const createFacility = async ({ deal, dealId, exporterPartyUrn, facility 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const { exporterCreditRating } = deal.tfm;
-
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
   const facilityAmount = Number(tfm.ukefExposure);
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
+  const dealId = getTfmUkefDealId(deal);
+
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
+
+  const { exporterCreditRating } = deal.tfm;
+  const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
 
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
