@@ -45,6 +45,6 @@ module.exports.login = (username, password, userService, auditDetails) =>
       }
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValidUsernameAndPasswordJWT(user);
-      return updateSessionIdentifier(user, sessionIdentifier, auditDetails, () => resolve({ tokenObject, userEmail: user.email }));
+      return updateSessionIdentifier(user, sessionIdentifier, auditDetails, () => resolve({ tokenObject, userEmail: user.email, userId: user._id }));
     });
   });

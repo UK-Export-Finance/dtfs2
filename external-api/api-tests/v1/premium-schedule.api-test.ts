@@ -45,8 +45,8 @@ describe('/premium-schedule', () => {
     },
   };
 
-  axiosMock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
-  axiosMock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
+  axiosMock.onPost(`${process.env.APIM_MDM_URL}v1/premium/schedule`).reply(200, mockResponse);
+  axiosMock.onGet(`${process.env.APIM_MDM_URL}v1/premium/segments/12345678`).reply(200, mockResponse);
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {

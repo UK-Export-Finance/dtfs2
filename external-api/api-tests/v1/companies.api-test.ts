@@ -9,7 +9,7 @@ dotenv.config();
 
 const { APIM_MDM_URL } = process.env;
 
-const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_MDM_URL}companies?registrationNumber=${registrationNumber}`;
+const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_MDM_URL}v1/companies?registrationNumber=${registrationNumber}`;
 
 const { get } = api(app);
 

@@ -357,11 +357,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     id: 'PEN',
   },
   {
-    currencyId: 54,
-    text: 'RUB - Russian Ruble ',
-    id: 'RUB',
-  },
-  {
     currencyId: 55,
     text: 'KRW - South Korean Won',
     id: 'KRW',

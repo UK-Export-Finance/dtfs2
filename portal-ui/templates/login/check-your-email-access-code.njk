@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import "./_macros/access-code-attempts.njk" as accessCodeAttempts %}
 
@@ -11,6 +11,20 @@
 {% endblock %}
 
 {% block content %}
+  {% if validationErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] if validationErrors.sixDigitAccessCode,
+      attributes: {
+        "data-cy": "error-summary"
+      }
+    }) }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <h1 class="govuk-heading-l" data-cy="check-your-email-heading">Check your email</h1>
@@ -18,38 +32,45 @@
       <p class="govuk-body govuk-!-margin-bottom-6" data-cy="check-your-email-description">
         We have sent you a 6-digit access code to your email {{ email }}.
       </p>
+
+      <form method="POST" action="/login/check-your-email-access-code" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
  
-      {{ govukInput({
-        label: {
-          text: "Enter access code:"
-        },
-        id: "sixDigitAccessCode",
-        classes: "govuk-input--width-10",
-        name: "sixDigitAccessCode",
-        value: sixDigitAccessCode,
-        spellcheck: false,
-        attributes: {
-          "data-cy": "six-digit-access-code-input",
-          "placeholder": "e.g. 123456"
-        },
-        errorMessage: errors and errors.fieldErrors.sixDigitAccessCode and {
-          text: errors.fieldErrors.sixDigitAccessCode.text,
+        {{ govukInput({
+          label: {
+            text: "Enter access code:",
+            attributes: {
+              "data-cy": "six-digit-access-code-label"
+            }
+          },
+          id: "sixDigitAccessCode",
+          classes: "govuk-input--width-10",
+          name: "sixDigitAccessCode",
+          value: sixDigitAccessCode,
+          spellcheck: false,
           attributes: {
-              'data-cy': 'six-digit-access-code-inline-error'
+            "data-cy": "six-digit-access-code-input",
+            "placeholder": "e.g. 123456"
+          },
+          errorMessage: accessCodeError and {
+              text: accessCodeError.text,
+              attributes: {
+                  'data-cy': 'six-digit-access-code-inline-error'
+              }
           }
-        }
-      }) }}
+        }) }}
 
-      <p class="govuk-body" data-cy="access-code-expiry-info">
-        This code will expire after 30 minutes.
-      </p>
+        <p class="govuk-body" data-cy="access-code-expiry-info">
+          This code will expire after 30 minutes.
+        </p>
 
-      {{ accessCodeAttempts.render({
-        isSupportInfo: false,
-        attemptsLeft: attemptsLeft,
-        requestNewCodeUrl: requestNewCodeUrl,
-        isAccessCodeLink: true
-      }) }}
+        {{ accessCodeAttempts.render({
+          isSupportInfo: isSupportInfo,
+          attemptsLeft: attemptsLeft,
+          requestNewCodeUrl: requestNewCodeUrl,
+          isAccessCodeLink: isAccessCodeLink
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}

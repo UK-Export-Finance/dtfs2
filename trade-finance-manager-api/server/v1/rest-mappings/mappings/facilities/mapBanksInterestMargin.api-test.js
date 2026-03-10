@@ -31,6 +31,6 @@ describe('mapBanksInterestMargin', () => {
     };
 
     const result = mapBanksInterestMargin(mockFacility);
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });
