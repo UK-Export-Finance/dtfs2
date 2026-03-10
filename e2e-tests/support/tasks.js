@@ -219,6 +219,23 @@ module.exports = {
     };
 
     /**
+     * Override the user's signInOTPSendCount in the DB for E2E tests.
+     *
+     * Usage note: the application computes "attempts remaining" as
+     *   remaining = MAX_SIGN_IN_ATTEMPTS - signInOTPSendCount
+     * and the code that sends an OTP increments the DB count before calculating
+     * remaining. To make the server return a desired `attemptsLeft` after the
+     * send occurs, set the DB count to:
+     *   signInOTPSendCount = MAX_SIGN_IN_ATTEMPTS - 1 - attemptsLeft
+     * In our tests MAX_SIGN_IN_ATTEMPTS = 3, so the helper in specs computes
+     * overrideCount = 2 - attemptsLeft before calling this task.
+     */
+    const overridePortalUserSignInOTPSendCountByUsername = async ({ username, count }) => {
+      const users = await getUsersCollection();
+      return users.updateOne({ username: { $eq: username } }, { $set: { signInOTPSendCount: count } });
+    };
+
+    /**
      * Generates the specified number of TFM deals and inserts them directly
      * into the db. The UKEF deal ID of the first generated deal is 10000001;
      * this is incremented for each subsequent deal. The deal exporter is
@@ -310,6 +327,7 @@ module.exports = {
       getUserFromDbByUsername,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
+      overridePortalUserSignInOTPSendCountByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
       disablePortalUserByUsername,
       insertManyTfmDeals,

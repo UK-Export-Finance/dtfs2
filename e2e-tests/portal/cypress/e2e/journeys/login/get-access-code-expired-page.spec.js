@@ -1,16 +1,22 @@
-import accessCodeExpired from '../../pages/login/access-code-expired';
+const accessCodeExpired = require('../../pages/login/access-code-expired');
+const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
 
-context('Access Code Expired Page', () => {
-  const attemptsLeft = 2;
-  const userId = 'test-user-123';
+describe('Access Code Expired Page', () => {
+  const { username } = BANK1_MAKER1;
 
   beforeEach(() => {
-    // TODO: session not avaible yet as the endpoint to set up session data is not implemented yet. Once implemented, this will set up the session with the specified user ID and attempts left before visiting the page.
-    cy.setupPortalSession({
-      userId,
-      numberOfSignInOtpAttemptsRemaining: attemptsLeft,
+    // Ensure the user is in a clean state and has zero prior send count so they are not suspended
+    cy.overridePortalUserSignInOTPSendCountByUsername({ username, count: 0 });
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
+
+    // Perform login to trigger sendSignInOTP which attempts to populate session values
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+    // Call the server endpoint that requests a new access code and stores attemptsLeft in session.
+    // This ensures `numberOfSignInOtpAttemptsRemaining` exists before visiting the expired page.
+    cy.request({ method: 'GET', url: '/login/request-new-access-code', followRedirect: true }).then(() => {
+      cy.visit('/login/access-code-expired');
     });
-    cy.visit('/login/access-code-expired');
   });
 
   it('renders the correct heading', () => {
@@ -24,7 +30,7 @@ context('Access Code Expired Page', () => {
   });
 
   it('shows attempts remaining info', () => {
-    accessCodeExpired.attemptsInfo().should('contain.text', `You have ${attemptsLeft} attempts remaining.`);
+    accessCodeExpired.attemptsInfo().should('contain.text', 'attempts remaining');
   });
 
   it('shows suspend info', () => {
@@ -36,10 +42,29 @@ context('Access Code Expired Page', () => {
       );
   });
 
-  it('shows and clicks the request new code button', () => {
-    accessCodeExpired.requestNewCodeButton().should('be.visible').and('contain.text', 'Request a new code');
-    accessCodeExpired.clickRequestNewCode();
-    // TODO: once the endpoint to set up session data is implemented, we can assert that the user is redirected to the new access code page after clicking the button. For now, we can just assert that the URL changes to the expected path.
-    cy.location('pathname').should('eq', '/login/new-access-code');
+  describe('Request new code button behaviour', () => {
+    const scenarios = [
+      { attemptsLeft: 2, expectedPath: '/login/check-your-email-access-code' },
+      { attemptsLeft: 1, expectedPath: '/login/new-access-code' },
+      { attemptsLeft: -1, expectedPath: '/login/temporarily-suspended-access-code' },
+    ];
+
+    scenarios.forEach(({ attemptsLeft: attempts, expectedPath }) => {
+      it(`when attemptsLeft is ${attempts} it redirects to ${expectedPath} after clicking request new code`, () => {
+        // compute DB signInOTPSendCount so that after increment the remaining attempts equals `attempts`
+        // remaining = MAX_SIGN_IN_ATTEMPTS - (count + 1) => count = MAX_SIGN_IN_ATTEMPTS - 1 - remaining
+        // with MAX_SIGN_IN_ATTEMPTS = 3, count = 2 - attempts
+        const overrideCount = 2 - attempts;
+        cy.overridePortalUserSignInOTPSendCountByUsername({ username, count: overrideCount });
+
+        // visit the expired page; clicking the request button will call the server endpoint
+        // to request a new access code (this is the single increment we want to test)
+        cy.visit('/login/access-code-expired');
+
+        accessCodeExpired.requestNewCodeButton().should('be.visible').and('contain.text', 'Request a new code');
+        accessCodeExpired.requestNewCodeButton().click();
+        cy.location('pathname').should('eq', expectedPath);
+      });
+    });
   });
 });

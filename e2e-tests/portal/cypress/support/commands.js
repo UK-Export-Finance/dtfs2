@@ -94,6 +94,7 @@ Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./port
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add('overridePortalUserSignInOTPSendCountByUsername', require('./portal-api/overridePortalUserSignInOTPSendCountByUsername'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 
