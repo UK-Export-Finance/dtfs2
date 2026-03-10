@@ -21,11 +21,10 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches:
-      - feat/DTFS2-16188-bicep-templates
+    branches: 
+      - feat/DTFS2-16188-remaining
     paths:
       - '.github/workflows/bicep_infrastructure.yml'
-      - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
 
 env:
@@ -72,13 +71,10 @@ jobs:
           inlineScript: |
             az group create \
             --location ${{ vars.REGION }} \
-            --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
+            --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} 
 
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
-
-
 
 # 2. Validate infrastructure resources
   Resource-Deploy:
@@ -146,6 +142,7 @@ jobs:
           WEBSITE_DYNAMIC_CACHE: ${{ vars.WEBSITE_DYNAMIC_CACHE }}  
           WEBSITE_NODE_DEFAULT_VERSION: ${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}
           WEBSITE_HEALTHCHECKING_MAX: ${{ vars.WEBSITE_HEALTHCHECKING_MAX }}
+          TEST_SOURCE_ADDRESS_PREFIX: ${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}
 
         run: |
           BICEP_PARAMETERS="version=${{ vars.VERSION }} \
@@ -159,7 +156,7 @@ jobs:
             acaClamAvCidr=$ACA_CLAMAV_CIDR \
             privateEndpointsCidr=$PRIVATE_ENDPOINTS_CIDR \
             productionSubnetCidr=$PROD_SUBNET_CIDR \
-            routeTableNextHopAddress=$ROUTE_TBL_NEXT_HOP_ADDRESS \
+            routeTableNextHopIpAddress=$ROUTE_TBL_NEXT_HOP_ADDRESS \
             onPremiseNetworkIpsString=$UKEF_VPN_IPS \
             azurePortalIpsString=$AZ_PORTAL_IPS \
             RATE_LIMIT_THRESHOLD=$RATE_LIMIT_THRESHOLD \
@@ -201,7 +198,8 @@ jobs:
             websiteHttploggingRetentionDays=$WEBSITE_HTTPLOGGING_RETENTION_DAYS \
             websiteDynamicCache=$WEBSITE_DYNAMIC_CACHE \
             websiteNodeDefaultVersion=$WEBSITE_NODE_DEFAULT_VERSION \
-            websiteHealthcheckingMax=$WEBSITE_HEALTHCHECKING_MAX " 
+            websiteHealthcheckingMax=$WEBSITE_HEALTHCHECKING_MAX \
+            testSourceAddressPrefix=$TEST_SOURCE_ADDRESS_PREFIX "
 
           echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> "$GITHUB_ENV"
 
@@ -220,4 +218,3 @@ jobs:
           template: ./infrastructure/resource_group_level/main.bicep
           parameters: ${{ env.BICEP_PARAMETERS }}
           scope: resourcegroup
-

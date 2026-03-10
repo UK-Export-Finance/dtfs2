@@ -2,8 +2,8 @@ param location string
 param gatewaySubnetId string
 param tfsIpId string
 param portalApiHostname string
-param portalUiHostname string
-param gefUiHostname string
+param portalUIHostname string
+param gefUIHostname string
 param apiPortalAccessPort int = 0
 param product string
 param target string
@@ -38,7 +38,7 @@ var backendPools = concat([
     properties: {
       backendAddresses: [
         {
-          fqdn: portalUiHostname
+          fqdn: portalUIHostname
         }
       ]
     }
@@ -48,7 +48,7 @@ var backendPools = concat([
     properties: {
       backendAddresses: [
         {
-          fqdn: gefUiHostname
+          fqdn: gefUIHostname
         }
       ]
     }

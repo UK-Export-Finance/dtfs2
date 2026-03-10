@@ -96,10 +96,6 @@ var optionalRules = apiPortalAccessPort != 0 ? [
       access: 'Allow'
       priority: 300
       direction: 'Inbound'
-      sourcePortRanges: []
-      destinationPortRanges: []
-      sourceAddressPrefixes: []
-      destinationAddressPrefixes: []
     }
   }
 ] : []

@@ -11,8 +11,11 @@ param product string
 param target string
 param version string
 param resourceNameFragment string = 'function-acbs'
+@secure()
 param settings object
-param secureSettings object
+@secure()  
+param secureSettings object  
+@secure() 
 param additionalSecureSettings object
 param azureDnsServerIp string
 param timeZone string

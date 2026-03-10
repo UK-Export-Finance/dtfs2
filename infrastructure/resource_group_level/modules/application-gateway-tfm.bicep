@@ -1,7 +1,7 @@
 param location string
 param gatewaySubnetId string
 param tfsTfmIpId string
-param tfmUiHostname string
+param tfmUIHostname string
 param product string
 param target string
 param version string
@@ -28,7 +28,7 @@ var backendPools = [
     properties: {
       backendAddresses: [
         {
-          fqdn: tfmUiHostname
+          fqdn: tfmUIHostname
         }
       ]
     }

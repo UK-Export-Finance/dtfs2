@@ -119,7 +119,7 @@ param nsgSourceAddressPrefix string
 param ukefSourceAddressPrefix string 
 param testSourceAddressPrefix string 
 param websiteHttploggingRetentionDays string
-param websiteHealthchekingMax int
+param websiteHealthcheckingMax int
 param websiteDynamicCache string
 param websiteNodeDefaultVersion string
 param timeZone string
@@ -133,21 +133,16 @@ var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ versio
 var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
 /* This parameters map holds the per-environment settings.
-Some notes from initial networking conversations:
-Dev uses 172.16.4x.xx
-Demo (legacy?) uses 172.16.6x.xx
-Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
-Feature can use 172.16.2x.xx */
+Some notes from initial networking conversations*/
 var parametersMap = {
   dev: {
-    acr: {
+    cr: {
       name: 'tfsdev'
       sku: {
         name: 'Standard'
       }
     }
     asp: {
-      name: 'dev'
       sku: 'p2v2'
     }
     cosmosDb: {
@@ -188,7 +183,7 @@ var parametersMap = {
     }
   }
   feature: {
-    acr: {
+    cr: {
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
@@ -236,7 +231,7 @@ var parametersMap = {
     }
   }
   staging: {
-    acr: {
+    cr: {
       name: 'tfsstaging'
       sku: {
         name: 'Standard'
@@ -284,7 +279,7 @@ var parametersMap = {
     }
   }
   prod: {
-    acr: {
+    cr: {
       name: 'tfsproduction'
       sku: {
         name: 'Standard'
@@ -412,48 +407,48 @@ var portalApiAdditionalSecureSetting = {
 var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
-var portalUiSettings = {
+var portalUISettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD 
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
-var portalUiSecureSettings = {
+var portalUISecureSettings = {
   COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
   SESSION_SECRET: SESSION_SECRET
 }
-var portalUiAdditionalSecureSettings = {
+var portalUIAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
-var portalUiSecureConnectionStrings = { }
-var portalUiAdditionalSecureConnectionStrings = { }
+var portalUISecureConnectionStrings = { }
+var portalUIAdditionalSecureConnectionStrings = { }
 
-var tfmUiSettings = {
+var tfmUISettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 }
-var tfmUiSecureSettings = {
+var tfmUISecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   ESTORE_URL: ESTORE_URL
   SESSION_SECRET: SESSION_SECRET
 }
-var tfmUiAdditionalSecureSettings = {
+var tfmUIAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
-var tfmUiSecureConnectionStrings = { }
-var tfmUiAdditionalSecureConnectionStrings = { }
+var tfmUISecureConnectionStrings = { }
+var tfmUIAdditionalSecureConnectionStrings = { }
 
-var gefUiSettings = {
+var gefUISettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
-var gefUiSecureSettings = {
+var gefUISecureSettings = {
   SESSION_SECRET: SESSION_SECRET
 }
-var gefUiAdditionalSecureSettings = {
+var gefUIAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
 }
-var gefUiSecureConnectionStrings = { }
-var gefUiAdditionalSecureConnectionStrings = { }
+var gefUISecureConnectionStrings = { }
+var gefUIAdditionalSecureConnectionStrings = { }
 var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
@@ -529,7 +524,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
   name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
   location: location
-  sku: parametersMap[environment].acr.sku
+  sku: parametersMap[environment].cr.sku
   properties: {
     adminUserEnabled: true
   }
@@ -818,8 +813,8 @@ module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables
   }
 }
 
-module portalUi 'modules/webapps/portal-ui.bicep' = {
-  name: 'portalUi'
+module portalUI 'modules/webapps/portal-ui.bicep' = {
+  name: 'portalUI'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
@@ -836,23 +831,23 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: portalUiSettings
-    secureSettings: portalUiSecureSettings
-    additionalSecureSettings: portalUiAdditionalSecureSettings
-    secureConnectionStrings: portalUiSecureConnectionStrings
-    additionalSecureConnectionStrings: portalUiAdditionalSecureConnectionStrings
+    settings: portalUISettings
+    secureSettings: portalUISecureSettings
+    additionalSecureSettings: portalUIAdditionalSecureSettings
+    secureConnectionStrings: portalUISecureConnectionStrings
+    additionalSecureConnectionStrings: portalUIAdditionalSecureConnectionStrings
     clamAvSettings: {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
     }
     azureDnsServerIp: azureDnsServerIp
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
-    websiteHealthchekingMax: websiteHealthchekingMax
+    websiteHealthcheckingMax: websiteHealthcheckingMax
   }
 }
 
-module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
-  name: 'tfmUi'
+module tfmUI 'modules/webapps/trade-finance-manager-ui.bicep' = {
+  name: 'tfmUI'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
@@ -868,19 +863,19 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: tfmUiSettings
-    secureSettings: tfmUiSecureSettings
-    additionalSecureSettings: tfmUiAdditionalSecureSettings
-    secureConnectionStrings: tfmUiSecureConnectionStrings
-    additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
+    settings: tfmUISettings
+    secureSettings: tfmUISecureSettings
+    additionalSecureSettings: tfmUIAdditionalSecureSettings
+    secureConnectionStrings: tfmUISecureConnectionStrings
+    additionalSecureConnectionStrings: tfmUIAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
   }
 }
 
-module gefUi 'modules/webapps/gef-ui.bicep' = {
-  name: 'gefUi'
+module gefUI 'modules/webapps/gef-ui.bicep' = {
+  name: 'gefUI'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
@@ -896,11 +891,11 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     redisName: redis.outputs.redisName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: gefUiSettings
-    secureSettings: gefUiSecureSettings
-    additionalSecureSettings: gefUiAdditionalSecureSettings
-    secureConnectionStrings: gefUiSecureConnectionStrings
-    additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
+    settings: gefUISettings
+    secureSettings: gefUISecureSettings
+    additionalSecureSettings: gefUIAdditionalSecureSettings
+    secureConnectionStrings: gefUISecureConnectionStrings
+    additionalSecureConnectionStrings: gefUIAdditionalSecureConnectionStrings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
@@ -917,8 +912,8 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     tfsIpId: tfsIp.outputs.tfsIpId
     portalApiHostname: portalApi.outputs.defaultHostName
-    portalUiHostname: portalUi.outputs.defaultHostName
-    gefUiHostname: gefUi.outputs.defaultHostName
+    portalUIHostname: portalUI.outputs.defaultHostName
+    gefUIHostname: gefUI.outputs.defaultHostName
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
   }
 }
@@ -932,7 +927,7 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
     target: target
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     tfsTfmIpId: tfsIp.outputs.tfsTfmIpId
-    tfmUiHostname: tfmUi.outputs.defaultHostName
+    tfmUIHostname: tfmUI.outputs.defaultHostName
   }
 }
 
@@ -1000,7 +995,7 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
   dependsOn: [applicationGatewayTfm]
 }
 
-var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
+var tfmUIUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
 
 module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
   name: 'tfmApiCalculatedVariables'
@@ -1017,7 +1012,7 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     secureConnectionStrings: tfmApiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
-    tfmUiUrl: tfmUiUrl
+    tfmUIUrl: tfmUIUrl
     storageAccountName: storage.outputs.storageAccountName
     settings: tmfApiSettings
     secureSettings: tfmApiSecureSettings

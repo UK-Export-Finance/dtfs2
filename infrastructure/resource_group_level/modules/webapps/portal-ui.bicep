@@ -29,7 +29,7 @@ param secureConnectionStrings object
 param additionalSecureConnectionStrings object
 param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
-param websiteHealthchekingMax int
+param websiteHealthcheckingMax int
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -58,7 +58,7 @@ var additionalSettings = {
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TFM_API_URL: tfmApiUrl
   TZ: 'Europe/London'
-  WEBSITE_HEALTHCHECK_MAXPINGFAILURES: websiteHealthchekingMax
+  WEBSITE_HEALTHCHECK_MAXPINGFAILURES: websiteHealthcheckingMax
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }

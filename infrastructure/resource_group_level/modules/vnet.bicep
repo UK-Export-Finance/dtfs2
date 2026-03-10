@@ -176,7 +176,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
     ]
-    virtualNetworkPeerings: [
+    /* virtualNetworkPeerings: [
       {
         name: peeringVnetName
         properties: {
@@ -201,7 +201,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-10-01' = {
         }
         type: 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings'
       }
-    ]
+    ] */
     enableDdosProtection: false
   }
 }

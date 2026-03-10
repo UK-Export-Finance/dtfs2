@@ -5,7 +5,7 @@ param externalApiHostname string
 param dtfsCentralApiHostname string
 param nodeDeveloperMode bool
 param numberGeneratorFunctionDefaultHostName string
-param tfmUiUrl string
+param tfmUIUrl string
 param storageAccountName string
 param settings object
 param product string
@@ -67,7 +67,7 @@ var calculatedAppSettings = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
-  TFM_UI_URL: tfmUiUrl
+  TFM_UI_URL: tfmUIUrl
   AZURE_PORTAL_STORAGE_ACCESS_KEY: storageAccountKey
   AZURE_PORTAL_STORAGE_ACCOUNT: storageAccountName
 }

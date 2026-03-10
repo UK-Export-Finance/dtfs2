@@ -138,4 +138,4 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   }
 }
 
-output defaultHostName string = '${frontDoorTfmName}.azurefd.net'
+output defaultHostName string = afdEndpoint.properties.hostName
