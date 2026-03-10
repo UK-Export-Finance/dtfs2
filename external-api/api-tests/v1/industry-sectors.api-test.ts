@@ -8,7 +8,7 @@ const { get } = api(app);
 
 describe('/industry-sectors', () => {
   describe('GET /industry-sectors', () => {
-    it('returns a list of industry-sectors', async () => {
+    it('should return a list of industry-sectors', async () => {
       // Act
       const { status, body } = await get('/industry-sectors');
 
@@ -17,14 +17,16 @@ describe('/industry-sectors', () => {
 
       expect(body.industrySectors.length).toBeGreaterThan(1);
 
-      expect(body.industries).toEqual(
+      expect(body.count).toBeDefined();
+
+      expect(body.industrySectors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            code: expect.any(Number),
+            code: expect.any(String),
             name: expect.any(String),
             classes: expect.arrayContaining([
               expect.objectContaining({
-                code: expect.any(Number),
+                code: expect.any(String),
                 name: expect.any(String),
               }),
             ]),
@@ -35,7 +37,7 @@ describe('/industry-sectors', () => {
   });
 
   describe('GET /v1/industry-sectors/:code', () => {
-    it('returns country', async () => {
+    it('should return an industry sector', async () => {
       // Act
       const { status, body } = await get('/industry-sectors/1008');
 
