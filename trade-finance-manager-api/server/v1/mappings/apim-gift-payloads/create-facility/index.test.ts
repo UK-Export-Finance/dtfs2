@@ -5,7 +5,7 @@ import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
-import { mapApimCreditRiskRatings } from './map-apim-credit-risk-ratings';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';

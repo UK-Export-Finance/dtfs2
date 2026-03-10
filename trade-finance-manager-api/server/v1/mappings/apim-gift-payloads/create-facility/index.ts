@@ -4,7 +4,7 @@ import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
-import { mapApimCreditRiskRatings } from './map-apim-credit-risk-ratings';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 
 export type FacilityCreationParams = {
   dealId: string;

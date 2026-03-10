@@ -1,6 +1,4 @@
-import { CreditRiskRating } from '../../../../api-response-types';
-
-// TODO: move to a higher directory?
+import { CreditRiskRating } from '../../api-response-types';
 
 /**
  * Map the APIM MDM response for credit risk ratings to simple array of descriptions.
