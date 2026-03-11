@@ -30,7 +30,7 @@ on:
 
 env:
   PRODUCT: dtfs2
-  ENVIRONMENT: infrastructure
+  ENVIRONMENT: dev
   TIMEZONE: '${{ vars.TIMEZONE }}'
   # Deployment environment target i.e., `development`, `staging`, `production`
   TARGET: ${{ vars.TARGET }}
