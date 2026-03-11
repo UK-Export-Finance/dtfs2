@@ -27,7 +27,11 @@ describe('GET /login/temporarily-suspended-access-code', () => {
   });
 
   afterAll(() => {
-    process.env.FF_PORTAL_2FA_ENABLED = originalEnv;
+    if (typeof originalEnv === 'undefined') {
+      delete process.env.FF_PORTAL_2FA_ENABLED;
+    } else {
+      process.env.FF_PORTAL_2FA_ENABLED = originalEnv;
+    }
   });
 
   afterEach(() => {

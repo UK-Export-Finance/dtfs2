@@ -29,12 +29,18 @@ const email = 'email@example.com';
 const password = 'a password';
 
 describe('POST /login/check-your-email-access-code', () => {
+  const originalEnv = process.env.FF_PORTAL_2FA_ENABLED;
+
   beforeAll(() => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
 
   afterAll(() => {
-    delete process.env.FF_PORTAL_2FA_ENABLED;
+    if (typeof originalEnv === 'undefined') {
+      delete process.env.FF_PORTAL_2FA_ENABLED;
+    } else {
+      process.env.FF_PORTAL_2FA_ENABLED = originalEnv;
+    }
   });
 
   withPartial2faAuthValidationApiTests({
