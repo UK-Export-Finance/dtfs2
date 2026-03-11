@@ -160,6 +160,8 @@ jobs:
           sed -i "s|{{WEBSITE_DYNAMIC_CACHE}}|${{ vars.WEBSITE_DYNAMIC_CACHE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{WEBSITE_NODE_DEFAULT_VERSION}}|${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{WEBSITE_HEALTHCHECKING_MAX}}|${{ vars.WEBSITE_HEALTHCHECKING_MAX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TIMEZONE}}|${{ vars.TIMEZONE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
 
 
       - name: Install Bicep

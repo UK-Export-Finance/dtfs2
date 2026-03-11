@@ -187,6 +187,12 @@
       },
       "websiteHealthcheckingMax": {
         "value": "{{WEBSITE_HEALTHCHECKING_MAX}}"
+      },
+      "timeZone": {
+        "value": "{{TIMEZONE}}"
+      },
+      "peeringAddressSpace": {
+        "value": "{{AZ_DEV_VNET_ADDRESS_PREFIX}}"
       }
     }
 }
