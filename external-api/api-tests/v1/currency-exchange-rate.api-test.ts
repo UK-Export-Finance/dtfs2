@@ -172,7 +172,7 @@ const currencyMockCases = [
 
 // Axios mock possible currencies responses
 currencyMockCases.forEach(({ endpoint, mockResponse }) => {
-  const url = `${APIM_MDM_URL}currencies/exchange?${endpoint}`;
+  const url = `${APIM_MDM_URL}v1/currencies/exchange?${endpoint}`;
   axiosMock.onGet(url).reply(HttpStatusCode.Ok, mockResponse);
 });
 
@@ -270,7 +270,7 @@ describe('/currency-exchange-rate', () => {
     ];
 
     describe('Invalid inputs', () => {
-      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
+      test.each(invalidCurrencyTestCases)('should return a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
         const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
 
         expect(status).toEqual(HttpStatusCode.BadRequest);

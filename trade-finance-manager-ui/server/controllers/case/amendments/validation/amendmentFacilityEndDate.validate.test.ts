@@ -37,7 +37,7 @@ describe('facilityEndDateValidation()', () => {
       testCoverStartDate,
     );
 
-    expect(result.error).toEqual(null);
+    expect(result.error).toBeNull();
   });
 
   it('should return an error if the facility end date is before the cover start date', () => {

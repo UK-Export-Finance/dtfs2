@@ -1,0 +1,80 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% import "./_macros/access-code-attempts.njk" as renderAccessCodeAttempts %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  New access code
+{% endblock %}
+
+{% block content %}
+  {% if validationErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: validationErrors.sixDigitAccessCode.text,
+          href: "#sixDigitAccessCode"
+        }
+      ] 
+      if validationErrors.sixDigitAccessCode,
+      attributes: {
+        "data-cy": "error-summary"
+      }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-l" data-cy="new-access-code-email-sent-heading">
+        New access code sent
+      </h1>
+
+      <p class="govuk-body" data-cy="new-access-code-email-sent-description">
+        We've sent you a 6-digit access code to your email {{ email }}.
+      </p>
+
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" data-cy="csrf-input">
+        <div class="govuk-form-group govuk-!-width-one-third">
+          {{ govukInput({
+            label: {
+              text: "Enter access code:"
+            },
+            id: "sixDigitAccessCode",
+            name: "sixDigitAccessCode",
+            spellcheck: false,
+            type: "text",
+            autocomplete: "off",
+            attributes: {
+              "placeholder": "e.g. 123456"
+            },
+            errorMessage: accessCodeError and {
+              text: accessCodeError.text,
+              attributes: {
+                  'data-cy': 'six-digit-access-code-inline-error'
+              }
+            }
+          }) }}
+        </div>
+
+        <p class="govuk-body" data-cy="new-access-code-email-sent-expiry-info">
+          We've sent you a new email with a different access code to sign in. This code will expire after 30 minutes.
+        </p>
+
+        {{ renderAccessCodeAttempts.render({
+          isSupportInfo: isSupportInfo,
+          attemptsLeft: attemptsLeft,
+          requestNewCodeUrl: requestNewCodeUrl,
+          isAccessCodeLink: isAccessCodeLink
+        }) }}
+      </form>
+     
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Contact us</h2>
+  {% include "_partials/contact.njk" %}
+{% endblock %}

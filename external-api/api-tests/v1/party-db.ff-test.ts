@@ -43,9 +43,9 @@ describe('party-db.controller feature flag', () => {
   beforeEach(() => {
     axiosMock = new MockAdapter(axios);
 
-    axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
-    axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
-    axiosMock.onPost(`${APIM_MDM_URL}customers`).reply(HttpStatusCode.Ok);
+    axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
+    axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+    axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);
   });
 
   afterEach(() => {
@@ -54,13 +54,13 @@ describe('party-db.controller feature flag', () => {
   });
 
   describe('GET /party-db', () => {
-    it(`should returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+    it(`should return a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it(`should returns a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
+    it(`should return a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
@@ -70,7 +70,7 @@ describe('party-db.controller feature flag', () => {
 
     describe('when company house number is invalid', () => {
       test.each(invalidCompaniesHouseNumberTestCases)(
-        `returns a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
+        `should return a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
         async (companyHouseNumber) => {
           const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
@@ -101,7 +101,7 @@ describe('party-db.controller feature flag', () => {
       { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 111111111 },
     ];
 
-    it(`should returns a ${HttpStatusCode.Ok} response with a valid body`, async () => {
+    it(`should return a ${HttpStatusCode.Ok} response with a valid body`, async () => {
       // Arrange
       jest.mocked(findACBSIndustrySector).mockResolvedValueOnce({
         data: [mockIndustryResponse],
@@ -123,7 +123,7 @@ describe('party-db.controller feature flag', () => {
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it.each(invalidPayloads)(`should returns a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {
+    it.each(invalidPayloads)(`should return a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {
       // Act
       const { status } = await post(payload).to(`/party-db/`);
 
@@ -131,7 +131,7 @@ describe('party-db.controller feature flag', () => {
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
-    it.each(invalidIndustryCodes)(`should returns a ${HttpStatusCode.BadRequest} if an invalid industry code is supplied %s`, async (payload) => {
+    it.each(invalidIndustryCodes)(`should return a ${HttpStatusCode.BadRequest} if an invalid industry code is supplied %s`, async (payload) => {
       // Act
       const { status } = await post(payload).to(`/party-db/`);
 

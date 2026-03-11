@@ -1648,7 +1648,8 @@ jobs:
                 AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
                 JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
-                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}" \
+                FF_TFM_APIM_GIFT_INTEGRATION="${{ vars.FF_TFM_APIM_GIFT_INTEGRATION }}"
 
   # END API setup
 
@@ -1967,6 +1968,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}" \
+                FF_TFM_APIM_GIFT_INTEGRATION="${{ vars.FF_TFM_APIM_GIFT_INTEGRATION }}" \
                 ENTRA_ID_CLIENT_ID="${{ vars.ENTRA_ID_CLIENT_ID }}" \
                 ENTRA_ID_CLOUD_INSTANCE="${{ vars.ENTRA_ID_CLOUD_INSTANCE }}" \
                 ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}" \
