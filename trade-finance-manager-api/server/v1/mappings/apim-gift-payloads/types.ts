@@ -24,9 +24,9 @@ export type ApimGiftRepaymentProfile = unknown; // TODO: DTFS2-8316 Define concr
 
 export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
-  dealId: string;
+  dealId: string | null;
   facilityCategoryCode: string | null;
-  facilityCreditRating: string;
+  facilityCreditRating: string | null;
   riskStatus: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['RISK_STATUS'];
   ukefIndustryCode: string;
 };
