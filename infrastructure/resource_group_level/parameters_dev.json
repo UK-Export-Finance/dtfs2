@@ -36,7 +36,7 @@
         "value": "{{PROD_SUBNET_CIDR}}"
       },
       "routeTableNextHopIpAddress": {
-        "value": "{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}"
+        "value": "{{ROUTE_TBL_NEXT_HOP_ADDRESS}}"
       },
       "onPremiseNetworkIpsString": {
         "value": "{{UKEF_VPN_IPS}}"
