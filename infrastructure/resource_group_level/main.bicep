@@ -654,25 +654,6 @@ module storage 'modules/storage.bicep' = {
   }
 }
 
-  module cosmosDb 'modules/cosmosdb.bicep' = {
-  name: 'mongoDb'
-  params: {
-    location: location
-    product: product
-    target: target
-    version: version
-    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
-    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
-    databaseName: parametersMap[environment].cosmosDb.databaseName
-    allowedIpsString: onPremiseNetworkIpsString
-    azurePortalIpsString: azurePortalIpsString
-    capacityMode: parametersMap[environment].cosmosDb.capacityMode
-    backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
-  }
-}
-
-
 module redis 'modules/redis.bicep' = {
   name: 'redis'
   params: {
@@ -736,7 +717,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
   }
-} */
+} 
 
 module cosmosDb 'modules/cosmosdb.bicep' = {
   name: 'mongoDb'
@@ -752,6 +733,7 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
+    azurePortalIpsString: azurePortalIpsString
   }
 }
 
