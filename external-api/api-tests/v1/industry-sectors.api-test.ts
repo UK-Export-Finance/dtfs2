@@ -49,7 +49,7 @@ describe('/industry-sectors', () => {
       expect(body.classes.length).toBeGreaterThan(0);
     });
 
-    it("returns 404 when industry-sector doesn't exist", async () => {
+    it("should return a 404 when industry-sector doesn't exist", async () => {
       // Act
       const { status } = await get('/industry-sectors/1');
 

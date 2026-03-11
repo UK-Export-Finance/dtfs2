@@ -8,7 +8,7 @@ const { get } = api(app);
 
 describe('/credit-risk-ratings', () => {
   describe('GET /credit-risk-ratings', () => {
-    it('returns a list of credit-risk-ratings', async () => {
+    it('should return a list of credit-risk-ratings', async () => {
       // Act
       const { status, body } = await get('/credit-risk-ratings');
 
