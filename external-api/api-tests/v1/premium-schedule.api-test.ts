@@ -89,7 +89,7 @@ describe('/premium-schedule', () => {
   const invalidFacilityUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when facility urn is invalid', () => {
-    test.each(invalidFacilityUrnTestCases)('returns a 400 if you provide an invalid facility urn %s', async (facilityUrn) => {
+    test.each(invalidFacilityUrnTestCases)('should return a 400 if you provide an invalid facility urn %s', async (facilityUrn) => {
       const invalidPayload = payload;
       invalidPayload.facilityURN = facilityUrn;
 
