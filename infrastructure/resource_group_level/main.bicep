@@ -119,7 +119,7 @@ param nsgSourceAddressPrefix string
 param ukefSourceAddressPrefix string 
 param testSourceAddressPrefix string 
 param websiteHttploggingRetentionDays string
-param websiteHealthcheckingMax int
+param websiteHealthcheckingMax string
 param websiteDynamicCache string
 param websiteNodeDefaultVersion string
 param timeZone string

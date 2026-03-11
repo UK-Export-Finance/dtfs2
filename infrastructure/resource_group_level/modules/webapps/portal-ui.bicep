@@ -29,7 +29,7 @@ param secureConnectionStrings object
 param additionalSecureConnectionStrings object
 param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
-param websiteHealthcheckingMax int
+param websiteHealthcheckingMax string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
