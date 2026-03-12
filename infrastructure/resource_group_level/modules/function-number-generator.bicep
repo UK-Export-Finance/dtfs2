@@ -27,6 +27,7 @@ var staticSettings = {
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
 }
+
 var additionalSettings = {
   APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
@@ -41,12 +42,12 @@ var additionalSettings = {
   WEBSITE_USE_PLACEHOLDER: '0'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
+
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 var functionNumberGeneratorName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
-
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName

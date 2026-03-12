@@ -564,6 +564,29 @@ var collectionsArray = [
       }
     }
   }
+  {
+    name: 'eligibilityCriteriaAmendments'
+    properties: {
+      resource: {
+        id: 'eligibilityCriteriaAmendments'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+      options: {
+        throughput: defaultThroughput 
+      }
+    }
+  }
 ]
 
 @batchSize(4)

@@ -81,5 +81,4 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
 
 output exposedIp string = managedEnvironment.properties.staticIp
 output exposedPort int = clamAvAca.properties.configuration.ingress.exposedPort
-
 output fqdn string = clamAvAca.properties.configuration.ingress.fqdn

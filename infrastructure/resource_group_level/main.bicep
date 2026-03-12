@@ -378,9 +378,11 @@ var parametersMap = {
     }
   }
 }
+
 var functionSettings = {
  RATE_LIMIT_THRESHOLD : RATE_LIMIT_THRESHOLD
 }
+
 var functionSecureSettings = {
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
@@ -463,14 +465,17 @@ var portalUISettings = {
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
+
 var portalUISecureSettings = {
   COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
   SESSION_SECRET: SESSION_SECRET
 }
+
 var portalUIAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
+
 var portalUISecureConnectionStrings = { }
 var portalUIAdditionalSecureConnectionStrings = { }
 
@@ -478,38 +483,47 @@ var tfmUISettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 }
+
 var tfmUISecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   ESTORE_URL: ESTORE_URL
   SESSION_SECRET: SESSION_SECRET
 }
+
 var tfmUIAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
+
 var tfmUISecureConnectionStrings = { }
 var tfmUIAdditionalSecureConnectionStrings = { }
 
 var gefUISettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
+
 var gefUISecureSettings = {
   SESSION_SECRET: SESSION_SECRET
 }
+
 var gefUIAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
 }
+
 var gefUISecureConnectionStrings = { }
 var gefUIAdditionalSecureConnectionStrings = { }
+
 var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
 }
+
 var tfmApiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
   JWT_SIGNING_KEY: JWT_SIGNING_KEY
 }
+
 var tfmApiAdditionalSecureSettings = {
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
@@ -518,6 +532,7 @@ var tfmApiAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
+
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
 

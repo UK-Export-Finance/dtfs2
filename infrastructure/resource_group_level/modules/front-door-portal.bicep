@@ -140,5 +140,4 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   }
 }
 
-
 output endpointHostName string = afdEndpoint.properties.hostName

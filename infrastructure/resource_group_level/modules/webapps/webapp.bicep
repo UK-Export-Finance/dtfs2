@@ -24,12 +24,14 @@ param selfHostnameEnvironmentVariable string = ''
 var appName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
+
 var appInsightsConfig = deployApplicationInsights ? {
   APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights!.properties.ConnectionString
 } : {}
 var selfHostnameConfig = selfHostnameEnvironmentVariable == '' ? {} : {
   '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
 }
+
 var appSettingsWithAppInsights = union(
   appSettings,
   appInsightsConfig,

@@ -46,7 +46,6 @@ var additionalSettings = {
 }
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
-
 var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
 var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
 var calculatedSettings = {

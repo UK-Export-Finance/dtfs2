@@ -22,6 +22,7 @@ var frontendPorts = [
       port: 80
     }
   }]
+
 var backendPools = [
   {
     name: 'appGatewayBackendPool'
@@ -33,6 +34,7 @@ var backendPools = [
       ]
     }
   }]
+
 var httpListeners = [
   {
     name: 'appGatewayHttpListener'
@@ -49,6 +51,7 @@ var httpListeners = [
     }
   }
 ]
+
 var requestRoutingRules = [
   {
     name: 'rule1'

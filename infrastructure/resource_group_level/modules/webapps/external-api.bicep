@@ -24,9 +24,6 @@ param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
 param timeZone string
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
-  name: containerRegistryName
-}
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connectionStrings
@@ -58,10 +55,13 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+  name: containerRegistryName
+}
+
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' existing = {
   name: cosmosDbAccountName
 }
-
 
 module externalApiWebapp 'webapp.bicep' = {
   name: 'externalApiWebapp'

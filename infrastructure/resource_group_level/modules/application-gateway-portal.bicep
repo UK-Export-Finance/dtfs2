@@ -16,6 +16,7 @@ param autoscaleConfiguration object = {
   minCapacity: 1
   maxCapacity: 5
 }
+
 var applicationGatewayName = '${product}-${target}-${version}-gw'
 var tfsPortApi = '${product}-${target}-${version}-port-api'
 var frontendPorts = concat([
@@ -32,6 +33,7 @@ var frontendPorts = concat([
     }
   }] : []
 )
+
 var backendPools = concat([
   {
     name: 'appGatewayBackendPool'

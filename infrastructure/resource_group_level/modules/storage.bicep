@@ -16,6 +16,7 @@ param filesDnsZoneId string
 
 var storageAccountName = '${product}${target}${version}storage'
 var allowedIps = json(onPremiseNetworkIpsString)
+
 var queueNames = [
   'acbs-control-00'
   'acbs-control-01'
@@ -33,6 +34,7 @@ var queueNames = [
   'numbergenerator-control-03'
   'numbergenerator-workitems'
 ]
+
 var tableNames = [
   'acbsHistory'
   'acbsInstances'
@@ -42,6 +44,7 @@ var tableNames = [
   'numbergeneratorHistory'
   'numbergeneratorInstances'
 ]
+
 var blobContainerNames = [
   'acbs-largemessages'
   'acbs-leases'

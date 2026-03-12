@@ -63,6 +63,7 @@ var cosmosDbConnectionStrings = cosmosDbAccount.listConnectionStrings().connecti
 var mongoDbConnectionString = length(cosmosDbConnectionStrings) > 0 ? replace(cosmosDbConnectionStrings[0].connectionString, '&replicaSet=globaldb', '') : ''
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+
 var calculatedAppSettings = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
@@ -71,6 +72,7 @@ var calculatedAppSettings = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: storageAccountKey
   AZURE_PORTAL_STORAGE_ACCOUNT: storageAccountName
 }
+
 var appSettings = union(
   settings,
   staticSettings,

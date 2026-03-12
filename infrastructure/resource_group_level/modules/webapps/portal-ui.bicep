@@ -49,6 +49,7 @@ var staticSettings = {
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
+
 var tfmApiUrl = 'https://${tfmApiHostname}'
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
