@@ -46,7 +46,7 @@ var staticRules = [
       protocol: '*'
       sourcePortRange: '*'
       destinationPortRange: '*'
-      sourceAddressPrefix: nsgSourceAddressPrefix
+      sourceAddressPrefix: '51.104.202.42'
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 997
