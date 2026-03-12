@@ -157,7 +157,7 @@ export type TfmFacilityGuaranteeDates = {
 export type TfmFacilityObject = {
   exchangeRate?: number;
   facilityValueInGBP?: number;
-  ukefExposure?: number;
+  ukefExposure: number;
   ukefExposureCalculationTimestamp?: string;
   hasBeenIssuedAndAcknowledged?: boolean;
   feeRecord?: number;

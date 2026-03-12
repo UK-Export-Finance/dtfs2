@@ -5,6 +5,7 @@ import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapRepaymentProfiles } from './map-repayment-profiles';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -21,7 +22,7 @@ export type FacilityCreationParams = {
 export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const { facilitySnapshot, tfm } = facility;
 
-  const { facilityGuaranteeDates } = tfm;
+  const { facilityGuaranteeDates, ukefExposure } = tfm;
 
   const consumer = APIM_GIFT_INTEGRATION.CONSUMER;
   const currency = facilitySnapshot.currency.id;
@@ -31,7 +32,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = Number(tfm.ukefExposure);
+  const facilityAmount = Number(tfm.ukefExposure); // TODO: is this right?
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const dealId = getTfmUkefDealId(deal);
@@ -73,7 +74,10 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }),
     counterparties: [], // TODO: DTFS2-8314
     obligations: [], // TODO: DTFS2-8315
-    repaymentProfiles: [], // TODO: DTFS2-8316
+    repaymentProfiles: mapRepaymentProfiles({
+      amount: Number(ukefExposure),
+      dueDate: expiryDate,
+    }),
     riskDetails: mapRiskDetails({
       creditRiskRatings,
       dealId,

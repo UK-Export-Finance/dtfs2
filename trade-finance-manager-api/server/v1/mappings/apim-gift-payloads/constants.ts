@@ -39,6 +39,12 @@ const IS_REVOLVING = {
 const GIFT_ACCOUNT = 2 as const;
 
 /**
+ * For all facilities,
+ * Default the "repayment profile" name, as this is a required field in APIM/GIFT.
+ */
+const REPAYMENT_PROFILE_NAME = 'Repayment profile' as const;
+
+/**
  * For BSS/GEF/EWCS,
  * default risk status to "Corporate" for the "riskStatus" field in GIFT.
  */
@@ -50,6 +56,9 @@ export const APIM_GIFT_INTEGRATION = {
     OVERVIEW: {
       CREDIT_TYPE,
       IS_REVOLVING,
+    },
+    REPAYMENT_PROFILE: {
+      NAME: REPAYMENT_PROFILE_NAME,
     },
     RISK_DETAILS: {
       ACCOUNT: GIFT_ACCOUNT,
