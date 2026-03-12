@@ -566,7 +566,7 @@ var collectionsArray = [
   }
 ]
 
-@batchSize(17)
+@batchSize(4)
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
   name: collection.name
