@@ -108,7 +108,7 @@ jobs:
           sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PROD_SUBNET_CIDR}}|${{ secrets.PROD_SUBNET_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ROUTE_TBL_NEXT_HOPE_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOPE_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ROUTE_TBL_NEXT_HOP_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UKEF_VPN_IPS}}|${{ secrets.UKEF_VPN_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZ_PORTAL_IPS}}|${{ secrets.AZ_PORTAL_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{APIM_TFS_KEY}}|${{ secrets.APIM_TFS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json

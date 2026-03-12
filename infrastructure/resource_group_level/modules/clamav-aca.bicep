@@ -63,7 +63,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
     template: {
       containers: [
         {
-          image: 'mkodockx/clamav/clamav:stable'
+          image: 'mkodockx/clamav:1.1.2-alpine'
           name: containerName
           resources: {
             cpu: 2
