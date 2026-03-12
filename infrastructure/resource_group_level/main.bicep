@@ -8,121 +8,235 @@ param target string
 @description('The version for resource naming')
 param version string
 var frontDoorAccess = 'Allow'
+@description('CIDR range used for the production subnet within the virtual network.')
 param productionSubnetCidr string
+
+@description('IP address of the next hop (typically firewall or NVA) used in the route table for outbound traffic.')
 param routeTableNextHopIpAddress string
 
+@description('Subscription ID containing the remote VNet used for VPN or peering.')
 @secure()
-// REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
-// REMOTE_VNET_RESOURCE_GROUP_VPN
+
+@description('Resource group containing the remote VNet used for VNet peering.')
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
-// REMOTE_VNET_NAME_VPN
+
+@description('Name of the remote virtual network that this VNet will peer with.')
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
-// VNET_ADDRESS_PREFIX
+
+@description('Address space of the remote VNet used for VNet peering.')
 param peeringAddressSpace string
 
+@description('Primary CIDR address space assigned to the main virtual network.')
 param vnetAddressPrefix string
+
+@description('CIDR range used for the Application Gateway subnet.')
 param applicationGatewayCidr string
+
+@description('CIDR range used for the App Service Plan egress subnet.')
 param appServicePlanEgressPrefixCidr string
+
+@description('CIDR range allocated to the Azure Container Apps subnet hosting the ClamAV service.')
 param acaClamAvCidr string
+
+@description('CIDR range used for the subnet hosting Private Endpoints.')
 param privateEndpointsCidr string
-@description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
+
+@description('IPs allowed to access restricted services, represented as JSON array string (UKEF_VPN_IPS).')
 @secure()
 param onPremiseNetworkIpsString string
-@description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
+
+@description('Network IPs permitted to access Cosmos DB from the Azure Portal (AZ_PORTAL_IPS).')
 @secure()
 param azurePortalIpsString string
 
-@description('Enable 7-day soft deletes on file shares')
+@description('Enable 7-day soft deletes on file shares.')
 var shareDeleteRetentionEnabled = false
 
-
+@description('Rate limit threshold used by the API management layer.')
 @secure()
 param RATE_LIMIT_THRESHOLD string
+
+@description('API Management subscription key used to access the TFS API.')
 @secure()
 param APIM_TFS_KEY string
+
+@description('API Management subscription value associated with the TFS API.')
 @secure()
 param APIM_TFS_VALUE string
+
+@description('Base URL for the APIM endpoint exposing the TFS API.')
 @secure()
 param APIM_TFS_URL string
+
+@description('API Management subscription key used to access the MDM API.')
 @secure()
 param APIM_MDM_KEY string
+
+@description('Base URL for the APIM endpoint exposing the MDM API.')
 @secure()
 param APIM_MDM_URL string
-@description('different in staging and dev')
+
+@description('API Management subscription value for the MDM API (varies between dev/staging environments).')
 @secure()
 param APIM_MDM_VALUE string
+
+@description('CRON schedule controlling when utilisation reports for banks are generated.')
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string = '0 2 * * 1'
+
+@description('Authentication key used by services to call the DTFS Central API.')
 @secure()
 param DTFS_CENTRAL_API_KEY string
+
+@description('Allowed CORS origin used by frontend applications when calling APIs.')
 @secure()
 param CORS_ORIGIN string
+
+@description('Base URL for the Companies House API.')
 @secure()
 param COMPANIES_HOUSE_API_URL string
+
+@description('Base URL for the Ordnance Survey API.')
 @secure()
 param ORDNANCE_SURVEY_API_URL string
+
+@description('Base URL for the APIM eStore integration.')
 @secure()
 param APIM_ESTORE_URL string
+
+@description('Subscription key used to access the APIM eStore API.')
 @secure()
 param APIM_ESTORE_KEY string
+
+@description('Subscription value used when calling the APIM eStore API.')
 @secure()
 param APIM_ESTORE_VALUE string
+
+@description('API key used when calling the Companies House API.')
 @secure()
 param COMPANIES_HOUSE_API_KEY string
+
+@description('API key used when calling the Ordnance Survey API.')
 @secure()
 param ORDNANCE_SURVEY_API_KEY string
+
+@description('API key used to authenticate with the GOV.UK Notify service.')
 @secure()
 param GOV_NOTIFY_API_KEY string
+
+@description('Email address used as the default recipient for GOV.UK Notify emails.')
 @secure()
 param GOV_NOTIFY_EMAIL_RECIPIENT string
+
+@description('API key used by external integrations to call system APIs.')
 @secure()
 param EXTERNAL_API_KEY string
+
+@description('Maximum allowed size for utilisation report uploads (in bytes).')
 param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
+
+@description('Public URL of the DTFS portal UI.')
 param PORTAL_UI_URL string
+
+@description('Number of business days from the start of the month when utilisation reports become due.')
 param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+
+@description('Number of business days from the start of the month when overdue utilisation report reminders are sent.')
 param UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+
+@description('CRON schedule controlling when utilisation reporting period start emails are sent.')
 param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
+
+@description('CRON schedule controlling when utilisation report due reminder emails are sent.')
 param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
+
+@description('CRON schedule controlling when overdue utilisation report emails are sent.')
 param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
+
+@description('Azure File Share name used to store utilisation reports.')
 param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
 
+@description('Folder within the Azure storage file share used for portal export files.')
 @secure()
 param AZURE_PORTAL_EXPORT_FOLDER string
+
+@description('Azure File Share name used for portal export storage.')
 @secure()
 param AZURE_PORTAL_FILESHARE_NAME string
+
+@description('JWT signing key used to generate authentication tokens.')
 @secure()
 param JWT_SIGNING_KEY string
+
+@description('JWT validation key used to verify authentication tokens.')
 @secure()
 param JWT_VALIDATING_KEY string
+
+@description('API key required to access the Portal API.')
 @secure()
 param PORTAL_API_KEY string
 
+@description('API key required to access the TFM API.')
 @secure()
 param TFM_API_KEY string
+
+@description('Secret used for session encryption and authentication.')
 @secure()
 param SESSION_SECRET string
+
+@description('Base URL used for the eStore integration.')
 @secure()
 param ESTORE_URL string
+
+@description('System authentication key used for calls to the UKEF TFM API.')
 @secure()
 param UKEF_TFM_API_SYSTEM_KEY string
 
+@description('API key used for retrieving reports from the UKEF TFM API.')
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
+
+@description('CRON schedule controlling when the Azure number generator function runs.')
 @secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
+
+@description('Email address used for PDC inputter notifications.')
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
+
+@description('Internal UKEF notification email or identifier used for internal alerts.')
 @secure()
 param UKEF_INTERNAL_NOTIFICATION string
+
+@description('Azure DNS server IP address used for custom DNS resolution within the VNet.')
 param azureDnsServerIp string
+
+@description('Source IP prefix allowed by the NSG to access restricted resources.')
 param nsgSourceAddressPrefix string 
+
+@description('UKEF network source IP prefix permitted by network security rules.')
 param ukefSourceAddressPrefix string 
+
+@description('Test network source IP prefix used for development or validation access.')
 param testSourceAddressPrefix string 
+
+@description('Number of days to retain HTTP logs for App Service.')
 param websiteHttploggingRetentionDays string
+
+@description('Maximum number of health check failures allowed before App Service instance recycling.')
 param websiteHealthcheckingMax string
+
+@description('Dynamic cache configuration value for the web application.')
 param websiteDynamicCache string
+
+@description('Default Node.js runtime version used by the web applications.')
 param websiteNodeDefaultVersion string
+
+@description('Time zone used by application services and scheduled tasks.')
 param timeZone string
+
+@description('Time zone used by application services and scheduled tasks.')
+param redirectUrl string
 
 var storageLocations = [
   'uksouth'
@@ -134,189 +248,126 @@ var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
 /* This parameters map holds the per-environment settings.
 Some notes from initial networking conversations*/
+var commonRedis = {
+  sku: {
+    name: 'Basic'
+    family: 'C'
+    capacity: 0
+  }
+}
+
+var commonCosmos = {
+  databaseName: 'dtfs-submissions'
+}
+
+var commonVnet = {
+  addressPrefixes: [vnetAddressPrefix]
+  applicationGatewayCidr: applicationGatewayCidr
+  appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
+  acaClamAvCidr: acaClamAvCidr
+  privateEndpointsCidr: privateEndpointsCidr
+  peeringVnetName: peeringVnetName
+}
+
+var commonWaf = {
+  matchVariable: 'SocketAddr'
+  rejectAction: 'Block'
+  applyWafRuleOverrides: true
+  restrictPortalAccessToUkefIps: true
+}
+
 var parametersMap = {
   dev: {
     cr: {
       name: 'tfsdev'
-      sku: {
-        name: 'Standard'
-      }
+      sku: { name: 'Standard' }
     }
-    asp: {
-      sku: 'p2v2'
-    }
-    cosmosDb: {
-      databaseName: 'dtfs-submissions'
+    asp: { sku: 'p2v2' }
+    cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
-    }
-    functionAcbs: {
-      state: 'Stopped'
-    }
+    })
     nodeDeveloperMode: true
-    nsg: {
-      storageNetworkAccessDefaultAction: 'Allow'
-    }
+    nsg: { storageNetworkAccessDefaultAction: 'Allow' }
     apiPortalAccessPort: 44232
-    redis: {
-      sku:{
-        name: 'Basic'
-        family: 'C'
-        capacity: 0
-      }
-    }
-    vnet: {
-      addressPrefixes: [vnetAddressPrefix]
-      applicationGatewayCidr: applicationGatewayCidr
-      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-      acaClamAvCidr: acaClamAvCidr
-      privateEndpointsCidr: privateEndpointsCidr
-      peeringVnetName: peeringVnetName
-    }
-    wafPolicies: {
-      matchVariable: 'SocketAddr'
-      redirectUrl: 'https://ukexportfinance.gov.uk/'
-      rejectAction: 'Block'
+    redis: commonRedis
+    vnet: commonVnet
+    wafPolicies: union(commonWaf, {
+      redirectUrl: redirectUrl
       wafPoliciesName: 'vpn'
-      applyWafRuleOverrides: true
-      restrictPortalAccessToUkefIps: true
-    }
+    })
   }
+
   feature: {
     cr: {
       name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
-      sku: {
-        name: 'Basic'
-      }
+      sku: { name: 'Basic' }
     }
     asp: {
       name: 'feature'
       sku: 'p2v2'
     }
-    cosmosDb: {
-      databaseName: 'dtfs-submissions'
+    cosmosDb: union(commonCosmos, {
       capacityMode: 'Serverless'
       backupPolicyTier: 'Continuous7Days'
-    }
-    functionAcbs: {
-      state: 'Stopped'
-    }
+    })
     nodeDeveloperMode: true
-    nsg: {
-      storageNetworkAccessDefaultAction: 'Allow'
-    }
+    nsg: { storageNetworkAccessDefaultAction: 'Allow' }
     apiPortalAccessPort: 44232
-    redis: {
-      sku:{
-        name: 'Basic'
-        family: 'C'
-        capacity: 0
-      }
-    }
-    vnet: {
-      addressPrefixes: [vnetAddressPrefix]
-      applicationGatewayCidr: applicationGatewayCidr
-      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-      acaClamAvCidr: acaClamAvCidr
-      privateEndpointsCidr: privateEndpointsCidr
-      peeringVnetName: peeringVnetName
-    }
-    wafPolicies: {
-      matchVariable: 'SocketAddr'
-      redirectUrl: 'https://ukexportfinance.gov.uk/'
-      rejectAction: 'Block'
+    redis: commonRedis
+    vnet: commonVnet
+    wafPolicies: union(commonWaf, {
+      redirectUrl: redirectUrl
       wafPoliciesName: 'vpnFeature'
-      applyWafRuleOverrides: true
-      restrictPortalAccessToUkefIps: true
-    }
+    })
   }
+
   staging: {
     cr: {
       name: 'tfsstaging'
-      sku: {
-        name: 'Standard'
-      }
+      sku: { name: 'Standard' }
     }
     asp: {
       name: 'test'
       sku: 'p3v2'
     }
-    cosmosDb: {
-      databaseName: 'dtfs-submissions'
+    cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
-    }
-    functionAcbs: {
-      state: 'Stopped'
-    }
+    })
     nodeDeveloperMode: false
-    nsg: {
-      storageNetworkAccessDefaultAction: 'Deny'
-    }
+    nsg: { storageNetworkAccessDefaultAction: 'Deny' }
     apiPortalAccessPort: 0
-    redis: {
-      sku:{
-        name: 'Basic'
-        family: 'C'
-        capacity: 0
-      }
-    }
-    vnet: {
-      addressPrefixes: [vnetAddressPrefix]
-      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-      acaClamAvCidr: acaClamAvCidr
-      applicationGatewayCidr: applicationGatewayCidr
-      privateEndpointsCidr: privateEndpointsCidr
-      peeringVnetName: peeringVnetName
-    }
-    wafPolicies: {
-      matchVariable: 'SocketAddr'
+    redis: commonRedis
+    vnet: commonVnet
+    wafPolicies: union(commonWaf, {
       redirectUrl: ''
-      rejectAction: 'Block'
       wafPoliciesName: 'vpnStaging'
       applyWafRuleOverrides: false
-      restrictPortalAccessToUkefIps: true
-    }
+    })
   }
+
   prod: {
     cr: {
       name: 'tfsproduction'
-      sku: {
-        name: 'Standard'
-      }
+      sku: { name: 'Standard' }
     }
     asp: {
       name: 'prod'
       sku: 'p3v2'
     }
-    cosmosDb: {
-      databaseName: 'dtfs-submissions'
+    cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
-    }
+    })
     functionAcbs: {
       state: 'Running'
     }
     nodeDeveloperMode: false
-    nsg: {
-      storageNetworkAccessDefaultAction: 'Allow'
-    }
+    nsg: { storageNetworkAccessDefaultAction: 'Allow' }
     apiPortalAccessPort: 0
-    redis: {
-      sku:{
-        name: 'Basic'
-        family: 'C'
-        capacity: 0
-      }
-    }
-    vnet: {
-      addressPrefixes: [vnetAddressPrefix]
-      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-      acaClamAvCidr: acaClamAvCidr
-      applicationGatewayCidr: applicationGatewayCidr
-      privateEndpointsCidr: privateEndpointsCidr
-      peeringVnetName: peeringVnetName
-    }
+    redis: commonRedis
+    vnet: commonVnet
     wafPolicies: {
       matchVariable: 'RemoteAddr'
       redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
@@ -470,8 +521,6 @@ var tfmApiAdditionalSecureSettings = {
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
 
-/*  We now define the resources, mostly via modules but some are simple enough
-    not to need their own module. */
 module networkSecurityGroup 'modules/gw-nsg.bicep' = {
   name: 'networkSecurityGroup'
   params: {
@@ -633,7 +682,6 @@ module storage 'modules/storage.bicep' = {
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
 }
-
 
 module redis 'modules/redis.bicep' = {
   name: 'redis'
@@ -959,7 +1007,7 @@ module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = {
     target: target
     allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
-    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    redirectUrl: redirectUrl
     rejectAction: parametersMap[environment].wafPolicies.rejectAction
     wafPoliciesName:'${parametersMap[environment].wafPolicies.wafPoliciesName}Portal'
     applyWafRuleOverrides: false

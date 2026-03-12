@@ -193,6 +193,9 @@
       },
       "peeringAddressSpace": {
         "value": "{{AZ_DEV_VNET_ADDRESS_PREFIX}}"
+      },
+      "redirectUrl": {
+        "value": "{{REDIRECT_URL}}"
       }
     }
 }
