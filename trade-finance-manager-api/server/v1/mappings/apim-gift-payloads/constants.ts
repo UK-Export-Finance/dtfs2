@@ -20,7 +20,7 @@ const CONSUMER = 'DTFS' as const;
 
 /**
  * BSS = default credit type to "Term".
- * GEF/EWCS = default credit type to "Revolving".
+ * GEF = default credit type to "Revolving".
  */
 const CREDIT_TYPE = {
   BSS: 'Term',

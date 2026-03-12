@@ -1,11 +1,11 @@
-import { DEAL_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, DealType } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftCounterparty, PartyUrns } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapCounterpartiesParams = {
-  dealType: string;
+  dealType: DealType;
   partyUrns: PartyUrns;
   startDate: string;
   exitDate: string;
