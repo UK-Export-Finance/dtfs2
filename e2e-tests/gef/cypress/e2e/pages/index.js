@@ -1,5 +1,4 @@
 const signInLink = require('./login/sign-in-link');
-const signInOTP = require('./login/sign-in-otp');
 const aboutExporter = require('./about-exporter');
 const aboutFacility = require('./about-facility');
 const applicationActivities = require('./application-activities');
@@ -40,7 +39,6 @@ const contact = require('./contact');
 
 module.exports = {
   signInLink,
-  signInOTP,
   aboutExporter,
   aboutFacility,
   applicationActivities,
