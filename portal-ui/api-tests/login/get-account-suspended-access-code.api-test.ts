@@ -43,6 +43,9 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('GET /login/suspended-access-code', () => {
+  beforeEach(() => {
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/suspended-access-code', {}, headers),
     validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
