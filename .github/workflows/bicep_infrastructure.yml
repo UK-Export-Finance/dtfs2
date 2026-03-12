@@ -153,9 +153,9 @@ jobs:
           sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZURE_DNS_SERVER_IP}}|${{ secrets.AZURE_DNS_SERVER_IP }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{NSG_SOURCE_ADDRESS_PREFIX}}|${{ secrets.NSG_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_SOURCE_ADDRESS_PREFIX}}|${{ secrets.UKEF_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TEST_SOURCE_ADDRESS_PREFIX}}|${{ secrets.TEST_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{NSG_SOURCE_ADDRESS_PREFIX}}|${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UKEF_SOURCE_ADDRESS_PREFIX}}|${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TEST_SOURCE_ADDRESS_PREFIX}}|${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{WEBSITE_HTTPLOGGING_RETENTION_DAYS}}|${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{WEBSITE_DYNAMIC_CACHE}}|${{ vars.WEBSITE_DYNAMIC_CACHE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{WEBSITE_NODE_DEFAULT_VERSION}}|${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
@@ -209,13 +209,13 @@ jobs:
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
           UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
           AZURE_DNS_SERVER_IP: ${{ vars.AZURE_DNS_SERVER_IP }}
-          NSG_SOURCE_ADDRESS_PREFIX: ${{ secrets.NSG_SOURCE_ADDRESS_PREFIX }}
-          UKEF_SOURCE_ADDRESS_PREFIX: ${{ secrets.UKEF_SOURCE_ADDRESS_PREFIX }}
+          NSG_SOURCE_ADDRESS_PREFIX: ${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}
+          UKEF_SOURCE_ADDRESS_PREFIX: ${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}
           WEBSITE_HTTPLOGGING_RETENTION_DAYS: ${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}
           WEBSITE_DYNAMIC_CACHE: ${{ vars.WEBSITE_DYNAMIC_CACHE }}  
           WEBSITE_NODE_DEFAULT_VERSION: ${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}
           WEBSITE_HEALTHCHECKING_MAX: ${{ vars.WEBSITE_HEALTHCHECKING_MAX }}
-          TEST_SOURCE_ADDRESS_PREFIX: ${{ secrets.TEST_SOURCE_ADDRESS_PREFIX }}
+          TEST_SOURCE_ADDRESS_PREFIX: ${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}
 
         run: |
           BICEP_PARAMETERS="version=${{ vars.VERSION }} \
