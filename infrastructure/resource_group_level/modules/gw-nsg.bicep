@@ -5,9 +5,9 @@ param apiPortalAccessPort int
 param product string
 param target string
 param version string
-param nsgSourceAddressPrefix string = '51.104.202.42'
-param ukefSourceAddressPrefix string = '51.140.76.208'
-param testSourceAddressPrefix string ='51.11.144.7'
+param nsgSourceAddressPrefix string 
+param ukefSourceAddressPrefix string 
+param testSourceAddressPrefix string 
 
 var nsgName = '${product}-${target}-${version}-gw-nsg'
 var staticRules = [
@@ -51,7 +51,6 @@ var staticRules = [
       access: 'Allow'
       priority: 997
       direction: 'Inbound'
-      sourceAddressPrefixes: []
     }
   }
   {
@@ -66,7 +65,6 @@ var staticRules = [
       access: 'Allow'
       priority: 998
       direction: 'Inbound'
-      sourceAddressPrefixes: []
     }
   }
   {
@@ -81,7 +79,6 @@ var staticRules = [
       access: 'Allow'
       priority: 3000
       direction: 'Inbound'
-      sourceAddressPrefixes: []
     }
   }
 ]
