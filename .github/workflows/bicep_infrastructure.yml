@@ -72,13 +72,10 @@ jobs:
           inlineScript: |
             az group create \
             --location ${{ vars.REGION }} \
-            --resource-group rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
             --name rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
-
-
 
 # 2. Validate infrastructure resources
   Resource-Deploy:
@@ -163,119 +160,6 @@ jobs:
           sed -i "s|{{TIMEZONE}}|${{ vars.TIMEZONE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           
-      - name: Set bicep properties ✨
-        env:
-          PEERING_REMOTE_VNET_SUBSCRIPTION_ID: ${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}
-          AZ_DEV_VNET_ADDRESS_PREFIX: ${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}
-          AZ_DEV_SNET_APPGW_CIDR_PREFIX: ${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX }}
-          AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR: ${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR }}
-          ACA_CLAMAV_CIDR: ${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }}
-          PRIVATE_ENDPOINTS_CIDR: ${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }}
-          PROD_SUBNET_CIDR: ${{ secrets.PROD_SUBNET_CIDR }}
-          ROUTE_TBL_NEXT_HOP_ADDRESS: ${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}
-          UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
-          AZ_PORTAL_IPS: ${{ secrets.AZ_PORTAL_IPS }}
-          RATE_LIMIT_THRESHOLD: ${{ secrets.RATE_LIMIT_THRESHOLD }}
-          APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-          APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-          APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
-          APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
-          APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
-          APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-          APIM_MDM_KEY_VAULT_NAME: ${{ secrets.APIM_MDM_KEY_VAULT_NAME }}
-          COMPANIES_HOUSE_API_URL: ${{ secrets.COMPANIES_HOUSE_API_URL }}
-          ORDNANCE_SURVEY_API_URL: ${{ secrets.ORDNANCE_SURVEY_API_URL }}
-          APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-          APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
-          APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
-          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-          GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-          GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-          EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
-          ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-          UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
-          DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
-          PDC_INPUTTERS_EMAIL_RECIPIENT: ${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}
-          AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-          AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-          JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-          PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-          TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-          ESTORE_URL: ${{ secrets.ESTORE_URL }}
-          UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-          AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
-          UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
-          AZURE_DNS_SERVER_IP: ${{ vars.AZURE_DNS_SERVER_IP }}
-          NSG_SOURCE_ADDRESS_PREFIX: ${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}
-          UKEF_SOURCE_ADDRESS_PREFIX: ${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}
-          WEBSITE_HTTPLOGGING_RETENTION_DAYS: ${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}
-          WEBSITE_DYNAMIC_CACHE: ${{ vars.WEBSITE_DYNAMIC_CACHE }}  
-          WEBSITE_NODE_DEFAULT_VERSION: ${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}
-          WEBSITE_HEALTHCHECKING_MAX: ${{ vars.WEBSITE_HEALTHCHECKING_MAX }}
-          TEST_SOURCE_ADDRESS_PREFIX: ${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}
-
-        run: |
-          BICEP_PARAMETERS="version=${{ vars.VERSION }} \
-            product=${{ vars.PRODUCT }} \
-            target=${{ vars.TARGET }} \
-            environment=${{ vars.ENVIRONMENT }} \
-            peeringRemoteVnetSubscriptionId=$PEERING_REMOTE_VNET_SUBSCRIPTION_ID \
-            vnetAddressPrefix=$AZ_DEV_VNET_ADDRESS_PREFIX \
-            applicationGatewayCidr=$AZ_DEV_SNET_APPGW_CIDR_PREFIX \
-            appServicePlanEgressPrefixCidr=$AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR \
-            acaClamAvCidr=$ACA_CLAMAV_CIDR \
-            privateEndpointsCidr=$PRIVATE_ENDPOINTS_CIDR \
-            productionSubnetCidr=$PROD_SUBNET_CIDR \
-            routeTableNextHopIpAddress=$ROUTE_TBL_NEXT_HOP_ADDRESS \
-            onPremiseNetworkIpsString=$UKEF_VPN_IPS \
-            azurePortalIpsString=$AZ_PORTAL_IPS \
-            RATE_LIMIT_THRESHOLD=$RATE_LIMIT_THRESHOLD \
-            APIM_TFS_KEY=$APIM_TFS_KEY \
-            APIM_TFS_VALUE=$APIM_TFS_VALUE \
-            APIM_TFS_URL=$APIM_TFS_URL \
-            APIM_MDM_KEY=$APIM_MDM_KEY \
-            APIM_MDM_URL=$APIM_MDM_URL \
-            APIM_MDM_VALUE=$APIM_MDM_VALUE \
-            APIM_MDM_KEY_VAULT_NAME=$APIM_MDM_KEY_VAULT_NAME \
-            COMPANIES_HOUSE_API_URL=$COMPANIES_HOUSE_API_URL \
-            ORDNANCE_SURVEY_API_URL=$ORDNANCE_SURVEY_API_URL \
-            APIM_ESTORE_URL=$APIM_ESTORE_URL \
-            CORS_ORIGIN=$CORS_ORIGIN \
-            APIM_ESTORE_KEY=$APIM_ESTORE_KEY \
-            APIM_ESTORE_VALUE=$APIM_ESTORE_VALUE \
-            COMPANIES_HOUSE_API_KEY=$COMPANIES_HOUSE_API_KEY \
-            GOV_NOTIFY_EMAIL_RECIPIENT=$GOV_NOTIFY_EMAIL_RECIPIENT \
-            GOV_NOTIFY_API_KEY=$GOV_NOTIFY_API_KEY \
-            EXTERNAL_API_KEY=$EXTERNAL_API_KEY \
-            ORDNANCE_SURVEY_API_KEY=$ORDNANCE_SURVEY_API_KEY \
-            UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE=$UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE \
-            DTFS_CENTRAL_API_KEY=$DTFS_CENTRAL_API_KEY \
-            PDC_INPUTTERS_EMAIL_RECIPIENT=$PDC_INPUTTERS_EMAIL_RECIPIENT \
-            AZURE_PORTAL_EXPORT_FOLDER=$AZURE_PORTAL_EXPORT_FOLDER \
-            AZURE_PORTAL_FILESHARE_NAME=$AZURE_PORTAL_FILESHARE_NAME \
-            JWT_VALIDATING_KEY=$JWT_VALIDATING_KEY \
-            PORTAL_API_KEY=$PORTAL_API_KEY \
-            TFM_API_KEY=$TFM_API_KEY \
-            SESSION_SECRET=$SESSION_SECRET \
-            UKEF_TFM_API_SYSTEM_KEY=$UKEF_TFM_API_SYSTEM_KEY \
-            ESTORE_URL=$ESTORE_URL \
-            UKEF_TFM_API_REPORTS_KEY=$UKEF_TFM_API_REPORTS_KEY \
-            AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE=$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE \
-            UKEF_INTERNAL_NOTIFICATION=$UKEF_INTERNAL_NOTIFICATION \
-            azureDnsServerIp=$AZURE_DNS_SERVER_IP \
-            nsgSourceAddressPrefix=$NSG_SOURCE_ADDRESS_PREFIX \
-            ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX \
-            websiteHttploggingRetentionDays=$WEBSITE_HTTPLOGGING_RETENTION_DAYS \
-            websiteDynamicCache=$WEBSITE_DYNAMIC_CACHE \
-            websiteNodeDefaultVersion=$WEBSITE_NODE_DEFAULT_VERSION \
-            websiteHealthcheckingMax=$WEBSITE_HEALTHCHECKING_MAX \
-            testSourceAddressPrefix=$TEST_SOURCE_ADDRESS_PREFIX "
-
-          echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> "$GITHUB_ENV"
-
       - name: Install Bicep
         run: |
           az config set bicep.use_binary_from_path=False
