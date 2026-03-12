@@ -51,6 +51,7 @@ var staticRules = [
       access: 'Allow'
       priority: 997
       direction: 'Inbound'
+      sourceAddressPrefixes: []
     }
   }
   {
@@ -65,6 +66,7 @@ var staticRules = [
       access: 'Allow'
       priority: 998
       direction: 'Inbound'
+      sourceAddressPrefixes: []
     }
   }
   {
@@ -79,6 +81,7 @@ var staticRules = [
       access: 'Allow'
       priority: 3000
       direction: 'Inbound'
+      sourceAddressPrefixes: []
     }
   }
 ]
