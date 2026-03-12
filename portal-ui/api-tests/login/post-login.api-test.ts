@@ -33,6 +33,10 @@ describe('POST /login', () => {
   const aPassword = 'a password';
   const token = 'a token';
 
+  beforeEach(() => {
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
