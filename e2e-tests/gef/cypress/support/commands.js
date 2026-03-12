@@ -16,13 +16,16 @@ Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));
+Cypress.Commands.add('loginOTP', require('./commands/portal/loginOTP'));
 
 Cypress.Commands.add(
   'overridePortalUserSignInTokenWithValidTokenByUsername',
   require('./commands/portal/overridePortalUserSignInTokenWithValidTokenByUsername'),
 );
+Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./commands/portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInOTPs'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
 Cypress.Commands.add('getDealIdFromUrl', require('./commands/portal/getDealIdFromUrl'));
 Cypress.Commands.add('getFacilityIdFromUrl', require('./commands/portal/getFacilityIdFromUrl'));

@@ -46,8 +46,11 @@ Cypress.Commands.add('createGefFacilities', require('./portal-api/createGefFacil
 Cypress.Commands.add('updateGefDeal', require('./portal-api/updateGefDeal'));
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
+Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
 Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
+Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./portal/resetPortalUserStatusAndNumberOfSignInOTPs'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 
 Cypress.Commands.add('getOneDeal', getOneDeal);
