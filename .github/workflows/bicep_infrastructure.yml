@@ -289,6 +289,6 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
           template: ./infrastructure/resource_group_level/main.bicep
-          parameters: ${{ env.BICEP_PARAMETERS }}
+          parameters: ./infrastructure/resource_group_level/parameters_dev.json
           scope: resourcegroup
 
