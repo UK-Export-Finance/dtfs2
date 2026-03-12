@@ -32,7 +32,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = Number(tfm.ukefExposure); // TODO: is this right?
+  const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const dealId = getTfmUkefDealId(deal);
