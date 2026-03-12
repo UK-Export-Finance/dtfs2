@@ -2,12 +2,13 @@ import { DEAL_TYPE, TfmDeal } from '@ukef/dtfs2-common';
 import { getPartyUrns } from '.';
 
 describe('getPartyUrns', () => {
+  const mockBankPartyUrn = '00112233';
+
   describe(`when the dealType is ${DEAL_TYPE.BSS_EWCS}`, () => {
     const dealType = DEAL_TYPE.BSS_EWCS;
 
     it('should return an object with bondBeneficiary and bondGiver party URNs', () => {
       // Arrange
-      const mockBankPartyUrn = '00112233';
       const mockBuyerPartyUrn = '00445566';
 
       const mockDeal = {
@@ -43,7 +44,6 @@ describe('getPartyUrns', () => {
     it('should return an object with issuingBank party URN', () => {
       // Arrange
       const dealType = DEAL_TYPE.GEF;
-      const mockBankPartyUrn = '00112233';
 
       const mockDeal = {
         dealSnapshot: {
