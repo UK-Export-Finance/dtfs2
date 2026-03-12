@@ -235,7 +235,7 @@ param websiteNodeDefaultVersion string
 @description('Time zone used by application services and scheduled tasks.')
 param timeZone string
 
-@description('Time zone used by application services and scheduled tasks.')
+@description('The URL to redirect traffic to when a request is blocked or rejected by WAF rules')
 param redirectUrl string
 
 var storageLocations = [
