@@ -64,3 +64,4 @@ export * from './can-submit-to-acbs';
 export * from './is-amendment-declined';
 export * from './errors';
 export * from './sort-amendments';
+export * from './is-api-error-response';
