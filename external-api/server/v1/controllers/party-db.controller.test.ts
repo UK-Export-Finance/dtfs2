@@ -112,7 +112,7 @@ describe('getOrCreateParty', () => {
 
   it(`should return ${HttpStatusCode.InternalServerError} when an error is thrown`, async () => {
     // Arrange
-    const mockError = new Error('Test');
+    const mockError = new Error('Mock error');
 
     jest.mocked(findACBSIndustrySector).mockRejectedValueOnce(mockError);
 
