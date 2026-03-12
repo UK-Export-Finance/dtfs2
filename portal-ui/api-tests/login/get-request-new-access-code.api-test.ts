@@ -43,6 +43,9 @@ const password = 'mock password';
 const partialAuthToken = 'partial auth token';
 
 describe('GET /login/request-new-access-code', () => {
+  beforeEach(() => {
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/request-new-access-code', {}, headers),
     validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(302),
