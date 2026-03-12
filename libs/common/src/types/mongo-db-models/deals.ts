@@ -9,21 +9,50 @@ type BaseDeal = AnyObject & {
   submissionType: DealSubmissionType | null;
 };
 
+type BaseBank = {
+  companiesHouseNo: string;
+  _id: ObjectId;
+  id: string;
+  emails: string[];
+  mga: string[];
+  name: string;
+  partyUrn: string;
+};
+
+type BssEwcsDealDetailsBankPaymentOfficerTeam = {
+  emails: string[];
+  teamName: string;
+};
+
+type BssEwcsUtilisationReportPeriodSchedule = {
+  startMonth: number;
+  endMonth: number;
+};
+
+interface BssEwcsDealDetailsBank extends BaseBank {
+  hasGefAccessOnly: boolean;
+  isVisibleInTfmUtilisationReports: boolean;
+  paymentOfficerTeam: BssEwcsDealDetailsBankPaymentOfficerTeam;
+  utilisationReportPeriodSchedule: BssEwcsUtilisationReportPeriodSchedule[];
+}
+
 export interface BssEwcsDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
     submissionCount: number;
+    bank: BssEwcsDealDetailsBank;
   };
 }
 
 export interface GefDeal extends BaseDeal {
+  bank: BaseBank;
   dealType: typeof DEAL_TYPE.GEF;
-  ukefDealId: string | null;
   eligibility: AnyObject;
   exporter: AnyObject;
   portalActivities: PortalActivity[];
   submissionCount: number;
+  ukefDealId: string | null;
 }
 
 /**

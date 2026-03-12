@@ -5,6 +5,8 @@ import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { getPartyUrns } from './get-party-urns';
+import { mapCounterparties } from './map-counterparties';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -35,11 +37,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const dealId = getTfmUkefDealId(deal);
+  const { dealType } = deal.dealSnapshot;
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
   const { exporterCreditRating } = deal.tfm;
   const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
+
+  const partyUrns = getPartyUrns(deal);
 
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
@@ -71,7 +76,12 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       productTypeCode,
       ukefFacilityId,
     }),
-    counterparties: [], // TODO: DTFS2-8314
+    counterparties: mapCounterparties({
+      dealType,
+      partyUrns,
+      startDate: effectiveDate,
+      exitDate: expiryDate,
+    }),
     obligations: [], // TODO: DTFS2-8315
     repaymentProfiles: [], // TODO: DTFS2-8316
     riskDetails: mapRiskDetails({
