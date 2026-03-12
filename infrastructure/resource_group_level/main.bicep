@@ -27,7 +27,6 @@ param appServicePlanEgressPrefixCidr string
 param acaClamAvCidr string
 param privateEndpointsCidr string
 @description('IPs allowed to access restricted services, represented as Json array string: UKEF_VPN_IPS')
-@secure()
 param onPremiseNetworkIpsString string
 @description('Network IPs to permit access to CosmosDB: AZ_PORTAL_IPS')
 @secure()
