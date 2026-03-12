@@ -10,11 +10,11 @@ type BaseDeal = AnyObject & {
 };
 
 export interface BssEwcsDeal extends BaseDeal {
+  bank: Bank;
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
     submissionCount: number;
-    bank: Bank;
   };
 }
 

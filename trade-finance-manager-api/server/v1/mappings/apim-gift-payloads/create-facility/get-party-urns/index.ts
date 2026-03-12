@@ -20,7 +20,7 @@ export const getPartyUrns = (deal: TfmDeal): PartyUrns => {
     case DEAL_TYPE.BSS_EWCS:
       return {
         bondBeneficiary: tfm.parties.buyer?.partyUrn,
-        bondGiver: dealSnapshot.details.bank.partyUrn,
+        bondGiver: dealSnapshot.bank.partyUrn,
       };
 
     case DEAL_TYPE.GEF:

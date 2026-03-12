@@ -13,10 +13,8 @@ describe('getPartyUrns', () => {
       const mockDeal = {
         dealSnapshot: {
           dealType,
-          details: {
-            bank: {
-              partyUrn: mockBankPartyUrn,
-            },
+          bank: {
+            partyUrn: mockBankPartyUrn,
           },
         },
         tfm: {

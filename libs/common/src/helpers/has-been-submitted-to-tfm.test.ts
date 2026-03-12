@@ -17,10 +17,10 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.AIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 1,
-          bank: mockBank,
         },
       };
 
@@ -37,10 +37,10 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIA,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 1,
-          bank: mockBank,
         },
       };
 
@@ -57,10 +57,10 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 2,
-          bank: mockBank,
         },
       };
 
@@ -77,10 +77,10 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.AIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 0,
-          bank: mockBank,
         },
       };
 
@@ -97,10 +97,10 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIA,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 0,
-          bank: mockBank,
         },
       };
 
