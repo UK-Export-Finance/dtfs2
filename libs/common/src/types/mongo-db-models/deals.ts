@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType } from '..';
+import { Bank, DealSubmissionType } from '..';
 import { PortalActivity } from '../portal';
 
 type BaseDeal = AnyObject & {
@@ -9,44 +9,17 @@ type BaseDeal = AnyObject & {
   submissionType: DealSubmissionType | null;
 };
 
-type BaseBank = {
-  companiesHouseNo: string;
-  _id: ObjectId;
-  id: string;
-  emails: string[];
-  mga: string[];
-  name: string;
-  partyUrn: string;
-};
-
-type BssEwcsDealDetailsBankPaymentOfficerTeam = {
-  emails: string[];
-  teamName: string;
-};
-
-type BssEwcsUtilisationReportPeriodSchedule = {
-  startMonth: number;
-  endMonth: number;
-};
-
-interface BssEwcsDealDetailsBank extends BaseBank {
-  hasGefAccessOnly: boolean;
-  isVisibleInTfmUtilisationReports: boolean;
-  paymentOfficerTeam: BssEwcsDealDetailsBankPaymentOfficerTeam;
-  utilisationReportPeriodSchedule: BssEwcsUtilisationReportPeriodSchedule[];
-}
-
 export interface BssEwcsDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
     submissionCount: number;
-    bank: BssEwcsDealDetailsBank;
+    bank: Bank;
   };
 }
 
 export interface GefDeal extends BaseDeal {
-  bank: BaseBank;
+  bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
   eligibility: AnyObject;
   exporter: AnyObject;
