@@ -65,6 +65,7 @@ Cypress.Commands.add('listAllUsers', require('./portal-api/listAllUsers'));
 Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
+Cypress.Commands.add('setupPortalSession', require('./portal-api/setupPortalSession'));
 
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
@@ -93,6 +94,7 @@ Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./port
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add('overridePortalUserSignInOTPSendCountByUsername', require('./portal-api/overridePortalUserSignInOTPSendCountByUsername'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 
