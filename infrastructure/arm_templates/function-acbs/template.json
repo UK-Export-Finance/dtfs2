@@ -1,0 +1,2432 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_tfs_dev_function_acbs_name": {
+            "defaultValue": "tfs-dev-function-acbs",
+            "type": "String"
+        },
+        "serverfarms_dev_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Web/serverfarms/dev",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('sites_tfs_dev_function_acbs_name')]",
+            "location": "UK South",
+            "tags": {
+                "Environment": "Preproduction",
+                "hidden-link: /app-insights-resource-id": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/microsoft.insights/components/tfs-dev-function-acbs",
+                "hidden-link: /app-insights-instrumentation-key": "355cee7a-a438-42da-a04a-e716b4b227ab"
+            },
+            "kind": "functionapp,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_dev_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": true,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/azure-function-acbs:dev",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": true,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 1
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "799591A29BF706E656906E134F41DABB87DFAD60A3D5E73B22B7E45E5A356B5C",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "virtualNetworkSubnetId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/ftp')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction",
+                "hidden-link: /app-insights-resource-id": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/microsoft.insights/components/tfs-dev-function-acbs",
+                "hidden-link: /app-insights-instrumentation-key": "355cee7a-a438-42da-a04a-e716b4b227ab"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/scm')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction",
+                "hidden-link: /app-insights-resource-id": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/microsoft.insights/components/tfs-dev-function-acbs",
+                "hidden-link: /app-insights-instrumentation-key": "355cee7a-a438-42da-a04a-e716b4b227ab"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/web')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "tags": {
+                "Environment": "Preproduction",
+                "hidden-link: /app-insights-resource-id": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/microsoft.insights/components/tfs-dev-function-acbs",
+                "hidden-link: /app-insights-instrumentation-key": "355cee7a-a438-42da-a04a-e716b4b227ab"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOCKER|tfsdev.azurecr.io/azure-function-acbs:dev",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$tfs-dev-function-acbs",
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetName": "5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress",
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://functions.azure.com",
+                        "https://functions-staging.azure.com",
+                        "https://functions-next.azure.com"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.0",
+                "ftpsState": "Disabled",
+                "preWarmedInstanceCount": 0,
+                "functionAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-amend-facility')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-amend-facility.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-amend-facility",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-amend-facility-loan-record')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-loan-record/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-loan-record/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-loan-record/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-amend-facility-loan-record.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-amend-facility-loan-record",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-amend-facility-master-record')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-master-record/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-master-record/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-amend-facility-master-record/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-amend-facility-master-record.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-amend-facility-master-record",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-facility')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-facility.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-facility",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-facility-bond')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-bond/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-bond/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-bond/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-facility-bond.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-facility-bond",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-facility-loan')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-loan/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-loan/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-facility-loan/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-facility-loan.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-facility-loan",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-http')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-http/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-http/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-http/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-http.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-http",
+                "config": {},
+                "invoke_url_template": "https://tfs-dev-function-acbs.azurewebsites.net/api/orchestrators/{functionname}",
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/acbs-issue-facility')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-issue-facility/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-issue-facility/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/acbs-issue-facility/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/acbs-issue-facility.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/acbs-issue-facility",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-code-value-transaction')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-code-value-transaction/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-code-value-transaction/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-code-value-transaction/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-code-value-transaction.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-code-value-transaction",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-deal')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-deal.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-deal",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-deal-guarantee')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-guarantee/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-guarantee/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-guarantee/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-deal-guarantee.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-deal-guarantee",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-deal-investor')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-investor/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-investor/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-deal-investor/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-deal-investor.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-deal-investor",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-covenant')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-covenant/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-covenant/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-covenant/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-covenant.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-covenant",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-fee')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-fee/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-fee/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-fee/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-fee.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-fee",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-guarantee')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-guarantee/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-guarantee/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-guarantee/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-guarantee.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-guarantee",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-investor')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-investor/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-investor/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-investor/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-investor.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-investor",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-loan')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-loan/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-loan/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-loan/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-loan.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-loan",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-facility-master')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-master/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-master/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-facility-master/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-facility-master.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-facility-master",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-create-party')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-party/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-party/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-create-party/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-create-party.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-create-party",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-get-acbs-country-code')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-country-code/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-country-code/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-country-code/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-get-acbs-country-code.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-get-acbs-country-code",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-get-acbs-industry-sector')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-industry-sector/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-industry-sector/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-acbs-industry-sector/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-get-acbs-industry-sector.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-get-acbs-industry-sector",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-get-facility-master')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-facility-master/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-facility-master/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-facility-master/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-get-facility-master.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-get-facility-master",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-get-loan-id')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-loan-id/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-loan-id/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-get-loan-id/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-get-loan-id.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-get-loan-id",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-update-facility-loan')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-update-facility-loan.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-update-facility-loan",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-update-facility-loan-amount')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan-amount/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan-amount/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-loan-amount/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-update-facility-loan-amount.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-update-facility-loan-amount",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/activity-update-facility-master')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-master/",
+                "script_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-master/index.js",
+                "config_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/site/wwwroot/activity-update-facility-master/function.json",
+                "test_data_href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/vfs/home/data/Functions/sampledata/activity-update-facility-master.dat",
+                "href": "https://tfs-dev-function-acbs.azurewebsites.net/admin/functions/activity-update-facility-master",
+                "config": {},
+                "language": "node",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/', parameters('sites_tfs_dev_function_acbs_name'), '.azurewebsites.net')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "siteName": "tfs-dev-function-acbs",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/privateEndpointConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/', parameters('sites_tfs_dev_function_acbs_name'), '-2688afb4-bd07-4ae2-a11f-03233067eab6')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-20T18_44_42_9377173')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-21T03_44_43_1531860')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-21T12_44_43_3875394')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-21T18_44_43_5225840')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-22T03_44_43_7362877')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-22T12_44_43_9428368')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-22T18_44_44_1040015')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-23T03_44_44_3007200')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-23T12_44_44_5222336')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-23T18_44_44_6436183')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-24T03_44_44_8590596')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-24T12_44_45_0478784')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-24T18_44_45_2109507')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-25T03_44_45_4208322')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-25T12_44_45_6150268')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-25T18_44_45_7689840')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-26T03_44_46_0307125')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-26T12_44_46_2165702')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-26T18_44_46_3425027')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-27T03_44_46_5490631')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-27T12_44_47_5595818')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-27T18_44_47_6420449')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-28T03_44_47_8483607')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-28T12_44_48_1078194')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-28T18_44_48_2118348')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-29T03_44_48_4213778')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-29T12_44_48_6111692')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-29T18_44_48_7343127')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-30T03_44_48_9533224')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-30T12_44_49_1682756')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-30T18_44_49_3007591')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-31T03_44_49_4786513')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-31T12_44_49_7094830')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-05-31T18_44_49_8437779')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-01T03_44_50_0445824')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-01T12_44_50_2726358')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-01T18_44_50_4057340')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-02T03_44_50_5866566')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-02T12_44_50_8542914')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-02T18_44_50_9569992')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-03T03_44_51_1767458')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-03T12_44_51_4503678')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-03T18_44_51_5340014')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-04T03_44_51_7773959')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-04T12_44_52_1742356')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-04T18_44_52_2877726')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-05T03_44_52_5145656')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-05T12_44_52_7584300')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-05T15_44_52_8021440')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-05T18_44_52_8870140')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-05T21_44_53_0100123')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T00_44_53_0740764')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T03_44_53_1350220')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T12_44_53_3748627')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T15_44_53_4245579')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T18_44_53_4843741')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-06T21_44_53_5581116')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T00_44_53_6419171')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T03_44_53_7746385')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T12_44_54_1450966')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T15_44_53_9977083')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T18_44_54_0576762')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-07T21_44_54_1330012')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T00_44_54_1930618')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T03_44_54_2520142')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T12_44_54_6204170')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T15_44_54_7003869')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T18_44_54_7482157')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-08T21_44_54_7813160')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T00_44_54_8394472')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T03_44_54_9163407')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T12_44_55_1373481')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T15_44_55_1856868')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T18_44_55_2792895')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-09T21_44_55_3112064')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T00_44_55_3891763')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T03_44_55_4804266')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T12_44_55_7016727')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T15_44_55_7692963')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T18_44_56_3968982')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-10T21_44_56_4748856')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T00_44_56_5553883')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T03_44_56_6248026')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T12_44_56_8401777')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T15_44_56_9019773')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T18_44_56_9604007')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-11T21_44_57_0044242')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T00_44_57_0710362')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T03_44_57_1480943')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T12_44_57_3733426')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T15_44_57_4208387')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T18_44_57_4931845')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-12T21_44_57_6181868')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T00_44_57_7165349')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T03_44_57_7213535')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T12_44_57_9217309')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T15_44_58_0190110')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T18_44_58_0468652')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-13T21_44_58_1282735')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T00_44_58_2293329')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T03_44_58_2706377')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T12_44_58_4927173')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T15_44_58_5961353')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T18_44_58_6079869')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-14T21_44_58_6366097')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T00_44_58_7146212')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T03_44_58_7539083')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T10_44_58_9269018')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T11_44_58_9612460')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T12_44_58_9928466')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T13_44_59_0072110')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T14_44_59_0784253')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T15_44_59_0509615')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T16_44_59_1312099')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T17_44_59_1605359')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T18_44_59_1975370')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T19_44_59_2180507')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T20_44_59_1973654')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T21_44_59_2529206')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T22_44_59_2414276')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-15T23_44_59_2718570')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T00_44_59_3090448')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T01_45_00_1819168')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T02_45_00_1700621')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T03_45_00_1974429')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T04_45_00_1817199')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T05_45_00_2139648')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T06_45_00_2641356')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T07_45_00_2862418')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T08_45_00_2859344')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T09_45_00_3425448')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T10_45_07_0398168')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T11_45_00_4811440')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T12_45_00_4578894')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T13_45_00_5643975')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T14_45_00_8116756')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T15_45_00_6503275')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T16_45_00_4520583')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T17_45_00_5917757')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T18_45_00_8023388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T19_45_00_7061897')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T20_45_00_5662611')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T21_45_00_7861797')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T22_45_00_5761767')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-16T23_45_00_6020137')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T00_45_00_6227671')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T01_45_00_6825188')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T02_45_00_7290209')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T03_45_00_7746998')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T04_45_00_7992592')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T05_45_00_7639872')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T06_45_00_7875553')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T07_45_00_8541824')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T08_45_00_8138132')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T09_45_00_9194949')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T10_45_00_8682025')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T11_45_00_8911671')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T12_45_00_9107935')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T13_45_00_9293716')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T14_45_00_9773720')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T15_45_00_9883547')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T16_45_01_0315036')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T17_45_01_0407047')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T18_45_01_1045841')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T19_45_01_1826374')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T20_45_01_6553996')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T21_45_01_1433280')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T22_45_01_1758461')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-17T23_45_01_1944209')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T00_45_01_2230335')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T01_45_01_2406486')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T02_45_01_3392657')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T03_45_01_2679022')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T04_45_01_3074873')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T05_45_01_3172371')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T06_45_01_3498754')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T07_45_01_3775194')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T08_45_01_3951964')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T09_45_01_4148407')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T10_45_01_4345968')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T11_45_01_4553190')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T12_45_01_5400044')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T13_45_01_5497332')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T14_45_01_6134991')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T15_45_01_5763479')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T16_45_01_5943736')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T17_45_01_5884201')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T18_45_01_6442916')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T19_45_01_6829358')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T20_45_01_6847937')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T21_45_01_6965571')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T22_45_01_7491946')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-18T23_45_01_7719642')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T00_45_01_7749648')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T01_45_01_8485777')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T02_45_01_8472298')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T03_45_01_8679860')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T04_45_01_8999847')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T05_45_01_9186889')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T06_45_01_9313422')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T07_45_01_9580301')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T08_45_02_0278372')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T09_45_02_0085776')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T10_45_02_0272971')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T11_45_02_0568733')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T12_45_02_0965434')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T13_45_02_1327246')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T14_45_02_3774709')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/2023-06-19T15_45_02_1525737')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_tfs_dev_function_acbs_name'), '/5c50c79a-d80a-4a69-9acb-6f1a859658a9_dev-app-service-plan-egress')]",
+            "location": "UK South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_tfs_dev_function_acbs_name'))]"
+            ],
+            "properties": {
+                "vnetResourceId": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                "isSwift": true
+            }
+        }
+    ]
+}
