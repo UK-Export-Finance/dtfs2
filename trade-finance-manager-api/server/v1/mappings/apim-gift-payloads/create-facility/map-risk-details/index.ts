@@ -50,7 +50,7 @@ export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCre
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
  * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {(typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES]} params.productTypeCode - The APIM GIFT product type code for the facility.
- * @returns {ApimGiftFacilityRiskDetails} The mapped risk details.
+ * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = ({
   creditRiskRatings,
