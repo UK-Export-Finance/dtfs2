@@ -1,12 +1,13 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
-import { mapOverview } from './map-overview';
-import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
-import { getPartyUrns } from './get-party-urns';
+import { mapOverview } from './map-overview';
 import { mapCounterparties } from './map-counterparties';
+import { mapRiskDetails } from './map-risk-details';
+import { getPartyUrns } from './get-party-urns';
+import { getIndustryCode } from '../get-industry-code';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -45,6 +46,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
 
   const partyUrns = getPartyUrns(deal);
+  const industryCode = getIndustryCode(deal);
 
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
@@ -59,8 +61,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    *
    * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-  const creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  let creditRiskRatingsResponse: unknown = [];
+
+  try {
+    creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  } catch {
+    // Swallow errors and default creditRiskRatingsResponse to an empty array
+    creditRiskRatingsResponse = [];
+  }
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
@@ -84,11 +92,12 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }),
     obligations: [], // TODO: DTFS2-8315
     repaymentProfiles: [], // TODO: DTFS2-8316
-    riskDetails: mapRiskDetails({
+    riskDetails: await mapRiskDetails({
       creditRiskRatings,
       dealId,
       exporterCreditRating,
       facilityCategoryCode,
+      industryCode,
       productTypeCode,
     }),
   };

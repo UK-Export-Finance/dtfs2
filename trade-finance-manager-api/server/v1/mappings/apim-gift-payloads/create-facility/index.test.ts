@@ -6,6 +6,7 @@ import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { getIndustryCode } from '../get-industry-code';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
@@ -65,13 +66,16 @@ describe('createFacility', () => {
   });
 
   it('should call api.getCreditRiskRatings', async () => {
+    // Arrange
     const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
     const getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
     mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
 
+    // Act
     await createFacility(params);
 
+    // Assert
     expect(getCreditRiskRatingsSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -105,12 +109,13 @@ describe('createFacility', () => {
       }),
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: [], // TODO: DTFS2-8316
-      riskDetails: mapRiskDetails({
+      riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
         dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
-        productTypeCode: PRODUCT_TYPES.BSS,
         facilityCategoryCode: String(facilitySnapshot.type),
+        industryCode: getIndustryCode(mockDeal),
+        productTypeCode: PRODUCT_TYPES.BSS,
       }),
     };
 
@@ -122,7 +127,7 @@ describe('createFacility', () => {
       // Arrange
       const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
-      mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
+      mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(new Error());
     });
 
     it('should NOT propagate the error', async () => {
@@ -130,7 +135,7 @@ describe('createFacility', () => {
       await expect(createFacility(params)).resolves.not.toThrow();
     });
 
-    it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
+    it('should map TFM facility data to the format expected by APIM for GIFT facility creation', async () => {
       // Act
       const result = await createFacility(params);
 
