@@ -1,6 +1,7 @@
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES, TFM_CREDIT_RATING_MAP } from '../../constants';
 import api from '../../../../api';
 import { ApimGiftFacilityRiskDetails } from '../../types';
+import { UkefIndustryCode } from '../../../../api-response-types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -11,10 +12,6 @@ type MapRiskDetailsParams = {
   facilityCategoryCode?: string;
   industryCode: string;
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
-};
-
-type IndustryCodeResponse = {
-  ukefIndustryCode: string;
 };
 
 /**
@@ -70,15 +67,19 @@ export const mapRiskDetails = async ({
    * Get a UKEF industry code by Companies House industry code.
    *
    * NOTE: if this API call fails, we do NOT want to throw an error.
-   * Instead, continue with a null UKEF industry code, which will result in the facility risk details being sent to APIM, but not created in GIFT.
+   * Instead, continue with an empty UKEF industry code, which will result in the facility risk details being sent to APIM, but not created in GIFT.
    * If this fails, the UKEF industry code will simply not be sent to GIFT, which is preferable to the entire facility creation failing.
    * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
    * The alternative of this would be to have retry logic in DTFS, which is not desired - this is APIM's responsibility.
-   *
-   * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-  const industryCodeResponse = (await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode)) as IndustryCodeResponse;
+  let industryCodeResponse: UkefIndustryCode;
+
+  try {
+    industryCodeResponse = (await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode)) as UkefIndustryCode;
+  } catch {
+    // Swallow errors and default ukefIndustryCode to an empty string
+    industryCodeResponse = { ukefIndustryCode: '' };
+  }
 
   const mapped = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
@@ -86,7 +87,7 @@ export const mapRiskDetails = async ({
     facilityCategoryCode: mapFacilityCategoryCode(productTypeCode, facilityCategoryCode),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-    ukefIndustryCode: industryCodeResponse?.ukefIndustryCode || '',
+    ukefIndustryCode: industryCodeResponse.ukefIndustryCode,
   };
 
   return mapped;

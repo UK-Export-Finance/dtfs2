@@ -707,7 +707,7 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
  * /ukef-industry-code/by-companies-house-industry-code/:industryCode:
  *   get:
  *     summary: Get a UKEF industry code by Companies House industry code
- *     tags: [UKEF Industry Code, APIM]
+ *     tags: [APIM, UKEF Industry Code]
  *     description: >-
  *       Get a UKEF industry code by Companies House industry code.
  *     parameters:

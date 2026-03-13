@@ -6,5 +6,5 @@
  *     properties:
  *       ukefIndustryCode:
  *         type: string
- *         example: 1406
+ *         example: 1003
  */

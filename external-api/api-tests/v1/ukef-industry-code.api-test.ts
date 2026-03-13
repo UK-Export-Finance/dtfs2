@@ -1,10 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { get } = api(app);
+
+const axiosMock = new MockAdapter(axios);
+
+axiosMock.onGet().reply((config) => {
+  const industryCodeParam = (config.params as { industryCode?: string } | undefined)?.industryCode;
+
+  if (industryCodeParam === '1406') {
+    return [200, { ukefIndustryCode: '1003' }];
+  }
+
+  if (industryCodeParam === '1111') {
+    return [404];
+  }
+
+  return [400];
+});
 
 describe('/ukef-industry-code', () => {
   describe('GET /ukef-industry-code/by-companies-house-industry-code/:industryCode', () => {
@@ -25,7 +43,7 @@ describe('/ukef-industry-code', () => {
       const { status } = await get('/ukef-industry-code/by-companies-house-industry-code/');
 
       // Assert
-      expect(status).toEqual(404);
+      expect(status).toEqual(400);
     });
 
     it('should return a 400 when an industryCode param is below the required length', async () => {

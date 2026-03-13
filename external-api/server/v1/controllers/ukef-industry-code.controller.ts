@@ -48,7 +48,7 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
   try {
     const { industryCode } = req.params;
 
-    console.info('⚡️ Invoking MDM UKEF industry code endpoint %S', industryCode);
+    console.info('⚡️ Invoking MDM UKEF industry code endpoint %s', industryCode);
 
     const url = `${APIM_MDM_URL}v1/ukef-industry-code/by-companies-house-industry-code/${industryCode}`;
 

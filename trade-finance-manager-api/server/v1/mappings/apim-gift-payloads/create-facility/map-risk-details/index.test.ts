@@ -130,9 +130,9 @@ describe('mapRiskDetails', () => {
     expect(getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should map TFM facility data to the format expected by APIM GIFT for "risk details" creation', () => {
+  it('should map TFM facility data to the format expected by APIM GIFT for "risk details" creation', async () => {
     // Act
-    const result = mapRiskDetails(params);
+    const result = await mapRiskDetails(params);
 
     // Assert
     const expected = {
@@ -152,7 +152,7 @@ describe('mapRiskDetails', () => {
       // Arrange
       const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
-      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockResolvedValueOnce(false);
+      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockRejectedValueOnce(new Error());
     });
 
     it('should NOT propagate the error', async () => {

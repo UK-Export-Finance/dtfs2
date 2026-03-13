@@ -109,7 +109,7 @@ describe('createFacility', () => {
       }),
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: [], // TODO: DTFS2-8316
-      riskDetails: mapRiskDetails({
+      riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
         dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
@@ -127,7 +127,7 @@ describe('createFacility', () => {
       // Arrange
       const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
-      mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
+      mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(new Error());
     });
 
     it('should NOT propagate the error', async () => {
