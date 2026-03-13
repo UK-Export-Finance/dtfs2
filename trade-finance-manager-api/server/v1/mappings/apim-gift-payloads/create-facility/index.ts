@@ -85,7 +85,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }),
     obligations: [], // TODO: DTFS2-8315
     repaymentProfiles: mapRepaymentProfiles({
-      amount: Number(ukefExposure),
+      amount: facilityAmount,
       dueDate: expiryDate,
     }),
     riskDetails: mapRiskDetails({
