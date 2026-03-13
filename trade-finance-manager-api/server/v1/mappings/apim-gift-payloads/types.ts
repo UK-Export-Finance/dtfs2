@@ -31,7 +31,11 @@ export type ApimGiftCounterparty = {
 
 export type ApimGiftObligation = unknown; // TODO: DTFS2-8315 Define concrete shape
 
-export type ApimGiftRepaymentProfile = unknown; // TODO: DTFS2-8316 Define concrete shape
+export type ApimGiftRepaymentProfile = {
+  amount: number;
+  dueDate: string;
+  name: string;
+};
 
 export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
