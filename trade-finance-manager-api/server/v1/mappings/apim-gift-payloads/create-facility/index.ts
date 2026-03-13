@@ -61,8 +61,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    *
    * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-  const creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  let creditRiskRatingsResponse: unknown = [];
+
+  try {
+    creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  } catch {
+    // Swallow errors and default creditRiskRatingsResponse to an empty array
+    creditRiskRatingsResponse = [];
+  }
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
