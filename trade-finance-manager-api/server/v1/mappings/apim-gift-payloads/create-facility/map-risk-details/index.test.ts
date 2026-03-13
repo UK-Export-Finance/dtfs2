@@ -131,6 +131,12 @@ describe('mapRiskDetails', () => {
   });
 
   it('should map TFM facility data to the format expected by APIM GIFT for "risk details" creation', async () => {
+    // Arrange
+    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+    const getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn().mockResolvedValueOnce({ ukefIndustryCode: mockUkefIndustryCode });
+    mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
+
     // Act
     const result = await mapRiskDetails(params);
 

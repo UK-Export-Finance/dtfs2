@@ -38,12 +38,12 @@ describe('/ukef-industry-code', () => {
       expect(body.ukefIndustryCode).toEqual('1003');
     });
 
-    it('should return a 400 when an industryCode param is not provided', async () => {
+    it('should return a 404 when an industryCode param is not provided', async () => {
       // Act
       const { status } = await get('/ukef-industry-code/by-companies-house-industry-code/');
 
       // Assert
-      expect(status).toEqual(400);
+      expect(status).toEqual(404);
     });
 
     it('should return a 400 when an industryCode param is below the required length', async () => {
