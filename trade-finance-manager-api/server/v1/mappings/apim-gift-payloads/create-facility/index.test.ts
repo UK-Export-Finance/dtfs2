@@ -108,7 +108,7 @@ describe('createFacility', () => {
       }),
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: mapRepaymentProfiles({
-        amount: tfm.ukefExposure,
+        amount: Number(tfm.ukefExposure),
         dueDate: expiryDate,
       }),
       riskDetails: mapRiskDetails({
