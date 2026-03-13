@@ -64,14 +64,14 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
       };
     });
 
-    if (!response?.data) {
-      throw new Error('void response received');
-    }
-
     const { status, data } = response;
 
-    if (status !== 200) {
+    if (status && status !== 200) {
       return res.status(status).send(data);
+    }
+
+    if (!response?.data) {
+      throw new Error('void response received');
     }
 
     const { ukefIndustryCode } = data;
