@@ -108,7 +108,7 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-        subtypeName: facilitySnapshot.bondType,
+        subtypeName: String(facilitySnapshot.bondType),
         ukefExposure: Number(tfm.ukefExposure),
       }),
       repaymentProfiles: [], // TODO: DTFS2-8316

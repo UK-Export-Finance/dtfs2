@@ -89,7 +89,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       currency: facilityCurrencyCode,
       effectiveDate,
       maturityDate: expiryDate,
-      subtypeName: facility.facilitySnapshot.bondType,
+      subtypeName: String(facility.facilitySnapshot.bondType),
       ukefExposure,
     }),
     repaymentProfiles: [], // TODO: DTFS2-8316

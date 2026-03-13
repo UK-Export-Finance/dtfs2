@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 
+// TODO: alphabetical ordering
 import * as countries from '../controllers/countries.controller';
 import * as currencies from '../controllers/currencies.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
@@ -18,6 +19,7 @@ import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
 import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 
 export const apiRoutes = express.Router();
 
@@ -334,6 +336,30 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi
+ * /obligation-subtypes:
+ *   get:
+ *     summary: Get obligation subtypes from MDM API.
+ *     tags: [APIM, Obligation subtypes]
+ *     description: >-
+ *       Get obligation subtypes from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/ObligationSubtypes'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/obligation-subtypes', obligationSubtypes.findAll);
+
+/**
+ * @openapi
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
@@ -577,7 +603,6 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
 
 /**
@@ -594,7 +619,7 @@ apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrati
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CreditRiskRating'
+ *               $ref: '#/definitions/CreditRiskRatings'
  *       401:
  *         description: Unauthorised
  *       429:
@@ -602,7 +627,6 @@ apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrati
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/credit-risk-ratings', creditRiskRatings.findAll);
 
 /**
