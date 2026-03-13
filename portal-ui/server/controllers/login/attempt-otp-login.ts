@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from 'axios';
-import { PORTAL_LOGIN_STATUS, isApiErrorResponse } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, isApiErrorResponse, errorsIncludeMessage } from '@ukef/dtfs2-common';
 import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
 import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
 import * as api from '../../api';
@@ -19,7 +19,7 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
   try {
     const loginResponse: LoginWithSignInOtpResponse = await api.loginWithSignInOtp({ token, userId, signInOTP });
 
-    if (loginResponse.isExpired || loginResponse.loginStatus === 'EXPIRED') {
+    if (loginResponse.isExpired) {
       return { type: OTP_RESULT_TYPE.EXPIRED };
     }
 
@@ -40,8 +40,8 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
         errors = extractedErrors;
       }
 
-      // Detect expired OTP by error message text
-      const expiredMsg = errors && Array.isArray(errors) ? errors.find((e) => typeof e.msg === 'string' && e.msg.includes('expired')) : undefined;
+      // Detect expired OTP by searching API error messages for the substring 'expired' (case-insensitive)
+      const expiredMsg = errorsIncludeMessage(errors, 'expired');
 
       if ((status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) && expiredMsg) {
         return { type: OTP_RESULT_TYPE.EXPIRED };

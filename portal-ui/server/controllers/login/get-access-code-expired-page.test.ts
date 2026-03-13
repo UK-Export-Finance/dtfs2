@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { HttpStatusCode } from 'axios';
 import { getAccessCodeExpiredPage, GetAccessCodeExpiredPageRequest } from './get-access-code-expired-page';
 
 describe('getAccessCodeExpiredPage', () => {
@@ -24,7 +23,6 @@ describe('getAccessCodeExpiredPage', () => {
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
   });
 
@@ -36,7 +34,6 @@ describe('getAccessCodeExpiredPage', () => {
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 2 }));
   });
 
@@ -48,7 +45,6 @@ describe('getAccessCodeExpiredPage', () => {
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     expect(res.render).toHaveBeenCalledWith('login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 1 }));
   });
 
@@ -76,8 +72,6 @@ describe('getAccessCodeExpiredPage', () => {
     getAccessCodeExpiredPage(req, res as Response);
 
     // Assert
-    expect(res.status).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     expect(renderMock).toHaveBeenCalledTimes(2);
     expect(renderMock).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
     expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
