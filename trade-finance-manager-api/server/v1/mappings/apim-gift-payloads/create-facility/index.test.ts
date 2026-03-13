@@ -9,7 +9,9 @@ import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
+import { getPartyUrns } from './get-party-urns';
 import { mapRepaymentProfiles } from './map-repayment-profiles';
+import { mapCounterparties } from './map-counterparties';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
@@ -98,7 +100,12 @@ describe('createFacility', () => {
         productTypeCode: PRODUCT_TYPES.BSS,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
-      counterparties: [], // TODO: DTFS2-8314
+      counterparties: mapCounterparties({
+        dealType: mockDeal.dealSnapshot.dealType,
+        partyUrns: getPartyUrns(mockDeal),
+        startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+      }),
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: mapRepaymentProfiles({
         amount: tfm.ukefExposure,
