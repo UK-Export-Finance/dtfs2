@@ -145,6 +145,43 @@ describe('postResendAnotherAccessCodePage', () => {
     });
   });
 
+  describe('when OTP result is EXPIRED', () => {
+    let req: PostResendAnotherAccessCodePageRequest;
+
+    beforeEach(async () => {
+      // Arrange
+      req = {
+        body: {
+          sixDigitAccessCode: '123456',
+        },
+        session: {
+          userToken: 'Bearer expired-token',
+          userId: 'user-expired',
+          numberOfSignInOtpAttemptsRemaining: 0,
+          userEmail: 'expired@example.com',
+        },
+      } as unknown as PostResendAnotherAccessCodePageRequest;
+
+      // Mock the API to return EXPIRED result
+      mockLoginWithSignInOtp.mockImplementation(() => {
+        return { isExpired: true };
+      });
+
+      // Act
+      await postResendAnotherAccessCodePage(req, res);
+    });
+
+    it('should redirect once', () => {
+      // Assert
+      expect(redirectMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should redirect to /login/access-code-expired', () => {
+      // Assert
+      expect(redirectMock).toHaveBeenCalledWith('/login/access-code-expired');
+    });
+  });
+
   describe('when the API rejects with a 401 Unauthorized error (wrong access code)', () => {
     let req: PostResendAnotherAccessCodePageRequest;
 

@@ -7,6 +7,7 @@ import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
+import { isOtpExpired } from '../../helpers/is-otp-expired';
 
 const NEW_ACCESS_CODE_TEMPLATE = 'login/new-access-code.njk';
 
@@ -60,6 +61,10 @@ export const postNewAccessCodePage = async (req: PostNewAccessCodePageRequest, r
     }
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
+
+    if (isOtpExpired(otpResult, userId)) {
+      return res.redirect('/login/access-code-expired');
+    }
 
     if (otpResult.type === OTP_RESULT_TYPE.INCORRECT_CODE) {
       console.error('Invalid sign-in OTP entered for user %s', userId);
