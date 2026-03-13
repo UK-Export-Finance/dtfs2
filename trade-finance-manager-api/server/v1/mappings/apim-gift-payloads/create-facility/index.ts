@@ -4,9 +4,10 @@ import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
-import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { getPartyUrns } from './get-party-urns';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { mapCounterparties } from './map-counterparties';
+import { mapObligations } from './map-obligations';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -33,8 +34,10 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = Number(tfm.ukefExposure);
+  const facilityCurrencyCode = facilitySnapshot.currency.id;
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
+
+  const ukefExposure = Number(tfm.ukefExposure);
 
   const dealId = getTfmUkefDealId(deal);
   const { dealType } = deal.dealSnapshot;
@@ -71,7 +74,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       effectiveDate,
       expiryDate,
       exporterPartyUrn,
-      facilityAmount,
+      facilityAmount: ukefExposure,
       facilityName,
       productTypeCode,
       ukefFacilityId,
@@ -82,7 +85,13 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       startDate: effectiveDate,
       exitDate: expiryDate,
     }),
-    obligations: [], // TODO: DTFS2-8315
+    obligations: mapObligations({
+      currency: facilityCurrencyCode,
+      effectiveDate,
+      maturityDate: expiryDate,
+      subtypeName: facility.facilitySnapshot.bondType,
+      ukefExposure,
+    }),
     repaymentProfiles: [], // TODO: DTFS2-8316
     riskDetails: mapRiskDetails({
       creditRiskRatings,
