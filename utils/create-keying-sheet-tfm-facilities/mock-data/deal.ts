@@ -18,7 +18,7 @@ export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: Object
     username: 'maker1@ukexportfinance.gov.uk',
     roles: ['maker'],
     bank: {
-      _id: '650ab55050b176a646bc1835',
+      _id: new ObjectId('650ab55050b176a646bc1835'),
       id: '10',
       name: 'UKEF test bank (Delegated) 2',
       mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
@@ -61,7 +61,7 @@ export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: Object
   },
   status: 'Acknowledged',
   bank: {
-    _id: '650ab55050b176a646bc1835',
+    _id: new ObjectId('650ab55050b176a646bc1835'),
     id: '10',
     name: 'UKEF test bank (Delegated) 2',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],

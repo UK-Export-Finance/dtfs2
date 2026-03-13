@@ -2,8 +2,14 @@ import { ObjectId } from 'mongodb';
 import { hasBeenSubmittedToTfm } from './has-been-submitted-to-tfm';
 import { Deal } from '../types';
 import { DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
+import MOCK_BANKS from '../test-helpers/mock-data/banks';
 
 describe('hasBeenSubmittedToTfm', () => {
+  const mockBank = {
+    ...MOCK_BANKS[0]!,
+    _id: new ObjectId('5ce819935e539c343f141ecf'),
+  };
+
   describe('BSS/EWCS', () => {
     it('should return true if the submission count is greater than zero for an AIN', () => {
       // Arrange
@@ -11,6 +17,7 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.AIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 1,
@@ -30,6 +37,7 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIA,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 1,
@@ -49,6 +57,7 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 2,
@@ -68,6 +77,7 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.AIN,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 0,
@@ -87,6 +97,7 @@ describe('hasBeenSubmittedToTfm', () => {
         _id: new ObjectId('5ce819935e539c343f141ece'),
         submissionType: DEAL_SUBMISSION_TYPE.MIA,
         dealType: DEAL_TYPE.BSS_EWCS,
+        bank: mockBank,
         details: {
           ukefDealId: '0030113304',
           submissionCount: 0,
@@ -110,6 +121,7 @@ describe('hasBeenSubmittedToTfm', () => {
         dealType: DEAL_TYPE.GEF,
         ukefDealId: '0030113304',
         submissionCount: 1,
+        bank: mockBank,
         eligibility: {},
         exporter: {},
         portalActivities: [],
@@ -130,6 +142,7 @@ describe('hasBeenSubmittedToTfm', () => {
         dealType: DEAL_TYPE.GEF,
         ukefDealId: '0030113304',
         submissionCount: 1,
+        bank: mockBank,
         eligibility: {},
         exporter: {},
         portalActivities: [],
@@ -150,6 +163,7 @@ describe('hasBeenSubmittedToTfm', () => {
         dealType: DEAL_TYPE.GEF,
         ukefDealId: '0030113304',
         submissionCount: 2,
+        bank: mockBank,
         eligibility: {},
         exporter: {},
         portalActivities: [],
@@ -170,6 +184,7 @@ describe('hasBeenSubmittedToTfm', () => {
         dealType: DEAL_TYPE.GEF,
         ukefDealId: '0030113304',
         submissionCount: 0,
+        bank: mockBank,
         eligibility: {},
         exporter: {},
         portalActivities: [],
@@ -190,6 +205,7 @@ describe('hasBeenSubmittedToTfm', () => {
         dealType: DEAL_TYPE.GEF,
         ukefDealId: '0030113304',
         submissionCount: 0,
+        bank: mockBank,
         eligibility: {},
         exporter: {},
         portalActivities: [],

@@ -8,7 +8,6 @@ import { TfmDeal } from '../types';
  */
 export const getTfmUkefDealId = (deal: TfmDeal): string | null => {
   const { dealSnapshot } = deal;
-
   const { dealType } = dealSnapshot;
 
   switch (dealType) {

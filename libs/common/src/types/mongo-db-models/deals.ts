@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType } from '..';
+import { Bank, DealSubmissionType } from '..';
 import { PortalActivity } from '../portal';
 
 type BaseDeal = AnyObject & {
@@ -10,6 +10,7 @@ type BaseDeal = AnyObject & {
 };
 
 export interface BssEwcsDeal extends BaseDeal {
+  bank: Bank;
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
@@ -18,12 +19,13 @@ export interface BssEwcsDeal extends BaseDeal {
 }
 
 export interface GefDeal extends BaseDeal {
+  bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
-  ukefDealId: string | null;
   eligibility: AnyObject;
   exporter: AnyObject;
   portalActivities: PortalActivity[];
   submissionCount: number;
+  ukefDealId: string | null;
 }
 
 /**
