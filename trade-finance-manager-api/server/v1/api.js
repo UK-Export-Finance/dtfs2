@@ -937,6 +937,26 @@ const getCreditRiskRatings = async () => {
 };
 
 /**
+ * Get a UKEF industry code by Companies House industry code
+ * @returns {Promise<import('./api-response-types').UkefIndustryCode | false>}
+ */
+const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code`,
+      headers: headers.external,
+      params: { industryCode },
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get UKEF industry code by companies house industry code %o', error);
+    return false;
+  }
+};
+
+/**
  * Find a TFM user by username
  * @param {string} username TFM username
  * @returns {Promise<object>} User information
@@ -1909,6 +1929,7 @@ module.exports = {
   getOrCreatePartyDbInfo,
   getCompanyInfo,
   getCreditRiskRatings,
+  getUkefIndustryCodeByCompaniesHouseIndustryCode,
   findUser,
   findUserById,
   updateDealCancellation,

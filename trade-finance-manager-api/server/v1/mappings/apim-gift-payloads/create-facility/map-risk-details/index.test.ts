@@ -1,7 +1,10 @@
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
+import api from '../../../../api';
 import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
+
+jest.mock('../../../../api');
 
 describe('mapFacilityCreditRating', () => {
   describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
@@ -97,16 +100,37 @@ describe('mapFacilityCategoryCode', () => {
 });
 
 describe('mapRiskDetails', () => {
-  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
-    // Arrange
-    const params = {
-      dealId: '123',
-      facilityCategoryCode: '',
-      productTypeCode: PRODUCT_TYPES.GEF,
-      creditRiskRatings: ['AAA', 'AA+', 'AA'],
-      exporterCreditRating: 'AAA',
-    };
+  const mockIndustryCode = '1406';
+  const mockUkefIndustryCode = '1003';
 
+  const params = {
+    dealId: '123',
+    creditRiskRatings: ['AAA', 'AA+', 'AA'],
+    facilityCategoryCode: '',
+    exporterCreditRating: 'AAA',
+    industryCode: mockIndustryCode,
+    productTypeCode: PRODUCT_TYPES.GEF,
+  };
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should call api.getUkefIndustryCodeByCompaniesHouseIndustryCode', async () => {
+    // Arrange
+    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+    const getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn().mockResolvedValueOnce({ ukefIndustryCode: mockUkefIndustryCode });
+    mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
+
+    // Act
+    await mapRiskDetails(params);
+
+    // Assert
+    expect(getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should map TFM facility data to the format expected by APIM GIFT for "risk details" creation', () => {
     // Act
     const result = mapRiskDetails(params);
 
@@ -117,9 +141,38 @@ describe('mapRiskDetails', () => {
       facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-      ukefIndustryCode: '', // TODO: DTFS2-8319
+      ukefIndustryCode: mockUkefIndustryCode,
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when api.getUkefIndustryCodeByCompaniesHouseIndustryCode throws an error', () => {
+    beforeEach(() => {
+      // Arrange
+      const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockResolvedValueOnce(false);
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(mapRiskDetails(params)).resolves.not.toThrow();
+    });
+
+    it('should map TFM facility data to the format expected by APIM for GIFT "risk details" creation', async () => {
+      // Act
+      const result = await mapRiskDetails(params);
+
+      // Assert
+      // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('account');
+      expect(result).toHaveProperty('dealId');
+      expect(result).toHaveProperty('facilityCategoryCode');
+      expect(result).toHaveProperty('facilityCreditRating');
+      expect(result).toHaveProperty('riskStatus');
+      expect(result).toHaveProperty('ukefIndustryCode');
+    });
   });
 });
