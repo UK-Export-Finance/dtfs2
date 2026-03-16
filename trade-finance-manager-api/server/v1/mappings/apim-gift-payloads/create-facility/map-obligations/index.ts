@@ -1,4 +1,7 @@
+import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftObligation } from '../../types';
+
+const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 type MapObligationsParams = {
   currency: string;
@@ -25,7 +28,7 @@ export const mapObligations = ({ currency, effectiveDate, maturityDate, subtypeN
       currency,
       effectiveDate,
       maturityDate,
-      subtypeCode: `TODO - ${subtypeName}`,
+      subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS[subtypeName as keyof typeof OBLIGATION_SUBTYPE_MAP.BSS],
     },
   ];
 

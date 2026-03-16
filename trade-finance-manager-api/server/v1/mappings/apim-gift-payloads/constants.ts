@@ -12,6 +12,33 @@ export const TFM_CREDIT_RATING_MAP = {
   'Acceptable (B+)': 'B+',
 };
 
+export const OBLIGATION_SUBTYPE_CODES = {
+  ADVANCED_PAYMENT_GUARANTEE: 'OST012',
+  BID_BOND: 'TODO: pending GIFT work(?)',
+  MAINTENANCE_BOND: 'TODO: pending GIFT work(?)',
+  PERFORMANCE_BOND: 'OST013',
+  PROGRESS_PAYMENT_BOND: 'OST015',
+  RETENTION_BOND: 'OST018',
+  STANDBY_LETTER_OF_CREDIT: 'TODO: pending GIFT work(?)',
+  WARRANTY_LETTER: 'OST016',
+};
+
+// TODO: documentation
+// TODO: update data mapping spreadsheet
+// this is BSS => subtype code in APIM/ODS/GIFT
+export const OBLIGATION_SUBTYPE_MAP = {
+  BSS: {
+    'Advance payment guarantee': OBLIGATION_SUBTYPE_CODES.ADVANCED_PAYMENT_GUARANTEE,
+    'Bid bond': OBLIGATION_SUBTYPE_CODES.BID_BOND,
+    'Maintenance bond': OBLIGATION_SUBTYPE_CODES.MAINTENANCE_BOND,
+    'Performance bond': OBLIGATION_SUBTYPE_CODES.PERFORMANCE_BOND,
+    'Progress payment bond': OBLIGATION_SUBTYPE_CODES.PROGRESS_PAYMENT_BOND,
+    'Retention bond': OBLIGATION_SUBTYPE_CODES.RETENTION_BOND,
+    'Standby letter of credit': OBLIGATION_SUBTYPE_CODES.STANDBY_LETTER_OF_CREDIT,
+    'Warranty letter': OBLIGATION_SUBTYPE_CODES.WARRANTY_LETTER,
+  },
+} as const;
+
 /**
  * Consumer name for APIM TFS - GIFT facility integration.
  * This is required to indicate which service/consumer is sending data to APIM/GIFT.
@@ -75,4 +102,5 @@ export const APIM_GIFT_INTEGRATION = {
       RISK_STATUS,
     },
   },
+  OBLIGATION_SUBTYPE_MAP,
 };
