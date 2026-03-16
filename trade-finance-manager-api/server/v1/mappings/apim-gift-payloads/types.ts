@@ -31,9 +31,13 @@ export type ApimGiftCounterparty = {
 
 export type ApimGiftObligation = unknown; // TODO: DTFS2-8315 Define concrete shape
 
-export type ApimGiftRepaymentProfile = {
+type ApimGiftRepaymentProfileAllocation = {
   amount: number;
   dueDate: string;
+};
+
+export type ApimGiftRepaymentProfile = {
+  allocations: ApimGiftRepaymentProfileAllocation[];
   name: string;
 };
 

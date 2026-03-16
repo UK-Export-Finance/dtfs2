@@ -18,9 +18,13 @@ type MapRepaymentProfilesParams = {
 export const mapRepaymentProfiles = ({ amount, dueDate }: MapRepaymentProfilesParams): ApimGiftRepaymentProfile[] => {
   const repaymentProfiles = [
     {
-      amount,
-      dueDate,
       name: DEFAULTS.REPAYMENT_PROFILE.NAME,
+      allocations: [
+        {
+          amount,
+          dueDate,
+        },
+      ],
     },
   ];
 

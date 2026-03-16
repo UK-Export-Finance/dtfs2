@@ -15,9 +15,13 @@ describe('mapRepaymentProfiles', () => {
     // Assert
     const expected = [
       {
-        amount,
-        dueDate,
         name: DEFAULTS.REPAYMENT_PROFILE.NAME,
+        allocations: [
+          {
+            amount,
+            dueDate,
+          },
+        ],
       },
     ];
 
