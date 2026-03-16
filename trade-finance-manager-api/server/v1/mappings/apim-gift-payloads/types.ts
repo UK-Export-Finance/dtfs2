@@ -1,4 +1,10 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from './constants';
+import { APIM_GIFT_INTEGRATION, COUNTERPARTY_ROLE_CODE, PRODUCT_TYPES } from './constants';
+
+export type PartyUrns = {
+  bondGiver?: string;
+  bondBeneficiary?: string;
+  issuingBank?: string;
+};
 
 type CreditTypeMap = (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['OVERVIEW']['CREDIT_TYPE'];
 type CreditTypeValue = CreditTypeMap[keyof CreditTypeMap];
@@ -16,7 +22,12 @@ export type ApimGiftFacilityOverview = {
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
 };
 
-export type ApimGiftCounterparty = unknown; // TODO: DTFS2-8314 Define concrete shape
+export type ApimGiftCounterparty = {
+  counterpartyUrn: string;
+  startDate: string;
+  exitDate: string;
+  roleCode: (typeof COUNTERPARTY_ROLE_CODE)[keyof typeof COUNTERPARTY_ROLE_CODE];
+};
 
 export type ApimGiftObligation = unknown; // TODO: DTFS2-8315 Define concrete shape
 
@@ -24,9 +35,9 @@ export type ApimGiftRepaymentProfile = unknown; // TODO: DTFS2-8316 Define concr
 
 export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
-  dealId: string;
+  dealId: string | null;
   facilityCategoryCode: string | null;
-  facilityCreditRating: string;
+  facilityCreditRating: string | null;
   riskStatus: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['RISK_STATUS'];
   ukefIndustryCode: string;
 };

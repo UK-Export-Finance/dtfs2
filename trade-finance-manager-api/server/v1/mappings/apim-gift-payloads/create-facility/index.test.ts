@@ -1,38 +1,88 @@
-import { Facility, TfmFacility } from '@ukef/dtfs2-common';
+import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
+import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import api from '../../../api';
+import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
+import { mapCounterparties } from './map-counterparties';
+import { getPartyUrns } from './get-party-urns';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
+const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
+
+jest.mock('../../../api');
 
 describe('createFacility', () => {
-  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
-    // Arrange
-    const mockFacility: TfmFacility = {
-      _id: new ObjectId(),
-      facilitySnapshot: mockFacilitySnapshot,
-      tfm: {
-        ukefExposure: 100000,
-        facilityGuaranteeDates: {
-          guaranteeCommencementDate: '2024-01-01',
-          guaranteeExpiryDate: '2025-01-01',
-        },
+  const mockDeal = mockTfmDeal;
+
+  const mockFacility: TfmFacility = {
+    _id: new ObjectId(),
+    facilitySnapshot: mockFacilitySnapshot,
+    tfm: {
+      ukefExposure: 100000,
+      facilityGuaranteeDates: {
+        guaranteeCommencementDate: '2024-01-01',
+        guaranteeExpiryDate: '2025-01-01',
       },
-    };
+    },
+  };
 
-    const { facilitySnapshot, tfm } = mockFacility;
+  const { facilitySnapshot, tfm } = mockFacility;
 
-    const params = {
-      dealId: '123',
-      exporterPartyUrn: '12345',
-      facility: mockFacility,
-    };
+  const mockCreditRiskRatings: CreditRiskRating[] = [
+    {
+      id: 1,
+      name: 1,
+      description: 'AAA',
+      createdAt: '2026-01-14T14:15:00.943Z',
+      updatedAt: '2026-01-14T14:15:00.943Z',
+      effectiveFrom: '2026-01-14T14:15:00.943Z',
+      effectiveTo: '9999-12-31T00:00:00.000Z',
+    },
+    {
+      id: 2,
+      name: 2,
+      description: 'AA+',
+      createdAt: '2026-01-14T14:15:00.943Z',
+      updatedAt: '2026-01-14T14:15:00.943Z',
+      effectiveFrom: '2026-01-14T14:15:00.943Z',
+      effectiveTo: '9999-12-31T00:00:00.000Z',
+    },
+  ];
+
+  const params = {
+    deal: mockDeal,
+    facility: mockFacility,
+  };
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should call api.getCreditRiskRatings', async () => {
+    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+    const getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
+    mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
+
+    await createFacility(params);
+
+    expect(getCreditRiskRatingsSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
+    // Arrange
+    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+    mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
 
     // Act
-    const result = createFacility(params);
+    const result = await createFacility(params);
 
     // Assert
     const expected = {
@@ -41,22 +91,58 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-        exporterPartyUrn: params.exporterPartyUrn,
+        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
         productTypeCode: PRODUCT_TYPES.BSS,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
-      counterparties: [], // TODO: DTFS2-8314
+      counterparties: mapCounterparties({
+        dealType: mockDeal.dealSnapshot.dealType,
+        partyUrns: getPartyUrns(mockDeal),
+        startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+      }),
       obligations: [], // TODO: DTFS2-8315
       repaymentProfiles: [], // TODO: DTFS2-8316
       riskDetails: mapRiskDetails({
-        dealId: params.dealId,
+        creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
+        dealId: getTfmUkefDealId(mockDeal),
+        exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         productTypeCode: PRODUCT_TYPES.BSS,
         facilityCategoryCode: String(facilitySnapshot.type),
       }),
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when api.getCreditRiskRatings throws an error', () => {
+    beforeEach(() => {
+      // Arrange
+      const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+      mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(createFacility(params)).resolves.not.toThrow();
+    });
+
+    it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('consumer');
+      expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('counterparties');
+      expect(result).toHaveProperty('obligations');
+      expect(result).toHaveProperty('repaymentProfiles');
+      expect(result).toHaveProperty('riskDetails');
+    });
   });
 });
