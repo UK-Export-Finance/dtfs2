@@ -20,16 +20,29 @@ const CONSUMER = 'DTFS' as const;
 
 /**
  * BSS = default credit type to "Term".
- * GEF/EWCS = default to "Revolving".
+ * GEF = default credit type to "Revolving".
  */
 const CREDIT_TYPE = {
   BSS: 'Term',
   GEF: 'Revolving',
 } as const;
 
+/**
+ * BSS = facility is not revolving.
+ * GEF = facility is revolving.
+ */
 const IS_REVOLVING = {
   BSS: false,
   GEF: true,
+} as const;
+
+/**
+ * Counterparty role codes
+ * BOND_BENEFICIARY is only sent to APIM/GIFT if a relevant party URN is available.
+ */
+export const COUNTERPARTY_ROLE_CODE = {
+  BOND_BENEFICIARY: 'Bond beneficiary',
+  BOND_GIVER: 'Bond giver',
 } as const;
 
 /**
@@ -47,6 +60,12 @@ const RISK_STATUS = 'Corporate' as const;
 export const APIM_GIFT_INTEGRATION = {
   CONSUMER,
   DEFAULTS: {
+    COUNTERPARTY_ROLE_CODE: {
+      BSS: {
+        BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,
+        BOND_GIVER: COUNTERPARTY_ROLE_CODE.BOND_GIVER,
+      },
+    },
     OVERVIEW: {
       CREDIT_TYPE,
       IS_REVOLVING,
