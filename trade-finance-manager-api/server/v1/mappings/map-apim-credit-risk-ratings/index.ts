@@ -2,11 +2,11 @@ import { CreditRiskRating } from '../../api-response-types';
 
 /**
  * Map the APIM MDM response for credit risk ratings to simple array of descriptions.
- * @param {CreditRiskRating[]} creditRiskRatings - The response from the APIM MDM credit risk ratings endpoint.
+ * @param {unknown} creditRiskRatingsResponse - The response from the APIM MDM credit risk ratings endpoint.
  * @returns {string[]} The list of credit risk rating descriptions, or an empty array if the response is not in the expected format.
  * @example
  * // Given the following APIM MDM response:
- * const creditRiskRatings = [
+ * const creditRiskRatingsResponse = [
  *   { id: 1, description: 'AAA' },
  *   { id: 2, description: 'AA+' },
  *   { id: 3, description: 'AA' },
