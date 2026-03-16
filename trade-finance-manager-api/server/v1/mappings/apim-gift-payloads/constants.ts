@@ -12,20 +12,31 @@ export const TFM_CREDIT_RATING_MAP = {
   'Acceptable (B+)': 'B+',
 };
 
+/**
+ * APIM/GIFT obligation subtype codes.
+ * These are ultimately stored and controlled by ODS.
+ */
 export const OBLIGATION_SUBTYPE_CODES = {
   ADVANCED_PAYMENT_GUARANTEE: 'OST012',
-  BID_BOND: 'TODO: pending GIFT work(?)',
-  MAINTENANCE_BOND: 'TODO: pending GIFT work(?)',
+  BID_BOND: 'TODO: pending GIFT work',
+  MAINTENANCE_BOND: 'TODO: pending GIFT work',
   PERFORMANCE_BOND: 'OST013',
   PROGRESS_PAYMENT_BOND: 'OST015',
   RETENTION_BOND: 'OST018',
-  STANDBY_LETTER_OF_CREDIT: 'TODO: pending GIFT work(?)',
+  STANDBY_LETTER_OF_CREDIT: 'TODO: pending GIFT work',
   WARRANTY_LETTER: 'OST016',
 };
 
-// TODO: documentation
-// TODO: update data mapping spreadsheet
-// this is BSS => subtype code in APIM/ODS/GIFT
+/**
+ * Obligation subtype codes for APIM GIFT, mapped by facility subtype name and deal type (e.g. BSS).
+ * This is required to map the facility subtype name from TFM to the expected obligation subtype code in APIM/GIFT when mapping the facility "obligations" data for the APIM GIFT payload.
+ * The obligation subtype code is required by APIM/GIFT to identify the type of obligation for each facility.
+ * The obligation subtype code values are based on the APIM/GIFT documentation and may require updates if new obligation subtypes are added in APIM/GIFT or if existing ones are modified.
+ *
+ * Examples:
+ * BSS "Advance payment guarantee" => "OST012" ("BSS Advance Payment Guarantee")
+ * BSS "Progress payment bond" => "OST015" ("BSS Progress Payment Bond")
+ */
 export const OBLIGATION_SUBTYPE_MAP = {
   BSS: {
     'Advance payment guarantee': OBLIGATION_SUBTYPE_CODES.ADVANCED_PAYMENT_GUARANTEE,

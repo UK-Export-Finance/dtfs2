@@ -34,6 +34,3 @@ export const mapObligations = ({ currency, effectiveDate, maturityDate, subtypeN
 
   return obligations;
 };
-
-// TODO: we need to get obligation subtype codes from APIM and map DTFS obligation subtype name into a code, for obligations
-// e.g OST001

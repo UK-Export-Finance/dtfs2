@@ -2,24 +2,23 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 
-// TODO: alphabetical ordering
+import * as acbs from '../controllers/acbs.controller';
+import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as companies from '../controllers/companies.controller';
 import * as countries from '../controllers/countries.controller';
+import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
 import * as currencies from '../controllers/currencies.controller';
+import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
+import * as email from '../controllers/email.controller';
+import * as eStore from '../controllers/estore/eStore.controller';
+import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as number from '../controllers/number-generator.controller';
+import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
-import * as acbs from '../controllers/acbs.controller';
-import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
-import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companies from '../controllers/companies.controller';
-import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
-import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
-import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
-import * as email from '../controllers/email.controller';
-import * as bankHolidays from '../controllers/bank-holidays.controller';
-import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 
 export const apiRoutes = express.Router();
 
