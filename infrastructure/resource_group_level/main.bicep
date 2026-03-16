@@ -718,6 +718,7 @@ module clamAv 'modules/clamav-aca.bicep' = {
     target: target
     acaClamAvSubnetId: vnet.outputs.acaClamAvSubnetId
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
+    containerRegistryName: containerRegistry.name
   }
 }
 

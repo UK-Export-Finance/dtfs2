@@ -4,6 +4,7 @@ param logAnalyticsWorkspaceName string
 param product string
 param target string
 param version string
+param containerRegistryName string
 
 var managedEnvironmentName = '${product}-${target}-${version}-clamav-env'
 var applicationInsightsName = '${product}-${target}-${version}-clamav-ai'
@@ -47,6 +48,10 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
+  name: containerRegistryName
+}
+
 resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
   name: containerName
   location: location
@@ -63,7 +68,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
     template: {
       containers: [
         {
-          image: 'mkodockx/docker-clamav:1.1.2-alpine'
+          image: '${containerRegistry.properties.loginServer}/clamav/clamav:stable'
           name: containerName
           resources: {
             cpu: 2
