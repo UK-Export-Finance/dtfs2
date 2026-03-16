@@ -338,7 +338,7 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
  * /obligation-subtypes:
  *   get:
  *     summary: Get obligation subtypes from MDM API.
- *     tags: [APIM, Obligation subtypes]
+ *     tags: [APIM, Obligation Subtypes]
  *     description: >-
  *       Get obligation subtypes from MDM API.
  *     responses:

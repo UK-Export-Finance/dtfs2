@@ -1,9 +1,11 @@
+import { IsoDateTimeStamp } from '@ukef/dtfs2-common';
+
 export type CreditRiskRating = {
   id: number;
   name: number;
   description: string;
-  createdAt: string;
-  updatedAt: string;
-  effectiveFrom: string;
-  effectiveTo: string;
+  createdAt: IsoDateTimeStamp;
+  updatedAt: IsoDateTimeStamp;
+  effectiveFrom: IsoDateTimeStamp;
+  effectiveTo: IsoDateTimeStamp;
 };

@@ -34,7 +34,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityCurrencyCode = facilitySnapshot.currency.id;
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const ukefExposure = Number(tfm.ukefExposure);
@@ -86,7 +85,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       exitDate: expiryDate,
     }),
     obligations: mapObligations({
-      currency: facilityCurrencyCode,
+      currency,
       effectiveDate,
       maturityDate: expiryDate,
       subtypeName: String(facility.facilitySnapshot.bondType),
