@@ -1,11 +1,7 @@
-import { IsoDateTimeStamp } from '@ukef/dtfs2-common';
-
 export type ObligationSubtype = {
-  id: number;
-  name: number;
+  type: string;
+  typeCode: string;
+  code: string;
   description: string;
-  createdAt: IsoDateTimeStamp;
-  updatedAt: IsoDateTimeStamp;
-  effectiveFrom: IsoDateTimeStamp;
-  effectiveTo: IsoDateTimeStamp;
+  isActive: boolean;
 };

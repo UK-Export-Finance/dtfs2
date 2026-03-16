@@ -19,6 +19,7 @@
  *       isActive:
  *         type: boolean
  *         example: true
+ *   ObligationSubtypes:
  *     type: array
  *     items:
  *       $ref: '#/definitions/ObligationSubtype'
