@@ -14,7 +14,7 @@ type MapObligationsParams = {
 /**
  * Maps the facility "obligations".
  * @param {MapObligationsParams} params - Data required to build the APIM GIFT "obligations" data.
- * @param {string} params.currency - The party URNs.
+ * @param {string} params.currency - The facility currency code to use for the obligation amount.
  * @param {string} params.effectiveDate - The start date of the facility (from TFM "facilityGuaranteeDates").
  * @param {string} params.maturityDate - The exit date of the facility (from TFM "facilityGuaranteeDates").
  * @param {string} params.subtypeName - The facility subtype name. This will need to be mapped into an obligation subtype code expected by APIM GIFT.

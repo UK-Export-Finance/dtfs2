@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { findAll } from './credit-risk-ratings.controller';
+import { findAll } from './obligation-subtypes.controller';
 
 dotenv.config();
 

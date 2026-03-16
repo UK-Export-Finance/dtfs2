@@ -347,7 +347,9 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/ObligationSubtypes'
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ObligationSubtype'
  *       401:
  *         description: Unauthorised
  *       429:
@@ -618,7 +620,9 @@ apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrati
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CreditRiskRatings'
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/CreditRiskRating'
  *       401:
  *         description: Unauthorised
  *       429:

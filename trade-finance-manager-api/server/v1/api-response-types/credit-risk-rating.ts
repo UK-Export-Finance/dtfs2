@@ -1,7 +1,9 @@
 export type CreditRiskRating = {
-  type: string;
-  typeCode: string;
-  code: string;
+  id: number;
+  name: number;
   description: string;
-  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  effectiveFrom: string;
+  effectiveTo: string;
 };

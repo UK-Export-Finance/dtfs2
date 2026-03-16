@@ -4,7 +4,7 @@ import { mapObligations } from '.';
 const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 describe('mapObligations', () => {
-  it('should return an array with one repayment profile', () => {
+  it('should return an array with one obligation', () => {
     // Arrange
     const currency = 'GBP';
     const effectiveDate = '2024-01-28';
