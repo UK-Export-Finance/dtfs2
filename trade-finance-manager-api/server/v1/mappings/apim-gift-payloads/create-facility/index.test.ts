@@ -20,6 +20,10 @@ const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
 jest.mock('../../../api');
 
 describe('createFacility', () => {
+  const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+  let getCreditRiskRatingsSpy = jest.fn();
+  let getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn();
+
   const mockDeal = mockTfmDeal;
 
   const mockFacility: TfmFacility = {
@@ -35,6 +39,8 @@ describe('createFacility', () => {
   };
 
   const { facilitySnapshot, tfm } = mockFacility;
+
+  const mockUkefIndustryCode = '1003';
 
   const mockCreditRiskRatings: CreditRiskRating[] = [
     {
@@ -64,15 +70,16 @@ describe('createFacility', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+
+    // Arrange
+    getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
+    mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
+
+    getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn().mockResolvedValue({ ukefIndustryCode: mockUkefIndustryCode });
+    mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
   });
 
   it('should call api.getCreditRiskRatings', async () => {
-    // Arrange
-    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
-
-    const getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
-    mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
-
     // Act
     await createFacility(params);
 
@@ -82,9 +89,8 @@ describe('createFacility', () => {
 
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
     // Arrange
-    const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
-
-    mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
+    // mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
+    // mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
 
     // Act
     const result = await createFacility(params);
@@ -115,7 +121,7 @@ describe('createFacility', () => {
         amount: Number(tfm.ukefExposure),
         dueDate: expiryDate,
       }),
-      riskDetails: mapRiskDetails({
+      riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
         dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
@@ -131,8 +137,6 @@ describe('createFacility', () => {
   describe('when api.getCreditRiskRatings throws an error', () => {
     beforeEach(() => {
       // Arrange
-      const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
-
       mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(new Error());
     });
 
