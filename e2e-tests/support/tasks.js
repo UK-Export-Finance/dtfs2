@@ -2,6 +2,7 @@ const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
+  hash,
   UtilisationReportEntity,
   FeeRecordEntity,
   PaymentEntity,
@@ -14,7 +15,7 @@ const {
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
-const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES, PORTAL_2FA_CODE } = require('../e2e-fixtures');
+const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES, PORTAL_2FA_ACCESS_CODE } = require('../e2e-fixtures');
 const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
@@ -50,10 +51,10 @@ module.exports = {
 
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-      const salt = crypto.randomBytes(64);
-      const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
-      const saltHex = salt.toString('hex');
-      const hashHex = hash.toString('hex');
+      const saltValue = crypto.randomBytes(64);
+      const hashValue = crypto.pbkdf2Sync(newSignInToken, saltValue, 210000, 64, 'sha512');
+      const saltHex = saltValue.toString('hex');
+      const hashHex = hashValue.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
       const userCollection = await getUsersCollection();
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
@@ -62,10 +63,17 @@ module.exports = {
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
-        const salt = crypto.randomBytes(64);
-        const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, 210000, 64, 'sha512');
-        const saltHex = salt.toString('hex');
-        const hashHex = hash.toString('hex');
+
+        const iterations = 210000;
+        const keyLength = 64;
+        const digest = 'sha512';
+        const stringType = 'hex';
+
+        const saltValue = crypto.randomBytes(64);
+        const hashValue = crypto.pbkdf2Sync(signInTokenFromLink, saltValue, iterations, keyLength, digest);
+        const saltHex = saltValue.toString(stringType);
+        const hashHex = hashValue.toString(stringType);
+
         return { saltHex, hashHex, expiry };
       });
 
@@ -101,10 +109,14 @@ module.exports = {
       const users = await getUsersCollection();
 
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
+      const stringType = 'hex';
+
       const saltBuffer = crypto.randomBytes(128); // matches CRYPTO.SALT.BYTES
-      const saltHex = saltBuffer.toString('hex');
-      // matches hash() in @ukef/dtfs2-common: pbkdf2Sync(password, saltHex, 210_000, 128, 'SHA512')
-      const hashHex = crypto.pbkdf2Sync(PORTAL_2FA_CODE, saltHex, 210_000, 128, 'SHA512').toString('hex');
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
 
       return users.updateOne(

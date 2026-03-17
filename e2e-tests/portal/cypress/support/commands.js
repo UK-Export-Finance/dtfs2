@@ -22,6 +22,9 @@ const { downloadFile } = require('./portal-api/fileshare');
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+// Resets the session
+Cypress.Commands.add('clearSessionCookies', require('./utils/clearSessionCookies'));
+
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // Assert an element has some exact text
