@@ -6,6 +6,7 @@ import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { getPartyUrns } from './get-party-urns';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapRepaymentProfiles } from './map-repayment-profiles';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
 
@@ -34,9 +35,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
+  const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
-
-  const ukefExposure = Number(tfm.ukefExposure);
 
   const dealId = getTfmUkefDealId(deal);
   const { dealType } = deal.dealSnapshot;
@@ -73,7 +73,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       effectiveDate,
       expiryDate,
       exporterPartyUrn,
-      facilityAmount: ukefExposure,
+      facilityAmount,
       facilityName,
       productTypeCode,
       ukefFacilityId,
@@ -89,9 +89,12 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       effectiveDate,
       maturityDate: expiryDate,
       subtypeName: String(facility.facilitySnapshot.bondType),
-      ukefExposure,
+      ukefExposure: facilityAmount,
     }),
-    repaymentProfiles: [], // TODO: DTFS2-8316
+    repaymentProfiles: mapRepaymentProfiles({
+      amount: facilityAmount,
+      dueDate: expiryDate,
+    }),
     riskDetails: mapRiskDetails({
       creditRiskRatings,
       dealId,

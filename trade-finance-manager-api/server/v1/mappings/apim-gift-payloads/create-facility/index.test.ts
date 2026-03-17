@@ -9,6 +9,7 @@ import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
+import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
@@ -86,12 +87,14 @@ describe('createFacility', () => {
     const result = await createFacility(params);
 
     // Assert
+    const expiryDate = String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate);
+
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
-        expiryDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+        expiryDate,
         exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
@@ -111,7 +114,10 @@ describe('createFacility', () => {
         subtypeName: String(facilitySnapshot.bondType),
         ukefExposure: Number(tfm.ukefExposure),
       }),
-      repaymentProfiles: [], // TODO: DTFS2-8316
+      repaymentProfiles: mapRepaymentProfiles({
+        amount: Number(tfm.ukefExposure),
+        dueDate: expiryDate,
+      }),
       riskDetails: mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
         dealId: getTfmUkefDealId(mockDeal),
