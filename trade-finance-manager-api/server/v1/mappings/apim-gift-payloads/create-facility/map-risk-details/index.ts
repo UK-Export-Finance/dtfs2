@@ -81,7 +81,7 @@ export const mapRiskDetails = async ({
     industryCodeResponse = { ukefIndustryCode: '' };
   }
 
-  const mapped = {
+  const mapped: ApimGiftFacilityRiskDetails = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
     facilityCategoryCode: mapFacilityCategoryCode(productTypeCode, facilityCategoryCode),

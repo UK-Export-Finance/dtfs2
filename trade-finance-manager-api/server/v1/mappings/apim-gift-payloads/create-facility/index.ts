@@ -2,12 +2,13 @@ import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
-import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
-import { mapOverview } from './map-overview';
-import { mapCounterparties } from './map-counterparties';
-import { mapRiskDetails } from './map-risk-details';
 import { getPartyUrns } from './get-party-urns';
 import { getIndustryCode } from '../get-industry-code';
+import { mapOverview } from './map-overview';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapRepaymentProfiles } from './map-repayment-profiles';
+import { mapCounterparties } from './map-counterparties';
+import { mapRiskDetails } from './map-risk-details';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -24,7 +25,7 @@ export type FacilityCreationParams = {
 export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const { facilitySnapshot, tfm } = facility;
 
-  const { facilityGuaranteeDates } = tfm;
+  const { facilityGuaranteeDates, ukefExposure } = tfm;
 
   const consumer = APIM_GIFT_INTEGRATION.CONSUMER;
   const currency = facilitySnapshot.currency.id;
@@ -34,7 +35,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = Number(tfm.ukefExposure);
+  const facilityAmount = Number(ukefExposure); // TODO: DTFS2-8306 is this correct?
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const dealId = getTfmUkefDealId(deal);
@@ -72,7 +73,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
-  const mapped = {
+  const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
       currency,
@@ -91,7 +92,10 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       exitDate: expiryDate,
     }),
     obligations: [], // TODO: DTFS2-8315
-    repaymentProfiles: [], // TODO: DTFS2-8316
+    repaymentProfiles: mapRepaymentProfiles({
+      amount: facilityAmount,
+      dueDate: expiryDate,
+    }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
       dealId,

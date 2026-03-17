@@ -1,7 +1,6 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, ApiError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -24,10 +23,14 @@ const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routeP
 
   const update = { ...facilityUpdate, dealId: ObjectId(dealId), updatedAt: Date.now(), auditRecord };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
-    returnNewDocument: true,
-    returnDocument: 'after',
-  });
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(facilityId) } },
+    { $set: withoutId(update) },
+    {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    },
+  );
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
