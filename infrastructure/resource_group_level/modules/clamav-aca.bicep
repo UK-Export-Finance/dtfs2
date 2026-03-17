@@ -64,6 +64,20 @@ resource clamAvAca 'Microsoft.App/containerApps@2024-03-01' = {
         external: true
         transport: 'tcp'
       }
+      registries: [
+        {
+          server: containerRegistry.properties.loginServer
+          username: containerRegistry.listCredentials().username
+          passwordSecretRef: 'acr-password'
+        }
+      ]
+
+      secrets: [
+        {
+          name: 'acr-password'
+          value: containerRegistry.listCredentials().passwords[0].value
+        }
+      ]
     }
     template: {
       containers: [
