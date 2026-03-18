@@ -937,7 +937,27 @@ const getCreditRiskRatings = async () => {
 };
 
 /**
+ * Get obligation subtypes
+ * @returns {Promise<import('./api-response-types').ObligationSubtype[] | false>}
+ */
+const getObligationSubtypes = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/obligation-subtypes`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get obligation subtypes %o', error);
+    return false;
+  }
+};
+
+/**
  * Get a UKEF industry code by Companies House industry code
+ * @param {string} industryCode Companies House industry code
  * @returns {Promise<import('./api-response-types').UkefIndustryCode | false>}
  */
 const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
@@ -945,12 +965,11 @@ const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => 
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${industryCode}`,
-      headers: headers.external,
+      headers: headers.central,
     });
-
-    return response?.data;
+    return response.data;
   } catch (error) {
-    console.error('Unable to get UKEF industry code by companies house industry code %o', error);
+    console.error('Unable to get UKEF industry code by Companies House industry code %s %o', industryCode, error);
     return false;
   }
 };
@@ -972,7 +991,7 @@ const findUser = async (username) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user %o', error);
+    console.error('Unable to find TFM user %s %o', username, error);
     return false;
   }
 };
@@ -1928,6 +1947,7 @@ module.exports = {
   getOrCreatePartyDbInfo,
   getCompanyInfo,
   getCreditRiskRatings,
+  getObligationSubtypes,
   getUkefIndustryCodeByCompaniesHouseIndustryCode,
   findUser,
   findUserById,

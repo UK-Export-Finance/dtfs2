@@ -46,7 +46,7 @@ export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCre
 };
 
 /**
- * Map the facility "risk details"
+ * Map the facility "risk details".
  * @param {MapRiskDetailsParams} params - Data required to build the APIM GIFT "facility risk details" data.
  * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
  * @param {string | null} params.dealId - The TFM deal ID.

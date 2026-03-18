@@ -2,22 +2,23 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 
+import * as acbs from '../controllers/acbs.controller';
+import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as companies from '../controllers/companies.controller';
 import * as countries from '../controllers/countries.controller';
+import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
 import * as currencies from '../controllers/currencies.controller';
+import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
+import * as email from '../controllers/email.controller';
+import * as eStore from '../controllers/estore/eStore.controller';
+import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as number from '../controllers/number-generator.controller';
+import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
-import * as acbs from '../controllers/acbs.controller';
-import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
-import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companies from '../controllers/companies.controller';
-import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
-import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
-import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
-import * as email from '../controllers/email.controller';
-import * as bankHolidays from '../controllers/bank-holidays.controller';
 import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
@@ -335,6 +336,32 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi
+ * /obligation-subtypes:
+ *   get:
+ *     summary: Get obligation subtypes from MDM API.
+ *     tags: [APIM, Obligation Subtypes]
+ *     description: >-
+ *       Get obligation subtypes from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ObligationSubtype'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/obligation-subtypes', obligationSubtypes.findAll);
+
+/**
+ * @openapi
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
@@ -578,7 +605,6 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
 
 /**
@@ -595,7 +621,9 @@ apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrati
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CreditRiskRating'
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/CreditRiskRating'
  *       401:
  *         description: Unauthorised
  *       429:
@@ -603,7 +631,6 @@ apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrati
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/credit-risk-ratings', creditRiskRatings.findAll);
 
 /**
