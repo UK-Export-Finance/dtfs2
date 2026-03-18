@@ -29,7 +29,13 @@ export type ApimGiftCounterparty = {
   roleCode: (typeof COUNTERPARTY_ROLE_CODE)[keyof typeof COUNTERPARTY_ROLE_CODE];
 };
 
-export type ApimGiftObligation = unknown; // TODO: DTFS2-8315 Define concrete shape
+export type ApimGiftObligation = {
+  currency: string;
+  effectiveDate: string;
+  maturityDate: string;
+  amount: number;
+  subtypeCode: string;
+};
 
 type ApimGiftRepaymentProfileAllocation = {
   amount: number;

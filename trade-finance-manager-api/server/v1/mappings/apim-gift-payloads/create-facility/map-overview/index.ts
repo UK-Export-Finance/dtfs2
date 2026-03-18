@@ -15,7 +15,7 @@ type MapOverviewParams = {
 };
 
 /**
- * Map the facility "overview"
+ * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
  * @param {string} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
