@@ -32,7 +32,7 @@ describe(page, () => {
     });
 
     it('should render the access code input', () => {
-      const input = wrapper.expectInput('[data-cy="six-digit-access-code-input"]');
+      const input = wrapper.expectInput('[data-cy="access-code-input"]');
       expect(input).toBeDefined();
     });
 

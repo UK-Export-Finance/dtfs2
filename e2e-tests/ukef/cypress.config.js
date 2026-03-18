@@ -6,11 +6,12 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { PORTAL_API_KEY, TFM_API_KEY, TZ } = process.env;
+const { PORTAL_API_KEY, TFM_API_KEY, FF_PORTAL_2FA_ENABLED, TZ } = process.env;
 
 module.exports = defineConfig({
   env: {
     TZ,
+    FF_PORTAL_2FA_ENABLED,
   },
   centralApiProtocol: 'http://',
   centralApiHost: 'localhost',
