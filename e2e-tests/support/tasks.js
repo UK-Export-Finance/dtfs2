@@ -93,6 +93,23 @@ module.exports = {
     };
 
     /**
+     * Override the user's signInOTPSendCount in the DB for E2E tests.
+     *
+     * Usage note: the application computes "attempts remaining" as
+     *   remaining = MAX_SIGN_IN_ATTEMPTS - signInOTPSendCount
+     * and the code that sends an OTP increments the DB count before calculating
+     * remaining. To make the server return a desired `attemptsLeft` after the
+     * send occurs, set the DB count to:
+     *   signInOTPSendCount = MAX_SIGN_IN_ATTEMPTS - 1 - attemptsLeft
+     * In our tests MAX_SIGN_IN_ATTEMPTS = 3, so the helper in specs computes
+     * overrideCount = 2 - attemptsLeft before calling this task.
+     */
+    const overridePortalUserSignInOTPSendCountByUsername = async ({ username, count }) => {
+      const users = await getUsersCollection();
+      return users.updateOne({ username: { $eq: username } }, { $set: { signInOTPSendCount: count } });
+    };
+
+    /**
      * Inserts utilisation report details to the SQL database
      * @param {Partial<UtilisationReportEntity[]>} utilisationReports
      * @returns {Promise<UtilisationReportEntity[]>} The inserted reports
@@ -308,6 +325,7 @@ module.exports = {
       log,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
+      overridePortalUserSignInOTPSendCountByUsername,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
