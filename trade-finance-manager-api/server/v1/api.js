@@ -937,6 +937,25 @@ const getCreditRiskRatings = async () => {
 };
 
 /**
+ * Get obligation subtypes
+ * @returns {Promise<import('./api-response-types').ObligationSubtype[] | false>}
+ */
+const getObligationSubtypes = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/obligation-subtypes`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get obligation subtypes %o', error);
+    return false;
+  }
+};
+
+/**
  * Find a TFM user by username
  * @param {string} username TFM username
  * @returns {Promise<object>} User information
@@ -1909,6 +1928,7 @@ module.exports = {
   getOrCreatePartyDbInfo,
   getCompanyInfo,
   getCreditRiskRatings,
+  getObligationSubtypes,
   findUser,
   findUserById,
   updateDealCancellation,
