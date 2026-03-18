@@ -9,6 +9,7 @@ import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
+import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
 import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
 import { loginAndSubmitPortalAmendmentRequestToUkef } from './gef/loginAndSubmitPortalAmendmentRequestToUkef';
@@ -23,7 +24,7 @@ import { assertPrintDialogue } from './utils/assertPrintDialogue';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 // Resets the session
-Cypress.Commands.add('clearSessionCookies', require('./utils/clearSessionCookies'));
+Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
 
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
