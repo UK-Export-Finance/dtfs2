@@ -3,6 +3,9 @@ const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
   hash,
+  CRYPTO,
+  HEX_STRING_TYPE,
+  OTP,
   UtilisationReportEntity,
   FeeRecordEntity,
   PaymentEntity,
@@ -108,10 +111,10 @@ module.exports = {
     const overridePortalUserSignInOTPWithValidTokenByUsername = async ({ username }) => {
       const users = await getUsersCollection();
 
-      const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-      const stringType = 'hex';
+      const thirtyMinutesInMilliseconds = OTP.DURATION_MILLISECONDS;
+      const stringType = HEX_STRING_TYPE;
 
-      const saltBuffer = crypto.randomBytes(128); // matches CRYPTO.SALT.BYTES
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
 
       const saltHex = saltBuffer.toString(stringType);
 
