@@ -3,7 +3,7 @@ const resendAnotherAccessCode = {
   heading: () => cy.get('[data-cy="resend-another-access-code-email-sent-heading"]'),
   description: () => cy.get('[data-cy="resend-another-access-code-email-sent-description"]'),
   expiryInfo: () => cy.get('[data-cy="resend-another-access-code-email-sent-expiry-info"]'),
-  sixDigitInput: () => cy.get('[data-cy="six-digit-access-code-input"]'),
+  accessCodeInput: () => cy.get('[data-cy="access-code-input"]'),
   spamOrJunk: () => cy.get('[data-cy="access-code-spam-or-junk"]'),
   supportInfo: () => cy.get('[data-cy="access-code-support-info"]'),
   attemptsInfo: () => cy.get('[data-cy="access-code-attempts-info"]'),

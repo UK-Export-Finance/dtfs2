@@ -3,7 +3,7 @@ const newAccessCode = {
   heading: () => cy.get('[data-cy="new-access-code-email-sent-heading"]'),
   description: () => cy.get('[data-cy="new-access-code-email-sent-description"]'),
   expiryInfo: () => cy.get('[data-cy="new-access-code-email-sent-expiry-info"]'),
-  sixDigitInput: () => cy.get('[data-cy="six-digit-access-code-input"]'),
+  accessCodeInput: () => cy.get('[data-cy="access-code-input"]'),
   spamOrJunk: () => cy.get('[data-cy="access-code-spam-or-junk"]'),
   attemptsInfo: () => cy.get('[data-cy="access-code-attempts-info"]'),
   suspendInfo: () => cy.get('[data-cy="access-code-suspend-info"]'),

@@ -52,7 +52,7 @@ context('2FA Page - Check your email', () => {
 
   it('should render access code input with correct placeholder', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    checkYourEmailAccessCode.sixDigitInput().should('have.attr', 'placeholder', 'e.g. 123456');
+    checkYourEmailAccessCode.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
   });
 
   it('should render request-code-link pointing to /login/request-new-access-code', () => {
@@ -63,13 +63,13 @@ context('2FA Page - Check your email', () => {
   describe('Validation', () => {
     it('should show validation when submitting empty access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation({ inputSelector: '[data-cy="six-digit-access-code-input"]' });
+      assertEmptyCodeValidation({ inputSelector: '[data-cy="access-code-input"]' });
     });
 
     it('should show validation when submitting wrong access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      checkYourEmailAccessCode.sixDigitInput().clear();
-      checkYourEmailAccessCode.sixDigitInput().type('000000');
+      checkYourEmailAccessCode.accessCodeInput().clear();
+      checkYourEmailAccessCode.accessCodeInput().type('000000');
       cy.get('form').submit();
       cy.get('[data-cy="error-summary"]').should('exist');
       cy.get('[data-cy="six-digit-access-code-inline-error"]').should('exist');

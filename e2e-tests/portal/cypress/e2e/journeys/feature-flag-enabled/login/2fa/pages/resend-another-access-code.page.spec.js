@@ -34,7 +34,7 @@ context('2FA Page - Resend another access code', () => {
     // shared common assertions for inputs, attempts and submit (no request-code-link on this page)
     assertCommonElements({
       maskedEmailSelector: '[data-cy="resend-another-access-code-email-sent-description"]',
-      inputFallbackSelector: '[data-cy="six-digit-access-code-input"]',
+      inputFallbackSelector: '[data-cy="access-code-input"]',
       attemptsSelector: '[data-cy="access-code-attempts-info"]',
       requestLinkSelector: null,
     });
@@ -56,19 +56,19 @@ context('2FA Page - Resend another access code', () => {
 
   it('should render access code input with correct placeholder', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="six-digit-access-code-input"]').should('have.attr', 'placeholder', 'e.g. 123456');
+    cy.get('[data-cy="access-code-input"]').should('have.attr', 'placeholder', 'e.g. 123456');
   });
 
   describe('Validation', () => {
     it('should show validation when submitting empty access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation({ inputSelector: '[data-cy="six-digit-access-code-input"]' });
+      assertEmptyCodeValidation({ inputSelector: '[data-cy="access-code-input"]' });
     });
 
     it('should show validation when submitting wrong access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.get('[data-cy="six-digit-access-code-input"]').clear();
-      cy.get('[data-cy="six-digit-access-code-input"]').type('000000');
+      cy.get('[data-cy="access-code-input"]').clear();
+      cy.get('[data-cy="access-code-input"]').type('000000');
       cy.get('form').submit();
       cy.get('[data-cy="error-summary"]').should('exist');
       cy.get('[data-cy="six-digit-access-code-inline-error"]').should('exist');

@@ -1,6 +1,6 @@
 const assertCommonElements = ({
   maskedEmailSelector,
-  inputFallbackSelector = '[data-cy="six-digit-access-code-input"]',
+  inputFallbackSelector = '[data-cy="access-code-input"]',
   attemptsSelector = '[data-cy="access-code-attempts-info"]',
   csrfSelector = '[data-cy="csrf-input"]',
   submitSelector = '[data-cy="submit-button"]',
@@ -33,8 +33,8 @@ const assertCommonElements = ({
   }
 
   // input fallback selector and placeholder
-  if (page && page.sixDigitInput) {
-    page.sixDigitInput().should('exist');
+  if (page && page.accessCodeInput) {
+    page.accessCodeInput().should('exist');
   } else {
     cy.get(inputFallbackSelector).should('exist').and('have.attr', 'placeholder', 'e.g. 123456');
   }
@@ -85,14 +85,14 @@ const clickRequestNewCodeAndAssertRedirect = ({
 const commonBeforeEach = (user, opts = { login: true }) => {
   const { username } = user;
   cy.getUserByUsername(username).then(() => {});
-  cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
+  cy.resetPortalUserStatusAndNumberOfSignInOTPs(username);
   if (opts.login) {
     cy.enterUsernameAndPassword(user);
   }
 };
 
 const assertEmptyCodeValidation = ({
-  inputSelector = '[data-cy="six-digit-access-code-input"]',
+  inputSelector = '[data-cy="access-code-input"]',
   inlineErrorSelector = '[data-cy="six-digit-access-code-inline-error"]',
 } = {}) => {
   cy.get(inputSelector).clear();
