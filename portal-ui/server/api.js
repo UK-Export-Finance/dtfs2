@@ -436,6 +436,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -540,6 +541,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
