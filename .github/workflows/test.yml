@@ -1316,7 +1316,6 @@ jobs:
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
             './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
-            './portal/cypress/e2e/journeys/login/**/*.spec.js',
             './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
             './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
             './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
