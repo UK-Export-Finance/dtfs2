@@ -26,7 +26,7 @@ Additional aspects:
  */
 
 import { Request, Response } from 'express';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 
@@ -66,7 +66,7 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
 
     const { status, data } = response;
 
-    if (status && status !== 200) {
+    if (status && status !== HttpStatusCode.Ok) {
       return res.status(status).send(data);
     }
 
@@ -82,6 +82,8 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
   } catch (error) {
     console.error('🚩 Error occurred during UKEF industry code endpoint call %o', error);
 
-    return res.status(500).send({ status: 500, message: 'Error occurred during UKEF industry code endpoint call' });
+    return res
+      .status(HttpStatusCode.InternalServerError)
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during UKEF industry code endpoint call' });
   }
 };
