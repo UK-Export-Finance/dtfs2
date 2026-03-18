@@ -10,6 +10,8 @@ const checkYourEmailAccessCode = {
   requestCodeLink: () => cy.get('[data-cy="request-code-link"]'),
   csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
   accessCodeInput: () => cy.get('[data-cy="access-code-input"]'),
+  errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
 };
 
 module.exports = checkYourEmailAccessCode;

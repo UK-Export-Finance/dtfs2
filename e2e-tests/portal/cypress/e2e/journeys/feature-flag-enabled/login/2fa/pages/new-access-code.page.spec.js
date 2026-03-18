@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach, assertCommonElements, assertEmptyCodeValidation } = require('./2faPageHelpers');
-const { newAccessCode } = require('../../../../../pages');
+const { newAccessCode, resendAnotherAccessCode } = require('../../../../../pages');
 
 context('2FA Page - New access code', () => {
   beforeEach(() => {
@@ -20,12 +20,12 @@ context('2FA Page - New access code', () => {
   it('should allow requesting another access code and navigate to resend page', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     // click request new code link and assert navigation to resend page
-    cy.get('[data-cy="request-code-link"]').should('exist').click();
+    newAccessCode.requestCodeLink().should('exist').click();
     cy.url().should('contain', '/login/resend-another-access-code');
-    cy.get('[data-cy="resend-another-access-code-email-sent-description"]').should('contain', '@');
-    cy.get('[data-cy="access-code-attempts-info"]').should('exist');
+    resendAnotherAccessCode.description().should('contain', '@');
+    resendAnotherAccessCode.attemptsInfo().should('exist');
     // csrf token should be present on the page
-    cy.get('[data-cy="csrf-input"]').invoke('attr', 'value').should('not.be.empty');
+    resendAnotherAccessCode.csrfToken().should('not.be.empty');
   });
 
   it('should render form, inputs and informational paragraphs correctly', () => {
@@ -34,30 +34,25 @@ context('2FA Page - New access code', () => {
     // form method
     cy.get('form').should('have.attr', 'method', 'POST');
     // static informational elements
-    cy.get('[data-cy="new-access-code-email-sent-heading"]').should('exist');
-    cy.get('[data-cy="new-access-code-email-sent-description"]').should('contain', '@');
-    cy.get('[data-cy="new-access-code-email-sent-expiry-info"]').should('exist');
-    cy.get('[data-cy="access-code-spam-or-junk"]').should('exist');
-    cy.get('[data-cy="access-code-suspend-info"]').should('exist');
+    newAccessCode.heading().should('exist');
+    newAccessCode.description().should('contain', '@');
+    newAccessCode.expiryInfo().should('exist');
+    newAccessCode.spamOrJunk().should('exist');
+    newAccessCode.suspendInfo().should('exist');
     cy.get('[data-cy="contact-us-timeframe"]').should('exist');
 
     // shared common assertions for inputs, attempts, submit and request link
-    assertCommonElements({
-      maskedEmailSelector: '[data-cy="new-access-code-email-sent-description"]',
-      inputFallbackSelector: '[data-cy="access-code-input"]',
-      attemptsSelector: '[data-cy="access-code-attempts-info"]',
-      requestLinkSelector: '[data-cy="request-code-link"]',
-    });
+    assertCommonElements({ page: newAccessCode });
   });
 
   it('should show 1 attempt remaining on first visit', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="access-code-attempts-info"]').should('contain', '1');
+    newAccessCode.attemptsInfo().should('contain', '1');
   });
 
   it('should render access code input with correct placeholder', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="access-code-input"]').should('have.attr', 'placeholder', 'e.g. 123456');
+    newAccessCode.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
   });
 
   it('should render contact us section', () => {
@@ -71,30 +66,30 @@ context('2FA Page - New access code', () => {
 
   it('should render request-code-link pointing to /login/request-new-access-code', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="request-code-link"]').should('have.attr', 'href', '/login/request-new-access-code');
+    newAccessCode.requestCodeLink().should('have.attr', 'href', '/login/request-new-access-code');
   });
 
   describe('Validation', () => {
     it('should show validation when submitting empty access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation({ inputSelector: '[data-cy="access-code-input"]' });
+      assertEmptyCodeValidation();
     });
 
     it('should show validation when submitting wrong access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.get('[data-cy="access-code-input"]').clear();
-      cy.get('[data-cy="access-code-input"]').type('000000');
+      newAccessCode.accessCodeInput().clear();
+      newAccessCode.accessCodeInput().type('000000');
       cy.get('form').submit();
-      cy.get('[data-cy="error-summary"]').should('exist');
-      cy.get('[data-cy="six-digit-access-code-inline-error"]').should('exist');
+      newAccessCode.errorSummary().should('exist');
+      newAccessCode.inlineError().should('exist');
     });
 
-    it('should show access code expired page when code expired', () => {
-      // TODO-8265: this will be enabled once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
-      // cy.enterUsernameAndPassword(BANK1_MAKER1);
-      // cy.visit('/login/access-code-expired');
-      // cy.get('[data-cy="access-code-expired-heading"]').should('exist');
-      // cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
+    // TODO-8265: this will be refactored once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
+    it.skip('should show access code expired page when code expired', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+      cy.visit('/login/access-code-expired');
+      cy.get('[data-cy="access-code-expired-heading"]').should('exist');
+      cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
     });
   });
 });

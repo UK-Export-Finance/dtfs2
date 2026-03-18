@@ -1,3 +1,19 @@
+/**
+ * Asserts common elements present on all 2FA OTP pages: masked email, CSRF token,
+ * access code input, attempts remaining text, submit button, and optional request-code link.
+ * Prefers page object getters when a `page` object is supplied; falls back to
+ * default `data-cy` selectors otherwise.
+ *
+ * @param {object} [opts]
+ * @param {string} [opts.maskedEmailSelector] - Fallback selector for the masked email element.
+ * @param {string} [opts.inputFallbackSelector] - Fallback selector for the OTP input.
+ * @param {string} [opts.attemptsSelector] - Fallback selector for the attempts-remaining element.
+ * @param {string} [opts.csrfSelector] - Fallback selector for the hidden CSRF input.
+ * @param {string} [opts.submitSelector] - Fallback selector for the submit button.
+ * @param {string} [opts.submitText] - Expected text on the submit button.
+ * @param {string} [opts.requestLinkSelector] - Fallback selector for the request-new-code link.
+ * @param {object} [opts.page] - Page object exposing getter functions for elements on the page.
+ */
 const assertCommonElements = ({
   maskedEmailSelector,
   inputFallbackSelector = '[data-cy="access-code-input"]',
@@ -70,6 +86,15 @@ const assertCommonElements = ({
   }
 };
 
+/**
+ * Clicks the request-new-code link and asserts the browser navigates to the
+ * expected redirect URL, then optionally checks the masked email element is present.
+ *
+ * @param {object} [opts]
+ * @param {string} [opts.requestLinkSelector] - Selector for the request-new-code link.
+ * @param {string} [opts.redirectUrl] - URL fragment the browser should navigate to after clicking.
+ * @param {string} [opts.maskedEmailSelector] - Selector for the masked email element on the redirect page.
+ */
 const clickRequestNewCodeAndAssertRedirect = ({
   requestLinkSelector = '[data-cy="request-new-sign-in-link"]',
   redirectUrl = '/login/check-your-email',
@@ -82,6 +107,15 @@ const clickRequestNewCodeAndAssertRedirect = ({
   }
 };
 
+/**
+ * Standard `beforeEach` setup for 2FA OTP page specs.
+ * Fetches the user from the DB, resets their OTP state (send count, tokens, status),
+ * and optionally enters credentials to reach the first 2FA page.
+ *
+ * @param {object} user - Mock user object with at least `username` and `password`.
+ * @param {object} [opts]
+ * @param {boolean} [opts.login] - When `true` (default), calls `cy.enterUsernameAndPassword` after the reset.
+ */
 const commonBeforeEach = (user, opts = { login: true }) => {
   const { username } = user;
   cy.getUserByUsername(username).then(() => {});
@@ -91,6 +125,14 @@ const commonBeforeEach = (user, opts = { login: true }) => {
   }
 };
 
+/**
+ * Asserts that submitting the OTP form with an empty access code shows the
+ * error summary and the inline field error.
+ *
+ * @param {object} [opts]
+ * @param {string} [opts.inputSelector] - Selector for the OTP input to clear before submission.
+ * @param {string} [opts.inlineErrorSelector] - Selector for the inline validation error element.
+ */
 const assertEmptyCodeValidation = ({
   inputSelector = '[data-cy="access-code-input"]',
   inlineErrorSelector = '[data-cy="six-digit-access-code-inline-error"]',

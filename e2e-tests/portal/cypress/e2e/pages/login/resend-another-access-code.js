@@ -12,6 +12,8 @@ const resendAnotherAccessCode = {
   requestNewSignInLink: () => cy.get('[data-cy="request-new-sign-in-link"]'),
   obscuredEmail: () => cy.get('[data-cy="obscured-sign-in-link-target-email-address"]'),
   csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
+  errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
 };
 
 module.exports = resendAnotherAccessCode;

@@ -23,26 +23,21 @@ context('2FA Page - Resend another access code', () => {
     // form method
     cy.get('form').should('have.attr', 'method', 'POST');
     // static informational elements
-    cy.get('[data-cy="resend-another-access-code-email-sent-heading"]').should('exist');
-    cy.get('[data-cy="resend-another-access-code-email-sent-description"]').should('contain', '@');
-    cy.get('[data-cy="resend-another-access-code-email-sent-expiry-info"]').should('exist');
-    cy.get('[data-cy="access-code-spam-or-junk"]').should('exist');
-    cy.get('[data-cy="access-code-support-info"]').should('exist');
-    cy.get('[data-cy="access-code-suspend-info"]').should('exist');
+    resendAnotherAccessCode.heading().should('exist');
+    resendAnotherAccessCode.description().should('contain', '@');
+    resendAnotherAccessCode.expiryInfo().should('exist');
+    resendAnotherAccessCode.spamOrJunk().should('exist');
+    resendAnotherAccessCode.supportInfo().should('exist');
+    resendAnotherAccessCode.suspendInfo().should('exist');
     cy.get('[data-cy="contact-us-timeframe"]').should('exist');
 
     // shared common assertions for inputs, attempts and submit (no request-code-link on this page)
-    assertCommonElements({
-      maskedEmailSelector: '[data-cy="resend-another-access-code-email-sent-description"]',
-      inputFallbackSelector: '[data-cy="access-code-input"]',
-      attemptsSelector: '[data-cy="access-code-attempts-info"]',
-      requestLinkSelector: null,
-    });
+    assertCommonElements({ page: resendAnotherAccessCode });
   });
 
   it('should show 0 attempts remaining on first visit', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="access-code-attempts-info"]').should('contain', '0');
+    resendAnotherAccessCode.attemptsInfo().should('contain', '0');
   });
 
   it('should render contact us section', () => {
@@ -56,30 +51,30 @@ context('2FA Page - Resend another access code', () => {
 
   it('should render access code input with correct placeholder', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.get('[data-cy="access-code-input"]').should('have.attr', 'placeholder', 'e.g. 123456');
+    resendAnotherAccessCode.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
   });
 
   describe('Validation', () => {
     it('should show validation when submitting empty access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation({ inputSelector: '[data-cy="access-code-input"]' });
+      assertEmptyCodeValidation();
     });
 
     it('should show validation when submitting wrong access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.get('[data-cy="access-code-input"]').clear();
-      cy.get('[data-cy="access-code-input"]').type('000000');
+      resendAnotherAccessCode.accessCodeInput().clear();
+      resendAnotherAccessCode.accessCodeInput().type('000000');
       cy.get('form').submit();
-      cy.get('[data-cy="error-summary"]').should('exist');
-      cy.get('[data-cy="six-digit-access-code-inline-error"]').should('exist');
+      resendAnotherAccessCode.errorSummary().should('exist');
+      resendAnotherAccessCode.inlineError().should('exist');
     });
 
-    it('should show access code expired page when code expired', () => {
-      // TODO-8265: this will be enabled once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
-      // cy.enterUsernameAndPassword(BANK1_MAKER1);
-      // cy.visit('/login/access-code-expired');
-      // cy.get('[data-cy="access-code-expired-heading"]').should('exist');
-      // cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
+    // TODO-8265: this will be refactored once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
+    it.skip('should show access code expired page when code expired', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+      cy.visit('/login/access-code-expired');
+      cy.get('[data-cy="access-code-expired-heading"]').should('exist');
+      cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
     });
   });
 });

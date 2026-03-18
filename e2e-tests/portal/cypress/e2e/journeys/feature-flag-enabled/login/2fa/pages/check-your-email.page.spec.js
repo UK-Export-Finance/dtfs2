@@ -1,4 +1,4 @@
-const { checkYourEmail, checkYourEmailAccessCode } = require('../../../../../pages');
+const { checkYourEmail, checkYourEmailAccessCode, newAccessCode } = require('../../../../../pages');
 const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
@@ -22,10 +22,10 @@ context('2FA Page - Check your email', () => {
     checkYourEmailAccessCode.requestCodeLink().should('exist').click();
     // should now be on new-access-code page showing email and attempts
     cy.url().should('contain', '/login/new-access-code');
-    cy.get('[data-cy="new-access-code-email-sent-description"]').should('contain', '@');
-    cy.get('[data-cy="access-code-attempts-info"]').should('exist');
+    newAccessCode.description().should('contain', '@');
+    newAccessCode.attemptsInfo().should('exist');
     // csrf token should be present on the page
-    checkYourEmailAccessCode.csrfToken().should('not.be.empty');
+    newAccessCode.csrfToken().should('not.be.empty');
   });
 
   it('should render form, inputs and informational paragraphs correctly', () => {
@@ -63,7 +63,7 @@ context('2FA Page - Check your email', () => {
   describe('Validation', () => {
     it('should show validation when submitting empty access code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation({ inputSelector: '[data-cy="access-code-input"]' });
+      assertEmptyCodeValidation();
     });
 
     it('should show validation when submitting wrong access code', () => {
@@ -71,16 +71,16 @@ context('2FA Page - Check your email', () => {
       checkYourEmailAccessCode.accessCodeInput().clear();
       checkYourEmailAccessCode.accessCodeInput().type('000000');
       cy.get('form').submit();
-      cy.get('[data-cy="error-summary"]').should('exist');
-      cy.get('[data-cy="six-digit-access-code-inline-error"]').should('exist');
+      checkYourEmailAccessCode.errorSummary().should('exist');
+      checkYourEmailAccessCode.inlineError().should('exist');
     });
 
-    it('should show access code expired page when code expired', () => {
-      // TODO-8265: this will be enabled once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
-      // cy.enterUsernameAndPassword(BANK1_MAKER1);
-      // cy.visit('/login/access-code-expired');
-      // cy.get('[data-cy="access-code-expired-heading"]').should('exist');
-      // cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
+    // TODO-8265: this will be refactored once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
+    it.skip('should show access code expired page when code expired', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+      cy.visit('/login/access-code-expired');
+      cy.get('[data-cy="access-code-expired-heading"]').should('exist');
+      cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
     });
   });
 });

@@ -20,8 +20,8 @@ context('2FA Page - Temporarily suspended account', () => {
   it('should render temporarily suspended page with heading and message', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-    cy.get('[data-cy="account-temporarily-suspended-heading"]').should('exist');
-    cy.get('[data-cy="account-temporarily-suspended-message"]').should('contain', 'failed attempts');
+    temporarilySuspendedAccessCode.heading().should('exist');
+    temporarilySuspendedAccessCode.message().should('contain', 'failed attempts');
   });
 
   it('should render contact us section', () => {
