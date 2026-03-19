@@ -1,7 +1,7 @@
 const {
   ROLES: { MAKER },
 } = require('@ukef/dtfs2-common');
-const { header, users, createUser, editUser } = require('../../../pages');
+const { header, users, createUser, editUser, landingPage } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
@@ -51,7 +51,12 @@ context('Admin user updates an existing user', () => {
     editUser.Deactivate().click();
     editUser.save().click();
 
+    cy.clearSessionCookies();
+
     // prove we can't log in as user
+    landingPage.visit();
+    cy.keyboardInput(landingPage.email(), userToUpdate.username);
+    cy.keyboardInput(landingPage.password(), userToUpdate.password);
     cy.enterUsernameAndPassword(userToUpdate);
     cy.url().should('eq', relative('/login'));
 
