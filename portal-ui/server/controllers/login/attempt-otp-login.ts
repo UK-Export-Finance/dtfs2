@@ -1,10 +1,6 @@
 import axios, { HttpStatusCode } from 'axios';
-import { PORTAL_LOGIN_STATUS, isApiErrorResponse, errorsIncludeMessage } from '@ukef/dtfs2-common';
-import { LoginWithSignInOtpResponse } from '../../types/2fa/login-with-sign-in-otp-response';
-import { OTP_RESULT_TYPE, OtpLoginResult } from '../../types/2fa/otp-login-result';
+import { PORTAL_LOGIN_STATUS, isApiErrorResponse, errorsIncludeMessage, OtpLoginResult, OTP_RESULT_TYPE, LoginWithSignInOtpResponse } from '@ukef/dtfs2-common';
 import * as api from '../../api';
-
-export { OTP_RESULT_TYPE } from '../../types/2fa/otp-login-result';
 
 /**
  * Calls the sign-in OTP API and returns a typed result.

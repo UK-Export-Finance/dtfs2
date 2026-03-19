@@ -1,4 +1,4 @@
-import { OTP_RESULT_TYPE, OtpLoginResult } from '../types/2fa/otp-login-result';
+import { OTP_RESULT_TYPE, OtpLoginResult } from '@ukef/dtfs2-common';
 
 /**
  * Type predicate that checks whether the OTP login result is expired.
@@ -12,7 +12,6 @@ export const isOtpExpired = (otpResult: OtpLoginResult, userId: string): otpResu
   if (otpResult.type !== OTP_RESULT_TYPE.EXPIRED) {
     return false;
   }
-
   console.error('Access code expired for user %s', userId);
 
   return true;

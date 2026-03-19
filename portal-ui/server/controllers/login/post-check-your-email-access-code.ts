@@ -1,8 +1,7 @@
 import { HttpStatusCode } from 'axios';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { attemptOtpLogin } from './attempt-otp-login';
-import { OTP_RESULT_TYPE } from '../../types/2fa/otp-login-result';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
@@ -74,6 +73,8 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
     if (isOtpExpired(otpResult, userId)) {
+      console.error('Access code expired for user %s during check-your-email POST', userId);
+
       return res.redirect('/login/access-code-expired');
     }
 

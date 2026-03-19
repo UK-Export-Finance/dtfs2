@@ -22,6 +22,13 @@ export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, r
       session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = req;
 
+    /**
+     * Defensive check: the number of remaining OTP attempts should always be
+     * present in the session when rendering the "access code expired" page.
+     * If it is missing (undefined) then the request is in an unexpected state
+     * — log an error and render the generic problem page rather than attempting
+     * to render the expired page with incomplete data.
+     */
     if (attemptsLeft === undefined) {
       console.error('No remaining OTP attempts found in session when rendering access code expired page');
       return res.render('partials/problem-with-service.njk');

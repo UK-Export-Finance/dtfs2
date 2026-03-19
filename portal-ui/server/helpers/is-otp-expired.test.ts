@@ -1,4 +1,4 @@
-import { OTP_RESULT_TYPE, OtpLoginResult } from '../types/2fa/otp-login-result';
+import { OTP_RESULT_TYPE, OtpLoginResult } from '@ukef/dtfs2-common';
 import { isOtpExpired } from './is-otp-expired';
 
 const userId = 'user-123';

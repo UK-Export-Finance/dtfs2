@@ -1,4 +1,11 @@
-import { LoginWithSignInOtpResponse } from './login-with-sign-in-otp-response';
+import { PortalSessionUser } from '../types';
+
+export type LoginWithSignInOtpResponse = {
+  loginStatus?: string;
+  token?: string;
+  user?: PortalSessionUser;
+  isExpired?: boolean;
+};
 
 export const OTP_RESULT_TYPE = {
   SUCCESS: 'success',

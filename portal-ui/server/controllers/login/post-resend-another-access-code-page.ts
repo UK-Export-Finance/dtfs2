@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { attemptOtpLogin, OTP_RESULT_TYPE } from './attempt-otp-login';
+import { attemptOtpLogin } from './attempt-otp-login';
 import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/2fa/resend-another-access-code-view-model';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
@@ -63,6 +63,8 @@ export const postResendAnotherAccessCodePage = async (req: PostResendAnotherAcce
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
 
     if (isOtpExpired(otpResult, userId)) {
+      console.error('Access code expired for user %s during resend-another-access-code POST', userId);
+
       return res.redirect('/login/access-code-expired');
     }
 

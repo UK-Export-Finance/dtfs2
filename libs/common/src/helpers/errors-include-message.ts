@@ -1,10 +1,15 @@
 /**
- * Check whether an API `errors` array includes any message containing a substring.
+ * Check whether an API `errors` array contains any message that includes a
+ * given substring (case-insensitive).
  *
- * This utility searches an `errors` array (the common `{ errors?: { msg?: string }[] }`
- * shape returned by our APIs) and returns `true` if any `msg` contains the given
- * substring (case-insensitive). It is a small, focused helper for domain logic
- * such as detecting expired OTP messages.
+ * Exported types:
+ * - `ApiErrorItem` — shape of a single error object (may include `msg`).
+ * - `ApiErrors` — an array of `ApiErrorItem` or `undefined`.
+ *
+ * Behaviour:
+ * - The helper is defensive and returns `false` when `errors` is not an array
+ *   or when `substring` is empty/falsey.
+ * - Matching is case-insensitive and only performed for `msg` values that are strings.
  *
  * Example:
  * ```ts
@@ -14,11 +19,17 @@
  * }
  * ```
  *
- * @param errors - An array of error objects or `undefined`.
- * @param substring - Substring to search for inside error `msg` values.
- * @returns `true` when at least one `msg` includes the substring (case-insensitive).
+ * @param errors API errors array (or `undefined`).
+ * @param substring Substring to search for; case-insensitive match.
+ * @returns `true` when at least one `msg` includes the substring.
  */
-export const errorsIncludeMessage = (errors: Array<{ msg?: string }> | undefined, substring: string): boolean =>
-  !!errors && Array.isArray(errors) && errors.some((e) => typeof e.msg === 'string' && e.msg.toLowerCase().includes(substring.toLowerCase()));
+type ApiErrorItem = { msg?: string };
+type ApiErrors = ApiErrorItem[] | undefined;
 
-export default errorsIncludeMessage;
+export const errorsIncludeMessage = (errors: ApiErrors, substring: string): boolean => {
+  if (!Array.isArray(errors) || !substring) return false;
+
+  const needle = substring.toLowerCase();
+
+  return errors.some((e) => e.msg?.toLowerCase().includes(needle));
+};

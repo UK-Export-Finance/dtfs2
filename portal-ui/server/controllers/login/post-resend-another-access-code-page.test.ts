@@ -180,6 +180,10 @@ describe('postResendAnotherAccessCodePage', () => {
       // Assert
       expect(redirectMock).toHaveBeenCalledWith('/login/access-code-expired');
     });
+
+    it('should log the access code expired event', () => {
+      expect(console.error).toHaveBeenCalledWith('Access code expired for user %s during resend-another-access-code POST', 'user-expired');
+    });
   });
 
   describe('when the API rejects with a 401 Unauthorized error (wrong access code)', () => {

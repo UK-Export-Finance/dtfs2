@@ -20,7 +20,7 @@ export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res
   } = req;
 
   try {
-    // If user has 0 attempts left (third expired code), suspend account without sending new OTP
+    // If user has no remaining OTP attempts, suspend account without sending a new OTP
     if (currentAttemptsLeft === 0) {
       req.session.numberOfSignInOtpAttemptsRemaining = -1;
       const suspendedAccountPage = getNextAccessCodePage(-1);
