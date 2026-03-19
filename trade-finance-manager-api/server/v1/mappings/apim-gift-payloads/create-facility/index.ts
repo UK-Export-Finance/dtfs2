@@ -1,13 +1,14 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
-import { mapOverview } from './map-overview';
-import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { getPartyUrns } from './get-party-urns';
+import { getIndustryCode } from '../get-industry-code';
+import { mapOverview } from './map-overview';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { mapRepaymentProfiles } from './map-repayment-profiles';
 import { mapCounterparties } from './map-counterparties';
+import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 
 export type FacilityCreationParams = {
@@ -47,6 +48,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
 
   const partyUrns = getPartyUrns(deal);
+  const industryCode = getIndustryCode(deal);
 
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
@@ -61,12 +63,18 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    *
    * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-  const creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  let creditRiskRatingsResponse: unknown = [];
+
+  try {
+    creditRiskRatingsResponse = await api.getCreditRiskRatings();
+  } catch {
+    // Swallow errors and default creditRiskRatingsResponse to an empty array
+    creditRiskRatingsResponse = [];
+  }
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
-  const mapped = {
+  const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
       currency,
@@ -95,11 +103,12 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       amount: facilityAmount,
       dueDate: expiryDate,
     }),
-    riskDetails: mapRiskDetails({
+    riskDetails: await mapRiskDetails({
       creditRiskRatings,
       dealId,
       exporterCreditRating,
       facilityCategoryCode,
+      industryCode,
       productTypeCode,
     }),
   };

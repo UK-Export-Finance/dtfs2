@@ -19,6 +19,7 @@ import * as obligationSubtypes from '../controllers/obligation-subtypes.controll
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
+import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
 
@@ -727,3 +728,32 @@ apiRoutes.post('/email', email.emailNotification);
  *               $ref: '#/definitions/BankHolidaysResponseBody'
  */
 apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
+
+/**
+ * @openapi
+ * /ukef-industry-code/by-companies-house-industry-code/:industryCode:
+ *   get:
+ *     summary: Get a UKEF industry code by Companies House industry code
+ *     tags: [APIM, UKEF Industry Code]
+ *     description: >-
+ *       Get a UKEF industry code by Companies House industry code.
+ *     parameters:
+ *       - in: path
+ *         name: industryCode
+ *         schema:
+ *           type: string
+ *           example: 1406
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/UKEFIndustryCodeResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+apiRoutes.get('/ukef-industry-code/by-companies-house-industry-code/:industryCode', ukefIndustryCode.getByCompaniesHouseIndustryCode);
