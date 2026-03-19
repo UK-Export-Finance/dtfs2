@@ -6,12 +6,13 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { CONTACT_US_EMAIL_ADDRESS, PORTAL_API_KEY, TZ } = process.env;
+const { CONTACT_US_EMAIL_ADDRESS, PORTAL_API_KEY, FF_PORTAL_2FA_ENABLED, TZ } = process.env;
 
 module.exports = defineConfig({
   env: {
     TZ,
     CONTACT_US_EMAIL_ADDRESS,
+    FF_PORTAL_2FA_ENABLED,
   },
   dealApiProtocol: 'http://',
   dealApiHost: 'localhost',

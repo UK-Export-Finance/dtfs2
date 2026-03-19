@@ -1,24 +1,28 @@
-import { TfmFacility } from '@ukef/dtfs2-common';
+import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
+import api from '../../../api';
+import { getPartyUrns } from './get-party-urns';
+import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapRepaymentProfiles } from './map-repayment-profiles';
+import { mapCounterparties } from './map-counterparties';
+import { mapObligations } from './map-obligations';
 
 export type FacilityCreationParams = {
-  dealId: string;
-  exporterPartyUrn: string;
+  deal: TfmDeal;
   facility: TfmFacility;
 };
 
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
- * @param {string} params.dealId - The TFM deal ID.
- * @param {string} params.exporterPartyUrn - The TFM exporter party URN, from deal data.
+ * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
- * @returns {ApimGiftFacilityCreationPayload} The APIM "GIFT facility creation" payload.
+ * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
-export const createFacility = ({ dealId, exporterPartyUrn, facility }: FacilityCreationParams): ApimGiftFacilityCreationPayload => {
+export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -31,10 +35,36 @@ export const createFacility = ({ dealId, exporterPartyUrn, facility }: FacilityC
 
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
-  const facilityAmount = Number(tfm.ukefExposure);
+  const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
   const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
+  const dealId = getTfmUkefDealId(deal);
+  const { dealType } = deal.dealSnapshot;
+
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
+
+  const { exporterCreditRating } = deal.tfm;
+  const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
+
+  const partyUrns = getPartyUrns(deal);
+
+  /**
+   * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
+   *
+   * NOTE: if this API call fails, we do NOT want to throw an error.
+   * Instead, continue with an empty array of credit risk ratings, which could result in the facility credit rating not being mapped.
+   * But at least the facility can still be created in GIFT and the issue can be investigated separately.
+   * If the credit risk rating mapping fails, the facility credit rating will simply not be sent to GIFT, which is preferable to the entire facility creation failing.
+   * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
+   * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API call failing and the fact that the credit risk rating mapping can be "best effort", this is not necessary.
+   * Note that this is an edge case scenario as 99% of credit risk ratings are in TFM_CREDIT_RATING_MAP and do not require the API call to map the facility credit rating.
+   *
+   * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+  const creditRiskRatingsResponse = await api.getCreditRiskRatings();
+
+  const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
   const mapped = {
     consumer,
@@ -48,13 +78,29 @@ export const createFacility = ({ dealId, exporterPartyUrn, facility }: FacilityC
       productTypeCode,
       ukefFacilityId,
     }),
-    counterparties: [], // TODO: DTFS2-8314
-    obligations: [], // TODO: DTFS2-8315
-    repaymentProfiles: [], // TODO: DTFS2-8316
+    counterparties: mapCounterparties({
+      dealType,
+      partyUrns,
+      startDate: effectiveDate,
+      exitDate: expiryDate,
+    }),
+    obligations: mapObligations({
+      currency,
+      effectiveDate,
+      maturityDate: expiryDate,
+      subtypeName: String(facility.facilitySnapshot.bondType),
+      ukefExposure: facilityAmount,
+    }),
+    repaymentProfiles: mapRepaymentProfiles({
+      amount: facilityAmount,
+      dueDate: expiryDate,
+    }),
     riskDetails: mapRiskDetails({
+      creditRiskRatings,
       dealId,
-      productTypeCode,
+      exporterCreditRating,
       facilityCategoryCode,
+      productTypeCode,
     }),
   };
 

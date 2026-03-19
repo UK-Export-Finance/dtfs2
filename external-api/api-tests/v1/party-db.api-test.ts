@@ -40,13 +40,13 @@ afterEach(() => {
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
-    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+    it(`should return a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
+    it(`should return a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
@@ -57,7 +57,7 @@ describe('/party-db', () => {
 
   describe('when company house number is invalid', () => {
     test.each(invalidCompaniesHouseNumberTestCases)(
-      `returns a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
+      `should return a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
       async (companyHouseNumber) => {
         const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 

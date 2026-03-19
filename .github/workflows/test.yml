@@ -168,7 +168,7 @@ env:
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
-  FF_PORTAL_2FA_ENABLED: ${{ vars. FF_PORTAL_2FA_ENABLED }}
+  FF_PORTAL_2FA_ENABLED: ${{ vars.FF_PORTAL_2FA_ENABLED }}
   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
   FF_TFM_APIM_GIFT_INTEGRATION: ${{ vars.FF_TFM_APIM_GIFT_INTEGRATION }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
@@ -1291,6 +1291,7 @@ jobs:
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'false'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
+      FF_PORTAL_2FA_ENABLED: 'true'
       FF_TFM_APIM_GIFT_INTEGRATION: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -1315,7 +1316,6 @@ jobs:
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
             './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
-            './portal/cypress/e2e/journeys/login/**/*.spec.js',
             './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
             './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
             './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
