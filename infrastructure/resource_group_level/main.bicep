@@ -244,7 +244,7 @@ var storageLocations = [
 ]
 
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
-var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
+var peeringVnetName = 'vnet-peer-uks-${product}-${target}-${version}'
 
 /* This parameters map holds the per-environment settings.
 Some notes from initial networking conversations*/
