@@ -55,7 +55,7 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 

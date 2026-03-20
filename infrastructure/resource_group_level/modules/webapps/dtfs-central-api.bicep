@@ -22,7 +22,7 @@ param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
 param timeZone string
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
 }
 var containerRegistryLoginServer = containerRegistry.properties.loginServer

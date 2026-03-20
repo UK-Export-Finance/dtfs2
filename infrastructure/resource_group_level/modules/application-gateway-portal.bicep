@@ -136,8 +136,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
   name: applicationGatewayName
   location: location
   tags: {
-    Environment: 'Preproduction'
-    Product: 'exip, dtfs'
+    Environment: target
+    Product: product
   }
   properties: {
     sku: applicationGatewaySku

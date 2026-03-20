@@ -246,8 +246,6 @@ var storageLocations = [
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
 var peeringVnetName = 'vnet-peer-uks-${product}-${target}-${version}'
 
-/* This parameters map holds the per-environment settings.
-Some notes from initial networking conversations*/
 var commonRedis = {
   sku: {
     name: 'Basic'
@@ -279,7 +277,7 @@ var commonWaf = {
 var parametersMap = {
   dev: {
     cr: {
-      name: 'tfsdev'
+      name: 'dtfsdev'
       sku: { name: 'Standard' }
     }
     asp: { sku: 'p2v2' }
@@ -300,7 +298,7 @@ var parametersMap = {
 
   feature: {
     cr: {
-      name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
+      name: 'dtfsfeature'
       sku: { name: 'Basic' }
     }
     asp: {
@@ -512,7 +510,7 @@ var gefUIAdditionalSecureSettings = {
 var gefUISecureConnectionStrings = { }
 var gefUIAdditionalSecureConnectionStrings = { }
 
-var tmfApiSettings = {
+var tfmApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
 }
@@ -590,7 +588,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' =
   location: location
   sku: parametersMap[environment].cr.sku
   properties: {
-    adminUserEnabled: true
+    adminUserEnabled: true //Admin is enabled for optional Azure portal functionality
   }
 }
 
@@ -1078,7 +1076,7 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
     tfmUIUrl: tfmUIUrl
     storageAccountName: storage.outputs.storageAccountName
-    settings: tmfApiSettings
+    settings: tfmApiSettings
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp

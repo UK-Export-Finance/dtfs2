@@ -73,7 +73,10 @@ var requestRoutingRules = [
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
-  tags: {}
+  tags: {
+    Environment: target
+    Product: product
+  }
   properties: {
     sku: applicationGatewaySku
     gatewayIPConfigurations: [
