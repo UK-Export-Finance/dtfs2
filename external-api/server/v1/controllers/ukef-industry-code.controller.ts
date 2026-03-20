@@ -4,21 +4,21 @@
 
 /**
 Objective:
-  The objective of the `findAll` function is to retrieve all obligation subtypes by calling an external API.
-  The function handles the API response and returns the obligation subtypes data in the response.
+  The objective of the `getByCompaniesHouseIndustryCode` function is to retrieve UKEF industry code data by calling an external API.
+  The function handles the API response and returns the industry code data in the response.
 
 Inputs:
   1. `req`: request object from Express
   2. `res`: response object from Express
 
 Flow:
-  1. Build API URL for obligation subtypes
+  1. Build API URL for UKEF industry code endpoint using `industryCode` parameter from `req.params`
   2. Call external API with `axios` and `headers`
   3. Handle errors and return response data or error message
-  4. Return obligation subtypes in response with appropriate status code
+  4. Return UKEF industry code data in response with appropriate status code
 
 Outputs:
-  1. Response with HTTP status code and obligation subtypes data
+  1. Response with HTTP status code and UKEF industry code data
 
 Additional aspects:
   1. The function uses `dotenv` to retrieve the MDM URL from environment variables
@@ -39,47 +39,51 @@ const headers = {
 };
 
 /**
- * Find all obligation subtypes.
+ * Get a UKEF industry code by Companies House industry code.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
-export const findAll = async (req: Request, res: Response) => {
+export const getByCompaniesHouseIndustryCode = async (req: Request, res: Response) => {
   try {
-    console.info('⚡️ Invoking MDM obligation subtypes endpoint');
+    const { industryCode } = req.params;
 
-    const url = `${APIM_MDM_URL}v2/ods/obligation-subtypes`;
+    console.info('⚡️ Invoking MDM UKEF industry code endpoint %s', industryCode);
+
+    const url = `${APIM_MDM_URL}v1/ukef-industry-code/by-companies-house-industry-code/${industryCode}`;
 
     const response = await axios({
       method: 'get',
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Obligation Subtypes API, %o', error);
+      console.error('Error calling UKEF Industry Code API, %o', error);
       return {
         data: error.response?.data,
         status: error.response?.status,
       };
     });
 
+    const { status, data } = response;
+
+    if (status && status !== HttpStatusCode.Ok) {
+      return res.status(status).send(data);
+    }
+
     if (!response?.data) {
       throw new Error('void response received');
     }
 
-    const { status, data } = response;
+    const { ukefIndustryCode } = data;
 
-    if (status !== HttpStatusCode.Ok) {
-      return res.status(status).send(data);
-    }
-
-    console.info('✅ Successfully retrieved obligation subtypes');
+    console.info('✅ Successfully retrieved UKEF industry code data from MDM %s %s', industryCode, ukefIndustryCode);
 
     return res.status(status).send(data);
   } catch (error) {
-    console.error('🚩 Error occurred during obligation subtypes endpoint call %o', error);
+    console.error('🚩 Error occurred during UKEF industry code endpoint call %o', error);
 
     return res
       .status(HttpStatusCode.InternalServerError)
-      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during obligation subtypes endpoint call' });
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during UKEF industry code endpoint call' });
   }
 };

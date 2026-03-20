@@ -26,7 +26,7 @@ Additional aspects:
  */
 
 import { Request, Response } from 'express';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 
@@ -68,7 +68,7 @@ export const findAll = async (req: Request, res: Response) => {
 
     const { status, data } = response;
 
-    if (status !== 200) {
+    if (status !== HttpStatusCode.Ok) {
       return res.status(status).send(data);
     }
 
@@ -78,6 +78,8 @@ export const findAll = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('🚩 Error occurred during credit risk ratings endpoint call %o', error);
 
-    return res.status(500).send({ status: 500, message: 'Error occurred during credit risk ratings endpoint call' });
+    return res
+      .status(HttpStatusCode.InternalServerError)
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during credit risk ratings endpoint call' });
   }
 };
