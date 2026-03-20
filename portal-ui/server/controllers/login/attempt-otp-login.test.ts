@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from 'axios';
-import { OTP_RESULT_TYPE, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { OTP_RESULT_TYPE, PORTAL_LOGIN_STATUS, LoginWithSignInOtpResponse } from '@ukef/dtfs2-common';
 import { attemptOtpLogin } from './attempt-otp-login';
 import * as api from '../../api';
 
@@ -42,7 +42,7 @@ describe('controllers/login/attempt-otp-login', () => {
       expect(api.loginWithSignInOtp).toHaveBeenCalledTimes(1);
     });
 
-    it(`should return incorrect-code when API throws ${HttpStatusCode.Unauthorized} Unauthorized error`, async () => {
+    it('should return incorrect-code when API throws Unauthorized error', async () => {
       const axiosError = {
         response: {
           status: HttpStatusCode.Unauthorized,
@@ -57,7 +57,7 @@ describe('controllers/login/attempt-otp-login', () => {
       expect(result.type).toBe(OTP_RESULT_TYPE.INCORRECT_CODE);
     });
 
-    it(`should return incorrect-code when API throws ${HttpStatusCode.Forbidden} Forbidden error`, async () => {
+    it('should return incorrect-code when API throws Forbidden error', async () => {
       const axiosError = {
         response: {
           status: HttpStatusCode.Forbidden,
@@ -112,6 +112,48 @@ describe('controllers/login/attempt-otp-login', () => {
       jest.spyOn(api, 'loginWithSignInOtp').mockRejectedValue(axiosError);
 
       await expect(attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP })).rejects.toEqual(axiosError);
+    });
+
+    it('should return expired when loginResponse.isExpired is true', async () => {
+      const expiredResponse: LoginWithSignInOtpResponse = { isExpired: true };
+
+      jest.spyOn(api, 'loginWithSignInOtp').mockResolvedValue(expiredResponse);
+
+      const result = await attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP });
+
+      expect(result.type).toBe(OTP_RESULT_TYPE.EXPIRED);
+    });
+
+    it('should return expired when API throws Unauthorized with expired message in errors', async () => {
+      const axiosError = {
+        response: {
+          status: HttpStatusCode.Unauthorized,
+          data: { errors: [{ msg: 'Access code expired' }] },
+        },
+      };
+
+      jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+      jest.spyOn(api, 'loginWithSignInOtp').mockRejectedValue(axiosError);
+
+      const result = await attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP });
+
+      expect(result.type).toBe(OTP_RESULT_TYPE.EXPIRED);
+    });
+
+    it('should return expired when API throws Forbidden with expired message in errors', async () => {
+      const axiosError = {
+        response: {
+          status: HttpStatusCode.Forbidden,
+          data: { errors: [{ msg: 'expired code' }] },
+        },
+      };
+
+      jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+      jest.spyOn(api, 'loginWithSignInOtp').mockRejectedValue(axiosError);
+
+      const result = await attemptOtpLogin({ token: mockToken, userId: mockUserId, signInOTP: mockSignInOTP });
+
+      expect(result.type).toBe(OTP_RESULT_TYPE.EXPIRED);
     });
   });
 });

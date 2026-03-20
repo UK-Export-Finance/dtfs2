@@ -57,7 +57,7 @@ describe('getAccessCodeExpiredPage', () => {
 
     // Assert
     expect(res.render).toHaveBeenCalledTimes(1);
-    expect(res.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     expect(res.status).not.toHaveBeenCalled();
   });
 
@@ -71,9 +71,10 @@ describe('getAccessCodeExpiredPage', () => {
     // Act
     getAccessCodeExpiredPage(req, res as Response);
 
-    // Assert
-    expect(renderMock).toHaveBeenCalledTimes(2);
-    expect(renderMock).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
-    expect(renderMock).toHaveBeenNthCalledWith(2, 'partials/problem-with-service.njk');
+    // Assert — use the same `res.render` / `res.status` pattern as other tests
+    expect(res.render).toHaveBeenCalledTimes(2);
+    expect(res.render).toHaveBeenNthCalledWith(1, 'login/access-code-expired.njk', expect.objectContaining({ attemptsLeft: 3 }));
+    expect(res.render).toHaveBeenNthCalledWith(2, '_partials/problem-with-service.njk');
+    expect(res.status).not.toHaveBeenCalled();
   });
 });
