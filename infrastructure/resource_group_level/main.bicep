@@ -238,7 +238,7 @@ param timeZone string
 @description('The URL to redirect traffic to when a request is blocked or rejected by WAF rules')
 param redirectUrl string
 
-@description('The URL to redirect traffic to when a request is blocked or rejected by WAF rules')
+@description('The SKU (pricing tier) of the App Service Plan')
 param aspSku string
 
 var storageLocations = [
