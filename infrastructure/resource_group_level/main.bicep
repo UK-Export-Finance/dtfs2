@@ -240,7 +240,6 @@ param redirectUrl string
 
 var storageLocations = [
   'uksouth'
-  'ukwest'
 ]
 
 var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
