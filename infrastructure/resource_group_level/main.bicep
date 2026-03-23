@@ -277,7 +277,7 @@ var commonWaf = {
 var parametersMap = {
   dev: {
     cr: {
-      name: 'dtfsdev'
+      name: 'dev'
       sku: { name: 'Standard' }
     }
     asp: { sku: 'p2v2' }
@@ -298,7 +298,7 @@ var parametersMap = {
 
   feature: {
     cr: {
-      name: 'dtfsfeature'
+      name: 'feature'
       sku: { name: 'Basic' }
     }
     asp: {
