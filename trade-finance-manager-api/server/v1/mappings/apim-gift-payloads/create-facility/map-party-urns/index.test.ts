@@ -56,7 +56,9 @@ describe('mapPartyUrns', () => {
             partyUrn: mockBankPartyUrn,
           },
         },
-        tfm: {},
+        tfm: {
+          parties: {},
+        },
       } as TfmDeal;
 
       // Act
@@ -85,7 +87,9 @@ describe('mapPartyUrns', () => {
         dealSnapshot: {
           bank: {},
         },
-        tfm: {},
+        tfm: {
+          parties: {},
+        },
       } as unknown as TfmDeal;
 
       // Act
