@@ -5,12 +5,14 @@ describe('errors-include-message', () => {
     it('returns false when errors is undefined', () => {
       const expected = false;
       const result = errorsIncludeMessage(undefined, 'expired');
+
       expect(result).toEqual(expected);
     });
 
     it('returns false for an empty errors array', () => {
       const expected = false;
       const result = errorsIncludeMessage([], 'expired');
+
       expect(result).toEqual(expected);
     });
 
@@ -18,6 +20,7 @@ describe('errors-include-message', () => {
       const errors = [{ msg: 'some other error' }, { msg: 'another message' }];
       const expected = false;
       const result = errorsIncludeMessage(errors, 'expired');
+
       expect(result).toEqual(expected);
     });
 
@@ -25,6 +28,7 @@ describe('errors-include-message', () => {
       const errors = [{ msg: 'This code has Expired' }, { msg: 'another' }];
       const expected = true;
       const result = errorsIncludeMessage(errors, 'expired');
+
       expect(result).toEqual(expected);
     });
 
@@ -32,6 +36,7 @@ describe('errors-include-message', () => {
       const errors = [{ msg: 'access code expired at 10:00' }];
       const expected = true;
       const result = errorsIncludeMessage(errors, 'expired');
+
       expect(result).toEqual(expected);
     });
 
@@ -40,6 +45,7 @@ describe('errors-include-message', () => {
       const errors: unknown = [{ msg: 123 }, { msg: undefined }];
       const expected = false;
       const result = errorsIncludeMessage(errors as Array<{ msg?: string }>, 'expired');
+
       expect(result).toEqual(expected);
     });
   });

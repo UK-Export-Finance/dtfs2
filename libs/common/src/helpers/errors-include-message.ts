@@ -26,9 +26,11 @@ export const errorsIncludeMessage = (errors: ApiErrors, substring: string): bool
   // Defensive checks: ensure `errors` is an array and `substring` is non-empty.
   if (!substring || !Array.isArray(errors)) return false;
 
-  // Precompute the lowercase search term for case-insensitive comparison.
+  // Make lowercase so not case sensitive when comparing.
   const searchTerm = substring.toLowerCase();
 
   // Use `some` to check if any error message includes the substring and return the resulting boolean value.
-  return errors.some((e) => typeof e.msg === 'string' && e.msg.toLowerCase().includes(searchTerm));
+  const hasErrorContainingMessage = errors.some((e) => typeof e.msg === 'string' && e.msg.toLowerCase().includes(searchTerm));
+
+  return hasErrorContainingMessage;
 };

@@ -23,5 +23,12 @@ export type ApiErrorResponse = {
  * @param value - The value to check for an `errors` property.
  * @returns `true` when `value` is a non-array object that has an `errors` key.
  */
-export const isApiErrorResponse = (value: unknown): value is ApiErrorResponse =>
-  typeof value === 'object' && value !== null && !Array.isArray(value) && 'errors' in (value as Record<string, unknown>);
+export const isApiErrorResponse = (value: unknown): value is ApiErrorResponse => {
+  // Defensive checks: must be a non-null, non-array object
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+
+  // Check for presence of the `errors` key on the object
+  const hasErrorsKey = 'errors' in (value as Record<string, unknown>);
+
+  return hasErrorsKey;
+};
