@@ -158,6 +158,7 @@ jobs:
           sed -i "s|{{TIMEZONE}}|${{ vars.TIMEZONE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{REDIRECT_URL}}|${{ vars.REDIRECT_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ASP_SKU}}|${{ vars.ASP_SKU }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           
       - name: Install Bicep
         run: |

@@ -196,6 +196,9 @@
       },
       "redirectUrl": {
         "value": "{{REDIRECT_URL}}"
+      },
+      "aspSku": {
+        "value": "{{ASP_SKU}}"
       }
     }
 }

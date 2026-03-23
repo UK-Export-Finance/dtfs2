@@ -238,6 +238,9 @@ param timeZone string
 @description('The URL to redirect traffic to when a request is blocked or rejected by WAF rules')
 param redirectUrl string
 
+@description('The URL to redirect traffic to when a request is blocked or rejected by WAF rules')
+param aspSku string
+
 var storageLocations = [
   'uksouth'
 ]
@@ -279,7 +282,7 @@ var parametersMap = {
       name: 'dev'
       sku: { name: 'Standard' }
     }
-    asp: { sku: 'p2v2' }
+    asp: { sku: aspSku }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
@@ -302,7 +305,7 @@ var parametersMap = {
     }
     asp: {
       name: 'feature'
-      sku: 'p2v2'
+      sku: aspSku
     }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Serverless'
@@ -326,7 +329,7 @@ var parametersMap = {
     }
     asp: {
       name: 'test'
-      sku: 'p3v2'
+      sku: aspSku
     }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
@@ -351,7 +354,7 @@ var parametersMap = {
     }
     asp: {
       name: 'prod'
-      sku: 'p3v2'
+      sku: aspSku
     }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
