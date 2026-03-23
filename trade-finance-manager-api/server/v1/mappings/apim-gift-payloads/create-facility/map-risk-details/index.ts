@@ -1,5 +1,7 @@
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES, TFM_CREDIT_RATING_MAP } from '../../constants';
+import api from '../../../../api';
 import { ApimGiftFacilityRiskDetails } from '../../types';
+import { UkefIndustryCode } from '../../../../api-response-types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -8,6 +10,7 @@ type MapRiskDetailsParams = {
   dealId: string | null;
   exporterCreditRating: string;
   facilityCategoryCode?: string;
+  industryCode: string;
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
 };
 
@@ -52,20 +55,41 @@ export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCre
  * @param {(typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES]} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
-export const mapRiskDetails = ({
+export const mapRiskDetails = async ({
   creditRiskRatings,
   dealId,
   exporterCreditRating,
   facilityCategoryCode,
+  industryCode,
   productTypeCode,
-}: MapRiskDetailsParams): ApimGiftFacilityRiskDetails => {
-  const mapped = {
+}: MapRiskDetailsParams): Promise<ApimGiftFacilityRiskDetails> => {
+  /**
+   * Get a UKEF industry code by Companies House industry code.
+   *
+   * NOTE: if this API call fails, we do NOT want to throw an error.
+   * Instead, continue with an empty UKEF industry code, which will result in the facility risk details being sent to APIM, but not created in GIFT.
+   * If this fails, the UKEF industry code will simply not be sent to GIFT, which is preferable to the entire facility creation failing.
+   * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
+   * The alternative of this would be to have retry logic in DTFS, which is not desired - this is APIM's responsibility.
+   */
+  let industryCodeResponse: UkefIndustryCode;
+
+  try {
+    const response = (await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode)) as UkefIndustryCode | undefined;
+
+    industryCodeResponse = response ?? { ukefIndustryCode: '' };
+  } catch {
+    // Swallow errors and default ukefIndustryCode to an empty string
+    industryCodeResponse = { ukefIndustryCode: '' };
+  }
+
+  const mapped: ApimGiftFacilityRiskDetails = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
     facilityCategoryCode: mapFacilityCategoryCode(productTypeCode, facilityCategoryCode),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-    ukefIndustryCode: '', // TODO: DTFS2-8319
+    ukefIndustryCode: industryCodeResponse.ukefIndustryCode,
   };
 
   return mapped;
