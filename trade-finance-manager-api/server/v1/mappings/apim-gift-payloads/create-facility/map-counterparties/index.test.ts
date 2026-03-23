@@ -1,4 +1,3 @@
-import { DEAL_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { mapCounterparties } from '.';
 
@@ -8,8 +7,8 @@ describe('mapCounterparties', () => {
   const startDate = '2024-01-28';
   const exitDate = '2026-02-14';
 
-  describe(`when the dealType is ${DEAL_TYPE.BSS_EWCS}`, () => {
-    const dealType = DEAL_TYPE.BSS_EWCS;
+  describe('when isBssDeal is true', () => {
+    const isBssDeal = true;
 
     describe(`when partyUrns.bondGiver exists`, () => {
       it('should return an array with a "BOND_GIVER" counterparty', () => {
@@ -20,7 +19,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          dealType,
+          isBssDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -49,7 +48,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          dealType,
+          isBssDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -79,7 +78,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          dealType,
+          isBssDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -112,7 +111,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          dealType,
+          isBssDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -124,13 +123,13 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe(`when the dealType is ${DEAL_TYPE.GEF}`, () => {
-    const dealType = DEAL_TYPE.GEF;
+  describe('when the isBssDeal is false', () => {
+    const isBssDeal = false;
 
     it('should return an empty array', () => {
       // Act
       const result = mapCounterparties({
-        dealType,
+        isBssDeal,
         partyUrns: {},
         startDate,
         exitDate,

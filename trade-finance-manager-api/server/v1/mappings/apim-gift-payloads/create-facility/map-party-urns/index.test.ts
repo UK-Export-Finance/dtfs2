@@ -1,11 +1,12 @@
-import { DEAL_TYPE, TfmDeal } from '@ukef/dtfs2-common';
-import { getPartyUrns } from '.';
+import { TfmDeal } from '@ukef/dtfs2-common';
+import { mapPartyUrns } from '.';
 
-describe('getPartyUrns', () => {
+describe('mapPartyUrns', () => {
   const mockBankPartyUrn = '00112233';
 
-  describe(`when the dealType is ${DEAL_TYPE.BSS_EWCS}`, () => {
-    const dealType = DEAL_TYPE.BSS_EWCS;
+  describe('when isBssDeal is true', () => {
+    const isBssDeal = true;
+    const isGefDeal = false;
 
     it('should return an object with bondBeneficiary and bondGiver party URNs', () => {
       // Arrange
@@ -13,7 +14,6 @@ describe('getPartyUrns', () => {
 
       const mockDeal = {
         dealSnapshot: {
-          dealType,
           bank: {
             partyUrn: mockBankPartyUrn,
           },
@@ -28,7 +28,11 @@ describe('getPartyUrns', () => {
       } as TfmDeal;
 
       // Act
-      const result = getPartyUrns(mockDeal);
+      const result = mapPartyUrns({
+        deal: mockDeal,
+        isBssDeal,
+        isGefDeal,
+      });
 
       // Assert
       const expected = {
@@ -40,14 +44,14 @@ describe('getPartyUrns', () => {
     });
   });
 
-  describe(`when the dealType is ${DEAL_TYPE.GEF}`, () => {
+  describe('when isGefDeal is true', () => {
     it('should return an object with issuingBank party URN', () => {
       // Arrange
-      const dealType = DEAL_TYPE.GEF;
+      const isBssDeal = false;
+      const isGefDeal = true;
 
       const mockDeal = {
         dealSnapshot: {
-          dealType,
           bank: {
             partyUrn: mockBankPartyUrn,
           },
@@ -56,7 +60,11 @@ describe('getPartyUrns', () => {
       } as TfmDeal;
 
       // Act
-      const result = getPartyUrns(mockDeal);
+      const result = mapPartyUrns({
+        deal: mockDeal,
+        isBssDeal,
+        isGefDeal,
+      });
 
       // Assert
       const expected = {
@@ -67,19 +75,25 @@ describe('getPartyUrns', () => {
     });
   });
 
-  describe('when the dealType is not recognised', () => {
+  describe('when isBssDeal and isGefDeal are both false', () => {
     it('should return an empty object', () => {
       // Arrange
+      const isBssDeal = false;
+      const isGefDeal = false;
+
       const mockDeal = {
         dealSnapshot: {
-          dealType: 'MOCK_DEAL_TYPE',
           bank: {},
         },
         tfm: {},
       } as unknown as TfmDeal;
 
       // Act
-      const result = getPartyUrns(mockDeal);
+      const result = mapPartyUrns({
+        deal: mockDeal,
+        isBssDeal,
+        isGefDeal,
+      });
 
       // Assert
       expect(result).toEqual({});

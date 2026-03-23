@@ -2,7 +2,8 @@ import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
-import { getPartyUrns } from './get-party-urns';
+import { getDealTypeFlags } from './get-deal-type-flags';
+import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
 import { mapOverview } from './map-overview';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
@@ -42,12 +43,19 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const dealId = getTfmUkefDealId(deal);
   const { dealType } = deal.dealSnapshot;
 
+  const { isBssDeal, isGefDeal } = getDealTypeFlags(dealType);
+
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
   const { exporterCreditRating } = deal.tfm;
   const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
 
-  const partyUrns = getPartyUrns(deal);
+  const partyUrns = mapPartyUrns({
+    deal,
+    isBssDeal,
+    isGefDeal,
+  });
+
   const industryCode = getIndustryCode(deal);
 
   /**
@@ -87,7 +95,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       ukefFacilityId,
     }),
     counterparties: mapCounterparties({
-      dealType,
+      isBssDeal,
       partyUrns,
       startDate: effectiveDate,
       exitDate: expiryDate,
