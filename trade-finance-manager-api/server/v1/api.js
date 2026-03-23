@@ -956,6 +956,25 @@ const getObligationSubtypes = async () => {
 };
 
 /**
+ * Get a UKEF industry code by Companies House industry code
+ * @param {string} industryCode Companies House industry code
+ * @returns {Promise<import('./api-response-types').UkefIndustryCode | false>}
+ */
+const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${industryCode}`,
+      headers: headers.central,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get UKEF industry code by Companies House industry code %s %o', industryCode, error);
+    return false;
+  }
+};
+
+/**
  * Find a TFM user by username
  * @param {string} username TFM username
  * @returns {Promise<object>} User information
@@ -972,7 +991,7 @@ const findUser = async (username) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user %o', error);
+    console.error('Unable to find TFM user %s %o', username, error);
     return false;
   }
 };
@@ -1929,6 +1948,7 @@ module.exports = {
   getCompanyInfo,
   getCreditRiskRatings,
   getObligationSubtypes,
+  getUkefIndustryCodeByCompaniesHouseIndustryCode,
   findUser,
   findUserById,
   updateDealCancellation,

@@ -73,6 +73,7 @@ describe('getPartyUrns', () => {
       const mockDeal = {
         dealSnapshot: {
           dealType: 'MOCK_DEAL_TYPE',
+          bank: {},
         },
         tfm: {},
       } as unknown as TfmDeal;
