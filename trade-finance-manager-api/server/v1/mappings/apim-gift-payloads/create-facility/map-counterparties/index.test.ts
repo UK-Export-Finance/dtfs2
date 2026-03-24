@@ -7,8 +7,8 @@ describe('mapCounterparties', () => {
   const startDate = '2024-01-28';
   const exitDate = '2026-02-14';
 
-  describe('when isBssDeal is true', () => {
-    const isBssDeal = true;
+  describe('when isBssEwcsDeal is true', () => {
+    const isBssEwcsDeal = true;
 
     describe(`when partyUrns.bondGiver exists`, () => {
       it('should return an array with a "BOND_GIVER" counterparty', () => {
@@ -19,7 +19,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssDeal,
+          isBssEwcsDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -48,7 +48,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssDeal,
+          isBssEwcsDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -78,7 +78,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssDeal,
+          isBssEwcsDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -111,7 +111,7 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssDeal,
+          isBssEwcsDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -123,13 +123,13 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when the isBssDeal is false', () => {
-    const isBssDeal = false;
+  describe('when the isBssEwcsDeal is false', () => {
+    const isBssEwcsDeal = false;
 
     it('should return an empty array', () => {
       // Act
       const result = mapCounterparties({
-        isBssDeal,
+        isBssEwcsDeal,
         partyUrns: {},
         startDate,
         exitDate,

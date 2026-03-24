@@ -4,7 +4,7 @@ import { ApimGiftCounterparty, PartyUrns } from '../../types';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapCounterpartiesParams = {
-  isBssDeal: boolean;
+  isBssEwcsDeal: boolean;
   partyUrns: PartyUrns;
   startDate: string;
   exitDate: string;
@@ -13,14 +13,14 @@ type MapCounterpartiesParams = {
 /**
  * Maps the counterparties for a given deal type and party URNs.
  * @param {MapCounterpartiesParams} params - Data required to build the APIM GIFT "counterparties" data.
- * @param {boolean} params.isBssDeal - If the deal is a BSS deal.
+ * @param {boolean} params.isBssEwcsDeal - If the deal is a BSS deal.
  * @param {PartyUrns} params.partyUrns - The party URNs.
  * @param {string} params.startDate - The start date of the facility (from TFM "facilityGuaranteeDates").
  * @param {string} params.exitDate - The exit date of the facility (from TFM "facilityGuaranteeDates").
  * @returns {ApimGiftCounterparty[]} Mapped counterparties array for the APIM GIFT payload.
  */
-export const mapCounterparties = ({ isBssDeal, partyUrns, startDate, exitDate }: MapCounterpartiesParams): ApimGiftCounterparty[] => {
-  if (isBssDeal) {
+export const mapCounterparties = ({ isBssEwcsDeal, partyUrns, startDate, exitDate }: MapCounterpartiesParams): ApimGiftCounterparty[] => {
+  if (isBssEwcsDeal) {
     const counterparties: ApimGiftCounterparty[] = [];
 
     if (partyUrns.bondGiver) {

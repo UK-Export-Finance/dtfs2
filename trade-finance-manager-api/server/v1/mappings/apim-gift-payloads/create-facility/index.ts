@@ -43,7 +43,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const dealId = getTfmUkefDealId(deal);
   const { dealType } = deal.dealSnapshot;
 
-  const { isBssDeal, isGefDeal } = getDealTypeFlags(dealType);
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
@@ -52,7 +52,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const partyUrns = mapPartyUrns({
     deal,
-    isBssDeal,
+    isBssEwcsDeal,
     isGefDeal,
   });
 
@@ -95,7 +95,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       ukefFacilityId,
     }),
     counterparties: mapCounterparties({
-      isBssDeal,
+      isBssEwcsDeal,
       partyUrns,
       startDate: effectiveDate,
       exitDate: expiryDate,

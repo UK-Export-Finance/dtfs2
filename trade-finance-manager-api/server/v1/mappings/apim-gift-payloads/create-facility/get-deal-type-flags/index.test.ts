@@ -3,7 +3,7 @@ import { getDealTypeFlags } from '.';
 
 describe('getDealTypeFlags', () => {
   describe(`when dealType is ${DEAL_TYPE.BSS_EWCS}`, () => {
-    it('should return an object with isBssDeal as true', () => {
+    it('should return an object with isBssEwcsDeal as true', () => {
       // Arrange
       const dealType = DEAL_TYPE.BSS_EWCS;
 
@@ -12,7 +12,7 @@ describe('getDealTypeFlags', () => {
 
       // Assert
       const expected = {
-        isBssDeal: true,
+        isBssEwcsDeal: true,
         isGefDeal: false,
       };
 
@@ -30,7 +30,7 @@ describe('getDealTypeFlags', () => {
 
       // Assert
       const expected = {
-        isBssDeal: false,
+        isBssEwcsDeal: false,
         isGefDeal: true,
       };
 

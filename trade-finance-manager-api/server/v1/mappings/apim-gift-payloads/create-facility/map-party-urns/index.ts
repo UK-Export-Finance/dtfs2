@@ -3,14 +3,15 @@ import { PartyUrns } from '../../types';
 
 type MapPartyUrnsParams = {
   deal: TfmDeal;
-  isBssDeal: boolean;
+  isBssEwcsDeal: boolean;
   isGefDeal: boolean;
 };
 
 /**
  * Map Party URNs for a given deal, based on the deal type.
- * @param {TfmDeal} deal - The TFM deal to get the party URNs from.
- * @param {boolean} params.isBssDeal - If the deal is a BSS deal.
+ * @param {MapPartyUrnsParams} params - Parameters used to determine the party URNs.
+ * @param {TfmDeal} params.deal - The TFM deal to get the party URNs from.
+ * @param {boolean} params.isBssEwcsDeal - If the deal is a BSS deal.
  * @param {boolean} params.isGefDeal - If the deal is a GEF deal.
  * @returns {PartyUrns} Party URNs for the given deal.
  * @remarks
@@ -20,13 +21,13 @@ type MapPartyUrnsParams = {
  * For GEF deals:
  * - GIFT's "issuing bank" is the "bank party URN" from the deal snapshot.
  */
-export const mapPartyUrns = ({ deal, isBssDeal, isGefDeal }: MapPartyUrnsParams): PartyUrns => {
+export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsParams): PartyUrns => {
   const bankPartyUrn = String(deal.dealSnapshot.bank.partyUrn);
   const buyerPartyUrn = String(deal.tfm.parties.buyer?.partyUrn);
 
-  if (isBssDeal) {
+  if (isBssEwcsDeal) {
     return {
-      bondBeneficiary: buyerPartyUrn,
+      ...(buyerPartyUrn && { bondBeneficiary: String(buyerPartyUrn) }),
       bondGiver: bankPartyUrn,
     };
   }

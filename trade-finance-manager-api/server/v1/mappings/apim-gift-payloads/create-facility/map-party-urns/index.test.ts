@@ -4,8 +4,8 @@ import { mapPartyUrns } from '.';
 describe('mapPartyUrns', () => {
   const mockBankPartyUrn = '00112233';
 
-  describe('when isBssDeal is true', () => {
-    const isBssDeal = true;
+  describe('when isBssEwcsDeal is true', () => {
+    const isBssEwcsDeal = true;
     const isGefDeal = false;
 
     it('should return an object with bondBeneficiary and bondGiver party URNs', () => {
@@ -30,7 +30,7 @@ describe('mapPartyUrns', () => {
       // Act
       const result = mapPartyUrns({
         deal: mockDeal,
-        isBssDeal,
+        isBssEwcsDeal,
         isGefDeal,
       });
 
@@ -47,7 +47,7 @@ describe('mapPartyUrns', () => {
   describe('when isGefDeal is true', () => {
     it('should return an object with issuingBank party URN', () => {
       // Arrange
-      const isBssDeal = false;
+      const isBssEwcsDeal = false;
       const isGefDeal = true;
 
       const mockDeal = {
@@ -64,7 +64,7 @@ describe('mapPartyUrns', () => {
       // Act
       const result = mapPartyUrns({
         deal: mockDeal,
-        isBssDeal,
+        isBssEwcsDeal,
         isGefDeal,
       });
 
@@ -77,10 +77,10 @@ describe('mapPartyUrns', () => {
     });
   });
 
-  describe('when isBssDeal and isGefDeal are both false', () => {
+  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
     it('should return an empty object', () => {
       // Arrange
-      const isBssDeal = false;
+      const isBssEwcsDeal = false;
       const isGefDeal = false;
 
       const mockDeal = {
@@ -95,7 +95,7 @@ describe('mapPartyUrns', () => {
       // Act
       const result = mapPartyUrns({
         deal: mockDeal,
-        isBssDeal,
+        isBssEwcsDeal,
         isGefDeal,
       });
 

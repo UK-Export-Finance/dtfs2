@@ -65,7 +65,7 @@ describe('createFacility', () => {
     },
   ];
 
-  const { isBssDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const params = {
     deal: mockDeal,
@@ -111,10 +111,10 @@ describe('createFacility', () => {
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       counterparties: mapCounterparties({
-        isBssDeal,
+        isBssEwcsDeal,
         partyUrns: mapPartyUrns({
           deal: mockDeal,
-          isBssDeal,
+          isBssEwcsDeal,
           isGefDeal,
         }),
         startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
