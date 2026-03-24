@@ -65,5 +65,5 @@ export * from './is-amendment-declined';
 export * from './errors';
 export * from './errors-include-message';
 export * from './sort-amendments';
-export * from './is-api-error-response';
+export * from './parse-api-error-response';
 export * from './otp-login-result';

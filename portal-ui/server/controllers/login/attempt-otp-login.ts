@@ -1,5 +1,12 @@
 import axios, { HttpStatusCode } from 'axios';
-import { PORTAL_LOGIN_STATUS, isApiErrorResponse, errorsIncludeMessage, OtpLoginResult, OTP_RESULT_TYPE, LoginWithSignInOtpResponse } from '@ukef/dtfs2-common';
+import {
+  PORTAL_LOGIN_STATUS,
+  parseApiErrorResponse,
+  errorsIncludeMessage,
+  OtpLoginResult,
+  OTP_RESULT_TYPE,
+  LoginWithSignInOtpResponse,
+} from '@ukef/dtfs2-common';
 import * as api from '../../api';
 
 /**
@@ -29,12 +36,8 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
       const status = apiError.response?.status;
       const data: unknown = apiError.response?.data;
 
-      let errors: Array<{ msg?: string }> | undefined;
-
-      if (isApiErrorResponse(data)) {
-        const { errors: extractedErrors } = data;
-        errors = extractedErrors;
-      }
+      // Checks if data has the expected shape of an API error response, and safely extracts the `errors` array if defined.
+      const errors = parseApiErrorResponse(data)?.errors;
 
       // Detect expired OTP by searching API error messages for the substring 'expired' (case-insensitive)
       const expiredMsg = errorsIncludeMessage(errors, 'expired');

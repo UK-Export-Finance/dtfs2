@@ -12,8 +12,8 @@ type ApiErrors = ApiErrorItem[] | undefined;
  *
  * Example:
  * ```ts
- * const data = apiError.response?.data;
- * if (isApiErrorResponse(data) && errorsIncludeMessage(data.errors, 'expired')) {
+ * const errors = parseApiErrorResponse(apiError.response?.data)?.errors;
+ * if (errorsIncludeMessage(errors, 'expired')) {
  *   // handle expired case
  * }
  * ```
