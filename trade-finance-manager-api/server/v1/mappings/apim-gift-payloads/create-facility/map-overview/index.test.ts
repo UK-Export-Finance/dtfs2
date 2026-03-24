@@ -1,39 +1,72 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
-  it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
-    // Arrange
-    const params = {
-      currency: 'GBP',
-      effectiveDate: '2026-01-30',
-      expiryDate: '2026-12-31',
-      exporterPartyUrn: '12345',
-      facilityAmount: 20000,
-      facilityName: 'Mock facility name',
-      productTypeCode: PRODUCT_TYPES.BSS,
-      ukefFacilityId: '123',
-    };
+  const baseParams = {
+    currency: 'GBP',
+    effectiveDate: '2026-01-30',
+    expiryDate: '2026-12-31',
+    exporterPartyUrn: '12345',
+    facilityAmount: 20000,
+    facilityName: 'Mock facility name',
+    ukefFacilityId: '123',
+  };
 
-    // Act
-    const result = mapOverview(params);
+  const baseExpected = {
+    currency: 'GBP',
+    effectiveDate: '2026-01-30',
+    expiryDate: '2026-12-31',
+    facilityAmount: 20000,
+    facilityId: baseParams.ukefFacilityId,
+    facilityName: 'Mock facility name',
+    obligorUrn: baseParams.exporterPartyUrn,
+  };
 
-    // Assert
-    const expected = {
-      creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS, // TODO: DTFS2-8307 - based on product type
-      currency: params.currency,
-      facilityAmount: params.facilityAmount,
-      facilityId: params.ukefFacilityId,
-      facilityName: params.facilityName,
-      effectiveDate: params.effectiveDate,
-      expiryDate: params.expiryDate,
-      isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.BSS, // TODO: DTFS2-8308 - based on product type
-      obligorUrn: params.exporterPartyUrn,
-      productTypeCode: params.productTypeCode,
-    };
+  describe(PRODUCT_TYPE_CODES.BSS, () => {
+    it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
+      // Arrange
+      const params = {
+        ...baseParams,
+        productTypeCode: PRODUCT_TYPE_CODES.BSS,
+      };
 
-    expect(result).toEqual(expected);
+      // Act
+      const result = mapOverview(params);
+
+      // Assert
+      const expected = {
+        ...baseExpected,
+        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS,
+        isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.BSS,
+        productTypeCode: PRODUCT_TYPE_CODES.BSS,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe(PRODUCT_TYPE_CODES.GEF, () => {
+    it('should map TFM facility data to the format expected by APIM GIFT for facility creation', () => {
+      // Arrange
+      const params = {
+        ...baseParams,
+        productTypeCode: PRODUCT_TYPE_CODES.GEF,
+      };
+
+      // Act
+      const result = mapOverview(params);
+
+      // Assert
+      const expected = {
+        ...baseExpected,
+        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.GEF,
+        isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.GEF,
+        productTypeCode: PRODUCT_TYPE_CODES.GEF,
+      };
+
+      expect(result).toEqual(expected);
+    });
   });
 });

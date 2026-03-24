@@ -1,5 +1,5 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
-import { ApimGiftFacilityOverview } from '../../types';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { ApimGiftFacilityOverview, ApimGiftProductTypeCode } from '../../types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -10,8 +10,7 @@ type MapOverviewParams = {
   effectiveDate: string;
   expiryDate: string;
   exporterPartyUrn: string;
-  // TODO: DTFS2-8333 isGefDeal
-  productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
+  productTypeCode: ApimGiftProductTypeCode;
   ukefFacilityId: string;
 };
 
@@ -24,7 +23,7 @@ type MapOverviewParams = {
  * @param {string} params.exporterPartyUrn - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.
  * @param {number} params.facilityAmount - The total facility amount.
  * @param {string} params.facilityName - The facility name.
- * @param {(typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES]} params.productTypeCode - The APIM GIFT product type code for the facility.
+ * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
  * @returns {ApimGiftFacilityOverview} The mapped facility overview data.
  */

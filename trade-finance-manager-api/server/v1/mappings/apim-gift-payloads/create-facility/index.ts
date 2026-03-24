@@ -1,5 +1,5 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
+import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import api from '../../../api';
 import { getDealTypeFlags } from './get-deal-type-flags';
@@ -11,6 +11,7 @@ import { mapRepaymentProfiles } from './map-repayment-profiles';
 import { mapCounterparties } from './map-counterparties';
 import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
+import { mapProductTypeCode } from './map-product-type-code';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -38,17 +39,18 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const facilityCategoryCode = String(facilitySnapshot.type);
   const facilityName = facilitySnapshot.name;
   const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
-  const productTypeCode = PRODUCT_TYPES.BSS; // TODO: DTFS2-8307
 
   const dealId = getTfmUkefDealId(deal);
   const { dealType } = deal.dealSnapshot;
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
+  const productTypeCode = mapProductTypeCode({ isBssEwcsDeal, isGefDeal, facilityCategoryCode });
+
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
-  const { exporterCreditRating } = deal.tfm;
-  const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
+  const { exporterCreditRating, parties } = deal.tfm;
+  const exporterPartyUrn = parties.exporter.partyUrn;
 
   const partyUrns = mapPartyUrns({
     deal,

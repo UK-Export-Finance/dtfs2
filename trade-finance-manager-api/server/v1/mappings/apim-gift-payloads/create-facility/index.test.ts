@@ -2,7 +2,9 @@ import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-co
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
+import { APIM_GIFT_INTEGRATION } from '../constants';
+import { getDealTypeFlags } from './get-deal-type-flags';
+import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
@@ -14,7 +16,6 @@ import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
-import { getDealTypeFlags } from './get-deal-type-flags';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
@@ -67,6 +68,12 @@ describe('createFacility', () => {
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
+  const productTypeCode = mapProductTypeCode({
+    isBssEwcsDeal,
+    isGefDeal,
+    facilityCategoryCode: facilitySnapshot.type,
+  });
+
   const params = {
     deal: mockDeal,
     facility: mockFacility,
@@ -107,7 +114,7 @@ describe('createFacility', () => {
         exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityName: facilitySnapshot.name,
-        productTypeCode: PRODUCT_TYPES.BSS,
+        productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       counterparties: mapCounterparties({
@@ -137,7 +144,7 @@ describe('createFacility', () => {
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityCategoryCode: String(facilitySnapshot.type),
         industryCode: getIndustryCode(mockDeal),
-        productTypeCode: PRODUCT_TYPES.BSS,
+        productTypeCode,
       }),
     };
 
