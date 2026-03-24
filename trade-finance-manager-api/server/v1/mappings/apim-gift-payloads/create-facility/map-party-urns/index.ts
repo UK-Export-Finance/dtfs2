@@ -23,11 +23,11 @@ type MapPartyUrnsParams = {
  */
 export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsParams): PartyUrns => {
   const bankPartyUrn = String(deal.dealSnapshot.bank.partyUrn);
-  const buyerPartyUrn = String(deal.tfm.parties.buyer?.partyUrn);
+  const buyerPartyUrn = deal.tfm.parties.buyer?.partyUrn;
 
   if (isBssEwcsDeal) {
     return {
-      ...(buyerPartyUrn && { bondBeneficiary: String(buyerPartyUrn) }),
+      ...(buyerPartyUrn !== null && { bondBeneficiary: String(buyerPartyUrn) }),
       bondGiver: bankPartyUrn,
     };
   }

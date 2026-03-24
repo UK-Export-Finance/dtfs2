@@ -13,7 +13,7 @@ type MapCounterpartiesParams = {
 /**
  * Maps the counterparties for a given deal type and party URNs.
  * @param {MapCounterpartiesParams} params - Data required to build the APIM GIFT "counterparties" data.
- * @param {boolean} params.isBssEwcsDeal - If the deal is a BSS deal.
+ * @param {boolean} params.isBssEwcsDeal - If the deal is a BSS/EWCS deal.
  * @param {PartyUrns} params.partyUrns - The party URNs.
  * @param {string} params.startDate - The start date of the facility (from TFM "facilityGuaranteeDates").
  * @param {string} params.exitDate - The exit date of the facility (from TFM "facilityGuaranteeDates").

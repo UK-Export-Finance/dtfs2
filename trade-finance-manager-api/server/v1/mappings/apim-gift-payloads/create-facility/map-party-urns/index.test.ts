@@ -7,11 +7,10 @@ describe('mapPartyUrns', () => {
   describe('when isBssEwcsDeal is true', () => {
     const isBssEwcsDeal = true;
     const isGefDeal = false;
+    const mockBuyerPartyUrn = '00445566';
 
     it('should return an object with bondBeneficiary and bondGiver party URNs', () => {
       // Arrange
-      const mockBuyerPartyUrn = '00445566';
-
       const mockDeal = {
         dealSnapshot: {
           bank: {
@@ -41,6 +40,41 @@ describe('mapPartyUrns', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+
+    describe('when deal.tfm.parties.buyer.partyUrn is null', () => {
+      it('should return an object with bondBeneficiary as an empty string', () => {
+        // Arrange
+        const mockDeal = {
+          dealSnapshot: {
+            bank: {
+              partyUrn: mockBankPartyUrn,
+            },
+          },
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrn: '',
+              },
+            },
+          },
+        } as TfmDeal;
+
+        // Act
+        const result = mapPartyUrns({
+          deal: mockDeal,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Assert
+        const expected = {
+          bondBeneficiary: '',
+          bondGiver: mockBankPartyUrn,
+        };
+
+        expect(result).toEqual(expected);
+      });
     });
   });
 
