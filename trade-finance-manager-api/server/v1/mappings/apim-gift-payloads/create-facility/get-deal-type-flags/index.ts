@@ -8,7 +8,7 @@ type GetDealTypeFlagsReturnShape = {
 /**
  * Return an object with BSS/GEF deal flags.
  * Avoids doing the same checks in other functions.
- * @param dealType - The deal type
+ * @param {DealType} dealType - The deal type
  * @returns {GetDealTypeFlagsReturnShape} BSS/GEF deal booleans
  */
 export const getDealTypeFlags = (dealType: DealType): GetDealTypeFlagsReturnShape => ({
