@@ -26,6 +26,7 @@ export type FacilityCreationParams = {
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
 export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
+  const { dealSnapshot } = deal;
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -37,11 +38,12 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
   const facilityCategoryCode = String(facilitySnapshot.type);
-  const facilityName = facilitySnapshot.name;
   const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
 
   const dealId = getTfmUkefDealId(deal);
-  const { dealType } = deal.dealSnapshot;
+
+  const bankInternalRefName = String(dealSnapshot.bankInternalRefName);
+  const { dealType } = dealSnapshot;
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
@@ -87,12 +89,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
+      bankInternalRefName,
       currency,
       effectiveDate,
       expiryDate,
       exporterPartyUrn,
       facilityAmount,
-      facilityName,
+      facilityCategoryCode,
+      isGefDeal,
       productTypeCode,
       ukefFacilityId,
     }),
