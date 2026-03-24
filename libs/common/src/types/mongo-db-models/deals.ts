@@ -7,6 +7,7 @@ import { PortalActivity } from '../portal';
 type BaseDeal = AnyObject & {
   _id: ObjectId;
   bankInternalRefName: string | null;
+  additionalRefName: string | null;
   submissionType: DealSubmissionType | null;
 };
 
@@ -81,7 +82,6 @@ export interface BssEwcsSubmissionDetails {
 export interface BssEwcsDeal extends BaseDeal {
   bank: Bank;
   dealType: typeof DEAL_TYPE.BSS_EWCS;
-  additionalRefName: string | null;
   details: {
     ukefDealId: string;
     submissionCount: number;
