@@ -4,7 +4,7 @@ import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-su
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../constants';
 import { getIndustryCode } from '../get-industry-code';
-import { getPartyUrns } from './get-party-urns';
+import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
@@ -14,6 +14,7 @@ import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { createFacility } from '.';
+import { getDealTypeFlags } from './get-deal-type-flags';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
@@ -64,6 +65,8 @@ describe('createFacility', () => {
     },
   ];
 
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+
   const params = {
     deal: mockDeal,
     facility: mockFacility,
@@ -89,10 +92,6 @@ describe('createFacility', () => {
   });
 
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
-    // Arrange
-    // mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
-    // mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
-
     // Act
     const result = await createFacility(params);
 
@@ -112,8 +111,12 @@ describe('createFacility', () => {
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       counterparties: mapCounterparties({
-        dealType: mockDeal.dealSnapshot.dealType,
-        partyUrns: getPartyUrns(mockDeal),
+        isBssEwcsDeal,
+        partyUrns: mapPartyUrns({
+          deal: mockDeal,
+          isBssEwcsDeal,
+          isGefDeal,
+        }),
         startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
       }),
