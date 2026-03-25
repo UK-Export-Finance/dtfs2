@@ -117,8 +117,7 @@ context('2FA Page - New access code', () => {
       newAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
     });
 
-    // TODO-8265: this will be refactored once the 8222 PR is merged and we can set the OTP send count to 0 and trigger expiry in the test.
-    it.skip('should show access code expired page when code expired', () => {
+    it('should show access code expired page when code expired', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
       cy.visit('/login/access-code-expired');
 

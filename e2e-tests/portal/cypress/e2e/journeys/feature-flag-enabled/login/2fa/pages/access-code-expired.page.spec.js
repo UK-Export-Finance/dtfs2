@@ -11,19 +11,19 @@ context('2FA Page - Access code expired', () => {
     cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
   });
 
-  // TODO-8265: these tests will be enabled once the 8222 PR is merged which adds the mechanism to trigger OTP expiry.
-  it.skip('should redirect to login when visited without partial auth', () => {
+  it('should redirect to login when visited without partial auth', () => {
     accessCodeExpired.visit();
     cy.url().should('eq', relative('/login'));
   });
 
-  it.skip('should render expired page with heading and info', () => {
+  it('should render expired page with heading and info', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
+    cy.url().should('include', '/login/check-your-email-access-code');
     cy.visit('/login/access-code-expired');
     cy.get('[data-cy="access-code-expired-heading"]').should('exist');
     cy.get('[data-cy="access-code-expired-security-info"]').should('contain', 'expire');
     cy.get('[data-cy="access-code-expired-attempts-info"]').should('exist');
     cy.get('[data-cy="access-code-expired-suspend-info"]').should('exist');
-    cy.get('[data-cy="submit-button"]').should('exist');
+    cy.get('[data-cy="access-code-expired-request-new-code"]').should('exist');
   });
 });
