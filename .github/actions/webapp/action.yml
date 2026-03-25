@@ -98,19 +98,32 @@ runs:
       uses: azure/cli@v2.1.0
       with:
         inlineScript: |
-          # Create new temporary slot
+          # Step 1: Create slot (copy basic settings if needed)
           az webapp deployment slot create \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --configuration-source ${{ env.WEBAPP }} \
-          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-          --docker-registry-server-user ${{ env.ACR_USER }} \
-          --docker-registry-server-password ${{ inputs.acr }}
-          # Swap slot
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --configuration-source ${{ env.WEBAPP }}
+
+          # Step 2: 🔑 Override container image explicitly
+          az webapp config container set \
+            --name ${{ env.WEBAPP }} \
+            --slot ${{ github.sha }} \
+            --resource-group <your-resource-group> \
+            --docker-custom-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+            --docker-registry-server-user ${{ env.ACR_USER }} \
+            --docker-registry-server-password ${{ inputs.acr }}
+
+          # Optional: verify the slot is pointing to the correct image
+          az webapp config container show \
+            --name ${{ env.WEBAPP }} \
+            --slot ${{ github.sha }} \
+            --resource-group <your-resource-group>
+
+          # Step 3: Swap the slot
           az webapp deployment slot swap \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --action swap
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --action swap
 
     # Step 9: Cleanup temporary slot.
     - name: Cleanup 🧹
