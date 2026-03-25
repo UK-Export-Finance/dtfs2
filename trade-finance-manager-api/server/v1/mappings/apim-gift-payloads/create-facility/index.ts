@@ -42,8 +42,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const dealId = getTfmUkefDealId(deal);
 
-  const bankInternalRefName = String(dealSnapshot.bankInternalRefName);
-  const { dealType } = dealSnapshot;
+  const { bankInternalRefName, dealType } = dealSnapshot;
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
