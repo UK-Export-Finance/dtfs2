@@ -282,7 +282,10 @@ var parametersMap = {
       name: 'dev'
       sku: { name: 'Standard' }
     }
-    asp: { sku: aspSku }
+    asp: { 
+      sku: aspSku 
+      name: 'dev'
+    }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
@@ -577,7 +580,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-11-01' = {
   name: 'appservice-plan-${product}-${target}-${version}'
   location: location
   sku: {
-    name: parametersMap[environment].asp.sku
+    name: parametersMap[environment].asp.Sk
   }
   kind: 'linux'
   properties: {
