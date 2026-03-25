@@ -41,7 +41,10 @@
         <div class="govuk-form-group govuk-!-width-one-third">
           {{ govukInput({
             label: {
-              text: "Enter access code:"
+              text: "Enter access code:",
+              attributes: {
+                "data-cy": "six-digit-access-code-label"
+              }
             },
             id: "sixDigitAccessCode",
             name: "sixDigitAccessCode",

@@ -8,7 +8,11 @@ const { temporarilySuspendedAccessCode } = require('../../../../../pages');
 context('2FA Page - Temporarily suspended account', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
-    // count: 3 → login sends OTP → count becomes 4 → attemptsLeft = 3 - 4 = -1 → temporarily-suspended page
+    /**
+     * initializing the OTP send count to 3 so in the below tests when the user logs in and an OTP is sent, the count
+     * becomes 4 and attemptsLeft becomes -1, which allows us to land on the temporarily-suspended-access-code
+     * page and test its page elements.
+     */
     cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
   });
 

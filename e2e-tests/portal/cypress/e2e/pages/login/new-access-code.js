@@ -12,6 +12,7 @@ const newAccessCode = {
   csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
+  sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),
 };
 
 module.exports = newAccessCode;

@@ -14,8 +14,7 @@
  * @param {string} [opts.requestLinkSelector] - Fallback selector for the request-new-code link.
  * @param {object} [opts.page] - Page object exposing getter functions for elements on the page.
  */
-const assertCommonElements = ({
-  maskedEmailSelector,
+const assertAccessCodePagesCommonElements = ({
   inputFallbackSelector = '[data-cy="access-code-input"]',
   attemptsSelector = '[data-cy="access-code-attempts-info"]',
   csrfSelector = '[data-cy="csrf-input"]',
@@ -24,20 +23,6 @@ const assertCommonElements = ({
   requestLinkSelector,
   page,
 } = {}) => {
-  // prefer page object getters when a page object is provided
-  if (page) {
-    // masked email / description
-    if (page.description) {
-      page.description().invoke('text').should('match', /@/);
-    } else if (page.obscuredSignInLinkTargetEmailAddressText) {
-      page.obscuredSignInLinkTargetEmailAddressText().should('contain', '@');
-    } else if (maskedEmailSelector) {
-      cy.get(maskedEmailSelector).invoke('text').should('match', /@/);
-    }
-  } else if (maskedEmailSelector) {
-    cy.get(maskedEmailSelector).invoke('text').should('match', /@/);
-  }
-
   // csrf token
   if (page && page.csrfToken) {
     page.csrfToken().then((token) => {
@@ -87,27 +72,6 @@ const assertCommonElements = ({
 };
 
 /**
- * Clicks the request-new-code link and asserts the browser navigates to the
- * expected redirect URL, then optionally checks the masked email element is present.
- *
- * @param {object} [opts]
- * @param {string} [opts.requestLinkSelector] - Selector for the request-new-code link.
- * @param {string} [opts.redirectUrl] - URL fragment the browser should navigate to after clicking.
- * @param {string} [opts.maskedEmailSelector] - Selector for the masked email element on the redirect page.
- */
-const clickRequestNewCodeAndAssertRedirect = ({
-  requestLinkSelector = '[data-cy="request-new-sign-in-link"]',
-  redirectUrl = '/login/check-your-email',
-  maskedEmailSelector = '[data-cy="obscured-sign-in-link-target-email-address"]',
-} = {}) => {
-  cy.get(requestLinkSelector).should('exist').click();
-  cy.url().should('contain', redirectUrl);
-  if (maskedEmailSelector) {
-    cy.get(maskedEmailSelector).should('exist');
-  }
-};
-
-/**
  * Standard `beforeEach` setup for 2FA OTP page specs.
  * Fetches the user from the DB, resets their OTP state (send count, tokens, status),
  * and optionally enters credentials to reach the first 2FA page.
@@ -144,8 +108,7 @@ const assertEmptyCodeValidation = ({
 };
 
 module.exports = {
-  assertCommonElements,
-  clickRequestNewCodeAndAssertRedirect,
+  assertAccessCodePagesCommonElements,
   commonBeforeEach,
   assertEmptyCodeValidation,
 };
