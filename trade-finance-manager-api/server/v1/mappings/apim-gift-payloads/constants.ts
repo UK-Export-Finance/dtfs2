@@ -1,6 +1,14 @@
-export const PRODUCT_TYPES = {
+/**
+ * APIM/GIFT product type codes.
+ * An "Unknown" code is included to use as a fallback value when the deal type is not recognized, to avoid sending null values to APIM/GIFT which would cause errors.
+ * Note that this is an extreme edge case that will probably never occur in practice, as the deal type is expected to always be recognized for valid deals.
+ * This is included as a safeguard to ensure that the integration can handle unexpected deal types without breaking.
+ * If the "Unknown" product type code is sent to APIM/GIFT, this will trigger an alert in APIM for the unexpected product type code value, which can be investigated by the team.
+ */
+export const PRODUCT_TYPE_CODES = {
   BSS: 'BSS',
   GEF: 'GEF',
+  UNKNOWN: 'UNKNOWN_PRODUCT_TYPE_CODE',
 } as const;
 
 /**
@@ -59,19 +67,23 @@ const CONSUMER = 'DTFS' as const;
 /**
  * BSS = default credit type to "Term".
  * GEF = default credit type to "Revolving".
+ * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
   BSS: 'Term',
   GEF: 'Revolving',
+  UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
 } as const;
 
 /**
  * BSS = facility is not revolving.
  * GEF = facility is revolving.
+ * UNKNOWN_PRODUCT_TYPE_CODE = facility is not revolving, as a fallback value for unrecognized deal types.
  */
 const IS_REVOLVING = {
   BSS: false,
   GEF: true,
+  UNKNOWN_PRODUCT_TYPE_CODE: false,
 } as const;
 
 /**

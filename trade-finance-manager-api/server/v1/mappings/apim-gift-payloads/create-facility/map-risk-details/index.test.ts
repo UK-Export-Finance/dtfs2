@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPES } from '../../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import api from '../../../../api';
 import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from '.';
 
@@ -55,10 +55,10 @@ describe('mapFacilityCreditRating', () => {
 });
 
 describe('mapFacilityCategoryCode', () => {
-  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}" and a facilityCategoryCode is provided`, () => {
+  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is provided`, () => {
     it('should return the provided facilityCategoryCode', () => {
       // Arrange
-      const mockProductTypeCode = PRODUCT_TYPES.GEF;
+      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
       const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
@@ -71,10 +71,10 @@ describe('mapFacilityCategoryCode', () => {
     });
   });
 
-  describe(`when productTypeCode is "${PRODUCT_TYPES.GEF}" and a facilityCategoryCode is NOT provided`, () => {
+  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is NOT provided`, () => {
     it('should return null', () => {
       // Arrange
-      const mockProductTypeCode = PRODUCT_TYPES.GEF;
+      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
 
       // Act
       const result = mapFacilityCategoryCode(mockProductTypeCode);
@@ -84,10 +84,10 @@ describe('mapFacilityCategoryCode', () => {
     });
   });
 
-  describe(`when productTypeCode is NOT "${PRODUCT_TYPES.GEF}"`, () => {
+  describe(`when productTypeCode is NOT "${PRODUCT_TYPE_CODES.GEF}"`, () => {
     it('should return null', () => {
       // Arrange
-      const mockProductTypeCode = PRODUCT_TYPES.BSS;
+      const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
       const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
@@ -109,7 +109,7 @@ describe('mapRiskDetails', () => {
     facilityCategoryCode: '',
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
-    productTypeCode: PRODUCT_TYPES.GEF,
+    productTypeCode: PRODUCT_TYPE_CODES.GEF,
   };
 
   beforeEach(() => {
