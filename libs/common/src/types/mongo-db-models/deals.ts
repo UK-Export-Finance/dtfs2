@@ -6,6 +6,8 @@ import { PortalActivity } from '../portal';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
+  bankInternalRefName: string;
+  additionalRefName: string | null;
   submissionType: DealSubmissionType | null;
 };
 
