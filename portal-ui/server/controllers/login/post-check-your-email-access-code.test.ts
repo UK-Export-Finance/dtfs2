@@ -373,4 +373,56 @@ describe('postCheckYourEmailAccessCodePage', () => {
       });
     });
   });
+
+  describe('when OTP result is EXPIRED', () => {
+    let req: PostCheckYourEmailAccessCodePageRequest;
+
+    beforeEach(async () => {
+      // Arrange
+      req = {
+        body: {
+          sixDigitAccessCode: '123456',
+        },
+        session: {
+          userToken: 'Bearer expired-token',
+          userId: 'user-expired',
+          numberOfSignInOtpAttemptsRemaining: 2,
+          userEmail: 'expired@example.com',
+        },
+      } as unknown as PostCheckYourEmailAccessCodePageRequest;
+
+      // Mock the API to return EXPIRED result
+      (api.loginWithSignInOtp as jest.Mock).mockImplementation(() => {
+        return { isExpired: true };
+      });
+
+      // Act
+      await postCheckYourEmailAccessCode(req, res);
+    });
+
+    it('should redirect once', () => {
+      // Assert
+      expect(redirectMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should redirect to /login/access-code-expired', () => {
+      // Assert
+      expect(redirectMock).toHaveBeenCalledWith('/login/access-code-expired');
+    });
+
+    it('should keep session userToken unchanged', () => {
+      // Assert
+      expect(req.session.userToken).toEqual('Bearer expired-token');
+    });
+
+    it('should keep session userId unchanged', () => {
+      // Assert
+      expect(req.session.userId).toEqual('user-expired');
+    });
+
+    it('should keep numberOfSignInOtpAttemptsRemaining unchanged', () => {
+      // Assert
+      expect(req.session.numberOfSignInOtpAttemptsRemaining).toEqual(2);
+    });
+  });
 });

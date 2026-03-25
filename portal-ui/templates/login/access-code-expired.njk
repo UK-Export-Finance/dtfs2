@@ -3,7 +3,6 @@
 
 {% extends "index.njk" %}
 
-
 {% block pageTitle %}
   Access code expired
 {% endblock %}
@@ -18,7 +17,7 @@
       </p>
 
       <p class="govuk-body" data-cy="access-code-expired-attempts-info">
-        You have {{ attemptsRemaining }} attempts remaining.
+        You have {{ attemptsLeft }} attempts remaining.
       </p>
 
       <p class="govuk-body" data-cy="access-code-expired-suspend-info">
@@ -28,8 +27,9 @@
       {{ govukButton({
         text: "Request a new code",
         attributes: {
-          "data-cy": "submit-button"
-        }
+          "data-cy": "access-code-expired-request-new-code"
+        },
+        href: '/login/request-new-access-code'
       }) }}
     </div>
   </div>

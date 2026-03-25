@@ -31,6 +31,23 @@ describe('controllers/login/get-request-new-access-code', () => {
     jest.clearAllMocks();
   });
 
+  describe('when numberOfSignInOtpAttemptsRemaining is 0 (third expired code)', () => {
+    beforeEach(() => {
+      req.session.numberOfSignInOtpAttemptsRemaining = 0;
+      (getNextAccessCodePage as jest.Mock).mockReturnValue('/login/temporarily-suspended-access-code');
+    });
+
+    it('should redirect to suspended account page without calling API or sending email', async () => {
+      await requestNewAccessCode(req, res);
+
+      expect(api.sendSignInOTP).not.toHaveBeenCalled();
+      expect(req.session.numberOfSignInOtpAttemptsRemaining).toBe(-1);
+      expect(getNextAccessCodePage).toHaveBeenCalledWith(-1);
+      expect(redirectMock).toHaveBeenCalledWith('/login/temporarily-suspended-access-code');
+      expect(renderMock).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when attemptsLeft is returned', () => {
     beforeEach(() => {
       (api.sendSignInOTP as jest.Mock).mockResolvedValue({
