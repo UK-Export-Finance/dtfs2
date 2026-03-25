@@ -10,6 +10,7 @@ type MapOverviewParams = {
   effectiveDate: string;
   expiryDate: string;
   exporterPartyUrn: string;
+  // TODO: DTFS2-8333 isGefDeal
   productTypeCode: (typeof PRODUCT_TYPES)[keyof typeof PRODUCT_TYPES];
   ukefFacilityId: string;
 };

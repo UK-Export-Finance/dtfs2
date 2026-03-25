@@ -1,12 +1,13 @@
 import { HttpStatusCode } from 'axios';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { attemptOtpLogin, OTP_RESULT_TYPE } from './attempt-otp-login';
+import { attemptOtpLogin } from './attempt-otp-login';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
 import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
+import { isOtpExpired } from '../../helpers/is-otp-expired';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -25,12 +26,13 @@ export type PostCheckYourEmailAccessCodePageRequest = CustomExpressRequest<Recor
  * - Validates the access code is not empty (client-side validation).
  * - If validation passes, calls API to verify the code.
  * - If the user enters the wrong code (login status not VALID_2FA), renders a validation error.
+ * - If the access code is expired (API returns EXPIRED or error message contains 'expired'), redirects to the access code expired page.
  * - Updates the session on successful login and redirects to dashboard.
  * - Any unexpected errors (API failures, missing session data) are caught and render problem-with-service.
  *
  * @param req Request containing the submitted access code and session data such as userId, userToken, attemptsLeft, and userEmail.
  * @param res Response used to render views or perform redirects.
- * @returns Renders a view or redirects based on validation and login status.
+ * @returns Renders a view, redirects to dashboard, access code expired page, or not-found based on validation and login status.
  */
 export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccessCodePageRequest, res: Response) => {
   try {
@@ -69,6 +71,12 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
     }
 
     const otpResult = await attemptOtpLogin({ token: userToken, userId, signInOTP: sixDigitAccessCode });
+
+    if (isOtpExpired(otpResult, userId)) {
+      console.error('Access code expired for user %s during check-your-email POST', userId);
+
+      return res.redirect('/login/access-code-expired');
+    }
 
     if (otpResult.type === OTP_RESULT_TYPE.INCORRECT_CODE) {
       console.error('Invalid sign-in OTP entered for user %s', userId);
