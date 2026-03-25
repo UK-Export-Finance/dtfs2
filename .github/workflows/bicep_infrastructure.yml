@@ -21,9 +21,11 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches: [infrastructure]
+    branches:
+      - feat/DTFS2-16188-deployment
     paths:
       - '.github/workflows/development_infrastructure.yml'
+      - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
 
 env:
@@ -159,7 +161,7 @@ jobs:
           sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{REDIRECT_URL}}|${{ vars.REDIRECT_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ASP_SKU}}|${{ vars.ASP_SKU }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          
+
       - name: Install Bicep
         run: |
           az config set bicep.use_binary_from_path=False
