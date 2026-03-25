@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import api from '../../../../api';
 import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from '.';
@@ -5,6 +6,30 @@ import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 jest.mock('../../../../api');
+
+const mockFacilityCategories = [
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT003',
+    description: 'Bond: Supplemental To Credit',
+    isActive: true,
+  },
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT006',
+    description: 'GEF: Contingent',
+    isActive: true,
+  },
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT007',
+    description: 'GEF: Cash Advances',
+    isActive: true,
+  },
+];
 
 describe('mapFacilityCreditRating', () => {
   describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
@@ -55,43 +80,69 @@ describe('mapFacilityCreditRating', () => {
 });
 
 describe('mapFacilityCategoryCode', () => {
-  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is provided`, () => {
-    it('should return the provided facilityCategoryCode', () => {
-      // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
-      const mockFacilityCategoryCode = 'Mock facility category code';
+  describe('when isGefDeal is true', () => {
+    describe('when a facilityCategoryCode is provided', () => {
+      it('should return a facility category code from the provided APIM categories', () => {
+        // Arrange
+        const mockFacilityCategoryCode = FACILITY_TYPE.CASH;
 
-      // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
+        // Act
+        const result = mapFacilityCategoryCode({
+          facilityCategoryCode: mockFacilityCategoryCode,
+          facilityCategories: mockFacilityCategories,
+          isGefDeal: true,
+        });
 
-      // Assert
-      const expected = mockFacilityCategoryCode;
+        // Assert
+        const expected = mockFacilityCategories[2].code; // The only category with "GEF" and "Cash"
 
-      expect(result).toEqual(expected);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when a facilityCategoryCode is provided, but an APIM category does not match', () => {
+      it('should return null', () => {
+        // Arrange
+        const mockFacilityCategoryCode = `NOT ${FACILITY_TYPE.CASH}`;
+
+        // Act
+        const result = mapFacilityCategoryCode({
+          facilityCategoryCode: mockFacilityCategoryCode,
+          facilityCategories: mockFacilityCategories,
+          isGefDeal: true,
+        });
+
+        // Assert
+        expect(result).toBeNull();
+      });
+    });
+
+    describe('when a facilityCategoryCode is NOT provided', () => {
+      it('should return null', () => {
+        // Act
+        const result = mapFacilityCategoryCode({
+          facilityCategoryCode: undefined,
+          facilityCategories: mockFacilityCategories,
+          isGefDeal: true,
+        });
+
+        // Assert
+        expect(result).toBeNull();
+      });
     });
   });
 
-  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is NOT provided`, () => {
+  describe('when isGefDeal is false', () => {
     it('should return null', () => {
       // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
-
-      // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode);
-
-      // Assert
-      expect(result).toBeNull();
-    });
-  });
-
-  describe(`when productTypeCode is NOT "${PRODUCT_TYPE_CODES.GEF}"`, () => {
-    it('should return null', () => {
-      // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
       const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
+      const result = mapFacilityCategoryCode({
+        facilityCategoryCode: mockFacilityCategoryCode,
+        facilityCategories: mockFacilityCategories,
+        isGefDeal: false,
+      });
 
       // Assert
       expect(result).toBeNull();
@@ -107,8 +158,10 @@ describe('mapRiskDetails', () => {
     dealId: '123',
     creditRiskRatings: ['AAA', 'AA+', 'AA'],
     facilityCategoryCode: '',
+    facilityCategories: mockFacilityCategories,
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
+    isGefDeal: true,
     productTypeCode: PRODUCT_TYPE_CODES.GEF,
   };
 
@@ -144,7 +197,11 @@ describe('mapRiskDetails', () => {
     const expected = {
       account: DEFAULTS.RISK_DETAILS.ACCOUNT,
       dealId: params.dealId,
-      facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
+      facilityCategoryCode: mapFacilityCategoryCode({
+        facilityCategoryCode: params.facilityCategoryCode,
+        facilityCategories: params.facilityCategories,
+        isGefDeal: params.isGefDeal,
+      }),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
       ukefIndustryCode: mockUkefIndustryCode,

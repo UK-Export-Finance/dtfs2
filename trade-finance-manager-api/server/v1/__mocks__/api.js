@@ -8,6 +8,7 @@ const { MOCK_UTILISATION_REPORT } = require('./mock-utilisation-report');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 const ALL_MOCK_DEALS = require('./mock-deals');
 const MOCK_CREDIT_RISK_RATINGS = require('./mock-credit-risk-ratings');
+const MOCK_FACILITY_CATEGORIES = require('./mock-facility-categories');
 const MOCK_UKEF_INDUSTRY_CODE = require('./mock-ukef-industry-code');
 const { COMPANY_REGISTRATION_NUMBER } = require('../../constants/deals');
 
@@ -208,6 +209,7 @@ module.exports = {
     ];
   },
   getCreditRiskRatings: jest.fn(() => MOCK_CREDIT_RISK_RATINGS),
+  getFacilityCategories: jest.fn(() => MOCK_FACILITY_CATEGORIES),
   getUkefIndustryCodeByCompaniesHouseIndustryCode: jest.fn(() => MOCK_UKEF_INDUSTRY_CODE),
   findUser: (username) => {
     if (username === 'invalidUser') {

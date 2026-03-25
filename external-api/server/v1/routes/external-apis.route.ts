@@ -12,6 +12,7 @@ import * as currencyExchangeRate from '../controllers/currency-exchange-rate.con
 import * as email from '../controllers/email.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as facilityCategories from '../controllers/facility-categories.controller';
 import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as number from '../controllers/number-generator.controller';
@@ -546,6 +547,32 @@ apiRoutes.get('/currency-exchange-rate/:source/:target', currencyExchangeRate.ge
  *             example: { exposurePeriodInMonths: 12 }
  */
 apiRoutes.get('/exposure-period/:startDate/:endDate/:facilityType', exposurePeriod.getExposurePeriod);
+
+/**
+ * @openapi
+ * /facility-categories:
+ *   get:
+ *     summary: Get facility categories from MDM API.
+ *     tags: [APIM, Facility Categories]
+ *     description: >-
+ *       Get facility categories from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/FacilityCategory'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/facility-categories', facilityCategories.findAll);
 
 /**
  * @openapi

@@ -15,6 +15,7 @@ import { mapObligations } from './map-obligations';
 import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
+import { FacilityCategory } from '../../../api-response-types/facility-category';
 import { createFacility } from '.';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
@@ -25,6 +26,7 @@ jest.mock('../../../api');
 describe('createFacility', () => {
   const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
   let getCreditRiskRatingsSpy = jest.fn();
+  let getFacilityCategoriesSpy = jest.fn();
   let getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn();
 
   const mockDeal = mockTfmDeal;
@@ -66,6 +68,23 @@ describe('createFacility', () => {
     },
   ];
 
+  const mockFacilityCategories: FacilityCategory[] = [
+    {
+      type: 'Facility Category',
+      typeCode: 'facilityCategory',
+      code: 'FCT003',
+      description: 'Bond: Supplemental To Credit',
+      isActive: true,
+    },
+    {
+      type: 'Facility Category',
+      typeCode: 'facilityCategory',
+      code: 'FCT006',
+      description: 'GEF: Contingent',
+      isActive: true,
+    },
+  ];
+
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const productTypeCode = mapProductTypeCode({
@@ -86,6 +105,9 @@ describe('createFacility', () => {
     getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
     mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
 
+    getFacilityCategoriesSpy = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
+    mockApi.getFacilityCategories = getFacilityCategoriesSpy;
+
     getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn().mockResolvedValue({ ukefIndustryCode: mockUkefIndustryCode });
     mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
   });
@@ -96,6 +118,14 @@ describe('createFacility', () => {
 
     // Assert
     expect(getCreditRiskRatingsSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call api.getFacilityCategories', async () => {
+    // Act
+    await createFacility(params);
+
+    // Assert
+    expect(getFacilityCategoriesSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
@@ -145,7 +175,9 @@ describe('createFacility', () => {
         dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityCategoryCode: String(facilitySnapshot.type),
+        facilityCategories: mockFacilityCategories,
         industryCode: getIndustryCode(mockDeal),
+        isGefDeal,
         productTypeCode,
       }),
     };
@@ -157,6 +189,33 @@ describe('createFacility', () => {
     beforeEach(() => {
       // Arrange
       mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(new Error());
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(createFacility(params)).resolves.not.toThrow();
+    });
+
+    it('should map TFM facility data to the format expected by APIM for GIFT facility creation', async () => {
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('consumer');
+      expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('counterparties');
+      expect(result).toHaveProperty('obligations');
+      expect(result).toHaveProperty('repaymentProfiles');
+      expect(result).toHaveProperty('riskDetails');
+    });
+  });
+
+  describe('when api.getFacilityCategories throws an error', () => {
+    beforeEach(() => {
+      // Arrange
+      mockApi.getFacilityCategories = jest.fn().mockRejectedValueOnce(new Error());
     });
 
     it('should NOT propagate the error', async () => {
