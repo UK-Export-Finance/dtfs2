@@ -1,15 +1,11 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES, TFM_CREDIT_RATING_MAP } from '../../constants';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
 import api from '../../../../api';
+import { mapFacilityCategoryCode } from './map-facility-category-code';
+import { mapFacilityCreditRating } from './map-facility-credit-rating';
 import { ApimGiftFacilityRiskDetails, ApimGiftProductTypeCode } from '../../types';
 import { FacilityCategory, UkefIndustryCode } from '../../../../api-response-types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
-
-type MapFacilityCategoryCodeParams = {
-  facilityCategoryCode?: string;
-  facilityCategories: FacilityCategory[];
-  isGefDeal: boolean;
-};
 
 type MapRiskDetailsParams = {
   creditRiskRatings: string[];
@@ -20,62 +16,6 @@ type MapRiskDetailsParams = {
   industryCode: string;
   isGefDeal: boolean;
   productTypeCode: ApimGiftProductTypeCode;
-};
-
-/**
- * For GEF facilities only,
- * map the facility category code by finding a match in the provided facility categories from APIM MDM,
- * where the category description includes both "GEF" and the TFM facility category code.
- * This is required because GEF facility categories are not codes.
- * Any other product/facility does not require a facility category code in the payload.
- * @param {string} [facilityCategoryCode] - Optional facility category code (e.g. "Cash", "Contingent").
- * @param {FacilityCategory[]} facilityCategories - The list of facility categories from APIM MDM.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
- * @returns {string | null}
- * @example
- * ```
- * const facilityCategoryCode = mapFacilityCategoryCode({
- *   facilityCategoryCode: 'Cash',
- *   facilityCategories: [...],
- *   isGefDeal: true
- * });
- * //=> 'FCT007'
- * ```
- */
-export const mapFacilityCategoryCode = ({ facilityCategoryCode, facilityCategories, isGefDeal }: MapFacilityCategoryCodeParams): string | null => {
-  if (isGefDeal) {
-    const matchingCategory = facilityCategories.find((category: FacilityCategory) => {
-      const tfmCategory = facilityCategoryCode ?? String(facilityCategoryCode);
-
-      return category.description.includes(PRODUCT_TYPE_CODES.GEF) && category.description.includes(tfmCategory);
-    });
-
-    if (matchingCategory) {
-      return matchingCategory.code;
-    }
-  }
-
-  return null;
-};
-
-/**
- * Map the facility credit rating based on the provided credit risk ratings from APIM MDM and TFM's exporter credit rating.
- * @param {string[]} creditRiskRatings - The list of credit risk ratings from APIM MDM.
- * @param {string} exporterCreditRating - TFM's exporter's credit rating.
- * @returns {string | null} The mapped facility credit rating or null if not found.
- */
-export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCreditRating: string): string | null => {
-  const creditRating = exporterCreditRating.trim();
-
-  if (creditRating in TFM_CREDIT_RATING_MAP) {
-    return TFM_CREDIT_RATING_MAP[creditRating as keyof typeof TFM_CREDIT_RATING_MAP];
-  }
-
-  if (creditRiskRatings.includes(creditRating)) {
-    return creditRating;
-  }
-
-  return null;
 };
 
 /**
