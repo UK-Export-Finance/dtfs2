@@ -108,8 +108,8 @@ runs:
           az webapp config container set \
             --name ${{ env.WEBAPP }} \
             --slot ${{ github.sha }} \
-            --resource-group <your-resource-group> \
-            --docker-custom-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+            --resource-group ${{ inputs.group }} \
+            --docker-custom-image-name ${{ env.ACR }}/${{ inputs.group }}:latest \
             --docker-registry-server-user ${{ env.ACR_USER }} \
             --docker-registry-server-password ${{ inputs.acr }}
 
@@ -117,7 +117,7 @@ runs:
           az webapp config container show \
             --name ${{ env.WEBAPP }} \
             --slot ${{ github.sha }} \
-            --resource-group <your-resource-group>
+            --resource-group ${{ inputs.group }}
 
           # Step 3: Swap the slot
           az webapp deployment slot swap \
