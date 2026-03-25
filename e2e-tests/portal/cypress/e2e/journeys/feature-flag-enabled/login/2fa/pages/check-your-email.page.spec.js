@@ -4,6 +4,7 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach, assertAccessCodePagesCommonElements, assertEmptyCodeValidation } = require('./2faPageHelpers');
+const { submitButton, errorSummary } = require('../../../../../partials');
 
 context('2FA Page - Check your email', () => {
   beforeEach(() => {
@@ -87,6 +88,7 @@ context('2FA Page - Check your email', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
       assertAccessCodePagesCommonElements({ page: checkYourEmailAccessCode });
+      submitButton().should('exist');
     });
 
     it('should render access code input with correct placeholder', () => {
@@ -114,7 +116,7 @@ context('2FA Page - Check your email', () => {
       assertEmptyCodeValidation();
 
       checkYourEmailAccessCode.inlineError().should('contain', 'Enter access code');
-      checkYourEmailAccessCode.errorSummary().should('contain', 'Enter access code');
+      errorSummary().should('contain', 'Enter access code');
     });
 
     it('should show validation when submitting wrong access code', () => {
@@ -123,7 +125,7 @@ context('2FA Page - Check your email', () => {
       checkYourEmailAccessCode.accessCodeInput().type('000000');
       cy.get('form').submit();
 
-      checkYourEmailAccessCode.errorSummary().should('exist');
+      errorSummary().should('exist');
       checkYourEmailAccessCode.inlineError().should('exist');
       checkYourEmailAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
     });
