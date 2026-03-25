@@ -145,7 +145,7 @@ describe('postCheckYourAnswers', () => {
         checkersEmail: mockChecker.email,
         emailVariables: {
           exporterName: mockDeal.exporter.companyName,
-          bankInternalRefName: mockDeal.bankInternalRefName!,
+          bankInternalRefName: mockDeal.bankInternalRefName,
           ukefDealId: mockDeal.ukefDealId,
           ukefFacilityId: facility.details.ukefFacilityId,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
@@ -211,7 +211,7 @@ describe('postCheckYourAnswers', () => {
         checkersEmail: mockChecker.email,
         emailVariables: {
           exporterName: mockDeal.exporter.companyName,
-          bankInternalRefName: mockDeal.bankInternalRefName!,
+          bankInternalRefName: mockDeal.bankInternalRefName,
           ukefDealId: mockDeal.ukefDealId,
           ukefFacilityId: facility.details.ukefFacilityId,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
