@@ -33,7 +33,7 @@ param ruleSet RuleSet
 
 var cleanIpsString = trim(allowedIpsString)
 
-var allowedIps = empty(cleanIpsString) ? [] : (startsWith(cleanIpsString, '[') ? json(cleanIpsString) : split(cleanIpsString, ','))
+var allowedIps = empty(cleanIpsString) ? []: split(replace(cleanIpsString, ' ', ''), ',')
 var unauthorisedMessageBody = base64('Unauthorised access!')
 
 var devRuleOverrides = applyWafRuleOverrides ? [
