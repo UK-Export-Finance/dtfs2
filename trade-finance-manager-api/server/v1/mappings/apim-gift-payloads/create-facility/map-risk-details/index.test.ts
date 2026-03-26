@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
 import api from '../../../../api';
 import { mapFacilityCategoryCode } from './map-facility-category-code';
 import { mapFacilityCreditRating } from './map-facility-credit-rating';
@@ -44,7 +44,6 @@ describe('mapRiskDetails', () => {
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
     isGefDeal: true,
-    productTypeCode: PRODUCT_TYPE_CODES.GEF,
   };
 
   beforeEach(() => {

@@ -95,14 +95,16 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   let facilityCategoriesResponse: unknown = [];
 
-  try {
-    facilityCategoriesResponse = await api.getFacilityCategories();
-  } catch {
-    // Swallow errors and default facilityCategoriesResponse to an empty array
-    facilityCategoriesResponse = [];
+  if (isGefDeal) {
+    try {
+      facilityCategoriesResponse = await api.getFacilityCategories();
+    } catch {
+      // Swallow errors and default facilityCategoriesResponse to an empty array
+      facilityCategoriesResponse = [];
+    }
   }
 
-  const facilityCategories = facilityCategoriesResponse as FacilityCategory[];
+  const facilityCategories = Array.isArray(facilityCategoriesResponse) ? (facilityCategoriesResponse as FacilityCategory[]) : [];
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
@@ -145,7 +147,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       facilityCategoryCode,
       industryCode,
       isGefDeal,
-      productTypeCode,
     }),
   };
 

@@ -28,10 +28,10 @@ type MapFacilityCategoryCodeParams = {
  * ```
  */
 export const mapFacilityCategoryCode = ({ facilityCategoryCode, facilityCategories, isGefDeal }: MapFacilityCategoryCodeParams): string | null => {
-  if (isGefDeal) {
-    const matchingCategory = facilityCategories.find((category: FacilityCategory) => {
-      const tfmCategory = facilityCategoryCode ?? String(facilityCategoryCode);
+  const tfmCategory = facilityCategoryCode && facilityCategoryCode !== '' ? String(facilityCategoryCode) : null;
 
+  if (isGefDeal && tfmCategory) {
+    const matchingCategory = facilityCategories.find((category: FacilityCategory) => {
       return category.description.includes(PRODUCT_TYPE_CODES.GEF) && category.description.includes(tfmCategory);
     });
 

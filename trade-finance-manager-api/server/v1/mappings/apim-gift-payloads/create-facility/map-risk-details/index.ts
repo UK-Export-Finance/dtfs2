@@ -2,7 +2,7 @@ import { APIM_GIFT_INTEGRATION } from '../../constants';
 import api from '../../../../api';
 import { mapFacilityCategoryCode } from './map-facility-category-code';
 import { mapFacilityCreditRating } from './map-facility-credit-rating';
-import { ApimGiftFacilityRiskDetails, ApimGiftProductTypeCode } from '../../types';
+import { ApimGiftFacilityRiskDetails } from '../../types';
 import { FacilityCategory, UkefIndustryCode } from '../../../../api-response-types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
@@ -15,7 +15,6 @@ type MapRiskDetailsParams = {
   facilityCategories: FacilityCategory[];
   industryCode: string;
   isGefDeal: boolean;
-  productTypeCode: ApimGiftProductTypeCode;
 };
 
 /**
@@ -25,7 +24,7 @@ type MapRiskDetailsParams = {
  * @param {string | null} params.dealId - The TFM deal ID.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
  * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
- * @param {string[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
+ * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */

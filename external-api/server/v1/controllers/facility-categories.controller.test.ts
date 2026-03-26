@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { findAll } from './obligation-subtypes.controller';
+import { findAll } from './facility-categories.controller';
 
 dotenv.config();
 
@@ -66,7 +66,7 @@ describe('findAll', () => {
     // Assert
     expect(console.error).toHaveBeenCalledTimes(2);
 
-    expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling Facility categories API, %o', mockError);
+    expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling Facility Categories API, %o', mockError);
 
     expect(console.error).toHaveBeenNthCalledWith(
       2,
@@ -98,7 +98,7 @@ describe('findAll', () => {
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error calling Facility categories API, %o', mockAxiosError);
+    expect(console.error).toHaveBeenCalledWith('Error calling Facility Categories API, %o', mockAxiosError);
 
     expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
     expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);

@@ -63,6 +63,20 @@ describe('mapFacilityCategoryCode', () => {
       });
     });
 
+    describe('when a facilityCategoryCode is an empty string', () => {
+      it('should return null', () => {
+        // Act
+        const result = mapFacilityCategoryCode({
+          facilityCategoryCode: '',
+          facilityCategories: mockFacilityCategories,
+          isGefDeal: true,
+        });
+
+        // Assert
+        expect(result).toBeNull();
+      });
+    });
+
     describe('when a facilityCategoryCode is NOT provided', () => {
       it('should return null', () => {
         // Act
