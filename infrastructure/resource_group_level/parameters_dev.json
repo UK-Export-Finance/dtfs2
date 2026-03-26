@@ -38,10 +38,10 @@
       "routeTableNextHopIpAddress": {
         "value": "{{ROUTE_TBL_NEXT_HOP_ADDRESS}}"
       },
-      "onPremiseNetworkIpsString": {
+      "onPremiseNetworkIps": {
         "value": "{{UKEF_VPN_IPS}}"
       },
-      "azurePortalIpsString": {
+      "azurePortalIps": {
         "value": "{{AZ_PORTAL_IPS}}"
       },
       "RATE_LIMIT_THRESHOLD": {
