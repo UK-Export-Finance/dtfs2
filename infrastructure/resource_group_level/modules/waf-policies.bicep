@@ -33,7 +33,7 @@ param ruleSet RuleSet
 
 var cleanIpsString = trim(allowedIpsString)
 
-var normalizedIps = replace(replace(replace(cleanIpsString, '[', ''), ']', ''), '"', '')
+var normalizedIps = replace(replace(replace(replace(cleanIpsString, '[', ''), ']', ''), '"', ''), '\'', '')
 var allowedIps = empty(normalizedIps) ? [] : split(replace(normalizedIps, ' ', ''), ',')
 var unauthorisedMessageBody = base64('Unauthorised access!')
 

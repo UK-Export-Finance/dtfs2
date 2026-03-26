@@ -17,8 +17,8 @@ param filesDnsZoneId string
 var storageAccountName = '${product}${target}${version}storage'
 var clean = trim(onPremiseNetworkIpsString)
 
-var normalized = replace(replace(replace(clean, '[', ''), ']', ''), '"', '')
-var allowedIps = empty(normalized)  ? []  : split(replace(normalized, ' ', ''), ',')
+var normalized = replace(replace(replace(replace(clean, '[', ''), ']', ''), '"', ''), '\'', '')
+var allowedIps = empty(normalized) ? [] : split(replace(normalized, ' ', ''), ',')
 
 var queueNames = [
   'acbs-control-00'
