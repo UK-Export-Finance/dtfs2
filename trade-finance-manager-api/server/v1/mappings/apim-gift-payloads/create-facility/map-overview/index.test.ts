@@ -13,13 +13,13 @@ describe('mapOverview', () => {
     expiryDate: '2026-12-31',
     exporterPartyUrn: '12345',
     facilityAmount: 20000,
-    facilityCategoryCode: GEF_FACILITY_TYPE.CASH,
+    facilityType: GEF_FACILITY_TYPE.CASH,
     facilityName: 'Mock facility name',
     isGefDeal: true,
     ukefFacilityId: '123',
   };
 
-  const { bankInternalRefName, exporterPartyUrn, facilityCategoryCode, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { bankInternalRefName, exporterPartyUrn, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
@@ -46,7 +46,7 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS,
         facilityName: mapFacilityName({
           bankInternalRefName,
-          facilityCategoryCode,
+          facilityType,
           isGefDeal,
           productTypeCode,
         }),
@@ -77,7 +77,7 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.GEF,
         facilityName: mapFacilityName({
           bankInternalRefName,
-          facilityCategoryCode,
+          facilityType,
           isGefDeal,
           productTypeCode,
         }),

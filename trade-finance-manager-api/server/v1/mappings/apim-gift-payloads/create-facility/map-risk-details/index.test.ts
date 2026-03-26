@@ -79,8 +79,8 @@ describe('mapRiskDetails', () => {
       account: DEFAULTS.RISK_DETAILS.ACCOUNT,
       dealId: params.dealId,
       facilityCategoryCode: mapFacilityCategoryCode({
-        facilityCategoryCode: params.facilityCategoryCode,
         facilityCategories: params.facilityCategories,
+        facilityType: params.facilityCategoryCode,
         isGefDeal: params.isGefDeal,
       }),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),

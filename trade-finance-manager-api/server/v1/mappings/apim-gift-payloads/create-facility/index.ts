@@ -45,7 +45,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const facilityCategoryCode = String(facilitySnapshot.type);
+  const facilityType = facilitySnapshot.type;
   const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
 
   const dealId = getTfmUkefDealId(deal);
@@ -54,7 +54,11 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
-  const productTypeCode = mapProductTypeCode({ isBssEwcsDeal, isGefDeal, facilityCategoryCode });
+  const productTypeCode = mapProductTypeCode({
+    isBssEwcsDeal,
+    isGefDeal,
+    facilityCategoryCode: facilityType,
+  });
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
@@ -115,7 +119,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       expiryDate,
       exporterPartyUrn,
       facilityAmount,
-      facilityCategoryCode,
+      facilityType,
       isGefDeal,
       productTypeCode,
       ukefFacilityId,
@@ -129,6 +133,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     obligations: mapObligations({
       currency,
       effectiveDate,
+      facilityType,
+      isGefDeal,
       maturityDate: expiryDate,
       subtypeName: String(facility.facilitySnapshot.bondType),
       ukefExposure: facilityAmount,
@@ -142,7 +148,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       dealId,
       exporterCreditRating,
       facilityCategories,
-      facilityCategoryCode,
+      facilityType,
       industryCode,
       isGefDeal,
     }),

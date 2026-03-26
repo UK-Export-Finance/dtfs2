@@ -10,12 +10,12 @@ describe('mapFacilityName', () => {
   describe('when isGefDeal is true', () => {
     it('should return the facility name with the facility category code and product type code', () => {
       // Arrange
-      const mockFacilityCategoryCode = FACILITY_TYPE.CASH;
+      const mockFacilityType = FACILITY_TYPE.CASH;
       const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
 
       const params = {
         bankInternalRefName: mockBankInternalRefName,
-        facilityCategoryCode: mockFacilityCategoryCode,
+        facilityType: mockFacilityType,
         isGefDeal: true,
         productTypeCode: mockProductTypeCode,
       };
@@ -24,7 +24,7 @@ describe('mapFacilityName', () => {
       const result = mapFacilityName(params);
 
       // Assert
-      const expected = `${CONSUMER} ${mockFacilityCategoryCode} ${mockProductTypeCode}: ${mockBankInternalRefName}`;
+      const expected = `${CONSUMER} ${mockFacilityType} ${mockProductTypeCode}: ${mockBankInternalRefName}`;
 
       expect(result).toEqual(expected);
     });
@@ -33,12 +33,12 @@ describe('mapFacilityName', () => {
   describe('when isGefDeal is false', () => {
     it('should return the facility name with just the product type code', () => {
       // Arrange
-      const mockFacilityCategoryCode = FACILITY_TYPE.BOND;
+      const mockFacilityType = FACILITY_TYPE.BOND;
       const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
 
       const params = {
         bankInternalRefName: mockBankInternalRefName,
-        facilityCategoryCode: mockFacilityCategoryCode,
+        facilityType: mockFacilityType,
         isGefDeal: false,
         productTypeCode: mockProductTypeCode,
       };
