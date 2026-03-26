@@ -1,4 +1,4 @@
-import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
@@ -130,7 +130,7 @@ describe('createFacility', () => {
         exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
       }),
       obligations: mapObligations({
-        bssSubtypeName: String(facilitySnapshot.bondType),
+        bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         isBssEwcsDeal,
@@ -152,6 +152,41 @@ describe('createFacility', () => {
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe(`when deal type is ${DEAL_TYPE.BSS_EWCS}`, () => {
+    it('should map obligations using bssSubtypeName', async () => {
+      // Arrange
+      const mockBssDeal = structuredClone(mockDeal);
+      mockBssDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
+      mockBssDeal.dealSnapshot.details = {
+        ukefDealId: '0030113304',
+        submissionCount: 0,
+      };
+      mockBssDeal.dealSnapshot.submissionDetails = {
+        'industry-sector': { code: '1008', name: 'Information and communication' },
+      };
+
+      params.deal = mockBssDeal;
+
+      const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssDeal.dealSnapshot.dealType);
+      const bssSubtypeName = isBssDeal ? String(facilitySnapshot.bondType) : undefined;
+
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      expect(result.obligations).toEqual(
+        mapObligations({
+          bssSubtypeName,
+          currency: facilitySnapshot.currency.id,
+          effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+          isBssEwcsDeal: isBssDeal,
+          maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+          ukefExposure: Number(tfm.ukefExposure),
+        }),
+      );
+    });
   });
 
   describe('when api.getCreditRiskRatings throws an error', () => {

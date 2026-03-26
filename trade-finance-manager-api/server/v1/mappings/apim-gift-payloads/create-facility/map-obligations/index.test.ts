@@ -38,6 +38,37 @@ describe('mapObligations', () => {
 
       expect(result).toEqual(expected);
     });
+
+    describe('when bssSubtypeName is not mapped to an obligation subtype code', () => {
+      it('should return an array with the subtypeCode as null', () => {
+        // Arrange
+        const isBssEwcsDeal = true;
+        const unmappedBssSubtypeName = 'Unmapped BSS subtype';
+
+        // Act
+        const result = mapObligations({
+          currency,
+          effectiveDate,
+          isBssEwcsDeal,
+          maturityDate,
+          bssSubtypeName: unmappedBssSubtypeName,
+          ukefExposure,
+        });
+
+        // Assert
+        const expected = [
+          {
+            amount: ukefExposure,
+            currency,
+            effectiveDate,
+            maturityDate,
+            subtypeCode: null,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
   });
 
   describe('when isBssEwcsDeal is false', () => {
@@ -51,7 +82,35 @@ describe('mapObligations', () => {
         effectiveDate,
         isBssEwcsDeal,
         maturityDate,
-        bssSubtypeName,
+        ukefExposure,
+      });
+
+      // Assert
+      const expected = [
+        {
+          amount: ukefExposure,
+          currency,
+          effectiveDate,
+          maturityDate,
+          subtypeCode: null,
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when isBssEwcsDeal is true and bssSubtypeName is not provided', () => {
+    it('should return an array with the subtypeCode as null', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
+      // Act
+      const result = mapObligations({
+        currency,
+        effectiveDate,
+        isBssEwcsDeal,
+        maturityDate,
         ukefExposure,
       });
 

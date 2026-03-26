@@ -61,6 +61,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const industryCode = getIndustryCode(deal);
 
+  const bssSubtypeName = isBssEwcsDeal ? String(facility.facilitySnapshot.bondType) : undefined;
+
   /**
    * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
    *
@@ -106,7 +108,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       exitDate: expiryDate,
     }),
     obligations: mapObligations({
-      bssSubtypeName: String(facility.facilitySnapshot.bondType),
+      bssSubtypeName,
       currency,
       effectiveDate,
       isBssEwcsDeal,
