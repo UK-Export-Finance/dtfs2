@@ -81,8 +81,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
    * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API call failing and the fact that the credit risk rating mapping can be "best effort", this is not necessary.
    * Note that this is an edge case scenario as 99% of credit risk ratings are in TFM_CREDIT_RATING_MAP and do not require the API call to map the facility credit rating.
-   *
-   * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
   let creditRiskRatingsResponse: unknown = [];
 
