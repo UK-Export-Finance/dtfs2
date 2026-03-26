@@ -10,7 +10,8 @@ param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
-param allowedIps string
+@secure()
+param allowedIpsString string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
 param matchVariable string
@@ -30,8 +31,10 @@ type RuleSet = {
 }
 param ruleSet RuleSet
 
+var cleanIpsString = trim(allowedIpsString)
+var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
+var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
 var unauthorisedMessageBody = base64('Unauthorised access!')
-var allowedIpsArray = json(allowedIps)
 
 var devRuleOverrides = applyWafRuleOverrides ? [
   {
@@ -278,7 +281,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
         matchVariable: matchVariable
         operator: 'IPMatch'
         negateCondition: true
-        matchValue: allowedIpsArray
+        matchValue: allowedIps
         transforms: []
       }
     ]

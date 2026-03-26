@@ -7,8 +7,10 @@ param product string
 param target string
 param version string
 @description('Network IPs to permit access to CosmosDB')
-param allowedIps string
-param azureAllowedIps array
+@secure()
+param allowedIpsString string
+@secure()
+param azurePortalIpsString string
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
@@ -18,8 +20,9 @@ param defaultThroughput int = 400
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
-var azureAllowedIpsArray = json(allowedIps)
-var allAllowedIps = concat(azureAllowedIpsArray, azureAllowedIps)
+var allowedIps = json(allowedIpsString)
+var azureAllowedIps = json(azurePortalIpsString)
+var allAllowedIps = concat(allowedIps, azureAllowedIps)
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
     name: 'EnableMongo'

@@ -43,10 +43,12 @@ param acaClamAvCidr string
 param privateEndpointsCidr string
 
 @description('IPs allowed to access restricted services, represented as JSON array string (UKEF_VPN_IPS).')
-param onPremiseNetworkIps string
+@secure()
+param onPremiseNetworkIpsString string
 
 @description('Network IPs permitted to access Cosmos DB from the Azure Portal (AZ_PORTAL_IPS).')
-param azurePortalIps array
+@secure()
+param azurePortalIpsString string
 
 @description('Enable 7-day soft deletes on file shares.')
 var shareDeleteRetentionEnabled = false
@@ -674,7 +676,7 @@ module storage 'modules/storage.bicep' = {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    onPremiseNetworkIps: onPremiseNetworkIps
+    onPremiseNetworkIpsString: onPremiseNetworkIpsString
     networkAccessDefaultAction: parametersMap[environment].nsg.storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
     filesDnsZoneId: filesDns.outputs.filesDnsZoneId
@@ -692,8 +694,8 @@ module storage 'modules/storage.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
     databaseName: parametersMap[environment].cosmosDb.databaseName
-    allowedIps: onPremiseNetworkIps
-    azureAllowedIps: azurePortalIps
+    allowedIpsString: onPremiseNetworkIpsString
+    azurePortalIpsString: azurePortalIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
     backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
@@ -1001,7 +1003,7 @@ module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
     product: product
     version: version
     target: target
-    allowedIps: onPremiseNetworkIps
+    allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
     redirectUrl: parametersMap[environment].wafPolicies.redirectUrl
     rejectAction: parametersMap[environment].wafPolicies.rejectAction
@@ -1021,7 +1023,7 @@ module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = {
     product: product
     version: version
     target: target
-    allowedIps: onPremiseNetworkIps
+    allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
     redirectUrl: redirectUrl
     rejectAction: parametersMap[environment].wafPolicies.rejectAction

@@ -6,7 +6,8 @@ param appServicePlanEgressSubnetId string
 param gatewaySubnetId string
 param privateEndpointsSubnetId string
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
-param onPremiseNetworkIps string
+@secure()
+param onPremiseNetworkIpsString string
 @description('Is public access to the storage account allowed or denied for everyone')
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
@@ -14,7 +15,8 @@ param shareDeleteRetentionEnabled bool
 param filesDnsZoneId string
 
 var storageAccountName = '${product}${target}${version}storage'
-var onPremiseNetworkIpsArray = json(onPremiseNetworkIps)  
+var allowedIps = json(onPremiseNetworkIpsString)
+
 var queueNames = [
   'acbs-control-00'
   'acbs-control-01'
@@ -82,7 +84,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
           action: 'Allow'
         }
       ]
-      ipRules: [for ip in onPremiseNetworkIpsArray: {
+      ipRules: [for ip in allowedIps: {
         action: 'Allow'
         value: ip
       }]
