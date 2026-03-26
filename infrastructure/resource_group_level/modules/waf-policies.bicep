@@ -31,6 +31,7 @@ type RuleSet = {
 param ruleSet RuleSet
 
 var unauthorisedMessageBody = base64('Unauthorised access!')
+var allowedIpsArray = json(allowedIps)
 
 var devRuleOverrides = applyWafRuleOverrides ? [
   {
@@ -277,7 +278,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
         matchVariable: matchVariable
         operator: 'IPMatch'
         negateCondition: true
-        matchValue: allowedIps
+        matchValue: allowedIpsArray
         transforms: []
       }
     ]
