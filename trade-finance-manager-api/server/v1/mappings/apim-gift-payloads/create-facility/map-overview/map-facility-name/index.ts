@@ -24,7 +24,11 @@ type MapFacilityNameParams = {
  */
 export const mapFacilityName = ({ bankInternalRefName, facilityType, isGefDeal, productTypeCode }: MapFacilityNameParams) => {
   if (isGefDeal) {
-    return `${CONSUMER} ${facilityType} ${productTypeCode}: ${bankInternalRefName}`;
+    if (facilityType) {
+      return `${CONSUMER} ${facilityType} ${productTypeCode}: ${bankInternalRefName}`;
+    }
+
+    return `${CONSUMER} ${productTypeCode}: ${bankInternalRefName}`;
   }
 
   return `${CONSUMER} ${productTypeCode}: ${bankInternalRefName}`;

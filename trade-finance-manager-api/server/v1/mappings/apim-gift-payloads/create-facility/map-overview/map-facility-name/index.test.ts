@@ -28,6 +28,49 @@ describe('mapFacilityName', () => {
 
       expect(result).toEqual(expected);
     });
+
+    describe('when facilityType is not provided', () => {
+      it('should return the facility name without a facility type', () => {
+        // Arrange
+        const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
+
+        const params = {
+          bankInternalRefName: mockBankInternalRefName,
+          isGefDeal: true,
+          productTypeCode: mockProductTypeCode,
+        };
+
+        // Act
+        const result = mapFacilityName(params);
+
+        // Assert
+        const expected = `${CONSUMER} ${mockProductTypeCode}: ${mockBankInternalRefName}`;
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when facilityType is an empty string', () => {
+      it('should return the facility name without a facility type', () => {
+        // Arrange
+        const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
+
+        const params = {
+          bankInternalRefName: mockBankInternalRefName,
+          facilityType: '',
+          isGefDeal: true,
+          productTypeCode: mockProductTypeCode,
+        };
+
+        // Act
+        const result = mapFacilityName(params);
+
+        // Assert
+        const expected = `${CONSUMER} ${mockProductTypeCode}: ${mockBankInternalRefName}`;
+
+        expect(result).toEqual(expected);
+      });
+    });
   });
 
   describe('when isGefDeal is false', () => {

@@ -14,7 +14,6 @@ type MapFacilityCategoryCodeParams = {
  * This is required because GEF facility categories are not codes.
  * Any other product/facility does not require a facility category code in the payload.
  * @param {MapFacilityCategoryCodeParams} params - Data required to map the facility category code for GEF facilities.
- * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Cash", "Contingent").
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM.
  * @param {string} [params.facilityType] - Facility type (e.g. "Cash", "Contingent").
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
