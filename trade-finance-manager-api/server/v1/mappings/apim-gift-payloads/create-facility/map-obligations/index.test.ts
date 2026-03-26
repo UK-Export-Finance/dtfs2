@@ -4,28 +4,69 @@ import { mapObligations } from '.';
 const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 describe('mapObligations', () => {
-  it('should return an array with one obligation', () => {
-    // Arrange
-    const currency = 'GBP';
-    const effectiveDate = '2024-01-28';
-    const maturityDate = '2026-02-14';
-    const subtypeName = 'Performance bond';
-    const ukefExposure = 1500;
+  const currency = 'GBP';
+  const effectiveDate = '2024-01-28';
+  const maturityDate = '2026-02-14';
+  const bssSubtypeName = 'Performance bond';
+  const ukefExposure = 1500;
 
-    // Act
-    const result = mapObligations({ currency, effectiveDate, maturityDate, subtypeName, ukefExposure });
+  describe('when isBssEwcsDeal is true', () => {
+    it('should return an array with one obligation and mapped subtypeCode', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
 
-    // Assert
-    const expected = [
-      {
-        amount: ukefExposure,
+      // Act
+      const result = mapObligations({
         currency,
         effectiveDate,
+        isBssEwcsDeal,
         maturityDate,
-        subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS['Performance bond'],
-      },
-    ];
+        bssSubtypeName,
+        ukefExposure,
+      });
 
-    expect(result).toEqual(expected);
+      // Assert
+      const expected = [
+        {
+          amount: ukefExposure,
+          currency,
+          effectiveDate,
+          maturityDate,
+          subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS['Performance bond'],
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when isBssEwcsDeal is false', () => {
+    it('should return an array with one obligation and subtypeCode as null', () => {
+      // Arrange
+      const isBssEwcsDeal = false;
+
+      // Act
+      const result = mapObligations({
+        currency,
+        effectiveDate,
+        isBssEwcsDeal,
+        maturityDate,
+        bssSubtypeName,
+        ukefExposure,
+      });
+
+      // Assert
+      const expected = [
+        {
+          amount: ukefExposure,
+          currency,
+          effectiveDate,
+          maturityDate,
+          subtypeCode: null,
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
   });
 });

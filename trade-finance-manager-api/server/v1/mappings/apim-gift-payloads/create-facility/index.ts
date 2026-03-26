@@ -106,10 +106,11 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       exitDate: expiryDate,
     }),
     obligations: mapObligations({
+      bssSubtypeName: String(facility.facilitySnapshot.bondType),
       currency,
       effectiveDate,
+      isBssEwcsDeal,
       maturityDate: expiryDate,
-      subtypeName: String(facility.facilitySnapshot.bondType),
       ukefExposure: facilityAmount,
     }),
     repaymentProfiles: mapRepaymentProfiles({
