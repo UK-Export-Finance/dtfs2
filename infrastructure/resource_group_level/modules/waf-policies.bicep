@@ -10,7 +10,6 @@ param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
-@secure()
 param allowedIpsString string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
@@ -325,3 +324,4 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
 
 
 output wafPoliciesId string = wafPolicies.id
+output debugAllowedIps string = allowedIpsString
