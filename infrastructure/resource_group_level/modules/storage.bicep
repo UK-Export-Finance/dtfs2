@@ -15,7 +15,9 @@ param shareDeleteRetentionEnabled bool
 param filesDnsZoneId string
 
 var storageAccountName = '${product}${target}${version}storage'
-var allowedIps = json(onPremiseNetworkIpsString)
+var allowedIps = empty(onPremiseNetworkIpsString)
+  ? []
+  : split(replace(onPremiseNetworkIpsString, ' ', ''), ',')
 
 var queueNames = [
   'acbs-control-00'
