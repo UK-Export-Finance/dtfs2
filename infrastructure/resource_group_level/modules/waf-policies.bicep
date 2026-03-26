@@ -10,6 +10,7 @@ param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
+@secure()
 param allowedIpsString string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
@@ -31,8 +32,8 @@ type RuleSet = {
 param ruleSet RuleSet
 
 var cleanIpsString = trim(allowedIpsString)
-var looksLikeJsonArray = !empty(cleanIpsString) && startsWith(cleanIpsString, '[') && endsWith(cleanIpsString, ']')
-var allowedIps = looksLikeJsonArray ? json(cleanIpsString) : []
+
+var allowedIps = empty(cleanIpsString) ? [] : (startsWith(cleanIpsString, '[') ? json(cleanIpsString) : split(cleanIpsString, ','))
 var unauthorisedMessageBody = base64('Unauthorised access!')
 
 var devRuleOverrides = applyWafRuleOverrides ? [
@@ -324,4 +325,3 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
 
 
 output wafPoliciesId string = wafPolicies.id
-output debugAllowedIps string = allowedIpsString
