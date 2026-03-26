@@ -10,7 +10,7 @@ param wafPoliciesName string = 'waf${product}${target}${version}'
 param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
-param allowedIps array
+param allowedIps string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
 param matchVariable string

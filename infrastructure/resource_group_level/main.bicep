@@ -43,7 +43,7 @@ param acaClamAvCidr string
 param privateEndpointsCidr string
 
 @description('IPs allowed to access restricted services, represented as JSON array string (UKEF_VPN_IPS).')
-param onPremiseNetworkIps array
+param onPremiseNetworkIps string
 
 @description('Network IPs permitted to access Cosmos DB from the Azure Portal (AZ_PORTAL_IPS).')
 param azurePortalIps array
