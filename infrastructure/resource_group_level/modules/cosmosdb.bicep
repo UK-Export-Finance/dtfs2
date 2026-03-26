@@ -20,8 +20,11 @@ param defaultThroughput int = 400
 
 var cosmosDbAccountName = '${product}-${target}-${version}-mongo'
 var privateEndpointName = '${product}-${target}-${version}-mongo'
-var allowedIps = json(allowedIpsString)
-var azureAllowedIps = json(azurePortalIpsString)
+var cleanAllowed = trim(allowedIpsString)
+var cleanAzure = trim(azurePortalIpsString)
+
+var allowedIps = empty(cleanAllowed) ? [] : split(replace(cleanAllowed, ' ', ''), ',')
+var azureAllowedIps = empty(cleanAzure) ? [] : split(replace(cleanAzure, ' ', ''), ',')
 var allAllowedIps = concat(allowedIps, azureAllowedIps)
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
