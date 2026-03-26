@@ -23,8 +23,11 @@ var privateEndpointName = '${product}-${target}-${version}-mongo'
 var cleanAllowed = trim(allowedIpsString)
 var cleanAzure = trim(azurePortalIpsString)
 
-var allowedIps = empty(cleanAllowed) ? [] : split(replace(cleanAllowed, ' ', ''), ',')
-var azureAllowedIps = empty(cleanAzure) ? [] : split(replace(cleanAzure, ' ', ''), ',')
+var normalizedAllowed = replace(replace(replace(cleanAllowed, '[', ''), ']', ''), '"', '')
+var normalizedAzure = replace(replace(replace(cleanAzure, '[', ''), ']', ''), '"', '')
+
+var allowedIps = empty(normalizedAllowed) ? [] : split(replace(normalizedAllowed, ' ', ''), ',')
+var azureAllowedIps = empty(normalizedAzure) ? [] : split(replace(normalizedAzure, ' ', ''), ',')
 var allAllowedIps = concat(allowedIps, azureAllowedIps)
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
