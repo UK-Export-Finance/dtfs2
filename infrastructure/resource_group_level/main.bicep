@@ -886,7 +886,6 @@ module portalUI 'modules/webapps/portal-ui.bicep' = {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
-    environment: environment
     location: location
     product: product
     version: version

@@ -1,5 +1,4 @@
 param location string
-// param environment string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
