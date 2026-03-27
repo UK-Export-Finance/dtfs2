@@ -90,6 +90,7 @@ describe('mapObligations', () => {
         effectiveDate,
         isBssEwcsDeal,
         isGefDeal,
+        facilityType,
         maturityDate,
         ukefExposure,
       });
