@@ -1,5 +1,5 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
-import { FacilityCategory } from '../../../api-response-types';
+import { CreditRiskRating, FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import apiModule from '../../../api';
@@ -20,8 +20,8 @@ export type FacilityCreationParams = {
 };
 
 type ApiTypes = {
-  getCreditRiskRatings: () => Promise<unknown>;
-  getFacilityCategories: () => Promise<unknown>;
+  getCreditRiskRatings: () => Promise<CreditRiskRating[]>;
+  getFacilityCategories: () => Promise<FacilityCategory[]>;
 };
 
 /**
