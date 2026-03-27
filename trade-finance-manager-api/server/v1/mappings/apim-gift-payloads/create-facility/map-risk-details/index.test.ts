@@ -1,103 +1,36 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
 import api from '../../../../api';
-import { mapRiskDetails, mapFacilityCategoryCode, mapFacilityCreditRating } from '.';
+import { mapFacilityCategoryCode } from './map-facility-category-code';
+import { mapFacilityCreditRating } from './map-facility-credit-rating';
+import { mapRiskDetails } from '.';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 jest.mock('../../../../api');
 
-describe('mapFacilityCreditRating', () => {
-  describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
-    it('should return the mapped credit rating', () => {
-      // Arrange
-      const mockCreditRiskRatings = ['BB-', 'B+'];
-      const mockExporterCreditRating = 'Good (BB-)';
-
-      // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
-
-      // Assert
-      const expected = 'BB-';
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('when the exporter credit rating is in the list of credit risk ratings', () => {
-    it('should return the mapped credit rating', () => {
-      // Arrange
-      const mockCreditRiskRatings = ['AAA', 'AA+', 'AA'];
-      const mockExporterCreditRating = 'AAA';
-
-      // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
-
-      // Assert
-      const expected = 'AAA';
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('when the exporter credit rating is NOT in TFM_CREDIT_RATING_MAP or the list of credit risk ratings', () => {
-    it('should return null', () => {
-      // Arrange
-      const mockCreditRiskRatings = ['AAA'];
-      const mockExporterCreditRating = 'CCC';
-
-      // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
-
-      // Assert
-      expect(result).toBeNull();
-    });
-  });
-});
-
-describe('mapFacilityCategoryCode', () => {
-  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is provided`, () => {
-    it('should return the provided facilityCategoryCode', () => {
-      // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
-      const mockFacilityCategoryCode = 'Mock facility category code';
-
-      // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
-
-      // Assert
-      const expected = mockFacilityCategoryCode;
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe(`when productTypeCode is "${PRODUCT_TYPE_CODES.GEF}" and a facilityCategoryCode is NOT provided`, () => {
-    it('should return null', () => {
-      // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
-
-      // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode);
-
-      // Assert
-      expect(result).toBeNull();
-    });
-  });
-
-  describe(`when productTypeCode is NOT "${PRODUCT_TYPE_CODES.GEF}"`, () => {
-    it('should return null', () => {
-      // Arrange
-      const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
-      const mockFacilityCategoryCode = 'Mock facility category code';
-
-      // Act
-      const result = mapFacilityCategoryCode(mockProductTypeCode, mockFacilityCategoryCode);
-
-      // Assert
-      expect(result).toBeNull();
-    });
-  });
-});
+const mockFacilityCategories = [
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT003',
+    description: 'Bond: Supplemental To Credit',
+    isActive: true,
+  },
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT006',
+    description: 'GEF: Contingent',
+    isActive: true,
+  },
+  {
+    type: 'Facility Category',
+    typeCode: 'facilityCategory',
+    code: 'FCT007',
+    description: 'GEF: Cash Advances',
+    isActive: true,
+  },
+];
 
 describe('mapRiskDetails', () => {
   const mockIndustryCode = '1406';
@@ -107,9 +40,10 @@ describe('mapRiskDetails', () => {
     dealId: '123',
     creditRiskRatings: ['AAA', 'AA+', 'AA'],
     facilityCategoryCode: '',
+    facilityCategories: mockFacilityCategories,
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
-    productTypeCode: PRODUCT_TYPE_CODES.GEF,
+    isGefDeal: true,
   };
 
   beforeEach(() => {
@@ -144,7 +78,11 @@ describe('mapRiskDetails', () => {
     const expected = {
       account: DEFAULTS.RISK_DETAILS.ACCOUNT,
       dealId: params.dealId,
-      facilityCategoryCode: mapFacilityCategoryCode(params.productTypeCode, params.facilityCategoryCode),
+      facilityCategoryCode: mapFacilityCategoryCode({
+        facilityCategoryCode: params.facilityCategoryCode,
+        facilityCategories: params.facilityCategories,
+        isGefDeal: params.isGefDeal,
+      }),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
       ukefIndustryCode: mockUkefIndustryCode,

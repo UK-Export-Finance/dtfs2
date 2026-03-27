@@ -1,6 +1,7 @@
-import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
@@ -15,19 +16,19 @@ import { mapObligations } from './map-obligations';
 import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
+import { FacilityCategory } from '../../../api-response-types/facility-category';
 import { createFacility } from '.';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
-const mockTfmDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
+const mockTfmGefDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
 
 jest.mock('../../../api');
 
 describe('createFacility', () => {
   const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
   let getCreditRiskRatingsSpy = jest.fn();
+  let getFacilityCategoriesSpy = jest.fn();
   let getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn();
-
-  const mockDeal = mockTfmDeal;
 
   const mockFacility: TfmFacility = {
     _id: new ObjectId(),
@@ -66,7 +67,24 @@ describe('createFacility', () => {
     },
   ];
 
-  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+  const mockFacilityCategories: FacilityCategory[] = [
+    {
+      type: 'Facility Category',
+      typeCode: 'facilityCategory',
+      code: 'FCT003',
+      description: 'Bond: Supplemental To Credit',
+      isActive: true,
+    },
+    {
+      type: 'Facility Category',
+      typeCode: 'facilityCategory',
+      code: 'FCT006',
+      description: 'GEF: Contingent',
+      isActive: true,
+    },
+  ];
+
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockTfmGefDeal.dealSnapshot.dealType);
 
   const productTypeCode = mapProductTypeCode({
     isBssEwcsDeal,
@@ -75,7 +93,7 @@ describe('createFacility', () => {
   });
 
   const params = {
-    deal: mockDeal,
+    deal: mockTfmGefDeal,
     facility: mockFacility,
   };
 
@@ -85,6 +103,9 @@ describe('createFacility', () => {
     // Arrange
     getCreditRiskRatingsSpy = jest.fn().mockResolvedValueOnce(mockCreditRiskRatings);
     mockApi.getCreditRiskRatings = getCreditRiskRatingsSpy;
+
+    getFacilityCategoriesSpy = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
+    mockApi.getFacilityCategories = getFacilityCategoriesSpy;
 
     getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy = jest.fn().mockResolvedValue({ ukefIndustryCode: mockUkefIndustryCode });
     mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = getUkefIndustryCodeByCompaniesHouseIndustryCodeSpy;
@@ -98,7 +119,35 @@ describe('createFacility', () => {
     expect(getCreditRiskRatingsSpy).toHaveBeenCalledTimes(1);
   });
 
+  describe(`when the deal is a ${DEAL_TYPE.GEF} deal`, () => {
+    it('should call api.getFacilityCategories', async () => {
+      // Act
+      await createFacility(params);
+
+      // Assert
+      expect(getFacilityCategoriesSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe(`when the deal is a ${DEAL_TYPE.BSS_EWCS} deal`, () => {
+    it('should NOT call api.getFacilityCategories', async () => {
+      // Arrange
+      const mockBssEwcsDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
+
+      params.deal = mockBssEwcsDeal;
+
+      // Act
+      await createFacility(params);
+
+      // Assert
+      expect(getFacilityCategoriesSpy).not.toHaveBeenCalled();
+    });
+  });
+
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
+    // Arrange
+    params.deal = mockTfmGefDeal;
+
     // Act
     const result = await createFacility(params);
 
@@ -108,11 +157,11 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
+        bankInternalRefName: mockTfmGefDeal.dealSnapshot.bankInternalRefName,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
-        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
+        exporterPartyUrn: mockTfmGefDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityCategoryCode: String(facilitySnapshot.type),
         isGefDeal,
@@ -122,7 +171,7 @@ describe('createFacility', () => {
       counterparties: mapCounterparties({
         isBssEwcsDeal,
         partyUrns: mapPartyUrns({
-          deal: mockDeal,
+          deal: mockTfmGefDeal,
           isBssEwcsDeal,
           isGefDeal,
         }),
@@ -142,11 +191,12 @@ describe('createFacility', () => {
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
-        dealId: getTfmUkefDealId(mockDeal),
-        exporterCreditRating: mockDeal.tfm.exporterCreditRating,
+        dealId: getTfmUkefDealId(mockTfmGefDeal),
+        exporterCreditRating: mockTfmGefDeal.tfm.exporterCreditRating,
         facilityCategoryCode: String(facilitySnapshot.type),
-        industryCode: getIndustryCode(mockDeal),
-        productTypeCode,
+        facilityCategories: mockFacilityCategories,
+        industryCode: getIndustryCode(mockTfmGefDeal),
+        isGefDeal,
       }),
     };
 
@@ -170,6 +220,85 @@ describe('createFacility', () => {
 
       // Assert
       // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('consumer');
+      expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('counterparties');
+      expect(result).toHaveProperty('obligations');
+      expect(result).toHaveProperty('repaymentProfiles');
+      expect(result).toHaveProperty('riskDetails');
+    });
+  });
+
+  describe('when api.getCreditRiskRatings returns false (API error without throw)', () => {
+    beforeEach(() => {
+      // Arrange
+      mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(createFacility(params)).resolves.not.toThrow();
+    });
+
+    it('should return a result with the expected shape', async () => {
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('consumer');
+      expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('counterparties');
+      expect(result).toHaveProperty('obligations');
+      expect(result).toHaveProperty('repaymentProfiles');
+      expect(result).toHaveProperty('riskDetails');
+    });
+  });
+
+  describe('when api.getFacilityCategories throws an error', () => {
+    beforeEach(() => {
+      // Arrange
+      mockApi.getFacilityCategories = jest.fn().mockRejectedValueOnce(new Error());
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(createFacility(params)).resolves.not.toThrow();
+    });
+
+    it('should map TFM facility data to the format expected by APIM for GIFT facility creation', async () => {
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('consumer');
+      expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('counterparties');
+      expect(result).toHaveProperty('obligations');
+      expect(result).toHaveProperty('repaymentProfiles');
+      expect(result).toHaveProperty('riskDetails');
+    });
+  });
+
+  describe('when api.getFacilityCategories returns false (API error without throw)', () => {
+    beforeEach(() => {
+      // Arrange
+      mockApi.getFacilityCategories = jest.fn().mockResolvedValueOnce(false);
+    });
+
+    it('should NOT propagate the error', async () => {
+      // Act & Assert
+      await expect(createFacility(params)).resolves.not.toThrow();
+    });
+
+    it('should return a result with the expected shape', async () => {
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
