@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION, COUNTERPARTY_ROLE_CODE, PRODUCT_TYPE_CODES } from './constants';
+import { APIM_GIFT_INTEGRATION, COUNTERPARTY_ROLE_CODE, PRODUCT_TYPE_CODES, REPAYMENT_TYPE } from './constants';
 
 export type PartyUrns = {
   bondGiver?: string;
@@ -11,6 +11,8 @@ type CreditTypeValue = CreditTypeMap[keyof CreditTypeMap];
 
 export type ApimGiftProductTypeCode = (typeof PRODUCT_TYPE_CODES)[keyof typeof PRODUCT_TYPE_CODES];
 
+export type ApimGiftRepaymentType = (typeof REPAYMENT_TYPE)[keyof typeof REPAYMENT_TYPE];
+
 export type ApimGiftFacilityOverview = {
   creditType: CreditTypeValue;
   currency: string;
@@ -22,6 +24,7 @@ export type ApimGiftFacilityOverview = {
   isRevolving: boolean;
   obligorUrn: string;
   productTypeCode: ApimGiftProductTypeCode;
+  repaymentType: ApimGiftRepaymentType;
 };
 
 export type ApimGiftCounterparty = {
@@ -32,10 +35,11 @@ export type ApimGiftCounterparty = {
 };
 
 export type ApimGiftObligation = {
+  amount: number | null;
   currency: string;
   effectiveDate: string;
   maturityDate: string;
-  amount: number | null;
+  repaymentType: ApimGiftRepaymentType;
   subtypeCode: string;
 };
 

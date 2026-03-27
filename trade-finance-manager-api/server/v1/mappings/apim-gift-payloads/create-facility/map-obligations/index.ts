@@ -2,7 +2,7 @@ import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftObligation } from '../../types';
 import { mapObligationAmount } from './map-obligation-amount';
 
-const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
+const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 type MapObligationsParams = {
   currency: string;
@@ -41,6 +41,7 @@ export const mapObligations = ({
       currency,
       effectiveDate,
       maturityDate,
+      repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       // TODO: DTFS2-8338
       subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS[subtypeName as keyof typeof OBLIGATION_SUBTYPE_MAP.BSS],
     },

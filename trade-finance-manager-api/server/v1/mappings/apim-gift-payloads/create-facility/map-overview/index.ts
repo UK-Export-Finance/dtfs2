@@ -59,4 +59,5 @@ export const mapOverview = ({
   isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING[productTypeCode],
   obligorUrn: exporterPartyUrn,
   productTypeCode,
+  repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
 });
