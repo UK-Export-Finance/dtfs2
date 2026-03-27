@@ -207,19 +207,11 @@ describe('createFacility', () => {
   describe(`when deal type is ${DEAL_TYPE.BSS_EWCS}`, () => {
     it('should map obligations using bssSubtypeName', async () => {
       // Arrange
-      const mockBssDeal = structuredClone(mockDeal);
-      mockBssDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
-      mockBssDeal.dealSnapshot.details = {
-        ukefDealId: '0030113304',
-        submissionCount: 0,
-      };
-      mockBssDeal.dealSnapshot.submissionDetails = {
-        'industry-sector': { code: '1008', name: 'Information and communication' },
-      };
+      const mockBssEwcsDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
 
-      params.deal = mockBssDeal;
+      params.deal = mockBssEwcsDeal;
 
-      const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssDeal.dealSnapshot.dealType);
+      const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssEwcsDeal.dealSnapshot.dealType);
       const bssSubtypeName = isBssDeal ? String(facilitySnapshot.bondType) : undefined;
 
       // Act
