@@ -170,6 +170,7 @@ describe('createFacility', () => {
       }),
       counterparties: mapCounterparties({
         isBssEwcsDeal,
+        isGefDeal,
         partyUrns: mapPartyUrns({
           deal: mockTfmGefDeal,
           isBssEwcsDeal,
