@@ -21,6 +21,20 @@ export const TFM_CREDIT_RATING_MAP = {
 };
 
 /**
+ * Obligation amount calculations for GEF facilities, based on the APIM GIFT documentation:
+ * - For Cash GEF facilities, the obligation amount is calculated as 85% of the Max UKEF exposure.
+ * - For Contingent GEF facilities, the obligation amount is calculated as 70% of the Max UKEF exposure.
+ * For non-GEF facilities, the obligation amount is simply the Max UKEF exposure.
+ * These calculations are required to map the facility's UKEF exposure to the expected obligation amount in APIM/GIFT when mapping the facility "obligations" data for the APIM GIFT payload.
+ */
+export const OBLIGATION_AMOUNT = {
+  UKEF_EXPOSURE_PERCENTAGE: {
+    CASH: 0.85,
+    CONTINGENT: 0.7,
+  },
+} as const;
+
+/**
  * APIM/GIFT obligation subtype codes.
  * These are ultimately stored and controlled by ODS.
  */

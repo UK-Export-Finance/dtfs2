@@ -1,5 +1,6 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftObligation } from '../../types';
+import { mapObligationAmount } from './map-obligation-amount';
 
 const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
@@ -8,6 +9,8 @@ type MapObligationsParams = {
   currency: string;
   effectiveDate: string;
   isBssEwcsDeal: boolean;
+  facilityType?: string;
+  isGefDeal: boolean;
   maturityDate: string;
   ukefExposure: number;
 };
@@ -21,6 +24,8 @@ type MapObligationsParams = {
  * @param {string} params.currency - The facility currency code to use for the obligation amount.
  * @param {string} params.effectiveDate - The start date of the facility (from TFM "facilityGuaranteeDates").
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
+ * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {string} params.maturityDate - The exit date of the facility (from TFM "facilityGuaranteeDates").
  * @param {number} params.ukefExposure - The facility's UKEF exposure.
  * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
@@ -30,6 +35,8 @@ export const mapObligations = ({
   currency,
   effectiveDate,
   isBssEwcsDeal,
+  isGefDeal,
+  facilityType,
   maturityDate,
   ukefExposure,
 }: MapObligationsParams): ApimGiftObligation[] => {
@@ -52,7 +59,7 @@ export const mapObligations = ({
 
   const obligations = [
     {
-      amount: ukefExposure, // TODO: DTFS2-8307: GEF % calculations.
+      amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
       currency,
       effectiveDate,
       maturityDate,

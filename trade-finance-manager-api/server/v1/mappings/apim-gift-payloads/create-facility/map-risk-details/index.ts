@@ -11,7 +11,7 @@ type MapRiskDetailsParams = {
   creditRiskRatings: string[];
   dealId: string | null;
   exporterCreditRating: string;
-  facilityCategoryCode?: string;
+  facilityType?: string;
   facilityCategories: FacilityCategory[];
   industryCode: string;
   isGefDeal: boolean;
@@ -23,7 +23,7 @@ type MapRiskDetailsParams = {
  * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
  * @param {string | null} params.dealId - The TFM deal ID.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
- * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
+ * @param {string} [params.facilityType] - Optional facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
@@ -32,7 +32,7 @@ export const mapRiskDetails = async ({
   creditRiskRatings,
   dealId,
   exporterCreditRating,
-  facilityCategoryCode,
+  facilityType,
   facilityCategories,
   industryCode,
   isGefDeal,
@@ -61,8 +61,8 @@ export const mapRiskDetails = async ({
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
     facilityCategoryCode: mapFacilityCategoryCode({
-      facilityCategoryCode,
       facilityCategories,
+      facilityType,
       isGefDeal,
     }),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),

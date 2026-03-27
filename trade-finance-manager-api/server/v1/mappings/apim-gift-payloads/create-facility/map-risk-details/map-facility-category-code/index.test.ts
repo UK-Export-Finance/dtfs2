@@ -27,14 +27,14 @@ const mockFacilityCategories = [
 
 describe('mapFacilityCategoryCode', () => {
   describe('when isGefDeal is true', () => {
-    describe('when a facilityCategoryCode is provided', () => {
+    describe('when a facilityType is provided', () => {
       it('should return a facility category code from the provided APIM categories', () => {
         // Arrange
         const mockFacilityCategoryCode = FACILITY_TYPE.CASH;
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityCategoryCode: mockFacilityCategoryCode,
+          facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -46,14 +46,14 @@ describe('mapFacilityCategoryCode', () => {
       });
     });
 
-    describe('when a facilityCategoryCode is provided, but an APIM category does not match', () => {
+    describe('when a facilityType is provided, but an APIM category does not match', () => {
       it('should return null', () => {
         // Arrange
         const mockFacilityCategoryCode = `NOT ${FACILITY_TYPE.CASH}`;
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityCategoryCode: mockFacilityCategoryCode,
+          facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -63,11 +63,11 @@ describe('mapFacilityCategoryCode', () => {
       });
     });
 
-    describe('when a facilityCategoryCode is an empty string', () => {
+    describe('when a facilityType is an empty string', () => {
       it('should return null', () => {
         // Act
         const result = mapFacilityCategoryCode({
-          facilityCategoryCode: '',
+          facilityType: '',
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -77,11 +77,11 @@ describe('mapFacilityCategoryCode', () => {
       });
     });
 
-    describe('when a facilityCategoryCode is NOT provided', () => {
+    describe('when a facilityType is NOT provided', () => {
       it('should return null', () => {
         // Act
         const result = mapFacilityCategoryCode({
-          facilityCategoryCode: undefined,
+          facilityType: undefined,
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -99,7 +99,7 @@ describe('mapFacilityCategoryCode', () => {
 
       // Act
       const result = mapFacilityCategoryCode({
-        facilityCategoryCode: mockFacilityCategoryCode,
+        facilityType: mockFacilityCategoryCode,
         facilityCategories: mockFacilityCategories,
         isGefDeal: false,
       });
