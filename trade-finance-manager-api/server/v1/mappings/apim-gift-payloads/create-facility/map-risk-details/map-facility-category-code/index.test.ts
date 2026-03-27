@@ -30,11 +30,11 @@ describe('mapFacilityCategoryCode', () => {
     describe('when a facilityType is provided', () => {
       it('should return a facility category code from the provided APIM categories', () => {
         // Arrange
-        const mockFacilityType = FACILITY_TYPE.CASH;
+        const mockFacilityCategoryCode = FACILITY_TYPE.CASH;
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: mockFacilityType,
+          facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -49,11 +49,11 @@ describe('mapFacilityCategoryCode', () => {
     describe('when a facilityType is provided, but an APIM category does not match', () => {
       it('should return null', () => {
         // Arrange
-        const mockFacilityType = `NOT ${FACILITY_TYPE.CASH}`;
+        const mockFacilityCategoryCode = `NOT ${FACILITY_TYPE.CASH}`;
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: mockFacilityType,
+          facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
           isGefDeal: true,
         });
@@ -95,11 +95,11 @@ describe('mapFacilityCategoryCode', () => {
   describe('when isGefDeal is false', () => {
     it('should return null', () => {
       // Arrange
-      const mockFacilityType = 'Mock facility type';
+      const mockFacilityCategoryCode = 'Mock facility category code';
 
       // Act
       const result = mapFacilityCategoryCode({
-        facilityType: mockFacilityType,
+        facilityType: mockFacilityCategoryCode,
         facilityCategories: mockFacilityCategories,
         isGefDeal: false,
       });

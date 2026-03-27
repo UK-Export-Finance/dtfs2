@@ -1,4 +1,4 @@
-import { FacilityCategory } from '../../../../../api-response-types';
+import type { FacilityCategory } from '../../../../../api-response-types/facility-category';
 import { PRODUCT_TYPE_CODES } from '../../../constants';
 
 type MapFacilityCategoryCodeParams = {

@@ -1,5 +1,5 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
-import { FacilityCategory } from '../../../api-response-types';
+import { CreditRiskRating, FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import apiModule from '../../../api';
@@ -20,8 +20,8 @@ export type FacilityCreationParams = {
 };
 
 type ApiTypes = {
-  getCreditRiskRatings: () => Promise<unknown>;
-  getFacilityCategories: () => Promise<unknown>;
+  getCreditRiskRatings: () => Promise<CreditRiskRating[]>;
+  getFacilityCategories: () => Promise<FacilityCategory[]>;
 };
 
 /**
@@ -86,7 +86,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API call failing and the fact that the credit risk rating mapping can be "best effort", this is not necessary.
    * Note that this is an edge case scenario as 99% of credit risk ratings are in TFM_CREDIT_RATING_MAP and do not require the API call to map the facility credit rating.
    */
-  let creditRiskRatingsResponse: unknown = [];
+  let creditRiskRatingsResponse: CreditRiskRating[] = [];
 
   try {
     creditRiskRatingsResponse = await api.getCreditRiskRatings();
@@ -95,7 +95,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     creditRiskRatingsResponse = [];
   }
 
-  let facilityCategoriesResponse: unknown = [];
+  let facilityCategoriesResponse: FacilityCategory[] = [];
 
   if (isGefDeal) {
     try {
@@ -106,7 +106,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }
   }
 
-  const facilityCategories = Array.isArray(facilityCategoriesResponse) ? (facilityCategoriesResponse as FacilityCategory[]) : [];
+  const facilityCategories = Array.isArray(facilityCategoriesResponse) ? facilityCategoriesResponse : [];
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
