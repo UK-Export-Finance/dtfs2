@@ -937,6 +937,25 @@ const getCreditRiskRatings = async () => {
 };
 
 /**
+ * Get facility categories
+ * @returns {Promise<import('./api-response-types').FacilityCategory[] | false>}
+ */
+const getFacilityCategories = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/facility-categories`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get facility categories %o', error);
+    return false;
+  }
+};
+
+/**
  * Get obligation subtypes
  * @returns {Promise<import('./api-response-types').ObligationSubtype[] | false>}
  */
@@ -1947,6 +1966,7 @@ module.exports = {
   getOrCreatePartyDbInfo,
   getCompanyInfo,
   getCreditRiskRatings,
+  getFacilityCategories,
   getObligationSubtypes,
   getUkefIndustryCodeByCompaniesHouseIndustryCode,
   findUser,
