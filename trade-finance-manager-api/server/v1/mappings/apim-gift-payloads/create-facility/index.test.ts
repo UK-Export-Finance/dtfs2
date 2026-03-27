@@ -220,16 +220,17 @@ describe('createFacility', () => {
       const result = await createFacility(params);
 
       // Assert
-      expect(result.obligations).toEqual(
-        mapObligations({
-          bssSubtypeName,
-          currency: facilitySnapshot.currency.id,
-          effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
-          isBssEwcsDeal: isBssDeal,
-          maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-          ukefExposure: Number(tfm.ukefExposure),
-        }),
-      );
+      const expected = mapObligations({
+        bssSubtypeName,
+        currency: facilitySnapshot.currency.id,
+        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        isBssEwcsDeal: isBssDeal,
+        isGefDeal,
+        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+        ukefExposure: Number(tfm.ukefExposure),
+      });
+
+      expect(result.obligations).toEqual(expected);
     });
   });
 
