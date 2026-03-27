@@ -1,8 +1,8 @@
-import { FacilityCategory } from '../../../../../api-response-types';
+import type { FacilityCategory } from '../../../../../api-response-types/facility-category';
 import { PRODUCT_TYPE_CODES } from '../../../constants';
 
 type MapFacilityCategoryCodeParams = {
-  facilityCategoryCode?: string;
+  facilityType?: string;
   facilityCategories: FacilityCategory[];
   isGefDeal: boolean;
 };
@@ -14,22 +14,22 @@ type MapFacilityCategoryCodeParams = {
  * This is required because GEF facility categories are not codes.
  * Any other product/facility does not require a facility category code in the payload.
  * @param {MapFacilityCategoryCodeParams} params - Data required to map the facility category code for GEF facilities.
- * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Cash", "Contingent").
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM.
+ * @param {string} [params.facilityType] - Facility type (e.g. "Cash", "Contingent").
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @returns {string | null}
  * @example
  * ```
  * const facilityCategoryCode = mapFacilityCategoryCode({
- *   facilityCategoryCode: 'Cash',
+ *   facilityType: 'Cash',
  *   facilityCategories: [...],
  *   isGefDeal: true
  * });
  * //=> 'FCT007'
  * ```
  */
-export const mapFacilityCategoryCode = ({ facilityCategoryCode, facilityCategories, isGefDeal }: MapFacilityCategoryCodeParams): string | null => {
-  const tfmCategory = facilityCategoryCode && facilityCategoryCode !== '' ? String(facilityCategoryCode) : null;
+export const mapFacilityCategoryCode = ({ facilityType, facilityCategories, isGefDeal }: MapFacilityCategoryCodeParams): string | null => {
+  const tfmCategory = facilityType && facilityType !== '' ? String(facilityType) : null;
 
   if (isGefDeal && tfmCategory) {
     const matchingCategory = facilityCategories.find((category: FacilityCategory) => {

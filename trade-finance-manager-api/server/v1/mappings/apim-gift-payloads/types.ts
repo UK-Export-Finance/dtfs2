@@ -35,7 +35,7 @@ export type ApimGiftObligation = {
   currency: string;
   effectiveDate: string;
   maturityDate: string;
-  amount: number;
+  amount: number | null;
   subtypeCode: string;
 };
 
