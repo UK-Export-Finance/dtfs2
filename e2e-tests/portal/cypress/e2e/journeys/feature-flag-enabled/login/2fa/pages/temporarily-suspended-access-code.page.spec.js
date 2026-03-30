@@ -2,7 +2,7 @@ const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach } = require('./2faPageHelpers');
+const { commonBeforeEach } = require('../2faPageHelpers');
 const { temporarilySuspendedAccessCode } = require('../../../../../pages');
 
 context('2FA Page - Temporarily suspended account', () => {

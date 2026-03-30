@@ -2,7 +2,7 @@ const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach, assertAccessCodePagesCommonElements, assertEmptyCodeValidation } = require('./2faPageHelpers');
+const { commonBeforeEach, assertAccessCodePagesCommonElements, assertEmptyCodeValidation } = require('../2faPageHelpers');
 const { submitButton, errorSummary } = require('../../../../../partials');
 const { newAccessCode, resendAnotherAccessCode } = require('../../../../../pages');
 
