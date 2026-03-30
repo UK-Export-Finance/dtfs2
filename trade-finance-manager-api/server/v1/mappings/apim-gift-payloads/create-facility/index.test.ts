@@ -149,8 +149,6 @@ describe('createFacility', () => {
 
       params.deal = mockBssEwcsDeal;
 
-      // const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssEwcsDeal.dealSnapshot.dealType);
-
       // Act
       const result = await createFacility(params);
 
