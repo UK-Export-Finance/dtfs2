@@ -46,7 +46,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
   const facilityType = facilitySnapshot.type;
-  const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
+  const facilityAmount = Number(tfm.ukefExposure);
 
   const dealId = getTfmUkefDealId(deal);
 
