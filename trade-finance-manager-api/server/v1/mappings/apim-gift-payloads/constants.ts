@@ -105,8 +105,9 @@ const IS_REVOLVING = {
  * BOND_BENEFICIARY is only sent to APIM/GIFT if a relevant party URN is available.
  */
 export const COUNTERPARTY_ROLE_CODE = {
-  BOND_BENEFICIARY: 'Bond beneficiary',
-  BOND_GIVER: 'Bond giver',
+  BOND_BENEFICIARY: 'CRT004',
+  BOND_GIVER: 'CRT005',
+  ISSUING_BANK: 'CRT043',
 } as const;
 
 /**
@@ -142,6 +143,9 @@ export const APIM_GIFT_INTEGRATION = {
       BSS: {
         BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,
         BOND_GIVER: COUNTERPARTY_ROLE_CODE.BOND_GIVER,
+      },
+      GEF: {
+        ISSUING_BANK: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
       },
     },
     OVERVIEW: {
