@@ -143,6 +143,9 @@
       "PORTAL_API_KEY": {
         "value": "{{PORTAL_API_KEY}}"
       },
+      "PORTAL_API_URL": {
+        "value": "{{PORTAL_API_URL}}"
+      },
       "UTILISATION_REPORT_MAX_FILE_SIZE_BYTES": {
         "value": "{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}"
       },
