@@ -52,6 +52,7 @@ describe('mapOverview', () => {
         }),
         isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.BSS,
         productTypeCode,
+        repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       };
 
       expect(result).toEqual(expected);
@@ -83,6 +84,7 @@ describe('mapOverview', () => {
         }),
         isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.GEF,
         productTypeCode,
+        repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       };
 
       expect(result).toEqual(expected);

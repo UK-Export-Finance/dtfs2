@@ -123,6 +123,14 @@ const GIFT_ACCOUNT = 2 as const;
 const REPAYMENT_PROFILE_NAME = 'Repayment profile' as const;
 
 /**
+ * GIFT repayment types.
+ * Only "Bullet" is relevant for BSS/EWCS/GEF.
+ */
+export const REPAYMENT_TYPE = {
+  BULLET: 'Bullet',
+} as const;
+
+/**
  * For BSS/GEF/EWCS,
  * default risk status to "Corporate" for the "riskStatus" field in GIFT.
  */
@@ -147,6 +155,7 @@ export const APIM_GIFT_INTEGRATION = {
     REPAYMENT_PROFILE: {
       NAME: REPAYMENT_PROFILE_NAME,
     },
+    REPAYMENT_TYPE,
     RISK_DETAILS: {
       ACCOUNT: GIFT_ACCOUNT,
       RISK_STATUS,
