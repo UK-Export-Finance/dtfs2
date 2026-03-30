@@ -126,6 +126,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }),
     counterparties: mapCounterparties({
       isBssEwcsDeal,
+      isGefDeal,
       partyUrns,
       startDate: effectiveDate,
       exitDate: expiryDate,
