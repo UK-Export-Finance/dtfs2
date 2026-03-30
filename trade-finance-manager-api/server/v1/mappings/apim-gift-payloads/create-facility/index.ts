@@ -1,7 +1,8 @@
 import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
+import { CreditRiskRating, FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
-import api from '../../../api';
+import apiModule from '../../../api';
 import { getDealTypeFlags } from './get-deal-type-flags';
 import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
@@ -18,6 +19,11 @@ export type FacilityCreationParams = {
   facility: TfmFacility;
 };
 
+type ApiTypes = {
+  getCreditRiskRatings: () => Promise<CreditRiskRating[]>;
+  getFacilityCategories: () => Promise<FacilityCategory[]>;
+};
+
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
@@ -26,6 +32,8 @@ export type FacilityCreationParams = {
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
 export const createFacility = async ({ deal, facility }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
+  const api = apiModule as ApiTypes;
+
   const { dealSnapshot } = deal;
   const { facilitySnapshot, tfm } = facility;
 
@@ -37,7 +45,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const facilityCategoryCode = String(facilitySnapshot.type);
+  const facilityType = facilitySnapshot.type;
   const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
 
   const dealId = getTfmUkefDealId(deal);
@@ -46,7 +54,11 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
-  const productTypeCode = mapProductTypeCode({ isBssEwcsDeal, isGefDeal, facilityCategoryCode });
+  const productTypeCode = mapProductTypeCode({
+    isBssEwcsDeal,
+    isGefDeal,
+    facilityCategoryCode: facilityType,
+  });
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
@@ -62,7 +74,9 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const industryCode = getIndustryCode(deal);
 
   /**
-   * Get credit risk ratings from APIM MDM and map it into a simple array of strings.
+   * Get data from APIM MDM required to map the APIM GIFT payload:
+   * - "credit risk ratings"
+   * - "facility categories"
    *
    * NOTE: if this API call fails, we do NOT want to throw an error.
    * Instead, continue with an empty array of credit risk ratings, which could result in the facility credit rating not being mapped.
@@ -71,10 +85,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
    * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
    * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API call failing and the fact that the credit risk rating mapping can be "best effort", this is not necessary.
    * Note that this is an edge case scenario as 99% of credit risk ratings are in TFM_CREDIT_RATING_MAP and do not require the API call to map the facility credit rating.
-   *
-   * Lastly - Unfortunately, because the "api" module is in JS, we lose type information and eslint-disable-next-line has to be used.
    */
-  let creditRiskRatingsResponse: unknown = [];
+  let creditRiskRatingsResponse: CreditRiskRating[] = [];
 
   try {
     creditRiskRatingsResponse = await api.getCreditRiskRatings();
@@ -82,6 +94,19 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     // Swallow errors and default creditRiskRatingsResponse to an empty array
     creditRiskRatingsResponse = [];
   }
+
+  let facilityCategoriesResponse: FacilityCategory[] = [];
+
+  if (isGefDeal) {
+    try {
+      facilityCategoriesResponse = await api.getFacilityCategories();
+    } catch {
+      // Swallow errors and default facilityCategoriesResponse to an empty array
+      facilityCategoriesResponse = [];
+    }
+  }
+
+  const facilityCategories = Array.isArray(facilityCategoriesResponse) ? facilityCategoriesResponse : [];
 
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
@@ -94,13 +119,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       expiryDate,
       exporterPartyUrn,
       facilityAmount,
-      facilityCategoryCode,
+      facilityType,
       isGefDeal,
       productTypeCode,
       ukefFacilityId,
     }),
     counterparties: mapCounterparties({
       isBssEwcsDeal,
+      isGefDeal,
       partyUrns,
       startDate: effectiveDate,
       exitDate: expiryDate,
@@ -108,6 +134,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     obligations: mapObligations({
       currency,
       effectiveDate,
+      facilityType,
+      isGefDeal,
       maturityDate: expiryDate,
       subtypeName: String(facility.facilitySnapshot.bondType),
       ukefExposure: facilityAmount,
@@ -120,9 +148,10 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       creditRiskRatings,
       dealId,
       exporterCreditRating,
-      facilityCategoryCode,
+      facilityCategories,
+      facilityType,
       industryCode,
-      productTypeCode,
+      isGefDeal,
     }),
   };
 

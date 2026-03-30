@@ -1,7 +1,9 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES, TFM_CREDIT_RATING_MAP } from '../../constants';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
 import api from '../../../../api';
-import { ApimGiftFacilityRiskDetails, ApimGiftProductTypeCode } from '../../types';
-import { UkefIndustryCode } from '../../../../api-response-types';
+import { mapFacilityCategoryCode } from './map-facility-category-code';
+import { mapFacilityCreditRating } from './map-facility-credit-rating';
+import { ApimGiftFacilityRiskDetails } from '../../types';
+import { FacilityCategory, UkefIndustryCode } from '../../../../api-response-types';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
@@ -9,40 +11,10 @@ type MapRiskDetailsParams = {
   creditRiskRatings: string[];
   dealId: string | null;
   exporterCreditRating: string;
-  facilityCategoryCode?: string;
+  facilityType?: string;
+  facilityCategories: FacilityCategory[];
   industryCode: string;
-  productTypeCode: ApimGiftProductTypeCode;
-};
-
-/**
- * Map the facility category code based on product type code and facility category code.
- * For GEF, map the facility category code.
- * Any other product does not require the facility category code in the payload.
- * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
- * @param {string} [facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
- * @returns {string | null}
- */
-export const mapFacilityCategoryCode = (productTypeCode: ApimGiftProductTypeCode, facilityCategoryCode?: string): string | null =>
-  productTypeCode === PRODUCT_TYPE_CODES.GEF && facilityCategoryCode ? String(facilityCategoryCode) : null;
-
-/**
- * Map the facility credit rating based on the provided credit risk ratings from APIM MDM and TFM's exporter credit rating.
- * @param {string[]} creditRiskRatings - The list of credit risk ratings from APIM MDM.
- * @param {string} exporterCreditRating - TFM's exporter's credit rating.
- * @returns {string | null} The mapped facility credit rating or null if not found.
- */
-export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCreditRating: string): string | null => {
-  const creditRating = exporterCreditRating.trim();
-
-  if (creditRating in TFM_CREDIT_RATING_MAP) {
-    return TFM_CREDIT_RATING_MAP[creditRating as keyof typeof TFM_CREDIT_RATING_MAP];
-  }
-
-  if (creditRiskRatings.includes(creditRating)) {
-    return creditRating;
-  }
-
-  return null;
+  isGefDeal: boolean;
 };
 
 /**
@@ -51,17 +23,19 @@ export const mapFacilityCreditRating = (creditRiskRatings: string[], exporterCre
  * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
  * @param {string | null} params.dealId - The TFM deal ID.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
- * @param {string} [params.facilityCategoryCode] - Optional facility category code (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
- * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
+ * @param {string} [params.facilityType] - Optional facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
+ * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
+ * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = async ({
   creditRiskRatings,
   dealId,
   exporterCreditRating,
-  facilityCategoryCode,
+  facilityType,
+  facilityCategories,
   industryCode,
-  productTypeCode,
+  isGefDeal,
 }: MapRiskDetailsParams): Promise<ApimGiftFacilityRiskDetails> => {
   /**
    * Get a UKEF industry code by Companies House industry code.
@@ -86,7 +60,11 @@ export const mapRiskDetails = async ({
   const mapped: ApimGiftFacilityRiskDetails = {
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
-    facilityCategoryCode: mapFacilityCategoryCode(productTypeCode, facilityCategoryCode),
+    facilityCategoryCode: mapFacilityCategoryCode({
+      facilityCategories,
+      facilityType,
+      isGefDeal,
+    }),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
     ukefIndustryCode: industryCodeResponse.ukefIndustryCode,

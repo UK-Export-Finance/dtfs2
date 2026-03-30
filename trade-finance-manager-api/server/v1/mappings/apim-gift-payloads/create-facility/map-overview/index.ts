@@ -11,7 +11,7 @@ type MapOverviewParams = {
   expiryDate: string;
   exporterPartyUrn: string;
   facilityAmount: number;
-  facilityCategoryCode: string;
+  facilityType?: string;
   isGefDeal: boolean;
   productTypeCode: ApimGiftProductTypeCode;
   ukefFacilityId: string;
@@ -26,7 +26,7 @@ type MapOverviewParams = {
  * @param {string} params.expiryDate - The facility guarantee expiry date.
  * @param {string} params.exporterPartyUrn - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.
  * @param {number} params.facilityAmount - The total facility amount.
- * @param {string} params.facilityCategoryCode - The facility category code.
+ * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
@@ -39,7 +39,7 @@ export const mapOverview = ({
   expiryDate,
   exporterPartyUrn,
   facilityAmount,
-  facilityCategoryCode,
+  facilityType,
   isGefDeal,
   productTypeCode,
   ukefFacilityId,
@@ -50,7 +50,7 @@ export const mapOverview = ({
   facilityId: ukefFacilityId,
   facilityName: mapFacilityName({
     bankInternalRefName,
-    facilityCategoryCode,
+    facilityType,
     isGefDeal,
     productTypeCode,
   }),
@@ -59,4 +59,5 @@ export const mapOverview = ({
   isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING[productTypeCode],
   obligorUrn: exporterPartyUrn,
   productTypeCode,
+  repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
 });

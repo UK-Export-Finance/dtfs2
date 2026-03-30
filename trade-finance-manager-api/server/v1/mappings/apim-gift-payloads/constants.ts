@@ -21,6 +21,20 @@ export const TFM_CREDIT_RATING_MAP = {
 };
 
 /**
+ * Obligation amount calculations for GEF facilities, based on the APIM GIFT documentation:
+ * - For Cash GEF facilities, the obligation amount is calculated as 85% of the Max UKEF exposure.
+ * - For Contingent GEF facilities, the obligation amount is calculated as 70% of the Max UKEF exposure.
+ * For non-GEF facilities, the obligation amount is simply the Max UKEF exposure.
+ * These calculations are required to map the facility's UKEF exposure to the expected obligation amount in APIM/GIFT when mapping the facility "obligations" data for the APIM GIFT payload.
+ */
+export const OBLIGATION_AMOUNT = {
+  UKEF_EXPOSURE_PERCENTAGE: {
+    CASH: 0.85,
+    CONTINGENT: 0.7,
+  },
+} as const;
+
+/**
  * APIM/GIFT obligation subtype codes.
  * These are ultimately stored and controlled by ODS.
  */
@@ -91,8 +105,9 @@ const IS_REVOLVING = {
  * BOND_BENEFICIARY is only sent to APIM/GIFT if a relevant party URN is available.
  */
 export const COUNTERPARTY_ROLE_CODE = {
-  BOND_BENEFICIARY: 'Bond beneficiary',
-  BOND_GIVER: 'Bond giver',
+  BOND_BENEFICIARY: 'CRT004',
+  BOND_GIVER: 'CRT005',
+  ISSUING_BANK: 'CRT043',
 } as const;
 
 /**
@@ -108,6 +123,14 @@ const GIFT_ACCOUNT = 2 as const;
 const REPAYMENT_PROFILE_NAME = 'Repayment profile' as const;
 
 /**
+ * GIFT repayment types.
+ * Only "Bullet" is relevant for BSS/EWCS/GEF.
+ */
+export const REPAYMENT_TYPE = {
+  BULLET: 'Bullet',
+} as const;
+
+/**
  * For BSS/GEF/EWCS,
  * default risk status to "Corporate" for the "riskStatus" field in GIFT.
  */
@@ -121,6 +144,9 @@ export const APIM_GIFT_INTEGRATION = {
         BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,
         BOND_GIVER: COUNTERPARTY_ROLE_CODE.BOND_GIVER,
       },
+      GEF: {
+        ISSUING_BANK: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+      },
     },
     OVERVIEW: {
       CREDIT_TYPE,
@@ -129,6 +155,7 @@ export const APIM_GIFT_INTEGRATION = {
     REPAYMENT_PROFILE: {
       NAME: REPAYMENT_PROFILE_NAME,
     },
+    REPAYMENT_TYPE,
     RISK_DETAILS: {
       ACCOUNT: GIFT_ACCOUNT,
       RISK_STATUS,
