@@ -133,7 +133,7 @@ describe('mapCounterparties', () => {
     const isBssEwcsDeal = false;
 
     describe(`when partyUrns.issuingBank exists`, () => {
-      it('should return an array with a "ISSUING_BANK" counterparty', () => {
+      it('should return an array with an "ISSUING_BANK" counterparty', () => {
         // Arrange
         const mockPartyUrns = {
           issuingBank: '00318345',
@@ -162,7 +162,7 @@ describe('mapCounterparties', () => {
       });
     });
 
-    describe(`when both partyUrns.issuingBank does NOT exist`, () => {
+    describe(`when partyUrns.issuingBank does NOT exist`, () => {
       it('should return an empty array', () => {
         // Arrange
         const mockPartyUrns = {};
