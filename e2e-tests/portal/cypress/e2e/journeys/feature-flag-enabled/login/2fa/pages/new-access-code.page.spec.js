@@ -11,8 +11,8 @@ context('2FA Page - New access code', () => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
     const MAX_OTP_SENDS = 3;
     /**
-     * initializing the OTP send count to 2 so in the below tests when the user logs in and an OTP is sent, the count
-     * becomes 3 and attemptsLeft becomes 0, which allows us to land on the new-access-code page and test its page elements.
+     * Initializing the OTP send count to 1 (MAX_OTP_SENDS - 2) so when the user logs in and an OTP is sent,
+     * the count becomes 2 and attemptsLeft becomes 1, which allows us to land on the new-access-code page.
      */
     cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: MAX_OTP_SENDS - 2 });
   });
