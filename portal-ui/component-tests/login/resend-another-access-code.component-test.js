@@ -27,15 +27,15 @@ describe(page, () => {
   });
 
   it('should render the access code input', () => {
-    wrapper.expectElement('[data-cy="six-digit-access-code-input"]').toExist();
+    wrapper.expectElement('[data-cy="access-code-input"]').toExist();
   });
 
   it('should render the access code input with placeholder', () => {
-    wrapper.expectElement('[data-cy="six-digit-access-code-input"]').toHaveAttribute('placeholder', 'e.g. 123456');
+    wrapper.expectElement('[data-cy="access-code-input"]').toHaveAttribute('placeholder', 'e.g. 123456');
   });
 
   it('should render the access code input with the correct class', () => {
-    wrapper.expectElement('[data-cy="six-digit-access-code-input"]').hasClass('govuk-!-width-one-third');
+    wrapper.expectElement('[data-cy="access-code-input"]').hasClass('govuk-!-width-one-third');
   });
 
   it('should render the label for the access code input', () => {
