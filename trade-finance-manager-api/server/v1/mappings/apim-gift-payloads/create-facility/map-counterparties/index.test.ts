@@ -128,7 +128,7 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when the isGefDeal is true', () => {
+  describe('when isGefDeal is true', () => {
     const isGefDeal = true;
     const isBssEwcsDeal = false;
 
@@ -182,7 +182,7 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when the isBssEwcsDeal and isGefDeal are both false', () => {
+  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
     const isGefDeal = false;
     const isBssEwcsDeal = false;
 

@@ -40,7 +40,7 @@ export type ApimGiftObligation = {
   effectiveDate: string;
   maturityDate: string;
   repaymentType: ApimGiftRepaymentType;
-  subtypeCode: string;
+  subtypeCode: string | null;
 };
 
 type ApimGiftRepaymentProfileAllocation = {
