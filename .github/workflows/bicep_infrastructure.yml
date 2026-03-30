@@ -162,6 +162,53 @@ jobs:
           sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{REDIRECT_URL}}|${{ vars.REDIRECT_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ASP_SKU}}|${{ vars.ASP_SKU }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{JWT_SIGNING_KEY}}|${{ secrets.JWT_SIGNING_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CONTACT_US_EMAIL_ADDRESS}}|${{ vars.CONTACT_US_EMAIL_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_FEE_RECORD_CORRECTION_ENABLED}}|${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_PORTAL_2FA_ENABLED}}|${{ vars.FF_PORTAL_2FA_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_PORTAL_FACILITY_AMENDMENTS_ENABLED}}|${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_TFM_DEAL_CANCELLATION_ENABLED}}|${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{MAINTENANCE_ACTIVE}}|${{ vars.MAINTENANCE_ACTIVE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{MAINTENANCE_TIMESTAMP}}|${{ vars.MAINTENANCE_TIMESTAMP }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DEAL_API_URL}}|${{ vars.DEAL_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TFM_API}}|${{ vars.TFM_API }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TFM_UI_URL}}|${{ vars.TFM_UI_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json  
+          sed -i "s|{{CHANGE_STREAM_ENABLED}}|${{ vars.CHANGE_STREAM_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json  
+          sed -i "s|{{GEF_DEAL_VERSION}}|${{ vars.GEF_DEAL_VERSION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DELETION_AUDIT_LOGS_TTL_SECONDS}}|${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ESTORE_CRON_MANAGER_SCHEDULE}}|${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AUDIT_API_PASSWORD}}|${{ secrets.AUDIT_API_PASSWORD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AUDIT_API_USERNAME}}|${{ secrets.AUDIT_API_USERNAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AUDIT_API_URL}}|${{ secrets.AUDIT_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE}}|${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DEAL_CANCELLATION_SCHEDULE}}|${{ vars.DEAL_CANCELLATION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DTFS_CENTRAL_API_URL}}|${{ vars.DTFS_CENTRAL_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{EXTERNAL_API_URL}}|${{ vars.EXTERNAL_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{PORTAL_API_URL}}|${{ vars.PORTAL_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{TFM_API_URL}}|${{ vars.TFM_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE}}|${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_HOST}}|${{ secrets.SQL_DB_HOST }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_PASSWORD}}|${{ secrets.SQL_DB_PASSWORD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_USERNAME}}|${{ secrets.SQL_DB_USERNAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_NAME}}|${{ secrets.SQL_DB_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_LOGGING_ENABLED}}|${{ vars.SQL_DB_LOGGING_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_PORT}}|${{ vars.SQL_DB_PORT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{UKEF_GEF_REPORTING_EMAIL_RECIPIENT}}|${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.
+          sed -i "s|{{AZURE_ACBS_FUNCTION_URL}}|${{ vars.AZURE_ACBS_FUNCTION_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CASH_UTILISATION_PERCENTAGE}}|${{ vars.CASH_UTILISATION_PERCENTAGE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CHANGE_STREAM_ENABLED}}|${{ vars.CHANGE_STREAM_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CONTINGENT_UTILISATION_PERCENTAGE}}|${{ vars.CONTINGENT_UTILISATION_PERCENTAGE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{DELETION_AUDIT_LOGS_TTL_SECONDS}}|${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ENTRA_ID_CLIENT_ID}}|${{ secrets.ENTRA_ID_CLIENT_ID }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ENTRA_ID_CLIENT_SECRET}}|${{ secrets.ENTRA_ID_CLIENT_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ENTRA_ID_CLOUD_INSTANCE}}|${{ vars.ENTRA_ID_CLOUD_INSTANCE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ENTRA_ID_TENANT_ID}}|${{ secrets.ENTRA_ID_TENANT_ID }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_SALESFORCE_CUSTOMER_CREATION_ENABLED}}|${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_TFM_FACILITY_END_DATE_ENABLED}}|${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{ENTRA_ID_REDIRECT_URL}}|${{ vars.ENTRA_ID_REDIRECT_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{CONTACT_US_SELF_SERVICE_PORTAL_URL}}|${{ vars.CONTACT_US_SELF_SERVICE_PORTAL_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{FF_TFM_PAYMENT_RECONCILIATION_ENABLED}}|${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          
 
       - name: Install Bicep
         run: |
