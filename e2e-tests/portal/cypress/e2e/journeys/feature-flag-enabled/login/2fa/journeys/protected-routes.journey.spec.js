@@ -80,7 +80,7 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.getCookie('dtfs-session').should('exist');
     });
 
-    it('should clear session and redirect to login when trying to access protected route', () => {
+    it('should redirect to login when trying to access protected route but maintain session', () => {
       cy.visit('/dashboard');
       cy.url().should('eq', relative('/login'));
 
