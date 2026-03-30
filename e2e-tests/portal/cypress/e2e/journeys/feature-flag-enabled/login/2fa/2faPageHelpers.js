@@ -1,11 +1,10 @@
 /**
- * Asserts common elements present on all 2FA OTP pages: masked email, CSRF token,
+ * Asserts common elements present on all 2FA OTP pages: CSRF token,
  * access code input, attempts remaining text, submit button, and optional request-code link.
  * Prefers page object getters when a `page` object is supplied; falls back to
  * default `data-cy` selectors otherwise.
  *
  * @param {object} [opts]
- * @param {string} [opts.maskedEmailSelector] - Fallback selector for the masked email element.
  * @param {string} [opts.inputFallbackSelector] - Fallback selector for the OTP input.
  * @param {string} [opts.attemptsSelector] - Fallback selector for the attempts-remaining element.
  * @param {string} [opts.csrfSelector] - Fallback selector for the hidden CSRF input.
@@ -82,7 +81,7 @@ const assertAccessCodePagesCommonElements = ({
  */
 const commonBeforeEach = (user, opts = { login: true }) => {
   const { username } = user;
-  cy.getUserByUsername(username).then(() => {});
+  cy.getUserByUsername(username);
   cy.resetPortalUserStatusAndNumberOfSignInOTPs(username);
   if (opts.login) {
     cy.enterUsernameAndPassword(user);
