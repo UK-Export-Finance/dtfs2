@@ -142,6 +142,31 @@ describe('createFacility', () => {
       // Assert
       expect(getFacilityCategoriesSpy).not.toHaveBeenCalled();
     });
+
+    it('should map obligations with a bssSubtypeName', async () => {
+      // Arrange
+      const mockBssEwcsDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
+
+      params.deal = mockBssEwcsDeal;
+
+      // const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssEwcsDeal.dealSnapshot.dealType);
+
+      // Act
+      const result = await createFacility(params);
+
+      // Assert
+      const expected = mapObligations({
+        bssSubtypeName: facilitySnapshot.bondType,
+        currency: facilitySnapshot.currency.id,
+        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        isBssEwcsDeal: true,
+        isGefDeal: false,
+        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+        ukefExposure: Number(tfm.ukefExposure),
+      });
+
+      expect(result.obligations).toEqual(expected);
+    });
   });
 
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {

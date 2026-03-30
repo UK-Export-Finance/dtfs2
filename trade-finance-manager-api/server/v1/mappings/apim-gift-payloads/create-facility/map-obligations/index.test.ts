@@ -3,7 +3,7 @@ import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { mapObligations } from '.';
 import { mapObligationAmount } from './map-obligation-amount';
 
-const { OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
+const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 describe('mapObligations', () => {
   const bssSubtypeName = 'Performance bond';
@@ -37,6 +37,7 @@ describe('mapObligations', () => {
           currency,
           effectiveDate,
           maturityDate,
+          repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS['Performance bond'],
         },
       ];
@@ -69,6 +70,7 @@ describe('mapObligations', () => {
             currency,
             effectiveDate,
             maturityDate,
+            repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
             subtypeCode: null,
           },
         ];
@@ -102,6 +104,7 @@ describe('mapObligations', () => {
           currency,
           effectiveDate,
           maturityDate,
+          repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,
         },
       ];
@@ -133,6 +136,7 @@ describe('mapObligations', () => {
           currency,
           effectiveDate,
           maturityDate,
+          repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,
         },
       ];
