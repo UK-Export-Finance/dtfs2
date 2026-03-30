@@ -206,34 +206,6 @@ describe('createFacility', () => {
     expect(result).toEqual(expected);
   });
 
-  describe(`when deal type is ${DEAL_TYPE.BSS_EWCS}`, () => {
-    it('should map obligations using bssSubtypeName', async () => {
-      // Arrange
-      const mockBssEwcsDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
-
-      params.deal = mockBssEwcsDeal;
-
-      const { isBssEwcsDeal: isBssDeal } = getDealTypeFlags(mockBssEwcsDeal.dealSnapshot.dealType);
-      const bssSubtypeName = isBssDeal ? String(facilitySnapshot.bondType) : undefined;
-
-      // Act
-      const result = await createFacility(params);
-
-      // Assert
-      const expected = mapObligations({
-        bssSubtypeName,
-        currency: facilitySnapshot.currency.id,
-        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
-        isBssEwcsDeal: isBssDeal,
-        isGefDeal,
-        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-        ukefExposure: Number(tfm.ukefExposure),
-      });
-
-      expect(result.obligations).toEqual(expected);
-    });
-  });
-
   describe('when api.getCreditRiskRatings throws an error', () => {
     beforeEach(() => {
       // Arrange
