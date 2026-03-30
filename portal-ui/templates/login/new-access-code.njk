@@ -38,7 +38,7 @@
 
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" data-cy="csrf-input">
-        <div class="govuk-form-group govuk-!-width-one-third">
+        <div class="govuk-form-group govuk-!-width-one-half">
           {{ govukInput({
             label: {
               text: "Enter access code:"
@@ -48,8 +48,10 @@
             spellcheck: false,
             type: "text",
             autocomplete: "off",
+            classes: "govuk-!-width-one-third",
             attributes: {
-              "placeholder": "e.g. 123456"
+              "placeholder": "e.g. 123456",
+              "data-cy": "six-digit-access-code-input"
             },
             errorMessage: accessCodeError and {
               text: accessCodeError.text,
