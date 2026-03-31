@@ -41,26 +41,27 @@ context('2FA Journey - Account suspension after too many attempts', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.get('[data-cy="contact-us-email"]')
+      temporarilySuspendedAccessCode
+        .contactUsEmail()
         .should('exist')
         .and('have.attr', 'href')
         .and('match', /^mailto:/);
-      cy.get('[data-cy="contact-us-timeframe"]').should('exist');
+      temporarilySuspendedAccessCode.contactUsTimeframe().should('exist');
     });
 
     it('should not display access code input on suspension page', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.get('[data-cy="access-code-input"]').should('not.exist');
-      cy.get('[data-cy="submit-button"]').should('not.exist');
+      newAccessCode.accessCodeInput().should('not.exist');
+      newAccessCode.submitButton().should('not.exist');
     });
 
     it('should not display request new code link on suspension page', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.get('[data-cy="request-code-link"]').should('not.exist');
+      newAccessCode.requestCodeLink().should('not.exist');
     });
   });
 
@@ -156,12 +157,13 @@ context('2FA Journey - Account suspension after too many attempts', () => {
     });
 
     it('should provide contact email for support', () => {
-      cy.get('[data-cy="contact-us-email"]').should('have.attr', 'href').and('include', 'mailto:');
+      temporarilySuspendedAccessCode.contactUsEmail().should('have.attr', 'href').and('include', 'mailto:');
     });
 
     it('should indicate timeframe for resolution', () => {
-      cy.get('[data-cy="contact-us-timeframe"]').should('exist');
-      cy.get('[data-cy="contact-us-timeframe"]')
+      temporarilySuspendedAccessCode.contactUsTimeframe().should('exist');
+      temporarilySuspendedAccessCode
+        .contactUsTimeframe()
         .invoke('text')
         .should('match', /Monday to Friday|9am to 5pm/i);
     });

@@ -1,4 +1,4 @@
-const { accessCodeExpired } = require('../../../../../pages');
+const { accessCodeExpired, newAccessCode } = require('../../../../../pages');
 const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
@@ -40,8 +40,8 @@ context('2FA Journey - Access code expiry', () => {
 
       accessCodeExpired.heading().should('contain', 'Your access code has expired');
       accessCodeExpired.securityInfo().should('exist');
-      cy.get('[data-cy="access-code-expired-attempts-info"]').should('exist');
-      cy.get('[data-cy="access-code-expired-suspend-info"]').should('exist');
+      accessCodeExpired.attemptsInfo().should('exist');
+      accessCodeExpired.suspendInfo().should('exist');
     });
 
     it('should show request new code link on access-code-expired page', () => {
@@ -49,8 +49,8 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-request-new-code"]').should('exist');
-      cy.get('[data-cy="access-code-expired-request-new-code"]').should('have.attr', 'href').and('contain', '/login/request-new-access-code');
+      accessCodeExpired.requestNewCodeButton().should('exist');
+      accessCodeExpired.requestNewCodeButton().should('have.attr', 'href').and('contain', '/login/request-new-access-code');
     });
 
     it('should maintain attempts remaining counter on expired page', () => {
@@ -58,7 +58,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-attempts-info"]').invoke('text').should('match', /\d+/);
+      accessCodeExpired.attemptsInfo().invoke('text').should('match', /\d+/);
     });
   });
 
@@ -68,7 +68,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-request-new-code"]').click();
+      accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/new-access-code');
     });
@@ -79,7 +79,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-request-new-code"]').click();
+      accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/resend-another-access-code');
     });
@@ -89,12 +89,12 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-request-new-code"]').click();
+      accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/new-access-code');
 
       cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
-        cy.get('[data-cy="access-code-input"]').type(PORTAL_2FA_ACCESS_CODE);
+        newAccessCode.accessCodeInput().type(PORTAL_2FA_ACCESS_CODE);
         cy.clickSubmitButton();
 
         cy.url().should('not.contain', '/login');
@@ -109,7 +109,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-attempts-info"]').invoke('text').should('contain', '2');
+      accessCodeExpired.attemptsInfo().invoke('text').should('contain', '2');
     });
 
     it('should show access-code-expired with 1 attempt remaining when count is 1', () => {
@@ -118,7 +118,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-attempts-info"]').invoke('text').should('contain', '1');
+      accessCodeExpired.attemptsInfo().invoke('text').should('contain', '1');
     });
 
     it('should show access-code-expired with 0 attempts remaining when count is 2', () => {
@@ -127,7 +127,7 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-attempts-info"]').invoke('text').should('contain', '0');
+      accessCodeExpired.attemptsInfo().invoke('text').should('contain', '0');
     });
   });
 
@@ -145,8 +145,9 @@ context('2FA Journey - Access code expiry', () => {
 
       cy.visit('/login/access-code-expired');
 
-      cy.get('[data-cy="access-code-expired-suspend-info"]').should('exist');
-      cy.get('[data-cy="access-code-expired-suspend-info"]')
+      accessCodeExpired.suspendInfo().should('exist');
+      accessCodeExpired
+        .suspendInfo()
         .invoke('text')
         .should('match', /suspend|temporarily blocked/i);
     });
