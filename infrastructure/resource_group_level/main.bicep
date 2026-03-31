@@ -268,7 +268,7 @@ param AUDIT_API_USERNAME string
 @description('CRON schedule controlling when the Azure number generator function runs.')
 param DEAL_CANCELLATION_SCHEDULE string
 
-@description('API key used to authenticate with the DTFS Central API.')
+@description('The URL of the DTFS Central API, used for retrieving data from or sending data to the API.')
 param DTFS_CENTRAL_API_URL string
 
 @description('The URL of the external API, used for retrieving data from or sending data to external systems.')
@@ -625,6 +625,9 @@ var portalApiSettings = {
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
   TFM_API: TFM_API
   TFM_UI_URL: TFM_UI_URL
+  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+  DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
+  DTFS_CENTRAL_API: DTFS_CENTRAL_API_URL
 }
 
 var portalApiSecureSettings = {
@@ -742,6 +745,7 @@ var tfmApiSettings = {
   MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
   DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
+  DTFS_CENTRAL_API: DTFS_CENTRAL_API_URL
 }
 
 var tfmApiSecureSettings = {

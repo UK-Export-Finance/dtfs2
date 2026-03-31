@@ -190,7 +190,7 @@ jobs:
           sed -i "s|{{SQL_DB_USERNAME}}|${{ secrets.SQL_DB_USERNAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{SQL_DB_NAME}}|${{ secrets.SQL_DB_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{SQL_DB_LOGGING_ENABLED}}|${{ vars.SQL_DB_LOGGING_ENABLED }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{SQL_DB_PORT}}|${{ vars.SQL_DB_PORT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{SQL_DB_PORT}}|${{ secrets.SQL_DB_PORT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{UKEF_GEF_REPORTING_EMAIL_RECIPIENT}}|${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AZURE_ACBS_FUNCTION_URL}}|${{ vars.AZURE_ACBS_FUNCTION_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{CASH_UTILISATION_PERCENTAGE}}|${{ vars.CASH_UTILISATION_PERCENTAGE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
