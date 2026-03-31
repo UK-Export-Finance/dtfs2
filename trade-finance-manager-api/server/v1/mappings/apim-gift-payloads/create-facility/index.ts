@@ -46,7 +46,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
   const facilityType = facilitySnapshot.type;
-  const facilityAmount = Number(tfm.ukefExposure); // TODO: DTFS2-8306 is this correct?
+  const facilityAmount = Number(tfm.ukefExposure);
 
   const dealId = getTfmUkefDealId(deal);
 
@@ -72,6 +72,8 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   });
 
   const industryCode = getIndustryCode(deal);
+
+  const bssSubtypeName = isBssEwcsDeal ? String(facility.facilitySnapshot.bondType) : undefined;
 
   /**
    * Get data from APIM MDM required to map the APIM GIFT payload:
@@ -132,12 +134,13 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       exitDate: expiryDate,
     }),
     obligations: mapObligations({
+      bssSubtypeName,
       currency,
       effectiveDate,
+      isBssEwcsDeal,
       facilityType,
       isGefDeal,
       maturityDate: expiryDate,
-      subtypeName: String(facility.facilitySnapshot.bondType),
       ukefExposure: facilityAmount,
     }),
     repaymentProfiles: mapRepaymentProfiles({
