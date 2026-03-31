@@ -12,6 +12,8 @@ const resendAnotherAccessCode = {
   csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
   sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),
+  contactUsEmail: () => cy.get('[data-cy="contact-us-email"]'),
+  contactUsTimeframe: () => cy.get('[data-cy="contact-us-timeframe"]'),
 };
 
 module.exports = resendAnotherAccessCode;

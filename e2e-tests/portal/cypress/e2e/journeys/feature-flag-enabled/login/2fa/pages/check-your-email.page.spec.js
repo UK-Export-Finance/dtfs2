@@ -1,4 +1,4 @@
-const { checkYourEmail, checkYourEmailAccessCode, newAccessCode } = require('../../../../../pages');
+const { checkYourEmail, checkYourEmailAccessCode, newAccessCode, accessCodeExpired } = require('../../../../../pages');
 const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
@@ -8,12 +8,8 @@ const { submitButton, errorSummary } = require('../../../../../partials');
 
 context('2FA Page - Check your email', () => {
   beforeEach(() => {
+    // login: false prevents automatic login, allowing tests to manually control the login flow and OTP count setup
     commonBeforeEach(BANK1_MAKER1, { login: false });
-    /**
-     * initializing the OTP send count to 0 so in the below tests when the user logs in and an OTP is sent, the count
-     * becomes 1 and attemptsLeft becomes 2, which allows us to land on the check-your-email page and test its page elements.
-     */
-    cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
   });
 
   it('should redirect to login when visited without partial auth', () => {
@@ -24,9 +20,19 @@ context('2FA Page - Check your email', () => {
 
   describe('Requesting a new access code', () => {
     beforeEach(() => {
+      /**
+       * Initializing the OTP send count to 0 so when the user logs in and an OTP is sent,
+       * the count becomes 1 and attemptsLeft becomes 2, which allows us to land on the check-your-email-access-code page
+       * before clicking the request link to navigate to the new-access-code page.
+       */
+      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 
+    /**
+     * The following tests verify navigation from check-your-email-access-code page to new-access-code page
+     * by clicking the "Request a new access code" link, which sends another OTP and increments the count to 2.
+     */
     it('should navigate to new-access-code when clicking request new code', () => {
       checkYourEmailAccessCode.requestCodeLink().should('exist').click();
 
@@ -35,12 +41,12 @@ context('2FA Page - Check your email', () => {
     it('should show email in description on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
-      newAccessCode.description().should('contain', '@');
+      newAccessCode.description().should('contain', "We've sent you a 6-digit access code to your email");
     });
     it('should show attempts info on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
-      newAccessCode.attemptsInfo().should('exist');
+      newAccessCode.attemptsInfo().should('contain', 'You have 1 attempts remaining.');
     });
     it('should have csrf token on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
@@ -49,93 +55,89 @@ context('2FA Page - Check your email', () => {
     });
   });
 
-  describe('Form, inputs and informational paragraphs', () => {
-    it('should have form method POST', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      cy.get('form').should('have.attr', 'method', 'POST');
+  describe('Page elements and validation', () => {
+    beforeEach(() => {
+      /**
+       * Initializing the OTP send count to 0 so when the user logs in and an OTP is sent,
+       * the count becomes 1 and attemptsLeft becomes 2, which allows us to land on the check-your-email-access-code page
+       * and test its page elements.
+       */
+      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
     });
 
-    it('should have correct form action', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      cy.get('form').should('have.attr', 'action', '/login/check-your-email-access-code');
-    });
-
-    it('should render description containing email', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      checkYourEmailAccessCode.description().should('contain', '@');
-    });
-
-    const accessCodeFormElements = [
-      ['renders heading', () => checkYourEmailAccessCode.heading()],
-      ['renders access code label', () => checkYourEmailAccessCode.sixDigitAccessCodeLabel()],
-      ['renders expiry information', () => checkYourEmailAccessCode.expiryInfo()],
-      ['renders spam/junk advice', () => checkYourEmailAccessCode.spamOrJunk()],
-      ['renders suspend information', () => checkYourEmailAccessCode.suspendInfo()],
-    ];
-
-    accessCodeFormElements.forEach(([title, getter]) => {
-      it(`should ${title}`, () => {
+    describe('Form, inputs and informational paragraphs', () => {
+      beforeEach(() => {
         cy.enterUsernameAndPassword(BANK1_MAKER1);
+      });
 
-        getter().should('exist');
+      it('should have form method POST', () => {
+        cy.get('form').should('have.attr', 'method', 'POST');
+      });
+
+      it('should have correct form action', () => {
+        cy.get('form').should('have.attr', 'action', '/login/check-your-email-access-code');
+      });
+
+      it('should render description containing email', () => {
+        checkYourEmailAccessCode.description().should('contain', 'We have sent you a 6-digit access code to your email');
+      });
+
+      const accessCodeFormElements = [
+        ['renders heading with text "Check your email"', () => checkYourEmailAccessCode.heading(), 'Check your email'],
+        ['renders access code label with text "Enter access code:"', () => checkYourEmailAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:'],
+        ['renders expiry information with text about 30 minutes', () => checkYourEmailAccessCode.expiryInfo(), 'This code will expire after 30 minutes.'],
+        ['renders spam/junk advice', () => checkYourEmailAccessCode.spamOrJunk(), 'Please check your spam or junk folders'],
+        ['renders suspend information', () => checkYourEmailAccessCode.suspendInfo(), 'If you request too many access codes your account will be suspended'],
+      ];
+
+      accessCodeFormElements.forEach(([title, getter, expectedText]) => {
+        it(`should ${title}`, () => {
+          getter().should('contain', expectedText);
+        });
+      });
+
+      it('should have shared common assertions for inputs, attempts, submit and request link', () => {
+        assertAccessCodePagesCommonElements({ page: checkYourEmailAccessCode, expectedAttempts: 2 });
+        submitButton().should('contain', 'Sign in');
+      });
+
+      it('should render access code input with correct placeholder', () => {
+        checkYourEmailAccessCode.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
+      });
+
+      it('should show attempts remaining on first visit', () => {
+        checkYourEmailAccessCode.attemptsInfo().should('contain', 'You have 2 attempts remaining.');
+      });
+
+      it('should render request-code-link pointing to /login/request-new-access-code', () => {
+        checkYourEmailAccessCode.requestCodeLink().should('have.attr', 'href', '/login/request-new-access-code');
       });
     });
 
-    it('should have shared common assertions for inputs, attempts, submit and request link', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+    describe('Validation', () => {
+      it('should show validation when submitting empty access code', () => {
+        cy.enterUsernameAndPassword(BANK1_MAKER1);
+        assertEmptyCodeValidation(checkYourEmailAccessCode);
+      });
 
-      assertAccessCodePagesCommonElements({ page: checkYourEmailAccessCode });
-      submitButton().should('exist');
-    });
+      it('should show validation when submitting wrong access code', () => {
+        cy.enterUsernameAndPassword(BANK1_MAKER1);
+        checkYourEmailAccessCode.accessCodeInput().clear();
+        checkYourEmailAccessCode.accessCodeInput().type('000000');
+        cy.get('form').submit();
 
-    it('should render access code input with correct placeholder', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+        errorSummary().should('exist');
+        checkYourEmailAccessCode.inlineError().should('exist');
+        checkYourEmailAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
+      });
 
-      checkYourEmailAccessCode.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
-    });
+      it('should show access code expired page when code expired', () => {
+        cy.enterUsernameAndPassword(BANK1_MAKER1);
+        cy.visit('/login/access-code-expired');
 
-    it('should show attempts remaining on first visit', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      checkYourEmailAccessCode.attemptsInfo().should('contain', '2');
-    });
-
-    it('should render request-code-link pointing to /login/request-new-access-code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      checkYourEmailAccessCode.requestCodeLink().should('have.attr', 'href', '/login/request-new-access-code');
-    });
-  });
-
-  describe('Validation', () => {
-    it('should show validation when submitting empty access code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      assertEmptyCodeValidation();
-
-      checkYourEmailAccessCode.inlineError().should('contain', 'Enter access code');
-      errorSummary().should('contain', 'Enter access code');
-    });
-
-    it('should show validation when submitting wrong access code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      checkYourEmailAccessCode.accessCodeInput().clear();
-      checkYourEmailAccessCode.accessCodeInput().type('000000');
-      cy.get('form').submit();
-
-      errorSummary().should('exist');
-      checkYourEmailAccessCode.inlineError().should('exist');
-      checkYourEmailAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
-    });
-
-    it('should show access code expired page when code expired', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.visit('/login/access-code-expired');
-
-      cy.get('[data-cy="access-code-expired-heading"]').should('exist');
-      cy.get('[data-cy="access-code-expired-security-info"]').should('exist');
+        accessCodeExpired.heading().should('contain', 'Your access code has expired');
+        accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
+      });
     });
   });
 });

@@ -24,16 +24,17 @@ context('2FA Page - Temporarily suspended account', () => {
   it('should render temporarily suspended page with heading and message', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-    temporarilySuspendedAccessCode.heading().should('exist');
-    temporarilySuspendedAccessCode.message().should('contain', 'failed attempts');
+    temporarilySuspendedAccessCode.heading().should('contain', 'This account has been temporarily suspended');
+    temporarilySuspendedAccessCode.message().should('contain', 'This can happen if there are too many failed attempts to login or sign in link requests');
   });
 
   it('should render contact us section', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-    cy.get('[data-cy="contact-us-email"]')
+    temporarilySuspendedAccessCode
+      .contactUsEmail()
       .should('have.attr', 'href')
       .and('match', /^mailto:/);
-    cy.get('[data-cy="contact-us-timeframe"]').should('exist');
+    temporarilySuspendedAccessCode.contactUsTimeframe().should('contain', 'Monday to Friday, 9am to 5pm');
   });
 });
