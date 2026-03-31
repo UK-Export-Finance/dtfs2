@@ -1,72 +1,47 @@
+const { errorSummary } = require('../../../../partials');
+
 /**
- * Asserts common elements present on all 2FA OTP pages: CSRF token,
- * access code input, attempts remaining text, submit button, and optional request-code link.
- * Prefers page object getters when a `page` object is supplied; falls back to
- * default `data-cy` selectors otherwise.
+ * Asserts common elements present on all 2FA OTP pages with exact text content validation.
+ * Tests actual text strings rather than just element existence to ensure content accuracy.
  *
- * @param {object} [opts]
- * @param {string} [opts.inputFallbackSelector] - Fallback selector for the OTP input.
- * @param {string} [opts.attemptsSelector] - Fallback selector for the attempts-remaining element.
- * @param {string} [opts.csrfSelector] - Fallback selector for the hidden CSRF input.
- * @param {string} [opts.submitSelector] - Fallback selector for the submit button.
- * @param {string} [opts.submitText] - Expected text on the submit button.
- * @param {string} [opts.requestLinkSelector] - Fallback selector for the request-new-code link.
- * @param {object} [opts.page] - Page object exposing getter functions for elements on the page.
+ * @param {object} opts
+ * @param {object} opts.page - Page object exposing getter functions for elements on the page.
+ * @param {number} [opts.expectedAttempts] - Expected number of attempts remaining.
  */
-const assertAccessCodePagesCommonElements = ({
-  inputFallbackSelector = '[data-cy="access-code-input"]',
-  attemptsSelector = '[data-cy="access-code-attempts-info"]',
-  csrfSelector = '[data-cy="csrf-input"]',
-  submitSelector = '[data-cy="submit-button"]',
-  submitText = 'Sign in',
-  requestLinkSelector,
-  page,
-} = {}) => {
-  // csrf token
-  if (page && page.csrfToken) {
-    page.csrfToken().then((token) => {
-      expect(token).to.be.a('string');
-      expect(token).to.not.equal('');
-    });
-  } else {
-    cy.get(csrfSelector).should('have.attr', 'value').and('not.be.empty');
+const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
+  // csrf token exists and has value
+  page.csrfToken().then((token) => {
+    expect(token).to.be.a('string');
+    expect(token).to.not.equal('');
+  });
+
+  // access code input label
+  page.sixDigitAccessCodeLabel().should('contain', 'Enter access code:');
+
+  // input with correct placeholder
+  page.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
+
+  // attempts text with exact number if provided
+  if (expectedAttempts !== undefined) {
+    page.attemptsInfo().should('contain', `You have ${expectedAttempts} attempts remaining.`);
   }
 
-  // input fallback selector and placeholder
-  if (page && page.accessCodeInput) {
-    page.accessCodeInput().should('exist');
-  } else {
-    cy.get(inputFallbackSelector).should('exist').and('have.attr', 'placeholder', 'e.g. 123456');
+  // suspend info text
+  page.suspendInfo().should('contain', 'If you request too many access codes your account will be suspended');
+
+  // spam/junk advice (if page has this element)
+  if (page.spamOrJunk) {
+    page.spamOrJunk().should('contain', 'Please check your spam or junk folders');
   }
 
-  // attempts text contains a number
-  if (page && page.attemptsInfo) {
-    page
-      .attemptsInfo()
-      .invoke('text')
-      .then((text) => expect(text).to.match(/\d+/));
-  } else {
-    cy.get(attemptsSelector)
-      .invoke('text')
-      .then((text) => {
-        expect(text).to.match(/\d+/);
-      });
+  // submit button contains 'Sign in'
+  if (page.submitButton) {
+    page.submitButton().should('contain', 'Sign in');
   }
 
-  // submit button
-  if (page && page.submitButton) {
-    page.submitButton().should('exist').and('contain', submitText);
-  } else {
-    cy.get(submitSelector).should('exist').and('contain', submitText);
-  }
-
-  // optional request link existence assertion
-  if (page && page.requestCodeLink) {
-    page.requestCodeLink().should('exist');
-  } else if (page && page.requestNewSignInLink) {
-    page.requestNewSignInLink().should('exist');
-  } else if (requestLinkSelector) {
-    cy.get(requestLinkSelector).should('exist');
+  // optional request code link
+  if (page.requestCodeLink) {
+    page.requestCodeLink().should('contain', 'Request a new code');
   }
 };
 
@@ -90,20 +65,15 @@ const commonBeforeEach = (user, opts = { login: true }) => {
 
 /**
  * Asserts that submitting the OTP form with an empty access code shows the
- * error summary and the inline field error.
+ * error summary and inline field error with the expected text 'Enter access code'.
  *
- * @param {object} [opts]
- * @param {string} [opts.inputSelector] - Selector for the OTP input to clear before submission.
- * @param {string} [opts.inlineErrorSelector] - Selector for the inline validation error element.
+ * @param {object} page - Page object with accessCodeInput and inlineError getters.
  */
-const assertEmptyCodeValidation = ({
-  inputSelector = '[data-cy="access-code-input"]',
-  inlineErrorSelector = '[data-cy="six-digit-access-code-inline-error"]',
-} = {}) => {
-  cy.get(inputSelector).clear();
+const assertEmptyCodeValidation = (page) => {
+  page.accessCodeInput().clear();
   cy.get('form').submit();
-  cy.get('[data-cy="error-summary"]').should('exist');
-  cy.get(inlineErrorSelector).should('exist');
+  errorSummary().should('contain', 'Enter access code');
+  page.inlineError().should('contain', 'Enter access code');
 };
 
 module.exports = {

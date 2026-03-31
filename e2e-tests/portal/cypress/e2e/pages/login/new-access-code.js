@@ -13,6 +13,8 @@ const newAccessCode = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
   sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),
+  contactUsEmail: () => cy.get('[data-cy="contact-us-email"]'),
+  contactUsTimeframe: () => cy.get('[data-cy="contact-us-timeframe"]'),
 };
 
 module.exports = newAccessCode;

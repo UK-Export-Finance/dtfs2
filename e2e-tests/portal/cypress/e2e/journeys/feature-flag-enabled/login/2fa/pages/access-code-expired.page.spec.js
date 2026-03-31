@@ -20,10 +20,11 @@ context('2FA Page - Access code expired', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     cy.url().should('include', '/login/check-your-email-access-code');
     cy.visit('/login/access-code-expired');
-    cy.get('[data-cy="access-code-expired-heading"]').should('exist');
-    cy.get('[data-cy="access-code-expired-security-info"]').should('contain', 'expire');
-    cy.get('[data-cy="access-code-expired-attempts-info"]').should('exist');
-    cy.get('[data-cy="access-code-expired-suspend-info"]').should('exist');
-    cy.get('[data-cy="access-code-expired-request-new-code"]').should('exist');
+    accessCodeExpired.heading().should('contain', 'Your access code has expired');
+    accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
+    accessCodeExpired.attemptsInfo().should('contain', 'You have');
+    accessCodeExpired.attemptsInfo().should('contain', 'attempts remaining.');
+    accessCodeExpired.suspendInfo().should('contain', 'If you request too many access codes your account will be suspended');
+    accessCodeExpired.requestNewCodeButton().should('contain', 'Request a new code');
   });
 });
