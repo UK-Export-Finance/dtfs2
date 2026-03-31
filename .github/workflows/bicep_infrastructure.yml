@@ -21,9 +21,11 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches: [infrastructure]
+    branches:
+      - feat/DTFS2-16188-deployment
     paths:
-      - '.github/workflows/development_infrastructure.yml'
+      - '.github/workflows/bicep_infrastructure.yml'
+      - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
 
 env:
