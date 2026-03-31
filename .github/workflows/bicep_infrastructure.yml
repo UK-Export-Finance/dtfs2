@@ -178,8 +178,8 @@ jobs:
           sed -i "s|{{DELETION_AUDIT_LOGS_TTL_SECONDS}}|${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ESTORE_CRON_MANAGER_SCHEDULE}}|${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{AUDIT_API_PASSWORD}}|${{ secrets.AUDIT_API_PASSWORD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AUDIT_API_USERNAME}}|${{ secrets.AUDIT_API_USERNAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AUDIT_API_URL}}|${{ secrets.AUDIT_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AUDIT_API_USERNAME}}|${{ vars.AUDIT_API_USERNAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
+          sed -i "s|{{AUDIT_API_URL}}|${{ vars.AUDIT_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE}}|${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{DEAL_CANCELLATION_SCHEDULE}}|${{ vars.DEAL_CANCELLATION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
           sed -i "s|{{DTFS_CENTRAL_API_URL}}|${{ vars.DTFS_CENTRAL_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
