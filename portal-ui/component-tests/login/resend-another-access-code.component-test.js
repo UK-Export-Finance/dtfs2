@@ -35,7 +35,7 @@ describe(page, () => {
   });
 
   it('should render the access code input with the correct class', () => {
-    wrapper.expectElement('[data-cy="access-code-input"]').hasClass('govuk-!-width-one-third');
+    wrapper.expectElement('[data-cy="access-code-input"]').hasClass('govuk-input--width-10');
   });
 
   it('should render the label for the access code input', () => {
