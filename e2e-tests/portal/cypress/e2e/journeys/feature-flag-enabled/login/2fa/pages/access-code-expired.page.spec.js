@@ -1,9 +1,10 @@
 const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
+const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../2faPageHelpers');
-const { accessCodeExpired } = require('../../../../../pages');
+const { accessCodeExpired, checkYourEmailAccessCode } = require('../../../../../pages');
 
 context('2FA Page - Access code expired', () => {
   beforeEach(() => {
@@ -16,10 +17,20 @@ context('2FA Page - Access code expired', () => {
     cy.url().should('eq', relative('/login'));
   });
 
-  it('should render expired page with heading and info', () => {
+  it('should render expired page with heading and info after submitting expired code', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     cy.url().should('include', '/login/check-your-email-access-code');
-    cy.visit('/login/access-code-expired');
+
+    // Set expired OTP in database
+    cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+
+    // Enter the expired access code
+    cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+    cy.clickSubmitButton();
+
+    // App should detect expiry and redirect
+    cy.url().should('eq', relative('/login/access-code-expired'));
+
     accessCodeExpired.heading().should('contain', 'Your access code has expired');
     accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
     accessCodeExpired.attemptsInfo().should('contain', 'You have');

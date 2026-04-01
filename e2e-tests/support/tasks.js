@@ -148,6 +148,36 @@ module.exports = {
     };
 
     /**
+     * Overrides portal user's generated OTP with an expired token for testing expiry flow.
+     * Sets the expiry timestamp to 31 minutes in the past (beyond the 30-minute OTP duration).
+     * This allows E2E tests to verify that the application correctly detects and handles expired OTPs.
+     */
+    const overridePortalUserSignInOTPWithExpiredTokenByUsername = async ({ username }) => {
+      const users = await getUsersCollection();
+
+      const thirtyOneMinutesInMilliseconds = 31 * 60 * 1000;
+      const stringType = HEX_STRING_TYPE;
+
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
+      const expiry = Date.now() - thirtyOneMinutesInMilliseconds;
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+            signInTokens: [{ hashHex, saltHex, expiry }],
+          },
+        },
+      );
+    };
+
+    /**
      * resets the portal user's OTP status and number of OTPs sent to ensure the user is in the correct state for testing OTP sign in flow
      */
     const resetPortalUserStatusAndNumberOfSignInOTPs = async (username) => {
@@ -390,6 +420,7 @@ module.exports = {
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
       overridePortalUserSignInOTPWithValidTokenByUsername,
+      overridePortalUserSignInOTPWithExpiredTokenByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
       resetPortalUserStatusAndNumberOfSignInOTPs,
       disablePortalUserByUsername,
