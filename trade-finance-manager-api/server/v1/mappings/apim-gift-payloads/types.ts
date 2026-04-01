@@ -14,14 +14,13 @@ export type ApimGiftProductTypeCode = (typeof PRODUCT_TYPE_CODES)[keyof typeof P
 export type ApimGiftRepaymentType = (typeof REPAYMENT_TYPE)[keyof typeof REPAYMENT_TYPE];
 
 export type ApimGiftFacilityOverview = {
+  amount: number;
   creditType: CreditTypeValue;
   currency: string;
-  facilityAmount: number;
   facilityId: string;
-  facilityName: string;
+  name: string;
   effectiveDate: string;
   expiryDate: string;
-  isRevolving: boolean;
   obligorUrn: string;
   productTypeCode: ApimGiftProductTypeCode;
   repaymentType: ApimGiftRepaymentType;
@@ -66,6 +65,7 @@ export type ApimGiftFacilityCreationPayload = {
   consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
   overview: ApimGiftFacilityOverview;
   counterparties: ApimGiftCounterparty[];
+  fixedFees: never[]; // APIM/GIFT requires a "fixedFees" array, but for BSS/GEF/EWCS this is always empty, so we type this as "never[]" to enforce that it cannot contain any items.
   obligations: ApimGiftObligation[];
   repaymentProfiles: ApimGiftRepaymentProfile[];
   riskDetails: ApimGiftFacilityRiskDetails;

@@ -6,8 +6,8 @@
  * If the "Unknown" product type code is sent to APIM/GIFT, this will trigger an alert in APIM for the unexpected product type code value, which can be investigated by the team.
  */
 export const PRODUCT_TYPE_CODES = {
-  BSS: 'BSS',
-  GEF: 'GEF',
+  BSS: 'PRT003',
+  GEF: 'PRT004',
   UNKNOWN: 'UNKNOWN_PRODUCT_TYPE_CODE',
 } as const;
 
@@ -40,12 +40,12 @@ export const OBLIGATION_AMOUNT = {
  */
 export const OBLIGATION_SUBTYPE_CODES = {
   ADVANCED_PAYMENT_GUARANTEE: 'OST012',
-  BID_BOND: 'TODO: pending GIFT work',
-  MAINTENANCE_BOND: 'TODO: pending GIFT work',
+  BID_BOND: 'OST014',
+  MAINTENANCE_BOND: 'OST017',
   PERFORMANCE_BOND: 'OST013',
   PROGRESS_PAYMENT_BOND: 'OST015',
   RETENTION_BOND: 'OST018',
-  STANDBY_LETTER_OF_CREDIT: 'TODO: pending GIFT work',
+  STANDBY_LETTER_OF_CREDIT: 'OST020',
   WARRANTY_LETTER: 'OST016',
 };
 
@@ -79,25 +79,14 @@ export const OBLIGATION_SUBTYPE_MAP = {
 const CONSUMER = 'DTFS' as const;
 
 /**
- * BSS = default credit type to "Term".
- * GEF = default credit type to "Revolving".
+ * PRT003 (BSS) = default credit type to "Term".
+ * PRT004 (GEF) = default credit type to "Revolver".
  * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
-  BSS: 'Term',
-  GEF: 'Revolving',
+  PRT003: 'Term',
+  PRT004: 'Revolver',
   UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
-} as const;
-
-/**
- * BSS = facility is not revolving.
- * GEF = facility is revolving.
- * UNKNOWN_PRODUCT_TYPE_CODE = facility is not revolving, as a fallback value for unrecognized deal types.
- */
-const IS_REVOLVING = {
-  BSS: false,
-  GEF: true,
-  UNKNOWN_PRODUCT_TYPE_CODE: false,
 } as const;
 
 /**
@@ -114,7 +103,7 @@ export const COUNTERPARTY_ROLE_CODE = {
  * For BSS/GEF/EWCS,
  * default account to "2" (Corporate) for the "account" field in GIFT.
  */
-const GIFT_ACCOUNT = 2 as const;
+const GIFT_ACCOUNT = '2' as const;
 
 /**
  * For all facilities,
@@ -150,7 +139,6 @@ export const APIM_GIFT_INTEGRATION = {
     },
     OVERVIEW: {
       CREDIT_TYPE,
-      IS_REVOLVING,
     },
     REPAYMENT_PROFILE: {
       NAME: REPAYMENT_PROFILE_NAME,

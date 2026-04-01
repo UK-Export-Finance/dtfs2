@@ -19,10 +19,11 @@ describe('mapOverview', () => {
     ukefFacilityId: '123',
   };
 
-  const { bankInternalRefName, exporterPartyUrn, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { bankInternalRefName, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
+    amount: facilityAmount,
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };
@@ -43,14 +44,13 @@ describe('mapOverview', () => {
       // Assert
       const expected = {
         ...baseExpected,
-        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.BSS,
-        facilityName: mapFacilityName({
+        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT003,
+        name: mapFacilityName({
           bankInternalRefName,
           facilityType,
           isGefDeal,
           productTypeCode,
         }),
-        isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.BSS,
         productTypeCode,
         repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       };
@@ -75,14 +75,13 @@ describe('mapOverview', () => {
       // Assert
       const expected = {
         ...baseExpected,
-        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.GEF,
-        facilityName: mapFacilityName({
+        creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT004,
+        name: mapFacilityName({
           bankInternalRefName,
           facilityType,
           isGefDeal,
           productTypeCode,
         }),
-        isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING.GEF,
         productTypeCode,
         repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       };

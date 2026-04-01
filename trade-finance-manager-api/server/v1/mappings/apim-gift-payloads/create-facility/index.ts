@@ -133,6 +133,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       startDate: effectiveDate,
       exitDate: expiryDate,
     }),
+    fixedFees: [],
     obligations: mapObligations({
       bssSubtypeName,
       currency,
