@@ -112,7 +112,7 @@ describe('FeeRecordEntity', () => {
       // Assert
       expect(correctionEntity.lastUpdatedByIsSystemUser).toEqual(false);
       expect(correctionEntity.lastUpdatedByPortalUserId).toEqual(requestSource.userId);
-      expect(correctionEntity.lastUpdatedByTfmUserId).toEqual(null);
+      expect(correctionEntity.lastUpdatedByTfmUserId).toBeNull();
     });
 
     it('should set isCompleted to true', () => {

@@ -36,7 +36,7 @@ describe('mapFirstDrawdownAmountInExportCurrency', () => {
       };
 
       const result = mapFirstDrawdownAmountInExportCurrency(mockFacility);
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

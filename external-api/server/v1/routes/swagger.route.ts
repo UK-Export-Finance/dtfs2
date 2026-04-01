@@ -73,6 +73,14 @@ const definition: swaggerDefinition = {
       name: 'Bank Holidays',
       description: 'GOV.UK API and locally stored backup data',
     },
+    {
+      name: 'Credit Risk Ratings',
+      description: 'APIM MDM API endpoint',
+    },
+    {
+      name: 'Obligation Subtypes',
+      description: 'APIM API endpoint',
+    },
   ],
 };
 
