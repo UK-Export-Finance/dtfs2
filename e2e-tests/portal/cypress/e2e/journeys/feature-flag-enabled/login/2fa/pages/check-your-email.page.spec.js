@@ -46,7 +46,7 @@ context('2FA Page - Check your email', () => {
     it('should show attempts info on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
-      newAccessCode.attemptsInfo().should('contain', 'You have 1 attempts remaining.');
+      cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
     });
     it('should have csrf token on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
@@ -92,13 +92,13 @@ context('2FA Page - Check your email', () => {
 
       accessCodeFormElements.forEach(([title, getter, expectedText]) => {
         it(`should ${title}`, () => {
-          getter().should('contain', expectedText);
+          cy.assertText(getter(), expectedText);
         });
       });
 
       it('should have shared common assertions for inputs, attempts, submit and request link', () => {
         assertAccessCodePagesCommonElements({ page: checkYourEmailAccessCode, expectedAttempts: 2 });
-        submitButton().should('contain', 'Sign in');
+        cy.assertText(submitButton(), 'Sign in');
       });
 
       it('should render access code input with correct placeholder', () => {
@@ -106,7 +106,7 @@ context('2FA Page - Check your email', () => {
       });
 
       it('should show attempts remaining on first visit', () => {
-        checkYourEmailAccessCode.attemptsInfo().should('contain', 'You have 2 attempts remaining.');
+        cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');
       });
 
       it('should render request-code-link pointing to /login/request-new-access-code', () => {
@@ -128,15 +128,18 @@ context('2FA Page - Check your email', () => {
 
         errorSummary().should('exist');
         checkYourEmailAccessCode.inlineError().should('exist');
-        checkYourEmailAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
+        cy.assertText(checkYourEmailAccessCode.inlineError(), 'The access code you have entered is incorrect');
       });
 
       it('should show access code expired page when code expired', () => {
         cy.enterUsernameAndPassword(BANK1_MAKER1);
         cy.visit('/login/access-code-expired');
 
-        accessCodeExpired.heading().should('contain', 'Your access code has expired');
-        accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
+        cy.assertText(accessCodeExpired.heading(), 'Your access code has expired');
+        cy.assertText(
+          accessCodeExpired.securityInfo(),
+          'For security, access codes expire after 30 minutes. You can request for a new access code to be sent to your email address.',
+        );
       });
     });
   });
