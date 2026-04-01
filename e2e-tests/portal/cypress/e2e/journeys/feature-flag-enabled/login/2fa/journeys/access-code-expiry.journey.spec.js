@@ -1,4 +1,4 @@
-const { accessCodeExpired, newAccessCode } = require('../../../../../pages');
+const { accessCodeExpired, newAccessCode, checkYourEmailAccessCode } = require('../../../../../pages');
 const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
@@ -11,7 +11,7 @@ const { commonBeforeEach } = require('../2faPageHelpers');
  *
  * Tests the access code expiry flow:
  * - Access codes expire after 30 minutes of inactivity
- * - Expired codes show appropriate error messages
+ * - Expired codes are detected by the application when submitted
  * - Users are redirected to the access-code-expired page
  * - Users can request new codes after expiry
  */
@@ -21,22 +21,36 @@ context('2FA Journey - Access code expiry', () => {
     cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
   });
 
-  describe('Access code expiry within session', () => {
-    it('should show access-code-expired page when navigating to it', () => {
+  describe('Access code expiry detection', () => {
+    it('should redirect to access-code-expired when submitting an expired OTP code', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
 
-      cy.visit('/login/access-code-expired');
+      // Set an expired OTP token in the database (31 minutes in the past)
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+
+      // Enter the expired access code and submit
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      // Application should detect expiry and redirect to expired page
       cy.url().should('eq', relative('/login/access-code-expired'));
 
-      accessCodeExpired.heading().should('exist');
-      accessCodeExpired.securityInfo().should('contain', 'expire');
+      accessCodeExpired.heading().should('contain', 'Your access code has expired');
+      accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
     });
 
     it('should display correct expiry information on access-code-expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      // Set an expired OTP token
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+
+      // Submit expired code to trigger redirect
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      cy.url().should('eq', relative('/login/access-code-expired'));
 
       accessCodeExpired.heading().should('contain', 'Your access code has expired');
       accessCodeExpired.securityInfo().should('exist');
@@ -44,10 +58,12 @@ context('2FA Journey - Access code expiry', () => {
       accessCodeExpired.suspendInfo().should('exist');
     });
 
-    it('should show request new code link on access-code-expired page', () => {
+    it('should show request new code button on access-code-expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.requestNewCodeButton().should('exist');
       accessCodeExpired.requestNewCodeButton().should('have.attr', 'href').and('contain', '/login/request-new-access-code');
@@ -56,7 +72,9 @@ context('2FA Journey - Access code expiry', () => {
     it('should maintain attempts remaining counter on expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.attemptsInfo().invoke('text').should('match', /\d+/);
     });
@@ -66,7 +84,11 @@ context('2FA Journey - Access code expiry', () => {
     it('should allow user to request new code from access-code-expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      cy.url().should('eq', relative('/login/access-code-expired'));
 
       accessCodeExpired.requestNewCodeButton().click();
 
@@ -77,7 +99,11 @@ context('2FA Journey - Access code expiry', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      cy.url().should('eq', relative('/login/access-code-expired'));
 
       accessCodeExpired.requestNewCodeButton().click();
 
@@ -87,7 +113,11 @@ context('2FA Journey - Access code expiry', () => {
     it('should allow successful login with new code after expiry', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      cy.url().should('eq', relative('/login/access-code-expired'));
 
       accessCodeExpired.requestNewCodeButton().click();
 
@@ -103,11 +133,13 @@ context('2FA Journey - Access code expiry', () => {
   });
 
   describe('Expiry behavior with different OTP send counts', () => {
-    it('should show access-code-expired with attempts remaining when count is 0', () => {
+    it('should show access-code-expired with 2 attempts remaining when count is 0', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.attemptsInfo().invoke('text').should('contain', '2');
     });
@@ -116,7 +148,9 @@ context('2FA Journey - Access code expiry', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.attemptsInfo().invoke('text').should('contain', '1');
     });
@@ -125,7 +159,9 @@ context('2FA Journey - Access code expiry', () => {
       cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 2 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.attemptsInfo().invoke('text').should('contain', '0');
     });
@@ -135,7 +171,9 @@ context('2FA Journey - Access code expiry', () => {
     it('should display security reason for expiry', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.securityInfo().should('contain', 'security');
     });
@@ -143,7 +181,9 @@ context('2FA Journey - Access code expiry', () => {
     it('should inform user about suspension after too many failed attempts', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       accessCodeExpired.suspendInfo().should('exist');
       accessCodeExpired
@@ -162,7 +202,9 @@ context('2FA Journey - Access code expiry', () => {
     it('should maintain session after viewing expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
 
       cy.getCookie('dtfs-session').should('exist');
     });
@@ -170,7 +212,11 @@ context('2FA Journey - Access code expiry', () => {
     it('should allow navigation back to check-your-email from expired page', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      cy.visit('/login/access-code-expired');
+      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+      cy.clickSubmitButton();
+
+      cy.url().should('eq', relative('/login/access-code-expired'));
 
       cy.visit('/login/check-your-email-access-code');
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
