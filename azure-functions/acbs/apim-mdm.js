@@ -30,9 +30,9 @@ const getAPI = async (endpoint) => {
   }
 };
 
-const getCurrency = (currencyCode) => getAPI(`currencies/${currencyCode}`);
-const getACBSIndustrySector = async (industryId) => getAPI(`sector-industries?ukefIndustryId=${industryId}`);
-const getACBSCountryCode = async (country) => getAPI(`markets?search=${country}`);
+const getCurrency = (currencyCode) => getAPI(`v1/currencies/${currencyCode}`);
+const getACBSIndustrySector = async (industryId) => getAPI(`v1/sector-industries?ukefIndustryId=${industryId}`);
+const getACBSCountryCode = async (country) => getAPI(`v1/markets?search=${country}`);
 
 module.exports = {
   getCurrency,

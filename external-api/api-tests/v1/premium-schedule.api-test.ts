@@ -45,8 +45,8 @@ describe('/premium-schedule', () => {
     },
   };
 
-  axiosMock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
-  axiosMock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
+  axiosMock.onPost(`${process.env.APIM_MDM_URL}v1/premium/schedule`).reply(200, mockResponse);
+  axiosMock.onGet(`${process.env.APIM_MDM_URL}v1/premium/segments/12345678`).reply(200, mockResponse);
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {
@@ -89,7 +89,7 @@ describe('/premium-schedule', () => {
   const invalidFacilityUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when facility urn is invalid', () => {
-    test.each(invalidFacilityUrnTestCases)('returns a 400 if you provide an invalid facility urn %s', async (facilityUrn) => {
+    test.each(invalidFacilityUrnTestCases)('should return a 400 if you provide an invalid facility urn %s', async (facilityUrn) => {
       const invalidPayload = payload;
       invalidPayload.facilityURN = facilityUrn;
 

@@ -62,7 +62,7 @@ describe('/email', () => {
     });
 
     it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
-      axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
+      axiosMock.onPost(`${APIM_MDM_URL}v1/emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
       const { status, body } = await post(mockBody).to('/email');
 
@@ -72,7 +72,7 @@ describe('/email', () => {
 
     it('should return error status from MDM GovNotify API if error message is missing', async () => {
       const unknown500Status = Math.floor(Math.random() * 50 + 500);
-      axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(unknown500Status, '');
+      axiosMock.onPost(`${APIM_MDM_URL}v1/emails`).reply(unknown500Status, '');
 
       const { status, body } = await post(mockBody).to('/email');
 
@@ -83,7 +83,7 @@ describe('/email', () => {
     it('should return error status from MDM GovNotify API if error message provided', async () => {
       const errorMessage = 'an error message';
       const unknown500Status = Math.floor(Math.random() * 50) + 500;
-      axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(unknown500Status, errorMessage);
+      axiosMock.onPost(`${APIM_MDM_URL}v1/emails`).reply(unknown500Status, errorMessage);
 
       const { status, body } = await post(mockBody).to('/email');
 
@@ -109,7 +109,7 @@ describe('/email', () => {
     describe('when MOCK_E2E_GOV_NOTIFY_API_KEY is undefined', () => {
       it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
         process.env.MOCK_E2E_GOV_NOTIFY_API_KEY = undefined;
-        axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
+        axiosMock.onPost(`${APIM_MDM_URL}v1/emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
         const { status, body } = await post(mockBody).to('/email');
 
@@ -121,7 +121,7 @@ describe('/email', () => {
     describe('when MOCK_E2E_GOV_NOTIFY_API_KEY is an empty string', () => {
       it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
         process.env.MOCK_E2E_GOV_NOTIFY_API_KEY = '';
-        axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
+        axiosMock.onPost(`${APIM_MDM_URL}v1/emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
         const { status, body } = await post(mockBody).to('/email');
 

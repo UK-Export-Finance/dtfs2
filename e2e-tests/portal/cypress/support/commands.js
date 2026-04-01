@@ -22,6 +22,9 @@ const { downloadFile } = require('./portal-api/fileshare');
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+// Resets the session
+Cypress.Commands.add('clearSessionCookies', require('./utils/clearSessionCookies'));
+
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // Assert an element has some exact text
@@ -87,12 +90,15 @@ Cypress.Commands.add('createBSSSubmission', require('./portal/createBSSSubmissio
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('login', require('./portal/login'));
+Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
+Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./portal/resetPortalUserStatusAndNumberOfSignInOTPs'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 

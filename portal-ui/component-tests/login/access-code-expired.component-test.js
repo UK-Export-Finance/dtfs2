@@ -4,11 +4,11 @@ const page = 'login/access-code-expired.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const attemptsRemaining = 2;
+  const attemptsLeft = 2;
   let wrapper;
 
   beforeEach(() => {
-    wrapper = render({ attemptsRemaining });
+    wrapper = render({ attemptsLeft });
   });
 
   it('should render the heading', () => {
@@ -22,7 +22,7 @@ describe(page, () => {
   });
 
   it('should render the attempts remaining paragraph', () => {
-    wrapper.expectText('[data-cy="access-code-expired-attempts-info"]').toRead(`You have ${attemptsRemaining} attempts remaining.`);
+    wrapper.expectText('[data-cy="access-code-expired-attempts-info"]').toRead(`You have ${attemptsLeft} attempts remaining.`);
   });
 
   it('should render the suspend info paragraph', () => {
@@ -31,7 +31,7 @@ describe(page, () => {
       .toRead('If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.');
   });
 
-  it('should render the request new code button', () => {
-    wrapper.expectText('[data-cy="submit-button"]').toRead('Request a new code');
+  it('should render the request new code button linking to /login/request-new-access-code', () => {
+    wrapper.expectPrimaryButton('[data-cy="access-code-expired-request-new-code"]').toLinkTo('/login/request-new-access-code', 'Request a new code');
   });
 });

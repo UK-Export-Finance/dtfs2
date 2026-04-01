@@ -212,7 +212,7 @@ describe('facilityIssueDeadline()', () => {
     MOCK_AIN_APPLICATION.submissionDate = null;
     const result = facilityIssueDeadline(MOCK_AIN_APPLICATION);
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });
 
