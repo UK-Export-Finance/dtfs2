@@ -29,14 +29,14 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
 
         const result = mapCoverStartDate(mockFacility);
 
-        expect(result).toEqual(null);
+        expect(result).toBeNull();
       });
     });
 
     it('should return null', () => {
       const result = mapCoverStartDate({});
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 

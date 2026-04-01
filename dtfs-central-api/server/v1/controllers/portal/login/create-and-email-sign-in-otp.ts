@@ -5,6 +5,7 @@ import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-
 import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
+import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
 
 /**
  * Creates and emails a sign-in OTP to the user.
@@ -48,8 +49,10 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
-      console.info('Sign in OTP code for user: %s is: %s', user.email, securityCode);
+      console.info('🔑 Sign in OTP code for user: %s is: %s', user.email, securityCode);
     }
+
+    await sendSignInOtpEmail(user, securityCode);
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {

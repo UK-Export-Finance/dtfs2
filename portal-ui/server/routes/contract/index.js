@@ -18,6 +18,7 @@ const {
   isEveryFacilityInDealComplete,
   generateErrorSummary,
   getFlashSuccessMessage,
+  fixNullCurrencyOnBondAndLoans,
 } = require('../../helpers');
 const { provide, DEAL, MANDATORY_CRITERIA } = require('../api-data-provider');
 const isDealEditable = require('./isDealEditable');
@@ -351,6 +352,24 @@ router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }),
       comments,
       validationErrors,
     });
+  }
+
+  /**
+   * fix currency being null on bonds and loans
+   * some loans or bonds may have a null currency based on order of completion
+   * this will set them to the supply contract value as happens if done in order
+   */
+  try {
+    const { bondTransactions, loanTransactions, submissionDetails } = req.apiData.deal;
+    const bonds = bondTransactions?.items;
+    const loans = loanTransactions?.items;
+    const { supplyContractCurrency } = submissionDetails ?? {};
+
+    await fixNullCurrencyOnBondAndLoans(bonds, loans, supplyContractCurrency, _id, req.session.userToken);
+  } catch (error) {
+    console.error('Error fixing null currency on bonds and loans for dealId %s: %o', req.params._id, error);
+
+    return res.render('_partials/problem-with-service.njk');
   }
 
   req.flash('successMessage', {

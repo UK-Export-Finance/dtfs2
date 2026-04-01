@@ -2,21 +2,25 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 
+import * as acbs from '../controllers/acbs.controller';
+import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as companies from '../controllers/companies.controller';
 import * as countries from '../controllers/countries.controller';
+import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
 import * as currencies from '../controllers/currencies.controller';
+import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
+import * as email from '../controllers/email.controller';
+import * as eStore from '../controllers/estore/eStore.controller';
+import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as facilityCategories from '../controllers/facility-categories.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as number from '../controllers/number-generator.controller';
+import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
-import * as acbs from '../controllers/acbs.controller';
-import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
-import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companies from '../controllers/companies.controller';
-import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
-import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
-import * as email from '../controllers/email.controller';
-import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
 
@@ -333,6 +337,32 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi
+ * /obligation-subtypes:
+ *   get:
+ *     summary: Get obligation subtypes from MDM API.
+ *     tags: [APIM, Obligation Subtypes]
+ *     description: >-
+ *       Get obligation subtypes from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ObligationSubtype'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/obligation-subtypes', obligationSubtypes.findAll);
+
+/**
+ * @openapi
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
@@ -520,6 +550,32 @@ apiRoutes.get('/exposure-period/:startDate/:endDate/:facilityType', exposurePeri
 
 /**
  * @openapi
+ * /facility-categories:
+ *   get:
+ *     summary: Get facility categories from MDM API.
+ *     tags: [APIM, Facility Categories]
+ *     description: >-
+ *       Get facility categories from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/FacilityCategory'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/facility-categories', facilityCategories.findAll);
+
+/**
+ * @openapi
  * /premium-schedule:
  *   get:
  *     summary: Get a repayment schedule for a facility
@@ -576,8 +632,33 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
+
+/**
+ * @openapi
+ * /credit-risk-ratings:
+ *   get:
+ *     summary: Get credit risk ratings from MDM API.
+ *     tags: [APIM, Credit Risk Ratings]
+ *     description: >-
+ *       Get credit risk ratings from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/CreditRiskRating'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/credit-risk-ratings', creditRiskRatings.findAll);
 
 /**
  * @openapi
@@ -674,3 +755,32 @@ apiRoutes.post('/email', email.emailNotification);
  *               $ref: '#/definitions/BankHolidaysResponseBody'
  */
 apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
+
+/**
+ * @openapi
+ * /ukef-industry-code/by-companies-house-industry-code/:industryCode:
+ *   get:
+ *     summary: Get a UKEF industry code by Companies House industry code
+ *     tags: [APIM, UKEF Industry Code]
+ *     description: >-
+ *       Get a UKEF industry code by Companies House industry code.
+ *     parameters:
+ *       - in: path
+ *         name: industryCode
+ *         schema:
+ *           type: string
+ *           example: 1406
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/UKEFIndustryCodeResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+apiRoutes.get('/ukef-industry-code/by-companies-house-industry-code/:industryCode', ukefIndustryCode.getByCompaniesHouseIndustryCode);

@@ -92,7 +92,7 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
 
       pages.loanFinancialDetails.currencyInput().should('be.visible');
-
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'RUB'); // should not contain Russian Ruble
       pages.loanFinancialDetails.conversionRateInput().should('be.visible');
 
       pages.loanFinancialDetails.conversionRateDateDayInput().should('be.visible');

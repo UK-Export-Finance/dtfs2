@@ -79,8 +79,9 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
 
 /**
  * Logs in a user using a sign in OTP
- * @param {object} parameters token, userId and signInOTP
- * @returns {Promise<object>} loginStatus, token and user
+ *
+ * @param {object} parameters - token, userId, signInOTP and isExpired
+ * @returns {Promise<{ token?: string; loginStatus?: string; user?: import('@ukef/dtfs2-common').PortalSessionUser; isExpired?: boolean }>} - Authenticated user details. The `isExpired` flag is returned when the submitted OTP has expired (true) — callers can use this to show an "access code expired" flow.
  */
 const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
   const response = await axios({
@@ -92,11 +93,12 @@ const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }
     },
   });
 
-  const { token, loginStatus, user } = response.data;
+  const { token, loginStatus, user, isExpired } = response.data;
   return {
     loginStatus,
     token,
     user,
+    isExpired,
   };
 };
 
@@ -435,6 +437,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -539,6 +542,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 

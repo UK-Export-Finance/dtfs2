@@ -488,7 +488,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].id = 'abc';
 
     const response = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0];
-    expect(response).toEqual(null);
+    expect(response).toBeNull();
   });
 
   it('returns a value with currency', () => {
@@ -1033,12 +1033,12 @@ describe('mapSummaryList()', () => {
 
 describe('isTrueSet()', () => {
   it('returns null if value is not a string', () => {
-    expect(isTrueSet(null)).toEqual(null);
-    expect(isTrueSet(10)).toEqual(null);
-    expect(isTrueSet('')).toEqual(null);
-    expect(isTrueSet(true)).toEqual(null);
-    expect(isTrueSet(false)).toEqual(null);
-    expect(isTrueSet(undefined)).toEqual(null);
+    expect(isTrueSet(null)).toBeNull();
+    expect(isTrueSet(10)).toBeNull();
+    expect(isTrueSet('')).toBeNull();
+    expect(isTrueSet(true)).toBeNull();
+    expect(isTrueSet(false)).toBeNull();
+    expect(isTrueSet(undefined)).toBeNull();
   });
 
   it('returns true boolean if string value is equal to `true`', () => {
