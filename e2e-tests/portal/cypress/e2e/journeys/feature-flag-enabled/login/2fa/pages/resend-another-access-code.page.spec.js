@@ -71,12 +71,27 @@ context('2FA Page - Resend another access code', () => {
 
       const accessCodeFormElements = [
         ['renders heading with text "We\'ve sent you another access code"', () => resendAnotherAccessCode.heading(), "We've sent you another access code"],
-        ['renders description containing email', () => resendAnotherAccessCode.description(), "We've sent you another email with a access code to"],
-        ['renders expiry information', () => resendAnotherAccessCode.expiryInfo(), 'This code will expire after 30 minutes'],
-        ['renders spam/junk advice', () => resendAnotherAccessCode.spamOrJunk(), 'Please check your spam or junk folders'],
+        [
+          'renders expiry information',
+          () => resendAnotherAccessCode.expiryInfo(),
+          'This code will expire after 30 minutes. Any previous access codes we have sent will no longer be valid.',
+        ],
+        [
+          'renders spam/junk advice',
+          () => resendAnotherAccessCode.spamOrJunk(),
+          'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.',
+        ],
         ['renders support information', () => resendAnotherAccessCode.supportInfo(), 'If you are still having problems signing in, contact us for support.'],
-        ['renders suspend information', () => resendAnotherAccessCode.suspendInfo(), 'If you request too many access codes your account will be suspended'],
-        ['renders contact-us timeframe element', () => resendAnotherAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm'],
+        [
+          'renders suspend information',
+          () => resendAnotherAccessCode.suspendInfo(),
+          'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
+        ],
+        [
+          'renders contact-us timeframe element',
+          () => resendAnotherAccessCode.contactUsTimeframe(),
+          'Monday to Friday, 9am to 5pm (excluding public holidays)',
+        ],
         ['renders access code label', () => resendAnotherAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:'],
       ];
 
@@ -84,6 +99,10 @@ context('2FA Page - Resend another access code', () => {
         it(`should ${title}`, () => {
           cy.assertText(getter(), expectedText);
         });
+      });
+
+      it('should render description containing email', () => {
+        resendAnotherAccessCode.description().should('contain', "We've sent you another email with a access code to");
       });
 
       it('should have shared common assertions for inputs, attempts and submit', () => {
@@ -105,7 +124,7 @@ context('2FA Page - Resend another access code', () => {
           .should('have.attr', 'href')
           .and('match', /^mailto:/);
 
-        cy.assertText(resendAnotherAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm');
+        cy.assertText(resendAnotherAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
       });
     });
 
@@ -123,7 +142,7 @@ context('2FA Page - Resend another access code', () => {
 
         errorSummary().should('exist');
         resendAnotherAccessCode.inlineError().should('exist');
-        cy.assertText(resendAnotherAccessCode.inlineError(), 'The access code you have entered is incorrect');
+        cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
       });
 
       it('should show access code expired page when code expired', () => {

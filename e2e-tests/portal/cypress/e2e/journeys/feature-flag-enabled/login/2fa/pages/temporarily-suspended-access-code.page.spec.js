@@ -25,7 +25,7 @@ context('2FA Page - Temporarily suspended account', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
     cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
-    cy.assertText(temporarilySuspendedAccessCode.message(), 'This can happen if there are too many failed attempts to login or sign in link requests');
+    cy.assertText(temporarilySuspendedAccessCode.message(), 'This can happen if there are too many failed attempts to login or sign in link requests.');
   });
 
   it('should render contact us section', () => {
@@ -35,6 +35,6 @@ context('2FA Page - Temporarily suspended account', () => {
       .contactUsEmail()
       .should('have.attr', 'href')
       .and('match', /^mailto:/);
-    cy.assertText(temporarilySuspendedAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm');
+    cy.assertText(temporarilySuspendedAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
   });
 });
