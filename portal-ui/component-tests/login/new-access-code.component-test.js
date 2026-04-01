@@ -27,8 +27,15 @@ describe(page, () => {
   });
 
   it('should render the access code input', () => {
-    const input = wrapper.expectInput('[data-cy="access-code-input"]');
-    expect(input).toBeDefined();
+    wrapper.expectElement('[data-cy="access-code-input"]').toExist();
+  });
+
+  it('should render the access code input with placeholder', () => {
+    wrapper.expectElement('[data-cy="access-code-input"]').toHaveAttribute('placeholder', 'e.g. 123456');
+  });
+
+  it('should render the access code input with the correct class', () => {
+    wrapper.expectElement('[data-cy="access-code-input"]').hasClass('govuk-input--width-10');
   });
 
   it('should render the label for the access code input', () => {
