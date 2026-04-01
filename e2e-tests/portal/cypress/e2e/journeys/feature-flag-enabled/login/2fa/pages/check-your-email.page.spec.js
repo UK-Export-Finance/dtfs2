@@ -81,8 +81,16 @@ context('2FA Page - Check your email', () => {
         ['renders heading with text "Check your email"', () => checkYourEmailAccessCode.heading(), 'Check your email'],
         ['renders access code label with text "Enter access code:"', () => checkYourEmailAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:'],
         ['renders expiry information with text about 30 minutes', () => checkYourEmailAccessCode.expiryInfo(), 'This code will expire after 30 minutes.'],
-        ['renders spam/junk advice', () => checkYourEmailAccessCode.spamOrJunk(), 'Please check your spam or junk folders'],
-        ['renders suspend information', () => checkYourEmailAccessCode.suspendInfo(), 'If you request too many access codes your account will be suspended'],
+        [
+          'renders spam/junk advice',
+          () => checkYourEmailAccessCode.spamOrJunk(),
+          'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.',
+        ],
+        [
+          'renders suspend information',
+          () => checkYourEmailAccessCode.suspendInfo(),
+          'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
+        ],
       ];
 
       accessCodeFormElements.forEach(([title, getter, expectedText]) => {
@@ -123,7 +131,7 @@ context('2FA Page - Check your email', () => {
 
         errorSummary().should('exist');
         checkYourEmailAccessCode.inlineError().should('exist');
-        cy.assertText(checkYourEmailAccessCode.inlineError(), 'The access code you have entered is incorrect');
+        cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
       });
 
       it('should show access code expired page when code expired', () => {

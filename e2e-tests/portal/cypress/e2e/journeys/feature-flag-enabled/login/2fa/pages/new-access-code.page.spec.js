@@ -68,17 +68,32 @@ context('2FA Page - New access code', () => {
       const accessCodeFormElements = [
         ['renders heading with text "New access code sent"', () => newAccessCode.heading(), 'New access code sent'],
         ['renders access code label with text "Enter access code:"', () => newAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:'],
-        ['renders description containing email', () => newAccessCode.description(), "We've sent you a 6-digit access code to your email"],
-        ['renders expiry information', () => newAccessCode.expiryInfo(), 'This code will expire after 30 minutes'],
-        ['renders spam/junk advice', () => newAccessCode.spamOrJunk(), 'Please check your spam or junk folders'],
-        ['renders suspend information', () => newAccessCode.suspendInfo(), 'If you request too many access codes your account will be suspended'],
-        ['renders contact-us timeframe element', () => newAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm'],
+        [
+          'renders expiry information',
+          () => newAccessCode.expiryInfo(),
+          "We've sent you a new email with a different access code to sign in. This code will expire after 30 minutes.",
+        ],
+        [
+          'renders spam/junk advice',
+          () => newAccessCode.spamOrJunk(),
+          'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.',
+        ],
+        [
+          'renders suspend information',
+          () => newAccessCode.suspendInfo(),
+          'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
+        ],
+        ['renders contact-us timeframe element', () => newAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)'],
       ];
 
       accessCodeFormElements.forEach(([title, getter, expectedText]) => {
         it(`should ${title}`, () => {
           cy.assertText(getter(), expectedText);
         });
+      });
+
+      it('should render description containing email', () => {
+        newAccessCode.description().should('contain', "We've sent you a 6-digit access code to your email");
       });
 
       it('should have form method POST', () => {
@@ -104,7 +119,7 @@ context('2FA Page - New access code', () => {
           .should('have.attr', 'href')
           .and('match', /^mailto:/);
 
-        cy.assertText(newAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm');
+        cy.assertText(newAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
       });
 
       it('should render request-code-link pointing to /login/request-new-access-code', () => {
@@ -126,7 +141,7 @@ context('2FA Page - New access code', () => {
 
         errorSummary().should('exist');
         newAccessCode.inlineError().should('exist');
-        cy.assertText(newAccessCode.inlineError(), 'The access code you have entered is incorrect');
+        cy.assertText(newAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
       });
 
       it('should show access code expired page when code expired', () => {

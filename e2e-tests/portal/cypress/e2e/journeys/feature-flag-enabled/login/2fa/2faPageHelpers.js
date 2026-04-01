@@ -21,11 +21,14 @@ const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
   }
 
   // suspend info text
-  page.suspendInfo().should('contain', 'If you request too many access codes your account will be suspended');
+  cy.assertText(
+    page.suspendInfo(),
+    'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
+  );
 
   // spam/junk advice (if page has this element)
   if (page.spamOrJunk) {
-    page.spamOrJunk().should('contain', 'Please check your spam or junk folders');
+    cy.assertText(page.spamOrJunk(), 'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.');
   }
 
   // submit button contains 'Sign in'
@@ -67,7 +70,7 @@ const assertEmptyCodeValidation = (page) => {
   page.accessCodeInput().clear();
   cy.clickSubmitButton();
   errorSummary().should('contain', 'Enter access code');
-  cy.assertText(page.inlineError(), 'Enter access code');
+  cy.assertText(page.inlineError(), 'Error: Enter access code');
 };
 
 module.exports = {
