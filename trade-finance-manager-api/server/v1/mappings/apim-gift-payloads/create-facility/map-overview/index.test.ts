@@ -14,7 +14,6 @@ describe('mapOverview', () => {
     exporterPartyUrn: '12345',
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
-    facilityName: 'Mock facility name',
     isGefDeal: true,
     ukefFacilityId: '123',
   };

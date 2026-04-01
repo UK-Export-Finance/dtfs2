@@ -1,6 +1,7 @@
 export * from './amendments-eligibility-criteria';
 export * from './activity-author';
 export * from './banks';
+export * from './bss-deal';
 export * from './db-model';
 export * from './deletion-audit-logs';
 export * from './facility';

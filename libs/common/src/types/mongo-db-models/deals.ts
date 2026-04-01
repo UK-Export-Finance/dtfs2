@@ -27,7 +27,7 @@ export interface GefDeal extends BaseDeal {
   bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
   eligibility: AnyObject;
-  exporter: GefExporter;
+  exporter: Partial<GefExporter>;
   portalActivities: PortalActivity[];
   submissionCount: number;
   ukefDealId: string | null;
