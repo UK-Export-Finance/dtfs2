@@ -71,7 +71,7 @@ const commonBeforeEach = (user, opts = { login: true }) => {
  */
 const assertEmptyCodeValidation = (page) => {
   page.accessCodeInput().clear();
-  cy.get('form').submit();
+  cy.clickSubmitButton();
   errorSummary().should('contain', 'Enter access code');
   page.inlineError().should('contain', 'Enter access code');
 };
