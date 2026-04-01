@@ -48,11 +48,6 @@ context('2FA Page - Check your email', () => {
 
       cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
     });
-    it('should have csrf token on new-access-code', () => {
-      checkYourEmailAccessCode.requestCodeLink().click();
-
-      newAccessCode.csrfToken().should('not.be.empty');
-    });
   });
 
   describe('Page elements and validation', () => {

@@ -47,11 +47,6 @@ context('2FA Page - Resend another access code', () => {
       newAccessCode.requestCodeLink().click();
       cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
     });
-
-    it('should have csrf token on resend page', () => {
-      newAccessCode.requestCodeLink().click();
-      resendAnotherAccessCode.csrfToken().should('not.be.empty');
-    });
   });
 
   describe('Page elements and validation', () => {

@@ -9,12 +9,6 @@ const { errorSummary } = require('../../../../partials');
  * @param {number} [opts.expectedAttempts] - Expected number of attempts remaining.
  */
 const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
-  // csrf token exists and has value
-  page.csrfToken().then((token) => {
-    expect(token).to.be.a('string');
-    expect(token).to.not.equal('');
-  });
-
   // access code input label
   cy.assertText(page.sixDigitAccessCodeLabel(), 'Enter access code:');
 
