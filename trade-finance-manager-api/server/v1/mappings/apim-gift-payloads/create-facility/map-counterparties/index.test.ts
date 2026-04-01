@@ -9,6 +9,7 @@ describe('mapCounterparties', () => {
 
   describe('when isBssEwcsDeal is true', () => {
     const isBssEwcsDeal = true;
+    const isGefDeal = false;
 
     describe(`when partyUrns.bondGiver exists`, () => {
       it('should return an array with a "BOND_GIVER" counterparty', () => {
@@ -20,6 +21,7 @@ describe('mapCounterparties', () => {
         // Act
         const result = mapCounterparties({
           isBssEwcsDeal,
+          isGefDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -49,6 +51,7 @@ describe('mapCounterparties', () => {
         // Act
         const result = mapCounterparties({
           isBssEwcsDeal,
+          isGefDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -79,6 +82,7 @@ describe('mapCounterparties', () => {
         // Act
         const result = mapCounterparties({
           isBssEwcsDeal,
+          isGefDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -112,6 +116,7 @@ describe('mapCounterparties', () => {
         // Act
         const result = mapCounterparties({
           isBssEwcsDeal,
+          isGefDeal,
           partyUrns: mockPartyUrns,
           startDate,
           exitDate,
@@ -123,13 +128,69 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when the isBssEwcsDeal is false', () => {
+  describe('when isGefDeal is true', () => {
+    const isGefDeal = true;
+    const isBssEwcsDeal = false;
+
+    describe(`when partyUrns.issuingBank exists`, () => {
+      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+        // Arrange
+        const mockPartyUrns = {
+          issuingBank: '00318345',
+        };
+
+        // Act
+        const result = mapCounterparties({
+          isBssEwcsDeal,
+          isGefDeal,
+          partyUrns: mockPartyUrns,
+          startDate,
+          exitDate,
+        });
+
+        // Assert
+        const expected = [
+          {
+            counterpartyUrn: mockPartyUrns.issuingBank,
+            startDate,
+            exitDate,
+            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe(`when partyUrns.issuingBank does NOT exist`, () => {
+      it('should return an empty array', () => {
+        // Arrange
+        const mockPartyUrns = {};
+
+        // Act
+        const result = mapCounterparties({
+          isBssEwcsDeal,
+          isGefDeal,
+          partyUrns: mockPartyUrns,
+          startDate,
+          exitDate,
+        });
+
+        // Assert
+        expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
+    const isGefDeal = false;
     const isBssEwcsDeal = false;
 
     it('should return an empty array', () => {
       // Act
       const result = mapCounterparties({
         isBssEwcsDeal,
+        isGefDeal,
         partyUrns: {},
         startDate,
         exitDate,
