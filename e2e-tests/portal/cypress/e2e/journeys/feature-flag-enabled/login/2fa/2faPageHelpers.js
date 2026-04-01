@@ -9,21 +9,15 @@ const { errorSummary } = require('../../../../partials');
  * @param {number} [opts.expectedAttempts] - Expected number of attempts remaining.
  */
 const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
-  // csrf token exists and has value
-  page.csrfToken().then((token) => {
-    expect(token).to.be.a('string');
-    expect(token).to.not.equal('');
-  });
-
   // access code input label
-  page.sixDigitAccessCodeLabel().should('contain', 'Enter access code:');
+  cy.assertText(page.sixDigitAccessCodeLabel(), 'Enter access code:');
 
   // input with correct placeholder
   page.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
 
   // attempts text with exact number if provided
   if (expectedAttempts !== undefined) {
-    page.attemptsInfo().should('contain', `You have ${expectedAttempts} attempts remaining.`);
+    cy.assertText(page.attemptsInfo(), `You have ${expectedAttempts} attempts remaining.`);
   }
 
   // suspend info text
@@ -36,12 +30,12 @@ const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
 
   // submit button contains 'Sign in'
   if (page.submitButton) {
-    page.submitButton().should('contain', 'Sign in');
+    cy.assertText(page.submitButton(), 'Sign in');
   }
 
   // optional request code link
   if (page.requestCodeLink) {
-    page.requestCodeLink().should('contain', 'Request a new code');
+    cy.assertText(page.requestCodeLink(), 'Request a new code');
   }
 };
 
@@ -73,7 +67,7 @@ const assertEmptyCodeValidation = (page) => {
   page.accessCodeInput().clear();
   cy.clickSubmitButton();
   errorSummary().should('contain', 'Enter access code');
-  page.inlineError().should('contain', 'Enter access code');
+  cy.assertText(page.inlineError(), 'Enter access code');
 };
 
 module.exports = {

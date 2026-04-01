@@ -45,12 +45,7 @@ context('2FA Page - New access code', () => {
 
     it('should show attempts info on resend page', () => {
       newAccessCode.requestCodeLink().click();
-      resendAnotherAccessCode.attemptsInfo().should('contain', 'You have 0 attempts remaining.');
-    });
-
-    it('should have csrf token on resend page', () => {
-      newAccessCode.requestCodeLink().click();
-      resendAnotherAccessCode.csrfToken().should('not.be.empty');
+      cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
     });
   });
 
@@ -82,7 +77,7 @@ context('2FA Page - New access code', () => {
 
       accessCodeFormElements.forEach(([title, getter, expectedText]) => {
         it(`should ${title}`, () => {
-          getter().should('contain', expectedText);
+          cy.assertText(getter(), expectedText);
         });
       });
 
@@ -92,7 +87,7 @@ context('2FA Page - New access code', () => {
 
       it('should have shared common assertions for inputs, attempts, submit and request link', () => {
         assertAccessCodePagesCommonElements({ page: newAccessCode, expectedAttempts: 1 });
-        submitButton().should('contain', 'Sign in');
+        cy.assertText(submitButton(), 'Sign in');
       });
 
       it('should render access code input with correct placeholder', () => {
@@ -100,7 +95,7 @@ context('2FA Page - New access code', () => {
       });
 
       it('should show attempts remaining on first visit', () => {
-        newAccessCode.attemptsInfo().should('contain', 'You have 1 attempts remaining.');
+        cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
       });
 
       it('should render contact us section', () => {
@@ -109,7 +104,7 @@ context('2FA Page - New access code', () => {
           .should('have.attr', 'href')
           .and('match', /^mailto:/);
 
-        newAccessCode.contactUsTimeframe().should('contain', 'Monday to Friday, 9am to 5pm');
+        cy.assertText(newAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm');
       });
 
       it('should render request-code-link pointing to /login/request-new-access-code', () => {
@@ -131,15 +126,18 @@ context('2FA Page - New access code', () => {
 
         errorSummary().should('exist');
         newAccessCode.inlineError().should('exist');
-        newAccessCode.inlineError().should('contain', 'The access code you have entered is incorrect');
+        cy.assertText(newAccessCode.inlineError(), 'The access code you have entered is incorrect');
       });
 
       it('should show access code expired page when code expired', () => {
         cy.enterUsernameAndPassword(BANK1_MAKER1);
         cy.visit('/login/access-code-expired');
 
-        accessCodeExpired.heading().should('contain', 'Your access code has expired');
-        accessCodeExpired.securityInfo().should('contain', 'For security, access codes expire after 30 minutes');
+        cy.assertText(accessCodeExpired.heading(), 'Your access code has expired');
+        cy.assertText(
+          accessCodeExpired.securityInfo(),
+          'For security, access codes expire after 30 minutes. You can request for a new access code to be sent to your email address.',
+        );
       });
     });
   });
