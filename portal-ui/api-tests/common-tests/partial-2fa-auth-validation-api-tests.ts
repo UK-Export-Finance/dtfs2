@@ -5,34 +5,7 @@ import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
-
-const { login, validatePartialAuthToken } = api;
-const { post } = createApi(app);
-
-const email = 'mock email';
-const password = 'mock password';
-const partialAuthToken = 'partial auth token';
-
-type SessionCookieResponse = {
-  headers: {
-    'set-cookie': string[];
-  };
-};
-
-const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
-const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
-
-type ApiResponse = {
-  status: number;
-  headers: {
-    location?: string;
-    [key: string]: unknown;
-  };
-};
+import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '../types';
 
 type WithPartial2faAuthValidationApiTestsParams = {
   makeRequestWithHeaders: (headers?: RequestHeaders) => Promise<ApiResponse>;
@@ -45,6 +18,16 @@ export const withPartial2faAuthValidationApiTests = ({
   validateResponseWasSuccessful,
   numberOfSignInOtpAttemptsRemaining,
 }: WithPartial2faAuthValidationApiTestsParams) => {
+  const { login, validatePartialAuthToken } = api;
+  const { post } = createApi(app);
+
+  const email = 'mock email';
+  const password = 'mock password';
+  const partialAuthToken = 'partial auth token';
+
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+
   describe('partial 2fa auth validation', () => {
     let sessionCookie: string;
 

@@ -4,21 +4,9 @@ import { createApi } from '@ukef/dtfs2-common/api-test';
 import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
+import type { RequestHeaders, SessionCookieResponse } from '../types';
 import mockLogin from '../helpers/login';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
-
-type SessionCookieResponse = {
-  headers: {
-    'set-cookie': string[];
-  };
-};
-
-const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
-const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
@@ -36,13 +24,16 @@ jest.mock('../../server/api', () => ({
   validatePartialAuthToken: jest.fn(),
 }));
 
-const { get, post } = createApi(app);
-
-const email = 'mock email';
-const password = 'mock password';
-const partialAuthToken = 'partial auth token';
-
 describe('GET /login/request-new-access-code', () => {
+  const { get, post } = createApi(app);
+
+  const email = 'mock email';
+  const password = 'mock password';
+  const partialAuthToken = 'partial auth token';
+
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+
   beforeEach(() => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
@@ -90,13 +81,13 @@ describe('GET /login/request-new-access-code', () => {
       expect(response.headers.location).toEqual('/login/new-access-code');
     });
 
-    it('should redirect to /login/resend-another-access-code when numberOfSignInOtpAttemptsRemaining is 0', async () => {
+    it('should redirect to /login/temporarily-suspended-access-code when numberOfSignInOtpAttemptsRemaining is 0', async () => {
       sessionCookie = await setupSessionWithAttempts(0);
 
       const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
 
       expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/login/resend-another-access-code');
+      expect(response.headers.location).toEqual('/login/temporarily-suspended-access-code');
     });
 
     it('should redirect to /login/temporarily-suspended-access-code when numberOfSignInOtpAttemptsRemaining is -1', async () => {

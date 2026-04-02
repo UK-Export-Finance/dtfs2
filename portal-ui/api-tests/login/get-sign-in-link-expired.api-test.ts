@@ -1,12 +1,7 @@
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import app from '../../server/createApp';
+import type { RequestHeaders } from '../types';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
-
-const { get } = createApi(app);
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
@@ -21,6 +16,8 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('GET /login/sign-in-link-expired', () => {
+  const { get } = createApi(app);
+
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/sign-in-link-expired', {}, headers),
     validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(302),

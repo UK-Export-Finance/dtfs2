@@ -4,33 +4,7 @@ import { login, loginWithSignInOtp, sendSignInOTP } from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
-
-const { post } = createApi(app);
-const mockedLogin = login as jest.Mock;
-const mockedSendSignInOTP = sendSignInOTP as jest.Mock;
-const mockedLoginWithSignInOtp = loginWithSignInOtp as jest.Mock;
-
-const allRoles: string[] = Object.values(ROLES) as string[];
-const email = 'mock email';
-const password = 'mock password';
-
-type SessionCookieResponse = {
-  headers: {
-    'set-cookie': string[];
-  };
-};
-
-const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
-const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
-
-type ApiResponse = {
-  status: number;
-  headers: Record<string, unknown>;
-};
+import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '../types';
 
 type WithRoleValidationOtpApiTestsParams = {
   makeRequestWithHeaders: (headers: RequestHeaders) => Promise<ApiResponse>;
@@ -43,12 +17,6 @@ type WithRoleValidationOtpApiTestsParams = {
   redirectUrlForInvalidRoles?: string;
 };
 
-const mockSuccessfulSendSignInOtp = (attemptsLeft?: number) => ({
-  data: {
-    numberOfSignInOtpAttemptsRemaining: attemptsLeft,
-  },
-});
-
 export const withRoleValidationOtpApiTests = ({
   makeRequestWithHeaders,
   whitelistedRoles,
@@ -59,6 +27,26 @@ export const withRoleValidationOtpApiTests = ({
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
   redirectUrlForInvalidRoles,
 }: WithRoleValidationOtpApiTestsParams) => {
+  const { post } = createApi(app);
+  const mockedLogin = login as jest.Mock;
+  const mockedSendSignInOTP = sendSignInOTP as jest.Mock;
+  const mockedLoginWithSignInOtp = loginWithSignInOtp as jest.Mock;
+
+  const allRoles: string[] = Object.values(ROLES) as string[];
+  const email = 'mock email';
+  const password = 'mock password';
+
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+
+  function mockSuccessfulSendSignInOtp(remainingAttempts?: number) {
+    return {
+      data: {
+        numberOfSignInOtpAttemptsRemaining: remainingAttempts,
+      },
+    };
+  }
+
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
