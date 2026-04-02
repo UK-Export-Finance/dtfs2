@@ -27,7 +27,7 @@ export interface GefDeal extends BaseDeal {
   bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
   eligibility: AnyObject;
-  exporter: Partial<GefExporter>;
+  exporter: Partial<GefExporter>; // TODO: DTFS2-8349 - this should be updated to a complete type once all mock GEF deals use a fully populated exporter object.
   portalActivities: PortalActivity[];
   submissionCount: number;
   ukefDealId: string | null;
