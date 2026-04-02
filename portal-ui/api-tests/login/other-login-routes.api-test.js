@@ -1,6 +1,6 @@
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  verify: jest.fn((req, res, next) => next()),
+  verify: jest.fn((_req, _res, next) => next()),
 }));
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
