@@ -65,7 +65,7 @@ export type ApimGiftFacilityCreationPayload = {
   consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
   overview: ApimGiftFacilityOverview;
   counterparties: ApimGiftCounterparty[];
-  fixedFees: never[]; // APIM/GIFT requires a "fixedFees" array, but for BSS/GEF/EWCS this is always empty, so we type this as "never[]" to enforce that it cannot contain any items.
+  fixedFees: readonly never[]; // APIM/GIFT requires a "fixedFees" array, but for BSS/GEF/EWCS this is always empty, so we type this as "never[]" to enforce that it cannot contain any items.
   obligations: ApimGiftObligation[];
   repaymentProfiles: ApimGiftRepaymentProfile[];
   riskDetails: ApimGiftFacilityRiskDetails;

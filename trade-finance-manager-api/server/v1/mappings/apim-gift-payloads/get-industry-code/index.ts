@@ -19,7 +19,7 @@ export const getIndustryCode = (deal: TfmDeal): string => {
   if (dealType === DEAL_TYPE.GEF) {
     const gefDeal = deal.dealSnapshot as GefDeal;
 
-    return gefDeal.exporter.industries[0]?.class.code || '';
+    return gefDeal.exporter?.industries?.[0]?.class?.code || '';
   }
 
   return '';
