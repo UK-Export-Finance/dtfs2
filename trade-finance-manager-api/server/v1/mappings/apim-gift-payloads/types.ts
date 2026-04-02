@@ -42,16 +42,6 @@ export type ApimGiftObligation = {
   subtypeCode: string | null;
 };
 
-type ApimGiftRepaymentProfileAllocation = {
-  amount: number;
-  dueDate: string;
-};
-
-export type ApimGiftRepaymentProfile = {
-  allocations: ApimGiftRepaymentProfileAllocation[];
-  name: string;
-};
-
 export type ApimGiftFacilityRiskDetails = {
   account: (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['RISK_DETAILS']['ACCOUNT'];
   dealId: string | null;
@@ -65,8 +55,6 @@ export type ApimGiftFacilityCreationPayload = {
   consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
   overview: ApimGiftFacilityOverview;
   counterparties: ApimGiftCounterparty[];
-  fixedFees: readonly never[]; // APIM/GIFT requires a "fixedFees" array, but for BSS/GEF/EWCS this is always empty, so we type this as "never[]" to enforce that it cannot contain any items.
   obligations: ApimGiftObligation[];
-  repaymentProfiles: ApimGiftRepaymentProfile[];
   riskDetails: ApimGiftFacilityRiskDetails;
 };

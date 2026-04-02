@@ -13,7 +13,6 @@ import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
-import { mapRepaymentProfiles } from './map-repayment-profiles';
 import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { FacilityCategory } from '../../../api-response-types/facility-category';
@@ -213,10 +212,6 @@ describe('createFacility', () => {
         maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
         ukefExposure: Number(tfm.ukefExposure),
       }),
-      repaymentProfiles: mapRepaymentProfiles({
-        amount: Number(tfm.ukefExposure),
-        dueDate: expiryDate,
-      }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
         dealId: getTfmUkefDealId(mockTfmGefDeal),
@@ -253,7 +248,6 @@ describe('createFacility', () => {
       expect(result).toHaveProperty('overview');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
-      expect(result).toHaveProperty('repaymentProfiles');
       expect(result).toHaveProperty('riskDetails');
     });
   });
@@ -279,7 +273,6 @@ describe('createFacility', () => {
       expect(result).toHaveProperty('overview');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
-      expect(result).toHaveProperty('repaymentProfiles');
       expect(result).toHaveProperty('riskDetails');
     });
   });
@@ -306,7 +299,6 @@ describe('createFacility', () => {
       expect(result).toHaveProperty('overview');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
-      expect(result).toHaveProperty('repaymentProfiles');
       expect(result).toHaveProperty('riskDetails');
     });
   });
@@ -332,7 +324,6 @@ describe('createFacility', () => {
       expect(result).toHaveProperty('overview');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
-      expect(result).toHaveProperty('repaymentProfiles');
       expect(result).toHaveProperty('riskDetails');
     });
   });

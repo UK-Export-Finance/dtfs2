@@ -8,7 +8,6 @@ import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
 import { mapOverview } from './map-overview';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
-import { mapRepaymentProfiles } from './map-repayment-profiles';
 import { mapCounterparties } from './map-counterparties';
 import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
@@ -133,7 +132,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       startDate: effectiveDate,
       exitDate: expiryDate,
     }),
-    fixedFees: [],
     obligations: mapObligations({
       bssSubtypeName,
       currency,
@@ -143,10 +141,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       isGefDeal,
       maturityDate: expiryDate,
       ukefExposure: facilityAmount,
-    }),
-    repaymentProfiles: mapRepaymentProfiles({
-      amount: facilityAmount,
-      dueDate: expiryDate,
     }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
