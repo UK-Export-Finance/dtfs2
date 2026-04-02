@@ -3,16 +3,9 @@ import { when } from 'jest-when';
 import { ACCESS_CODE_PAGES, ROLES, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import api from '../../server/api';
+import type { RequestHeaders } from '../types';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
-
-const { post } = createApi(app);
-
-const allRoles: string[] = Object.values(ROLES) as string[];
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
@@ -29,6 +22,9 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('POST /login', () => {
+  const { post } = createApi(app);
+  const allRoles: string[] = Object.values(ROLES) as string[];
+
   const anEmail = 'an email';
   const aPassword = 'a password';
   const token = 'a token';

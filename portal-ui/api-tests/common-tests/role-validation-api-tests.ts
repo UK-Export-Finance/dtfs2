@@ -2,36 +2,11 @@ import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import { login, loginWithSignInLink } from '../../server/api';
 import app from '../../server/createApp';
+import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '../types';
 import { SIGN_IN_TOKEN_LINK_TOKEN } from '../fixtures/sign-in-token-constants';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
 import loginWithSignInLinkAsRole from '../helpers/loginWithSignInLinkAsRole';
-
-const { get, post } = createApi(app);
-
-const allRoles: string[] = Object.values(ROLES) as string[];
-const email = 'mock email';
-const password = 'mock password';
-const token = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
-const userId = '61e567d7db41bd65b00bd47a';
-
-type SessionCookieResponse = {
-  headers: {
-    'set-cookie': string[];
-  };
-};
-
-const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
-const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
-
-type ApiResponse = {
-  status: number;
-  headers: Record<string, unknown>;
-};
 
 type WithRoleValidationApiTestsParams = {
   makeRequestWithHeaders: (headers: RequestHeaders) => Promise<ApiResponse>;
@@ -50,6 +25,17 @@ export const withRoleValidationApiTests = ({
   disableHappyPath,
   redirectUrlForInvalidRoles,
 }: WithRoleValidationApiTestsParams) => {
+  const { get, post } = createApi(app);
+
+  const allRoles: string[] = Object.values(ROLES) as string[];
+  const email = 'mock email';
+  const password = 'mock password';
+  const token = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
+  const userId = '61e567d7db41bd65b00bd47a';
+
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {

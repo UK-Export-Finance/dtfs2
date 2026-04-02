@@ -2,16 +2,9 @@ import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
-
-const { get, post } = createApi(app);
-
-const allRoles = Object.values(ROLES);
+import type { RequestHeaders } from '../types';
 
 const pwdResetToken = 'pwd-reset-token';
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
@@ -28,6 +21,9 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('GET /logout', () => {
+  const { get } = createApi(app);
+  const allRoles = Object.values(ROLES);
+
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/logout', {}, headers),
     whitelistedRoles: allRoles,
@@ -37,6 +33,9 @@ describe('GET /logout', () => {
 });
 
 describe('GET /reset-password', () => {
+  const { get } = createApi(app);
+  const allRoles = Object.values(ROLES);
+
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/reset-password', {}, headers),
     whitelistedRoles: allRoles,
@@ -45,6 +44,9 @@ describe('GET /reset-password', () => {
 });
 
 describe('POST /reset-password', () => {
+  const { post } = createApi(app);
+  const allRoles = Object.values(ROLES);
+
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to('/reset-password'),
     whitelistedRoles: allRoles,
@@ -53,6 +55,9 @@ describe('POST /reset-password', () => {
 });
 
 describe('GET /reset-password/:pwdResetToken', () => {
+  const { get } = createApi(app);
+  const allRoles = Object.values(ROLES);
+
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get(`/reset-password/${pwdResetToken}`, {}, headers),
     whitelistedRoles: allRoles,

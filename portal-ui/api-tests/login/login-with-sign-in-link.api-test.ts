@@ -5,8 +5,6 @@ import app from '../../server/createApp';
 import api from '../../server/api';
 import { HTTP_ERROR_CAUSES } from '../../server/constants';
 
-const { get } = createApi(app);
-
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
   verify: jest.fn((_req: unknown, _res: unknown, next: () => void): void => {
@@ -22,6 +20,7 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
+  const { get } = createApi(app);
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';

@@ -4,27 +4,9 @@ import { createApi } from '@ukef/dtfs2-common/api-test';
 import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
+import type { SessionCookieResponse, RequestHeaders } from '../types';
 import mockLogin from '../helpers/login';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
-
-const { get, post } = createApi(app);
-
-const email = 'mock email';
-const password = 'mock password';
-const partialAuthToken = 'partial auth token';
-
-type RequestHeaders = {
-  Cookie: string | string[];
-};
-
-type SessionCookieResponse = {
-  headers: {
-    'set-cookie': string[];
-  };
-};
-
-const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
-const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
@@ -43,6 +25,13 @@ jest.mock('../../server/api', () => ({
 }));
 
 describe('GET /login/suspended-access-code', () => {
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+  const { get, post } = createApi(app);
+  const email = 'mock email';
+  const password = 'mock password';
+  const partialAuthToken = 'partial auth token';
+
   beforeEach(() => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
