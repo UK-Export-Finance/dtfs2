@@ -30,6 +30,7 @@ type Accounts = {
 
 type RegisteredAddress = {
   addressLine1: string;
+  addressLine2: string;
   country: string;
   locality: string;
   postalCode: string;
