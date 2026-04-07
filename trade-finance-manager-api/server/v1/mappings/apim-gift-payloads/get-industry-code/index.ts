@@ -1,4 +1,4 @@
-import { TfmDeal, BssEwcsDeal, DEAL_TYPE } from '@ukef/dtfs2-common';
+import { TfmDeal, BssEwcsDeal, DEAL_TYPE, GefDeal } from '@ukef/dtfs2-common';
 
 /**
  * Get the industry code from a given deal.
@@ -14,6 +14,12 @@ export const getIndustryCode = (deal: TfmDeal): string => {
     const bssEwcsDeal = deal.dealSnapshot as BssEwcsDeal;
 
     return bssEwcsDeal.submissionDetails['industry-sector']?.code || '';
+  }
+
+  if (dealType === DEAL_TYPE.GEF) {
+    const gefDeal = deal.dealSnapshot as GefDeal;
+
+    return gefDeal.exporter?.industries?.[0]?.class?.code || '';
   }
 
   return '';
