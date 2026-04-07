@@ -201,7 +201,6 @@ describe('createFacility', () => {
         startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
       }),
-      fixedFees: [],
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
