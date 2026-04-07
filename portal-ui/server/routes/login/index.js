@@ -397,7 +397,7 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
  *       403:
  *         description: Forbidden
  */
-router.get('/login/suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
 
 /**
  * @openapi
@@ -427,6 +427,6 @@ router.get('/login/request-new-access-code', validatePortal2FAEnabled, validateP
  *       302:
  *         description: Redirect to /login if partial auth token is invalid or to /not-found if feature flag is disabled
  */
-router.route('/login/access-code-expired').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getAccessCodeExpiredPage);
+router.get('/login/access-code-expired', validatePortal2FAEnabled, validatePartialAuthToken, getAccessCodeExpiredPage);
 
 module.exports = router;
