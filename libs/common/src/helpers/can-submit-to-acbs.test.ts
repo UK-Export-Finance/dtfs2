@@ -227,6 +227,23 @@ describe('canSendToAcbs', () => {
         expect(response).toBeFalsy();
       });
 
+      it('should return false when only a single attribute has been amended, has been sent to UKEF and has been submitted by PIM, but is a task update', () => {
+        // Arrange
+        const mockAmendment = {
+          type: AMENDMENT_TYPES.TFM,
+          changeCoverEndDate: true,
+          changeFacilityValue: false,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+        } as TfmFacilityAmendmentWithUkefId;
+
+        // Act
+        const response = canSendToAcbs(mockAmendment, true);
+
+        // Assert
+        expect(response).toBeFalsy();
+      });
+
       it('should return true when only a single attribute has been amended, has been sent to UKEF and has been submitted by PIM', () => {
         // Arrange
         const mockAmendment = {
@@ -451,6 +468,19 @@ describe('canSendToAcbs', () => {
 
         // Assert
         expect(response).toBeTruthy();
+      });
+
+      it('should return false when the amendment has been approved by UKEF but is a task update', () => {
+        // Arrange
+        const mockAmendment = {
+          ...manualTfmAmendmentsApproved[0],
+        } as TfmFacilityAmendmentWithUkefId;
+
+        // Act
+        const response = canSendToAcbs(mockAmendment, true);
+
+        // Assert
+        expect(response).toBeFalsy();
       });
     });
   });
