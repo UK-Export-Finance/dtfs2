@@ -1,5 +1,5 @@
+import { DEAL_TYPE } from '@ukef/dtfs2-common';
 import type { FacilityCategory } from '../../../../../api-response-types/facility-category';
-import { PRODUCT_TYPE_CODES } from '../../../constants';
 
 type MapFacilityCategoryCodeParams = {
   facilityType?: string;
@@ -33,7 +33,7 @@ export const mapFacilityCategoryCode = ({ facilityType, facilityCategories, isGe
 
   if (isGefDeal && tfmCategory) {
     const matchingCategory = facilityCategories.find((category: FacilityCategory) => {
-      return category.description.includes(PRODUCT_TYPE_CODES.GEF) && category.description.includes(tfmCategory);
+      return category.description.includes(DEAL_TYPE.GEF) && category.description.includes(tfmCategory);
     });
 
     if (matchingCategory) {
