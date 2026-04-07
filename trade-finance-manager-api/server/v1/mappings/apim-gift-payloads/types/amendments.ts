@@ -7,10 +7,7 @@ export type AmendmentAmountDataParams = {
   date: string;
 };
 
-export type AmendmentDataPayloadIncreaseOrDecreaseAmount = {
-  amount: number;
-  date: string;
-};
+export type AmendmentDataPayloadIncreaseOrDecreaseAmount = AmendmentAmountDataParams;
 
 export type AmendmentPayloadDecreaseAmount = {
   amendmentType: typeof AMENDMENT_TYPE.DECREASE_AMOUNT;
