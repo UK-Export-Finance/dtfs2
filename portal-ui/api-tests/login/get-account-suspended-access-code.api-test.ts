@@ -1,10 +1,10 @@
 import { when } from 'jest-when';
 import { HttpStatusCode, AxiosResponse } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { SessionCookieResponse, RequestHeaders } from '@ukef/dtfs2-common';
 import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
-import type { SessionCookieResponse, RequestHeaders } from '../types';
 import mockLogin from '../helpers/login';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
 
@@ -24,7 +24,7 @@ jest.mock('../../server/api', () => ({
   validatePartialAuthToken: jest.fn(),
 }));
 
-describe('GET /login/suspended-access-code', () => {
+describe('GET /login/temporarily-suspended-access-code', () => {
   const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
   const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
   const { get, post } = createApi(app);
@@ -36,7 +36,7 @@ describe('GET /login/suspended-access-code', () => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
   withPartial2faAuthValidationApiTests({
-    makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/suspended-access-code', {}, headers),
+    makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/temporarily-suspended-access-code', {}, headers),
     validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
     numberOfSignInOtpAttemptsRemaining: -1,
   });
@@ -60,7 +60,7 @@ describe('GET /login/suspended-access-code', () => {
     });
 
     it(`should render the suspended access code page with HTTP status ${HttpStatusCode.Ok}`, async () => {
-      const response = await get('/login/suspended-access-code', {}, { Cookie: sessionCookie });
+      const response = await get('/login/temporarily-suspended-access-code', {}, { Cookie: sessionCookie });
 
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('This account has been temporarily suspended');
@@ -77,7 +77,7 @@ describe('GET /login/suspended-access-code', () => {
         .calledWith(partialAuthToken)
         .mockResolvedValue({ data: {} } as AxiosResponse<unknown>);
 
-      const response = await get('/login/suspended-access-code', {}, { Cookie: invalidSessionCookie });
+      const response = await get('/login/temporarily-suspended-access-code', {}, { Cookie: invalidSessionCookie });
 
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');

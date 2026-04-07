@@ -1,6 +1,6 @@
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders } from '@ukef/dtfs2-common';
 import app from '../../server/createApp';
-import type { RequestHeaders } from '../types';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
 
 jest.mock('@ukef/dtfs2-common', () => ({

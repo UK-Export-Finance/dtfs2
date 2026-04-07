@@ -1,11 +1,11 @@
 import { when } from 'jest-when';
 import type { AxiosResponse } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '@ukef/dtfs2-common';
 import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
-import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '../types';
 
 type WithPartial2faAuthValidationApiTestsParams = {
   makeRequestWithHeaders: (headers?: RequestHeaders) => Promise<ApiResponse>;

@@ -1,8 +1,8 @@
 import { resetAllWhenMocks, when } from 'jest-when';
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
 import extractSessionCookie from '../helpers/extractSessionCookie';
-import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '../types';
 import mockLogin from '../helpers/login';
 import app from '../../server/createApp';
 import * as api from '../../server/api';

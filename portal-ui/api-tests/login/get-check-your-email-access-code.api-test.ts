@@ -1,10 +1,10 @@
 import { when } from 'jest-when';
 import { HttpStatusCode, AxiosResponse } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders, SessionCookieResponse } from '@ukef/dtfs2-common';
 import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
-import type { RequestHeaders, SessionCookieResponse } from '../types';
 import mockLogin from '../helpers/login';
 import { withPartial2faAuthValidationApiTests } from '../common-tests/partial-2fa-auth-validation-api-tests';
 

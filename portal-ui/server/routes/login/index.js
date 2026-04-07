@@ -386,11 +386,11 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
 
 /**
  * @openapi
- * /login/suspended-access-code:
+ * /login/temporarily-suspended-access-code:
  *   get:
- *     summary: Render suspended access code page
+ *     summary: Render temporarily suspended access code page
  *     tags: [Portal]
- *     description: Render suspended access code page
+ *     description: Render temporarily suspended access code page
  *     responses:
  *       200:
  *         description: Ok

@@ -1,8 +1,8 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
-import type { RequestHeaders } from '../types';
 
 const pwdResetToken = 'pwd-reset-token';
 

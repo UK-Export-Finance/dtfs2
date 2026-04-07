@@ -1,10 +1,10 @@
 import { PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
 import { login, loginWithSignInOtp, sendSignInOTP } from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
-import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '../types';
 
 type WithRoleValidationOtpApiTestsParams = {
   makeRequestWithHeaders: (headers: RequestHeaders) => Promise<ApiResponse>;

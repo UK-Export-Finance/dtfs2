@@ -1,8 +1,8 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '@ukef/dtfs2-common';
 import { login, loginWithSignInLink } from '../../server/api';
 import app from '../../server/createApp';
-import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '../types';
 import { SIGN_IN_TOKEN_LINK_TOKEN } from '../fixtures/sign-in-token-constants';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';

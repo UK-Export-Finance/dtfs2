@@ -2,8 +2,8 @@ import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { ACCESS_CODE_PAGES, ROLES, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { RequestHeaders } from '@ukef/dtfs2-common';
 import api from '../../server/api';
-import type { RequestHeaders } from '../types';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 
