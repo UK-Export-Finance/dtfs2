@@ -53,6 +53,7 @@ const assertAccessCodePagesCommonElements = ({ page, expectedAttempts }) => {
  */
 const commonBeforeEach = (user, opts = { login: true }) => {
   const { username } = user;
+
   cy.getUserByUsername(username);
   cy.resetPortalUserStatusAndNumberOfSignInOTPs(username);
   if (opts.login) {
@@ -69,6 +70,7 @@ const commonBeforeEach = (user, opts = { login: true }) => {
 const assertEmptyCodeValidation = (page) => {
   page.accessCodeInput().clear();
   cy.clickSubmitButton();
+
   errorSummary().should('contain', 'Enter access code');
   cy.assertText(page.inlineError(), 'Error: Enter access code');
 };

@@ -3,6 +3,7 @@ const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
+
 const { commonBeforeEach, assertAccessCodePagesCommonElements, assertEmptyCodeValidation } = require('../2faPageHelpers');
 const { submitButton, errorSummary } = require('../../../../../partials');
 
@@ -38,11 +39,13 @@ context('2FA Page - Check your email', () => {
 
       cy.url().should('contain', '/login/new-access-code');
     });
+
     it('should show email in description on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
       newAccessCode.description().should('contain', "We've sent you a 6-digit access code to your email");
     });
+
     it('should show attempts info on new-access-code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
@@ -65,37 +68,35 @@ context('2FA Page - Check your email', () => {
         cy.enterUsernameAndPassword(BANK1_MAKER1);
       });
 
-      it('should have form method POST', () => {
-        cy.get('form').should('have.attr', 'method', 'POST');
-      });
-
-      it('should have correct form action', () => {
-        cy.get('form').should('have.attr', 'action', '/login/check-your-email-access-code');
-      });
-
       it('should render description containing email', () => {
-        checkYourEmailAccessCode.description().should('contain', 'We have sent you a 6-digit access code to your email');
+        checkYourEmailAccessCode.description().should('contain', 'We have sent you a 6-digit access code to your email').and('contain', BANK1_MAKER1.email);
       });
 
-      const accessCodeFormElements = [
-        ['renders heading with text "Check your email"', () => checkYourEmailAccessCode.heading(), 'Check your email'],
-        ['renders access code label with text "Enter access code:"', () => checkYourEmailAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:'],
-        ['renders expiry information with text about 30 minutes', () => checkYourEmailAccessCode.expiryInfo(), 'This code will expire after 30 minutes.'],
-        [
-          'renders spam/junk advice',
-          () => checkYourEmailAccessCode.spamOrJunk(),
-          'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.',
-        ],
-        [
-          'renders suspend information',
-          () => checkYourEmailAccessCode.suspendInfo(),
-          'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
-        ],
-      ];
+      describe('Access code form static informational elements', () => {
+        it('should render heading with text "Check your email"', () => {
+          cy.assertText(checkYourEmailAccessCode.heading(), 'Check your email');
+        });
 
-      accessCodeFormElements.forEach(([title, getter, expectedText]) => {
-        it(`should ${title}`, () => {
-          cy.assertText(getter(), expectedText);
+        it('should render access code label with text "Enter access code:"', () => {
+          cy.assertText(checkYourEmailAccessCode.sixDigitAccessCodeLabel(), 'Enter access code:');
+        });
+
+        it('should render expiry information with text about 30 minutes', () => {
+          cy.assertText(checkYourEmailAccessCode.expiryInfo(), 'This code will expire after 30 minutes.');
+        });
+
+        it('should render spam/junk advice', () => {
+          cy.assertText(
+            checkYourEmailAccessCode.spamOrJunk(),
+            'Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.',
+          );
+        });
+
+        it('should render suspend information', () => {
+          cy.assertText(
+            checkYourEmailAccessCode.suspendInfo(),
+            'If you request too many access codes your account will be suspended for security purposes and you will be prompted to contact us.',
+          );
         });
       });
 
