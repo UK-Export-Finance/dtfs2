@@ -17,10 +17,7 @@ describe('decreaseAmount', () => {
     // Assert
     const expected = {
       amendmentType: AMENDMENT_TYPE.DECREASE_AMOUNT,
-      amendmentData: {
-        amount: 10000,
-        date: '2024-07-01',
-      },
+      amendmentData: params,
     };
 
     expect(result).toEqual(expected);

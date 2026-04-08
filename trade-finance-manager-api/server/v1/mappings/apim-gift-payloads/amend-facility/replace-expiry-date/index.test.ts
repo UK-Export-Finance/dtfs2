@@ -16,9 +16,7 @@ describe('replaceExpiryDate', () => {
     // Assert
     const expected = {
       amendmentType: AMENDMENT_TYPE.REPLACE_EXPIRY_DATE,
-      amendmentData: {
-        expiryDate: '2024-07-01',
-      },
+      amendmentData: params,
     };
 
     expect(result).toEqual(expected);
