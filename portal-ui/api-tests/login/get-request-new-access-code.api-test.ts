@@ -129,5 +129,14 @@ describe('GET /login/request-new-access-code', () => {
 
       expect(response.status).toEqual(HttpStatusCode.BadRequest);
     });
+
+    it('should render problem-with-service page when numberOfSignInOtpAttemptsRemaining is less than -1', async () => {
+      sessionCookie = await setupSessionWithAttempts(-999);
+
+      const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
+
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      expect(response.text).toContain('Problem with the service');
+    });
   });
 });

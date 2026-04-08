@@ -137,5 +137,64 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
         mockUnsuccessfulSendSignInOtpResponseWithStatusCode(500);
       }
     });
+
+    describe('OTP expiration handling', () => {
+      const partialAuthToken = 'partial auth token';
+      const email = 'email@example.com';
+      const password = 'a password';
+      let sessionCookie: string;
+
+      beforeEach(async () => {
+        resetAllWhenMocks();
+        jest.clearAllMocks();
+        mockedLogin.mockImplementation(mockLogin(partialAuthToken));
+        mockedSendSignInOTP.mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft } });
+        sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
+        when(mockedValidatePartialAuthToken)
+          .calledWith(partialAuthToken)
+          .mockResolvedValueOnce({} as any);
+      });
+
+      it('should redirect to /login/access-code-expired when OTP has expired via isExpired flag', async () => {
+        (api.loginWithSignInOtp as jest.Mock).mockResolvedValue({ isExpired: true });
+
+        const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
+
+        expect(status).toEqual(HttpStatusCode.Found);
+        expect(headers.location).toEqual('/login/access-code-expired');
+      });
+
+      it('should redirect to /login/access-code-expired when API returns 401 with expired error message', async () => {
+        const expiredError = Object.assign(new Error('Unauthorized'), {
+          isAxiosError: true,
+          response: {
+            status: HttpStatusCode.Unauthorized,
+            data: { errors: [{ msg: 'The access code has expired. Request a new code.' }] },
+          },
+        });
+        (api.loginWithSignInOtp as jest.Mock).mockRejectedValue(expiredError);
+
+        const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
+
+        expect(status).toEqual(HttpStatusCode.Found);
+        expect(headers.location).toEqual('/login/access-code-expired');
+      });
+
+      it('should redirect to /login/access-code-expired when API returns 403 with expired error message', async () => {
+        const expiredError = Object.assign(new Error('Forbidden'), {
+          isAxiosError: true,
+          response: {
+            status: HttpStatusCode.Forbidden,
+            data: { errors: [{ msg: 'access code expired' }] },
+          },
+        });
+        (api.loginWithSignInOtp as jest.Mock).mockRejectedValue(expiredError);
+
+        const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
+
+        expect(status).toEqual(HttpStatusCode.Found);
+        expect(headers.location).toEqual('/login/access-code-expired');
+      });
+    });
   });
 };
