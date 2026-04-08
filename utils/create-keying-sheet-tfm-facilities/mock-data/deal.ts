@@ -1,4 +1,4 @@
-import { Deal } from '@ukef/dtfs2-common';
+import { GefDeal } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 
 /**
@@ -10,7 +10,7 @@ import { ObjectId } from 'mongodb';
  * @param portalUserId - id of a portal user
  * @returns a deal
  */
-export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: ObjectId): Deal => ({
+export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: ObjectId): GefDeal => ({
   _id: dealId,
   dealType: 'GEF',
   version: 1,
@@ -102,6 +102,8 @@ export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: Object
       addressLine2: '2nd Line of Address',
       locality: 'London',
       postalCode: 'SW1A 1AA',
+      country: 'United Kingdom',
+      region: 'London',
     },
     industries: [
       {
