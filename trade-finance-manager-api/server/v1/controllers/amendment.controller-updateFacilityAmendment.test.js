@@ -1,6 +1,7 @@
 const { createMocks } = require('node-mocks-http');
 const { HttpStatusCode } = require('axios');
 const { cloneDeep } = require('lodash');
+const { canSendToAcbs, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const amendmentController = require('./amendment.controller');
 const { MOCK_AMENDMENT, MOCK_AMENDMENT_WITH_UKEF_DECISION } = require('../__mocks__/mock-amendment');
@@ -15,6 +16,11 @@ jest.mock('../helpers/create-tasks-amendment.helper', () => ({
   createAmendmentTasks: jest.fn(),
   updateAmendmentTasks: jest.fn(),
   getTasksAssignedToUserByGroup: jest.fn(),
+}));
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  canSendToAcbs: jest.fn(),
 }));
 
 const {
@@ -47,6 +53,7 @@ const facility = {
 };
 const deal = {
   dealSnapshot: MOCK_BSS_EWCS_DEAL,
+  tfm: {},
 };
 
 beforeEach(() => {
@@ -150,6 +157,9 @@ describe('updated facility amendment API call', () => {
         { ...requestBodyWithUnderwriterManager, tasks: TASKS_ASSIGNED_TO_UNDERWRITER_MANAGER },
         auditDetails,
       );
+
+      expect(canSendToAcbs).toHaveBeenCalledTimes(1);
+      expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
     });
   });
 
@@ -182,6 +192,18 @@ describe('updated facility amendment API call', () => {
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       });
+
+      it('should call canSendToAcbs with isTaskUpdate as true', async () => {
+        // Arrange
+        const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
+
+        // Act
+        await amendmentController.updateFacilityAmendment(mockRequest, res);
+
+        // Assert
+        expect(canSendToAcbs).toHaveBeenCalledTimes(1);
+        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+      });
     });
 
     describe('when UKEF decision does exist for the facility amendment', () => {
@@ -201,6 +223,36 @@ describe('updated facility amendment API call', () => {
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         expect(res._getData().ukefDecision).toEqual(MOCK_AMENDMENT_WITH_UKEF_DECISION.ukefDecision);
+      });
+
+      it('should call canSendToAcbs with isTaskUpdate as true', async () => {
+        // Arrange
+        const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
+
+        // Act
+        await amendmentController.updateFacilityAmendment(mockRequest, res);
+
+        // Assert
+        expect(canSendToAcbs).toHaveBeenCalledTimes(1);
+        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+      });
+    });
+
+    describe('when update to amendment is not a task update', () => {
+      it('should call canSendToAcbs with isTaskUpdate as false', async () => {
+        // Arrange
+        const updateAmendmentBody = {
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+        };
+
+        const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+        // Act
+        await amendmentController.updateFacilityAmendment(req, res);
+
+        // Assert
+        expect(canSendToAcbs).toHaveBeenCalledTimes(1);
+        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
       });
     });
   });
