@@ -21,6 +21,58 @@ const headers = {
   },
 };
 
+/**
+ * creates a sign in OTP code for the user and emails it to them
+ * @param {import('@ukef/dtfs2-common').PortalUser} user
+ * @param {object} auditDetails
+ * @returns data from the API call
+ */
+const createSignInOTPCode = async (user, auditDetails) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/users/me/sign-in-code`,
+      headers: headers.central,
+      data: {
+        user,
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch ({ response }) {
+    console.error('Error creating sign in OTP code: %o', response?.data || response);
+
+    return response?.data;
+  }
+};
+
+/**
+ * verifies the sign in OTP code for the user and signs in the user if valid
+ * @param {string} userId
+ * @param {string} signInOTPCode
+ * @param {object} auditDetails
+ * @returns response from the API call
+ */
+const verifySignInOTPCode = async (userId, signInOTPCode, auditDetails) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/users/me/validate-sign-in-code`,
+      headers: headers.central,
+      data: {
+        userId,
+        signInOTPCode,
+        auditDetails,
+      },
+    });
+  } catch ({ response }) {
+    console.error('Error verifying sign in OTP code: %o', response?.data || response);
+
+    return response;
+  }
+};
+
 const findOneDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
@@ -1082,6 +1134,8 @@ const getTfmFacility = async (facilityId) => {
 };
 
 module.exports = {
+  createSignInOTPCode,
+  verifySignInOTPCode,
   findOneDeal,
   createDeal,
   updateDeal,

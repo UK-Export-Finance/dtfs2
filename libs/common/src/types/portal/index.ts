@@ -4,3 +4,4 @@ export * from './facility-status';
 export * from './roles';
 export * from './amendment';
 export * from './dashboard';
+export * from './login';

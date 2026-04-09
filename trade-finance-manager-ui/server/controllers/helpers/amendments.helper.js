@@ -12,6 +12,7 @@ const {
   STATUS_TAG_COLOURS,
   isDealCancelled,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
+  sortAmendmentsByReferenceNumber,
 } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
@@ -193,10 +194,10 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
   let amendments = amendmentsArray;
 
   if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
-    // reverses array so most recent first
-    amendments = amendmentsArray.reverse();
+    amendments = sortAmendmentsByReferenceNumber(amendmentsArray, {
+      sortByVersionWhenNoReferenceNumber: true,
+    });
   }
-
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
 

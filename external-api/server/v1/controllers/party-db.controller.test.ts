@@ -112,7 +112,7 @@ describe('getOrCreateParty', () => {
 
   it(`should return ${HttpStatusCode.InternalServerError} when an error is thrown`, async () => {
     // Arrange
-    const mockError = new Error('Test');
+    const mockError = new Error('Mock error');
 
     jest.mocked(findACBSIndustrySector).mockRejectedValueOnce(mockError);
 
@@ -190,7 +190,7 @@ describe('getOrCreateParty', () => {
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenLastCalledWith({
       method: 'post',
-      url: `${APIM_MDM_URL}customers`,
+      url: `${APIM_MDM_URL}v1/customers`,
       headers,
       data: {
         companyRegistrationNumber: mockBody.companyRegNo,

@@ -267,7 +267,7 @@ describe('submissionTypeToConstant()', () => {
   it('should return null label for wrong type', () => {
     const result = submissionTypeToConstant(wrong);
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });
 

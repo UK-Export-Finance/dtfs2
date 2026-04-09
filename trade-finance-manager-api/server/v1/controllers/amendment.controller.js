@@ -243,6 +243,8 @@ const updateFacilityAmendment = async (req, res) => {
 
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
+  // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
+  let isTaskUpdate = false;
 
   /** Payload computation */
   // Tasks
@@ -263,6 +265,13 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       if (payload?.taskUpdate?.updateTask) {
+        /**
+         * if payload is a task update,
+         * then this flag has to be set to true
+         * so that ACBS is not called when task is updated only
+         */
+        isTaskUpdate = true;
+
         const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
         payload.tasks = tasks;
 
@@ -323,7 +332,7 @@ const updateFacilityAmendment = async (req, res) => {
       // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {
         // TFM Facility update + ACBS Interaction
-        if (canSendToAcbs(amendment)) {
+        if (canSendToAcbs(amendment, isTaskUpdate)) {
           // Amend facility TFM properties
           await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
           // Amendment email notification to PDC

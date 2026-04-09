@@ -61,7 +61,13 @@ const baseRules = {
       consistent: true,
     },
   ],
-  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['draft', 'req', 'res'] }],
+  'no-param-reassign': [
+    'error',
+    {
+      props: true,
+      ignorePropertyModificationsFor: ['req', 'res', 'draft', 'draftUser', 'draftRequest', 'draftBank', 'result'],
+    },
+  ],
 };
 
 module.exports = {

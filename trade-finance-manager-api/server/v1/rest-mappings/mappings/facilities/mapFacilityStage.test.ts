@@ -68,7 +68,7 @@ describe('mapBssEwcsFacilityStage', () => {
       const invalidFacilityStage = 'invalid stage';
 
       const result = mapBssEwcsFacilityStage(invalidFacilityStage);
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

@@ -13,12 +13,14 @@ export {
   isPortalFacilityAmendmentsFeatureFlagEnabled,
   isSalesforceCustomerCreationEnabled,
   isPortal2FAFeatureFlagEnabled,
+  isTfmApimGiftIntegrationEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
 export * from './monetary-value';
 export * from './facility-calculations';
 export * from './format-date-for-email';
 export * from './get-ukef-deal-id';
+export * from './get-tfm-ukef-deal-id';
 export * from './is-ukef-email';
 export * from './fee-record-corrections';
 export * from './decode-html-entities';
@@ -61,3 +63,7 @@ export * from './format';
 export * from './can-submit-to-acbs';
 export * from './is-amendment-declined';
 export * from './errors';
+export * from './errors-include-message';
+export * from './sort-amendments';
+export * from './parse-api-error-response';
+export * from './otp-login-result';
