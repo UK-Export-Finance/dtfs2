@@ -73,6 +73,16 @@ export const OBLIGATION_SUBTYPE_MAP = {
 } as const;
 
 /**
+ * APIM/GIFT amendment types.
+ * These are required to indicate the type of amendment being made to a facility in APIM/GIFT.
+ */
+const AMENDMENT_TYPE = {
+  INCREASE_AMOUNT: 'IncreaseAmount',
+  DECREASE_AMOUNT: 'DecreaseAmount',
+  REPLACE_EXPIRY_DATE: 'ReplaceExpiryDate',
+} as const;
+
+/**
  * Consumer name for APIM TFS - GIFT facility integration.
  * This is required to indicate which service/consumer is sending data to APIM/GIFT.
  */
@@ -126,6 +136,7 @@ export const REPAYMENT_TYPE = {
 const RISK_STATUS = 'Corporate' as const;
 
 export const APIM_GIFT_INTEGRATION = {
+  AMENDMENT_TYPE,
   CONSUMER,
   DEFAULTS: {
     COUNTERPARTY_ROLE_CODE: {
