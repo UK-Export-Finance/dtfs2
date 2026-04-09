@@ -25,7 +25,7 @@ export const findACBSIndustrySector = async (industryId: number): Promise<{ data
 
   const response = await axios({
     method: 'GET',
-    url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
+    url: `${APIM_MDM_URL}v1/sector-industries?ukefIndustryId=${industryId}`,
     headers,
   }).catch((error: AxiosError) => {
     console.error('Error calling ACBS industry sector %o %s', error?.response?.data, error?.response?.status);

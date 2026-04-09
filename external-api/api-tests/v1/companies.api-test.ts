@@ -9,7 +9,7 @@ dotenv.config();
 
 const { APIM_MDM_URL } = process.env;
 
-const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_MDM_URL}companies?registrationNumber=${registrationNumber}`;
+const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_MDM_URL}v1/companies?registrationNumber=${registrationNumber}`;
 
 const { get } = api(app);
 
@@ -110,7 +110,7 @@ const testCases = [
 
 describe('GET /companies/:registrationNumber', () => {
   it.each(testCases)(
-    'returns the $expectedStatus with the response body from APIM MDM, if MDM returns a $expectedStatus code with a response body',
+    'should return the $expectedStatus with the response body from APIM MDM, if MDM returns a $expectedStatus code with a response body',
     async ({ registrationNumber, expectedStatus, expectedBody }) => {
       axiosMock.onGet(getMdmUrlForRegistrationNumber(registrationNumber)).reply(expectedStatus, expectedBody);
 
@@ -121,7 +121,7 @@ describe('GET /companies/:registrationNumber', () => {
     },
   );
 
-  it(`returns a ${HttpStatusCode.BadRequest} if the company registration number is invalid`, async () => {
+  it(`should return a ${HttpStatusCode.BadRequest} if the company registration number is invalid`, async () => {
     const response = await get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
 
     expect(response.status).toEqual(HttpStatusCode.BadRequest);

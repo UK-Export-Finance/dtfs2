@@ -5,6 +5,7 @@ module.exports = {
   signInLink: require('./login/sign-in-link'),
   signInLinkExpired: require('./login/sign-in-link-expired'),
   checkYourEmail: require('./login/check-your-email'),
+  checkYourEmailAccessCode: require('./login/check-your-email-access-code'),
   header: require('./header'),
   landingPage: require('./landingPage'),
   beforeYouStart: require('./beforeYouStart'),

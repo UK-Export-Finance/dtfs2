@@ -1,6 +1,7 @@
 /**
  * Cryptography-related constants used throughout the application.
  */
+// TODO: DTFS2-8243 - Align EXIPs with DTFS crypto standards
 export const CRYPTO = {
   // Configuration for password hashing
   HASHING: {
@@ -16,7 +17,7 @@ export const CRYPTO = {
     ALGORITHM: 'SHA512',
   },
   SALT: {
-    // Salt ramdom bytes
+    // Salt random bytes
     BYTES: 128,
   },
 };

@@ -1,19 +1,22 @@
 {% extends "index.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
+{% macro span(content, dataCy) %}
+  <span class="govuk-!-text-break-word" data-cy="{{ dataCy }}">{{ content }}</span>
+{% endmacro %}
+
 {% block pageTitle %}Report GEF utilisation and fees - Record correction{% endblock %}
 {% block content %}
-  <h1 class="govuk-heading-l" data-cy="main-heading">
-    Report GEF utilisation and fees
-  </h1>
-  <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
-  <p class="govuk-body" data-cy="corrections-info-text">
-    The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
-  </p>
-  <p class="govuk-body" data-cy="selection-text">
-    Select the record you would like to amend from the list below
-  </p>
-
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+      Report GEF utilisation and fees
+    </h1>
+    <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
+    <p class="govuk-body" data-cy="corrections-info-text">
+      The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
+    </p>
+    <p class="govuk-body" data-cy="selection-text">
+      Select the record you would like to amend from the list below
+    </p>
   {% set rows = [] %}
   {% for correction in corrections %}
     {% set facilityIdHtml %}
@@ -45,7 +48,7 @@
         attributes: { "data-cy": "pending-corrections-row--error-type" }
       },
       {
-        html: (correction.additionalInfo | replaceNewLinesWithBrTags),
+        html: span((correction.additionalInfo | replaceNewLinesWithBrTags | safe), "additional-info"),
         attributes: { "data-cy": "pending-corrections-row--error-summary" }
       }
     ] %}
@@ -73,6 +76,7 @@
       }
     ],
     rows: rows,
+    classes: "pending-corrections-table",
     attributes: {
       "data-cy": "pending-corrections-table"
     }

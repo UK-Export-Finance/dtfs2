@@ -138,7 +138,8 @@ describe(page, () => {
       correctionId: 1,
       facilityId: '1111',
       exporter: 'Exporter 1',
-      additionalInfo: 'Additional info 1',
+      // Test newlines are converted to <br>
+      additionalInfo: 'Line 1\nLine 2',
       formattedReasons: 'Reason 1, Other',
       formattedReportedFees: 'USD 1,000.00',
     };
@@ -146,7 +147,8 @@ describe(page, () => {
       correctionId: 2,
       facilityId: '2222',
       exporter: 'Exporter 2',
-      additionalInfo: 'Additional info 2',
+      // Test <br> tags in input are not rendered as <br>
+      additionalInfo: 'Should not render <br> here',
       formattedReasons: 'Reason 2',
       formattedReportedFees: 'JPY 10,000.00',
     };
@@ -190,13 +192,17 @@ describe(page, () => {
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--exporter"]`).toRead(firstCorrection.exporter);
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--reported-fees-paid"]`).toRead(firstCorrection.formattedReportedFees);
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-type"]`).toRead(firstCorrection.formattedReasons);
-      wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead(firstCorrection.additionalInfo);
+
+      wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead('Line 1Line 2');
+      wrapper.expectElement(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toContain('Line 1<br>Line 2');
+
+      wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead('Should not render  here');
+      wrapper.expectElement(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toContain('Should not render <br> here');
 
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"]`).toRead(secondCorrection.facilityId);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--exporter"]`).toRead(secondCorrection.exporter);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--reported-fees-paid"]`).toRead(secondCorrection.formattedReportedFees);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-type"]`).toRead(secondCorrection.formattedReasons);
-      wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead(secondCorrection.additionalInfo);
     });
 
     it('should render the facility ids of the corrections as links to the provide correction page', () => {

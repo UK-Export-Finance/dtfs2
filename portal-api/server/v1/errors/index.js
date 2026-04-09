@@ -6,6 +6,7 @@ const InvalidSessionIdentifierError = require('./invalid-session-identifier.erro
 const UserNotFoundError = require('./user-not-found.error');
 const InvalidEmailAddressError = require('./invalid-email-address.error');
 const { InvalidReportStatusError } = require('./invalid-report-status.error');
+const InvalidOTPError = require('./invalid-otp-error');
 
 module.exports = {
   InvalidDatabaseQueryError,
@@ -16,4 +17,5 @@ module.exports = {
   InvalidSessionIdentifierError,
   InvalidEmailAddressError,
   InvalidReportStatusError,
+  InvalidOTPError,
 };

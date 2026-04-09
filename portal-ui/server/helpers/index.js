@@ -22,6 +22,8 @@ const { getNowAsEpoch } = require('./date');
 const { convertUserFormDataToRequest } = require('./convertUserFormDataToRequest');
 const { getRecordCorrectionCancelLinkHref } = require('./get-record-correction-cancel-link-href');
 const { mapFacilityProperties } = require('./map-facility-properties');
+const { getNextAccessCodePage } = require('./getNextAccessCodePage');
+const { fixNullCurrencyOnBondAndLoans } = require('./fixNullCurrencyOnBondAndLoans');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -49,4 +51,6 @@ module.exports = {
   convertUserFormDataToRequest,
   getRecordCorrectionCancelLinkHref,
   mapFacilityProperties,
+  getNextAccessCodePage,
+  fixNullCurrencyOnBondAndLoans,
 };

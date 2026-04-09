@@ -4,7 +4,7 @@ describe('Nunjucks filter - sentenceCase', () => {
   describe('Should return argument as response', () => {
     it('Should return `null`', () => {
       const result = sentenceCase(null);
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
 
     it('Should return `undefined`', () => {
