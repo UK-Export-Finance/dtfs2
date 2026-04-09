@@ -1,0 +1,46 @@
+import type { Response } from 'express';
+import type { CustomExpressRequest } from '@ukef/dtfs2-common';
+
+type BaseRequest = CustomExpressRequest<Record<string, never>>;
+
+type GetAccessCodeExpiredPageRequestSession = {
+  numberOfSignInOtpAttemptsRemaining?: number;
+  userEmail?: string;
+};
+export type GetAccessCodeExpiredPageRequest = BaseRequest & {
+  session: GetAccessCodeExpiredPageRequestSession;
+};
+
+/**
+ * Controller to get the access code expired page.
+ * @param req - the request object
+ * @param res - the response object
+ */
+export const getAccessCodeExpiredPage = (req: GetAccessCodeExpiredPageRequest, res: Response) => {
+  try {
+    const {
+      session: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
+    } = req;
+
+    /**
+     * Defensive check: the number of remaining OTP attempts should always be
+     * present in the session when rendering the "access code expired" page.
+     * If it is missing (undefined) then the request is in an unexpected state
+     * — log an error and render the generic problem page rather than attempting
+     * to render the expired page with incomplete data.
+     */
+    if (attemptsLeft === undefined) {
+      console.error('No remaining OTP attempts found in session when rendering access code expired page');
+      return res.render('_partials/problem-with-service.njk');
+    }
+
+    const viewModel = {
+      attemptsLeft,
+    };
+
+    return res.render('login/access-code-expired.njk', viewModel);
+  } catch (error) {
+    console.error('Error getting access code expired page %o', error);
+    return res.render('_partials/problem-with-service.njk');
+  }
+};

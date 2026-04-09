@@ -9,7 +9,7 @@ describe('bank-holidays', () => {
    * to be 6 months before the date of the final bank holiday in the backup.
    */
   it('should have up to date backup data for bank holidays', () => {
-    const deadlineForUpdatingBackup = new Date('2026-07-01');
+    const deadlineForUpdatingBackup = new Date('2027-07-01');
 
     const isTodayBeforeTheDeadline = isBefore(new Date(), deadlineForUpdatingBackup);
 

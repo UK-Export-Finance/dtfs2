@@ -199,19 +199,29 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.error);
   }
 
-  const { tokenObject, userEmail } = loginResult;
+  const { tokenObject, userEmail, userId } = loginResult;
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
     loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
-    user: { email: userEmail },
+    user: { email: userEmail, userId },
     expiresIn: tokenObject.expires,
   });
 };
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
+/**
+ * Creates and emails a sign-in OTP to the user associated with the provided email address.
+ */
+module.exports.createAndEmailSignInOTP = (req, res) => signInLinkController.createAndEmailSignInOTP(req, res);
+
 module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWithSignInLink(req, res);
+
+/**
+ * Verifies and logs in a user using a sign-in OTP.
+ */
+module.exports.loginWithOTP = (req, res) => signInLinkController.loginWithOTP(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;

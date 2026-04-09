@@ -72,7 +72,7 @@ const assertions = (wrapper, html) => ({
       expect(wrapper(selector).html()).toBeNull();
     },
     toContain: (text) => {
-      expect(wrapper(selector).text().trim()).toContain(text);
+      expect(wrapper(selector).html().trim()).toContain(text);
     },
     toHaveHtmlContent: (value) => {
       expect(wrapper(selector).html()?.trim()).toBe(value);

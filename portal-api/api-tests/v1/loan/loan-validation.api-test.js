@@ -812,23 +812,38 @@ describe('/v1/deals/:id/loan', () => {
         });
       });
 
-      describe('when not between 0 and 99', () => {
-        it('should return validationError', async () => {
+      describe('when not between 1 and 99', () => {
+        it('should return validationError for value above 99', async () => {
           const loan = {
             interestMarginFee: '100',
           };
 
-          let body = await updateLoanInDeal(dealId, loan);
+          const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
+        });
 
-          loan.interestMarginFee = '-1';
+        it('should return validationError for value below 0', async () => {
+          const loan = {
+            interestMarginFee: '-1',
+          };
 
-          body = await updateLoanInDeal(dealId, loan);
+          const body = await updateLoanInDeal(dealId, loan);
 
           expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
+        });
+
+        it('should return validationError for value of 0', async () => {
+          const loan = {
+            interestMarginFee: '0',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 1 and 99');
         });
       });
 

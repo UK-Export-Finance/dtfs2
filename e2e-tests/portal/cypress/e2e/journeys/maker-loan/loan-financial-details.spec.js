@@ -93,6 +93,12 @@ context('Loan Financial Details', () => {
 
       pages.loanFinancialDetails.currencyInput().should('be.visible');
 
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'RUB'); // should not contain Russian Ruble
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'XAF'); // should not contain CFA Francs
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'HKD'); // should not contain Hong Kong Dollars
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'NGN'); // should not contain Nigerian Naira
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'ZMK'); // should not contain Zambian Kwacha
+
       pages.loanFinancialDetails.conversionRateInput().should('be.visible');
 
       pages.loanFinancialDetails.conversionRateDateDayInput().should('be.visible');
@@ -154,6 +160,27 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.interestMarginFeeInput().blur();
 
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
+    });
+  });
+
+  describe('interestMarginFee validation', () => {
+    [
+      { value: '0', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '-1', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+      { value: '100', expectedMessage: 'Interest Margin % must be between 1 and 99' },
+    ].forEach(({ value, expectedMessage }) => {
+      it(`should show error when interest margin fee is '${value}'`, () => {
+        cy.assertRiskMarginValidationError({
+          value,
+          expectedMessage,
+          goToPage: goToPageWithUnconditionalFacilityStage,
+          facilityId: bssDealId,
+          inputSelector: () => pages.loanFinancialDetails.interestMarginFeeInput(),
+          errorSelector: () => pages.loanFinancialDetails.interestMarginFeeInputErrorMessage(),
+          partials,
+          detailsTabName: 'loan-financial-details',
+        });
+      });
     });
   });
 

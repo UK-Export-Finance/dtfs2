@@ -1,0 +1,3 @@
+const MOCK_UKEF_INDUSTRY_CODE = '1003';
+
+module.exports = MOCK_UKEF_INDUSTRY_CODE;

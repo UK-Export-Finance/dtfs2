@@ -41,6 +41,20 @@ const sendSignInLink = async (token) =>
   });
 
 /**
+ * Sends a new sign in OTP to a user
+ * @param {string} token auth token
+ * @returns {Promise<object>} Response object
+ */
+const sendSignInOTP = async (token) =>
+  axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-otp`,
+    headers: {
+      Authorization: token,
+    },
+  });
+
+/**
  * Logs in a user using a sign in link
  * @param {object} parameters token, userId and signInToken
  * @returns {Promise<object>} loginStatus, token and user
@@ -60,6 +74,31 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
     loginStatus,
     token,
     user,
+  };
+};
+
+/**
+ * Logs in a user using a sign in OTP
+ *
+ * @param {object} parameters - token, userId, signInOTP and isExpired
+ * @returns {Promise<{ token?: string; loginStatus?: string; user?: import('@ukef/dtfs2-common').PortalSessionUser; isExpired?: boolean }>} - Authenticated user details. The `isExpired` flag is returned when the submitted OTP has expired (true) — callers can use this to show an "access code expired" flow.
+ */
+const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-otp/${signInOTP}/login`,
+    headers: {
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+      Authorization: requestAuthToken,
+    },
+  });
+
+  const { token, loginStatus, user, isExpired } = response.data;
+  return {
+    loginStatus,
+    token,
+    user,
+    isExpired,
   };
 };
 
@@ -398,6 +437,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -502,6 +542,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -1227,7 +1268,9 @@ module.exports = {
   user,
   createUser,
   sendSignInLink,
+  sendSignInOTP,
   loginWithSignInLink,
+  loginWithSignInOtp,
   updateUser,
   getCurrencies,
   getCountries,

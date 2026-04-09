@@ -3,18 +3,25 @@ const { signInLink } = require('../../../../portal/cypress/e2e/pages');
 const { SIGN_IN_TOKENS } = require('../../../../portal/cypress/fixtures/constants');
 const relative = require('../../e2e/relativeURL');
 
+const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
+
 module.exports = (opts) => {
   const { username, password, roles } = opts;
-  cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
-  cy.enterUsernameAndPassword({ username, password });
 
-  cy.url().should('eq', relative('/login/check-your-email'));
+  if (PORTAL_2FA_FF === 'true') {
+    cy.loginOTP({ username, password });
+  } else {
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
+    cy.enterUsernameAndPassword({ username, password });
 
-  const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
-  cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
-  cy.getUserByUsername(username).then(({ _id }) => {
-    signInLink.visit({ token: signInToken, userId: _id });
-  });
+    cy.url().should('eq', relative('/login/check-your-email'));
+
+    const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+    cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
+    cy.getUserByUsername(username).then(({ _id }) => {
+      signInLink.visit({ token: signInToken, userId: _id });
+    });
+  }
 
   /**
    * If the user has a single role, and that role is payment report officer,

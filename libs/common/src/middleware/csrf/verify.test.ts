@@ -62,6 +62,24 @@ describe('verify', () => {
     expect(crypto.createHmac).not.toHaveBeenCalled();
   });
 
+  it('should return next and not call HMAC if the request URL includes the SSO redirect URL', () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks({
+      method: 'POST',
+      session: {
+        csrf: '1234',
+      },
+      originalUrl: '/auth/sso-redirect?code=1234',
+    });
+
+    // Act
+    verify(req, res, next);
+
+    // Assert
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(crypto.createHmac).not.toHaveBeenCalled();
+  });
+
   it('should copy CSRF from query to body, when supplied in req.query', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({

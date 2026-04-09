@@ -1,6 +1,10 @@
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
+  hash,
+  CRYPTO,
+  HEX_STRING_TYPE,
+  OTP,
   UtilisationReportEntity,
   FeeRecordEntity,
   PaymentEntity,
@@ -15,7 +19,7 @@ const {
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
-const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES } = require('../e2e-fixtures');
+const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES, PORTAL_2FA_ACCESS_CODE } = require('../e2e-fixtures');
 const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
@@ -51,11 +55,15 @@ module.exports = {
 
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-      const salt = generateSalt();
-      const saltHex = salt.toString('hex');
-      const hash = generateHash(newSignInToken, saltHex);
-      const hashHex = hash.toString('hex');
+
+      const saltValue = generateSalt();
+      const hashValue = generateHash(newSignInToken, saltValue);
+
+      const saltHex = saltValue.toString('hex');
+      const hashHex = hashValue.toString('hex');
+
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
+
       const userCollection = await getUsersCollection();
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
     };
@@ -64,11 +72,11 @@ module.exports = {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
 
-        const salt = generateSalt();
-        const saltHex = salt.toString('hex');
+        const saltValue = generateSalt();
+        const hashValue = generateHash(signInTokenFromLink, saltValue);
 
-        const hash = generateHash(signInTokenFromLink, saltHex);
-        const hashHex = hash.toString('hex');
+        const saltHex = saltValue.toString('hex');
+        const hashHex = hashValue.toString('hex');
 
         return { saltHex, hashHex, expiry };
       });
@@ -90,6 +98,59 @@ module.exports = {
             signInLinkSendCount: '',
             blockedStatusReason: '',
             signInLikeTokens: '',
+            disabled: '',
+          },
+        },
+      );
+    };
+
+    /**
+     * overrides portal user's generated OTP with a mocked valid OTP to allow tests to bypass the need to retrieve the OTP from email
+     * generates a salt and hash hex for the OTP and adds an expiry
+     * inserts the OTP details into the user's record in the database
+     */
+    const overridePortalUserSignInOTPWithValidTokenByUsername = async ({ username }) => {
+      const users = await getUsersCollection();
+
+      const thirtyMinutesInMilliseconds = OTP.DURATION_MILLISECONDS;
+      const stringType = HEX_STRING_TYPE;
+
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
+      const expiry = Date.now() + thirtyMinutesInMilliseconds;
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+            signInTokens: [{ hashHex, saltHex, expiry }],
+          },
+        },
+      );
+    };
+
+    /**
+     * resets the portal user's OTP status and number of OTPs sent to ensure the user is in the correct state for testing OTP sign in flow
+     */
+    const resetPortalUserStatusAndNumberOfSignInOTPs = async (username) => {
+      const users = await getUsersCollection();
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+          },
+          $unset: {
+            signInOTPSendDate: '',
+            signInOTPSendCount: '',
+            blockedStatusReason: '',
+            signInTokens: '',
             disabled: '',
           },
         },
@@ -314,7 +375,9 @@ module.exports = {
       getUserFromDbByUsername,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
+      overridePortalUserSignInOTPWithValidTokenByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
+      resetPortalUserStatusAndNumberOfSignInOTPs,
       disablePortalUserByUsername,
       insertManyTfmDeals,
       deleteAllTfmDeals,

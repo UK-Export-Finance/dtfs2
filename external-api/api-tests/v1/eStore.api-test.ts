@@ -60,7 +60,7 @@ const mockExporterResponse = {
 };
 
 // mocks test for estore if exists
-axiosMock.onGet(`${APIM_ESTORE_URL}/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
+axiosMock.onGet(`${APIM_ESTORE_URL}v1//sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
 
 describe('/estore', () => {
   describe('Empty payload', () => {
