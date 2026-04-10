@@ -37,7 +37,7 @@ runs:
 
     # Step 2: Set up Azure CLI defaults.
     - name: Defaults ✨
-      uses: azure/cli@v3.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Basic
@@ -82,7 +82,7 @@ runs:
 
     # Step 8: Create and swap deployment slot.
     - name: Slot 🔀
-      uses: azure/cli@v3.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Create new temporary slot
@@ -103,7 +103,7 @@ runs:
     # Step 9: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
-      uses: azure/cli@v3.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Delete temporary slot
