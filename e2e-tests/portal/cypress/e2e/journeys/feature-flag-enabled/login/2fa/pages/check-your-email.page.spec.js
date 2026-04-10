@@ -25,7 +25,7 @@ context('2FA Page - Check your email', () => {
        * the count becomes 1 and attemptsLeft becomes 2, which allows us to land on the check-your-email-access-code page
        * and test its page elements.
        */
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
+      cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 0 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 

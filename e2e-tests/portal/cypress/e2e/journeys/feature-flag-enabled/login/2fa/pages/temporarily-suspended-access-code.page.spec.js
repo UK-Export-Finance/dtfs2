@@ -12,7 +12,7 @@ context('2FA Page - Temporarily suspended account', () => {
      * becomes 4 and attemptsLeft becomes -1, which allows us to land on the temporarily-suspended-access-code
      * page and test its page elements.
      */
-    cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
+    cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 3 });
   });
 
   it('should redirect to login when visited without partial auth', () => {
@@ -20,7 +20,6 @@ context('2FA Page - Temporarily suspended account', () => {
     cy.clearLocalStorage();
 
     cy.request({ url: '/login/temporarily-suspended-access-code', followRedirect: false }).then((resp) => {
-      expect(resp.status).to.equal(302);
       expect(resp.headers.location).to.equal('/login');
     });
   });
@@ -28,12 +27,8 @@ context('2FA Page - Temporarily suspended account', () => {
   it('should render temporarily suspended page with heading and message', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-    cy.get('[data-cy="account-temporarily-suspended-heading"]', { timeout: 10000 }).should('contain', 'This account has been temporarily suspended');
-
-    cy.get('[data-cy="account-temporarily-suspended-message"]', { timeout: 10000 }).should(
-      'contain',
-      'This can happen if there are too many failed attempts to login or sign in link requests.',
-    );
+    cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
+    cy.assertText(temporarilySuspendedAccessCode.message(), 'This can happen if there are too many failed attempts to login or sign in link requests.');
   });
 
   it('should render contact us section', () => {

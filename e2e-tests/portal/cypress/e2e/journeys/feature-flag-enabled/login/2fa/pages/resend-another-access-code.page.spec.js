@@ -25,7 +25,7 @@ context('2FA Page - Resend another access code', () => {
        * the count becomes 3 and attemptsLeft becomes 0, which allows us to land on the resend-another-access-code page
        * and test its page elements.
        */
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: MAX_OTP_SENDS - 1 });
+      cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: MAX_OTP_SENDS - 1 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 

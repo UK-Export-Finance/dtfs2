@@ -9,7 +9,7 @@ const { accessCodeExpired, checkYourEmailAccessCode } = require('../../../../../
 context('2FA Page - Access code expired', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
-    cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
+    cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 0 });
   });
 
   describe('when visited without partial auth', () => {
@@ -25,7 +25,7 @@ context('2FA Page - Access code expired', () => {
       cy.url().should('include', '/login/check-your-email-access-code');
 
       // Set expired OTP in database
-      cy.overridePortalUserSignInOTPWithExpiredTokenByUsername({ username: BANK1_MAKER1.username });
+      cy.overridePortalUserSignInOTPWithExpiredToken({ username: BANK1_MAKER1.username });
 
       // Enter the expired access code and submit
       cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);

@@ -112,7 +112,7 @@ module.exports = {
      * directly when calling this task. To derive a `count` that yields a
      * desired `attemptsLeft`, use: `count = MAX_SIGN_IN_ATTEMPTS - 1 - attemptsLeft`.
      */
-    const overridePortalUserSignInOTPSendCountByUsername = async ({ username, count }) => {
+    const overridePortalUserSignInOTPSendCount = async ({ username, count }) => {
       const users = await getUsersCollection();
       return users.updateOne({ username: { $eq: username } }, { $set: { signInOTPSendCount: count } });
     };
@@ -152,7 +152,7 @@ module.exports = {
      * Sets the expiry timestamp to 31 minutes in the past (beyond the 30-minute OTP duration).
      * This allows E2E tests to verify that the application correctly detects and handles expired OTPs.
      */
-    const overridePortalUserSignInOTPWithExpiredTokenByUsername = async ({ username }) => {
+    const overridePortalUserSignInOTPWithExpiredToken = async ({ username }) => {
       const users = await getUsersCollection();
 
       const thirtyOneMinutesInMilliseconds = 31 * 60 * 1000;
@@ -416,11 +416,11 @@ module.exports = {
       log,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
-      overridePortalUserSignInOTPSendCountByUsername,
+      overridePortalUserSignInOTPSendCount,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
       overridePortalUserSignInOTPWithValidTokenByUsername,
-      overridePortalUserSignInOTPWithExpiredTokenByUsername,
+      overridePortalUserSignInOTPWithExpiredToken,
       resetPortalUserStatusAndNumberOfSignInLinks,
       resetPortalUserStatusAndNumberOfSignInOTPs,
       disablePortalUserByUsername,

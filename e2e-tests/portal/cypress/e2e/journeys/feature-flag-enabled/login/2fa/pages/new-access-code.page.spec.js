@@ -25,7 +25,7 @@ context('2FA Page - New access code', () => {
        * the count becomes 2 and attemptsLeft becomes 1, which allows us to land on the new-access-code page
        * and test its page elements.
        */
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: MAX_OTP_SENDS - 2 });
+      cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: MAX_OTP_SENDS - 2 });
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 

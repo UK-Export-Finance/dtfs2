@@ -15,7 +15,7 @@ const sharedAccessCodeValidationTests = ({ page, user }) => {
     cy.enterUsernameAndPassword(user);
     page.accessCodeInput().clear();
     page.accessCodeInput().type('000000');
-    cy.get('form').submit();
+    cy.clickSubmitButton();
 
     errorSummary().should('exist');
     page.inlineError().should('exist');

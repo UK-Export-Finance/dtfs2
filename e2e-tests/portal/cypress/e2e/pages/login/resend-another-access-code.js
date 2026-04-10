@@ -9,7 +9,6 @@ const resendAnotherAccessCode = {
   attemptsInfo: () => cy.get('[data-cy="access-code-attempts-info"]'),
   suspendInfo: () => cy.get('[data-cy="access-code-suspend-info"]'),
   obscuredEmail: () => cy.get('[data-cy="obscured-sign-in-link-target-email-address"]'),
-  csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
   sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),
   contactUsEmail: () => cy.get('[data-cy="contact-us-email"]'),

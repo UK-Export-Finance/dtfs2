@@ -9,7 +9,6 @@ const newAccessCode = {
   suspendInfo: () => cy.get('[data-cy="access-code-suspend-info"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   requestCodeLink: () => cy.get('[data-cy="request-code-link"]'),
-  csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
   sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),
