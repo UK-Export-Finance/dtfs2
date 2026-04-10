@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach } = require('../2faPageHelpers');
+const { commonBeforeEach } = require('../access-code-form.shared-test');
 const { accessCodeExpired, checkYourEmailAccessCode } = require('../../../../../pages');
 
 context('2FA Page - Access code expired', () => {
