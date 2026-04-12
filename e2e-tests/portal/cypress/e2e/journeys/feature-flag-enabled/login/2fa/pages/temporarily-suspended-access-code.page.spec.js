@@ -1,8 +1,7 @@
-const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach } = require('../2faPageHelpers');
+const { commonBeforeEach } = require('../access-code-form.shared-test');
 const { temporarilySuspendedAccessCode } = require('../../../../../pages');
 
 context('2FA Page - Temporarily suspended account', () => {
@@ -13,12 +12,16 @@ context('2FA Page - Temporarily suspended account', () => {
      * becomes 4 and attemptsLeft becomes -1, which allows us to land on the temporarily-suspended-access-code
      * page and test its page elements.
      */
-    cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 3 });
+    cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 3 });
   });
 
   it('should redirect to login when visited without partial auth', () => {
-    temporarilySuspendedAccessCode.visit();
-    cy.url().should('eq', relative('/login'));
+    cy.clearCookies();
+    cy.clearLocalStorage();
+
+    cy.request({ url: '/login/temporarily-suspended-access-code', followRedirect: false }).then((resp) => {
+      expect(resp.headers.location).to.equal('/login');
+    });
   });
 
   it('should render temporarily suspended page with heading and message', () => {
@@ -35,6 +38,7 @@ context('2FA Page - Temporarily suspended account', () => {
       .contactUsEmail()
       .should('have.attr', 'href')
       .and('match', /^mailto:/);
+
     cy.assertText(temporarilySuspendedAccessCode.contactUsTimeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
   });
 });

@@ -95,14 +95,14 @@ Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'))
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
 Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
-Cypress.Commands.add('overridePortalUserSignInOTPWithExpiredTokenByUsername', require('./portal-api/overridePortalUserSignInOTPWithExpiredTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInOTPWithExpiredToken', require('./portal-api/overridePortalUserSignInOTPWithExpiredToken'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./portal/resetPortalUserStatusAndNumberOfSignInOTPs'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
-Cypress.Commands.add('overridePortalUserSignInOTPSendCountByUsername', require('./portal-api/overridePortalUserSignInOTPSendCountByUsername'));
+Cypress.Commands.add('overridePortalUserSignInOTPSendCount', require('./portal-api/overridePortalUserSignInOTPSendCount'));
 
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
