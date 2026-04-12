@@ -44,19 +44,18 @@ export const mapOverview = ({
   productTypeCode,
   ukefFacilityId,
 }: MapOverviewParams): ApimGiftFacilityOverview => ({
+  amount: facilityAmount,
   creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE[productTypeCode],
   currency,
-  facilityAmount,
   facilityId: ukefFacilityId,
-  facilityName: mapFacilityName({
+  effectiveDate,
+  expiryDate,
+  name: mapFacilityName({
     bankInternalRefName,
     facilityType,
     isGefDeal,
     productTypeCode,
   }),
-  effectiveDate,
-  expiryDate,
-  isRevolving: DEFAULTS.OVERVIEW.IS_REVOLVING[productTypeCode],
   obligorUrn: exporterPartyUrn,
   productTypeCode,
   repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
