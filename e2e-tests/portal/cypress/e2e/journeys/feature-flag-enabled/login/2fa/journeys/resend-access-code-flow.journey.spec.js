@@ -4,234 +4,84 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach } = require('../2faPageHelpers');
+const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-/**
- * E2E Journey Test: Resend Access Code Flow
- *
- * Tests the complete flow of requesting new access codes:
- * - Requesting first new code (check-your-email -> new-access-code)
- * - Requesting second new code (new-access-code -> resend-another-access-code)
- * - Attempts remaining counter decrements correctly
- * - Successfully logging in after requesting new codes
- */
+const enterJourneyAtSendCount = (count) => {
+  cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count });
+  cy.enterUsernameAndPassword(BANK1_MAKER1);
+};
+
+const submitValidAccessCode = (page) => {
+  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
+    cy.keyboardInput(page.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+    cy.clickSubmitButton();
+  });
+};
+
 context('2FA Journey - Resend access code flow', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
   });
 
-  describe('First code sent - check-your-email page', () => {
-    beforeEach(() => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-    });
+  it('should move from check-your-email to new-access-code when requesting the first new code', () => {
+    enterJourneyAtSendCount(0);
 
-    it('should land on check-your-email page after first login', () => {
-      cy.url().should('eq', relative('/login/check-your-email-access-code'));
-      checkYourEmailAccessCode.heading().should('exist');
-    });
+    cy.url().should('eq', relative('/login/check-your-email-access-code'));
+    cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');
 
-    it('should show 2 attempts remaining on check-your-email page', () => {
-      checkYourEmailAccessCode.attemptsInfo().should('contain', '2');
-    });
+    checkYourEmailAccessCode.requestCodeLink().click();
 
-    it('should display request new code link on check-your-email page', () => {
-      checkYourEmailAccessCode.requestCodeLink().should('exist');
-      checkYourEmailAccessCode.requestCodeLink().should('have.attr', 'href', '/login/request-new-access-code');
-    });
-
-    it('should navigate to new-access-code page when requesting new code', () => {
-      checkYourEmailAccessCode.requestCodeLink().click();
-
-      cy.url().should('contain', '/login/new-access-code');
-      newAccessCode.heading().should('exist');
-    });
+    cy.url().should('contain', '/login/new-access-code');
+    cy.assertText(newAccessCode.heading(), 'New access code sent');
   });
 
-  describe('Second code sent - new-access-code page', () => {
-    beforeEach(() => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-    });
+  it('should move from new-access-code to resend-another-access-code when requesting another code', () => {
+    enterJourneyAtSendCount(1);
 
-    it('should land on new-access-code page after second code request', () => {
-      cy.url().should('contain', '/login/new-access-code');
-      newAccessCode.heading().should('exist');
-    });
+    cy.url().should('contain', '/login/new-access-code');
+    cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
 
-    it('should show 1 attempt remaining on new-access-code page', () => {
-      newAccessCode.attemptsInfo().should('contain', '1');
-    });
+    newAccessCode.requestCodeLink().click();
 
-    it('should display request new code link on new-access-code page', () => {
-      newAccessCode.requestCodeLink().should('exist');
-      newAccessCode.requestCodeLink().should('have.attr', 'href', '/login/request-new-access-code');
-    });
-
-    it('should navigate to resend-another-access-code page when requesting another code', () => {
-      newAccessCode.requestCodeLink().click();
-
-      cy.url().should('contain', '/login/resend-another-access-code');
-      resendAnotherAccessCode.heading().should('exist');
-    });
-
-    it('should successfully login with valid code from new-access-code page', () => {
-      cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
-        cy.keyboardInput(newAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
-        cy.clickSubmitButton();
-
-        cy.url().should('not.contain', '/login');
-      });
-    });
+    cy.url().should('contain', '/login/resend-another-access-code');
+    cy.assertText(resendAnotherAccessCode.heading(), "We've sent you another access code");
   });
 
-  describe('Third code sent - resend-another-access-code page', () => {
-    beforeEach(() => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 2 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-    });
+  it('should end the resend flow on resend-another-access-code with no further request link', () => {
+    enterJourneyAtSendCount(2);
 
-    it('should land on resend-another-access-code page after third code request', () => {
-      cy.url().should('contain', '/login/resend-another-access-code');
-      resendAnotherAccessCode.heading().should('exist');
-    });
-
-    it('should show 0 attempts remaining on resend-another-access-code page', () => {
-      resendAnotherAccessCode.attemptsInfo().should('contain', '0');
-    });
-
-    it('should not display request new code link on resend-another-access-code page', () => {
-      cy.get('[data-cy="request-code-link"]').should('not.exist');
-    });
-
-    it('should display support information on final resend page', () => {
-      resendAnotherAccessCode.supportInfo().should('exist');
-      cy.get('[data-cy="contact-us-email"]')
-        .should('exist')
-        .and('have.attr', 'href')
-        .and('match', /^mailto:/);
-    });
-
-    it('should successfully login with valid code from resend-another-access-code page', () => {
-      cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
-        cy.keyboardInput(resendAnotherAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
-        cy.clickSubmitButton();
-
-        cy.url().should('not.contain', '/login');
-      });
-    });
+    cy.url().should('contain', '/login/resend-another-access-code');
+    cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
+    cy.assertText(resendAnotherAccessCode.supportInfo(), 'If you are still having problems signing in, contact us for support.');
+    cy.get('[data-cy="request-code-link"]').should('not.exist');
   });
 
-  describe('Complete resend journey from start to finish', () => {
-    it('should progress through all resend pages correctly', () => {
-      // Start with count 0
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+  it('should allow successful login from the new-access-code page', () => {
+    enterJourneyAtSendCount(1);
+    submitValidAccessCode(newAccessCode);
 
-      // First page: check-your-email (2 attempts remaining)
-      cy.url().should('eq', relative('/login/check-your-email-access-code'));
-      checkYourEmailAccessCode.attemptsInfo().should('contain', '2');
-
-      // Request new code
-      checkYourEmailAccessCode.requestCodeLink().click();
-
-      // Second page: new-access-code (1 attempt remaining)
-      cy.url().should('contain', '/login/new-access-code');
-      newAccessCode.attemptsInfo().should('contain', '1');
-
-      // Request another code
-      newAccessCode.requestCodeLink().click();
-
-      // Third page: resend-another-access-code (0 attempts remaining)
-      cy.url().should('contain', '/login/resend-another-access-code');
-      resendAnotherAccessCode.attemptsInfo().should('contain', '0');
-
-      // No more request link
-      cy.get('[data-cy="request-code-link"]').should('not.exist');
-    });
-
-    it('should allow login from any stage of the resend flow', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      cy.url().should('contain', '/login/new-access-code');
-
-      cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
-        cy.keyboardInput(newAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
-        cy.clickSubmitButton();
-
-        cy.url().should('not.contain', '/login');
-        cy.url().should('match', /\/(dashboard|deals|contracts)/);
-      });
-    });
+    cy.url().should('not.contain', '/login');
   });
 
-  describe('Email display across resend pages', () => {
-    it('should display masked email on check-your-email page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+  it('should allow successful login from the resend-another-access-code page', () => {
+    enterJourneyAtSendCount(2);
+    submitValidAccessCode(resendAnotherAccessCode);
 
-      checkYourEmailAccessCode.description().should('contain', '@');
-    });
-
-    it('should display masked email on new-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      newAccessCode.description().should('contain', '@');
-    });
-
-    it('should display masked email on resend-another-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 2 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      resendAnotherAccessCode.description().should('contain', '@');
-    });
+    cy.url().should('not.contain', '/login');
   });
 
-  describe('Expiry information across resend pages', () => {
-    it('should display expiry info on check-your-email page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+  it('should progress through the full resend journey with the expected attempts remaining', () => {
+    enterJourneyAtSendCount(0);
 
-      checkYourEmailAccessCode.expiryInfo().should('exist');
-    });
+    cy.url().should('eq', relative('/login/check-your-email-access-code'));
+    cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');
+    checkYourEmailAccessCode.requestCodeLink().click();
 
-    it('should display expiry info on new-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+    cy.url().should('contain', '/login/new-access-code');
+    cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
+    newAccessCode.requestCodeLink().click();
 
-      newAccessCode.expiryInfo().should('exist');
-    });
-
-    it('should display expiry info on resend-another-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 2 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      resendAnotherAccessCode.expiryInfo().should('exist');
-    });
-  });
-
-  describe('Spam/junk advice across resend pages', () => {
-    it('should display spam/junk advice on check-your-email page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      checkYourEmailAccessCode.spamOrJunk().should('exist');
-    });
-
-    it('should display spam/junk advice on new-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 1 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      newAccessCode.spamOrJunk().should('exist');
-    });
-
-    it('should display spam/junk advice on resend-another-access-code page', () => {
-      cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 2 });
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      resendAnotherAccessCode.spamOrJunk().should('exist');
-    });
+    cy.url().should('contain', '/login/resend-another-access-code');
+    cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
   });
 });

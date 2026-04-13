@@ -4,18 +4,26 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const { commonBeforeEach } = require('../2faPageHelpers');
+const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-/**
- * E2E Journey Test: Successful 2FA Login Flow
- *
- * Tests the complete happy path from entering credentials through OTP verification
- * to successfully reaching the dashboard.
- */
+const authenticatedRoutes = ['/dashboard', '/user/profile'];
+const restricted2faRoutes = ['/login/check-your-email-access-code', '/login/new-access-code', '/login/resend-another-access-code'];
+
+const complete2faLogin = () => {
+  cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+  cy.url().should('eq', relative('/login/check-your-email-access-code'));
+
+  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
+    cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
+    cy.clickSubmitButton();
+  });
+};
+
 context('2FA Journey - Successful login flow', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
-    cy.overridePortalUserSignInOTPSendCountByUsername({ username: BANK1_MAKER1.username, count: 0 });
+    cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 0 });
   });
 
   describe('Complete successful 2FA journey', () => {
@@ -23,69 +31,44 @@ context('2FA Journey - Successful login flow', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
-      checkYourEmailAccessCode.heading().should('exist');
-      checkYourEmailAccessCode.description().should('contain', '@');
+      cy.assertText(checkYourEmailAccessCode.heading(), 'Check your email');
+      checkYourEmailAccessCode.description().should('contain', BANK1_MAKER1.email);
     });
 
-    it('should successfully login and reach dashboard after entering correct access code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+    it('should successfully login and reach the application after entering the correct access code', () => {
+      complete2faLogin();
 
-      cy.url().should('eq', relative('/login/check-your-email-access-code'));
+      cy.url().should('not.contain', '/login');
+      cy.url().should('match', /\/(dashboard|deals|contracts)/);
+    });
 
-      cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
-        cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
-        cy.clickSubmitButton();
+    it('should allow access to protected routes after successful 2FA', () => {
+      complete2faLogin();
 
-        cy.url().should('not.contain', '/login');
-        cy.url().should('match', /\/(dashboard|deals|contracts)/);
+      authenticatedRoutes.forEach((route) => {
+        cy.visit(route);
+        cy.url().should('contain', route);
       });
     });
 
-    it('should allow user to access protected routes after successful 2FA', () => {
-      cy.loginOTP(BANK1_MAKER1);
-
-      cy.url().should('not.contain', '/login');
-
-      cy.visit('/dashboard');
-      cy.url().should('contain', '/dashboard');
-    });
-
-    it('should maintain session after successful 2FA login', () => {
-      cy.loginOTP(BANK1_MAKER1);
+    it('should maintain the session after successful 2FA login', () => {
+      complete2faLogin();
 
       cy.getCookie('dtfs-session').should('exist');
-
       cy.visit('/dashboard');
       cy.url().should('contain', '/dashboard');
-
-      cy.visit('/user/profile');
-      cy.url().should('contain', '/user/profile');
     });
   });
 
   describe('User state after successful login', () => {
-    it('should not allow revisiting 2FA pages after successful login', () => {
-      cy.loginOTP(BANK1_MAKER1);
+    it('should redirect away from 2FA pages after successful login', () => {
+      complete2faLogin();
 
-      cy.visit('/login/check-your-email-access-code');
-      cy.url().should('not.contain', '/login/check-your-email-access-code');
-      cy.url().should('not.contain', '/login');
-    });
-
-    it('should redirect to home when trying to access new-access-code page after successful login', () => {
-      cy.loginOTP(BANK1_MAKER1);
-
-      cy.visit('/login/new-access-code');
-      cy.url().should('not.contain', '/login/new-access-code');
-      cy.url().should('not.contain', '/login');
-    });
-
-    it('should redirect to home when trying to access resend-another-access-code page after successful login', () => {
-      cy.loginOTP(BANK1_MAKER1);
-
-      cy.visit('/login/resend-another-access-code');
-      cy.url().should('not.contain', '/login/resend-another-access-code');
-      cy.url().should('not.contain', '/login');
+      restricted2faRoutes.forEach((route) => {
+        cy.visit(route);
+        cy.url().should('not.contain', route);
+        cy.url().should('not.contain', '/login');
+      });
     });
   });
 });
