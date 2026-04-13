@@ -32,7 +32,7 @@ context('2FA Journey - Successful login flow', () => {
 
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
       cy.assertText(checkYourEmailAccessCode.heading(), 'Check your email');
-      checkYourEmailAccessCode.description().should('contain', BANK1_MAKER1.email);
+      cy.assertText(checkYourEmailAccessCode.description(), `We have sent you a 6-digit access code to your email ${BANK1_MAKER1.email}.`);
     });
 
     it('should successfully login and reach the application after entering the correct access code', () => {
