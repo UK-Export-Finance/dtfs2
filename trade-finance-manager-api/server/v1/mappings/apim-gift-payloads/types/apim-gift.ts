@@ -1,10 +1,4 @@
-import { APIM_GIFT_INTEGRATION, COUNTERPARTY_ROLE_CODE, PRODUCT_TYPE_CODES, REPAYMENT_TYPE } from './constants';
-
-export type PartyUrns = {
-  bondGiver?: string;
-  bondBeneficiary?: string;
-  issuingBank?: string;
-};
+import { APIM_GIFT_INTEGRATION, COUNTERPARTY_ROLE_CODE, PRODUCT_TYPE_CODES, REPAYMENT_TYPE } from '../constants';
 
 type CreditTypeMap = (typeof APIM_GIFT_INTEGRATION)['DEFAULTS']['OVERVIEW']['CREDIT_TYPE'];
 type CreditTypeValue = CreditTypeMap[keyof CreditTypeMap];
