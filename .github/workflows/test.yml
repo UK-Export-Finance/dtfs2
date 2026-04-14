@@ -249,8 +249,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -282,7 +282,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -355,8 +355,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -390,7 +390,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -470,8 +470,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -505,7 +505,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -564,7 +564,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -632,7 +632,7 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -709,7 +709,7 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -806,8 +806,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -919,8 +919,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1053,8 +1053,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1143,8 +1143,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1240,8 +1240,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1451,8 +1451,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1556,8 +1556,8 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 300000 # 5 minutes
-          interval: 5000 # 5 seconds
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Project
         id: project
