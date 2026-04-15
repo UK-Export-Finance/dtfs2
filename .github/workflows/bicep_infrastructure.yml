@@ -46,7 +46,7 @@ jobs:
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Environment 🧪
         run: echo "Environment set to ${{ env.ENVIRONMENT }}"
@@ -55,12 +55,12 @@ jobs:
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
       - name: Login 🔐
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
       - name: Azure defaults ✨
-        uses: azure/cli@v2
+        uses: azure/cli@v3
         with:
           inlineScript: |
             # Basic
@@ -68,7 +68,7 @@ jobs:
             az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
 
       - name: Create Resource group 🏗️
-        uses: azure/cli@v2
+        uses: azure/cli@v3
         with:
           inlineScript: |
             az group create \
@@ -86,10 +86,10 @@ jobs:
     environment: dev
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login 🔐
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
