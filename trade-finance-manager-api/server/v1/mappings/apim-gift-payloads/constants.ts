@@ -82,6 +82,7 @@ export const TFM_FEE_TYPES = {
   SEMI_ANNUALLY: 'Semi-annually',
   ANNUALLY: 'Annually',
   EVERY_BUSINESS_DAY: 'Every business day',
+  AT_MATURITY: 'At maturity',
 };
 
 /**

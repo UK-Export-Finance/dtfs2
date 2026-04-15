@@ -2,6 +2,18 @@ import { ACCRUAL_FREQUENCY_CODE_MAP, TFM_FEE_TYPES } from '../../../constants';
 import { mapFrequencyCode } from '.';
 
 describe('mapFrequencyCode', () => {
+  describe(`when feeType is ${TFM_FEE_TYPES.AT_MATURITY}`, () => {
+    it(`should return ${ACCRUAL_FREQUENCY_CODE_MAP.ANNUALLY}`, () => {
+      // Act
+      const result = mapFrequencyCode(TFM_FEE_TYPES.MONTHLY, TFM_FEE_TYPES.AT_MATURITY);
+
+      // Assert
+      const expected = ACCRUAL_FREQUENCY_CODE_MAP.ANNUALLY;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe(`when frequencyName is ${TFM_FEE_TYPES.MONTHLY}`, () => {
     it(`should return ${ACCRUAL_FREQUENCY_CODE_MAP.MONTHLY}`, () => {
       // Act
@@ -10,7 +22,7 @@ describe('mapFrequencyCode', () => {
       // Assert
       const expected = ACCRUAL_FREQUENCY_CODE_MAP.MONTHLY;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 
@@ -22,7 +34,7 @@ describe('mapFrequencyCode', () => {
       // Assert
       const expected = ACCRUAL_FREQUENCY_CODE_MAP.QUARTERLY;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 
@@ -34,7 +46,7 @@ describe('mapFrequencyCode', () => {
       // Assert
       const expected = ACCRUAL_FREQUENCY_CODE_MAP.SEMI_ANNUALLY;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 
@@ -46,7 +58,7 @@ describe('mapFrequencyCode', () => {
       // Assert
       const expected = ACCRUAL_FREQUENCY_CODE_MAP.ANNUALLY;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 
@@ -58,7 +70,7 @@ describe('mapFrequencyCode', () => {
       // Assert
       const expected = ACCRUAL_FREQUENCY_CODE_MAP.EVERY_BUSINESS_DAY;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 

@@ -10,7 +10,7 @@ describe('mapDayBasisCode', () => {
       // Assert
       const expected = DAY_BASIS_CODE.ACTUAL_360;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 
@@ -22,7 +22,7 @@ describe('mapDayBasisCode', () => {
       // Assert
       const expected = DAY_BASIS_CODE.ACTUAL_365;
 
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     });
   });
 

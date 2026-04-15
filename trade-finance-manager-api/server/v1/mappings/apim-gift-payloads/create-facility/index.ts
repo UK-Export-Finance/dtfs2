@@ -51,6 +51,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const facilityAmount = Number(tfm.ukefExposure);
   const facilityFeeFrequency = facilitySnapshot.feeFrequency;
+  const facilityFeeType = facilitySnapshot.feeType;
   const facilityType = facilitySnapshot.type;
   const facilityDayCountBasis = facilitySnapshot.dayCountBasis;
 
@@ -137,6 +138,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       maturityDate,
       dayCountBasis: facilityDayCountBasis,
       feeFrequency: facilityFeeFrequency,
+      feeType: facilityFeeType,
       guaranteeFeePayableToUkef,
     }),
     counterparties: mapCounterparties({

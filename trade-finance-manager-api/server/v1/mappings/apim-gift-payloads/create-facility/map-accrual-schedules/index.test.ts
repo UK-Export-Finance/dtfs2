@@ -11,6 +11,7 @@ describe('mapAccrualSchedules', () => {
     const dayCountBasis = 360;
     const effectiveDate = '2024-01-01';
     const feeFrequency = 'Monthly';
+    const feeType = 'At maturity';
     const guaranteeFeePayableToUkef = '7.0200%';
     const maturityDate = '2025-01-01';
 
@@ -19,6 +20,7 @@ describe('mapAccrualSchedules', () => {
       dayCountBasis,
       effectiveDate,
       feeFrequency,
+      feeType,
       guaranteeFeePayableToUkef,
       maturityDate,
     });
@@ -29,7 +31,7 @@ describe('mapAccrualSchedules', () => {
         accrualScheduleTypeCode: DEFAULTS.ACCRUAL_SCHEDULE.TYPE_CODE,
         accrualEffectiveDate: effectiveDate,
         accrualMaturityDate: maturityDate,
-        accrualFrequencyCode: mapFrequencyCode(feeFrequency),
+        accrualFrequencyCode: mapFrequencyCode(feeFrequency, feeType),
         accrualDayBasisCode: mapDayBasisCode(dayCountBasis),
         firstCycleAccrualEndDate: maturityDate,
         baseRate: DEFAULTS.ACCRUAL_SCHEDULE.BASE_RATE,

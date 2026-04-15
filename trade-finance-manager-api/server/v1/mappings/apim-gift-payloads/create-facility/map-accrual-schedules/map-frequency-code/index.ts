@@ -1,17 +1,19 @@
 import { ACCRUAL_FREQUENCY_CODE_MAP, TFM_FEE_TYPES } from '../../../constants';
 import { ApimGiftAccrualFrequencyCodeType } from '../../../types';
 
-// TODO - if feeType is "At maturity", default to "Annually" and default date in GIFT to DTFS cover end date.
-
-// The "At maturity" option in DTFS is very rare, reportedly only on EWCS facilities to date.
-// If "At maturity" option is chosen in DTFS, default Interest frequency to "Annual" and default date in GIFT to DTFS cover end date
-
 /**
  * Maps a TFM "frequency name" to its corresponding GIFT accrual frequency code.
+ * If the feeType is "At maturity", defaults to "Annually".
+ * Otherwise, maps based on the frequencyName value.
  * @param frequencyName - The name of the frequency to map.
+ * @param feeType - Optional fee type, used to determine if the frequency should be overridden.
  * @returns {ApimGiftAccrualFrequencyCodeType | null} The corresponding accrual frequency code, or null if not found.
  */
-export const mapFrequencyCode = (frequencyName: string): ApimGiftAccrualFrequencyCodeType | null => {
+export const mapFrequencyCode = (frequencyName: string, feeType?: string): ApimGiftAccrualFrequencyCodeType | null => {
+  if (feeType === TFM_FEE_TYPES.AT_MATURITY) {
+    return ACCRUAL_FREQUENCY_CODE_MAP.ANNUALLY;
+  }
+
   switch (frequencyName) {
     case TFM_FEE_TYPES.MONTHLY:
       return ACCRUAL_FREQUENCY_CODE_MAP.MONTHLY;
