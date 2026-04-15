@@ -8,6 +8,7 @@ import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
 import { mapOverview } from './map-overview';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
 import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
@@ -43,9 +44,15 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
+  const maturityDate = expiryDate;
+  // TODO, above and below, simplify.
 
-  const facilityType = facilitySnapshot.type;
+  const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
+
   const facilityAmount = Number(tfm.ukefExposure);
+  const facilityFeeFrequency = facilitySnapshot.feeFrequency;
+  const facilityType = facilitySnapshot.type;
+  const facilityDayCountBasis = facilitySnapshot.dayCountBasis;
 
   const dealId = getTfmUkefDealId(deal);
 
@@ -125,6 +132,13 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       productTypeCode,
       ukefFacilityId,
     }),
+    accrualSchedules: mapAccrualSchedules({
+      effectiveDate,
+      maturityDate,
+      dayCountBasis: facilityDayCountBasis,
+      feeFrequency: facilityFeeFrequency,
+      guaranteeFeePayableToUkef,
+    }),
     counterparties: mapCounterparties({
       isBssEwcsDeal,
       isGefDeal,
@@ -139,7 +153,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       isBssEwcsDeal,
       facilityType,
       isGefDeal,
-      maturityDate: expiryDate,
+      maturityDate: expiryDate, // TODO: rename param to maturityDate.
       ukefExposure: facilityAmount,
     }),
     riskDetails: await mapRiskDetails({

@@ -73,6 +73,34 @@ export const OBLIGATION_SUBTYPE_MAP = {
 } as const;
 
 /**
+ * TFM fee frequency values.
+ * These are required to map the facility's fee frequency from TFM to the expected fee frequency values in APIM/GIFT.
+ */
+export const TFM_FEE_TYPES = {
+  MONTHLY: 'Monthly',
+  QUARTERLY: 'Quarterly',
+  SEMI_ANNUALLY: 'Semi-annually',
+  ANNUALLY: 'Annually',
+  EVERY_BUSINESS_DAY: 'Every business day',
+};
+
+/**
+ * APIM/GIFT accrual frequency codes.
+ * These are required to map the facility's accrual frequency from TFM to the expected accrual frequency code in APIM/GIFT.
+ */
+export const ACCRUAL_FREQUENCY_CODE_MAP = {
+  MONTHLY: 'FREQ1MON',
+  QUARTERLY: 'FREQ3MON',
+  SEMI_ANNUALLY: 'FREQ6MON',
+  ANNUALLY: 'FREQ12MON',
+  EVERY_BUSINESS_DAY: 'FREQEBD',
+} as const;
+
+export const ACCRUAL_SCHEDULE_TYPE_CODES = {
+  PREMIUM: 'PAC01',
+} as const;
+
+/**
  * APIM/GIFT amendment types.
  * These are required to indicate the type of amendment being made to a facility in APIM/GIFT.
  */
@@ -110,6 +138,15 @@ export const COUNTERPARTY_ROLE_CODE = {
 } as const;
 
 /**
+ * GIFT day basis codes.
+ * These are required to map the facility's day count basis from TFM to the expected day basis code in APIM/GIFT when mapping the facility "accrual schedules" data for the APIM GIFT payload.
+ */
+export const DAY_BASIS_CODE = {
+  ACTUAL_360: 'ACTUAL_360',
+  ACTUAL_365: 'ACTUAL_365',
+} as const;
+
+/**
  * For BSS/GEF/EWCS,
  * default account to "2" (Corporate) for the "account" field in GIFT.
  */
@@ -136,9 +173,15 @@ export const REPAYMENT_TYPE = {
 const RISK_STATUS = 'Corporate' as const;
 
 export const APIM_GIFT_INTEGRATION = {
+  ACCRUAL_FREQUENCY_CODE_MAP,
   AMENDMENT_TYPE,
   CONSUMER,
   DEFAULTS: {
+    ACCRUAL_SCHEDULE: {
+      ADDITIONAL_RATE: 0,
+      BASE_RATE: 0,
+      TYPE_CODE: ACCRUAL_SCHEDULE_TYPE_CODES.PREMIUM,
+    },
     COUNTERPARTY_ROLE_CODE: {
       BSS: {
         BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,

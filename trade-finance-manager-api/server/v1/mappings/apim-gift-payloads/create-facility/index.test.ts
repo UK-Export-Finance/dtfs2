@@ -11,6 +11,7 @@ import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
 import api from '../../../api';
@@ -190,6 +191,13 @@ describe('createFacility', () => {
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
+      accrualSchedules: mapAccrualSchedules({
+        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+        dayCountBasis: facilitySnapshot.dayCountBasis,
+        feeFrequency: facilitySnapshot.feeFrequency,
+        guaranteeFeePayableToUkef: String(facilitySnapshot.guaranteeFeePayableToUkef),
+      }),
       counterparties: mapCounterparties({
         isBssEwcsDeal,
         isGefDeal,
@@ -245,6 +253,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -270,6 +279,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -296,6 +306,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -321,6 +332,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
