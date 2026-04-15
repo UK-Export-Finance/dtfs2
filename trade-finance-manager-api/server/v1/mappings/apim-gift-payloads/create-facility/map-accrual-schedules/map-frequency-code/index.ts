@@ -17,14 +17,19 @@ export const mapFrequencyCode = (frequencyName: string, feeType?: string): ApimG
   switch (frequencyName) {
     case TFM_FEE_FREQUENCIES.MONTHLY:
       return ACCRUAL_FREQUENCY_CODE_MAP.MONTHLY;
+
     case TFM_FEE_FREQUENCIES.QUARTERLY:
       return ACCRUAL_FREQUENCY_CODE_MAP.QUARTERLY;
+
     case TFM_FEE_FREQUENCIES.SEMI_ANNUALLY:
       return ACCRUAL_FREQUENCY_CODE_MAP.SEMI_ANNUALLY;
+
     case TFM_FEE_FREQUENCIES.ANNUALLY:
       return ACCRUAL_FREQUENCY_CODE_MAP.ANNUALLY;
+
     case TFM_FEE_FREQUENCIES.EVERY_BUSINESS_DAY:
       return ACCRUAL_FREQUENCY_CODE_MAP.EVERY_BUSINESS_DAY;
+
     default:
       return null;
   }
