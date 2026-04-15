@@ -73,17 +73,17 @@ export const OBLIGATION_SUBTYPE_MAP = {
 } as const;
 
 /**
- * TFM fee frequency values.
+ * TFM fee frequencies.
  * These are required to map the facility's fee frequency from TFM to the expected fee frequency values in APIM/GIFT.
  */
-export const TFM_FEE_TYPES = {
+export const TFM_FEE_FREQUENCIES = {
   MONTHLY: 'Monthly',
   QUARTERLY: 'Quarterly',
   SEMI_ANNUALLY: 'Semi-annually',
   ANNUALLY: 'Annually',
   EVERY_BUSINESS_DAY: 'Every business day',
   AT_MATURITY: 'At maturity',
-};
+} as const;
 
 /**
  * APIM/GIFT accrual frequency codes.

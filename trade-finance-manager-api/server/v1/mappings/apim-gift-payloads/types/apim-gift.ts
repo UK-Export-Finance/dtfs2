@@ -41,7 +41,7 @@ export type ApimAccrualSchedule = {
   firstCycleAccrualEndDate: string;
   accrualDayBasisCode: ApimGiftDayBasisType | null;
   baseRate: number;
-  spreadRate: number;
+  spreadRate: number | null;
   additionalRate: number;
 };
 

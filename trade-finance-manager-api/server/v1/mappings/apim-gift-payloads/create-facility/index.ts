@@ -48,10 +48,10 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
   const facilityAmount = Number(tfm.ukefExposure);
-  const facilityFeeFrequency = facilitySnapshot.feeFrequency;
-  const facilityFeeType = facilitySnapshot.feeType;
+  const { feeFrequency } = facilitySnapshot;
+  const { feeType } = facilitySnapshot;
   const facilityType = facilitySnapshot.type;
-  const facilityDayCountBasis = facilitySnapshot.dayCountBasis;
+  const { dayCountBasis } = facilitySnapshot;
 
   const dealId = getTfmUkefDealId(deal);
 
@@ -134,9 +134,9 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     accrualSchedules: mapAccrualSchedules({
       effectiveDate,
       maturityDate: expiryDate,
-      dayCountBasis: facilityDayCountBasis,
-      feeFrequency: facilityFeeFrequency,
-      feeType: facilityFeeType,
+      dayCountBasis,
+      feeFrequency,
+      feeType,
       guaranteeFeePayableToUkef,
     }),
     counterparties: mapCounterparties({

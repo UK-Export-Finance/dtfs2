@@ -32,7 +32,10 @@ describe('createFacility', () => {
 
   const mockFacility: TfmFacility = {
     _id: new ObjectId(),
-    facilitySnapshot: mockFacilitySnapshot,
+    facilitySnapshot: {
+      ...mockFacilitySnapshot,
+      guaranteeFeePayableToUkef: '1.23%',
+    },
     tfm: {
       ukefExposure: 100000,
       facilityGuaranteeDates: {
