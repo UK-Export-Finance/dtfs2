@@ -6,6 +6,7 @@ import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/incr
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
+import { sendAccountSuspensionEmail } from './send-account-suspension-email';
 
 /**
  * Creates and emails a sign-in OTP to the user.
@@ -42,6 +43,12 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
     const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
+
+    if (signInOTPSendCount === -1) {
+      console.info('User %s account suspended due to excessive OTP requests, sending suspension email', user._id);
+      await sendAccountSuspensionEmail(user);
+      return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
+    }
 
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
 
