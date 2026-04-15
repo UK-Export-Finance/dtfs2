@@ -196,6 +196,7 @@ describe('createFacility', () => {
         maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
         dayCountBasis: facilitySnapshot.dayCountBasis,
         feeFrequency: facilitySnapshot.feeFrequency,
+        feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef: String(facilitySnapshot.guaranteeFeePayableToUkef),
       }),
       counterparties: mapCounterparties({

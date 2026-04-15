@@ -44,8 +44,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
-  const maturityDate = expiryDate;
-  // TODO, above and below, simplify.
 
   const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
@@ -135,7 +133,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     }),
     accrualSchedules: mapAccrualSchedules({
       effectiveDate,
-      maturityDate,
+      maturityDate: expiryDate,
       dayCountBasis: facilityDayCountBasis,
       feeFrequency: facilityFeeFrequency,
       feeType: facilityFeeType,
@@ -155,7 +153,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       isBssEwcsDeal,
       facilityType,
       isGefDeal,
-      maturityDate: expiryDate, // TODO: rename param to maturityDate.
+      maturityDate: expiryDate,
       ukefExposure: facilityAmount,
     }),
     riskDetails: await mapRiskDetails({
