@@ -16,18 +16,10 @@ export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, ne
  */
 export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res: Response) => {
   const {
-    session: { userToken, numberOfSignInOtpAttemptsRemaining },
+    session: { userToken },
   } = req;
 
   try {
-    // If user has no remaining OTP attempts, suspend account without sending a new OTP
-    if (numberOfSignInOtpAttemptsRemaining === 0) {
-      req.session.numberOfSignInOtpAttemptsRemaining = -1;
-      const suspendedAccountPage = getNextAccessCodePage(-1);
-
-      return res.redirect(suspendedAccountPage);
-    }
-
     const {
       data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = (await api.sendSignInOTP(userToken)) as SendSignInOtpResponse;
