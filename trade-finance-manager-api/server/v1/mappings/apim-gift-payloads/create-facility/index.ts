@@ -48,10 +48,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
   const facilityAmount = Number(tfm.ukefExposure);
-  const { feeFrequency } = facilitySnapshot;
-  const { feeType } = facilitySnapshot;
-  const facilityType = facilitySnapshot.type;
-  const { dayCountBasis } = facilitySnapshot;
+  const { dayCountBasis, feeFrequency, feeType, type: facilityType } = facilitySnapshot;
 
   const dealId = getTfmUkefDealId(deal);
 

@@ -40,6 +40,7 @@ describe('mapAccrualSchedules', () => {
         additionalRate: DEFAULTS.ACCRUAL_SCHEDULE.ADDITIONAL_RATE,
       },
     ];
+
     expect(result).toEqual(expected);
   });
 });
