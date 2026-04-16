@@ -1,4 +1,4 @@
-const signInOTPDurationMinutes = 0.2; // 12 seconds, for testing purposes. In production, this should be set to a higher value, such as 10 or 15 minutes.
+const signInOTPDurationMinutes = 30;
 
 export const OTP = {
   DIGITS: 6,
