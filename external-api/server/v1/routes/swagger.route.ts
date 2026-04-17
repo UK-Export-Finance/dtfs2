@@ -3,11 +3,23 @@ import { swaggerDefinition, SWAGGER, SERVICES } from '@ukef/dtfs2-common';
 import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
 const definition: swaggerDefinition = {
+  openapi: '3.0.0',
   info: {
     title: SERVICES.EXTERNAL_API,
     version: '1.0.0',
     description: 'External API microservice handles all external ingress and egress network traffic.',
   },
+  components: {
+    securitySchemes: {
+      ApiKeyAuth: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-api-key',
+        description: 'Provide the external API key in the x-api-key header.',
+      },
+    },
+  },
+  security: [{ ApiKeyAuth: [] }],
   tags: [
     {
       name: 'Local Data',
