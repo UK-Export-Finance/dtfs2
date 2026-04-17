@@ -57,7 +57,6 @@ describe('create', () => {
     });
 
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Created);
-    // expect(mockResponse._getData()).
   });
 
   it('should set an undefined status when axios throws without an HTTP response', async () => {
