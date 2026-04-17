@@ -58,24 +58,19 @@ export const create = async (req: Request, res: Response) => {
     }).catch((error: any) => {
       console.error('Error calling APIM TFS GIFT facility endpoint %o', error);
       return {
-        data: error.response?.data,
         status: error.response?.status,
       };
     });
 
-    if (!response?.data) {
-      throw new Error('void response received');
-    }
+    const { status } = response;
 
-    const { status, data } = response;
-
-    if (status !== HttpStatusCode.Ok) {
-      return res.status(status).send(data);
+    if (status !== HttpStatusCode.Created) {
+      return res.status(status);
     }
 
     console.info('✅ Successfully created GIFT facility');
 
-    return res.status(status).send(data);
+    return res.status(status);
   } catch (error) {
     console.error('🚩 Error occurred during GIFT facility endpoint call %o', error);
 

@@ -33,12 +33,10 @@ describe('/gift', () => {
       nock(baseUrl).persist().post(url).reply(HttpStatusCode.Created, mockApimTfsResponse);
 
       // Act
-      const { body, status } = await post(mockBody).to('/gift/facility');
+      const { status } = await post(mockBody).to('/gift/facility');
 
       // Assert
       expect(status).toEqual(HttpStatusCode.Created);
-
-      expect(body).toEqual(mockApimTfsResponse.data);
     });
 
     describe(`when the APIM TFS endpoint returns a status that is NOT ${HttpStatusCode.Created}`, () => {

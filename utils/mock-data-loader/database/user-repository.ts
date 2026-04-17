@@ -16,7 +16,7 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toStri
  * @returns A promise that resolves to `true` if the user was successfully created.
  * @throws Throws an error if the user creation fails.
  */
-export const createMockDataUser = async (user: PortalUser & { password: string }): Promise<boolean | Error> => {
+export const createMockDataUser = async (user: PortalUser & { password: string }): Promise<boolean> => {
   try {
     const userCollection = await mongoDbClient.getCollection('users');
     const { password } = user;

@@ -13,7 +13,10 @@ const headers = {
   [String(APIM_TFS_KEY)]: APIM_TFS_VALUE,
 };
 
-const mockTfsResponse = {};
+const mockTfsResponse = {
+  data: {},
+  status: HttpStatusCode.Created,
+};
 
 let mockRequest: MockRequest<Request>;
 let mockResponse: MockResponse<Response>;
@@ -48,12 +51,12 @@ describe('create', () => {
 
     expect(console.error).toHaveBeenNthCalledWith(
       2,
-      '🚩 Error occurred during gift facility endpoint call %o',
+      '🚩 Error occurred during GIFT facility endpoint call %o',
       expect.objectContaining({ message: 'void response received' }),
     );
 
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during gift facility endpoint call' });
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during GIFT facility endpoint call' });
   });
 
   it(`should forward non-${HttpStatusCode.Ok} status and body when APIM TFS GIFT facility returns an HTTP error response`, async () => {
@@ -82,11 +85,11 @@ describe('create', () => {
     expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);
   });
 
-  it(`should return ${HttpStatusCode.Ok}`, async () => {
+  it(`should return ${HttpStatusCode.Created}`, async () => {
     // Arrange
     jest.mocked(axios).mockResolvedValueOnce({
       data: mockTfsResponse,
-      status: HttpStatusCode.Ok,
+      status: HttpStatusCode.Created,
     });
 
     // Act
@@ -97,12 +100,12 @@ describe('create', () => {
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenLastCalledWith({
-      method: 'get',
+      method: 'post',
       url: `${APIM_TFS_URL}v2/gift/facility`,
       headers,
     });
 
-    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Ok);
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Created);
     expect(mockResponse._getData()).toEqual(mockTfsResponse);
   });
 });
