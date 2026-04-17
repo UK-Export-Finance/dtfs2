@@ -4,24 +4,24 @@
 
 /**
 Objective:
-  The objective of the `findAll` function is to retrieve all credit risk ratings by calling an external API.
-  The function handles the API response and returns the credit risk ratings data in the response.
+  The objective of the `create` function is to create a GIFT facility by calling an external API.
+  The function handles the API response and returns the GIFT facility data in the response.
 
 Inputs:
   1. `req`: request object from Express
   2. `res`: response object from Express
 
 Flow:
-  1. Build API URL for credit risk ratings
+  1. Build API URL for GIFT facility creation
   2. Call external API with `axios` and `headers`
   3. Handle errors and return response data or error message
-  4. Return credit risk ratings in response with appropriate status code
+  4. Return GIFT facility data in response with appropriate status code
 
 Outputs:
-  1. Response with HTTP status code and credit risk ratings data
+  1. Response with HTTP status code and GIFT facility data
 
 Additional aspects:
-  1. The function uses `dotenv` to retrieve the MDM URL from environment variables
+  1. The function uses `dotenv` to retrieve the APIM TFS URL from environment variables
   2. The function logs information and errors to the console for debugging purposes
  */
 
@@ -32,30 +32,31 @@ import { HEADERS } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
-const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const { APIM_TFS_VALUE, APIM_TFS_KEY, APIM_TFS_URL } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+  [String(APIM_TFS_KEY)]: APIM_TFS_VALUE,
 };
 
 /**
- * Find all credit risk ratings.
+ * Create a GIFT facility.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
-export const findAll = async (req: Request, res: Response) => {
+export const create = async (req: Request, res: Response) => {
   try {
-    console.info('⚡️ Invoking MDM credit risk ratings endpoint');
+    console.info('⚡️ Invoking APIM TFS GIFT facility endpoint');
 
-    const url = `${APIM_MDM_URL}v2/dom/credit-risk-ratings`;
+    const url = `${APIM_TFS_URL}v2/gift/facility`;
 
     const response = await axios({
-      method: 'get',
+      method: 'post',
       url,
       headers,
+      data: req.body,
     }).catch((error: any) => {
-      console.error('Error calling Credit Risk Ratings API %o', error);
+      console.error('Error calling APIM TFS GIFT facility endpoint %o', error);
       return {
         data: error.response?.data,
         status: error.response?.status,
@@ -72,14 +73,14 @@ export const findAll = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
 
-    console.info('✅ Successfully retrieved credit risk ratings');
+    console.info('✅ Successfully created GIFT facility');
 
     return res.status(status).send(data);
   } catch (error) {
-    console.error('🚩 Error occurred during credit risk ratings endpoint call %o', error);
+    console.error('🚩 Error occurred during GIFT facility endpoint call %o', error);
 
     return res
       .status(HttpStatusCode.InternalServerError)
-      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during credit risk ratings endpoint call' });
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during GIFT facility endpoint call' });
   }
 };
