@@ -24,8 +24,9 @@ export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res
       data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = (await api.sendSignInOTP(userToken)) as SendSignInOtpResponse;
 
+    // Persisting -1 session is required by the next page to render correctly and as a security gate.
+    // The API returns -1 when the account has been suspended (user blocked in DB and suspension email sent).
     if (attemptsLeft >= -1) {
-      // persist latest attempts in session so the next page can read it
       req.session.numberOfSignInOtpAttemptsRemaining = attemptsLeft;
       const nextAccessCodePage = getNextAccessCodePage(attemptsLeft);
 

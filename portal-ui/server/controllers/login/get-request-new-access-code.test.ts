@@ -76,7 +76,7 @@ describe('controllers/login/get-request-new-access-code', () => {
       });
     });
 
-    it('should render problem with service template (defensive check - should not occur with updated API)', async () => {
+    it('should render problem with service template', async () => {
       await requestNewAccessCode(req, res);
 
       expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
