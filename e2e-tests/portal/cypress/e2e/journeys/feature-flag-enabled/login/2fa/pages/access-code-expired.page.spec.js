@@ -47,8 +47,7 @@ context('2FA Page - Access code expired', () => {
     });
 
     it('should display attempts remaining information', () => {
-      accessCodeExpired.attemptsInfo().should('contain', 'You have');
-      accessCodeExpired.attemptsInfo().should('contain', 'attempts remaining.');
+      cy.assertText(accessCodeExpired.attemptsInfo(), 'You have 2 attempts remaining.');
     });
 
     it('should show the suspend info text', () => {
