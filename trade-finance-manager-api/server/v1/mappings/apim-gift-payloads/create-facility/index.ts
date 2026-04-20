@@ -40,6 +40,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const { facilityGuaranteeDates } = tfm;
 
   const consumer = APIM_GIFT_INTEGRATION.CONSUMER;
+
   const currency = facilitySnapshot.currency.id;
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
@@ -64,14 +65,15 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
-  const { exporterCreditRating, parties } = deal.tfm;
-  const exporterPartyUrn = parties.exporter.partyUrn;
+  const { exporterCreditRating } = deal.tfm;
 
   const partyUrns = mapPartyUrns({
     deal,
     isBssEwcsDeal,
     isGefDeal,
   });
+
+  const { exporterPartyUrn } = partyUrns;
 
   const industryCode = getIndustryCode(deal);
 

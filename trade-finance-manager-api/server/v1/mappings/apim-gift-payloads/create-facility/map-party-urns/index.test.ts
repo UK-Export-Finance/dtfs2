@@ -3,6 +3,7 @@ import { mapPartyUrns } from '.';
 
 describe('mapPartyUrns', () => {
   const mockBankPartyUrn = '00112233';
+  const mockExporterPartyUrn = '00778899';
 
   describe('when isBssEwcsDeal is true', () => {
     const isBssEwcsDeal = true;
@@ -22,6 +23,9 @@ describe('mapPartyUrns', () => {
             buyer: {
               partyUrn: mockBuyerPartyUrn,
             },
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
           },
         },
       } as TfmDeal;
@@ -37,6 +41,7 @@ describe('mapPartyUrns', () => {
       const expected = {
         bondBeneficiary: mockBuyerPartyUrn,
         bondGiver: mockBankPartyUrn,
+        exporterPartyUrn: mockExporterPartyUrn,
       };
 
       expect(result).toEqual(expected);
@@ -56,6 +61,9 @@ describe('mapPartyUrns', () => {
               buyer: {
                 partyUrn: '',
               },
+              exporter: {
+                partyUrn: mockExporterPartyUrn,
+              },
             },
           },
         } as TfmDeal;
@@ -71,6 +79,7 @@ describe('mapPartyUrns', () => {
         const expected = {
           bondBeneficiary: '',
           bondGiver: mockBankPartyUrn,
+          exporterPartyUrn: mockExporterPartyUrn,
         };
 
         expect(result).toEqual(expected);
@@ -91,7 +100,11 @@ describe('mapPartyUrns', () => {
           },
         },
         tfm: {
-          parties: {},
+          parties: {
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
+          },
         },
       } as TfmDeal;
 
@@ -105,6 +118,7 @@ describe('mapPartyUrns', () => {
       // Assert
       const expected = {
         issuingBank: mockBankPartyUrn,
+        exporterPartyUrn: mockExporterPartyUrn,
       };
 
       expect(result).toEqual(expected);
@@ -112,7 +126,7 @@ describe('mapPartyUrns', () => {
   });
 
   describe('when isBssEwcsDeal and isGefDeal are both false', () => {
-    it('should return an empty object', () => {
+    it('should return an object with exporterPartyUrn', () => {
       // Arrange
       const isBssEwcsDeal = false;
       const isGefDeal = false;
@@ -122,7 +136,11 @@ describe('mapPartyUrns', () => {
           bank: {},
         },
         tfm: {
-          parties: {},
+          parties: {
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
+          },
         },
       } as unknown as TfmDeal;
 
@@ -134,7 +152,11 @@ describe('mapPartyUrns', () => {
       });
 
       // Assert
-      expect(result).toEqual({});
+      const expected = {
+        exporterPartyUrn: mockExporterPartyUrn,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 });
