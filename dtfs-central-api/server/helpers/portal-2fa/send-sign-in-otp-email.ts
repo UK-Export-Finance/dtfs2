@@ -36,6 +36,6 @@ export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)
     const message = error instanceof Error ? error.message : String(error);
 
     console.error('Failed to send access code email to user %s: %s%s', sanitisedId, message, status ? ` (HTTP ${status})` : '');
-    throw new EmailSendError(sanitisedId, message, status);
+    throw new EmailSendError(sanitisedId, message, status, 'access code email');
   }
 };
