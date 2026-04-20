@@ -18,7 +18,7 @@ export const facilityUpdate = {
   paymentType: 'Monthly',
   feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: true,
   ukefFacilityId: 1234,
 };

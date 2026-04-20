@@ -16,7 +16,7 @@ const generateACompleteFacilityUpdate = ({ dealVersion }) => {
     coverPercentage: 75,
     interestPercentage: 10,
     paymentType: 'Monthly',
-    dayCountBasis: 365,
+    dayCountBasis: '365',
     feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
     feeFrequency: 'Monthly',
     coverDateConfirmed: true,

@@ -43,7 +43,7 @@ export const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) 
   feeType: 'In advance',
   feeFrequency: 'Monthly',
   ukefFacilityId: '10000011',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: null,
   canResubmitIssuedFacilities: null,
 });
@@ -80,7 +80,7 @@ export const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) =>
   ukefFacilityId: '10000012',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: true,
   canResubmitIssuedFacilities: null,
 });
@@ -117,7 +117,7 @@ export const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnab
   ukefFacilityId: '10000012',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: null,
   canResubmitIssuedFacilities: null,
 });
@@ -158,7 +158,7 @@ export const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } 
   ukefFacilityId: '10000013',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: false,
   canResubmitIssuedFacilities: null,
 });
@@ -195,7 +195,7 @@ export const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabl
   ukefFacilityId: '10000014',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: false,
   canResubmitIssuedFacilities: null,
 });

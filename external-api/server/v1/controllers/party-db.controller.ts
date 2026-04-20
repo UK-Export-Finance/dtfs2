@@ -76,8 +76,8 @@ export const getOrCreateParty = async (
     const industryData = await findACBSIndustrySector(code);
 
     /**
-     * Throw an error to trigger a 500 status code (instead of 400 status code), to trigger an alert,
-     * as SIC code should never be incorrect as they are fetched from Companies House API.
+     * Throw an error so this returns a 500 status code instead of a 400 and monitoring/alerts fire,
+     * because SIC codes are fetched from the Companies House API and should never be invalid here.
      */
     if (!Array.isArray(industryData.data) || !industryData?.data?.length) {
       throw new Error('Unable to get industry sector data');
