@@ -29,7 +29,10 @@ context('2FA Journey - Account suspension after too many attempts', () => {
     goToSuspendedPage();
 
     cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
-    cy.assertText(temporarilySuspendedAccessCode.message(), 'This can happen if there are too many failed attempts to login or sign in link requests.');
+    cy.assertText(
+      temporarilySuspendedAccessCode.message(),
+      'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
+    );
   });
 
   it('should show contact information on the suspension page', () => {
