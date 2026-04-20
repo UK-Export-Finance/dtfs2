@@ -1,3 +1,4 @@
+import { Currency } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftFacilityOverview, ApimGiftProductTypeCode } from '../../types';
 import { mapFacilityName } from './map-facility-name';
@@ -6,7 +7,7 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapOverviewParams = {
   bankInternalRefName: string;
-  currency: string;
+  currency: Currency;
   effectiveDate: string;
   expiryDate: string;
   exporterPartyUrn: string;
@@ -21,7 +22,7 @@ type MapOverviewParams = {
  * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
  * @param {string} params.bankInternalRefName - The bank internal reference name for the facility's deal.
- * @param {string} params.currency - The facility currency code.
+ * @param {Currency} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.
  * @param {string} params.exporterPartyUrn - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.

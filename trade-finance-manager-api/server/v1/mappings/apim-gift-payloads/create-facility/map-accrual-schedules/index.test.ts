@@ -9,7 +9,7 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 describe('mapAccrualSchedules', () => {
   it('should return an array with a mapped accrual schedule', () => {
     // Arrange
-    const dayCountBasis = 360;
+    const dayCountBasis = '360';
     const effectiveDate = '2024-01-01';
     const feeFrequency = 'Monthly';
     const feeType = 'At maturity';

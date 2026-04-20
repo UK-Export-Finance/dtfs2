@@ -1,3 +1,4 @@
+import { Currency } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftObligation } from '../../types';
 import { mapObligationAmount } from './map-obligation-amount';
@@ -6,7 +7,7 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 type MapObligationsParams = {
   bssSubtypeName?: string;
-  currency: string;
+  currency: Currency;
   effectiveDate: string;
   isBssEwcsDeal: boolean;
   facilityType?: string;

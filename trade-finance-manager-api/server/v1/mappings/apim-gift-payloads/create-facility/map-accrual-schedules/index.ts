@@ -7,7 +7,7 @@ import { mapSpreadRate } from './map-spread-rate';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapAccrualSchedulesParams = {
-  dayCountBasis: number;
+  dayCountBasis: string;
   effectiveDate: string;
   feeFrequency: string;
   feeType: string;
@@ -18,7 +18,7 @@ type MapAccrualSchedulesParams = {
 /**
  * Maps the facility "accrual schedules"
  * @param params - The parameters required to map the accrual schedules, including:
- * @param {number} params.dayCountBasis - The facility's day count basis, used to map to GIFT day basis code.
+ * @param {string} params.dayCountBasis - The facility's day count basis, used to map to GIFT day basis code.
  * @param {string} params.effectiveDate - The facility's effective date, used as the accrual effective date.
  * @param {string} params.feeFrequency - The facility's fee frequency, used to map to GIFT accrual frequency code.
  * @param {string} params.feeType - The facility's fee type, used to determine special handling for "At maturity" option.
