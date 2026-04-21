@@ -65,13 +65,19 @@ export const create = async (req: Request, res: Response) => {
     const { status } = response;
 
     if (status !== HttpStatusCode.Created) {
-      return res.status(status);
+      return res.sendStatus(status);
     }
 
     console.info('✅ Successfully created GIFT facility');
 
-    return res.status(status);
-  } catch (error) {
+    return res.sendStatus(status);
+  } catch (error: any) {
+    console.error('Error calling APIM TFS GIFT facility endpoint %o', error);
+
+    if (error?.response?.status) {
+      return res.sendStatus(error.response.status);
+    }
+
     console.error('🚩 Error occurred during GIFT facility endpoint call %o', error);
 
     return res
