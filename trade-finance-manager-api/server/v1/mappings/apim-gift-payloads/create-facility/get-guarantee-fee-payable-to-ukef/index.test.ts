@@ -4,7 +4,7 @@ import { getGuaranteeFeePayableToUkef } from '.';
 
 describe('getGuaranteeFeePayableToUkef', () => {
   describe('when isBssEwcsDeal is true', () => {
-    it('should return the mapped "guarantee fee payable by bank" value from the "guaranteeFeePayableByBank" value', () => {
+    it('should return the "guaranteeFeePayableByBank" value', () => {
       // Arrange
       const facilitySnapshot = {
         guaranteeFeePayableByBank: '1.23',
@@ -24,10 +24,29 @@ describe('getGuaranteeFeePayableToUkef', () => {
 
       expect(result).toEqual(expected);
     });
+
+    describe('when guaranteeFeePayableByBank is not provided', () => {
+      it('should return null', () => {
+        // Arrange
+        const facilitySnapshot = {} as TfmFacilitySnapshot;
+
+        const params = {
+          facilitySnapshot,
+          isBssEwcsDeal: true,
+          isGefDeal: false,
+        };
+
+        // Act
+        const result = getGuaranteeFeePayableToUkef(params);
+
+        // Assert
+        expect(result).toBeNull();
+      });
+    });
   });
 
   describe('when isGefDeal is true', () => {
-    it('should return the mapped "guarantee fee payable by bank" value from the "guaranteeFee" value', () => {
+    it('should return the "guaranteeFee" value', () => {
       // Arrange
       const facilitySnapshot = {
         guaranteeFee: 2.34,
@@ -46,6 +65,25 @@ describe('getGuaranteeFeePayableToUkef', () => {
       const expected = mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee);
 
       expect(result).toEqual(expected);
+    });
+
+    describe('when guaranteeFee is not provided', () => {
+      it('should return null', () => {
+        // Arrange
+        const facilitySnapshot = {} as TfmFacilitySnapshot;
+
+        const params = {
+          facilitySnapshot,
+          isBssEwcsDeal: false,
+          isGefDeal: true,
+        };
+
+        // Act
+        const result = getGuaranteeFeePayableToUkef(params);
+
+        // Assert
+        expect(result).toBeNull();
+      });
     });
   });
 
