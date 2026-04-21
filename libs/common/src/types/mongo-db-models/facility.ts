@@ -60,7 +60,11 @@ export type Facility = {
   ukefFacilityId: string | null;
   feeType: string;
   feeFrequency: string;
-  dayCountBasis: string;
+  /**
+   * BSS/EWCS dayCountBasis = string;
+   * GEF dayCountBasis = number;
+   */
+  dayCountBasis: string | number | null;
   coverDateConfirmed: boolean | null;
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;

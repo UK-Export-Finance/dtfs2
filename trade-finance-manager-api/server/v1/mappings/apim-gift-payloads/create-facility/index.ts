@@ -49,7 +49,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
   const facilityAmount = Number(tfm.ukefExposure);
-  const { dayCountBasis, feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  /**
+   * Ensure dayCountBasis is a string.
+   * GEF stores this as a number, BSS/EWCS stores this as a string.
+   * Number is cleanest.
+   */
+  const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
   const dealId = getTfmUkefDealId(deal);
 
