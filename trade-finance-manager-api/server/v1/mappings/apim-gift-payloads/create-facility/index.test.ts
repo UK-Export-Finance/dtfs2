@@ -18,6 +18,7 @@ import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { FacilityCategory } from '../../../api-response-types/facility-category';
 import { createFacility } from '.';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 const mockTfmGefDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
@@ -32,10 +33,7 @@ describe('createFacility', () => {
 
   const mockFacility: TfmFacility = {
     _id: new ObjectId(),
-    facilitySnapshot: {
-      ...mockFacilitySnapshot,
-      guaranteeFeePayableToUkef: '1.23%',
-    },
+    facilitySnapshot: mockFacilitySnapshot,
     tfm: {
       ukefExposure: 100000,
       facilityGuaranteeDates: {
@@ -93,6 +91,12 @@ describe('createFacility', () => {
     isBssEwcsDeal,
     isGefDeal,
     facilityCategoryCode: facilitySnapshot.type,
+  });
+
+  const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
   });
 
   const params = {
@@ -200,7 +204,7 @@ describe('createFacility', () => {
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
-        guaranteeFeePayableToUkef: String(facilitySnapshot.guaranteeFeePayableToUkef),
+        guaranteeFeePayableToUkef,
       }),
       counterparties: mapCounterparties({
         isBssEwcsDeal,

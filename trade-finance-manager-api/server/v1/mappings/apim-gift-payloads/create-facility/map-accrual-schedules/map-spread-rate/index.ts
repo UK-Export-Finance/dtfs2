@@ -5,7 +5,7 @@
  * @param {string} guaranteeFeePayableToUkef - The facility's guarantee fee payable to UKEF, as a string (e.g. "1.5%" or "1.5").
  * @returns {number | null} The spread rate for the GIFT accrual schedule, as a number (e.g. 1.5), or null if not provided.
  */
-export const mapSpreadRate = (guaranteeFeePayableToUkef?: string): number | null => {
+export const mapSpreadRate = (guaranteeFeePayableToUkef: string | null): number | null => {
   if (guaranteeFeePayableToUkef) {
     return Number(guaranteeFeePayableToUkef.replace('%', ''));
   }
