@@ -1,8 +1,9 @@
 const axios = require('axios');
+const path = require('path');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { mockDataLoaderTfmAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 const ApiError = require('../errors/api.error');
-require('dotenv').config({ path: `${__dirname}/../.env` });
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 const { TFM_API_URL, TFM_API_KEY, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
