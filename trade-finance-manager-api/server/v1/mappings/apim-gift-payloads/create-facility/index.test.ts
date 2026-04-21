@@ -5,6 +5,7 @@ import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-de
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
@@ -18,7 +19,6 @@ import api from '../../../api';
 import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating';
 import { FacilityCategory } from '../../../api-response-types/facility-category';
 import { createFacility } from '.';
-import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
 const mockTfmGefDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
