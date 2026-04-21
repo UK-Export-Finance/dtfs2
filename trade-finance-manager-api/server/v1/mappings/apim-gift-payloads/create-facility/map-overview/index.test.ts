@@ -1,4 +1,4 @@
-import { GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
 import { mapFacilityName } from './map-facility-name';
@@ -8,7 +8,7 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 describe('mapOverview', () => {
   const baseParams = {
     bankInternalRefName: 'Mock internal reference name',
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
     expiryDate: '2026-12-31',
     exporterPartyUrn: '12345',
@@ -86,6 +86,25 @@ describe('mapOverview', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when exporterPartyUrn is undefined', () => {
+    it('should set obligorUrn to null in the mapped overview', () => {
+      // Arrange
+      const productTypeCode = PRODUCT_TYPE_CODES.GEF;
+
+      const params = {
+        ...baseParams,
+        productTypeCode,
+        exporterPartyUrn: undefined,
+      };
+
+      // Act
+      const result = mapOverview(params);
+
+      // Assert
+      expect(result.obligorUrn).toBeNull();
     });
   });
 });

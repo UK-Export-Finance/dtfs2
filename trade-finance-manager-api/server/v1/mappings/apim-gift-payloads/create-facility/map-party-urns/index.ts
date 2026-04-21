@@ -28,7 +28,7 @@ export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsPar
 
   if (isBssEwcsDeal) {
     const partyUrns = {
-      ...(buyerPartyUrn !== null && { bondBeneficiary: String(buyerPartyUrn) }),
+      ...(buyerPartyUrn != null && { bondBeneficiary: String(buyerPartyUrn) }),
       bondGiver: bankPartyUrn,
       exporterPartyUrn,
     };

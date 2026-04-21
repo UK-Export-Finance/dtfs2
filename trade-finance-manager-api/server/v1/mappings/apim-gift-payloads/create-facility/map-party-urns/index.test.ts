@@ -48,7 +48,7 @@ describe('mapPartyUrns', () => {
     });
 
     describe('when deal.tfm.parties.buyer.partyUrn is null', () => {
-      it('should return an object with bondBeneficiary as an empty string', () => {
+      it('should return an object without bondBeneficiary', () => {
         // Arrange
         const mockDeal = {
           dealSnapshot: {
@@ -59,14 +59,14 @@ describe('mapPartyUrns', () => {
           tfm: {
             parties: {
               buyer: {
-                partyUrn: '',
+                partyUrn: null,
               },
               exporter: {
                 partyUrn: mockExporterPartyUrn,
               },
             },
           },
-        } as TfmDeal;
+        } as unknown as TfmDeal;
 
         // Act
         const result = mapPartyUrns({
@@ -77,7 +77,44 @@ describe('mapPartyUrns', () => {
 
         // Assert
         const expected = {
-          bondBeneficiary: '',
+          bondGiver: mockBankPartyUrn,
+          exporterPartyUrn: mockExporterPartyUrn,
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when deal.tfm.parties.buyer.partyUrn is undefined', () => {
+      it('should return an object without bondBeneficiary', () => {
+        // Arrange
+        const mockDeal = {
+          dealSnapshot: {
+            bank: {
+              partyUrn: mockBankPartyUrn,
+            },
+          },
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrn: undefined,
+              },
+              exporter: {
+                partyUrn: mockExporterPartyUrn,
+              },
+            },
+          },
+        } as unknown as TfmDeal;
+
+        // Act
+        const result = mapPartyUrns({
+          deal: mockDeal,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Assert
+        const expected = {
           bondGiver: mockBankPartyUrn,
           exporterPartyUrn: mockExporterPartyUrn,
         };
