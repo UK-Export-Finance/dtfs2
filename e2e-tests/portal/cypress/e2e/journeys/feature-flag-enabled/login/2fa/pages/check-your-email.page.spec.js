@@ -34,7 +34,7 @@ context('2FA Page - Check your email', () => {
     });
 
     it('should render description containing email', () => {
-      checkYourEmailAccessCode.description().should('contain', 'We have sent you a 6-digit access code to your email').and('contain', BANK1_MAKER1.email);
+      cy.assertText(checkYourEmailAccessCode.description(), `We have sent you a 6-digit access code to your email ${BANK1_MAKER1.email}.`);
     });
 
     sharedAccessCodeFormTests({

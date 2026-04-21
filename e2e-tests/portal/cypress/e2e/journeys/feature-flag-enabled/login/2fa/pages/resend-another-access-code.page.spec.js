@@ -34,7 +34,7 @@ context('2FA Page - Resend another access code', () => {
     });
 
     it('should render description containing email', () => {
-      resendAnotherAccessCode.description().should('contain', "We've sent you another email with a access code to").and('contain', BANK1_MAKER1.email);
+      cy.assertText(resendAnotherAccessCode.description(), `We've sent you another email with a access code to ${BANK1_MAKER1.email}`);
     });
 
     sharedAccessCodeFormTests({

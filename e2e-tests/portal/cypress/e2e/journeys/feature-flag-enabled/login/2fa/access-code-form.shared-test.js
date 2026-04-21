@@ -31,7 +31,7 @@ const sharedAccessCodeFormTests = ({ page, expiryText, requestCodeHref }) => {
     page.accessCodeInput().should('have.attr', 'placeholder', 'e.g. 123456');
   });
 
-  it('should render expiry information with text about 30 minutes', () => {
+  it('should render expiry information text', () => {
     cy.assertText(page.expiryInfo(), expiryText);
   });
 

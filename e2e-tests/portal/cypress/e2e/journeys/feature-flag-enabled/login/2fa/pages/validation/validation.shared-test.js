@@ -22,7 +22,7 @@ const sharedAccessCodeValidationTests = ({ page, user }) => {
     cy.assertText(page.inlineError(), 'Error: The access code you have entered is incorrect');
   });
 
-  it('should show access code expired page when code expired', () => {
+  it('should show access code expired page when code has expired', () => {
     cy.enterUsernameAndPassword(user);
     cy.visit('/login/access-code-expired');
 

@@ -28,7 +28,10 @@ context('2FA Page - Temporarily suspended account', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
 
     cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
-    cy.assertText(temporarilySuspendedAccessCode.message(), 'This can happen if there are too many failed attempts to login or sign in link requests.');
+    cy.assertText(
+      temporarilySuspendedAccessCode.message(),
+      'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
+    );
   });
 
   it('should render contact us section', () => {
