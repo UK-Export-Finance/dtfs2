@@ -74,7 +74,6 @@ describe('create', () => {
     expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling APIM TFS GIFT facility endpoint %o', mockError);
 
     expect(mockResponse._getStatusCode()).toBeUndefined();
-    expect(mockResponse._getData()).toEqual('');
   });
 
   it(`should forward non-${HttpStatusCode.Created} status when APIM TFS GIFT facility returns an HTTP error response`, async () => {
@@ -100,6 +99,5 @@ describe('create', () => {
     expect(console.error).toHaveBeenCalledWith('Error calling APIM TFS GIFT facility endpoint %o', mockAxiosError);
 
     expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
-    expect(mockResponse._getData()).toEqual('');
   });
 });

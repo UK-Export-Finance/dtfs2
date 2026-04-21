@@ -16,24 +16,17 @@ export type GetNewAccessCodePageRequest = CustomExpressRequest<Record<string, ne
  */
 export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res: Response) => {
   const {
-    session: { userToken, numberOfSignInOtpAttemptsRemaining },
+    session: { userToken },
   } = req;
 
   try {
-    // If user has no remaining OTP attempts, suspend account without sending a new OTP
-    if (numberOfSignInOtpAttemptsRemaining === 0) {
-      req.session.numberOfSignInOtpAttemptsRemaining = -1;
-      const suspendedAccountPage = getNextAccessCodePage(-1);
-
-      return res.redirect(suspendedAccountPage);
-    }
-
     const {
       data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft },
     } = (await api.sendSignInOTP(userToken)) as SendSignInOtpResponse;
 
+    // Persisting -1 session is required by the next page to render correctly and as a security gate.
+    // The API returns -1 when the account has been suspended (user blocked in DB and suspension email sent).
     if (attemptsLeft >= -1) {
-      // persist latest attempts in session so the next page can read it
       req.session.numberOfSignInOtpAttemptsRemaining = attemptsLeft;
       const nextAccessCodePage = getNextAccessCodePage(attemptsLeft);
 

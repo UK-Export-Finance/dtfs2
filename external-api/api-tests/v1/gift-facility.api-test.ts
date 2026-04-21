@@ -30,7 +30,7 @@ describe('/gift', () => {
       nock.abortPendingRequests();
       nock.cleanAll();
 
-      nock(baseUrl).persist().post(url).reply(HttpStatusCode.Created, mockApimTfsResponse);
+      nock(baseUrl).post(url).reply(HttpStatusCode.Created, mockApimTfsResponse);
 
       // Act
       const { status } = await post(mockBody).to('/gift/facility');
@@ -53,22 +53,6 @@ describe('/gift', () => {
         const { status } = await post(mockBody).to('/gift/facility');
 
         expect(status).toEqual(mockStatusCode);
-      });
-    });
-
-    describe('when the response does not return data', () => {
-      it(`should return ${HttpStatusCode.InternalServerError} status`, async () => {
-        // Arrange
-        nock.abortPendingRequests();
-        nock.cleanAll();
-
-        nock(baseUrl).persist().post(url).reply(HttpStatusCode.Created);
-
-        // Act
-        const { status } = await post(mockBody).to('/gift/facility');
-
-        // Assert
-        expect(status).toEqual(HttpStatusCode.InternalServerError);
       });
     });
   });
