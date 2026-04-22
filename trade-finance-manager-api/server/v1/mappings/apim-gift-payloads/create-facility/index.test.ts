@@ -197,7 +197,7 @@ describe('createFacility', () => {
       accrualSchedules: mapAccrualSchedules({
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
-        dayCountBasis: facilitySnapshot.dayCountBasis,
+        dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef: String(facilitySnapshot.guaranteeFeePayableToUkef),
