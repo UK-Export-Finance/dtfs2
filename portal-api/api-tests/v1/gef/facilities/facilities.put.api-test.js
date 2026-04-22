@@ -140,7 +140,7 @@ describe(baseUrl, () => {
           paymentType: 'Monthly',
           feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
           feeFrequency: 'Monthly',
-          dayCountBasis: '365',
+          dayCountBasis: 365,
           coverDateConfirmed: true,
           ukefFacilityId: 1234,
         };
@@ -189,7 +189,7 @@ describe(baseUrl, () => {
           paymentType: 'Monthly',
           feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
           feeFrequency: 'Monthly',
-          dayCountBasis: '365',
+          dayCountBasis: 365,
         };
 
         const item = await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
