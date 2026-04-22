@@ -40,6 +40,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const { facilityGuaranteeDates } = tfm;
 
   const consumer = APIM_GIFT_INTEGRATION.CONSUMER;
+
   const currency = facilitySnapshot.currency.id;
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
@@ -48,7 +49,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
   const facilityAmount = Number(tfm.ukefExposure);
-  const { dayCountBasis, feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  /**
+   * Ensure dayCountBasis is a string.
+   * GEF stores this as a number, BSS/EWCS stores this as a string.
+   * Number is cleanest.
+   */
+  const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
   const dealId = getTfmUkefDealId(deal);
 
@@ -64,14 +72,15 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
-  const { exporterCreditRating, parties } = deal.tfm;
-  const exporterPartyUrn = parties.exporter.partyUrn;
+  const { exporterCreditRating } = deal.tfm;
 
   const partyUrns = mapPartyUrns({
     deal,
     isBssEwcsDeal,
     isGefDeal,
   });
+
+  const { exporterPartyUrn } = partyUrns;
 
   const industryCode = getIndustryCode(deal);
 

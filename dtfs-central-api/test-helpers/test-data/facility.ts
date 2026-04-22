@@ -30,7 +30,7 @@ export const aFacility = (): Facility => ({
   ukefFacilityId: '12345678',
   feeType: 'cash',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   coverDateConfirmed: null,
   hasBeenIssuedAndAcknowledged: null,
   canResubmitIssuedFacilities: null,
