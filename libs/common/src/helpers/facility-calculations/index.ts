@@ -102,7 +102,7 @@ export const calculateGefFacilityFeeRecord = (facility: Facility) => {
 
     const drawnAmount = calculateDrawnAmount(value, coverPercentage, type);
     const daysOfCover = calculateDaysOfCover(type, coverStartDate, coverEndDate);
-    const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+    const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, Number(dayCountBasis), Number(guaranteeFee));
 
     return feeRecord;
   }

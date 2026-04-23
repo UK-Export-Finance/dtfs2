@@ -3,7 +3,7 @@ import { ApimGiftDayBasisType } from '../../../types';
 
 /**
  * Maps a TFM "day count basis" to its corresponding GIFT day basis code.
- * @param dayCountBasis - The day count basis to map.
+ * @param {number} dayCountBasis - The day count basis to map.
  * @returns {ApimGiftDayBasisType | null} The corresponding day basis code, or null if not found.
  */
 export const mapDayBasisCode = (dayCountBasis: number): ApimGiftDayBasisType | null => {

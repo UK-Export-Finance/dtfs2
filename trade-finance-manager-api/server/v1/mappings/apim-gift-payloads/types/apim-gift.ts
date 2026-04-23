@@ -28,7 +28,7 @@ export type ApimGiftFacilityOverview = {
   name: string;
   effectiveDate: string;
   expiryDate: string;
-  obligorUrn: string;
+  obligorUrn: string | null;
   productTypeCode: ApimGiftProductTypeCode;
   repaymentType: ApimGiftRepaymentType;
 };
