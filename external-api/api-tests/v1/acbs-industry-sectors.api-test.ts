@@ -1,6 +1,8 @@
+import axios, { HttpStatusCode } from 'axios';
 import { industrySector } from '@ukef/dtfs2-common';
-import { HttpStatusCode } from 'axios';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
+
+jest.mock('axios');
 
 describe('findACBSIndustrySector', () => {
   const invalidIndustryCodeTestCases = [0, 1, 12, 123, 1234, 0o001];
@@ -25,6 +27,9 @@ describe('findACBSIndustrySector', () => {
         effectiveTo: '9999-12-31T00:00:00.000Z',
       },
     ];
+
+    // Arrange - mock axios response
+    jest.mocked(axios).mockResolvedValueOnce({ data: expected, status: HttpStatusCode.Ok });
 
     // Act
     const { status, data } = await findACBSIndustrySector(35220);
