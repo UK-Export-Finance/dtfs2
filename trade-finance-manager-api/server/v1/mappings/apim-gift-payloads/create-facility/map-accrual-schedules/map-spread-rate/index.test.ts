@@ -26,10 +26,10 @@ describe('mapSpreadRate', () => {
     });
   });
 
-  describe('when guaranteeFeePayableToUkef is NOT provided', () => {
+  describe('when guaranteeFeePayableToUkef is null', () => {
     it('should return null', () => {
       // Act
-      const result = mapSpreadRate();
+      const result = mapSpreadRate(null);
 
       // Assert
       expect(result).toBeNull();
