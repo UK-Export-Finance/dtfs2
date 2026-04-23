@@ -11,7 +11,7 @@ type MapAccrualSchedulesParams = {
   effectiveDate: string;
   feeFrequency: string;
   feeType: string;
-  guaranteeFeePayableToUkef: string;
+  guaranteeFeePayableToUkef: string | null;
   maturityDate: string;
 };
 
@@ -22,7 +22,7 @@ type MapAccrualSchedulesParams = {
  * @param {string} params.effectiveDate - The facility's effective date, used as the accrual effective date.
  * @param {string} params.feeFrequency - The facility's fee frequency, used to map to GIFT accrual frequency code.
  * @param {string} params.feeType - The facility's fee type, used to determine special handling for "At maturity" option.
- * @param {string} params.guaranteeFeePayableToUkef - The guarantee fee payable to UKEF, used as the spread rate in the accrual schedule.
+ * @param {string | null} params.guaranteeFeePayableToUkef - The guarantee fee payable to UKEF, used as the spread rate in the accrual schedule.
  * @param {string} params.maturityDate - The facility's maturity date, used as the accrual maturity date and first cycle accrual end date.
  * @returns {ApimAccrualSchedule[]} - Mapped accrual schedules for the APIM GIFT payload.
  */
