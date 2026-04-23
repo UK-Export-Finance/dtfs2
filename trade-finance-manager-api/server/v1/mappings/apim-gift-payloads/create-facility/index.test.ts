@@ -5,6 +5,7 @@ import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-de
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
@@ -32,10 +33,7 @@ describe('createFacility', () => {
 
   const mockFacility: TfmFacility = {
     _id: new ObjectId(),
-    facilitySnapshot: {
-      ...mockFacilitySnapshot,
-      guaranteeFeePayableToUkef: '1.23%',
-    },
+    facilitySnapshot: mockFacilitySnapshot,
     tfm: {
       ukefExposure: 100000,
       facilityGuaranteeDates: {
@@ -93,6 +91,12 @@ describe('createFacility', () => {
     isBssEwcsDeal,
     isGefDeal,
     facilityCategoryCode: facilitySnapshot.type,
+  });
+
+  const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
   });
 
   const params = {
@@ -200,7 +204,7 @@ describe('createFacility', () => {
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
-        guaranteeFeePayableToUkef: String(facilitySnapshot.guaranteeFeePayableToUkef),
+        guaranteeFeePayableToUkef,
       }),
       counterparties: mapCounterparties({
         isBssEwcsDeal,
