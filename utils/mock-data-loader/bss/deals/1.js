@@ -124,7 +124,7 @@ module.exports = {
   submissionDetails: {
     status: 'Incomplete',
     'supplier-type': 'Exporter',
-    'supplier-companies-house-registration-number': 'TEST',
+    'supplier-companies-house-registration-number': '08989898',
     'supplier-name': 'Auto Test 1',
     'supplier-address-country': {
       name: 'Australia',

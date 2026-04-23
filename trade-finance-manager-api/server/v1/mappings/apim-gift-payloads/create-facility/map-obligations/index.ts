@@ -1,3 +1,4 @@
+import { Currency } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftObligation } from '../../types';
 import { mapObligationAmount } from './map-obligation-amount';
@@ -6,7 +7,7 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 
 type MapObligationsParams = {
   bssSubtypeName?: string;
-  currency: string;
+  currency: Currency;
   effectiveDate: string;
   isBssEwcsDeal: boolean;
   facilityType?: string;
@@ -21,7 +22,7 @@ type MapObligationsParams = {
  * Otherwise, the obligation subtype code is not required and should be null.
  * @param {MapObligationsParams} params - Data required to build the APIM GIFT "obligations" data.
  * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssEwcsDeal` is true.
- * @param {string} params.currency - The facility currency code to use for the obligation amount.
+ * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
  * @param {string} params.effectiveDate - The start date of the facility (from TFM "facilityGuaranteeDates").
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
