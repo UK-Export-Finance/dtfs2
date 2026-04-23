@@ -318,7 +318,7 @@ router.get('/login/sign-in-link', loginWithSignInLink);
  *       500:
  *         description: Internal server error
  */
-router.route('/login/check-your-email-access-code').get(validatePortal2FAEnabled, validatePartialAuthToken, getCheckYourEmailAccessCodePage);
+router.get('/login/check-your-email-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getCheckYourEmailAccessCodePage);
 
 /**
  * @openapi
@@ -427,6 +427,6 @@ router.get('/login/request-new-access-code', validatePortal2FAEnabled, validateP
  *       302:
  *         description: Redirect to /login if partial auth token is invalid or to /not-found if feature flag is disabled
  */
-router.route('/login/access-code-expired').all([validatePortal2FAEnabled, validatePartialAuthToken]).get(getAccessCodeExpiredPage);
+router.get('/login/access-code-expired', validatePortal2FAEnabled, validatePartialAuthToken, getAccessCodeExpiredPage);
 
 module.exports = router;
