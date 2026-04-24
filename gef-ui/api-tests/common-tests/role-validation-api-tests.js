@@ -2,6 +2,10 @@ jest.mock('../../server/services/api', () => ({
   ...jest.requireActual('../../server/services/api'),
   validateToken: () => true,
   validateBank: () => ({ isValid: true }),
+  getApplication: jest.fn(),
+  getFacilities: jest.fn(),
+  getUserDetails: jest.fn(),
+  setApplicationStatus: jest.fn(),
 }));
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
