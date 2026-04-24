@@ -25,10 +25,13 @@ const canSubmitToACBS = async (deal, firstSubmissionCheck = true) => {
 
     // Check 1: Ensure submission type is `Notice`
     const validSubmissionType = acceptable.includes(dealSnapshot?.submissionType);
+
     // Check 2: Ensure ACBS records exist
     const validFirstSubmission = firstSubmissionCheck ? !tfm?.acbs : true;
+
     // Check 3: Ensure IDs are valid
     const { status: validIds } = await dealHasAllValidUkefIds(_id);
+
     // Check 4: Ensure all required parties have URN
     const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 

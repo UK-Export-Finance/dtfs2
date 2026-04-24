@@ -6,6 +6,7 @@ import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/incr
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
+import { sendAccountSuspensionEmail } from './send-account-suspension-email';
 
 /**
  * Creates and emails a sign-in OTP to the user.
@@ -28,24 +29,31 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.NotFound).send({ message: 'User or auditDetails not found' });
     }
 
-    console.info('Creating and emailing sign in OTP for user %s', req.body.user._id);
+    const userId = user._id.toString();
+    const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+    console.info('Creating and emailing sign in OTP for user %s', sanitisedUserId);
 
     const userIsBlockedOrDisabled = isUserBlockedOrDisabled(user);
 
     if (userIsBlockedOrDisabled) {
-      console.error('User %s is blocked or disabled', user._id);
+      console.error('User %s is blocked or disabled', sanitisedUserId);
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
-
-    const userId = user._id.toString();
 
     const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
     const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
 
+    if (signInOTPSendCount === -1) {
+      console.info('User %s account suspended due to excessive OTP requests, sending suspension email', sanitisedUserId);
+      await sendAccountSuspensionEmail(user);
+      return res.status(HttpStatusCode.Created).send({ signInOTPSendCount: -1 });
+    }
+
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
 
-    console.info('Saving sign in OTP for user %s', user._id);
+    console.info('Saving sign in OTP for user %s', sanitisedUserId);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
@@ -56,7 +64,9 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {
-    console.error('Failed to create and email sign in OTP for user %s: %o', req.body.user._id, error);
+    const sanitisedUserId = req.body.user?._id ? String(req.body.user._id).replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
+
+    console.error('Failed to create and email sign in OTP for user %s: %o', sanitisedUserId, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({ message: error instanceof Error ? error.message : 'An unexpected error occurred' });
   }

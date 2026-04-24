@@ -36,7 +36,7 @@ const facilityDefaults = {
   submittedAsIssuedDate: '1638363717231',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   canResubmitIssuedFacilities: null,
   hasBeenIssuedAndAcknowledged: null,
   issueDate: null,
