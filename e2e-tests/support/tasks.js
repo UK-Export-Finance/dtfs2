@@ -1,4 +1,4 @@
-const crypto = require('node:crypto');
+const crypto = require('crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
@@ -14,6 +14,7 @@ const {
   FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionEntity,
+  salt: generateSalt,
 } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
@@ -54,11 +55,15 @@ module.exports = {
 
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-      const saltValue = crypto.randomBytes(64);
-      const hashValue = crypto.pbkdf2Sync(newSignInToken, saltValue, 210000, 64, 'sha512');
+
+      const saltValue = generateSalt();
+      const hashValue = crypto.pbkdf2Sync(newSignInToken, saltValue, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+
       const saltHex = saltValue.toString('hex');
       const hashHex = hashValue.toString('hex');
+
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
+
       const userCollection = await getUsersCollection();
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
     };
@@ -67,15 +72,11 @@ module.exports = {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
 
-        const iterations = 210000;
-        const keyLength = 64;
-        const digest = 'sha512';
-        const stringType = 'hex';
+        const saltValue = generateSalt();
+        const hashValue = crypto.pbkdf2Sync(signInTokenFromLink, saltValue, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
 
-        const saltValue = crypto.randomBytes(64);
-        const hashValue = crypto.pbkdf2Sync(signInTokenFromLink, saltValue, iterations, keyLength, digest);
-        const saltHex = saltValue.toString(stringType);
-        const hashHex = hashValue.toString(stringType);
+        const saltHex = saltValue.toString('hex');
+        const hashHex = hashValue.toString('hex');
 
         return { saltHex, hashHex, expiry };
       });
