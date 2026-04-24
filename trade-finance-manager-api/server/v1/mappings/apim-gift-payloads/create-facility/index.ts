@@ -8,10 +8,12 @@ import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
 import { mapOverview } from './map-overview';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
 import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -39,13 +41,21 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
   const { facilityGuaranteeDates } = tfm;
 
   const consumer = APIM_GIFT_INTEGRATION.CONSUMER;
+
   const currency = facilitySnapshot.currency.id;
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const facilityType = facilitySnapshot.type;
   const facilityAmount = Number(tfm.ukefExposure);
+  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  /**
+   * Ensure dayCountBasis is a string.
+   * GEF stores this as a number, BSS/EWCS stores this as a string.
+   * Number is cleanest.
+   */
+  const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
   const dealId = getTfmUkefDealId(deal);
 
@@ -61,8 +71,7 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
-  const { exporterCreditRating, parties } = deal.tfm;
-  const exporterPartyUrn = parties.exporter.partyUrn;
+  const { exporterCreditRating } = deal.tfm;
 
   const partyUrns = mapPartyUrns({
     deal,
@@ -70,9 +79,17 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
     isGefDeal,
   });
 
-  const industryCode = getIndustryCode(deal);
+  const { exporterPartyUrn } = partyUrns;
 
   const bssSubtypeName = isBssEwcsDeal ? String(facility.facilitySnapshot.bondType) : undefined;
+
+  const industryCode = getIndustryCode(deal);
+
+  const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
 
   /**
    * Get data from APIM MDM required to map the APIM GIFT payload:
@@ -124,6 +141,14 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
       isGefDeal,
       productTypeCode,
       ukefFacilityId,
+    }),
+    accrualSchedules: mapAccrualSchedules({
+      effectiveDate,
+      maturityDate: expiryDate,
+      dayCountBasis,
+      feeFrequency,
+      feeType,
+      guaranteeFeePayableToUkef,
     }),
     counterparties: mapCounterparties({
       isBssEwcsDeal,
