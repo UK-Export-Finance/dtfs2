@@ -32,6 +32,9 @@ describe('return to maker routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/return-to-maker`),
       whitelistedRoles: [CHECKER],
       successCode: 302,
+      successHeaders: {
+        location: '/dashboard',
+      },
     });
   });
 });

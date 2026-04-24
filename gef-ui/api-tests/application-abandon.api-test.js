@@ -34,6 +34,9 @@ describe('application abandon routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/abandon`),
       whitelistedRoles: [MAKER],
       successCode: 302,
+      successHeaders: {
+        location: '/dashboard',
+      },
     });
   });
 });
