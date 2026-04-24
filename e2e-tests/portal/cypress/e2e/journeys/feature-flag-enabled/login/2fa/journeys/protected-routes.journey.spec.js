@@ -25,6 +25,7 @@ context('2FA Journey - Protected routes authorization', () => {
     blockedRoutes.forEach((route) => {
       it(`should redirect to login when visiting ${route} without a session`, () => {
         cy.visit(route);
+
         cy.url().should('eq', relative('/login'));
       });
     });
@@ -39,6 +40,7 @@ context('2FA Journey - Protected routes authorization', () => {
     blockedRoutes.forEach((route) => {
       it(`should redirect to login when visiting ${route} mid-2FA`, () => {
         cy.visit(route);
+
         cy.url().should('eq', relative('/login'));
       });
     });
@@ -52,6 +54,7 @@ context('2FA Journey - Protected routes authorization', () => {
 
     it('should allow the current 2FA page to be revisited during partial auth', () => {
       cy.visit('/login/check-your-email-access-code');
+
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
   });
@@ -65,6 +68,7 @@ context('2FA Journey - Protected routes authorization', () => {
     authenticatedRoutes.forEach((route) => {
       it(`should successfully access ${route} after full 2FA`, () => {
         cy.visit(route);
+
         cy.url().should('contain', route);
       });
     });

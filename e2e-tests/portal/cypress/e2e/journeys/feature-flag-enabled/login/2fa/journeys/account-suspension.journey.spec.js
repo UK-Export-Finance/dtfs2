@@ -22,6 +22,7 @@ context('2FA Journey - Account suspension after too many attempts', () => {
 
   it('should redirect to login when accessing the suspension page without partial auth', () => {
     temporarilySuspendedAccessCode.visit();
+
     cy.url().should('eq', relative('/login'));
   });
 

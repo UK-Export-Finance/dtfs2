@@ -47,6 +47,7 @@ context('2FA Journey - Access code expiry', () => {
 
   it('should redirect to login when accessing the expired page without partial auth', () => {
     accessCodeExpired.visit();
+
     cy.url().should('eq', relative('/login'));
   });
 
