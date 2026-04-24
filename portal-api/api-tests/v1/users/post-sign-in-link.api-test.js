@@ -1,12 +1,10 @@
-const { when, resetAllWhenMocks } = require('jest-when');
 const { AxiosError } = require('axios');
-const { CRYPTO } = require('@ukef/dtfs2-common');
 const crypto = require('crypto');
+const { PORTAL_USER_SALTS, PORTAL_USER_SIGN_IN_TOKENS, VALID_COMPUTED_HASH } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../server/v1/email');
 const { createUser } = require('../../helpers/create-user');
-
 const app = require('../../../server/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
@@ -14,7 +12,6 @@ const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/cl
 const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../server/constants');
 const { PORTAL_UI_URL } = require('../../../server/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
-const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../../fixtures/sign-in-token-constants');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 const maker1 = users.testBank1Maker1;
@@ -22,18 +19,16 @@ const maker2 = users.testBank1Maker2;
 
 const url = '/v1/users/me/sign-in-link';
 
-const hashHexOne = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_ONE;
-const hashHexTwo = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_TWO;
-const hashHexThree = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_THREE;
+const hashHexOne = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+const hashHexTwo = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_TWO;
+const hashHexThree = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_THREE;
 
-const saltHexOne = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_ONE;
-const saltHexTwo = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_TWO;
-const saltHexThree = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_THREE;
+const saltHexOne = PORTAL_USER_SALTS.VALID_FORMAT_SALT_ONE;
+const saltHexTwo = PORTAL_USER_SALTS.VALID_FORMAT_SALT_TWO;
+const saltHexThree = PORTAL_USER_SALTS.VALID_FORMAT_SALT_THREE;
 
 const mockSalt = Buffer.from(saltHexOne, 'hex');
-const mockHash = Buffer.from(hashHexOne, 'hex');
 
-const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const userToCreateAsPartiallyLoggedIn = {
   ...maker1,
@@ -45,8 +40,7 @@ const userToCreateFullyLoggedIn = { ...maker2 };
 jest.mock('../../../server/v1/email');
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
-  pbkdf2Sync: jest.fn().mockReturnValue(Buffer.from([111])),
-  randomBytes: jest.fn().mockReturnValue(Buffer.from([222])),
+  randomBytes: jest.fn().mockReturnValue(Buffer.from('bbb', 'hex')),
 }));
 
 describe('POST /users/me/sign-in-link', () => {
@@ -97,9 +91,12 @@ describe('POST /users/me/sign-in-link', () => {
       username: temporaryUsernameAndEmail,
       update: { 'user-status': USER.STATUS.ACTIVE },
     });
+  });
 
+  afterEach(() => {
     jest.resetAllMocks();
-    resetAllWhenMocks();
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
@@ -240,11 +237,9 @@ describe('POST /users/me/sign-in-link', () => {
   describe('when user has remaining attempts', () => {
     describe('when creating the sign in token errors', () => {
       beforeEach(() => {
-        when(crypto.randomBytes)
-          .calledWith(CRYPTO.SALT.BYTES)
-          .mockImplementationOnce(() => {
-            throw new Error();
-          });
+        jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => {
+          throw new Error();
+        });
       });
 
       it('returns a 500 error response', async () => {
@@ -255,40 +250,42 @@ describe('POST /users/me/sign-in-link', () => {
 
     describe('when creating the sign in token succeeds', () => {
       beforeEach(() => {
-        when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
+        jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => mockSalt);
       });
 
       describe('when creating the sign in salt errors', () => {
         beforeEach(() => {
-          when(crypto.randomBytes)
-            .calledWith(CRYPTO.SALT.BYTES)
-            .mockImplementationOnce(() => {
-              throw new Error();
-            });
+          jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => {
+            throw new Error();
+          });
         });
 
         it('returns a 500 error response', async () => {
+          // Act
           const { status, body } = await sendSignInLink();
+
+          // Assert
           expect500ErrorWithFailedToSaveCodeMessage({ status, body });
         });
       });
 
       describe('when creating the sign in salt succeeds', () => {
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(mockSalt);
+          jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => mockSalt);
         });
 
         describe('when creating the sign in hash errors', () => {
           beforeEach(() => {
-            when(crypto.pbkdf2Sync)
-              .calledWith(signInToken, mockSalt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
-              .mockImplementationOnce(() => {
-                throw new Error();
-              });
+            jest.spyOn(crypto, 'pbkdf2Sync').mockImplementationOnce(() => {
+              throw new Error();
+            });
           });
 
           it('returns a 500 error response', async () => {
+            // Act
             const { status, body } = await sendSignInLink();
+
+            // Assert
             expect500ErrorWithFailedToSaveCodeMessage({ status, body });
           });
         });
@@ -299,15 +296,10 @@ describe('POST /users/me/sign-in-link', () => {
           beforeEach(() => {
             newSignInToken = {
               saltHex: saltHexOne,
-              hashHex: hashHexOne,
+              hashHex: VALID_COMPUTED_HASH,
               expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS,
             };
-            when(crypto.pbkdf2Sync)
-              .calledWith(signInToken, mockSalt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
-              .mockReturnValueOnce(mockHash);
-          });
 
-          afterEach(() => {
             SIGN_IN_LINK.DURATION_MINUTES = originalSignInLinkDurationMinutes;
           });
 
@@ -327,7 +319,7 @@ describe('POST /users/me/sign-in-link', () => {
             expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
               firstName: partiallyLoggedInUser.firstname,
               lastName: partiallyLoggedInUser.surname,
-              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
+              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${saltHexOne}&u=${partiallyLoggedInUser._id}`,
               signInLinkDuration: '2 minutes',
             });
           });
@@ -383,12 +375,12 @@ describe('POST /users/me/sign-in-link', () => {
                 expect(userInDb.signInLinkSendCount).toEqual(1);
               });
 
-              it('adds the signInToken to the end of saved signInTokens array', async () => {
+              it('adds the hashHexOne to the end of saved signInTokens array', async () => {
                 await sendSignInLink();
 
                 const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                 expect(userInDb.signInTokens).toStrictEqual([
-                  { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                  { saltHex: saltHexOne, hashHex: VALID_COMPUTED_HASH, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
                 ]);
               });
             });
@@ -428,13 +420,13 @@ describe('POST /users/me/sign-in-link', () => {
                   expect(userInDb.signInLinkSendCount).toEqual(initialSignInLinkSendCount + 1);
                 });
 
-                it('adds the signInToken to the end of saved signInTokens array', async () => {
+                it('adds the hashHexOne to the end of saved signInTokens array', async () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInTokens).toStrictEqual([
                     ...existingSignInTokens,
-                    { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                    { saltHex: saltHexOne, hashHex: VALID_COMPUTED_HASH, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
                   ]);
                 });
               });
@@ -481,12 +473,12 @@ describe('POST /users/me/sign-in-link', () => {
                   expect(hasSignInTokenThree).toEqual(false);
                 });
 
-                it('adds the signInToken to the end of saved signInTokens array', async () => {
+                it('adds the hashHexOne to the end of saved signInTokens array', async () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInTokens).toStrictEqual([
-                    { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                    { saltHex: saltHexOne, hashHex: VALID_COMPUTED_HASH, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
                   ]);
                 });
               });
