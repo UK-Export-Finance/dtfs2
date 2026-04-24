@@ -5,6 +5,9 @@ permissions:
   contents: read
 
 on:
+  push:
+    branches:
+      - feat/DTFS2-16188-deployment
   schedule:
     - cron: '0 23 * * *'
 
@@ -45,7 +48,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma']
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma', 'crdtfsdev0012lpd66flpami2']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
