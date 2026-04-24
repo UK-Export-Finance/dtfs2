@@ -15,12 +15,9 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
   isGefDeal?: boolean;
 };
 
-// TODO
-// TODO
-// if is BSS - deal has issued facilities with "buyer party URN"
-
 /**
  * Determines if a deal can be submitted to APIM/GIFT based on its type, submission type, and issued facilities.
+ * If the deal is BSS/EWCS, a buyer party URN must be populated.
  * Checks if the APIM/GIFT integration is enabled, then evaluates the deal's type and submission type.
  * If the deal is of a valid type and submission type, it retrieves the facilities associated with the deal,
  * filters for issued facilities, and determines if there are any that can be submitted to APIM/GIFT.
@@ -39,18 +36,22 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const validSubmissionType = submissionType === AIN || submissionType === MIN;
 
     if (validDealType && validSubmissionType) {
-      const facilities: TfmFacility[] = await api.findFacilitiesByDealId(deal._id.toString());
+      const validBssEwcsDeal = isBssEwcsDeal && deal.tfm.parties.buyer?.partyUrn;
 
-      const issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
+      if (validBssEwcsDeal || isGefDeal) {
+        const facilities: TfmFacility[] = await api.findFacilitiesByDealId(deal._id.toString());
 
-      const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
+        const issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
 
-      return {
-        canSubmitFacilitiesToApimGift,
-        issuedFacilities,
-        isBssEwcsDeal,
-        isGefDeal,
-      };
+        const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
+
+        return {
+          canSubmitFacilitiesToApimGift,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        };
+      }
     }
   }
 
