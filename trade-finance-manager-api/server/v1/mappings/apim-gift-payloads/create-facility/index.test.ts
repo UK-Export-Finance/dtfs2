@@ -5,12 +5,14 @@ import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-de
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
 import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
+import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
 import api from '../../../api';
@@ -89,6 +91,12 @@ describe('createFacility', () => {
     isBssEwcsDeal,
     isGefDeal,
     facilityCategoryCode: facilitySnapshot.type,
+  });
+
+  const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
   });
 
   const params = {
@@ -190,6 +198,14 @@ describe('createFacility', () => {
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
+      accrualSchedules: mapAccrualSchedules({
+        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
+        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
+        dayCountBasis: Number(facilitySnapshot.dayCountBasis),
+        feeFrequency: facilitySnapshot.feeFrequency,
+        feeType: facilitySnapshot.feeType,
+        guaranteeFeePayableToUkef,
+      }),
       counterparties: mapCounterparties({
         isBssEwcsDeal,
         isGefDeal,
@@ -245,6 +261,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -270,6 +287,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -296,6 +314,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');
@@ -321,6 +340,7 @@ describe('createFacility', () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty('consumer');
       expect(result).toHaveProperty('overview');
+      expect(result).toHaveProperty('accrualSchedules');
       expect(result).toHaveProperty('counterparties');
       expect(result).toHaveProperty('obligations');
       expect(result).toHaveProperty('riskDetails');

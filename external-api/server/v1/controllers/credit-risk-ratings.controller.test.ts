@@ -72,7 +72,7 @@ describe('findAll', () => {
     // Assert
     expect(console.error).toHaveBeenCalledTimes(2);
 
-    expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling Credit Risk Ratings API, %o', mockError);
+    expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling Credit Risk Ratings API %o', mockError);
 
     expect(console.error).toHaveBeenNthCalledWith(
       2,
@@ -104,7 +104,7 @@ describe('findAll', () => {
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error calling Credit Risk Ratings API, %o', mockAxiosError);
+    expect(console.error).toHaveBeenCalledWith('Error calling Credit Risk Ratings API %o', mockAxiosError);
 
     expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
     expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);
