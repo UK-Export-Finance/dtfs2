@@ -13,6 +13,7 @@ import { mapCounterparties } from './map-counterparties';
 import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
+import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -45,8 +46,6 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
-
-  const guaranteeFeePayableToUkef = String(facilitySnapshot.guaranteeFeePayableToUkef);
 
   const facilityAmount = Number(tfm.ukefExposure);
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
@@ -82,9 +81,15 @@ export const createFacility = async ({ deal, facility }: FacilityCreationParams)
 
   const { exporterPartyUrn } = partyUrns;
 
+  const bssSubtypeName = isBssEwcsDeal ? String(facility.facilitySnapshot.bondType) : undefined;
+
   const industryCode = getIndustryCode(deal);
 
-  const bssSubtypeName = isBssEwcsDeal ? String(facility.facilitySnapshot.bondType) : undefined;
+  const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
 
   /**
    * Get data from APIM MDM required to map the APIM GIFT payload:
