@@ -4,7 +4,7 @@ import apiModule from '../../../api';
 import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-payloads/types';
 
 type ApiTypes = {
-  createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility[]>;
+  createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility>;
 };
 
 type SubmitFacilitiesToApimGiftParams = {

@@ -61,7 +61,7 @@ describe('submitFacilitiesToApimGift', () => {
       expect(createFacilityPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facility: mockFacility });
     });
 
-    it('should call api.createGiftFacilityapi.createGiftFacility', async () => {
+    it('should call api.createGiftFacility', async () => {
       // Act
       await submitFacilitiesToApimGift({
         deal: mockDeal,
@@ -127,7 +127,7 @@ describe('submitFacilitiesToApimGift', () => {
       expect(createFacilitiesPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facilities: [mockFacility, mockFacilityTwo, mockFacilityThree] });
     });
 
-    it('should call api.createGiftFacilityapi.createGiftFacility', async () => {
+    it('should call api.createGiftFacility', async () => {
       // Act
       await submitFacilitiesToApimGift({
         deal: mockDeal,

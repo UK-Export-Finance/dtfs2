@@ -36,7 +36,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const validSubmissionType = submissionType === AIN || submissionType === MIN;
 
     if (validDealType && validSubmissionType) {
-      const validBssEwcsDeal = isBssEwcsDeal && deal.tfm.parties.buyer?.partyUrn;
+      const validBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
 
       if (validBssEwcsDeal || isGefDeal) {
         const facilities: TfmFacility[] = await api.findFacilitiesByDealId(deal._id.toString());

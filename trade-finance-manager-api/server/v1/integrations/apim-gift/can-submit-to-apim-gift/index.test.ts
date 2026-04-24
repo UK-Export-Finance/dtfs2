@@ -247,37 +247,40 @@ describe('canSubmitToApimGift', () => {
       });
     });
 
-    describe(`when the deal is ${DEAL_TYPE.BSS_EWCS}, but does not have a buyer party URN`, () => {
-      it('should return canSubmitFacilitiesToApimGift as false', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockBaseDeal,
-          dealSnapshot: {
-            ...mockBaseDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: {
-            parties: {
-              buyer: {
-                partyUrn: '',
+    describe.each([{ partyUrn: undefined }, { partyUrn: null }, { partyUrn: '' }])(
+      `when the deal is ${DEAL_TYPE.BSS_EWCS}, but buyer party URN is $partyUrn`,
+      ({ partyUrn }) => {
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+          // Arrange
+          const mockDeal = {
+            ...mockBaseDeal,
+            dealSnapshot: {
+              ...mockBaseDeal.dealSnapshot,
+              dealType: DEAL_TYPE.BSS_EWCS,
+              submissionType: DEAL_SUBMISSION_TYPE.AIN,
+            },
+            tfm: {
+              parties: {
+                buyer: {
+                  partyUrn,
+                },
               },
             },
-          },
-        } as TfmDeal;
+          } as TfmDeal;
 
-        mockedFindFacilitiesByDealId.mockResolvedValue([]);
+          mockedFindFacilitiesByDealId.mockResolvedValue([]);
 
-        // Act
-        const result = await canSubmitToApimGift(mockDeal);
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
 
-        // Assert
-        const expected = {
-          canSubmitFacilitiesToApimGift: false,
-        };
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: false,
+          };
 
-        expect(result).toEqual(expected);
-      });
-    });
+          expect(result).toEqual(expected);
+        });
+      },
+    );
   });
 });
