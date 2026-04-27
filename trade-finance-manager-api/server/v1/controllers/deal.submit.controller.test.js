@@ -115,11 +115,8 @@ describe('submitDealAfterUkefIds', () => {
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: true,
-      issuedFacilities,
-    });
     canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+
     convertDealCurrencies.mockImplementation(async (deal) => deal);
     createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));
     createDealTasks.mockImplementation(async (deal) => deal);
@@ -172,6 +169,7 @@ describe('submitDealAfterUkefIds', () => {
     it('should call canSubmitToApimGift', async () => {
       canSubmitToApimGift.mockResolvedValue({
         canSubmitFacilitiesToApimGift: true,
+        issuedFacilities,
       });
 
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);

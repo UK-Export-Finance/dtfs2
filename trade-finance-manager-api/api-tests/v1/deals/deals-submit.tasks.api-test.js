@@ -38,6 +38,8 @@ describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
     canSubmitToApimGift.mockClear();
+    canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+
     submitFacilitiesToApimGift.mockClear();
 
     api.getFacilityExposurePeriod.mockClear();

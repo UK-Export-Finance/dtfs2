@@ -50,7 +50,11 @@ jest.mock('../../../server/v1/integrations/apim-gift', () => ({
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    canSubmitToApimGift.mockClear();
+    canSubmitToApimGift.mockResolvedValue({
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
+    });
+
     submitFacilitiesToApimGift.mockClear();
 
     api.getFacilityExposurePeriod.mockClear();
@@ -362,13 +366,17 @@ describe('/v1/deals', () => {
       };
 
       api.updateDeal.mockResolvedValue(mockTfmDeal);
+      canSubmitToApimGift.mockResolvedValueOnce({
+        canSubmitFacilitiesToApimGift: true,
+        issuedFacilities: [mockIssuedBond, mockIssuedLoan],
+      });
 
       await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
       expect(submitFacilitiesToApimGift).toHaveBeenCalledTimes(1);
       expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
         deal: mockTfmDeal,
-        facilities: expect.arrayContaining([mockIssuedBond, mockIssuedLoan]),
+        facilities: [mockIssuedBond, mockIssuedLoan],
       });
     });
   });
