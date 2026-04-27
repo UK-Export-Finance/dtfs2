@@ -39,7 +39,14 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       const validBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
 
       if (validBssEwcsDeal || isGefDeal) {
-        const facilities: TfmFacility[] = await api.findFacilitiesByDealId(deal._id.toString());
+        let facilities: TfmFacility[] = [];
+
+        try {
+          facilities = await api.findFacilitiesByDealId(deal._id.toString());
+        } catch {
+          // Swallow errors and default facilities to an empty array
+          facilities = [];
+        }
 
         let issuedFacilities: TfmFacility[] = [];
 
