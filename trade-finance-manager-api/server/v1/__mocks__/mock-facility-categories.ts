@@ -1,4 +1,6 @@
-const MOCK_FACILITY_CATEGORIES = [
+import { FacilityCategory } from '../api-response-types';
+
+export const MOCK_FACILITY_CATEGORIES: FacilityCategory[] = [
   {
     type: 'Facility Category',
     typeCode: 'facilityCategory',
@@ -21,5 +23,3 @@ const MOCK_FACILITY_CATEGORIES = [
     isActive: true,
   },
 ];
-
-module.exports = MOCK_FACILITY_CATEGORIES;

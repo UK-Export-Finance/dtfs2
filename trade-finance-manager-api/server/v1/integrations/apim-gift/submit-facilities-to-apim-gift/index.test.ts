@@ -4,8 +4,15 @@ import apiModule from '../../../api';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
-import { submitFacilitiesToApimGift } from '.';
 import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-payloads/types/apim-gift';
+import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
+import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
+import { submitFacilitiesToApimGift } from '.';
+import { getReferenceData } from './get-reference-data';
+
+jest.mock('./get-reference-data', () => ({
+  getReferenceData: jest.fn(),
+}));
 
 jest.mock('../../../api', () => ({
   __esModule: true,
@@ -30,9 +37,13 @@ const mockFacility: TfmFacility = {
   tfm: {},
 };
 
+const mockIsBssEwcsDeal = true;
+const mockIsGefDeal = false;
+
 const createFacilityPayloadSpy = APIM_GIFT_PAYLOADS.createFacility as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacility>;
 const createFacilitiesPayloadSpy = APIM_GIFT_PAYLOADS.createFacilities as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacilities>;
 const createGiftFacilitySpy = apiModule.createGiftFacility as jest.MockedFunction<typeof apiModule.createGiftFacility>;
+const getReferenceDataSpy = getReferenceData as jest.MockedFunction<typeof getReferenceData>;
 
 const mockPayload = APIM_GIFT_PAYLOADS_EXAMPLES.CREATE_FACILITY.VALID_PAYLOAD as unknown as ApimGiftFacilityCreationPayload;
 const mockApiResponse = { mock: true };
@@ -44,6 +55,12 @@ describe('submitFacilitiesToApimGift', () => {
 
   describe('when one facility is provided', () => {
     beforeEach(() => {
+      // Arrange
+      getReferenceDataSpy.mockResolvedValue({
+        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
+        facilityCategories: MOCK_FACILITY_CATEGORIES,
+      });
+
       createFacilityPayloadSpy.mockResolvedValueOnce(mockPayload);
 
       createGiftFacilitySpy.mockResolvedValueOnce(mockApiResponse);
@@ -54,11 +71,34 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
       expect(createFacilityPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilityPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facility: mockFacility });
+      expect(createFacilityPayloadSpy).toHaveBeenCalledWith({
+        deal: mockDeal,
+        facility: mockFacility,
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
+        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
+        facilityCategories: MOCK_FACILITY_CATEGORIES,
+      });
+    });
+
+    it('should call getReferenceData', async () => {
+      // Act
+      await submitFacilitiesToApimGift({
+        deal: mockDeal,
+        facilities: [mockFacility],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
+      });
+
+      // Assert
+      expect(getReferenceDataSpy).toHaveBeenCalledTimes(1);
+      expect(getReferenceDataSpy).toHaveBeenCalledWith(mockIsGefDeal);
     });
 
     it('should call api.createGiftFacility', async () => {
@@ -66,6 +106,8 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
@@ -78,6 +120,8 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
@@ -89,6 +133,8 @@ describe('submitFacilitiesToApimGift', () => {
       const result = await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       expect(result).toEqual(mockApiResponse);
@@ -110,6 +156,12 @@ describe('submitFacilitiesToApimGift', () => {
     } as unknown as ApimGiftFacilityCreationPayload;
 
     beforeEach(() => {
+      // Arrange
+      getReferenceDataSpy.mockResolvedValue({
+        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
+        facilityCategories: MOCK_FACILITY_CATEGORIES,
+      });
+
       createFacilitiesPayloadSpy.mockResolvedValueOnce([mockPayload, mockPayloadTwo, mockPayloadThree]);
 
       createGiftFacilitySpy.mockResolvedValueOnce(mockApiResponse).mockResolvedValueOnce(mockApiResponse).mockResolvedValueOnce(mockApiResponse);
@@ -120,11 +172,20 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
       expect(createFacilitiesPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilitiesPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facilities: [mockFacility, mockFacilityTwo, mockFacilityThree] });
+      expect(createFacilitiesPayloadSpy).toHaveBeenCalledWith({
+        deal: mockDeal,
+        facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
+        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
+        facilityCategories: MOCK_FACILITY_CATEGORIES,
+      });
     });
 
     it('should call api.createGiftFacility', async () => {
@@ -132,6 +193,8 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
@@ -146,6 +209,8 @@ describe('submitFacilitiesToApimGift', () => {
       await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       // Assert
@@ -157,6 +222,8 @@ describe('submitFacilitiesToApimGift', () => {
       const result = await submitFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
+        isBssEwcsDeal: mockIsBssEwcsDeal,
+        isGefDeal: mockIsGefDeal,
       });
 
       const expected = [mockApiResponse, mockApiResponse, mockApiResponse];
