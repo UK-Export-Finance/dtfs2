@@ -1,12 +1,8 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import apiModule from '../../../api';
-import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-payloads/types';
+import { ApimGiftFacilityCreationPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 import { getReferenceData } from './get-reference-data';
-
-type ApiTypes = {
-  createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility>;
-};
 
 type SubmitFacilitiesToApimGiftParams = {
   deal: TfmDeal;

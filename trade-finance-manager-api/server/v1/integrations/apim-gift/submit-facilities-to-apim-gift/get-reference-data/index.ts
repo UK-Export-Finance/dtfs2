@@ -1,11 +1,7 @@
 import apiModule from '../../../../api';
 import { mapApimCreditRiskRatings } from '../../../../mappings/map-apim-credit-risk-ratings';
 import { CreditRiskRating, FacilityCategory } from '../../../../api-response-types';
-
-type ApiTypes = {
-  getCreditRiskRatings: () => Promise<CreditRiskRating[]>;
-  getFacilityCategories: () => Promise<FacilityCategory[]>;
-};
+import { ApiTypes } from '../../../../mappings/apim-gift-payloads/types';
 
 type GetReferenceDataResult = {
   creditRiskRatings: string[];
