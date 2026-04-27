@@ -41,7 +41,11 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       if (validBssEwcsDeal || isGefDeal) {
         const facilities: TfmFacility[] = await api.findFacilitiesByDealId(deal._id.toString());
 
-        const issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
+        let issuedFacilities: TfmFacility[] = [];
+
+        if (Array.isArray(facilities)) {
+          issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
+        }
 
         const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
 

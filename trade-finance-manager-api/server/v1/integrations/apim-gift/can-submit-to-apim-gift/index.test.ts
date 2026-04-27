@@ -282,5 +282,30 @@ describe('canSubmitToApimGift', () => {
         });
       },
     );
+
+    describe('when api.findFacilitiesByDealId throws an error', () => {
+      it('should swallow the error and return issuedFacilities as an empty array', async () => {
+        // Arrange
+        const mockDeal = {
+          ...mockBaseDeal,
+          dealSnapshot: {
+            ...mockBaseDeal.dealSnapshot,
+            dealType: DEAL_TYPE.BSS_EWCS,
+            submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          },
+          tfm: mockTfmObject,
+        } as TfmDeal;
+
+        const mockError = new Error('Mock API error');
+
+        mockedFindFacilitiesByDealId.mockRejectedValueOnce(mockError);
+
+        // Act
+        const result = await canSubmitToApimGift(mockDeal);
+
+        // Assert
+        expect(result.issuedFacilities).toEqual([]);
+      });
+    });
   });
 });
