@@ -34,13 +34,10 @@ permissions:
   contents: read
 
 on:
-  workflow_run:
-    workflows: ['Quality Assurance - Tests']
-    types:
-      - completed
+  push:
     branches:
-      - release-*
-      - '!release-please*'
+      # Manual deployment
+      - staging-manual
 
 env:
   PRODUCT: dtfs
@@ -64,13 +61,7 @@ jobs:
       - name: Environment 🧪
         id: environment
         run: |
-          if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
-            echo "environment=prod" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
-            echo "environment=staging" >> "$GITHUB_OUTPUT"
-          else
-            echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "environment=staging" >> "$GITHUB_OUTPUT"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
