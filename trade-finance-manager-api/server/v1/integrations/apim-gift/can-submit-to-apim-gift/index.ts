@@ -35,35 +35,43 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const validDealType = isBssEwcsDeal || isGefDeal;
     const validSubmissionType = submissionType === AIN || submissionType === MIN;
 
-    if (validDealType && validSubmissionType) {
-      const validBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
-
-      if (validBssEwcsDeal || isGefDeal) {
-        let facilities: TfmFacility[] = [];
-
-        try {
-          facilities = await api.findFacilitiesByDealId(deal._id.toString());
-        } catch {
-          // Swallow errors and default facilities to an empty array
-          facilities = [];
-        }
-
-        let issuedFacilities: TfmFacility[] = [];
-
-        if (Array.isArray(facilities)) {
-          issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
-        }
-
-        const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
-
-        return {
-          canSubmitFacilitiesToApimGift,
-          issuedFacilities,
-          isBssEwcsDeal,
-          isGefDeal,
-        };
-      }
+    if (!validDealType || !validSubmissionType) {
+      return {
+        canSubmitFacilitiesToApimGift: false,
+      };
     }
+
+    const validBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
+
+    if (!validBssEwcsDeal && !isGefDeal) {
+      return {
+        canSubmitFacilitiesToApimGift: false,
+      };
+    }
+
+    let facilities: TfmFacility[] = [];
+
+    try {
+      facilities = await api.findFacilitiesByDealId(deal._id.toString());
+    } catch {
+      // Swallow errors and default facilities to an empty array
+      facilities = [];
+    }
+
+    let issuedFacilities: TfmFacility[] = [];
+
+    if (Array.isArray(facilities)) {
+      issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
+    }
+
+    const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
+
+    return {
+      canSubmitFacilitiesToApimGift,
+      issuedFacilities,
+      isBssEwcsDeal,
+      isGefDeal,
+    };
   }
 
   return {

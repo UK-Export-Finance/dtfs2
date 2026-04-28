@@ -57,8 +57,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createFacilityPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilityPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facility: mockFacility });
+      expect(createFacilityPayloadSpy).toHaveBeenNthCalledWith(1, { deal: mockDeal, facility: mockFacility });
     });
 
     it('should call api.createGiftFacility', async () => {
@@ -69,8 +68,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createGiftFacilitySpy).toHaveBeenCalledTimes(1);
-      expect(createGiftFacilitySpy).toHaveBeenCalledWith(mockPayload);
+      expect(createGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockPayload);
     });
 
     it('should NOT call APIM_GIFT_PAYLOADS.createFacilities', async () => {
@@ -123,8 +121,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createFacilitiesPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilitiesPayloadSpy).toHaveBeenCalledWith({ deal: mockDeal, facilities: [mockFacility, mockFacilityTwo, mockFacilityThree] });
+      expect(createFacilitiesPayloadSpy).toHaveBeenNthCalledWith(1, { deal: mockDeal, facilities: [mockFacility, mockFacilityTwo, mockFacilityThree] });
     });
 
     it('should call api.createGiftFacility', async () => {
