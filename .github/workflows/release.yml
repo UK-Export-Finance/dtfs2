@@ -37,7 +37,7 @@ on:
   push:
     branches:
       # Manual deployment
-      - staging-manual
+      - chore/staging-manual
 
 env:
   PRODUCT: dtfs
