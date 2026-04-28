@@ -20,8 +20,8 @@ import { CreditRiskRating } from '../../../api-response-types/credit-risk-rating
 import { FacilityCategory } from '../../../api-response-types/facility-category';
 import { createFacility } from '.';
 
+const mockDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
 const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
-const mockTfmGefDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
 
 jest.mock('../../../api');
 
@@ -85,7 +85,7 @@ describe('createFacility', () => {
     },
   ];
 
-  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockTfmGefDeal.dealSnapshot.dealType);
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const productTypeCode = mapProductTypeCode({
     isBssEwcsDeal,
@@ -100,7 +100,7 @@ describe('createFacility', () => {
   });
 
   const params = {
-    deal: mockTfmGefDeal,
+    deal: mockDeal,
     facility: mockFacility,
   };
 
@@ -176,7 +176,7 @@ describe('createFacility', () => {
 
   it('should map TFM facility data to the format expected by APIM GIFT for facility creation', async () => {
     // Arrange
-    params.deal = mockTfmGefDeal;
+    params.deal = mockDeal;
 
     // Act
     const result = await createFacility(params);
@@ -187,11 +187,11 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        bankInternalRefName: mockTfmGefDeal.dealSnapshot.bankInternalRefName,
+        bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
-        exporterPartyUrn: mockTfmGefDeal.tfm.parties.exporter.partyUrn,
+        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount: Number(tfm.ukefExposure),
         facilityType: facilitySnapshot.type,
         isGefDeal,
@@ -210,7 +210,7 @@ describe('createFacility', () => {
         isBssEwcsDeal,
         isGefDeal,
         partyUrns: mapPartyUrns({
-          deal: mockTfmGefDeal,
+          deal: mockDeal,
           isBssEwcsDeal,
           isGefDeal,
         }),
@@ -229,11 +229,11 @@ describe('createFacility', () => {
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: mapApimCreditRiskRatings(mockCreditRiskRatings),
-        dealId: getTfmUkefDealId(mockTfmGefDeal),
-        exporterCreditRating: mockTfmGefDeal.tfm.exporterCreditRating,
+        dealId: getTfmUkefDealId(mockDeal),
+        exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityType: facilitySnapshot.type,
         facilityCategories: mockFacilityCategories,
-        industryCode: getIndustryCode(mockTfmGefDeal),
+        industryCode: getIndustryCode(mockDeal),
         isGefDeal,
       }),
     };
