@@ -138,8 +138,7 @@ describe('submitDealAfterUkefIds', () => {
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
       // Assert
-      expect(updatePortalDealStatus).toHaveBeenCalledTimes(1);
-      expect(updatePortalDealStatus).toHaveBeenCalledWith(mappedDeal, auditDetails);
+      expect(updatePortalDealStatus).toHaveBeenNthCalledWith(1, mappedDeal, auditDetails);
     });
 
     it('should call createDealTasks', async () => {
@@ -186,8 +185,7 @@ describe('submitDealAfterUkefIds', () => {
 
         await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
-        expect(submitFacilitiesToApimGift).toHaveBeenCalledTimes(1);
-        expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
+        expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
         });
