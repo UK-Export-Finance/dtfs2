@@ -627,6 +627,8 @@ describe('/v1/deals', () => {
         submissionCount: 2,
       };
 
+      const getFacilities = (body) => body.facilities || body.dealSnapshot?.facilities || [];
+
       it('does NOT call premium schedule when dealType is GEF', async () => {
         const { status } = await submitDeal(createSubmitBody(mockDeal));
 
@@ -654,7 +656,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
+        const issuedFacility = getFacilities(body).find((facility) => facility.hasBeenIssued);
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
@@ -666,7 +668,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const unissuedFacility = body.facilities.find((facility) => !facility.hasBeenIssued);
+        const unissuedFacility = getFacilities(body).find((facility) => !facility.hasBeenIssued);
 
         expect(unissuedFacility.tfm.feeRecord).toBeNull();
       });
@@ -676,7 +678,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
+        const issuedFacility = getFacilities(body).find((facility) => facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
@@ -686,7 +688,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.tfm);
+        const issuedFacility = getFacilities(body).find((facility) => facility.tfm);
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 

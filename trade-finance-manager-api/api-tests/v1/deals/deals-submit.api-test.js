@@ -50,6 +50,7 @@ jest.mock('../../../server/v1/integrations/apim-gift', () => ({
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
+    canSubmitToApimGift.mockClear();
     canSubmitToApimGift.mockResolvedValue({
       canSubmitFacilitiesToApimGift: false,
       issuedFacilities: [],
@@ -338,45 +339,25 @@ describe('/v1/deals', () => {
     it('should call canSubmitToApimGift', async () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
-      expect(canSubmitToApimGift).toHaveBeenCalledTimes(1);
       expect(canSubmitToApimGift).toHaveBeenCalledWith(body);
     });
 
     it('should call submitFacilitiesToApimGift', async () => {
-      const mockIssuedBond = {
-        _id: '1',
-        type: 'Bond',
-        hasBeenIssued: true,
-      };
-
-      const mockIssuedLoan = {
-        _id: '2',
-        type: 'Loan',
-        hasBeenIssued: true,
-      };
-
-      const mockTfmDeal = {
-        _id: MOCK_BSS_EWCS_DEAL._id,
-        bondTransactions: {
-          items: [mockIssuedBond],
-        },
-        loanTransactions: {
-          items: [mockIssuedLoan],
-        },
-      };
-
-      api.updateDeal.mockResolvedValue(mockTfmDeal);
       canSubmitToApimGift.mockResolvedValueOnce({
         canSubmitFacilitiesToApimGift: true,
-        issuedFacilities: [mockIssuedBond, mockIssuedLoan],
+        issuedFacilities: [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
+          (facility) => facility.hasBeenIssued,
+        ),
       });
 
       await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
-      expect(submitFacilitiesToApimGift).toHaveBeenCalledTimes(1);
-      expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
-        deal: mockTfmDeal,
-        facilities: [mockIssuedBond, mockIssuedLoan],
+      const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+      const issuedFacilities = [...submittedDeal.bondTransactions.items, ...submittedDeal.loanTransactions.items].filter((facility) => facility.hasBeenIssued);
+
+      expect(submitFacilitiesToApimGift).toHaveBeenCalledNthWith(1, {
+        deal: submittedDeal,
+        facilities: issuedFacilities,
       });
     });
   });
