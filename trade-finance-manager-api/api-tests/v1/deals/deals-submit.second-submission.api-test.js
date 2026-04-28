@@ -628,6 +628,10 @@ describe('/v1/deals', () => {
       };
 
       const getFacilities = (body) => body.facilities || body.dealSnapshot?.facilities || [];
+      const getUpdatedDealFacilities = () => {
+        const lastUpdateDealCall = api.updateDeal.mock.calls[api.updateDeal.mock.calls.length - 1];
+        return lastUpdateDealCall?.[0]?.dealUpdate?.facilities || [];
+      };
 
       it('does NOT call premium schedule when dealType is GEF', async () => {
         const { status } = await submitDeal(createSubmitBody(mockDeal));
@@ -638,9 +642,10 @@ describe('/v1/deals', () => {
       });
 
       it('should call updateGefFacility', async () => {
-        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+        await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
-        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+        const issuedFacility = getUpdatedDealFacilities().find((facility) => facility.hasBeenIssued === true);
+        const facilityId = issuedFacility?._id;
 
         expect(updateGefFacilitySpy).toHaveBeenCalledWith({
           facilityId,
@@ -656,7 +661,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = getFacilities(body).find((facility) => facility.hasBeenIssued);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
+        expect(issuedFacility).toBeDefined();
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
@@ -668,7 +674,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const unissuedFacility = getFacilities(body).find((facility) => !facility.hasBeenIssued);
+        const unissuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => !facility.hasBeenIssued);
+        expect(unissuedFacility).toBeDefined();
 
         expect(unissuedFacility.tfm.feeRecord).toBeNull();
       });
@@ -678,7 +685,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = getFacilities(body).find((facility) => facility.hasBeenIssued);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
+        expect(issuedFacility).toBeDefined();
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
@@ -688,7 +696,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = getFacilities(body).find((facility) => facility.tfm);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.tfm);
+        expect(issuedFacility).toBeDefined();
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 

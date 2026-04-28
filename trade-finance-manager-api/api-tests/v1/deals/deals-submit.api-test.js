@@ -343,21 +343,22 @@ describe('/v1/deals', () => {
     });
 
     it('should call submitFacilitiesToApimGift', async () => {
+      const mockIssuedFacilities = [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
+        (facility) => facility.hasBeenIssued,
+      );
+
       canSubmitToApimGift.mockResolvedValueOnce({
         canSubmitFacilitiesToApimGift: true,
-        issuedFacilities: [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
-          (facility) => facility.hasBeenIssued,
-        ),
+        issuedFacilities: mockIssuedFacilities,
       });
 
       await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
       const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
-      const issuedFacilities = [...submittedDeal.bondTransactions.items, ...submittedDeal.loanTransactions.items].filter((facility) => facility.hasBeenIssued);
 
       expect(submitFacilitiesToApimGift).toHaveBeenCalledNthWith(1, {
         deal: submittedDeal,
-        facilities: issuedFacilities,
+        facilities: mockIssuedFacilities,
       });
     });
   });
