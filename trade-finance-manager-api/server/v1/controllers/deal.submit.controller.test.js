@@ -1,5 +1,22 @@
 const CONSTANTS = require('../../constants');
 
+const api = require('../api');
+const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { findOneGefDeal } = require('./deal.controller');
+const { addPartyUrns } = require('./deal.party-db');
+const { createDealTasks } = require('./deal.tasks');
+const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
+const { updateFacilities } = require('./update-facilities');
+const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
+const addTfmDealData = require('./deal-add-tfm-data');
+const { updatePortalDealStatus } = require('./update-portal-deal-status');
+const { createEstoreSite } = require('./estore.controller');
+const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
+const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
+
+const { submitDealAfterUkefIds } = require('./deal.submit.controller');
+
 jest.mock('../api', () => ({
   submitDeal: jest.fn(),
   updateDeal: jest.fn(),
@@ -71,23 +88,6 @@ jest.mock('./send-deal-submit-emails', () => ({
 jest.mock('../mappings/map-submitted-deal', () => jest.fn());
 jest.mock('../helpers/dealHasAllUkefIds', () => ({ dealHasAllUkefIds: jest.fn() }));
 jest.mock('../helpers/can-submit-to-acbs', () => jest.fn());
-
-const api = require('../api');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
-const { findOneGefDeal } = require('./deal.controller');
-const { addPartyUrns } = require('./deal.party-db');
-const { createDealTasks } = require('./deal.tasks');
-const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
-const { updateFacilities } = require('./update-facilities');
-const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
-const addTfmDealData = require('./deal-add-tfm-data');
-const { updatePortalDealStatus } = require('./update-portal-deal-status');
-const { createEstoreSite } = require('./estore.controller');
-const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
-const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
-
-const { submitDealAfterUkefIds } = require('./deal.submit.controller');
 
 const dealId = 'deal-123';
 const checker = { _id: 'checker-id' };

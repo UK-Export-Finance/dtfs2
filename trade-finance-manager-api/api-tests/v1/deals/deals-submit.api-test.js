@@ -1,4 +1,4 @@
-const { DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
+const { DEAL_SUBMISSION_TYPE, DEAL_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
@@ -182,8 +182,8 @@ describe('/v1/deals', () => {
       expect(body).toMatchObject(tfmDeal);
     });
 
-    describe('when currency is NOT GBP', () => {
-      it('should convert supplyContractValue to GBP', async () => {
+    describe(`when currency is NOT ${CURRENCY.GBP}`, () => {
+      it(`should convert supplyContractValue to ${CURRENCY.GBP}`, async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE));
         expect(status).toEqual(200);
 

@@ -353,13 +353,13 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should NOT call canSubmitToApimGift', async () => {
+      it('should not call canSubmitToApimGift', async () => {
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         expect(canSubmitToApimGift).not.toHaveBeenCalled();
       });
 
-      it('should NOT call submitFacilitiesToApimGift', async () => {
+      it('should not call submitFacilitiesToApimGift', async () => {
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
