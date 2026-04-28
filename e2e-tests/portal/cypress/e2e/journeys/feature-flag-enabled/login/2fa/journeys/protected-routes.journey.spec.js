@@ -4,12 +4,7 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const blockedRoutes = ['/dashboard', '/user/profile', '/contract/12345'];
-const authenticatedRoutes = ['/dashboard', '/user/profile'];
-const restricted2faRoutes = ['/login/check-your-email-access-code', '/login/new-access-code'];
-
 const startPartialAuthJourney = () => {
-  cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 0 });
   cy.enterUsernameAndPassword(BANK1_MAKER1);
 
   cy.url().should('eq', relative('/login/check-your-email-access-code'));
@@ -22,12 +17,22 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.clearLocalStorage();
     });
 
-    blockedRoutes.forEach((route) => {
-      it(`should redirect to login when visiting ${route} without a session`, () => {
-        cy.visit(route);
+    it('should redirect to login when visiting /dashboard without a session', () => {
+      cy.visit('/dashboard');
 
-        cy.url().should('eq', relative('/login'));
-      });
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /user/profile without a session', () => {
+      cy.visit('/user/profile');
+
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /contract/12345 without a session', () => {
+      cy.visit('/contract/12345');
+
+      cy.url().should('eq', relative('/login'));
     });
   });
 
@@ -37,12 +42,22 @@ context('2FA Journey - Protected routes authorization', () => {
       startPartialAuthJourney();
     });
 
-    blockedRoutes.forEach((route) => {
-      it(`should redirect to login when visiting ${route} mid-2FA`, () => {
-        cy.visit(route);
+    it('should redirect to login when visiting /dashboard mid-2FA', () => {
+      cy.visit('/dashboard');
 
-        cy.url().should('eq', relative('/login'));
-      });
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /user/profile mid-2FA', () => {
+      cy.visit('/user/profile');
+
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /contract/12345 mid-2FA', () => {
+      cy.visit('/contract/12345');
+
+      cy.url().should('eq', relative('/login'));
     });
 
     it('should keep the partial auth session after a protected route redirect', () => {
@@ -65,20 +80,30 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.loginOTP(BANK1_MAKER1);
     });
 
-    authenticatedRoutes.forEach((route) => {
-      it(`should successfully access ${route} after full 2FA`, () => {
-        cy.visit(route);
+    it('should successfully access /dashboard after full 2FA', () => {
+      cy.visit('/dashboard');
 
-        cy.url().should('contain', route);
-      });
+      cy.url().should('contain', '/dashboard');
     });
 
-    it('should redirect away from 2FA pages after full auth', () => {
-      restricted2faRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('not.contain', route);
-        cy.url().should('not.contain', '/login');
-      });
+    it('should successfully access /user/profile after full 2FA', () => {
+      cy.visit('/user/profile');
+
+      cy.url().should('contain', '/user/profile');
+    });
+
+    it('should redirect away from /login/check-your-email-access-code after full auth', () => {
+      cy.visit('/login/check-your-email-access-code');
+
+      cy.url().should('not.contain', '/login/check-your-email-access-code');
+      cy.url().should('not.contain', '/login');
+    });
+
+    it('should redirect away from /login/new-access-code after full auth', () => {
+      cy.visit('/login/new-access-code');
+
+      cy.url().should('not.contain', '/login/new-access-code');
+      cy.url().should('not.contain', '/login');
     });
   });
 });

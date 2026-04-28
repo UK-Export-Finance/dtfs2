@@ -6,9 +6,6 @@ const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const authenticatedRoutes = ['/dashboard', '/user/profile'];
-const restricted2faRoutes = ['/login/check-your-email-access-code', '/login/new-access-code', '/login/resend-another-access-code'];
-
 const complete2faLogin = () => {
   cy.enterUsernameAndPassword(BANK1_MAKER1);
 
@@ -23,7 +20,6 @@ const complete2faLogin = () => {
 context('2FA Journey - Successful login flow', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
-    cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 0 });
   });
 
   describe('Complete successful 2FA journey', () => {
@@ -42,15 +38,6 @@ context('2FA Journey - Successful login flow', () => {
       cy.url().should('match', /\/(dashboard|deals|contracts)/);
     });
 
-    it('should allow access to protected routes after successful 2FA', () => {
-      complete2faLogin();
-
-      authenticatedRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('contain', route);
-      });
-    });
-
     it('should maintain the session after successful 2FA login', () => {
       complete2faLogin();
 
@@ -60,15 +47,48 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('User state after successful login', () => {
-    it('should redirect away from 2FA pages after successful login', () => {
+  describe('Accessing protected routes after successful 2FA', () => {
+    beforeEach(() => {
       complete2faLogin();
+    });
 
-      restricted2faRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('not.contain', route);
-        cy.url().should('not.contain', '/login');
-      });
+    it('should allow access to /dashboard after successful 2FA', () => {
+      cy.visit('/dashboard');
+
+      cy.url().should('contain', '/dashboard');
+    });
+
+    it('should allow access to /user/profile after successful 2FA', () => {
+      cy.visit('/user/profile');
+
+      cy.url().should('contain', '/user/profile');
+    });
+  });
+
+  describe('Redirecting away from 2FA pages after successful login', () => {
+    beforeEach(() => {
+      complete2faLogin();
+    });
+
+    it('should redirect away from /login/check-your-email-access-code after successful login', () => {
+      cy.visit('/login/check-your-email-access-code');
+
+      cy.url().should('not.contain', '/login/check-your-email-access-code');
+      cy.url().should('not.contain', '/login');
+    });
+
+    it('should redirect away from /login/new-access-code after successful login', () => {
+      cy.visit('/login/new-access-code');
+
+      cy.url().should('not.contain', '/login/new-access-code');
+      cy.url().should('not.contain', '/login');
+    });
+
+    it('should redirect away from /login/resend-another-access-code after successful login', () => {
+      cy.visit('/login/resend-another-access-code');
+
+      cy.url().should('not.contain', '/login/resend-another-access-code');
+      cy.url().should('not.contain', '/login');
     });
   });
 });

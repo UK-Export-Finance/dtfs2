@@ -7,8 +7,16 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
 const enterJourneyAtSendCount = (count) => {
-  cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count });
   cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+  // advance pages via UI clicks: 0 -> check, 1 -> new, 2 -> resend-another
+  for (let i = 0; i < count; i += 1) {
+    if (i === 0) {
+      checkYourEmailAccessCode.requestCodeLink().click();
+    } else if (i === 1) {
+      newAccessCode.requestCodeLink().click();
+    }
+  }
 };
 
 const submitValidAccessCode = (page) => {

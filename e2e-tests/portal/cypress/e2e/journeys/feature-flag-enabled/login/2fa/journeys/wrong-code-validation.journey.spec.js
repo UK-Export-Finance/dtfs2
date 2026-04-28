@@ -7,17 +7,25 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 const { errorSummary } = require('../../../../../partials');
 
-const accessCodePages = [
-  { name: 'check-your-email', count: 0, url: '/login/check-your-email-access-code', page: checkYourEmailAccessCode, wrongCode: '000000' },
-  { name: 'new-access-code', count: 1, url: '/login/new-access-code', page: newAccessCode, wrongCode: '999999' },
-  { name: 'resend-another-access-code', count: 2, url: '/login/resend-another-access-code', page: resendAnotherAccessCode, wrongCode: '111111' },
-];
-
-const visitAccessCodePage = ({ count, url }) => {
-  cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count });
+const visitCheckYourEmailPage = () => {
   cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-  cy.url().should('eq', relative(url));
+  cy.url().should('eq', relative('/login/check-your-email-access-code'));
+};
+
+const visitNewAccessCodePage = () => {
+  cy.enterUsernameAndPassword(BANK1_MAKER1);
+  checkYourEmailAccessCode.requestCodeLink().click();
+
+  cy.url().should('eq', relative('/login/new-access-code'));
+};
+
+const visitResendAnotherAccessCodePage = () => {
+  cy.enterUsernameAndPassword(BANK1_MAKER1);
+  checkYourEmailAccessCode.requestCodeLink().click();
+  newAccessCode.requestCodeLink().click();
+
+  cy.url().should('eq', relative('/login/resend-another-access-code'));
 };
 
 const submitAccessCode = (page, code) => {
@@ -35,37 +43,75 @@ context('2FA Journey - Wrong access code validation', () => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
   });
 
-  describe('Empty code validation', () => {
-    accessCodePages.forEach(({ name, count, url, page }) => {
-      it(`should show validation error when submitting an empty code on ${name}`, () => {
-        visitAccessCodePage({ count, url });
-        submitAccessCode(page);
+  describe('Empty code validation on check-your-email-access-code page', () => {
+    it('should show validation error when submitting an empty code', () => {
+      visitCheckYourEmailPage();
+      submitAccessCode(checkYourEmailAccessCode);
 
-        errorSummary().should('contain', 'Enter access code');
-        cy.assertText(page.inlineError(), 'Error: Enter access code');
-
-        cy.url().should('contain', url);
-      });
+      errorSummary().should('contain', 'Enter access code');
+      cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: Enter access code');
+      cy.url().should('contain', '/login/check-your-email-access-code');
     });
   });
 
-  describe('Wrong code validation', () => {
-    accessCodePages.forEach(({ name, count, url, page, wrongCode }) => {
-      it(`should show the incorrect code error on ${name}`, () => {
-        visitAccessCodePage({ count, url });
-        submitAccessCode(page, wrongCode);
+  describe('Empty code validation on new-access-code page', () => {
+    it('should show validation error when submitting an empty code', () => {
+      visitNewAccessCodePage();
+      submitAccessCode(newAccessCode);
 
-        errorSummary().should('exist');
-        cy.assertText(page.inlineError(), 'Error: The access code you have entered is incorrect');
+      errorSummary().should('contain', 'Enter access code');
+      cy.assertText(newAccessCode.inlineError(), 'Error: Enter access code');
+      cy.url().should('contain', '/login/new-access-code');
+    });
+  });
 
-        cy.url().should('contain', url);
-      });
+  describe('Empty code validation on resend-another-access-code page', () => {
+    it('should show validation error when submitting an empty code', () => {
+      visitResendAnotherAccessCodePage();
+      submitAccessCode(resendAnotherAccessCode);
+
+      errorSummary().should('contain', 'Enter access code');
+      cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: Enter access code');
+      cy.url().should('contain', '/login/resend-another-access-code');
+    });
+  });
+
+  describe('Wrong code validation on check-your-email-access-code page', () => {
+    it('should show the incorrect code error', () => {
+      visitCheckYourEmailPage();
+      submitAccessCode(checkYourEmailAccessCode, '000000');
+
+      errorSummary().should('exist');
+      cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('contain', '/login/check-your-email-access-code');
+    });
+  });
+
+  describe('Wrong code validation on new-access-code page', () => {
+    it('should show the incorrect code error', () => {
+      visitNewAccessCodePage();
+      submitAccessCode(newAccessCode, '999999');
+
+      errorSummary().should('exist');
+      cy.assertText(newAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('contain', '/login/new-access-code');
+    });
+  });
+
+  describe('Wrong code validation on resend-another-access-code page', () => {
+    it('should show the incorrect code error', () => {
+      visitResendAnotherAccessCodePage();
+      submitAccessCode(resendAnotherAccessCode, '111111');
+
+      errorSummary().should('exist');
+      cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('contain', '/login/resend-another-access-code');
     });
   });
 
   describe('Error summary behavior', () => {
     it('should display the error summary at the top of the page', () => {
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
       errorSummary().should('be.visible');
@@ -76,7 +122,7 @@ context('2FA Journey - Wrong access code validation', () => {
 
   describe('Correcting errors and successful submission', () => {
     it('should allow successful login after correcting an incorrect access code', () => {
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode, '000000');
 
       errorSummary().should('exist');
@@ -89,7 +135,7 @@ context('2FA Journey - Wrong access code validation', () => {
     });
 
     it('should allow successful login after correcting an empty access code', () => {
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
       errorSummary().should('exist');
@@ -104,15 +150,22 @@ context('2FA Journey - Wrong access code validation', () => {
 
   describe('Multiple wrong attempts', () => {
     it('should keep the user on the same page with a consistent error message after multiple wrong attempts', () => {
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
 
-      ['111111', '222222', '333333'].forEach((wrongCode) => {
-        submitAccessCode(checkYourEmailAccessCode, wrongCode);
+      submitAccessCode(checkYourEmailAccessCode, '111111');
+      errorSummary().should('exist');
+      cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('eq', relative('/login/check-your-email-access-code'));
 
-        errorSummary().should('exist');
-        cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
-        cy.url().should('eq', relative('/login/check-your-email-access-code'));
-      });
+      submitAccessCode(checkYourEmailAccessCode, '222222');
+      errorSummary().should('exist');
+      cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('eq', relative('/login/check-your-email-access-code'));
+
+      submitAccessCode(checkYourEmailAccessCode, '333333');
+      errorSummary().should('exist');
+      cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
+      cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
   });
 
@@ -120,14 +173,14 @@ context('2FA Journey - Wrong access code validation', () => {
     it('should preserve the entered access code after a validation error', () => {
       const wrongCode = '000000';
 
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode, wrongCode);
 
       checkYourEmailAccessCode.accessCodeInput().should('have.value', wrongCode);
     });
 
     it('should maintain the session after a validation error', () => {
-      visitAccessCodePage(accessCodePages[0]);
+      visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
       cy.getCookie('dtfs-session').should('exist');

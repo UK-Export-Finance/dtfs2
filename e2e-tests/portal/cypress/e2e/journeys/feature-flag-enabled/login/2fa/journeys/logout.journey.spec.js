@@ -5,9 +5,6 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const protectedRoutes = ['/dashboard', '/user/profile', '/dashboard/deals/0'];
-const restricted2faRoutes = ['/login/check-your-email-access-code', '/login/new-access-code', '/login/resend-another-access-code'];
-
 context('2FA Journey - Logout', () => {
   describe('Logout from authenticated session', () => {
     beforeEach(() => {
@@ -54,19 +51,22 @@ context('2FA Journey - Logout', () => {
       cy.url().should('eq', relative('/login'));
     });
 
-    protectedRoutes.forEach((route) => {
-      it(`should redirect to login when visiting ${route} after logout`, () => {
-        cy.visit(route);
+    it('should redirect to login when visiting /dashboard after logout', () => {
+      cy.visit('/dashboard');
 
-        cy.url().should('eq', relative('/login'));
-      });
+      cy.url().should('eq', relative('/login'));
     });
 
-    it('should not allow access to any protected route after logout', () => {
-      protectedRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('eq', relative('/login'));
-      });
+    it('should redirect to login when visiting /user/profile after logout', () => {
+      cy.visit('/user/profile');
+
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /dashboard/deals/0 after logout', () => {
+      cy.visit('/dashboard/deals/0');
+
+      cy.url().should('eq', relative('/login'));
     });
   });
 
@@ -81,12 +81,22 @@ context('2FA Journey - Logout', () => {
       cy.url().should('eq', relative('/login'));
     });
 
-    restricted2faRoutes.forEach((route) => {
-      it(`should redirect to login when visiting ${route} after logout`, () => {
-        cy.visit(route);
+    it('should redirect to login when visiting /login/check-your-email-access-code after logout', () => {
+      cy.visit('/login/check-your-email-access-code');
 
-        cy.url().should('eq', relative('/login'));
-      });
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /login/new-access-code after logout', () => {
+      cy.visit('/login/new-access-code');
+
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('should redirect to login when visiting /login/resend-another-access-code after logout', () => {
+      cy.visit('/login/resend-another-access-code');
+
+      cy.url().should('eq', relative('/login'));
     });
   });
 
