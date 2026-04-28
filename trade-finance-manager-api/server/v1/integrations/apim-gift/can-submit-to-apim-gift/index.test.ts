@@ -247,8 +247,44 @@ describe('canSubmitToApimGift', () => {
       });
     });
 
-    describe(`when the deal is ${DEAL_TYPE.BSS_EWCS}, but does not have a buyer party URN`, () => {
-      it('should return canSubmitFacilitiesToApimGift as false', async () => {
+    describe.each([{ partyUrn: undefined }, { partyUrn: null }, { partyUrn: '' }])(
+      `when the deal is ${DEAL_TYPE.BSS_EWCS}, but buyer party URN is $partyUrn`,
+      ({ partyUrn }) => {
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+          // Arrange
+          const mockDeal = {
+            ...mockBaseDeal,
+            dealSnapshot: {
+              ...mockBaseDeal.dealSnapshot,
+              dealType: DEAL_TYPE.BSS_EWCS,
+              submissionType: DEAL_SUBMISSION_TYPE.AIN,
+            },
+            tfm: {
+              parties: {
+                buyer: {
+                  partyUrn,
+                },
+              },
+            },
+          } as TfmDeal;
+
+          mockedFindFacilitiesByDealId.mockResolvedValue([]);
+
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: false,
+          };
+
+          expect(result).toEqual(expected);
+        });
+      },
+    );
+
+    describe('when api.findFacilitiesByDealId throws an error', () => {
+      it('should swallow the error and return issuedFacilities as an empty array', async () => {
         // Arrange
         const mockDeal = {
           ...mockBaseDeal,
@@ -257,26 +293,18 @@ describe('canSubmitToApimGift', () => {
             dealType: DEAL_TYPE.BSS_EWCS,
             submissionType: DEAL_SUBMISSION_TYPE.AIN,
           },
-          tfm: {
-            parties: {
-              buyer: {
-                partyUrn: '',
-              },
-            },
-          },
+          tfm: mockTfmObject,
         } as TfmDeal;
 
-        mockedFindFacilitiesByDealId.mockResolvedValue([]);
+        const mockError = new Error('Mock API error');
+
+        mockedFindFacilitiesByDealId.mockRejectedValueOnce(mockError);
 
         // Act
         const result = await canSubmitToApimGift(mockDeal);
 
         // Assert
-        const expected = {
-          canSubmitFacilitiesToApimGift: false,
-        };
-
-        expect(result).toEqual(expected);
+        expect(result.issuedFacilities).toEqual([]);
       });
     });
   });
