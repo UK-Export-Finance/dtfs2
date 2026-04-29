@@ -1,6 +1,5 @@
 const checkYourEmailAccessCode = require('../../e2e/pages/login/check-your-email-access-code');
 const newAccessCode = require('../../e2e/pages/login/new-access-code');
-const resendAnotherAccessCode = require('../../e2e/pages/login/resend-another-access-code');
 
 module.exports = (username) =>
   cy.getUserByUsername(username).then((user) => {
@@ -16,7 +15,7 @@ module.exports = (username) =>
     newAccessCode.requestCodeLink().click();
     cy.url().should('contain', '/login/resend-another-access-code');
 
-    // Request final code to reach temporarily-suspended-access-code
-    resendAnotherAccessCode.requestCodeLink().click();
+    // Navigate directly to request-new-access-code to trigger suspension
+    cy.visit('/login/request-new-access-code');
     cy.url().should('contain', '/login/temporarily-suspended-access-code');
   });
