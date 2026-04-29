@@ -50,6 +50,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
     try {
       const response = await api.findFacilitiesByDealId(deal._id.toString());
+
       facilities = Array.isArray(response) ? response : [];
     } catch {
       // Swallow errors and default facilities to an empty array

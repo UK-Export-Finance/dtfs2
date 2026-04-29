@@ -96,8 +96,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(getReferenceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getReferenceDataSpy).toHaveBeenCalledWith(mockIsGefDeal);
+      expect(getReferenceDataSpy).toHaveBeenNthCalledWith(1, mockIsGefDeal);
     });
 
     it('should call api.createGiftFacility', async () => {
