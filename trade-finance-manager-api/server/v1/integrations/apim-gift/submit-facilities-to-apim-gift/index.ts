@@ -21,14 +21,14 @@ type SubmitFacilitiesToApimGiftParams = {
  * @param {TfmFacility[]} params.facilities - An array of TFM facilities to be submitted to APIM/GIFT.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
- * @returns {Promise<TfmFacility | TfmFacility[]>} A promise that resolves to the response from the APIM/GIFT integration.
+ * @returns {Promise<TfmFacility | TfmFacility[] | boolean>} A promise that resolves to the response from the APIM/GIFT integration.
  */
 export const submitFacilitiesToApimGift = async ({
   deal,
   facilities,
   isBssEwcsDeal,
   isGefDeal,
-}: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[]> => {
+}: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
   const api = apiModule as ApiTypes;
 
   const { facilityCategories, creditRiskRatings } = await getReferenceData(isGefDeal);
@@ -45,7 +45,7 @@ export const submitFacilitiesToApimGift = async ({
 
     const response = await api.createGiftFacility(payload);
 
-    return response || [];
+    return response;
   }
 
   const payloads = await APIM_GIFT_PAYLOADS.createFacilities({

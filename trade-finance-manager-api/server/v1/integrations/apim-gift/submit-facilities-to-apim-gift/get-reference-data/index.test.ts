@@ -13,6 +13,9 @@ describe('getReferenceData', () => {
   let getCreditRiskRatingsSpy = jest.fn();
   let getFacilityCategoriesSpy = jest.fn();
 
+  // Arrange
+  const isGefDeal = true;
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -25,9 +28,6 @@ describe('getReferenceData', () => {
   });
 
   it('should call api.getCreditRiskRatings', async () => {
-    // Arrange
-    const isGefDeal = true;
-
     // Act
     await getReferenceData(isGefDeal);
 
@@ -37,9 +37,6 @@ describe('getReferenceData', () => {
 
   describe(`when the deal is a ${DEAL_TYPE.GEF} deal`, () => {
     it('should call api.getFacilityCategories', async () => {
-      // Arrange
-      const isGefDeal = true;
-
       // Act
       await getReferenceData(isGefDeal);
 
@@ -51,10 +48,10 @@ describe('getReferenceData', () => {
   describe(`when the deal is a ${DEAL_TYPE.BSS_EWCS} deal`, () => {
     it('should NOT call api.getFacilityCategories', async () => {
       // Arrange
-      const isGefDeal = false;
+      const mockIsGefDeal = false;
 
       // Act
-      await getReferenceData(isGefDeal);
+      await getReferenceData(mockIsGefDeal);
 
       // Assert
       expect(getFacilityCategoriesSpy).not.toHaveBeenCalled();
@@ -62,9 +59,6 @@ describe('getReferenceData', () => {
   });
 
   it('should return creditRiskRatings and facilityCategories', async () => {
-    // Arrange
-    const isGefDeal = true;
-
     // Act
     const result = await getReferenceData(isGefDeal);
 
@@ -78,9 +72,6 @@ describe('getReferenceData', () => {
   });
 
   describe('when api.getCreditRiskRatings throws an error', () => {
-    // Arrange
-    const isGefDeal = true;
-
     beforeEach(() => {
       // Arrange
       mockApi.getCreditRiskRatings = jest.fn().mockRejectedValueOnce(new Error());
@@ -106,9 +97,6 @@ describe('getReferenceData', () => {
   });
 
   describe('when api.getCreditRiskRatings returns false (API error without throw)', () => {
-    // Arrange
-    const isGefDeal = true;
-
     beforeEach(() => {
       // Arrange
       mockApi.getCreditRiskRatings = jest.fn().mockResolvedValueOnce(false);
@@ -134,9 +122,6 @@ describe('getReferenceData', () => {
   });
 
   describe('when api.getFacilityCategories throws an error', () => {
-    // Arrange
-    const isGefDeal = true;
-
     beforeEach(() => {
       // Arrange
       mockApi.getFacilityCategories = jest.fn().mockRejectedValueOnce(new Error());
@@ -162,9 +147,6 @@ describe('getReferenceData', () => {
   });
 
   describe('when api.getFacilityCategories returns false (API error without throw)', () => {
-    // Arrange
-    const isGefDeal = true;
-
     beforeEach(() => {
       // Arrange
       mockApi.getFacilityCategories = jest.fn().mockResolvedValueOnce(false);
