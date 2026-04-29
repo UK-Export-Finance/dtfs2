@@ -41,9 +41,9 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       };
     }
 
-    const validBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
+    const isValidBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
 
-    if (!validBssEwcsDeal && !isGefDeal) {
+    if (!isValidBssEwcsDeal && !isGefDeal) {
       return {
         canSubmitFacilitiesToApimGift: false,
       };

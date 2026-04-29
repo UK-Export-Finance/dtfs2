@@ -1,10 +1,8 @@
-jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
-  issueAcbsFacilities: jest.fn(),
-}));
-
+const { DEAL_SUBMISSION_TYPE, DEAL_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
 const mapSubmittedDeal = require('../../../server/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../server/v1/controllers/deal-add-tfm-data');
@@ -44,9 +42,22 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   createACBS: jest.fn(),
 }));
 
+jest.mock('../../../server/v1/integrations/apim-gift', () => ({
+  canSubmitToApimGift: jest.fn(),
+  submitFacilitiesToApimGift: jest.fn(),
+}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
+    canSubmitToApimGift.mockClear();
+    canSubmitToApimGift.mockResolvedValue({
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
+    });
+
+    submitFacilitiesToApimGift.mockClear();
+
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
 
@@ -172,8 +183,8 @@ describe('/v1/deals', () => {
       expect(body).toMatchObject(tfmDeal);
     });
 
-    describe('currency NOT GBP', () => {
-      it('should convert supplyContractValue to GBP', async () => {
+    describe(`when currency is NOT ${CURRENCY.GBP}`, () => {
+      it(`should convert supplyContractValue to ${CURRENCY.GBP}`, async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE));
         expect(status).toEqual(200);
 
@@ -187,8 +198,8 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('TFM deal stage (GEF)', () => {
-      describe('when deal is AIN', () => {
+    describe(`TFM deal stage (${DEAL_TYPE.GEF})`, () => {
+      describe(`when deal is ${DEAL_SUBMISSION_TYPE.AIN}`, () => {
         describe('when deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
@@ -200,7 +211,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when deal is MIA', () => {
+      describe(`when deal is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
         describe('when deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
@@ -211,7 +222,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when deal is MIN', () => {
+      describe(`when deal is ${DEAL_SUBMISSION_TYPE.MIN}`, () => {
         it('should add `Application` tfm stage', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
           expect(status).toEqual(200);
@@ -230,7 +241,7 @@ describe('/v1/deals', () => {
       expect(body.tfm.dateReceivedTimestamp).toBeDefined();
     });
 
-    describe('when dealType is `GEF`', () => {
+    describe(`when dealType is '${DEAL_TYPE.GEF}'`, () => {
       it('should return 200', async () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
         expect(status).toEqual(200);
@@ -252,7 +263,7 @@ describe('/v1/deals', () => {
     });
 
     describe('portal status updates', () => {
-      describe('when AIN BSS deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.AIN} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
@@ -264,7 +275,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when MIN BSS deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.MIN} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIN));
 
@@ -276,7 +287,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when MIA BSS deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.MIA} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIA));
 
@@ -288,7 +299,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when AIN GEF deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.AIN} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
@@ -300,7 +311,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when MIN GEF deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.MIN} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
 
@@ -312,7 +323,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when MIA GEF deal is submitted', () => {
+      describe(`when ${DEAL_SUBMISSION_TYPE.MIA} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
@@ -322,6 +333,32 @@ describe('/v1/deals', () => {
             auditDetails,
           });
         });
+      });
+    });
+
+    it('should call canSubmitToApimGift', async () => {
+      const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
+
+      expect(canSubmitToApimGift).toHaveBeenCalledWith(body);
+    });
+
+    it('should call submitFacilitiesToApimGift', async () => {
+      const mockIssuedFacilities = [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
+        (facility) => facility.hasBeenIssued,
+      );
+
+      canSubmitToApimGift.mockResolvedValueOnce({
+        canSubmitFacilitiesToApimGift: true,
+        issuedFacilities: mockIssuedFacilities,
+      });
+
+      await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
+
+      const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+
+      expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+        deal: submittedDeal,
+        facilities: mockIssuedFacilities,
       });
     });
   });
