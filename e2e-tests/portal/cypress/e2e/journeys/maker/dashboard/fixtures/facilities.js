@@ -21,7 +21,7 @@ const CASH_FACILITY = {
   ukefFacilityId: '1234567890',
   guaranteeFee: 10.8,
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   hasBeenIssued: true,
   submittedAsIssuedDate: Date.now(),
 };

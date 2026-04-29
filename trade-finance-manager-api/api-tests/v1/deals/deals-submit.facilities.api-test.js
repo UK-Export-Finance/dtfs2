@@ -2,6 +2,7 @@ const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const calculateUkefExposure = require('../../../server/v1/helpers/calculateUkefExposure');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
 
@@ -27,9 +28,22 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   createACBS: jest.fn(),
 }));
 
+jest.mock('../../../server/v1/integrations/apim-gift', () => ({
+  canSubmitToApimGift: jest.fn(),
+  submitFacilitiesToApimGift: jest.fn(),
+}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
+    canSubmitToApimGift.mockClear();
+    canSubmitToApimGift.mockResolvedValue({
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
+    });
+
+    submitFacilitiesToApimGift.mockClear();
+
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
 
