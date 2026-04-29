@@ -16,10 +16,13 @@ import { isAmendmentDeclined } from './is-amendment-declined';
  *
  * In both cases, ensures at least one attribute (cover end date or facility value) has been amended.
  *
+ * If the amendment update is part of a task update, it should not be sent to ACBS, hence the `isTaskUpdate` flag is used to prevent that.
+ *
  * @param amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
+ * @param isTaskUpdate - Optional flag indicating if the amendment update is part of a task update.
  * @returns `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
-export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId) => {
+export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId, isTaskUpdate = false) => {
   // Amendment type
   const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
 
@@ -52,9 +55,9 @@ export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | Tfm
     // Bank has accepted the UW decision
     const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
 
-    return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && submitted && proceed && !isAmendmentDeclined(amendment);
+    return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && submitted && proceed && !isAmendmentDeclined(amendment) && !isTaskUpdate;
   }
 
   // Automatic amendment
-  return hasBeenAmended && hasBeenSubmittedToUkef && hasUser;
+  return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && !isTaskUpdate;
 };

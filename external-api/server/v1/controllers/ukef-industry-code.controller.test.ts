@@ -104,7 +104,7 @@ describe('getByCompaniesHouseIndustryCode', () => {
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenLastCalledWith({
       method: 'get',
-      url: `${APIM_MDM_URL}v1/ukef-industry-code/by-companies-house-industry-code/${mockCompaniesHouseIndustryCode}`,
+      url: `${APIM_MDM_URL}v2/ods/ukef-industry-code/by-companies-house-industry-code/${mockCompaniesHouseIndustryCode}`,
       headers,
     });
 

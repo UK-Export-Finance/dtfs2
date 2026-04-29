@@ -50,7 +50,7 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
 
     console.info('⚡️ Invoking MDM UKEF industry code endpoint %s', industryCode);
 
-    const url = `${APIM_MDM_URL}v1/ukef-industry-code/by-companies-house-industry-code/${industryCode}`;
+    const url = `${APIM_MDM_URL}v2/ods/ukef-industry-code/by-companies-house-industry-code/${industryCode}`;
 
     const response = await axios({
       method: 'get',

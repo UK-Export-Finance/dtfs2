@@ -4,6 +4,7 @@ const { cloneDeep } = require('lodash');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const getGuaranteeDates = require('../../../server/v1/helpers/get-guarantee-dates');
 const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
 const { generateIssuedFacilitiesListString } = require('../../../server/v1/controllers/send-issued-facilities-received-email');
@@ -30,6 +31,11 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
 
 jest.mock('../../../server/v1/helpers/can-submit-to-acbs');
 
+jest.mock('../../../server/v1/integrations/apim-gift', () => ({
+  canSubmitToApimGift: jest.fn(),
+  submitFacilitiesToApimGift: jest.fn(),
+}));
+
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 const updatePortalFacilityStatusSpy = jest.fn((facilityId, facilityStatusUpdate) => {
@@ -51,7 +57,9 @@ const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 const createFacilityCoverEndDate = (facility) =>
   set(new Date(), {
     date: Number(facility['coverEndDate-day']),
@@ -78,6 +86,9 @@ const expectAnyPortalUserAuditDetails = { userType: AUDIT_USER_TYPES.PORTAL, id:
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
+    canSubmitToApimGift.mockClear();
+    submitFacilitiesToApimGift.mockClear();
+
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
 
@@ -327,8 +338,7 @@ describe('/v1/deals', () => {
         expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
       });
 
-      it('should update ACBS for AIN', async () => {
-        // Mock the return value of canSubmitToACBS to be true
+      it('should update ACBS', async () => {
         canSubmitToACBS.mockReturnValue(true);
 
         const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
@@ -342,10 +352,22 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledTimes(1);
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
+
+      it('should not call canSubmitToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+      });
+
+      it('should not call submitFacilitiesToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      });
     });
 
     describe('MIA deal - on second submission', () => {
-      it('should update submissionType from MIA to MIN, add MINsubmissionDate and checkerMIN in the snapshot and call canSubmitToACBS', async () => {
+      it('should update submissionType from MIA to MIN, add manualInclusionNoticeSubmissionDate and checkerMIN in the snapshot and call canSubmitToACBS', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
 
@@ -362,6 +384,18 @@ describe('/v1/deals', () => {
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
         expect(canSubmitToACBS).toHaveBeenCalledWith(body);
         expect(canSubmitToACBS).toHaveBeenCalledWith(body, false);
+      });
+
+      it('should NOT call canSubmitToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
+
+        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+      });
+
+      it('should NOT call submitFacilitiesToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
+
+        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
@@ -551,6 +585,18 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
+      it('should NOT call canSubmitToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+      });
+
+      it('should NOT call submitFacilitiesToApimGift', async () => {
+        await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      });
+
       it('should send an email for newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
@@ -581,6 +627,12 @@ describe('/v1/deals', () => {
         submissionCount: 2,
       };
 
+      const getFacilities = (body) => body.facilities || body.dealSnapshot?.facilities || [];
+      const getUpdatedDealFacilities = () => {
+        const lastUpdateDealCall = api.updateDeal.mock.calls[api.updateDeal.mock.calls.length - 1];
+        return lastUpdateDealCall?.[0]?.dealUpdate?.facilities || [];
+      };
+
       it('does NOT call premium schedule when dealType is GEF', async () => {
         const { status } = await submitDeal(createSubmitBody(mockDeal));
 
@@ -590,9 +642,10 @@ describe('/v1/deals', () => {
       });
 
       it('should call updateGefFacility', async () => {
-        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+        await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
-        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+        const issuedFacility = getUpdatedDealFacilities().find((facility) => facility.hasBeenIssued === true);
+        const facilityId = issuedFacility?._id;
 
         expect(updateGefFacilitySpy).toHaveBeenCalledWith({
           facilityId,
@@ -608,7 +661,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
+        expect(issuedFacility).toBeDefined();
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
@@ -620,7 +674,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const unissuedFacility = body.facilities.find((facility) => !facility.hasBeenIssued);
+        const unissuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => !facility.hasBeenIssued);
+        expect(unissuedFacility).toBeDefined();
 
         expect(unissuedFacility.tfm.feeRecord).toBeNull();
       });
@@ -630,7 +685,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
+        expect(issuedFacility).toBeDefined();
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
@@ -640,7 +696,8 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) => facility.tfm);
+        const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.tfm);
+        expect(issuedFacility).toBeDefined();
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
@@ -652,7 +709,7 @@ describe('/v1/deals', () => {
         expect(updateGefActivitySpy).toHaveBeenCalledWith({ auditDetails: expectAnyPortalUserAuditDetails, dealId: 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA' });
       });
 
-      it('Should update the application from MIA to MIN', async () => {
+      it('should update the application from MIA to MIN', async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);

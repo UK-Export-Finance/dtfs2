@@ -20,6 +20,7 @@ import * as obligationSubtypes from '../controllers/obligation-subtypes.controll
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
+import * as giftFacility from '../controllers/gift-facility.controller';
 import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
@@ -755,6 +756,28 @@ apiRoutes.post('/email', email.emailNotification);
  *               $ref: '#/definitions/BankHolidaysResponseBody'
  */
 apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
+
+/**
+ * @openapi
+ * /gift/facility:
+ *   post:
+ *     summary: Send a facility to APIM TFS's GIFT endpoint
+ *     tags: [APIM, Gift Facility]
+ *     description: >-
+ *       Send a facility to APIM TFS's GIFT endpoint.
+ *     responses:
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.post('/gift/facility', giftFacility.create);
 
 /**
  * @openapi

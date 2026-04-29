@@ -6,8 +6,8 @@
  * If the "Unknown" product type code is sent to APIM/GIFT, this will trigger an alert in APIM for the unexpected product type code value, which can be investigated by the team.
  */
 export const PRODUCT_TYPE_CODES = {
-  BSS: 'BSS',
-  GEF: 'GEF',
+  BSS: 'PRT003',
+  GEF: 'PRT004',
   UNKNOWN: 'UNKNOWN_PRODUCT_TYPE_CODE',
 } as const;
 
@@ -40,12 +40,12 @@ export const OBLIGATION_AMOUNT = {
  */
 export const OBLIGATION_SUBTYPE_CODES = {
   ADVANCED_PAYMENT_GUARANTEE: 'OST012',
-  BID_BOND: 'TODO: pending GIFT work',
-  MAINTENANCE_BOND: 'TODO: pending GIFT work',
+  BID_BOND: 'OST014',
+  MAINTENANCE_BOND: 'OST017',
   PERFORMANCE_BOND: 'OST013',
   PROGRESS_PAYMENT_BOND: 'OST015',
   RETENTION_BOND: 'OST018',
-  STANDBY_LETTER_OF_CREDIT: 'TODO: pending GIFT work',
+  STANDBY_LETTER_OF_CREDIT: 'OST020',
   WARRANTY_LETTER: 'OST016',
 };
 
@@ -73,31 +73,59 @@ export const OBLIGATION_SUBTYPE_MAP = {
 } as const;
 
 /**
+ * TFM fee frequencies.
+ * These are required to map the facility's fee frequency from TFM to the expected fee frequency values in APIM/GIFT.
+ */
+export const TFM_FEE_FREQUENCIES = {
+  MONTHLY: 'Monthly',
+  QUARTERLY: 'Quarterly',
+  SEMI_ANNUALLY: 'Semi-annually',
+  ANNUALLY: 'Annually',
+  EVERY_BUSINESS_DAY: 'Every business day',
+  AT_MATURITY: 'At maturity',
+} as const;
+
+/**
+ * APIM/GIFT accrual frequency codes.
+ * These are required to map the facility's accrual frequency from TFM to the expected accrual frequency code in APIM/GIFT.
+ */
+export const ACCRUAL_FREQUENCY_CODE_MAP = {
+  MONTHLY: 'FREQ1MON',
+  QUARTERLY: 'FREQ3MON',
+  SEMI_ANNUALLY: 'FREQ6MON',
+  ANNUALLY: 'FREQ12MON',
+  EVERY_BUSINESS_DAY: 'FREQEBD',
+} as const;
+
+export const ACCRUAL_SCHEDULE_TYPE_CODES = {
+  PREMIUM: 'PAC01',
+} as const;
+
+/**
+ * APIM/GIFT amendment types.
+ * These are required to indicate the type of amendment being made to a facility in APIM/GIFT.
+ */
+const AMENDMENT_TYPE = {
+  INCREASE_AMOUNT: 'IncreaseAmount',
+  DECREASE_AMOUNT: 'DecreaseAmount',
+  REPLACE_EXPIRY_DATE: 'ReplaceExpiryDate',
+} as const;
+
+/**
  * Consumer name for APIM TFS - GIFT facility integration.
  * This is required to indicate which service/consumer is sending data to APIM/GIFT.
  */
 const CONSUMER = 'DTFS' as const;
 
 /**
- * BSS = default credit type to "Term".
- * GEF = default credit type to "Revolving".
+ * PRT003 (BSS) = default credit type to "Term".
+ * PRT004 (GEF) = default credit type to "Revolver".
  * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
-  BSS: 'Term',
-  GEF: 'Revolving',
+  PRT003: 'Term',
+  PRT004: 'Revolver',
   UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
-} as const;
-
-/**
- * BSS = facility is not revolving.
- * GEF = facility is revolving.
- * UNKNOWN_PRODUCT_TYPE_CODE = facility is not revolving, as a fallback value for unrecognized deal types.
- */
-const IS_REVOLVING = {
-  BSS: false,
-  GEF: true,
-  UNKNOWN_PRODUCT_TYPE_CODE: false,
 } as const;
 
 /**
@@ -111,10 +139,19 @@ export const COUNTERPARTY_ROLE_CODE = {
 } as const;
 
 /**
+ * GIFT day basis codes.
+ * These are required to map the facility's day count basis from TFM to the expected day basis code in APIM/GIFT when mapping the facility "accrual schedules" data for the APIM GIFT payload.
+ */
+export const DAY_BASIS_CODE = {
+  ACTUAL_360: 'ACTUAL_360',
+  ACTUAL_365: 'ACTUAL_365',
+} as const;
+
+/**
  * For BSS/GEF/EWCS,
  * default account to "2" (Corporate) for the "account" field in GIFT.
  */
-const GIFT_ACCOUNT = 2 as const;
+const GIFT_ACCOUNT = '2' as const;
 
 /**
  * For all facilities,
@@ -137,8 +174,15 @@ export const REPAYMENT_TYPE = {
 const RISK_STATUS = 'Corporate' as const;
 
 export const APIM_GIFT_INTEGRATION = {
+  ACCRUAL_FREQUENCY_CODE_MAP,
+  AMENDMENT_TYPE,
   CONSUMER,
   DEFAULTS: {
+    ACCRUAL_SCHEDULE: {
+      ADDITIONAL_RATE: 0,
+      BASE_RATE: 0,
+      TYPE_CODE: ACCRUAL_SCHEDULE_TYPE_CODES.PREMIUM,
+    },
     COUNTERPARTY_ROLE_CODE: {
       BSS: {
         BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,
@@ -150,7 +194,6 @@ export const APIM_GIFT_INTEGRATION = {
     },
     OVERVIEW: {
       CREDIT_TYPE,
-      IS_REVOLVING,
     },
     REPAYMENT_PROFILE: {
       NAME: REPAYMENT_PROFILE_NAME,
