@@ -7,8 +7,8 @@ import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-payloads/types/apim-gift';
 import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
-import { submitFacilitiesToApimGift } from '.';
 import { getReferenceData } from './get-reference-data';
+import { submitFacilitiesToApimGift } from '.';
 
 jest.mock('./get-reference-data', () => ({
   getReferenceData: jest.fn(),
@@ -76,8 +76,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createFacilityPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilityPayloadSpy).toHaveBeenCalledWith({
+      expect(createFacilityPayloadSpy).toHaveBeenNthCalledWith(1, {
         deal: mockDeal,
         facility: mockFacility,
         isBssEwcsDeal: mockIsBssEwcsDeal,
@@ -111,8 +110,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createGiftFacilitySpy).toHaveBeenCalledTimes(1);
-      expect(createGiftFacilitySpy).toHaveBeenCalledWith(mockPayload);
+      expect(createGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockPayload);
     });
 
     it('should NOT call APIM_GIFT_PAYLOADS.createFacilities', async () => {
@@ -177,8 +175,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
 
       // Assert
-      expect(createFacilitiesPayloadSpy).toHaveBeenCalledTimes(1);
-      expect(createFacilitiesPayloadSpy).toHaveBeenCalledWith({
+      expect(createFacilitiesPayloadSpy).toHaveBeenNthCalledWith(1, {
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
