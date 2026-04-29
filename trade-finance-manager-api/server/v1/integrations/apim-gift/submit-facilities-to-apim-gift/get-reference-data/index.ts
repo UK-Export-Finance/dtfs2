@@ -1,6 +1,6 @@
 import apiModule from '../../../../api';
 import { mapApimCreditRiskRatings } from '../../../../mappings/map-apim-credit-risk-ratings';
-import { CreditRiskRating, FacilityCategory } from '../../../../api-response-types';
+import type { CreditRiskRating, FacilityCategory } from '../../../../api-response-types';
 import { ApiTypes } from '../../../../mappings/apim-gift-payloads/types';
 
 type GetReferenceDataResult = {
@@ -28,7 +28,9 @@ export const getReferenceData = async (isGefDeal: boolean): Promise<GetReference
   let creditRiskRatingsResponse: CreditRiskRating[] = [];
 
   try {
-    creditRiskRatingsResponse = await api.getCreditRiskRatings();
+    const response = await api.getCreditRiskRatings();
+
+    creditRiskRatingsResponse = Array.isArray(response) ? response : [];
   } catch {
     // Swallow errors and default creditRiskRatingsResponse to an empty array
     creditRiskRatingsResponse = [];
@@ -38,19 +40,19 @@ export const getReferenceData = async (isGefDeal: boolean): Promise<GetReference
 
   if (isGefDeal) {
     try {
-      facilityCategoriesResponse = await api.getFacilityCategories();
+      const response = await api.getFacilityCategories();
+
+      facilityCategoriesResponse = Array.isArray(response) ? response : [];
     } catch {
       // Swallow errors and default facilityCategoriesResponse to an empty array
       facilityCategoriesResponse = [];
     }
   }
 
-  const facilityCategories = Array.isArray(facilityCategoriesResponse) ? facilityCategoriesResponse : [];
-
   const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
 
   return {
     creditRiskRatings,
-    facilityCategories,
+    facilityCategories: facilityCategoriesResponse,
   };
 };

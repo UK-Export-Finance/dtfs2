@@ -12,7 +12,6 @@ import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
 import { mapRiskDetails } from './map-risk-details';
-import { mapApimCreditRiskRatings } from '../../map-apim-credit-risk-ratings';
 import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
 import { mapObligations } from './map-obligations';
@@ -129,7 +128,7 @@ describe('createFacility', () => {
         ukefExposure: Number(tfm.ukefExposure),
       }),
       riskDetails: await mapRiskDetails({
-        creditRiskRatings: mapApimCreditRiskRatings(MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS),
+        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         dealId: getTfmUkefDealId(mockDeal),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityType: facilitySnapshot.type,

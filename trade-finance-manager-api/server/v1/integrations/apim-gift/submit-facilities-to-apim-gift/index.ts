@@ -45,7 +45,7 @@ export const submitFacilitiesToApimGift = async ({
 
     const response = await api.createGiftFacility(payload);
 
-    return response;
+    return response || [];
   }
 
   const payloads = await APIM_GIFT_PAYLOADS.createFacilities({
@@ -59,5 +59,7 @@ export const submitFacilitiesToApimGift = async ({
 
   const promises = await Promise.all(payloads.map((payload: ApimGiftFacilityCreationPayload) => api.createGiftFacility(payload)));
 
-  return promises.flat();
+  const successfulResponses = promises.filter((response): response is TfmFacility => Boolean(response));
+
+  return successfulResponses;
 };
