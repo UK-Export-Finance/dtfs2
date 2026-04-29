@@ -356,7 +356,7 @@ describe('/v1/deals', () => {
 
       const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
 
-      expect(submitFacilitiesToApimGift).toHaveBeenCalledNthCalledWith(1, {
+      expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
         deal: submittedDeal,
         facilities: mockIssuedFacilities,
       });
