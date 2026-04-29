@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { hash as generateHash } from '@ukef/dtfs2-common';
+import { hash as generateHash, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
 
 /**
  * verifies provided otp code against stored hash and salt
@@ -19,7 +19,7 @@ export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, us
     const generatedOTPHash = generateHash(otpCode, otpSalt);
 
     // convert stored hash hex to buffer for comparison
-    const storedOTPHash = Buffer.from(otpHash, 'hex');
+    const storedOTPHash = Buffer.from(otpHash, HEX_STRING_TYPE);
 
     // compare generated hash to stored hash
     return crypto.timingSafeEqual(new Uint8Array(storedOTPHash), new Uint8Array(generatedOTPHash));
