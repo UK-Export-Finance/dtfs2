@@ -1931,6 +1931,27 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
   return response.data;
 };
 
+/**
+ * Create a GIFT facility.
+ * @param {import('./mappings/apim-gift-payloads/types').ApimGiftFacilityCreationPayload} facilityData - The data for the facility to be created
+ * @returns {Promise<object|boolean>} The created facility data if successful, otherwise false
+ */
+const createGiftFacility = async (facilityData) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility`,
+      headers: headers.external,
+      data: facilityData,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to send GIFT facility %o', error);
+
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -2020,4 +2041,5 @@ module.exports = {
   createFeeRecordCorrection,
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
+  createGiftFacility,
 };

@@ -3,7 +3,7 @@ description: 'Runs az deployment group what-if'
 runs:
   using: 'composite'
   steps:
-    - uses: azure/cli@v2
+    - uses: azure/cli@v3
       with:
         inlineScript: |
           az bicep install

@@ -9,7 +9,7 @@ const facilityMapper = require('../../facility');
  * @returns mapped facility objects
  */
 const mapFacilities = (facilities, dealSnapshot, dealTfm) => {
-  // Map facilities if only they exists
+  // Only map facilities if they exist
   if (facilities?.length) {
     return facilities.map((facility) => facilityMapper(facility, dealSnapshot, dealTfm));
   }

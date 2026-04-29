@@ -11,7 +11,7 @@ describe('getIndustryCode', () => {
         dealSnapshot: {
           dealType: DEAL_TYPE.BSS_EWCS,
           submissionDetails: {
-            'industry-sector': {
+            'industry-class': {
               code: expectedIndustryCode,
             },
           },
@@ -32,7 +32,7 @@ describe('getIndustryCode', () => {
           dealSnapshot: {
             dealType: DEAL_TYPE.BSS_EWCS,
             submissionDetails: {
-              'industry-sector': {},
+              'industry-class': {},
             },
           },
         } as TfmDeal;
@@ -43,6 +43,58 @@ describe('getIndustryCode', () => {
         // Assert
         expect(result).toEqual('');
       });
+    });
+  });
+
+  describe(`when the dealType is ${DEAL_TYPE.GEF}`, () => {
+    it('should return the industry code from the deal snapshot', () => {
+      // Arrange
+      const expectedIndustryCode = '12345';
+
+      const mockDeal = {
+        dealSnapshot: {
+          dealType: DEAL_TYPE.GEF,
+          exporter: {
+            industries: [
+              {
+                class: {
+                  code: expectedIndustryCode,
+                },
+              },
+            ],
+          },
+        },
+      } as TfmDeal;
+
+      // Act
+      const result = getIndustryCode(mockDeal);
+
+      // Assert
+      expect(result).toEqual(expectedIndustryCode);
+    });
+  });
+
+  describe('when no industry code is available in the deal snapshot', () => {
+    it('should return an empty string', () => {
+      // Arrange
+      const mockDeal = {
+        dealSnapshot: {
+          dealType: DEAL_TYPE.GEF,
+          exporter: {
+            industries: [
+              {
+                class: {},
+              },
+            ],
+          },
+        },
+      } as TfmDeal;
+
+      // Act
+      const result = getIndustryCode(mockDeal);
+
+      // Assert
+      expect(result).toEqual('');
     });
   });
 

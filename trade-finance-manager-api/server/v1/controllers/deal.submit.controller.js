@@ -1,6 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -45,7 +46,8 @@ const getPortalDeal = async (dealId, dealType) => {
 
 /**
  * Submits a deal to TFM after UKEF IDs have been assigned, handling both first submissions and resubmissions.
- * Updates deal status, facilities, tasks, and sends relevant notifications. Also manages ACBS integration.
+ * Updates deal status, facilities, tasks, and sends relevant notifications.
+ * Also invokes calls for ACBS and APIM GIFT integration.
  *
  * @async
  * @param {string} dealId - The unique identifier of the deal to submit.
@@ -68,11 +70,12 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const mappedDeal = mapSubmittedDeal(submittedDeal);
 
     const { submissionCount } = mappedDeal;
-    const firstDealSubmission = submissionCount === 1;
-    const dealHasBeenResubmit = submissionCount > 1;
+    const isFirstDealSubmission = submissionCount === 1;
+    const isDealResubmission = submissionCount > 1;
 
-    if (firstDealSubmission) {
+    if (isFirstDealSubmission) {
       const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
+
       // Updates portal deal status
       await updatePortalDealStatus(mappedDeal, auditDetails);
 
@@ -84,9 +87,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        * Not fetching the latest portal deal status would cause TFM deal status to be
        * an `Application` rather than `Confirmed`.
        */
-
       const updatedPortalDeal = await getPortalDeal(dealId, dealType);
       const { status } = updatedPortalDeal;
+
       const updatedMappedDeal = {
         ...mappedDeal,
         status,
@@ -118,17 +121,31 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       // Update the deal with all the above modifications
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
+      // Submit facilities to APIM/GIFT
+      const { canSubmitFacilitiesToApimGift, issuedFacilities } = await canSubmitToApimGift(tfmDeal);
+
+      if (canSubmitFacilitiesToApimGift) {
+        console.info('TFM deal %s submitDealAfterUkefIds - calling submitFacilitiesToApimGift', dealId);
+
+        await submitFacilitiesToApimGift({
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+        });
+      }
+
       // Submit to ACBS
       const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
       if (canSubmitDealToACBS) {
+        console.info('TFM deal %s submitDealAfterUkefIds - calling createACBS', dealId);
+
         await createACBS(dealId);
       }
 
       return tfmDeal;
     }
 
-    if (dealHasBeenResubmit) {
+    if (isDealResubmission) {
       let tfmDeal = await findOneTfmDeal(dealId);
       /**
        * checks if can update to MIN
@@ -182,7 +199,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
         await sendAinMinAcknowledgement(dealUpdate);
 
-        // TFM deal stage should be updated to `Confirmed`
+        // Update TFM deal stage to `Confirmed`
         const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
         dealUpdate.tfm.stage = updatedDealStage;
 
@@ -194,6 +211,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
       if (canSubmitDealToACBS) {
+        console.info('TFM deal %s resubmission - submitDealAfterUkefIds - calling createACBS', dealId);
+
         await createACBS(dealId);
       }
 
