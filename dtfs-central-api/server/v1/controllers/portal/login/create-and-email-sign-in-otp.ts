@@ -47,7 +47,13 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     if (signInOTPSendCount === -1) {
       console.info('User %s account suspended due to excessive OTP requests, sending suspension email', sanitisedUserId);
-      await sendAccountSuspensionEmail(user);
+      try {
+        await sendAccountSuspensionEmail(user);
+      } catch (emailError) {
+        // The user has already been suspended in the database; the email is a notification.
+        // Log the failure but still return -1 so the user is shown the suspended account page.
+        console.error('Failed to send account suspension email to user %s: %o', sanitisedUserId, emailError);
+      }
       return res.status(HttpStatusCode.Created).send({ signInOTPSendCount: -1 });
     }
 

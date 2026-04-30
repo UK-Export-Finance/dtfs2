@@ -40,10 +40,11 @@ const createSignInOTPCode = async (user, auditDetails) => {
     });
 
     return response.data;
-  } catch ({ response }) {
-    console.error('Error creating sign in OTP code: %o', response?.data || response);
+  } catch (error) {
+    const responseData = error?.response?.data;
+    console.error('Error creating sign in OTP code: %o', responseData || error);
 
-    return response?.data;
+    throw error;
   }
 };
 
