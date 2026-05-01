@@ -1,12 +1,9 @@
 import { DEAL_SUBMISSION_TYPE, isTfmApimGiftIntegrationEnabled, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
 import { getDealTypeFlags } from '../../../mappings/apim-gift-payloads/create-facility/get-deal-type-flags';
+import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 
 const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
-
-type ApiTypes = {
-  findFacilitiesByDealId: (dealId: string) => Promise<TfmFacility[]>;
-};
 
 type CanSubmitFacilitiesToApimGiftReturnShape = {
   canSubmitFacilitiesToApimGift: boolean;
@@ -52,7 +49,11 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     let facilities: TfmFacility[] = [];
 
     try {
-      facilities = await api.findFacilitiesByDealId(deal._id.toString());
+      const dealId = deal._id.toString();
+
+      const response = await api.findFacilitiesByDealId(dealId);
+
+      facilities = Array.isArray(response) ? response : [];
     } catch {
       // Swallow errors and default facilities to an empty array
       facilities = [];
