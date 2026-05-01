@@ -5,9 +5,10 @@
       {% if params.keyClass %}
         <p class="{{ params.keyClass }}">{{ params.key }}</p>
       {% else %}
-        <p class="ukef-heading-xs">{{ params.key }}</p>
+        <p class="ukef-heading-xs">{{ params.key | safe }}</p>
         {% endif %}
     </dt>
+
     <dd class="govuk-grid-column-two-thirds">
       {% if params.dataCy %}
         <p class="govuk-body-s govuk-!-margin-top-3 {{ params.valueStyle }}" data-cy="{{ params.dataCy }}">
