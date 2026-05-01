@@ -12,6 +12,15 @@ export const PRODUCT_TYPE_CODES = {
 } as const;
 
 /**
+ * Mapping of APIM/GIFT product type codes to deal types.
+ */
+export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
+  [PRODUCT_TYPE_CODES.BSS]: 'BSS',
+  [PRODUCT_TYPE_CODES.GEF]: 'GEF',
+  [PRODUCT_TYPE_CODES.UNKNOWN]: 'UNKNOWN',
+} as const;
+
+/**
  * TFM credit ratings that do not directly match APIM MDM credit risk ratings, and their mapped APIM MDM credit risk rating value.
  * This is required to map TFM's exporter credit rating to the expected APIM MDM credit risk rating value for the facility credit rating to be sent to GIFT.
  */
