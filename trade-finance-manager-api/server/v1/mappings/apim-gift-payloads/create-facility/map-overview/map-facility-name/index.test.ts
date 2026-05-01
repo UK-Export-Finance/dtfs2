@@ -1,5 +1,5 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES, PRODUCT_TYPE_CODES_TO_DEAL_TYPE } from '../../../constants';
+import { APIM_GIFT_INTEGRATION, DEAL_TYPE, PRODUCT_TYPE_CODES } from '../../../constants';
 import { mapFacilityName } from '.';
 
 const { CONSUMER } = APIM_GIFT_INTEGRATION;
@@ -24,9 +24,7 @@ describe('mapFacilityName', () => {
       const result = mapFacilityName(params);
 
       // Assert
-      const expectedProductName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[mockProductTypeCode as keyof typeof PRODUCT_TYPE_CODES_TO_DEAL_TYPE];
-
-      const expected = `${CONSUMER} ${mockFacilityType} ${expectedProductName}: ${mockBankInternalRefName}`;
+      const expected = `${CONSUMER} ${mockFacilityType} ${DEAL_TYPE.GEF}: ${mockBankInternalRefName}`;
 
       expect(result).toEqual(expected);
     });
@@ -46,9 +44,7 @@ describe('mapFacilityName', () => {
         const result = mapFacilityName(params);
 
         // Assert
-        const expectedProductName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[mockProductTypeCode as keyof typeof PRODUCT_TYPE_CODES_TO_DEAL_TYPE];
-
-        const expected = `${CONSUMER} ${expectedProductName}: ${mockBankInternalRefName}`;
+        const expected = `${CONSUMER} ${DEAL_TYPE.GEF}: ${mockBankInternalRefName}`;
 
         expect(result).toEqual(expected);
       });
@@ -70,9 +66,7 @@ describe('mapFacilityName', () => {
         const result = mapFacilityName(params);
 
         // Assert
-        const expectedProductName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[mockProductTypeCode as keyof typeof PRODUCT_TYPE_CODES_TO_DEAL_TYPE];
-
-        const expected = `${CONSUMER} ${expectedProductName}: ${mockBankInternalRefName}`;
+        const expected = `${CONSUMER} ${DEAL_TYPE.GEF}: ${mockBankInternalRefName}`;
 
         expect(result).toEqual(expected);
       });
@@ -96,9 +90,7 @@ describe('mapFacilityName', () => {
       const result = mapFacilityName(params);
 
       // Assert
-      const expectedProductName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[mockProductTypeCode as keyof typeof PRODUCT_TYPE_CODES_TO_DEAL_TYPE];
-
-      const expected = `${CONSUMER} ${expectedProductName}: ${mockBankInternalRefName}`;
+      const expected = `${CONSUMER} ${DEAL_TYPE.BSS}: ${mockBankInternalRefName}`;
 
       expect(result).toEqual(expected);
     });

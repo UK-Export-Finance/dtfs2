@@ -1,3 +1,15 @@
+import { ProductTypeCode } from './types';
+
+/**
+ * Deal type names used in APIM/GIFT integration.
+ * These are used to map product type codes to human-readable deal type names.
+ */
+export const DEAL_TYPE = {
+  BSS: 'BSS',
+  EWCS: 'EWCS',
+  GEF: 'GEF',
+};
+
 /**
  * APIM/GIFT product type codes.
  * An "Unknown" code is included to use as a fallback value when the deal type is not recognized, to avoid sending null values to APIM/GIFT which would cause errors.
@@ -15,10 +27,10 @@ export const PRODUCT_TYPE_CODES = {
  * Mapping of APIM/GIFT product type codes to deal types.
  */
 export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
-  [PRODUCT_TYPE_CODES.BSS]: 'BSS',
-  [PRODUCT_TYPE_CODES.GEF]: 'GEF',
+  [PRODUCT_TYPE_CODES.BSS]: DEAL_TYPE.BSS,
+  [PRODUCT_TYPE_CODES.GEF]: DEAL_TYPE.GEF,
   [PRODUCT_TYPE_CODES.UNKNOWN]: 'UNKNOWN',
-} as const;
+} as const satisfies Record<ProductTypeCode, string>;
 
 /**
  * TFM credit ratings that do not directly match APIM MDM credit risk ratings, and their mapped APIM MDM credit risk rating value.

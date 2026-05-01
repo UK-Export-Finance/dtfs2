@@ -23,7 +23,7 @@ type MapFacilityNameParams = {
  * @returns {string} The mapped facility name.
  */
 export const mapFacilityName = ({ bankInternalRefName, facilityType, isGefDeal, productTypeCode }: MapFacilityNameParams): string => {
-  const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode as keyof typeof PRODUCT_TYPE_CODES_TO_DEAL_TYPE];
+  const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode];
 
   if (isGefDeal) {
     if (facilityType) {
