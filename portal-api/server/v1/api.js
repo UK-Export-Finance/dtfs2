@@ -41,8 +41,12 @@ const createSignInOTPCode = async (user, auditDetails) => {
 
     return response.data;
   } catch (error) {
-    const responseData = error?.response?.data;
-    console.error('Error creating sign in OTP code: %o', responseData || error);
+    const message = error instanceof Error ? error.message : String(error);
+    const code = typeof error?.code === 'string' ? error.code : undefined;
+    const status = typeof error?.response?.status === 'number' ? error.response.status : undefined;
+    const responseData = typeof error?.response?.data !== 'undefined' ? error.response.data : undefined;
+
+    console.error('Error creating sign in OTP code: %o', { message, code, status, responseData });
 
     throw error;
   }
