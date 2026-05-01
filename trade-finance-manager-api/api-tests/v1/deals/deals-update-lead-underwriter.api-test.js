@@ -1,6 +1,5 @@
 const { when } = require('jest-when');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
