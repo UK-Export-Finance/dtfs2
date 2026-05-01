@@ -9,10 +9,12 @@ type GetReferenceDataResult = {
 };
 
 /**
+ * Get reference data from APIM MDD.
+ * This is required to map APIM GIFT payloads, including:
+ * - "Credit risk ratings"
+ * - "Facility categories" (only for GEF deals, not required for BSS/EWCS deals)
  * @param {boolean} isGefDeal - A boolean indicating whether the deal is a GEF deal
- * @returns {Promise<GetReferenceDataResult>} An object containing the reference data required to map APIM GIFT payloads, including:
- * - "credit risk ratings"
- * - "facility categories" (only for GEF deals, not required for BSS/EWCS deals)
+ * @returns {Promise<GetReferenceDataResult>} Reference data
  *
  * NOTE: if the API call to get reference data from APIM MDM fails, we do NOT want to throw an error.
  * Instead, continue with an empty array of credit risk ratings and facility categories, which could result in the facility credit rating and category not being mapped.

@@ -49,7 +49,9 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     let facilities: TfmFacility[] = [];
 
     try {
-      const response = await api.findFacilitiesByDealId(deal._id.toString());
+      const dealId = deal._id.toString();
+
+      const response = await api.findFacilitiesByDealId(dealId);
 
       facilities = Array.isArray(response) ? response : [];
     } catch {

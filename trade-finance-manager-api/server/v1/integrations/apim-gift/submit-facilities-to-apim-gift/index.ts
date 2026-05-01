@@ -59,6 +59,18 @@ export const submitFacilitiesToApimGift = async ({
 
   const promises = await Promise.all(payloads.map((payload: ApimGiftFacilityCreationPayload) => api.createGiftFacility(payload)));
 
+  /**
+   * For typing, the response from the APIM/GIFT integration is expected to be an array of TfmFacility objects, but in the case where all API calls fail, this would result in an empty array.
+   * Therefore we need ot filter the responses to ensure we only return the successful responses, which could be an array of TfmFacility objects or an empty array if all API calls fail.
+   *
+   * If the API call to create a facility in APIM/GIFT fails for any of the facilities, we do NOT want to throw an error.
+   * Instead, continue with the successful responses, which could result in some facilities being created in GIFT and some not being created.
+   * But at least the facilities that can be created in GIFT will be created and the issues with the facilities that cannot be created can be investigated separately.
+   * If all API calls fail, this will result in an empty array of successful responses, which is preferable to the entire function throwing an error and no facilities being created in GIFT.
+   * Ultimately, this will trigger an alert in APIM for the failed API calls, which can be investigated by the team.
+   * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API calls failing and the fact that facility creation in GIFT can be "best effort", this is not necessary.
+   * Note that this is an edge case scenario as most facilities should be able to be created in GIFT without issue.
+   */
   const successfulResponses = promises.filter((response): response is TfmFacility => Boolean(response));
 
   return successfulResponses;
