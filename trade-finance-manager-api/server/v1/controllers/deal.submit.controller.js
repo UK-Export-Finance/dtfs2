@@ -122,7 +122,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities } = await canSubmitToApimGift(tfmDeal);
+      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - calling submitFacilitiesToApimGift', dealId);
@@ -130,6 +130,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
         await submitFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
         });
       }
 
@@ -156,6 +158,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
       if (isUpdatingToMIN) {
         mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+
         console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
       }
 
