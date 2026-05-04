@@ -100,8 +100,12 @@ const mappedDeal = {
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   submissionCount: 1,
 };
+
 const issuedFacilities = [{ _id: 'facility-1' }];
 const tfmDeal = { _id: dealId, tfm: { stage: 'stage' } };
+
+const isBssEwcsDeal = false;
+const isGefDeal = true;
 
 describe('submitDealAfterUkefIds', () => {
   beforeEach(() => {
@@ -169,6 +173,8 @@ describe('submitDealAfterUkefIds', () => {
       canSubmitToApimGift.mockResolvedValue({
         canSubmitFacilitiesToApimGift: true,
         issuedFacilities,
+        isBssEwcsDeal,
+        isGefDeal,
       });
 
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
@@ -181,6 +187,8 @@ describe('submitDealAfterUkefIds', () => {
         canSubmitToApimGift.mockResolvedValue({
           canSubmitFacilitiesToApimGift: true,
           issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
         });
 
         await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
@@ -188,6 +196,8 @@ describe('submitDealAfterUkefIds', () => {
         expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
         });
       });
     });
@@ -197,6 +207,8 @@ describe('submitDealAfterUkefIds', () => {
         canSubmitToApimGift.mockResolvedValue({
           canSubmitFacilitiesToApimGift: false,
           issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
         });
 
         await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);

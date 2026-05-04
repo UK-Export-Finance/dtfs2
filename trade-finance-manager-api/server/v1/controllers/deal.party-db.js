@@ -102,6 +102,7 @@ const identifyDealParties = (deal) => ({
 const addPartyUrns = async (deal, auditDetails) => {
   if (!deal?.exporter) {
     console.error('Adding party URN, invalid deal supplied');
+
     return false;
   }
 
