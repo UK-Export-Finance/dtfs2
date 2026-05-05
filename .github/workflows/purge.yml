@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma', 'crdtfsdev0012lpd66flpami2']
+        acr: ['crdtfsdev0012lpd66flpami2']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -61,7 +61,7 @@ jobs:
       - name: Subscription 🛠️
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
-            echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
+            echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
@@ -71,7 +71,7 @@ jobs:
       - name: Resource group 🛠️
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
-            echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
+            echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
@@ -81,7 +81,7 @@ jobs:
       - name: Execute ⚡
         uses: ./.github/actions/acr
         with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
