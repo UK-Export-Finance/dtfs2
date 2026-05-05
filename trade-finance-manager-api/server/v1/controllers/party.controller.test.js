@@ -175,6 +175,34 @@ describe('updateParty', () => {
         isGefDeal: true,
       });
     });
+
+    it('should return 500 when submitFacilitiesToApimGift fails', async () => {
+      const mockRequest = {
+        params: {
+          dealId: '5ce819935e539c343f141ece',
+        },
+        body: mockTfmDeal.tfm.parties,
+        user: {
+          _id: '5ce819935e539c343f141ece',
+        },
+      };
+      const apimGiftError = new Error('APIM/GIFT failed');
+
+      canSubmitToApimGift.mockResolvedValue({
+        canSubmitFacilitiesToApimGift: true,
+        issuedFacilities,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
+      submitFacilitiesToApimGift.mockRejectedValueOnce(apimGiftError);
+
+      await updateParty(mockRequest, mockResponse);
+
+      expect(consoleErrorMock).toHaveBeenCalledWith('TFM deal %s updateParty - submitFacilitiesToApimGift failed %o', mockRequest.params.dealId, apimGiftError);
+      expect(consoleErrorMock).toHaveBeenCalledWith('Unable to update parties for deal %s %o', mockRequest.params.dealId, apimGiftError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith(apimGiftError);
+    });
   });
 
   describe('when APIM/GIFT submission is not allowed', () => {
@@ -202,6 +230,31 @@ describe('updateParty', () => {
 
       // Assert
       expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when ACBS submission is allowed', () => {
+    it('should return 500 when createACBS fails', async () => {
+      const mockRequest = {
+        params: {
+          dealId: '5ce819935e539c343f141ece',
+        },
+        body: mockTfmDeal.tfm.parties,
+        user: {
+          _id: '5ce819935e539c343f141ece',
+        },
+      };
+      const acbsError = new Error('ACBS failed');
+
+      canSubmitToACBS.mockResolvedValue(true);
+      createACBS.mockRejectedValueOnce(acbsError);
+
+      await updateParty(mockRequest, mockResponse);
+
+      expect(consoleErrorMock).toHaveBeenCalledWith('TFM deal %s updateParty - createACBS failed %o', mockRequest.params.dealId, acbsError);
+      expect(consoleErrorMock).toHaveBeenCalledWith('Unable to update parties for deal %s %o', mockRequest.params.dealId, acbsError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith(acbsError);
     });
   });
 

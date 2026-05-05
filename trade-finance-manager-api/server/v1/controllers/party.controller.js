@@ -33,12 +33,18 @@ const updateParty = async (req, res) => {
     if (canSubmitFacilitiesToApimGift) {
       console.info('TFM deal %s updateParty - calling submitFacilitiesToApimGift', dealId);
 
-      await submitFacilitiesToApimGift({
-        deal: tfmDeal,
-        facilities: issuedFacilities,
-        isBssEwcsDeal,
-        isGefDeal,
-      });
+      try {
+        await submitFacilitiesToApimGift({
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+      } catch (error) {
+        console.error('TFM deal %s updateParty - submitFacilitiesToApimGift failed %o', dealId, error);
+
+        throw error;
+      }
     }
 
     // Submit to ACBS
@@ -47,7 +53,13 @@ const updateParty = async (req, res) => {
     if (canSubmitDealToACBS) {
       console.info('TFM deal %s updateParty - calling createACBS', dealId);
 
-      await createACBS(dealId);
+      try {
+        await createACBS(dealId);
+      } catch (error) {
+        console.error('TFM deal %s updateParty - createACBS failed %o', dealId, error);
+
+        throw error;
+      }
     }
 
     const response = res.status(HttpStatusCode.Ok).send({
@@ -59,6 +71,7 @@ const updateParty = async (req, res) => {
     return response;
   } catch (error) {
     console.error('Unable to update parties for deal %s %o', req.params.dealId, error);
+
     return res.status(HttpStatusCode.InternalServerError).send(error);
   }
 };

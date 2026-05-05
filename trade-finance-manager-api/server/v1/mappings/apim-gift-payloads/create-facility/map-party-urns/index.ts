@@ -51,3 +51,7 @@ export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsPar
     exporterPartyUrn,
   };
 };
+
+// exporterPartyUrn = deal.tfm.parties.exporter.partyUrn - comes from salesforce during deal submission
+// buyerPartyUrn = deal.tfm.parties.buyer?.partyUrn
+// bankPartyUrn= deal.dealSnapshot.bank.partyUrn
