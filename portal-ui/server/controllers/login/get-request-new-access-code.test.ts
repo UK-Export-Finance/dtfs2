@@ -80,7 +80,7 @@ describe('controllers/login/get-request-new-access-code', () => {
       await requestNewAccessCode(req, res);
 
       expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
-      expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(renderMock).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       expect(redirectMock).not.toHaveBeenCalled();
     });
   });
@@ -95,7 +95,7 @@ describe('controllers/login/get-request-new-access-code', () => {
 
       expect(api.sendSignInOTP).toHaveBeenCalledWith('test-token');
       expect(console.error).toHaveBeenCalledWith('Error requesting new access code: %o', new Error('API error'));
-      expect(renderMock).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(renderMock).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       expect(redirectMock).not.toHaveBeenCalled();
     });
   });
