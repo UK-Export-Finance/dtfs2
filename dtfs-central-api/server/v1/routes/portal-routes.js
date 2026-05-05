@@ -1476,10 +1476,8 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *             type: object
  *             properties:
  *               user:
- *                 type: object
  *                 $ref: '#/definitions/PortalUser'
  *               auditDetails:
- *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       201:
@@ -1487,7 +1485,7 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *       403:
  *         description: Forbidden
  *       404:
- *         description: User not found
+ *         description: Missing or invalid request body
  *       500:
  *         description: Internal Server Error
  */
@@ -1513,7 +1511,6 @@ portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmail
  *               signInOTPCode:
  *                 type: string
  *               auditDetails:
- *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       200:

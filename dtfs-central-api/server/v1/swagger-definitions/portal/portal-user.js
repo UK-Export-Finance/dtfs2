@@ -7,7 +7,6 @@
  *       _id:
  *         type: string
  *         example: 607f1f77bcf86cd799439011
- *         required: true
  *       user-status:
  *         type: string
  *         example: active
@@ -20,18 +19,15 @@
  *       firstname:
  *         type: string
  *         example: Joe
- *         required: true
  *       surname:
  *         type: string
  *         example: Bloggs
- *         required: true
  *       username:
  *         type: string
  *         example: test@test.com
  *       email:
  *         type: string
  *         example: test@test.com
- *         required: true
  *       roles:
  *         type: array
  *         items:
