@@ -28,7 +28,7 @@ const definition: swaggerDefinition = {
     },
     {
       name: 'User',
-      description: 'Get and create Portal (BSS/GEF) users. This is only used in the central API.',
+      description: 'Get, create and authenticate Portal (BSS/GEF) users. This is only used in the central API.',
     },
     {
       name: 'Utilisation Report',

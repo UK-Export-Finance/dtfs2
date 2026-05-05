@@ -1462,10 +1462,10 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
 
 /**
  * @openapi
- * /users/me/sign-in-code:
+ * /portal/users/me/sign-in-code:
  *   post:
  *     summary: Create and email a sign in OTP to the user
- *     tags: [Portal - User]
+ *     tags: [User]
  *     description: Create and email a sign in OTP to the user
  *     requestBody:
  *       description: Required fields
@@ -1495,10 +1495,10 @@ portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmail
 
 /**
  * @openapi
- * /users/me/validate-sign-in-code:
+ * /portal/users/me/validate-sign-in-code:
  *   post:
  *     summary: Validate a sign in OTP and sign in the user if valid
- *     tags: [Portal - User]
+ *     tags: [User]
  *     description: Validate a sign in OTP and sign in the user if valid
  *     requestBody:
  *       description: Required fields
@@ -1510,7 +1510,7 @@ portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmail
  *             properties:
  *               userId:
  *                 type: string
- *               signInOTP:
+ *               signInOTPCode:
  *                 type: string
  *               auditDetails:
  *                 type: object
@@ -1520,8 +1520,10 @@ portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmail
  *         description: OK - OTP valid and user signed in successfully
  *       400:
  *         description: Bad request - invalid userId or OTP format
+ *       401:
+ *         description: Unauthorized - invalid or expired OTP
  *       403:
- *         description: Forbidden - invalid OTP
+ *         description: Forbidden - user is blocked or disabled
  *       404:
  *         description: User not found
  *       500:
