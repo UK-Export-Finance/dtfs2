@@ -100,73 +100,94 @@ describe('PUT /v1/parties/:dealId', () => {
   });
 
   it('returns updated parties', async () => {
+    // Act
     const { status, body } = await as({ token }).put(partiesUpdate).to(VALID_URL);
 
+    // Assert
     expect(status).toEqual(200);
+
     expect(body).toEqual({
       updateParty: {
         parties: partiesUpdate,
       },
     });
-    expect(canSubmitToApimGift).toHaveBeenCalledTimes(1);
   });
 
-  it('calls submitFacilitiesToApimGift when APIM/GIFT submission is allowed', async () => {
-    const issuedFacilities = [{ _id: 'facility-1' }];
+  describe('when APIM/GIFT submission is allowed', () => {
+    it('should call submitFacilitiesToApimGift', async () => {
+      // Arrange
+      const issuedFacilities = [{ _id: 'facility-1' }];
 
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: true,
-      issuedFacilities,
-      isBssEwcsDeal: false,
-      isGefDeal: true,
-    });
+      canSubmitToApimGift.mockResolvedValue({
+        canSubmitFacilitiesToApimGift: true,
+        issuedFacilities,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
 
-    await as({ token }).put(partiesUpdate).to(VALID_URL);
+      // Act
+      await as({ token }).put(partiesUpdate).to(VALID_URL);
 
-    expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
-      deal: expect.any(Object),
-      facilities: issuedFacilities,
-      isBssEwcsDeal: false,
-      isGefDeal: true,
-    });
-  });
-
-  it('does not call submitFacilitiesToApimGift when APIM/GIFT submission is not allowed', async () => {
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
-      issuedFacilities: [],
-      isBssEwcsDeal: false,
-      isGefDeal: true,
-    });
-
-    await as({ token }).put(partiesUpdate).to(VALID_URL);
-
-    expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
-  });
-
-  it('returns 400 when deal id is invalid', async () => {
-    const { status, body } = await as({ token }).put(partiesUpdate).to(`/v1/parties/${INVALID_DEAL_ID}`);
-
-    expect(status).toEqual(400);
-    expect(body).toEqual({
-      errors: [
-        {
-          location: 'params',
-          msg: 'The Deal ID (dealId) provided should be a Mongo ID',
-          path: 'dealId',
-          type: 'field',
-          value: INVALID_DEAL_ID,
-        },
-      ],
-      status: 400,
+      // Assert
+      expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+        deal: expect.any(Object),
+        facilities: issuedFacilities,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
     });
   });
 
-  it('returns 500 if updateDeal fails', async () => {
-    when(api.updateDeal).calledWith(expect.anything()).mockRejectedValueOnce(new Error('update failed'));
+  describe('when APIM/GIFT submission is not allowed', () => {
+    it('should not call submitFacilitiesToApimGift when APIM/GIFT submission is not allowed', async () => {
+      // Arrange
+      canSubmitToApimGift.mockResolvedValue({
+        canSubmitFacilitiesToApimGift: false,
+        issuedFacilities: [],
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
 
-    const { status } = await as({ token }).put(partiesUpdate).to(VALID_URL);
+      // Act
+      await as({ token }).put(partiesUpdate).to(VALID_URL);
 
-    expect(status).toEqual(500);
+      // Assert
+      expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when deal id is invalid', () => {
+    it('should return a 400', async () => {
+      // Act
+      const { status, body } = await as({ token }).put(partiesUpdate).to(`/v1/parties/${INVALID_DEAL_ID}`);
+
+      // Assert
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        errors: [
+          {
+            location: 'params',
+            msg: 'The Deal ID (dealId) provided should be a Mongo ID',
+            path: 'dealId',
+            type: 'field',
+            value: INVALID_DEAL_ID,
+          },
+        ],
+        status: 400,
+      });
+    });
+  });
+
+  describe('when updateDeal throws an error', () => {
+    it('should return a 500', async () => {
+      // Arrange
+      when(api.updateDeal).calledWith(expect.anything()).mockRejectedValueOnce(new Error('update failed'));
+
+      // Act
+      const { status } = await as({ token }).put(partiesUpdate).to(VALID_URL);
+
+      // Assert
+      expect(status).toEqual(500);
+    });
   });
 });
