@@ -1479,17 +1479,17 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *                 type: object
  *                 $ref: '#/definitions/PortalUser'
  *               auditDetails:
- *                type: object
- *                $ref: '#/definitions/PortalAuditDetails'
- *    responses:
- *      201:
- *        description: Created - OTP created and emailed successfully
- *      403:
- *        description: Forbidden
- *     404:
- *       description: User not found
- *      500:
- *        description: Internal Server Error
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       201:
+ *         description: Created - OTP created and emailed successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
  */
 portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmailSignInOTP);
 
@@ -1513,19 +1513,19 @@ portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmail
  *               signInOTP:
  *                 type: string
  *               auditDetails:
- *                type: object
- *                $ref: '#/definitions/PortalAuditDetails'
- *    responses:
- *      200:
- *        description: OK - OTP valid and user signed in successfully
- *      400:
- *        description: Bad request - invalid userId or OTP format
- *      403:
- *        description: Forbidden - invalid OTP
- *     404:
- *       description: User not found
- *      500:
- *        description: Internal Server Error
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       200:
+ *         description: OK - OTP valid and user signed in successfully
+ *       400:
+ *         description: Bad request - invalid userId or OTP format
+ *       403:
+ *         description: Forbidden - invalid OTP
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
  */
 portalRouter.route('/users/me/validate-sign-in-code').post(loginController.validateOTPAndSignIn);
 
