@@ -274,7 +274,7 @@ describe('postLogin', () => {
           await postLogin(req, res);
 
           expect(console.error).toHaveBeenNthCalledWith(2, 'Access temporarily suspended for user %s', req.body.email);
-
+          expect(req.session.numberOfSignInOtpAttemptsRemaining).toEqual(-1);
           expect(res.redirect).toHaveBeenNthCalledWith(1, '/login/temporarily-suspended-access-code');
         });
       });

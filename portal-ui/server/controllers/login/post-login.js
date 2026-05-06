@@ -77,6 +77,7 @@ export const postLogin = async (req, res) => {
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user %s', email);
+          req.session.numberOfSignInOtpAttemptsRemaining = -1;
           return res.redirect('/login/temporarily-suspended-access-code');
         }
 
