@@ -20,13 +20,13 @@
   {% endif %}
 
   {% if errors %}
-      {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors.errorSummary,
-        attributes: {
-          'data-cy': 'error-summary'
-        }
-      }) }}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
   {% endif %}
 
   <div class="govuk-grid-row {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-indemnifier">
@@ -76,8 +76,8 @@
                   text: errors.fieldErrors.partyUrn.text,
                   attributes: {
                     'data-cy': 'partyUrn--inline-error'
+                  }
                 }
-            }
               }) }}
               </div>
             </div>
@@ -92,13 +92,14 @@
 
           {{ keyValueArrayGridRow.render({
             key: 'Address',
-            values:  [ deal.submissionDetails.indemnifierAddressLine1,
-                    deal.submissionDetails.indemnifierAddressLine2,
-                    deal.submissionDetails.indemnifierAddressLine3,
-                    deal.submissionDetails.indemnifierAddressTown,
-                    deal.submissionDetails.indemnifierAddressPostcode],
+            values: [
+              deal.submissionDetails.indemnifierAddressLine1,
+              deal.submissionDetails.indemnifierAddressLine2,
+              deal.submissionDetails.indemnifierAddressLine3,
+              deal.submissionDetails.indemnifierAddressTown,
+              deal.submissionDetails.indemnifierAddressPostcode
+            ],
             dataCy: 'indemnifier-address'
-
           }) }}
 
           {{ keyValueGridRow.render({
@@ -108,15 +109,17 @@
           }) }}
 
           {{ keyValueGridRow.render({
-            key: 'Companies house<br>registration number',
+            key: 'Companies house registration number',
             value: deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber,
             dataCy: 'indemnifier-companies-house-registration-number'
           }) }}
+
           {{ keyValueGridRow.render({
-            key: 'Is the indemnifier legally<br>distinct from the exporter?',
+            key: 'Is the indemnifier legally distinct from the exporter?',
             value: deal.submissionDetails.legallyDistinct,
             dataCy: 'indemnifier-legally-distinct'
           }) }}
+
           {{ keyValueGridRow.render({
             key: 'Approval level required',
             value: '',
@@ -125,13 +128,16 @@
 
           {{ keyValueArrayGridRow.render({
             key: 'Correspondence Address',
-            values:  [ deal.submissionDetails.indemnifierCorrespondenceAddressLine1,
-                    deal.submissionDetails.indemnifierCorrespondenceAddressLine2,
-                    deal.submissionDetails.indemnifierCorrespondenceAddressLine3,
-                    deal.submissionDetails.indemnifierCorrespondenceAddressTown,
-                    deal.submissionDetails.indemnifierCorrespondenceAddressPostcode],
+            values:  [
+              deal.submissionDetails.indemnifierCorrespondenceAddressLine1,
+              deal.submissionDetails.indemnifierCorrespondenceAddressLine2,
+              deal.submissionDetails.indemnifierCorrespondenceAddressLine3,
+              deal.submissionDetails.indemnifierCorrespondenceAddressTown,
+              deal.submissionDetails.indemnifierCorrespondenceAddressPostcode
+            ],
             dataCy: 'correspondence-address'
           }) }}
+
           {{ keyValueGridRow.render({
             key: 'Correspondence country',
             value: deal.submissionDetails.indemnifierCorrespondenceAddressCountry,

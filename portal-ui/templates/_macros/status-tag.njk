@@ -5,7 +5,7 @@
   {% set greyColourStatus = (status === "Not started" or status === "Incomplete" or status === "Ready for check" or status === "Acknowledged" or status === "Maker's input required") %}
 
   {% if status %}
-    {{govukTag({
+    {{ govukTag({
       text: status,
       classes: greyColourStatus and "govuk-tag--grey",
       attributes: {

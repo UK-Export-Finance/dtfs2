@@ -19,7 +19,7 @@
     {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
   {% endif %}
 
-    {% if errors %}
+  {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors.errorSummary,
@@ -93,13 +93,16 @@
 
           {{ keyValueArrayGridRow.render({
             key: 'Address',
-            values:  [ deal.submissionDetails.buyerAddressLine1,
-                    deal.submissionDetails.buyerAddressLine2,
-                    deal.submissionDetails.buyerAddressLine3,
-                    deal.submissionDetails.buyerAddressTown,
-                    deal.submissionDetails.buyerAddressPostcode],
+            values: [
+              deal.submissionDetails.buyerAddressLine1,
+              deal.submissionDetails.buyerAddressLine2,
+              deal.submissionDetails.buyerAddressLine3,
+              deal.submissionDetails.buyerAddressTown,
+              deal.submissionDetails.buyerAddressPostcode
+            ],
             dataCy: 'buyer-address'
           }) }}
+
           {{ keyValueGridRow.render({
             key: 'Country',
             value: deal.submissionDetails.buyerAddressCountry,
