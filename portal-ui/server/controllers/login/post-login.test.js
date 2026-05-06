@@ -207,13 +207,13 @@ describe('postLogin', () => {
           jest.mocked(api.sendSignInOTP).mockRejectedValue(error);
         });
 
-        it('should log the error and continue the login flow by redirecting the login page', async () => {
+        it('should log the error and render the problem with service page', async () => {
           await postLogin(req, res);
 
-          const expectedMessage = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was ';
-          expect(console.error).toHaveBeenNthCalledWith(1, '%s %o', expectedMessage, error);
+          expect(console.error).toHaveBeenNthCalledWith(1, 'Failed to send sign in OTP, rendering problem with service page. The error was %o', error);
 
-          expect(res.redirect).toHaveBeenNthCalledWith(1, '/login');
+          expect(res.render).toHaveBeenNthCalledWith(1, '_partials/problem-with-service.njk');
+          expect(res.redirect).not.toHaveBeenCalled();
         });
 
         it(`should redirect to login/temporarily-suspended-access-code when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {

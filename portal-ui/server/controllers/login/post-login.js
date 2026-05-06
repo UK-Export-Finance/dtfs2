@@ -95,13 +95,9 @@ export const postLogin = async (req, res) => {
         return res.redirect('/login/temporarily-suspended-access-code');
       }
 
-      const message = 'Failed to send sign in OTP. The login flow will continue as the user can retry on the next page. The error was ';
-      console.error('%s %o', message, error);
+      console.error('Failed to send sign in OTP, rendering problem with service page. The error was %o', error);
 
-      // Continue login flow so the user can retry sending OTP code
-      const nextAccessCodePage = getNextAccessCodePage(req.session.numberOfSignInOtpAttemptsRemaining);
-
-      return res.redirect(nextAccessCodePage);
+      return res.render('_partials/problem-with-service.njk');
     }
   } else {
     let loginApiLinkSucceeded = false;

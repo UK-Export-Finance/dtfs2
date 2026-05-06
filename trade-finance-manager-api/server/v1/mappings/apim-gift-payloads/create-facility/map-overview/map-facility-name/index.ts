@@ -1,4 +1,4 @@
-import { APIM_GIFT_INTEGRATION } from '../../../constants';
+import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES_TO_DEAL_TYPE } from '../../../constants';
 import { ApimGiftProductTypeCode } from '../../../types';
 
 const { CONSUMER } = APIM_GIFT_INTEGRATION;
@@ -22,14 +22,16 @@ type MapFacilityNameParams = {
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The product type code.
  * @returns {string} The mapped facility name.
  */
-export const mapFacilityName = ({ bankInternalRefName, facilityType, isGefDeal, productTypeCode }: MapFacilityNameParams) => {
+export const mapFacilityName = ({ bankInternalRefName, facilityType, isGefDeal, productTypeCode }: MapFacilityNameParams): string => {
+  const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode];
+
   if (isGefDeal) {
     if (facilityType) {
-      return `${CONSUMER} ${facilityType} ${productTypeCode}: ${bankInternalRefName}`;
+      return `${CONSUMER} ${facilityType} ${productName}: ${bankInternalRefName}`;
     }
 
-    return `${CONSUMER} ${productTypeCode}: ${bankInternalRefName}`;
+    return `${CONSUMER} ${productName}: ${bankInternalRefName}`;
   }
 
-  return `${CONSUMER} ${productTypeCode}: ${bankInternalRefName}`;
+  return `${CONSUMER} ${productName}: ${bankInternalRefName}`;
 };
