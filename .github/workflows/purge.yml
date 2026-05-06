@@ -62,13 +62,14 @@ jobs:
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
+          fi
 
 
       - name: Resource group 🛠️
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
-
+          fi
 
       - name: Execute ⚡
         uses: ./.github/actions/acr
