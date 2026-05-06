@@ -62,21 +62,13 @@ jobs:
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
-            echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
-            echo "SUBSCRIPTION=${{ secrets.FEATURE_SUBSCRIPTION }}" >> $GITHUB_ENV
-          fi
+
 
       - name: Resource group 🛠️
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
-            echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
-            echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          fi
+
 
       - name: Execute ⚡
         uses: ./.github/actions/acr
