@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { when } = require('jest-when');
 const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const { createACBS } = require('../../../server/v1/controllers/acbs.controller');
@@ -13,8 +14,6 @@ const { createApi } = require('../../api');
 jest.mock('../../../server/v1/controllers/user/user.controller', () => ({
   findByUsername: jest.fn(),
 }));
-
-jest.setTimeout(30000);
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
   canSubmitToApimGift: jest.fn(),
@@ -99,12 +98,12 @@ describe('PUT /v1/parties/:dealId', () => {
       }),
   });
 
-  it('returns updated parties', async () => {
+  it(`should return ${HttpStatusCode.Ok} with updated parties`, async () => {
     // Act
     const { status, body } = await as({ token }).put(partiesUpdate).to(VALID_URL);
 
     // Assert
-    expect(status).toEqual(200);
+    expect(status).toEqual(HttpStatusCode.Ok);
 
     expect(body).toEqual({
       updateParty: {
@@ -139,7 +138,7 @@ describe('PUT /v1/parties/:dealId', () => {
   });
 
   describe('when APIM/GIFT submission is not allowed', () => {
-    it('should not call submitFacilitiesToApimGift when APIM/GIFT submission is not allowed', async () => {
+    it(`should not call submitFacilitiesToApimGift when APIM/GIFT submission is not allowed`, async () => {
       // Arrange
       canSubmitToApimGift.mockResolvedValue({
         canSubmitFacilitiesToApimGift: false,
@@ -157,12 +156,13 @@ describe('PUT /v1/parties/:dealId', () => {
   });
 
   describe('when deal id is invalid', () => {
-    it('should return a 400', async () => {
+    it(`should return ${HttpStatusCode.BadRequest}`, async () => {
       // Act
       const { status, body } = await as({ token }).put(partiesUpdate).to(`/v1/parties/${INVALID_DEAL_ID}`);
 
       // Assert
-      expect(status).toEqual(400);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+
       expect(body).toEqual({
         errors: [
           {
@@ -173,13 +173,13 @@ describe('PUT /v1/parties/:dealId', () => {
             value: INVALID_DEAL_ID,
           },
         ],
-        status: 400,
+        status: HttpStatusCode.BadRequest,
       });
     });
   });
 
   describe('when updateDeal throws an error', () => {
-    it('should return a 500', async () => {
+    it(`should return ${HttpStatusCode.InternalServerError}`, async () => {
       // Arrange
       when(api.updateDeal).calledWith(expect.anything()).mockRejectedValueOnce(new Error('update failed'));
 
@@ -187,7 +187,7 @@ describe('PUT /v1/parties/:dealId', () => {
       const { status } = await as({ token }).put(partiesUpdate).to(VALID_URL);
 
       // Assert
-      expect(status).toEqual(500);
+      expect(status).toEqual(HttpStatusCode.InternalServerError);
     });
   });
 });

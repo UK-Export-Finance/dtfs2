@@ -176,7 +176,7 @@ describe('updateParty', () => {
       });
     });
 
-    it('should return 500 when submitFacilitiesToApimGift fails', async () => {
+    it(`should return ${HttpStatusCode.InternalServerError} when submitFacilitiesToApimGift fails`, async () => {
       const mockRequest = {
         params: {
           dealId: '5ce819935e539c343f141ece',
@@ -234,7 +234,7 @@ describe('updateParty', () => {
   });
 
   describe('when ACBS submission is allowed', () => {
-    it('should return 500 when createACBS fails', async () => {
+    it(`should return ${HttpStatusCode.InternalServerError} when createACBS fails`, async () => {
       const mockRequest = {
         params: {
           dealId: '5ce819935e539c343f141ece',

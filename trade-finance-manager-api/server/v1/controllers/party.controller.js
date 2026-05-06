@@ -53,13 +53,7 @@ const updateParty = async (req, res) => {
     if (canSubmitDealToACBS) {
       console.info('TFM deal %s updateParty - calling createACBS', dealId);
 
-      try {
-        await createACBS(dealId);
-      } catch (error) {
-        console.error('TFM deal %s updateParty - createACBS failed %o', dealId, error);
-
-        throw error;
-      }
+      await createACBS(dealId);
     }
 
     const response = res.status(HttpStatusCode.Ok).send({
