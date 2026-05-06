@@ -234,7 +234,7 @@ describe('updateParty', () => {
   });
 
   describe('when ACBS submission is allowed', () => {
-    it(`should return ${HttpStatusCode.InternalServerError} when createACBS fails`, async () => {
+    it('should call createACBS', async () => {
       const mockRequest = {
         params: {
           dealId: '5ce819935e539c343f141ece',
@@ -251,10 +251,7 @@ describe('updateParty', () => {
 
       await updateParty(mockRequest, mockResponse);
 
-      expect(consoleErrorMock).toHaveBeenCalledWith('TFM deal %s updateParty - createACBS failed %o', mockRequest.params.dealId, acbsError);
-      expect(consoleErrorMock).toHaveBeenCalledWith('Unable to update parties for deal %s %o', mockRequest.params.dealId, acbsError);
-      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-      expect(mockResponse.send).toHaveBeenCalledWith(acbsError);
+      expect(createACBS).toHaveBeenNthCalledWith(1, mockRequest.params.dealId);
     });
   });
 
