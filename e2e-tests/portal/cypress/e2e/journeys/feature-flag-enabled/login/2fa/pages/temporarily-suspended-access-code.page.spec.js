@@ -15,12 +15,12 @@ context('2FA Page - Temporarily suspended account', () => {
     cy.overridePortalUserSignInOTPSendCount({ username: BANK1_MAKER1.username, count: 3 });
   });
 
-  it('should redirect to login when visited without partial auth', () => {
+  it('should render account suspended page when visited without partial auth', () => {
     cy.clearCookies();
     cy.clearLocalStorage();
 
     cy.request({ url: '/login/temporarily-suspended-access-code', followRedirect: false }).then((resp) => {
-      expect(resp.headers.location).to.equal('/login');
+      expect(resp.status).to.equal(200);
     });
   });
 

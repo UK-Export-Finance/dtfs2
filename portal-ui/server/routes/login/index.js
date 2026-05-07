@@ -397,7 +397,7 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
  *       403:
  *         description: Forbidden
  */
-router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, validatePartialAuthToken, getAccountSuspendedPage);
+router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, getAccountSuspendedPage);
 
 /**
  * @openapi
