@@ -5,9 +5,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches:
-      - feat/DTFS2-16188-deployment
   schedule:
     - cron: '0 23 * * *'
 
@@ -48,7 +45,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['crdtfsdev0012lpd66flpami2']
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma', 'crdtfsdev0012lpd66flpami2']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -60,21 +57,41 @@ jobs:
 
       - name: Subscription 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.FEATURE_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
 
       - name: Resource group 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          fi
+
+      - name: Credentials 🔑
+        run: |
+          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
+            echo "CREDENTIALS=${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}" >> $GITHUB_ENV
+          else
+            echo "CREDENTIALS=${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}" >> $GITHUB_ENV
           fi
 
       - name: Execute ⚡
         uses: ./.github/actions/acr
         with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
+          credentials: ${{ env.CREDENTIALS }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
