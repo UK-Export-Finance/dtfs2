@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 
 const api = require('../api');
 const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
-const { findOneGefDeal } = require('./deal.controller');
+const { findOneGefDeal, findOneTfmDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
@@ -14,6 +14,8 @@ const { createEstoreSite } = require('./estore.controller');
 const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
+const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
+const { updatedIssuedFacilities } = require('./update-issued-facilities');
 
 const { submitDealAfterUkefIds } = require('./deal.submit.controller');
 
@@ -170,6 +172,7 @@ describe('submitDealAfterUkefIds', () => {
     });
 
     it('should call canSubmitToApimGift', async () => {
+      // Arrange
       canSubmitToApimGift.mockResolvedValue({
         canSubmitFacilitiesToApimGift: true,
         issuedFacilities,
@@ -177,13 +180,16 @@ describe('submitDealAfterUkefIds', () => {
         isGefDeal,
       });
 
+      // Act
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
+      // Assert
       expect(canSubmitToApimGift).toHaveBeenCalledWith(tfmDeal);
     });
 
     describe('when APIM/GIFT submission is allowed', () => {
       it('should call submitFacilitiesToApimGift when APIM/GIFT submission is allowed', async () => {
+        // Arrange
         canSubmitToApimGift.mockResolvedValue({
           canSubmitFacilitiesToApimGift: true,
           issuedFacilities,
@@ -191,8 +197,10 @@ describe('submitDealAfterUkefIds', () => {
           isGefDeal,
         });
 
+        // Act
         await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
+        // Assert
         expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
@@ -204,6 +212,7 @@ describe('submitDealAfterUkefIds', () => {
 
     describe('when APIM/GIFT submission is not allowed', () => {
       it('should NOT call submitFacilitiesToApimGift', async () => {
+        // Arrange
         canSubmitToApimGift.mockResolvedValue({
           canSubmitFacilitiesToApimGift: false,
           issuedFacilities,
@@ -211,10 +220,101 @@ describe('submitDealAfterUkefIds', () => {
           isGefDeal,
         });
 
+        // Act
         await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
+        // Assert
         expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('deal resubmission', () => {
+    const resubmittedDeal = { ...mappedDeal, submissionCount: 2 };
+    const existingTfmDeal = { _id: dealId, tfm: { stage: 'stage', tasks: [] } };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      api.submitDeal.mockResolvedValue(submittedDeal);
+      api.updateDeal.mockResolvedValue(tfmDeal);
+      api.updateDealSnapshot.mockResolvedValue({ dealSnapshot: submittedDeal });
+
+      mapSubmittedDeal.mockReturnValue(resubmittedDeal);
+      findOneTfmDeal.mockResolvedValue(existingTfmDeal);
+      findOneGefDeal.mockResolvedValue({ _id: dealId, status: 'Acknowledged' });
+
+      shouldUpdateDealFromMIAtoMIN.mockReturnValue(false);
+      updatedIssuedFacilities.mockImplementation(async (deal) => deal);
+      updatePortalDealStatus.mockResolvedValue();
+
+      canSubmitToACBS.mockResolvedValue(false);
+      canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+    });
+
+    it('should call canSubmitToApimGift with the updated tfmDeal', async () => {
+      // Arrange
+      canSubmitToApimGift.mockResolvedValue({
+        canSubmitFacilitiesToApimGift: true,
+        issuedFacilities,
+        isBssEwcsDeal,
+        isGefDeal,
+      });
+
+      // Act
+      await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+      // Assert
+      expect(canSubmitToApimGift).toHaveBeenCalledWith(tfmDeal);
+    });
+
+    describe('when APIM/GIFT submission is allowed', () => {
+      it('should call submitFacilitiesToApimGift with correct parameters', async () => {
+        // Arrange
+        canSubmitToApimGift.mockResolvedValue({
+          canSubmitFacilitiesToApimGift: true,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+      });
+    });
+
+    describe('when APIM/GIFT submission is not allowed', () => {
+      it('should NOT call submitFacilitiesToApimGift', async () => {
+        // Arrange
+        canSubmitToApimGift.mockResolvedValue({
+          canSubmitFacilitiesToApimGift: false,
+          issuedFacilities: [],
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should return the updated TFM deal', async () => {
+      // Act
+      await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+      // Assert
+      expect(api.updateDeal).toHaveBeenCalled();
     });
   });
 });

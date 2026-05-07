@@ -104,7 +104,7 @@ describe('updateParty', () => {
     createACBS.mockResolvedValue({});
   });
 
-  it('should update party and return 200', async () => {
+  it(`should update party and return ${HttpStatusCode.Ok}`, async () => {
     // Arrange
     const mockRequest = {
       params: {
