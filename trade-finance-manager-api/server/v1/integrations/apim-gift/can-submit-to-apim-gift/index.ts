@@ -38,6 +38,17 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       };
     }
 
+    /**
+     * NOTE: During first BSS/EWCS deal submission, tfm.parties.buyer?.partyUrn will always be an empty string.
+     *
+     * The buyer party URN is populated in TFM - after the first deal submission.
+     * BSS/EWCS should only send facilities to APIM/GIFT if the buyer party URN is populated.
+     *
+     * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+     * For GEF deals, there is no requirement for a buyer party URN to be populated to submit facilities to APIM/GIFT, so GEF deals can submit facilities on the first submission.
+     * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
+     * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
+     */
     const isValidBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
 
     if (!isValidBssEwcsDeal && !isGefDeal) {

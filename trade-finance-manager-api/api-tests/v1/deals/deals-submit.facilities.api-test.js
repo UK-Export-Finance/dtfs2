@@ -5,7 +5,6 @@ const acbsController = require('../../../server/v1/controllers/acbs.controller')
 const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const calculateUkefExposure = require('../../../server/v1/helpers/calculateUkefExposure');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-
 const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../server/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../server/v1/__mocks__/mock-deal-issued-facilities');

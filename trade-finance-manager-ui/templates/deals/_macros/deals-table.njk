@@ -111,7 +111,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-buyerName">{{ deal.dealSnapshot.submissionDetails.buyerName | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.bank.name | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-stage">
-              {{govukTag({
+              {{ govukTag({
                 text: deal.tfm.stage | dashIfEmpty,
                 classes: "govuk-tag--blue"
               })}}
