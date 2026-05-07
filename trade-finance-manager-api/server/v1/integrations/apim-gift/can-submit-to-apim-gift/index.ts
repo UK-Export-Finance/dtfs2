@@ -24,6 +24,8 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
 export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilitiesToApimGiftReturnShape> => {
   const api = apiModule as ApiTypes;
 
+  // TODO: add logs. Checking If... Can submit. Cannot submit.
+
   if (isTfmApimGiftIntegrationEnabled()) {
     const { dealType, submissionType } = deal.dealSnapshot;
 
@@ -32,7 +34,17 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const validDealType = isBssEwcsDeal || isGefDeal;
     const validSubmissionType = submissionType === AIN || submissionType === MIN;
 
-    if (!validDealType || !validSubmissionType) {
+    /**
+     * NOTE: During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
+     * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
+     *
+     * BSS/EWCS/GEF should only send facilities to APIM/GIFT if the buyer party URN is populated.
+     *
+     * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+     */
+    const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating);
+
+    if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
       return {
         canSubmitFacilitiesToApimGift: false,
       };
@@ -49,7 +61,9 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
      * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
      * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
      */
-    const isValidBssEwcsDeal = isBssEwcsDeal && Boolean(deal.tfm.parties.buyer?.partyUrn);
+    const hasBuyerPartyUrn = Boolean(deal.tfm.parties.buyer?.partyUrn);
+
+    const isValidBssEwcsDeal = isBssEwcsDeal && hasBuyerPartyUrn;
 
     if (!isValidBssEwcsDeal && !isGefDeal) {
       return {

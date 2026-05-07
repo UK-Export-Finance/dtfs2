@@ -27,6 +27,7 @@ const mockTfmObject = {
       partyUrn: 'Mock party URN',
     },
   },
+  exporterCreditRating: 'Acceptable (B+)',
 };
 
 const mockedFeatureFlag = isTfmApimGiftIntegrationEnabled as jest.MockedFunction<typeof isTfmApimGiftIntegrationEnabled>;
@@ -250,24 +251,24 @@ describe('canSubmitToApimGift', () => {
     describe.each([{ partyUrn: undefined }, { partyUrn: null }, { partyUrn: '' }])(
       `when the deal is ${DEAL_TYPE.BSS_EWCS}, but buyer party URN is $partyUrn`,
       ({ partyUrn }) => {
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
-          // Arrange
-          const mockDeal = {
-            ...mockBaseDeal,
-            dealSnapshot: {
-              ...mockBaseDeal.dealSnapshot,
-              dealType: DEAL_TYPE.BSS_EWCS,
-              submissionType: DEAL_SUBMISSION_TYPE.AIN,
-            },
-            tfm: {
-              parties: {
-                buyer: {
-                  partyUrn,
-                },
+        // Arrange
+        const mockDeal = {
+          ...mockBaseDeal,
+          dealSnapshot: {
+            ...mockBaseDeal.dealSnapshot,
+            dealType: DEAL_TYPE.BSS_EWCS,
+            submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          },
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrn,
               },
             },
-          } as TfmDeal;
+          },
+        } as TfmDeal;
 
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
           mockedFindFacilitiesByDealId.mockResolvedValue([]);
 
           // Act
@@ -279,6 +280,53 @@ describe('canSubmitToApimGift', () => {
           };
 
           expect(result).toEqual(expected);
+        });
+
+        it('should NOT call findFacilitiesByDealId', async () => {
+          // Act
+          await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          expect(mockedFindFacilitiesByDealId).not.toHaveBeenCalled();
+        });
+      },
+    );
+
+    describe.each([{ exporterCreditRating: undefined }, { exporterCreditRating: null }, { exporterCreditRating: '' }])(
+      'when deal does not have exporterCreditRating (exporterCreditRating: $exporterCreditRating)',
+      ({ exporterCreditRating }) => {
+        // Arrange
+        const mockDeal = {
+          ...mockBaseDeal,
+          dealSnapshot: {
+            ...mockBaseDeal.dealSnapshot,
+            dealType: DEAL_TYPE.GEF,
+            submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          },
+          tfm: {
+            ...mockTfmObject,
+            exporterCreditRating,
+          },
+        } as TfmDeal;
+
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: false,
+          };
+
+          expect(result).toEqual(expected);
+        });
+
+        it('should NOT call findFacilitiesByDealId', async () => {
+          // Act
+          await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          expect(mockedFindFacilitiesByDealId).not.toHaveBeenCalled();
         });
       },
     );
