@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { CURRENCY, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
@@ -66,7 +66,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('facilities', () => {
-      it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {
+      it(`adds facilityValueInGBP to all facilities that are NOT in ${CURRENCY.GBP}`, async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
 
         expect(status).toEqual(200);
@@ -80,7 +80,7 @@ describe('/v1/deals', () => {
         expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE);
       });
 
-      describe('all bonds that are NOT in GBP', () => {
+      describe(`all bonds that are NOT in ${CURRENCY.GBP}`, () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
 
@@ -97,7 +97,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('all loans that are NOT in GBP', () => {
+      describe(`all loans that are NOT in ${CURRENCY.GBP}`, () => {
         it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
 
@@ -114,7 +114,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('all bonds that are in GBP', () => {
+      describe(`all bonds that are in ${CURRENCY.GBP}`, () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
@@ -127,7 +127,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('all loans that are in GBP', () => {
+      describe(`all loans that are in ${CURRENCY.GBP}`, () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
@@ -213,7 +213,7 @@ describe('/v1/deals', () => {
           expect(api.getPremiumSchedule).not.toHaveBeenCalled();
         });
 
-        it('does NOT call premium schedule when dealType is GEF', async () => {
+        it(`does NOT call premium schedule when dealType is ${DEAL_TYPE.GEF}`, async () => {
           const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
           expect(status).toEqual(200);
@@ -223,7 +223,7 @@ describe('/v1/deals', () => {
       });
 
       describe('fee record', () => {
-        describe('when facility/dealType is GEF', () => {
+        describe(`when facility/dealType is ${DEAL_TYPE.GEF}`, () => {
           it('adds fee record to issued facilities', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
@@ -247,7 +247,7 @@ describe('/v1/deals', () => {
           });
         });
 
-        it('does NOT add fee record when deal is MIA', async () => {
+        it(`does NOT add fee record when deal is ${DEAL_SUBMISSION_TYPE.MIA}`, async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
           expect(status).toEqual(200);
@@ -257,7 +257,7 @@ describe('/v1/deals', () => {
           expect(issuedFacility.tfm.feeRecord).toBeUndefined();
         });
 
-        describe('when facility/dealType is BSS', () => {
+        describe(`when facility/dealType is ${DEAL_TYPE.BSS}`, () => {
           it('does NOT add fee record to any unissued facilities', async () => {
             const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
@@ -282,7 +282,7 @@ describe('/v1/deals', () => {
     });
 
     describe('hasBeenIssuedAndAcknowledged', () => {
-      describe('when facility/dealType is GEF', () => {
+      describe(`when facility/dealType is ${DEAL_TYPE.GEF}`, () => {
         it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
@@ -294,7 +294,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when facility/dealType is BSS', () => {
+      describe(`when facility/dealType is ${DEAL_TYPE.BSS}`, () => {
         it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
 
