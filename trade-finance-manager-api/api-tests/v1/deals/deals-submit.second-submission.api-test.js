@@ -1,4 +1,4 @@
-const { AUDIT_USER_TYPES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { AUDIT_USER_TYPES, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
@@ -125,7 +125,7 @@ describe('/v1/deals', () => {
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
-    describe('AIN deal - on second submission', () => {
+    describe(`${DEAL_SUBMISSION_TYPE.AIN} deal - on second submission`, () => {
       describe('when a bond facility is issued and NOT Acknowledged', () => {
         it('should update bond status to `Acknowledged`', async () => {
           // check status before calling submit endpoint
@@ -364,9 +364,40 @@ describe('/v1/deals', () => {
 
         expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
       });
+
+      describe('when APIM/GIFT submission is allowed', () => {
+        it('should call submitFacilitiesToApimGift', async () => {
+          // Arrange
+          const mockIssuedFacilities = [
+            ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
+            ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
+            (facility) => facility.hasBeenIssued,
+          ];
+
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          // Act
+          await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          // Assert
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
+      });
     });
 
-    describe('MIA deal - on second submission', () => {
+    describe(`${DEAL_SUBMISSION_TYPE.MIA} deal - on second submission`, () => {
       it('should update submissionType from MIA to MIN, add manualInclusionNoticeSubmissionDate and checkerMIN in the snapshot and call canSubmitToACBS', async () => {
         // check submission type before submission
         expect(MOCK_MIA_SECOND_SUBMIT.submissionType).toEqual('Manual Inclusion Application');
@@ -396,6 +427,36 @@ describe('/v1/deals', () => {
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      });
+
+      describe('when APIM/GIFT submission is allowed', () => {
+        it('should call submitFacilitiesToApimGift', async () => {
+          // Arrange
+          const mockIssuedFacilities = [
+            ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
+            ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
+          ].filter((facility) => facility.hasBeenIssued);
+
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          // Act
+          await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          // Assert
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
@@ -504,7 +565,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('MIN deal - on second submission', () => {
+    describe(`${DEAL_SUBMISSION_TYPE.MIN} deal - on second submission`, () => {
       it('should add bond.facilityGuaranteeDates', async () => {
         const initialBond = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
         const dealSubmissionDate = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.details.submissionDate;
@@ -597,6 +658,36 @@ describe('/v1/deals', () => {
         expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
+      describe('when APIM/GIFT submission is allowed', () => {
+        it('should call submitFacilitiesToApimGift', async () => {
+          // Arrange
+          const mockIssuedFacilities = [
+            ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
+            ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
+          ].filter((facility) => facility.hasBeenIssued);
+
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          // Act
+          await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          // Assert
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: mockIssuedFacilities,
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
+      });
+
       it('should send an email for newly issued facility', async () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
@@ -621,7 +712,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('GEF deal - on second submission', () => {
+    describe(`${DEAL_TYPE.GEF} deal - on second submission`, () => {
       const mockDeal = {
         ...MOCK_GEF_DEAL,
         submissionCount: 2,
@@ -706,6 +797,7 @@ describe('/v1/deals', () => {
 
       it('calls updateGefMINActivity when deal is MIA', async () => {
         await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+
         expect(updateGefActivitySpy).toHaveBeenCalledWith({ auditDetails: expectAnyPortalUserAuditDetails, dealId: 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA' });
       });
 
@@ -715,6 +807,33 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
         expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
+      });
+
+      describe('when APIM/GIFT submission is allowed', () => {
+        it('should call submitFacilitiesToApimGift', async () => {
+          // Arrange
+          const mockIssuedFacilities = (mockDeal.facilities || []).filter((facility) => facility.hasBeenIssued);
+
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: mockIssuedFacilities,
+            isBssEwcsDeal: false,
+            isGefDeal: true,
+          });
+
+          // Act
+          await submitDeal(createSubmitBody(mockDeal));
+
+          // Assert
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: mockIssuedFacilities,
+            isBssEwcsDeal: false,
+            isGefDeal: true,
+          });
+        });
       });
     });
   });
