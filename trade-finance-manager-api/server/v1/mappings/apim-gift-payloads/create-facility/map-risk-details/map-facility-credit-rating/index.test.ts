@@ -46,4 +46,21 @@ describe('mapFacilityCreditRating', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe.each([
+    { exporterCreditRating: undefined, description: 'undefined' },
+    { exporterCreditRating: null, description: 'null' },
+    { exporterCreditRating: '', description: 'empty string' },
+  ])('when the exporter credit rating is $description', ({ exporterCreditRating }) => {
+    it('should return null', () => {
+      // Arrange
+      const mockCreditRiskRatings = ['BB-', 'B+'];
+
+      // Act
+      const result = mapFacilityCreditRating(mockCreditRiskRatings, exporterCreditRating);
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
 });
