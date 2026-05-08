@@ -99,10 +99,10 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
     const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
 
-    if (canSubmitFacilitiesToApimGift) {
-      console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
-    } else {
+    if (!canSubmitFacilitiesToApimGift) {
       console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', deal?.dealSnapshot?.dealId);
+    } else {
+      console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
     }
 
     return {
