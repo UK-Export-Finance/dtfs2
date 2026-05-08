@@ -57,10 +57,9 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Subscription 🛠️
+        if: "!contains(matrix.acr, 'crdtfs')"
         run: |
-          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
-            echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
@@ -68,12 +67,10 @@ jobs:
             echo "SUBSCRIPTION=${{ secrets.FEATURE_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
-
       - name: Resource group 🛠️
+        if: "!contains(matrix.acr, 'crdtfs')"
         run: |
-          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
-            echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
@@ -81,22 +78,21 @@ jobs:
             echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
           fi
 
-      - name: Credentials 🔑
-        run: |
-          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
-            echo "CREDENTIALS<<EOF" >> $GITHUB_ENV
-            echo '${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}' >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          else
-            echo "CREDENTIALS<<EOF" >> $GITHUB_ENV
-            echo '${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}' >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          fi
-
-      - name: Execute ⚡
+      - name: Execute (DEV1) ⚡
+        if: contains(matrix.acr, 'crdtfs')
         uses: ./.github/actions/acr
         with:
-          credentials: ${{ env.CREDENTIALS }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
+          subscription: ${{ secrets.DEV1_SUBSCRIPTION }}
+          group: ${{ secrets.DEV1_RESOURCE_GROUP }}
+          acr: ${{ matrix.acr }}
+          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
+
+      - name: Execute ⚡
+        if: "!contains(matrix.acr, 'crdtfs')"
+        uses: ./.github/actions/acr
+        with:
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
