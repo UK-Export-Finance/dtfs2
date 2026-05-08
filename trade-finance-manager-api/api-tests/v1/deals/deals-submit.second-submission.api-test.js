@@ -122,6 +122,8 @@ describe('/v1/deals', () => {
     mockUpdateDeal();
 
     canSubmitToACBS.mockClear();
+
+    canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false });
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -400,12 +402,12 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should not call canSubmitToApimGift', async () => {
+      it('should call canSubmitToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+        expect(canSubmitToApimGift).toHaveBeenCalled();
       });
 
       it('should not call submitFacilitiesToApimGift', async () => {
@@ -468,15 +470,15 @@ describe('/v1/deals', () => {
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body });
-        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body }, false);
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body, firstSubmissionCheck: false });
       });
 
-      it('should NOT call canSubmitToApimGift', async () => {
+      it('should call canSubmitToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         // Assert
-        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+        expect(canSubmitToApimGift).toHaveBeenCalled();
       });
 
       it('should NOT call submitFacilitiesToApimGift', async () => {
@@ -744,12 +746,12 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should NOT call canSubmitToApimGift', async () => {
+      it('should call canSubmitToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).not.toHaveBeenCalled();
+        expect(canSubmitToApimGift).toHaveBeenCalled();
       });
 
       it('should NOT call submitFacilitiesToApimGift', async () => {
