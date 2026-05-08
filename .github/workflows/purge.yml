@@ -5,7 +5,6 @@ permissions:
   contents: read
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 23 * * *'
 
@@ -84,9 +83,13 @@ jobs:
       - name: Credentials 🔑
         run: |
           if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
-            echo "CREDENTIALS=${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}" >> $GITHUB_ENV
+            echo "CREDENTIALS<<EOF" >> $GITHUB_ENV
+            echo '${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}' >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           else
-            echo "CREDENTIALS=${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}" >> $GITHUB_ENV
+            echo "CREDENTIALS<<EOF" >> $GITHUB_ENV
+            echo '${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}' >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           fi
 
       - name: Execute ⚡
