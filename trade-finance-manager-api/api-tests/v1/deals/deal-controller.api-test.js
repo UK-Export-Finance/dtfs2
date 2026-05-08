@@ -13,10 +13,10 @@ describe('deal controller', () => {
 
   describe('findOneTfmDeal', () => {
     it('should return false if the deal does not exist', async () => {
-      // Arrange
+      // Act
       const deal = await findOneTfmDeal('NO_DEAL_ID');
 
-      // Act
+      // Assert
       expect(deal).toEqual(false);
     });
 

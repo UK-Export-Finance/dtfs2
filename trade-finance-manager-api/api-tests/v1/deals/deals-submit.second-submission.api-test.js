@@ -346,7 +346,6 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
-          // Arrange
           // Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
