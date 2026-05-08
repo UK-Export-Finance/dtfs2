@@ -40,6 +40,12 @@ export const createFacility = async ({
   creditRiskRatings,
   facilityCategories,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
+  const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
+
+  console.info('Submit facility %s to APIM GIFT', ukefFacilityId);
+
+  const dealId = getTfmUkefDealId(deal);
+
   const { dealSnapshot } = deal;
   const { bankInternalRefName } = dealSnapshot;
 
@@ -64,15 +70,11 @@ export const createFacility = async ({
    */
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
-  const dealId = getTfmUkefDealId(deal);
-
   const productTypeCode = mapProductTypeCode({
     isBssEwcsDeal,
     isGefDeal,
     facilityCategoryCode: facilityType,
   });
-
-  const ukefFacilityId = String(facilitySnapshot.ukefFacilityId);
 
   const { exporterCreditRating } = deal.tfm;
 
