@@ -42,7 +42,7 @@ export const createFacility = async ({
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
 
-  console.info('Submit facility %s to APIM GIFT', ukefFacilityId);
+  console.info('Submitting facility %s to APIM GIFT', ukefFacilityId);
 
   const dealId = getTfmUkefDealId(deal);
 

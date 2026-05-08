@@ -29,7 +29,7 @@ export const submitFacilitiesToApimGift = async ({
   isBssEwcsDeal,
   isGefDeal,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
-  console.info('Submit facilities to APIM GIFT for deal %s ', deal.dealSnapshot.dealId);
+  console.info('Submitting facilities to APIM GIFT for deal %s ', deal.dealSnapshot.dealId);
 
   const api = apiModule as ApiTypes;
 

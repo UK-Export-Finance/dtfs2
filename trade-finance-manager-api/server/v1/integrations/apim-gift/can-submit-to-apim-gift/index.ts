@@ -22,9 +22,9 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
  * @returns {CanSubmitFacilitiesToApimGiftReturnShape} An object indicating whether the deal can be submitted and relevant details.
  */
 export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilitiesToApimGiftReturnShape> => {
-  const api = apiModule as ApiTypes;
+  console.info('Checking if issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
 
-  // TODO: add logs. Checking If... Can submit. Cannot submit.
+  const api = apiModule as ApiTypes;
 
   if (isTfmApimGiftIntegrationEnabled()) {
     const { dealType, submissionType } = deal.dealSnapshot;
@@ -45,6 +45,11 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating);
 
     if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
+      console.info(
+        'Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid deal type, submission type, or missing exporter credit rating',
+        deal?.dealSnapshot?.dealId,
+      );
+
       return {
         canSubmitFacilitiesToApimGift: false,
       };
@@ -66,6 +71,8 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     const isValidBssEwcsDeal = isBssEwcsDeal && hasBuyerPartyUrn;
 
     if (!isValidBssEwcsDeal && !isGefDeal) {
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid BSS/EWCS or GEF deal', deal?.dealSnapshot?.dealId);
+
       return {
         canSubmitFacilitiesToApimGift: false,
       };
@@ -92,6 +99,8 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
     const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
 
+    console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
+
     return {
       canSubmitFacilitiesToApimGift,
       issuedFacilities,
@@ -99,6 +108,8 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       isGefDeal,
     };
   }
+
+  console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', deal?.dealSnapshot?.dealId);
 
   return {
     canSubmitFacilitiesToApimGift: false,
