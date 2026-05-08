@@ -58,7 +58,7 @@ const getPortalDeal = async (dealId, dealType) => {
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   try {
-    // TODO: log
+    console.info('TFM deal %s submitDealAfterUkefIds', dealId);
 
     const deal = await getPortalDeal(dealId, dealType);
 
@@ -128,7 +128,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
-        console.info('TFM deal %s submitDealAfterUkefIds - calling submitFacilitiesToApimGift', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling submitFacilitiesToApimGift', dealId);
 
         await submitFacilitiesToApimGift({
           deal: tfmDeal,
@@ -142,7 +142,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const canSubmitDealToACBS = await canSubmitToACBS({ deal: tfmDeal });
 
       if (canSubmitDealToACBS) {
-        console.info('TFM deal %s submitDealAfterUkefIds - calling createACBS', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling createACBS', dealId);
 
         await createACBS(dealId);
       }
@@ -151,7 +151,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     }
 
     if (isDealResubmission) {
-      // TODO: log
+      console.info('TFM deal %s submitDealAfterUkefIds - resubmission', dealId);
 
       let tfmDeal = await findOneTfmDeal(dealId);
       /**
@@ -219,8 +219,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
-        // TODO: log - second submision
-        console.info('TFM deal %s submitDealAfterUkefIds - calling submitFacilitiesToApimGift', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling submitFacilitiesToApimGift', dealId);
 
         await submitFacilitiesToApimGift({
           deal: tfmDeal,
@@ -234,7 +233,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const canSubmitDealToACBS = await canSubmitToACBS({ deal: tfmDeal });
 
       if (canSubmitDealToACBS) {
-        console.info('TFM deal %s resubmission - submitDealAfterUkefIds - calling createACBS', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling createACBS', dealId);
 
         await createACBS(dealId);
       }
