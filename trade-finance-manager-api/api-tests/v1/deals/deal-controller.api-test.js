@@ -13,15 +13,21 @@ describe('deal controller', () => {
 
   describe('findOneTfmDeal', () => {
     it('should return false if the deal does not exist', async () => {
+      // Arrange
       const deal = await findOneTfmDeal('NO_DEAL_ID');
+
+      // Act
       expect(deal).toEqual(false);
     });
 
     it('should return a deal with mapped dealSnapshot', async () => {
+      // Arrange
       const deal = await findOneTfmDeal(MOCK_BSS_EWCS_DEAL._id);
 
+      // Act
       const mappedSnapshot = await mapDeal(MOCK_BSS_EWCS_DEAL);
 
+      // Assert
       expect(deal).toMatchObject({
         dealSnapshot: mappedSnapshot,
       });
@@ -30,12 +36,18 @@ describe('deal controller', () => {
 
   describe('findOnePortalDeal', () => {
     it('should return false if the deal does not exist', async () => {
+      // Act
       const deal = await findOnePortalDeal('NO_DEAL_ID');
+
+      // Assert
       expect(deal).toEqual(false);
     });
 
     it('should fetch a portal deal', async () => {
+      // Act
       const deal = await findOnePortalDeal(MOCK_BSS_EWCS_DEAL._id);
+
+      // Assert
       expect(deal).toEqual(MOCK_BSS_EWCS_DEAL);
     });
   });
