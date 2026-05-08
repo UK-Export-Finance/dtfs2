@@ -179,7 +179,7 @@ env:
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
   FF_PORTAL_2FA_ENABLED: ${{ vars.FF_PORTAL_2FA_ENABLED }}
   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
-  FF_TFM_APIM_GIFT_INTEGRATION: ${{ vars.FF_TFM_APIM_GIFT_INTEGRATION }}
+  FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: ${{ vars.FF_TFM_APIM_GIFT_INTEGRATION_ENABLED }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -650,7 +650,7 @@ jobs:
       FF_TFM_SSO_ENABLED: 'true'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
       FF_PORTAL_2FA_ENABLED: 'true'
-      FF_TFM_APIM_GIFT_INTEGRATION: 'false'
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1292,7 +1292,7 @@ jobs:
       FF_TFM_SSO_ENABLED: 'false'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
       FF_PORTAL_2FA_ENABLED: 'true'
-      FF_TFM_APIM_GIFT_INTEGRATION: 'false'
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
