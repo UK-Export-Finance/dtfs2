@@ -393,8 +393,8 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(expect.any(Object));
-        expect(canSubmitToACBS).toHaveBeenCalledWith(expect.any(Object), false);
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object) });
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object), firstSubmissionCheck: false });
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledTimes(1);
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
@@ -423,8 +423,7 @@ describe('/v1/deals', () => {
           const mockIssuedFacilities = [
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
-            (facility) => facility.hasBeenIssued,
-          ];
+          ].filter((facility) => facility.hasBeenIssued);
 
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: true,
@@ -468,8 +467,8 @@ describe('/v1/deals', () => {
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(body);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(body, false);
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body });
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body }, false);
       });
 
       it('should NOT call canSubmitToApimGift', async () => {
@@ -562,8 +561,8 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(body);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(body, false);
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body });
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body, firstSubmissionCheck: false });
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledTimes(0);
       });
@@ -738,8 +737,8 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
-        expect(canSubmitToACBS).toHaveBeenCalledWith(expect.any(Object));
-        expect(canSubmitToACBS).toHaveBeenCalledWith(expect.any(Object), false);
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object) });
+        expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object), firstSubmissionCheck: false });
 
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledTimes(1);
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));

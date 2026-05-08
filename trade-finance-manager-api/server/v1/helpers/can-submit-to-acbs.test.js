@@ -66,7 +66,7 @@ describe('canSubmiToACBS', () => {
 
   it('should return true', async () => {
     // Act
-    const result = await canSubmitToACBS(mockTfmDeal);
+    const result = await canSubmitToACBS({ deal: mockTfmDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -82,7 +82,7 @@ describe('canSubmiToACBS', () => {
 
   it.each(invalidDeals)('should log an error and return false if the deal object is invalid', async (deal) => {
     // Act
-    const result = await canSubmitToACBS(deal);
+    const result = await canSubmitToACBS({ deal });
 
     // Assert
     expect(consoleInfoMock).toHaveBeenCalledTimes(0);
@@ -106,7 +106,7 @@ describe('canSubmiToACBS', () => {
     };
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -128,7 +128,7 @@ describe('canSubmiToACBS', () => {
     };
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -152,7 +152,7 @@ describe('canSubmiToACBS', () => {
     };
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -184,7 +184,7 @@ describe('canSubmiToACBS', () => {
     mockDeal.dealSnapshot.facilities[0].facilitySnapshot.ukefFacilityId = facilityId;
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -353,7 +353,7 @@ describe('canSubmiToACBS', () => {
     };
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -393,7 +393,7 @@ describe('canSubmiToACBS', () => {
     mockDeal.dealSnapshot.facilities[0].facilitySnapshot = facilitySnapshot;
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
@@ -439,7 +439,7 @@ describe('canSubmiToACBS', () => {
     };
 
     // Act
-    const result = await canSubmitToACBS(mockDeal);
+    const result = await canSubmitToACBS({ deal: mockDeal });
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);

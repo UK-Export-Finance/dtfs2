@@ -260,7 +260,9 @@ describe('canSubmitToApimGift', () => {
             submissionType: DEAL_SUBMISSION_TYPE.AIN,
           },
           tfm: {
+            ...mockTfmObject,
             parties: {
+              ...mockTfmObject.parties,
               buyer: {
                 partyUrn,
               },

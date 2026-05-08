@@ -99,7 +99,11 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
     const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
 
-    console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
+    if (canSubmitFacilitiesToApimGift) {
+      console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?.dealSnapshot?.dealId);
+    } else {
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', deal?.dealSnapshot?.dealId);
+    }
 
     return {
       canSubmitFacilitiesToApimGift,
@@ -109,7 +113,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     };
   }
 
-  console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', deal?.dealSnapshot?.dealId);
+  console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - feature flag disabled', deal?.dealSnapshot?.dealId);
 
   return {
     canSubmitFacilitiesToApimGift: false,
