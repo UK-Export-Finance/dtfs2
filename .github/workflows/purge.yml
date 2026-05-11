@@ -5,7 +5,6 @@ permissions:
   contents: read
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 23 * * *'
 
@@ -148,13 +147,13 @@ jobs:
 
       - name: Subscription 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
       - name: Resource group 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
           fi
 
@@ -162,8 +161,8 @@ jobs:
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
-          subscription: ${{ env.DEV1_SUBSCRIPTION }}
-          group: ${{ env.DEV1_RESOURCE_GROUP }}
+          subscription: ${{ env.SUBSCRIPTION }}
+          group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
