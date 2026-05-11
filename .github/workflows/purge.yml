@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma', 'crdtfsdev0012lpd66flpami2']
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -57,7 +57,6 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Subscription 🛠️
-        if: "!contains(matrix.acr, 'crdtfs')"
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
@@ -68,7 +67,6 @@ jobs:
           fi
 
       - name: Resource group 🛠️
-        if: "!contains(matrix.acr, 'crdtfs')"
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
@@ -78,23 +76,94 @@ jobs:
             echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
           fi
 
-      - name: Execute (DEV1) ⚡
-        if: contains(matrix.acr, 'crdtfs')
-        uses: ./.github/actions/acr
-        with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
-          subscription: ${{ secrets.DEV1_SUBSCRIPTION }}
-          group: ${{ secrets.DEV1_RESOURCE_GROUP }}
-          acr: ${{ matrix.acr }}
-          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
-
       - name: Execute ⚡
-        if: "!contains(matrix.acr, 'crdtfs')"
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
+          acr: ${{ matrix.acr }}
+          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
+
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+          content: '
+                      {
+              "@type": "MessageCard",
+              "@context": "http://schema.org/extensions",
+              "themeColor": "00703c",
+              "title": "🗑️ ${{ matrix.acr }} purge",
+              "summary": "Purged artefacts from ''${{ matrix.acr }}'' Azure container registry",
+              "sections": [
+                {
+                  "activityTitle": "ACR Purge",
+                  "activitySubtitle": "Purged artefacts from **${{ matrix.acr }}** Azure container registry",
+                  "facts": [
+                    { "name": "ACR", "value": "${{ matrix.acr }}" },
+                    { "name": "Resource group", "value": "${{ env.RESOURCE_GROUP }}" },
+                    { "name": "Commit", "value": "${{ github.sha }}" }
+                  ],
+                  "markdown": true
+                }
+              ],
+              "potentialAction": [
+                {
+                  "@type": "OpenUri",
+                  "name": "Workflow",
+                  "targets": [
+                    {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+            '
+
+  purge1:
+    name: Purge1 🗑️
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        acr: ['crdtfsdev0012lpd66flpami2']
+
+    concurrency:
+      group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v6
+
+      - name: Subscription 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
+          fi
+
+      - name: Resource group 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"crdtfs"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          fi
+
+      - name: Execute (DEV1) ⚡
+        uses: ./.github/actions/acr
+        with:
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
+          subscription: ${{ env.DEV1_SUBSCRIPTION }}
+          group: ${{ env.DEV1_RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
