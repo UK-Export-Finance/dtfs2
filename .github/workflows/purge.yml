@@ -40,6 +40,7 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      AZURE_CONFIG_DIR: /tmp/azure-${{ github.run_id }}-${{ github.job }}-${{ matrix.acr }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -130,6 +131,7 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      AZURE_CONFIG_DIR: /tmp/azure-${{ github.run_id }}-${{ github.job }}-${{ matrix.acr }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
