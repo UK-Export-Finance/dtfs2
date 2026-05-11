@@ -19,9 +19,9 @@ context('2FA Page - Temporarily suspended account', () => {
     cy.clearCookies();
     cy.clearLocalStorage();
 
-    cy.request({ url: '/login/temporarily-suspended-access-code', followRedirect: false }).then((resp) => {
-      expect(resp.status).to.equal(200);
-    });
+    temporarilySuspendedAccessCode.visit();
+
+    cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
   });
 
   it('should render temporarily suspended page with heading and message', () => {
