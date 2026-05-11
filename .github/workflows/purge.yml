@@ -146,24 +146,12 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
-      - name: Subscription 🛠️
-        run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
-            echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
-          fi
-
-      - name: Resource group 🛠️
-        run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
-            echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          fi
-
       - name: Execute (DEV1) ⚡
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
-          subscription: ${{ env.SUBSCRIPTION }}
-          group: ${{ env.RESOURCE_GROUP }}
+          subscription: ${{ secrets.DEV1_SUBSCRIPTION }}
+          group: ${{ secrets.DEV1_RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
@@ -184,7 +172,7 @@ jobs:
                   "activitySubtitle": "Purged artefacts from **${{ matrix.acr }}** Azure container registry",
                   "facts": [
                     { "name": "ACR", "value": "${{ matrix.acr }}" },
-                    { "name": "Resource group", "value": "${{ env.RESOURCE_GROUP }}" },
+                    { "name": "Resource group", "value": "${{ secrets.DEV1_RESOURCE_GROUP }}" },
                     { "name": "Commit", "value": "${{ github.sha }}" }
                   ],
                   "markdown": true
