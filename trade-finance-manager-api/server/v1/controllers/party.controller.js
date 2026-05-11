@@ -48,7 +48,7 @@ const updateParty = async (req, res) => {
     }
 
     // Submit to ACBS
-    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+    const canSubmitDealToACBS = await canSubmitToACBS({ deal: tfmDeal });
 
     if (canSubmitDealToACBS) {
       console.info('TFM deal %s updateParty - calling createACBS', dealId);

@@ -29,6 +29,8 @@ export const submitFacilitiesToApimGift = async ({
   isBssEwcsDeal,
   isGefDeal,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
+  console.info('Submitting facilities to APIM GIFT for deal %s ', deal?._id);
+
   const api = apiModule as ApiTypes;
 
   const { facilityCategories, creditRiskRatings } = await getReferenceData(isGefDeal);

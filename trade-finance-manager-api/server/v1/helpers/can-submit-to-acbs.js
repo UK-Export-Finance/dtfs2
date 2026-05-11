@@ -7,12 +7,13 @@ const CONSTANTS = require('../../constants');
  * Validates various prerequisites such as the deal object, submission type, first submission status,
  * valid UK Export Finance (UKEF) IDs, and the presence of required parties' URNs.
  *
- * @param {object} deal - The deal object containing information about the deal.
- * @param {boolean} [firstSubmissionCheck=true] - Flag to check if it is the first submission.
+ * @param {object} params - The parameters object.
+ * @param {object} params.deal - The deal object containing information about the deal.
+ * @param {boolean} [params.firstSubmissionCheck=true] - Flag to check if it is the first submission.
  * @returns {Promise<boolean>} - A boolean value indicating whether the deal is eligible for submission to ACBS.
  * @throws {Error} - If the deal object is invalid.
  */
-const canSubmitToACBS = async (deal, firstSubmissionCheck = true) => {
+const canSubmitToACBS = async ({ deal, firstSubmissionCheck = true }) => {
   try {
     if (!deal?._id || !deal?.dealSnapshot || !deal?.tfm) {
       throw new Error('Invalid deal object supplied');

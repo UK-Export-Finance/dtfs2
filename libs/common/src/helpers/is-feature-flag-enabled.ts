@@ -17,7 +17,7 @@ const featureFlagsSchema = z.object({
   FF_TFM_SSO_ENABLED: featureFlagOptions,
   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: featureFlagOptions,
   FF_PORTAL_2FA_ENABLED: featureFlagOptions,
-  FF_TFM_APIM_GIFT_INTEGRATION: featureFlagOptions,
+  FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: featureFlagOptions,
 });
 
 export type FeatureFlag = keyof z.infer<typeof featureFlagsSchema>;
@@ -41,4 +41,4 @@ export const isSalesforceCustomerCreationEnabled = isFeatureFlagEnabled('FF_SALE
 
 export const isPortal2FAFeatureFlagEnabled = isFeatureFlagEnabled('FF_PORTAL_2FA_ENABLED');
 
-export const isTfmApimGiftIntegrationEnabled = isFeatureFlagEnabled('FF_TFM_APIM_GIFT_INTEGRATION');
+export const isTfmApimGiftIntegrationEnabled = isFeatureFlagEnabled('FF_TFM_APIM_GIFT_INTEGRATION_ENABLED');
