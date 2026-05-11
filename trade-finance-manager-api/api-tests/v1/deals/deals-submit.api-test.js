@@ -119,7 +119,7 @@ describe('/v1/deals', () => {
       expect(tfmDataWithPartiesObject).toEqual(expected);
     });
 
-    it('returns the requested resource if no companies house no given', async () => {
+    it('returns the requested resource if no companies house number is given', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;

@@ -47,7 +47,7 @@
 
         {% if amendment.changeCoverEndDate === true %}
           {% set coverEndDateDecisionHtml %}
-              {{govukTag({
+              {{ govukTag({
                 text: amendment.ukefDecisionCoverEndDate,
                 classes: amendment.tags[amendment.ukefDecisionCoverEndDate],
                 attributes: { "data-cy": "amendment--details-"+loop.index+"-cover-end-date-decision" }
@@ -65,7 +65,7 @@
 
           {% if amendment.requireUkefApproval === 'Yes' %}
             {% set banksDecisionHtml %}
-              {{govukTag({
+              {{ govukTag({
                 text: amendment.banksDecision,
                 classes: amendment.bankDecisionTags[amendment.banksDecision],
                 attributes: { "data-cy": "amendment--details-"+loop.index+"-banks-decision" }
@@ -81,7 +81,7 @@
 
         {% if amendment.changeFacilityValue === true %}
           {% set facilityValueDecisionHtml %}
-              {{govukTag({
+              {{ govukTag({
                 text: amendment.ukefDecisionValue,
                 classes: amendment.tags[amendment.ukefDecisionValue],
                 attributes: { "data-cy": "amendment--details-"+loop.index+"-facility-value-decision" }
@@ -101,7 +101,7 @@
             {% set banksDecisionHtml = '' %}
             {% if amendment.changeCoverEndDate === false %}
               {% set banksDecisionHtml %}
-                {{govukTag({
+                {{ govukTag({
                   text: amendment.banksDecision,
                   classes: amendment.bankDecisionTags[amendment.banksDecision],
                   attributes: { "data-cy": "amendment--details-"+loop.index+"-banks-decision" }

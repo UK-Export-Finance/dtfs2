@@ -4,7 +4,7 @@
   {% set status = params.status %}
 
   {% if status === 'Cannot start yet' %}
-    {{govukTag({
+    {{ govukTag({
       text: status,
       attributes: {
         'data-cy': 'status-tag'
@@ -14,7 +14,7 @@
   {% endif %}
 
   {% if status === 'To do' %}
-    {{govukTag({
+    {{ govukTag({
       text: status,
       attributes: {
         'data-cy': 'status-tag'
@@ -23,7 +23,7 @@
   {% endif %}
 
   {% if status === 'In progress' %}
-    {{govukTag({
+    {{ govukTag({
       text: status,
       attributes: {
         'data-cy': 'status-tag'
@@ -33,7 +33,7 @@
   {% endif %}
 
   {% if status === 'Done' %}
-    {{govukTag({
+    {{ govukTag({
       text: status,
       attributes: {
         'data-cy': 'status-tag'
