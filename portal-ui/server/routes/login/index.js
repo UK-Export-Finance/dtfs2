@@ -394,8 +394,8 @@ router.post('/login/resend-another-access-code', validatePortal2FAEnabled, valid
  *     responses:
  *       200:
  *         description: Ok
- *       403:
- *         description: Forbidden
+ *       302:
+ *         description: Redirect to /not-found if feature flag is disabled
  */
 router.get('/login/temporarily-suspended-access-code', validatePortal2FAEnabled, getAccountSuspendedPage);
 
