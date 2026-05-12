@@ -1938,7 +1938,8 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
  */
 const createGiftFacility = async (facilityData) => {
   try {
-    const { facilityId, dealId } = facilityData || {};
+    const facilityId = facilityData?.overview?.facilityId;
+    const dealId = facilityData?.riskDetails?.dealId;
 
     console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
 

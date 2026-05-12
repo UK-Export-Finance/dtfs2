@@ -111,7 +111,7 @@ describe('mapRiskDetails', () => {
       // Arrange
       const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
 
-      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockResolvedValueOnce(false);
+      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockResolvedValueOnce(undefined);
 
       // Act
       const result = await mapRiskDetails(params);
