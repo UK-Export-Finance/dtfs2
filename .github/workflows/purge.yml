@@ -131,7 +131,6 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      AZURE_CONFIG_DIR: /tmp/azure-${{ github.run_id }}-${{ github.job }}-${{ matrix.acr }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -147,6 +146,9 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v6
+
+      - name: Azure config dir 🔧
+        run: echo "AZURE_CONFIG_DIR=/tmp/azure-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.acr }}" >> $GITHUB_ENV
 
       - name: Execute (DEV1) ⚡
         uses: ./.github/actions/acr
