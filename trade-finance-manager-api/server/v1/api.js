@@ -1940,7 +1940,7 @@ const createGiftFacility = async (facilityData) => {
   try {
     const { facilityId, dealId } = facilityData || {};
 
-    console.info('Calling external API "Create GIFT facility" endpoint', { facilityId, dealId });
+    console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
 
     const response = await axios({
       method: 'post',
