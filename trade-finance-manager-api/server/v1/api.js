@@ -1938,6 +1938,11 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
  */
 const createGiftFacility = async (facilityData) => {
   try {
+    const facilityId = facilityData?.overview?.facilityId;
+    const dealId = facilityData?.riskDetails?.dealId;
+
+    console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
+
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/gift/facility`,
@@ -1946,7 +1951,7 @@ const createGiftFacility = async (facilityData) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to send GIFT facility %o', error);
+    console.error('Unable to send GIFT facility to external API %o', error);
 
     return false;
   }

@@ -57,6 +57,7 @@ export const create = async (req: Request, res: Response) => {
       data: req.body,
     }).catch((error: any) => {
       console.error('Error calling APIM TFS GIFT facility endpoint %o', error);
+
       return {
         status: error.response?.status,
       };
