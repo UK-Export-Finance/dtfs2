@@ -984,7 +984,7 @@ const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => 
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${industryCode}`,
-      headers: headers.central,
+      headers: headers.external,
     });
     return response.data;
   } catch (error) {
