@@ -49,9 +49,11 @@ export const mapRiskDetails = async ({
   let ukefIndustryCode = '';
 
   try {
-    const response = (await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode)) as UkefIndustryCode | undefined;
+    const response: UkefIndustryCode | false = await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode);
 
-    ukefIndustryCode = response?.ukefIndustryCode ?? '';
+    if (response) {
+      ukefIndustryCode = response.ukefIndustryCode ?? '';
+    }
   } catch {
     // Swallow errors and default ukefIndustryCode to an empty string
     ukefIndustryCode = '';

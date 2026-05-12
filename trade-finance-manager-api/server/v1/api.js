@@ -1938,7 +1938,9 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
  */
 const createGiftFacility = async (facilityData) => {
   try {
-    console.info('Calling external API "Create GIFT facility" endpoint with data: %o', facilityData);
+    const { facilityId, dealId } = facilityData || {};
+
+    console.info('Calling external API "Create GIFT facility" endpoint', { facilityId, dealId });
 
     const response = await axios({
       method: 'post',
