@@ -46,15 +46,15 @@ export const mapRiskDetails = async ({
    * Ultimately, this will trigger an alert in APIM for the failed API call, which can be investigated by the team.
    * The alternative of this would be to have retry logic in DTFS, which is not desired - this is APIM's responsibility.
    */
-  let industryCodeResponse: UkefIndustryCode;
+  let ukefIndustryCode = '';
 
   try {
     const response = (await api.getUkefIndustryCodeByCompaniesHouseIndustryCode(industryCode)) as UkefIndustryCode | undefined;
 
-    industryCodeResponse = response ?? { ukefIndustryCode: '' };
+    ukefIndustryCode = response?.ukefIndustryCode ?? '';
   } catch {
     // Swallow errors and default ukefIndustryCode to an empty string
-    industryCodeResponse = { ukefIndustryCode: '' };
+    ukefIndustryCode = '';
   }
 
   const mapped: ApimGiftFacilityRiskDetails = {
@@ -67,7 +67,7 @@ export const mapRiskDetails = async ({
     }),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
-    ukefIndustryCode: industryCodeResponse.ukefIndustryCode,
+    ukefIndustryCode,
   };
 
   return mapped;

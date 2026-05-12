@@ -91,6 +91,21 @@ describe('mapRiskDetails', () => {
     expect(result).toEqual(expected);
   });
 
+  describe('when api.getUkefIndustryCodeByCompaniesHouseIndustryCode does not return an ukefIndustryCode', () => {
+    it('should default ukefIndustryCode to an empty string', async () => {
+      // Arrange
+      const mockApi = jest.mocked(api) as jest.Mocked<typeof api>;
+
+      mockApi.getUkefIndustryCodeByCompaniesHouseIndustryCode = jest.fn().mockResolvedValueOnce({} as never);
+
+      // Act
+      const result = await mapRiskDetails(params);
+
+      // Assert
+      expect(result.ukefIndustryCode).toEqual('');
+    });
+  });
+
   describe('when api.getUkefIndustryCodeByCompaniesHouseIndustryCode throws an error', () => {
     beforeEach(() => {
       // Arrange
