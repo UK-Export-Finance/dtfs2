@@ -923,6 +923,8 @@ const getCompanyInfo = async (partyUrn) => {
  */
 const getCreditRiskRatings = async () => {
   try {
+    console.info('Calling external API "Get credit risk ratings" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
@@ -942,6 +944,8 @@ const getCreditRiskRatings = async () => {
  */
 const getFacilityCategories = async () => {
   try {
+    console.info('Calling external API "Get facility categories" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/facility-categories`,
@@ -961,6 +965,8 @@ const getFacilityCategories = async () => {
  */
 const getObligationSubtypes = async () => {
   try {
+    console.info('Calling external API "Get obligation subtypes" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/obligation-subtypes`,
@@ -981,10 +987,12 @@ const getObligationSubtypes = async () => {
  */
 const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
   try {
+    console.info('Calling external API "Get UKEF industry code by companies house industry code" endpoint - industryCode %s', industryCode);
+
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${industryCode}`,
-      headers: headers.central,
+      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${encodeURIComponent(industryCode)}`,
+      headers: headers.external,
     });
     return response.data;
   } catch (error) {
