@@ -294,8 +294,8 @@ describe('canSubmitToApimGift', () => {
       },
     );
 
-    describe.each([{ exporterCreditRating: undefined }, { exporterCreditRating: null }, { exporterCreditRating: '' }])(
-      'when deal does not have exporterCreditRating (exporterCreditRating: $exporterCreditRating)',
+    describe.each([{ exporterCreditRating: undefined }, { exporterCreditRating: null }, { exporterCreditRating: '' }, { exporterCreditRating: ' ' }])(
+      'when deal does not have an exporterCreditRating (exporterCreditRating: $exporterCreditRating)',
       ({ exporterCreditRating }) => {
         // Arrange
         const mockDeal = {
