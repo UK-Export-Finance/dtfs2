@@ -2,8 +2,10 @@ const { signInLink } = require('../../e2e/pages');
 const relative = require('../../e2e/relativeURL');
 const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
 
+const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
+
 module.exports = ({ username, password }) => {
-  if (Cypress.env('FF_PORTAL_2FA_ENABLED') === 'true') {
+  if (PORTAL_2FA_FF === 'true') {
     cy.loginOTP({ username, password });
   } else {
     cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
