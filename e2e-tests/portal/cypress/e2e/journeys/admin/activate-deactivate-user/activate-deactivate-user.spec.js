@@ -8,9 +8,9 @@ const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 const { ADMIN } = MOCK_USERS;
 
-context('Admin user updates an existing user', () => {
-  let previous2FAFlag;
+const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
 
+context('Admin user updates an existing user', () => {
   const userToUpdate = {
     username: 'email@example.com',
     email: 'email@example.com',
@@ -22,14 +22,7 @@ context('Admin user updates an existing user', () => {
   };
 
   beforeEach(() => {
-    previous2FAFlag = Cypress.env('FF_PORTAL_2FA_ENABLED');
-    Cypress.env('FF_PORTAL_2FA_ENABLED', 'false');
-
     cy.removeUserIfPresent(userToUpdate, ADMIN);
-  });
-
-  afterEach(() => {
-    Cypress.env('FF_PORTAL_2FA_ENABLED', previous2FAFlag);
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {
@@ -67,7 +60,12 @@ context('Admin user updates an existing user', () => {
     cy.keyboardInput(landingPage.email(), userToUpdate.username);
     cy.keyboardInput(landingPage.password(), userToUpdate.password);
     cy.enterUsernameAndPassword(userToUpdate);
-    cy.url().should('eq', relative('/login'));
+
+    if (PORTAL_2FA_FF === 'true') {
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
+    } else {
+      cy.url().should('eq', relative('/login'));
+    }
 
     // go back to admin user and re-activate
     cy.login(ADMIN);
