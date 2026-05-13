@@ -42,7 +42,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
      *
      * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
      */
-    const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating);
+    const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());
 
     if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
       console.info(
