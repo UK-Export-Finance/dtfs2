@@ -9,6 +9,8 @@ const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 const { ADMIN } = MOCK_USERS;
 
 context('Admin user updates an existing user', () => {
+  let previous2FAFlag;
+
   const userToUpdate = {
     username: 'email@example.com',
     email: 'email@example.com',
@@ -20,7 +22,14 @@ context('Admin user updates an existing user', () => {
   };
 
   beforeEach(() => {
+    previous2FAFlag = Cypress.env('FF_PORTAL_2FA_ENABLED');
+    Cypress.env('FF_PORTAL_2FA_ENABLED', 'false');
+
     cy.removeUserIfPresent(userToUpdate, ADMIN);
+  });
+
+  afterEach(() => {
+    Cypress.env('FF_PORTAL_2FA_ENABLED', previous2FAFlag);
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {
