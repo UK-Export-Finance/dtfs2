@@ -1945,9 +1945,12 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
  * @returns {Promise<object|boolean>} The created facility data if successful, otherwise false
  */
 const createGiftFacility = async (facilityData) => {
+  let facilityId;
+  let dealId;
+
   try {
-    const facilityId = facilityData?.overview?.facilityId;
-    const dealId = facilityData?.riskDetails?.dealId;
+    facilityId = facilityData?.overview?.facilityId;
+    dealId = facilityData?.riskDetails?.dealId;
 
     console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
 
@@ -1957,9 +1960,13 @@ const createGiftFacility = async (facilityData) => {
       headers: headers.external,
       data: facilityData,
     });
+
     return response.data;
   } catch (error) {
-    console.error('Unable to send GIFT facility to external API %o', error);
+    const status = error?.response?.status;
+    const responseBody = error?.response?.data;
+
+    console.error('Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o', facilityId, dealId, status, responseBody);
 
     return false;
   }
