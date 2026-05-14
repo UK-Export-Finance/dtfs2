@@ -1966,7 +1966,14 @@ const createGiftFacility = async (facilityData) => {
     const status = error?.response?.status;
     const responseBody = error?.response?.data;
 
-    console.error('Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o', facilityId, dealId, status, responseBody);
+    console.error(
+      'Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o error %o',
+      facilityId,
+      dealId,
+      status,
+      responseBody,
+      error,
+    );
 
     return false;
   }

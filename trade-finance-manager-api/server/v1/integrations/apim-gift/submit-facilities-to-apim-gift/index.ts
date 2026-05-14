@@ -14,7 +14,7 @@ type SubmitFacilitiesToApimGiftParams = {
 /**
  * Submits facilities to the APIM/GIFT.
  * If only one facility is provided, create a single payload and submits it.
- * If multiple facilities are provided, create multiple payloads and submits them in parallel.
+ * If multiple facilities are provided, create multiple payloads and submit them sequentially.
  * The function returns the response from the APIM/GIFT integration, which could be a single facility or an array of facilities depending on the input.
  * @param {SubmitFacilitiesToApimGiftParams} params - An object containing the deal and facilities to be submitted.
  * @param {TfmDeal} params.deal - The TFM deal associated with the facilities being submitted.

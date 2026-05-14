@@ -60,7 +60,13 @@ export const create = async (req: Request, res: Response) => {
       const status = error?.response?.status;
       const responseBody = error?.response?.data;
 
-      console.error('Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o', facilityId, status, responseBody);
+      console.error(
+        'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
+        facilityId,
+        status,
+        responseBody,
+        error,
+      );
 
       return {
         status: error.response?.status,

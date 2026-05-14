@@ -48,8 +48,7 @@ describe('create', () => {
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
 
-    expect(axios).toHaveBeenCalledTimes(1);
-    expect(axios).toHaveBeenCalledWith({
+    expect(axios).toHaveBeenNthCalledWith(1, {
       method: 'post',
       url: `${APIM_TFS_URL}v2/gift/facility`,
       headers,
@@ -59,21 +58,32 @@ describe('create', () => {
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Created);
   });
 
-  it('should set an undefined status when axios throws without an HTTP response', async () => {
+  it('should set a default status when axios throws without an HTTP response', async () => {
     // Arrange
     const mockError = new Error('Mock error');
+    const mockFacilityId = 'mock-facility-id';
+    const mockResponseBody = { error: 'No response received' };
 
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
     // Act
-    await create(mockRequest, mockResponse);
+    const mockRequestWithParams = httpMocks.createRequest({
+      method: 'GET',
+      params: { facilityId: mockFacilityId },
+    });
+
+    await create(mockRequestWithParams, mockResponse);
 
     // Assert
-    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o',
+      mockFacilityId,
+      HttpStatusCode.InternalServerError,
+      mockResponseBody,
+    );
 
-    expect(console.error).toHaveBeenNthCalledWith(1, 'Error calling APIM TFS GIFT facility endpoint %o', mockError);
-
-    expect(mockResponse._getStatusCode()).toBeUndefined();
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError); // Set a default status
   });
 
   it(`should forward non-${HttpStatusCode.Created} status when APIM TFS GIFT facility returns an HTTP error response`, async () => {
@@ -95,8 +105,13 @@ describe('create', () => {
     await create(mockRequest, mockResponse);
 
     // Assert
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error calling APIM TFS GIFT facility endpoint %o', mockAxiosError);
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o',
+      undefined,
+      mockAxiosError.response.status,
+      mockAxiosError.response.data,
+    );
 
     expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
   });
