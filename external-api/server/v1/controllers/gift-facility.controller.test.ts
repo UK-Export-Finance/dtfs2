@@ -58,18 +58,30 @@ describe('create', () => {
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Created);
   });
 
-  it('should set a default status when axios throws without an HTTP response', async () => {
+  it('should return a concrete error status when axios throws with an HTTP error response', async () => {
     // Arrange
-    const mockError = new Error('Mock error');
+    const mockError = {
+      response: {
+        status: HttpStatusCode.InternalServerError,
+        data: {
+          status: HttpStatusCode.InternalServerError,
+          message: 'Mock upstream error',
+          errors: [{ code: 'MOCK_FAILURE' }],
+        },
+      },
+    };
     const mockFacilityId = 'mock-facility-id';
-    const mockResponseBody = { error: 'No response received' };
 
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
     // Act
     const mockRequestWithParams = httpMocks.createRequest({
-      method: 'GET',
-      params: { facilityId: mockFacilityId },
+      method: 'POST',
+      body: {
+        overview: {
+          facilityId: mockFacilityId,
+        },
+      },
     });
 
     await create(mockRequestWithParams, mockResponse);
@@ -77,10 +89,11 @@ describe('create', () => {
     // Assert
     expect(console.error).toHaveBeenNthCalledWith(
       1,
-      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o',
+      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
       mockFacilityId,
-      HttpStatusCode.InternalServerError,
-      mockResponseBody,
+      mockError.response.status,
+      mockError.response.data,
+      mockError,
     );
 
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError); // Set a default status
@@ -88,6 +101,7 @@ describe('create', () => {
 
   it(`should forward non-${HttpStatusCode.Created} status when APIM TFS GIFT facility returns an HTTP error response`, async () => {
     // Arrange
+    const mockFacilityId = 'mock-facility-id';
     const mockAxiosError = {
       response: {
         status: HttpStatusCode.BadGateway,
@@ -102,15 +116,22 @@ describe('create', () => {
     jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
 
     // Act
+    mockRequest.body = {
+      overview: {
+        facilityId: mockFacilityId,
+      },
+    };
+
     await create(mockRequest, mockResponse);
 
     // Assert
     expect(console.error).toHaveBeenNthCalledWith(
       1,
-      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o',
-      undefined,
+      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
+      mockFacilityId,
       mockAxiosError.response.status,
       mockAxiosError.response.data,
+      mockAxiosError,
     );
 
     expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
