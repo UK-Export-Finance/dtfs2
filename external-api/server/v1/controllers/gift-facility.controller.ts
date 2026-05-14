@@ -49,6 +49,7 @@ export const create = async (req: Request, res: Response) => {
     console.info('⚡️ Invoking APIM TFS GIFT facility endpoint');
 
     const url = `${APIM_TFS_URL}v2/gift/facility`;
+    const facilityId = req.body?.overview?.facilityId;
 
     const response = await axios({
       method: 'post',
@@ -56,7 +57,10 @@ export const create = async (req: Request, res: Response) => {
       headers,
       data: req.body,
     }).catch((error: any) => {
-      console.error('Error calling APIM TFS GIFT facility endpoint %o', error);
+      const status = error?.response?.status;
+      const responseBody = error?.response?.data;
+
+      console.error('Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o', facilityId, status, responseBody);
 
       return {
         status: error.response?.status,
