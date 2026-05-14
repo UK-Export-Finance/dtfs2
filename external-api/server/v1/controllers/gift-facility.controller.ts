@@ -57,8 +57,8 @@ export const create = async (req: Request, res: Response) => {
       headers,
       data: req.body,
     }).catch((error: any) => {
-      const status = error?.response?.status;
-      const responseBody = error?.response?.data;
+      const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+      const responseBody = error?.response?.data ?? { message: 'No response received from APIM TFS GIFT facility endpoint' };
 
       console.error(
         'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
@@ -69,7 +69,7 @@ export const create = async (req: Request, res: Response) => {
       );
 
       return {
-        status: error.response?.status,
+        status,
       };
     });
 

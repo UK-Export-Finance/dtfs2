@@ -58,19 +58,11 @@ describe('create', () => {
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Created);
   });
 
-  it('should return a concrete error status when axios throws with an HTTP error response', async () => {
+  it('should fallback to 500 when axios throws without an HTTP response', async () => {
     // Arrange
-    const mockError = {
-      response: {
-        status: HttpStatusCode.InternalServerError,
-        data: {
-          status: HttpStatusCode.InternalServerError,
-          message: 'Mock upstream error',
-          errors: [{ code: 'MOCK_FAILURE' }],
-        },
-      },
-    };
+    const mockError = new Error('Mock network error');
     const mockFacilityId = 'mock-facility-id';
+    const expectedResponseBody = { message: 'No response received from APIM TFS GIFT facility endpoint' };
 
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
@@ -91,12 +83,12 @@ describe('create', () => {
       1,
       'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
       mockFacilityId,
-      mockError.response.status,
-      mockError.response.data,
+      HttpStatusCode.InternalServerError,
+      expectedResponseBody,
       mockError,
     );
 
-    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError); // Set a default status
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
   });
 
   it(`should forward non-${HttpStatusCode.Created} status when APIM TFS GIFT facility returns an HTTP error response`, async () => {
