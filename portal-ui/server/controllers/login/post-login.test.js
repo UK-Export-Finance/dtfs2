@@ -267,14 +267,14 @@ describe('postLogin', () => {
           });
         });
 
-        it(`should render login/temporarily-suspended-access-code.njk when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {
+        it(`should redirect to /login/temporarily-suspended-access-code when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {
           const forbiddenError = { response: { status: HttpStatusCode.Forbidden } };
           jest.mocked(api.login).mockRejectedValue(forbiddenError);
 
           await postLogin(req, res);
 
           expect(console.error).toHaveBeenNthCalledWith(2, 'Access temporarily suspended for user %s', req.body.email);
-
+          expect(req.session.numberOfSignInOtpAttemptsRemaining).toEqual(-1);
           expect(res.redirect).toHaveBeenNthCalledWith(1, '/login/temporarily-suspended-access-code');
         });
       });
