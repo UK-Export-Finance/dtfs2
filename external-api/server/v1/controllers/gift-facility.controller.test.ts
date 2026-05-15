@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { create } from './gift-facility.controller';
+import { create, get } from './gift-facility.controller';
 
 dotenv.config();
 
@@ -13,17 +13,118 @@ const headers = {
   [String(APIM_TFS_KEY)]: APIM_TFS_VALUE,
 };
 
-const mockTfsResponse = {
-  data: {},
-  status: HttpStatusCode.Created,
-};
-
 let mockRequest: MockRequest<Request>;
 let mockResponse: MockResponse<Response>;
 
 jest.mock('axios');
 
+describe('get', () => {
+  // Arrange
+  const mockFacilityId = 'mock-facility-id';
+
+  beforeEach(() => {
+    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks());
+
+    console.info = jest.fn();
+    console.error = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it(`should return ${HttpStatusCode.Ok} when APIM TFS GIFT facility returns success`, async () => {
+    // Arrange
+    mockRequest.params = { facilityId: mockFacilityId };
+
+    jest.mocked(axios).mockResolvedValueOnce({ status: HttpStatusCode.Ok, data: {} });
+
+    // Act
+    await get(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+
+    expect(axios).toHaveBeenNthCalledWith(1, {
+      method: 'GET',
+      url: `${APIM_TFS_URL}v2/gift/facility/${mockFacilityId}`,
+      headers,
+    });
+
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Ok);
+  });
+
+  it(`should fallback to ${HttpStatusCode.InternalServerError} when axios throws without an HTTP response`, async () => {
+    // Arrange
+    const mockError = new Error('Mock network error');
+
+    const expectedResponseBody = { message: `No response received from APIM TFS GIFT - get facility ${mockFacilityId} endpoint` };
+
+    jest.mocked(axios).mockRejectedValueOnce(mockError);
+
+    // Act
+    mockRequest.params = {
+      facilityId: mockFacilityId,
+    };
+
+    await get(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      'Error calling APIM TFS GIFT - get facility endpoint - facilityId %s status %s responseBody %o error %o',
+      mockFacilityId,
+      HttpStatusCode.InternalServerError,
+      expectedResponseBody,
+      mockError,
+    );
+
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+  });
+
+  it(`should forward non-${HttpStatusCode.Ok} and non-${HttpStatusCode.NotFound} status when APIM TFS GIFT facility returns an HTTP error response`, async () => {
+    // Arrange
+    const mockAxiosError = {
+      response: {
+        status: HttpStatusCode.BadGateway,
+        data: {
+          status: HttpStatusCode.BadGateway,
+          message: 'Mock upstream error',
+          errors: [{ code: 'UPSTREAM_FAILURE' }],
+        },
+      },
+    };
+
+    jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+    // Act
+    mockRequest.params = {
+      facilityId: mockFacilityId,
+    };
+
+    await get(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      'Error calling APIM TFS GIFT - get facility endpoint - facilityId %s status %s responseBody %o error %o',
+      mockFacilityId,
+      mockAxiosError.response.status,
+      mockAxiosError.response.data,
+      mockAxiosError,
+    );
+
+    expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
+  });
+});
+
 describe('create', () => {
+  // Arrange
+  const mockTfsResponse = {
+    data: {},
+    status: HttpStatusCode.Created,
+  };
+
   beforeEach(() => {
     ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks());
 
@@ -62,7 +163,7 @@ describe('create', () => {
     // Arrange
     const mockError = new Error('Mock network error');
     const mockFacilityId = 'mock-facility-id';
-    const expectedResponseBody = { message: 'No response received from APIM TFS GIFT facility endpoint' };
+    const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - create facility endpoint' };
 
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
@@ -78,7 +179,7 @@ describe('create', () => {
     // Assert
     expect(console.error).toHaveBeenNthCalledWith(
       1,
-      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
+      'Error calling APIM TFS GIFT - create facility endpoint - facilityId %s status %s responseBody %o error %o',
       mockFacilityId,
       HttpStatusCode.InternalServerError,
       expectedResponseBody,
@@ -96,7 +197,7 @@ describe('create', () => {
         status: HttpStatusCode.BadGateway,
         data: {
           status: HttpStatusCode.BadGateway,
-          message: 'TFS upstream error',
+          message: 'Mock upstream error',
           errors: [{ code: 'UPSTREAM_FAILURE' }],
         },
       },
@@ -116,7 +217,7 @@ describe('create', () => {
     // Assert
     expect(console.error).toHaveBeenNthCalledWith(
       1,
-      'Error calling APIM TFS GIFT facility endpoint - facilityId %s status %s responseBody %o error %o',
+      'Error calling APIM TFS GIFT - create facility endpoint - facilityId %s status %s responseBody %o error %o',
       mockFacilityId,
       mockAxiosError.response.status,
       mockAxiosError.response.data,
