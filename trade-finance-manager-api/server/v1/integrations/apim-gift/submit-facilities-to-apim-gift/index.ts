@@ -63,7 +63,7 @@ export const submitFacilitiesToApimGift = async ({
 
   console.info('APIM GIFT debug - deal %s attempting to submit %s facilities. Facility IDs: %o', deal?._id, payloads.length, attemptedFacilityIds);
 
-  const responses: Array<TfmFacility | boolean> = [];
+  const responses: Array<TfmFacility | false> = [];
 
   /**
    * NOTE: We need to use a for loop instead of Promise.all, to ensure that the calls are sequential.

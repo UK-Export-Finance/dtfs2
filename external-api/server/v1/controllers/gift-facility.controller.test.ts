@@ -49,7 +49,7 @@ describe('create', () => {
     expect(console.error).toHaveBeenCalledTimes(0);
 
     expect(axios).toHaveBeenNthCalledWith(1, {
-      method: 'post',
+      method: 'POST',
       url: `${APIM_TFS_URL}v2/gift/facility`,
       headers,
       data: requestBody,
@@ -67,16 +67,13 @@ describe('create', () => {
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
     // Act
-    const mockRequestWithParams = httpMocks.createRequest({
-      method: 'POST',
-      body: {
-        overview: {
-          facilityId: mockFacilityId,
-        },
+    mockRequest.body = {
+      overview: {
+        facilityId: mockFacilityId,
       },
-    });
+    };
 
-    await create(mockRequestWithParams, mockResponse);
+    await create(mockRequest, mockResponse);
 
     // Assert
     expect(console.error).toHaveBeenNthCalledWith(

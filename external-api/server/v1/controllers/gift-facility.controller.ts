@@ -52,7 +52,7 @@ export const create = async (req: Request, res: Response) => {
     const facilityId = req.body?.overview?.facilityId;
 
     const response = await axios({
-      method: 'post',
+      method: 'POST',
       url,
       headers,
       data: req.body,
