@@ -184,7 +184,7 @@ describe('submitFacilitiesToApimGift', () => {
       });
     });
 
-    it('should call api.createGiftFacility', async () => {
+    it('should call api.createGiftFacility multiple times', async () => {
       // Act
       await submitFacilitiesToApimGift({
         deal: mockDeal,
