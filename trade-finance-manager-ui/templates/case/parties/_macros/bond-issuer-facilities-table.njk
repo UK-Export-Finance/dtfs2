@@ -38,7 +38,7 @@
               <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.tfm.bondIssuerPartyUrn }}</span>
 
             {% else %}
-              {{govukTag({
+              {{ govukTag({
                 text: 'Not matched',
                 classes: "govuk-tag--red",
                 attributes: {

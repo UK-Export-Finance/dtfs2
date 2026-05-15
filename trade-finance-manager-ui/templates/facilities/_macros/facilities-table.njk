@@ -127,7 +127,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-value">{{ facility.currencyAndValue | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-coverEndDate">{{ facility.coverEndDate | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-facilityStage">
-              {{govukTag({
+              {{ govukTag({
                 text: facilityStage | dashIfEmpty,
                 classes: "govuk-tag--blue"
               })}}

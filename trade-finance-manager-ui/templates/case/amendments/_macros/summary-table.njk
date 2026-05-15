@@ -5,7 +5,7 @@
   {% set rows = [] %}
   {% if amendment.changeCoverEndDate === true %}
     {% set coverEndDateDecisionHtml %}
-        {{govukTag({
+        {{ govukTag({
           text: amendment.ukefDecision.coverEndDate,
           classes: amendment.tags[amendment.ukefDecision.coverEndDate],
           attributes: { "data-cy": "amendment--details-"+amendment.version+"-cover-end-date-decision" }
@@ -35,7 +35,7 @@
 
   {% if amendment.changeFacilityValue === true %}
     {% set facilityValueDecisionHtml %}
-        {{govukTag({
+        {{ govukTag({
           text: amendment.ukefDecision.value,
           classes: amendment.tags[amendment.ukefDecision.value],
           attributes: { "data-cy": "amendment--details-"+amendment.version+"-facility-value-decision" }
