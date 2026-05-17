@@ -24,6 +24,7 @@ const MOCK_GEF_DEAL_AIN = require('../../../server/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../server/v1/__mocks__/mock-gef-deal-MIN');
 const { MOCK_PORTAL_USERS } = require('../../../server/v1/__mocks__/mock-portal-users');
+const { MOCK_FACILITIES } = require('../../../server/v1/__mocks__/mock-facilities');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -359,6 +360,70 @@ describe('/v1/deals', () => {
       expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
         deal: submittedDeal,
         facilities: mockIssuedFacilities,
+      });
+    });
+
+    describe('submitFacilitiesToApimGift only called with facilities not already in GIFT', () => {
+      const facility1 = { ...MOCK_FACILITIES[0], facilitySnapshot: { ...MOCK_FACILITIES[0], ukefFacilityId: 'FACILITY_A' }, hasBeenIssued: true };
+      const facility2 = { ...MOCK_FACILITIES[1], facilitySnapshot: { ...MOCK_FACILITIES[1], ukefFacilityId: 'FACILITY_B' }, hasBeenIssued: true };
+      const facility3 = {
+        ...(MOCK_FACILITIES[2] || MOCK_FACILITIES[0]),
+        facilitySnapshot: { ...(MOCK_FACILITIES[2] || MOCK_FACILITIES[0]), ukefFacilityId: 'FACILITY_C' },
+        hasBeenIssued: true,
+      };
+
+      describe('when all issued facilities are not in GIFT', async () => {
+        it('should call submitFacilitiesToApimGift with all issued facilities', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: [facility1, facility2],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: [facility1, facility2],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
+      });
+
+      describe('when there are no issued facilities to send to GIFT', async () => {
+        it('should not call submitFacilitiesToApimGift', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: false,
+            issuedFacilities: [], // no facilities to send
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when some issued facilities are in GIFT, some are not', async () => {
+        it('should call submitFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: [facility2, facility3], // only facility 2 and 3 are not in GIFT
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: [facility2, facility3],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
       });
     });
   });

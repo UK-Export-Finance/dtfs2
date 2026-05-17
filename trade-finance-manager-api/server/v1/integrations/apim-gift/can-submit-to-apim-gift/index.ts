@@ -137,7 +137,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
   return {
     canSubmitFacilitiesToApimGift: facilitiesToSendToApimGift.length > 0,
-    issuedFacilities: facilitiesToSendToApimGift, // TODO: rename issuedFacilities.
+    issuedFacilities: facilitiesToSendToApimGift,
     isBssEwcsDeal,
     isGefDeal,
   };

@@ -20,6 +20,7 @@ describe('/gift', () => {
   describe('GET /facilities?ids=...', () => {
     const facilityIds = ['11111', '22222'];
     const ids = facilityIds.join(',');
+
     const mockResponseBody = {
       facilities: [
         { facilityId: facilityIds[0], status: HttpStatusCode.Ok },
