@@ -759,6 +759,44 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
 
 /**
  * @openapi
+ * /gift/facilities:
+ *   get:
+ *     summary: Get multiple GIFT facilities from APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Get multiple GIFT facilities from APIM TFS's GIFT endpoint by a comma-separated list of facility IDs.
+ *     parameters:
+ *       - in: query
+ *         name: ids
+ *         schema:
+ *           type: string
+ *           example: FACILITY-001,FACILITY-002
+ *         required: true
+ *         description: Comma-separated GIFT facility IDs.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilitiesBulkResponse'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/gift/facilities', giftFacility.getMany);
+
+/**
+ * @openapi
  * /gift/facility/:facilityId:
  *   get:
  *     summary: Get a GIFT facility from APIM TFS's GIFT endpoint
@@ -785,6 +823,10 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
  *         description: Too many requests
  *       500:
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
  */
 apiRoutes.get('/gift/facility/:facilityId', giftFacility.get);
 

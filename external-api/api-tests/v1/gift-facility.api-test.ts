@@ -17,6 +17,45 @@ const { post, get } = api(app);
 describe('/gift', () => {
   const baseUrl = String(APIM_TFS_URL);
 
+  describe('GET /facilities?ids=...', () => {
+    const facilityIds = ['11111', '22222'];
+    const ids = facilityIds.join(',');
+    const mockResponseBody = {
+      facilities: [
+        { facilityId: facilityIds[0], status: HttpStatusCode.Ok },
+        { facilityId: facilityIds[1], status: HttpStatusCode.NotFound },
+      ],
+    };
+
+    describe(`when ids query parameter is provided`, () => {
+      it(`should return ${HttpStatusCode.Ok} with APIM TFS data`, async () => {
+        // Arrange
+        nock.abortPendingRequests();
+        nock.cleanAll();
+
+        nock(baseUrl).get('/v2/gift/facilities').query({ ids }).reply(HttpStatusCode.Ok, mockResponseBody);
+
+        // Act
+        const response = await get(`/gift/facilities?ids=${ids}`);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+        expect(response.body).toEqual(mockResponseBody);
+      });
+    });
+
+    describe(`when ids query parameter is missing`, () => {
+      it(`should return ${HttpStatusCode.BadRequest}`, async () => {
+        // Act
+        const response = await get('/gift/facilities');
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
+        expect(response.body).toEqual({ status: HttpStatusCode.BadRequest, message: 'ids query parameter is required' });
+      });
+    });
+  });
+
   describe('GET /facility/:facilityId', () => {
     const mockFacilityId = '12345';
     const url = `/v2/gift/facility/${mockFacilityId}`;

@@ -99,6 +99,56 @@ export const get = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get multiple GIFT facilities.
+ * @param req request object
+ * @param res response object
+ * @returns response with HTTP status `code` and per-facility statuses
+ */
+export const getMany = async (req: Request, res: Response) => {
+  const facilityIdsQuery = req.query?.ids ?? req.query?.facilityIds;
+
+  const facilityIds = String(facilityIdsQuery ?? '')
+    .split(',')
+    .map((facilityId) => facilityId.trim())
+    .filter(Boolean);
+
+  if (!facilityIds.length) {
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'ids query parameter is required' });
+  }
+
+  const ids = facilityIds.join(',');
+
+  console.info('⚡️ Invoking APIM TFS GIFT - get multiple facilities endpoint - ids %s', ids);
+
+  const url = `${APIM_TFS_URL}v2/gift/facilities?ids=${ids}`;
+
+  const response = await axios({
+    method: 'GET',
+    url,
+    headers,
+  }).catch((error: any) => {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: `No response received from APIM TFS GIFT - get facilities endpoint - ids=${ids}` };
+
+    console.error('Error calling APIM TFS GIFT - get facilities endpoint - ids %s status %s responseBody %o error %o', ids, status, responseBody, error);
+
+    return {
+      status,
+    };
+  });
+
+  const { status } = response;
+
+  if (status !== HttpStatusCode.Ok) {
+    return res.sendStatus(status);
+  }
+
+  const responseData = 'data' in response ? response.data : {};
+
+  return res.status(HttpStatusCode.Ok).send(responseData);
+};
+
+/**
  * Create a GIFT facility.
  * @param req request object
  * @param res response object
