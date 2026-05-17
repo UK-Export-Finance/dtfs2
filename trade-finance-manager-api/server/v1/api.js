@@ -1964,12 +1964,45 @@ const createGiftFacility = async (facilityData) => {
     return response.data;
   } catch (error) {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
-    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility endpoint' };
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility creation endpoint' };
 
     console.error(
       'Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o error %o',
       facilityId,
       dealId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
+/**
+ * Find GIFT facilities by their IDs.
+ * @param {string} facilityIds - The IDs of the facilities to find
+ * @returns {Promise<object|boolean>} The found facilities if successful, otherwise false
+ */
+const findGiftFacilitiesById = async (facilityIds) => {
+  try {
+    console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIds);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facilities?ids=${facilityIds}`,
+      headers: headers.external,
+    });
+
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
+
+    console.error(
+      'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
+      facilityIds,
+      status,
       status,
       responseBody,
       error,
@@ -2069,4 +2102,5 @@ module.exports = {
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
   createGiftFacility,
+  findGiftFacilitiesById,
 };
