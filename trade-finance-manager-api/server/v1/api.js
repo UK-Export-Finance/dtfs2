@@ -923,6 +923,8 @@ const getCompanyInfo = async (partyUrn) => {
  */
 const getCreditRiskRatings = async () => {
   try {
+    console.info('Calling external API "Get credit risk ratings" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
@@ -942,6 +944,8 @@ const getCreditRiskRatings = async () => {
  */
 const getFacilityCategories = async () => {
   try {
+    console.info('Calling external API "Get facility categories" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/facility-categories`,
@@ -961,6 +965,8 @@ const getFacilityCategories = async () => {
  */
 const getObligationSubtypes = async () => {
   try {
+    console.info('Calling external API "Get obligation subtypes" endpoint');
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/obligation-subtypes`,
@@ -981,10 +987,12 @@ const getObligationSubtypes = async () => {
  */
 const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
   try {
+    console.info('Calling external API "Get UKEF industry code by companies house industry code" endpoint - industryCode %s', industryCode);
+
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${industryCode}`,
-      headers: headers.central,
+      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${encodeURIComponent(industryCode)}`,
+      headers: headers.external,
     });
     return response.data;
   } catch (error) {
@@ -1937,16 +1945,35 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
  * @returns {Promise<object|boolean>} The created facility data if successful, otherwise false
  */
 const createGiftFacility = async (facilityData) => {
+  let facilityId;
+  let dealId;
+
   try {
+    facilityId = facilityData?.overview?.facilityId;
+    dealId = facilityData?.riskDetails?.dealId;
+
+    console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
+
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/gift/facility`,
       headers: headers.external,
       data: facilityData,
     });
+
     return response.data;
   } catch (error) {
-    console.error('Unable to send GIFT facility %o', error);
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility endpoint' };
+
+    console.error(
+      'Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o error %o',
+      facilityId,
+      dealId,
+      status,
+      responseBody,
+      error,
+    );
 
     return false;
   }

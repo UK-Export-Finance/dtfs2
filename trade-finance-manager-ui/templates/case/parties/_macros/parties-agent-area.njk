@@ -49,7 +49,7 @@
     <div class="govuk-grid-column-one-half">
 
       {% if deal.dealType === 'GEF' %}
-        {{ notApplicable.render({ id: 'agent' })}}
+        {{ notApplicable.render({ id: 'agent' }) }}
       {% else %}
 
         <div data-cy="agent-details">
@@ -99,6 +99,7 @@
                     deal.eligibility.agentAddressPostcode],
             dataCy: 'agent-address'
           }) }}
+
           {{ keyValueGridRow.render({
             key: 'Country',
             value: deal.eligibility.agentAddressCountry.name,
