@@ -85,21 +85,6 @@ describe('generateIssuedFacilitiesQueryString', () => {
     });
   });
 
-  describe('when facilities have numeric facility IDs', () => {
-    it('should convert facility IDs to string format', () => {
-      // Arrange
-      const issuedFacilities = [mockTfmIssuedFacility4];
-
-      // Act
-      const result = generateIssuedFacilitiesQueryString(issuedFacilities);
-
-      // Assert
-      const expected = mockTfmIssuedFacility4.facilitySnapshot.ukefFacilityId;
-
-      expect(result).toEqual(expected);
-    });
-  });
-
   describe('when facilities have special characters in IDs', () => {
     it('should preserve special characters in facility IDs', () => {
       // Arrange

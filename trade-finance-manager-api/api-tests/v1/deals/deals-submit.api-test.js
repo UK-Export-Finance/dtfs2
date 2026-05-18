@@ -364,19 +364,36 @@ describe('/v1/deals', () => {
     });
 
     describe('submitFacilitiesToApimGift only called with facilities not already in GIFT', () => {
-      const facility1 = { ...MOCK_FACILITIES[0], facilitySnapshot: { ...MOCK_FACILITIES[0], ukefFacilityId: 'FACILITY_A' }, hasBeenIssued: true };
-      const facility2 = { ...MOCK_FACILITIES[1], facilitySnapshot: { ...MOCK_FACILITIES[1], ukefFacilityId: 'FACILITY_B' }, hasBeenIssued: true };
-      const facility3 = {
-        ...(MOCK_FACILITIES[2] || MOCK_FACILITIES[0]),
-        facilitySnapshot: { ...(MOCK_FACILITIES[2] || MOCK_FACILITIES[0]), ukefFacilityId: 'FACILITY_C' },
-        hasBeenIssued: true,
+      const mockFacility1 = {
+        ...MOCK_FACILITIES[0],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[0].facilitySnapshot,
+          ukefFacilityId: 'FACILITY_A',
+        },
+      };
+
+      const mockFacility2 = {
+        ...MOCK_FACILITIES[1],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[1].facilitySnapshot,
+          ukefFacilityId: 'FACILITY_B',
+        },
+      };
+
+      const mockFacility3 = {
+        ...MOCK_FACILITIES[2],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[2].facilitySnapshot,
+          _id: 'mock-facility-3',
+          ukefFacilityId: 'FACILITY_C',
+        },
       };
 
       describe('when all issued facilities are not in GIFT', () => {
         it('should call submitFacilitiesToApimGift with all issued facilities', async () => {
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: true,
-            issuedFacilities: [facility1, facility2],
+            issuedFacilities: [mockFacility1, mockFacility2],
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
@@ -385,7 +402,7 @@ describe('/v1/deals', () => {
           const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
           expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
             deal: submittedDeal,
-            facilities: [facility1, facility2],
+            facilities: [mockFacility1, mockFacility2],
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
@@ -410,7 +427,7 @@ describe('/v1/deals', () => {
         it('should call submitFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: true,
-            issuedFacilities: [facility2, facility3], // only facility 2 and 3 are not in GIFT
+            issuedFacilities: [mockFacility2, mockFacility3], // only facility 2 and 3 are not in GIFT
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
@@ -419,7 +436,7 @@ describe('/v1/deals', () => {
           const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
           expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
             deal: submittedDeal,
-            facilities: [facility2, facility3],
+            facilities: [mockFacility2, mockFacility3],
             isBssEwcsDeal: true,
             isGefDeal: false,
           });

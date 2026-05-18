@@ -224,6 +224,9 @@ describe('canSubmitToApimGift', () => {
           // Assert
           const expected = {
             canSubmitFacilitiesToApimGift: false,
+            issuedFacilities: [],
+            isBssEwcsDeal,
+            isGefDeal,
           };
 
           expect(result).toEqual(expected);
@@ -293,6 +296,9 @@ describe('canSubmitToApimGift', () => {
         // Assert
         const expected = {
           canSubmitFacilitiesToApimGift: false,
+          issuedFacilities: [],
+          isBssEwcsDeal: true,
+          isGefDeal: false,
         };
 
         expect(result).toEqual(expected);
