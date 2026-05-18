@@ -196,8 +196,7 @@ describe('getMany', () => {
       expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(mockResponse._getData()).toEqual(mockResponseData);
 
-      expect(axios).toHaveBeenCalledTimes(1);
-      expect(axios).toHaveBeenCalledWith({
+      expect(axios).toHaveBeenNthCalledWith(1, {
         method: 'GET',
         url: `${APIM_TFS_URL}v2/gift/facilities?ids=${ids}`,
         headers,

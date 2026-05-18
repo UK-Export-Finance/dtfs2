@@ -4,7 +4,7 @@ import { canSubmitToApimGift } from '.';
 import * as generateIssuedFacilitiesQueryStringModule from '../generate-issued-facilities-query-string';
 import * as mapFacilitiesToSendToGiftModule from '../map-facilities-to-send-to-gift';
 import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
-import { mockTfmDeal, mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility } from '../test-mocks';
+import { mockGiftFacility, mockTfmDeal, mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility } from '../test-mocks';
 
 jest.mock('../../../api', () => ({
   __esModule: true,
@@ -112,16 +112,10 @@ describe('canSubmitToApimGift', () => {
 
       it('should call findFacilitiesByDealId', async () => {
         // Arrange
-        const mockIssuedFacility = {
-          _id: '61f7a4edcf809301e78fbe53',
-          facilitySnapshot: {
-            ukefFacilityId: 'FACILITY-001',
-            hasBeenIssued: true,
-          },
-        } as unknown as TfmFacility;
+        const mockIssuedFacility = mockTfmIssuedFacility1;
 
         mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility]);
-        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001');
+        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(String(mockIssuedFacility.facilitySnapshot.ukefFacilityId));
         mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
         mockMapFacilitiesToSendToGift.mockReturnValueOnce({
           facilitiesToSendToApimGift: [mockIssuedFacility],
@@ -138,7 +132,9 @@ describe('canSubmitToApimGift', () => {
         it('should return canSubmitFacilitiesToApimGift as true', async () => {
           // Arrange
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
+            [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
+          );
           mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
             facilitiesToSendToApimGift: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
@@ -162,25 +158,17 @@ describe('canSubmitToApimGift', () => {
       describe('when issued facilities already exist in GIFT', () => {
         it('should return canSubmitFacilitiesToApimGift as false', async () => {
           // Arrange
-          const mockIssuedFacility1 = {
-            _id: '61f7a4edcf809301e78fbe53',
-            facilitySnapshot: {
-              ukefFacilityId: 'FACILITY-001',
-              hasBeenIssued: true,
-            },
-          } as unknown as TfmFacility;
-
-          const mockIssuedFacility2 = {
-            _id: '61f7a4edcf809301e78fbe54',
-            facilitySnapshot: {
-              ukefFacilityId: 'FACILITY-002',
-              hasBeenIssued: true,
-            },
-          } as unknown as TfmFacility;
+          const mockIssuedFacility1 = mockTfmIssuedFacility1;
+          const mockIssuedFacility2 = mockTfmIssuedFacility2;
 
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility1, mockIssuedFacility2]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
-          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
+            [mockIssuedFacility1.facilitySnapshot.ukefFacilityId, mockIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
+          );
+          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([
+            { ...mockGiftFacility, facilityId: String(mockIssuedFacility1.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
+            { ...mockGiftFacility, facilityId: String(mockIssuedFacility2.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
+          ]);
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
             facilitiesToSendToApimGift: [],
           });
@@ -204,7 +192,9 @@ describe('canSubmitToApimGift', () => {
         it('should return canSubmitFacilitiesToApimGift as false', async () => {
           // Arrange
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
+            [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
+          );
           mockApi.findGiftFacilitiesById.mockResolvedValueOnce(false);
 
           // Act

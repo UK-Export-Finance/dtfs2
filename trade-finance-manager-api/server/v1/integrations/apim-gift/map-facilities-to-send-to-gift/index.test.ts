@@ -1,17 +1,14 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { hasId, mapFacilitiesToSendToGift } from '.';
-import { mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3 } from '../test-mocks';
+import { mockGiftFacility, mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3 } from '../test-mocks';
 
 const MOCK_DEAL_ID = '61f7a4edcf809301e78fbe41';
 
 describe('hasId', () => {
   describe('when object has facilityId property', () => {
     it('should return true', () => {
-      // Arrange
-      const obj = { facilityId: 'FACILITY-001' };
-
       // Act
-      const result = hasId(obj);
+      const result = hasId(mockGiftFacility);
 
       // Assert
       expect(result).toEqual(true);
@@ -145,7 +142,10 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should return an empty array', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000002' }];
+      const giftFacilitiesResponse = [
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) },
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId) },
+      ];
 
       // Act
       const result = mapFacilitiesToSendToGift({
@@ -161,7 +161,10 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should log that all facilities already exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000002' }];
+      const giftFacilitiesResponse = [
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) },
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId) },
+      ];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -173,8 +176,8 @@ describe('mapFacilitiesToSendToGift', () => {
 
       // Assert
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'All issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, [
-        '0000000001',
-        '0000000002',
+        mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId,
       ]);
     });
   });
@@ -183,7 +186,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should return only the facilities that do not exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
+      const giftFacilitiesResponse = [{ ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) }];
 
       // Act
       const result = mapFacilitiesToSendToGift({
@@ -201,7 +204,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should log facilities that exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
+      const giftFacilitiesResponse = [{ ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) }];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -212,13 +215,15 @@ describe('mapFacilitiesToSendToGift', () => {
       });
 
       // Assert
-      expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Some issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, ['0000000001']);
+      expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Some issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, [
+        mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId,
+      ]);
     });
 
     it('should log facilities that do not exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
+      const giftFacilitiesResponse = [{ ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) }];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -230,15 +235,18 @@ describe('mapFacilitiesToSendToGift', () => {
 
       // Assert
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(3, 'Some issued facilities for deal %s do not exist in GIFT: %o', MOCK_DEAL_ID, [
-        '0000000002',
-        '0000000003',
+        mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility3.facilitySnapshot.ukefFacilityId,
       ]);
     });
 
     it('should return correct facilities when multiple exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000003' }];
+      const giftFacilitiesResponse = [
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId) },
+        { ...mockGiftFacility, facilityId: String(mockTfmIssuedFacility3.facilitySnapshot.ukefFacilityId) },
+      ];
 
       // Act
       const result = mapFacilitiesToSendToGift({

@@ -3,15 +3,19 @@
  * definitions:
  *   GiftFacility:
  *     type: object
- *     properties:
- *       facilityId:
- *         type: string
- *         description: The GIFT facility ID
- *         example: 'FACILITY-001'
- *       status:
- *         type: integer
- *         description: HTTP status code for the facility lookup
- *         example: 200
+ *     description: GIFT facility payload returned by APIM
+ *     additionalProperties: true
+ *     example:
+ *       amount: 10000
+ *       creditType: Term
+ *       currency: USD
+ *       effectiveDate: '2025-01-01'
+ *       expiryDate: '2027-02-01'
+ *       facilityId: '0030000322'
+ *       name: Amazing facility
+ *       obligorUrn: '01234567'
+ *       productTypeCode: PRT003
+ *       repaymentType: Scheduled
  *   GiftFacilitiesBulkResponse:
  *     type: object
  *     properties:
