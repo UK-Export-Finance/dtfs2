@@ -238,6 +238,7 @@ describe('getMany', () => {
       );
 
       expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(mockResponse._getData()).toEqual(mockResponseBody);
     });
   });
 
@@ -275,6 +276,7 @@ describe('getMany', () => {
       );
 
       expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);
     });
   });
 });

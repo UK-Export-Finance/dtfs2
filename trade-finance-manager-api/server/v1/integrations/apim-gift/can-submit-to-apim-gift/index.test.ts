@@ -499,6 +499,33 @@ describe('canSubmitToApimGift', () => {
         // Assert
         expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
       });
+
+      it('should log that facilities could not be retrieved from TFM', async () => {
+        // Arrange
+        const mockDeal = {
+          ...mockTfmDeal,
+          dealSnapshot: {
+            ...mockTfmDeal.dealSnapshot,
+            dealType: DEAL_TYPE.BSS_EWCS,
+            submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          },
+          tfm: mockTfmDeal.tfm,
+        } as TfmDeal;
+
+        const mockError = new Error('Mock API error');
+
+        mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
+        const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+
+        // Act
+        await canSubmitToApimGift(mockDeal);
+
+        // Assert
+        expect(consoleInfoSpy).toHaveBeenCalledWith(
+          'Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve facilities from TFM',
+          String(mockDeal._id),
+        );
+      });
     });
   });
 });

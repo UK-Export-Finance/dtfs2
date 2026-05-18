@@ -90,6 +90,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
   }
 
   let facilities: TfmFacility[] = [];
+  let findFacilitiesByDealIdFailed = false;
 
   try {
     // Get TFM facilities by deal ID.
@@ -98,6 +99,7 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     facilities = Array.isArray(response) ? response : [];
   } catch {
     // Swallow errors and default facilities to an empty array
+    findFacilitiesByDealIdFailed = true;
     facilities = [];
   }
 
@@ -110,7 +112,11 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
   const validCoreChecks = validDealType && validSubmissionType && issuedFacilities.length > 0;
 
   if (!validCoreChecks) {
-    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', dealId);
+    if (findFacilitiesByDealIdFailed) {
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve facilities from TFM', dealId);
+    } else {
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', dealId);
+    }
 
     return {
       canSubmitFacilitiesToApimGift: false,

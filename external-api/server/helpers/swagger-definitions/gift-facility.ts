@@ -17,13 +17,10 @@
  *       productTypeCode: PRT003
  *       repaymentType: Scheduled
  *   GiftFacilitiesBulkResponse:
- *     type: object
- *     properties:
- *       facilities:
- *         type: array
- *         description: Array of facility lookup results
- *         items:
- *           $ref: '#/definitions/GiftFacility'
+ *     type: array
+ *     description: Array of facility lookup results
+ *     items:
+ *       $ref: '#/definitions/GiftFacility'
  *   GiftFacilityErrorResponse:
  *     type: object
  *     properties:

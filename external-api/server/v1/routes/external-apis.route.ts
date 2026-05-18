@@ -765,6 +765,7 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
  *     tags: [APIM, GIFT Facility]
  *     description: >-
  *       Get multiple GIFT facilities from APIM TFS's GIFT endpoint by a comma-separated list of facility IDs.
+ *       Example endpoint: /gift/facilities?ids=0000000001,0000000002
  *     parameters:
  *       - in: query
  *         name: ids
@@ -797,17 +798,19 @@ apiRoutes.get('/gift/facilities', giftFacility.getMany);
 
 /**
  * @openapi
- * /gift/facility/:facilityId:
+ * /gift/facility/{facilityId}:
  *   get:
  *     summary: Get a GIFT facility from APIM TFS's GIFT endpoint
  *     tags: [APIM, GIFT Facility]
  *     description: >-
  *       Get a GIFT facility from APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001
  *     parameters:
  *       - in: path
  *         name: facilityId
  *         schema:
  *           type: string
+ *           example: 0000000001
  *         required: true
  *         description: The GIFT facility ID.
  *     responses:
