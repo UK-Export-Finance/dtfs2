@@ -770,7 +770,7 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
  *         name: ids
  *         schema:
  *           type: string
- *           example: FACILITY-001,FACILITY-002
+ *           example: 0000000001,0000000002
  *         required: true
  *         description: Comma-separated GIFT facility IDs.
  *     responses:
