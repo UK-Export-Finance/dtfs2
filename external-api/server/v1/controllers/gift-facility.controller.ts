@@ -83,7 +83,9 @@ export const get = async (req: Request, res: Response) => {
 
     console.info('✅ Successfully obtained GIFT facility %s', facilityId);
 
-    return res.sendStatus(status);
+    const responseData = 'data' in response ? response.data : undefined;
+
+    return res.status(status).send(responseData);
   } catch (error: any) {
     console.error('Error calling APIM TFS GIFT - get facility %s endpoint %o', facilityId, error);
 
@@ -106,7 +108,7 @@ export const get = async (req: Request, res: Response) => {
  * @returns response with HTTP status `code` and per-facility statuses
  */
 export const getMany = async (req: Request, res: Response) => {
-  const facilityIdsQuery = req.query?.ids ?? req.query?.facilityIds;
+  const facilityIdsQuery = req.query?.ids;
 
   const facilityIds = String(facilityIdsQuery ?? '')
     .split(',')
@@ -192,7 +194,9 @@ export const create = async (req: Request, res: Response) => {
 
     console.info('✅ Successfully created GIFT facility');
 
-    return res.sendStatus(status);
+    const responseData = 'data' in response ? response.data : undefined;
+
+    return res.status(status).send(responseData);
   } catch (error: any) {
     console.error('Error calling APIM TFS GIFT - create facility endpoint %o', error);
 

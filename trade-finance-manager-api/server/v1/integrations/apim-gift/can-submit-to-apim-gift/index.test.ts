@@ -134,66 +134,93 @@ describe('canSubmitToApimGift', () => {
         expect(mockApi.findFacilitiesByDealId).toHaveBeenNthCalledWith(1, mockDeal._id);
       });
 
-      it('should return canSubmitFacilitiesToApimGift as true when there are issued facilities not in GIFT', async () => {
-        // Arrange
-        mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
-        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
-        mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
-        mockMapFacilitiesToSendToGift.mockReturnValueOnce({
-          facilitiesToSendToApimGift: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
+      describe('when issued facilities are not in GIFT', () => {
+        it('should return canSubmitFacilitiesToApimGift as true', async () => {
+          // Arrange
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
+          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
+          mockMapFacilitiesToSendToGift.mockReturnValueOnce({
+            facilitiesToSendToApimGift: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
+          });
+
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
+            isBssEwcsDeal,
+            isGefDeal,
+          };
+
+          expect(result).toEqual(expected);
         });
-
-        // Act
-        const result = await canSubmitToApimGift(mockDeal);
-
-        // Assert
-        const expected = {
-          canSubmitFacilitiesToApimGift: true,
-          issuedFacilities: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
-          isBssEwcsDeal,
-          isGefDeal,
-        };
-
-        expect(result).toEqual(expected);
       });
 
-      it('should return canSubmitFacilitiesToApimGift as false when issued facilities already exist in GIFT', async () => {
-        // Arrange
-        const mockIssuedFacility1 = {
-          _id: '61f7a4edcf809301e78fbe53',
-          facilitySnapshot: {
-            ukefFacilityId: 'FACILITY-001',
-            hasBeenIssued: true,
-          },
-        } as unknown as TfmFacility;
+      describe('when issued facilities already exist in GIFT', () => {
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+          // Arrange
+          const mockIssuedFacility1 = {
+            _id: '61f7a4edcf809301e78fbe53',
+            facilitySnapshot: {
+              ukefFacilityId: 'FACILITY-001',
+              hasBeenIssued: true,
+            },
+          } as unknown as TfmFacility;
 
-        const mockIssuedFacility2 = {
-          _id: '61f7a4edcf809301e78fbe54',
-          facilitySnapshot: {
-            ukefFacilityId: 'FACILITY-002',
-            hasBeenIssued: true,
-          },
-        } as unknown as TfmFacility;
+          const mockIssuedFacility2 = {
+            _id: '61f7a4edcf809301e78fbe54',
+            facilitySnapshot: {
+              ukefFacilityId: 'FACILITY-002',
+              hasBeenIssued: true,
+            },
+          } as unknown as TfmFacility;
 
-        mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility1, mockIssuedFacility2]);
-        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
-        mockApi.findGiftFacilitiesById.mockResolvedValueOnce([{ facilityId: 'FACILITY-001' }, { facilityId: 'FACILITY-002' }]);
-        mockMapFacilitiesToSendToGift.mockReturnValueOnce({
-          facilitiesToSendToApimGift: [],
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility1, mockIssuedFacility2]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
+          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2]);
+          mockMapFacilitiesToSendToGift.mockReturnValueOnce({
+            facilitiesToSendToApimGift: [],
+          });
+
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
+
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: false,
+            issuedFacilities: [],
+            isBssEwcsDeal,
+            isGefDeal,
+          };
+
+          expect(result).toEqual(expected);
         });
+      });
 
-        // Act
-        const result = await canSubmitToApimGift(mockDeal);
+      describe('when the lookup of existing GIFT facilities fails', () => {
+        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+          // Arrange
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('FACILITY-001,FACILITY-002');
+          mockApi.findGiftFacilitiesById.mockResolvedValueOnce(false);
 
-        // Assert
-        const expected = {
-          canSubmitFacilitiesToApimGift: false,
-          issuedFacilities: [],
-          isBssEwcsDeal,
-          isGefDeal,
-        };
+          // Act
+          const result = await canSubmitToApimGift(mockDeal);
 
-        expect(result).toEqual(expected);
+          // Assert
+          const expected = {
+            canSubmitFacilitiesToApimGift: false,
+            issuedFacilities: [],
+            isBssEwcsDeal,
+            isGefDeal,
+          };
+
+          expect(result).toEqual(expected);
+          expect(mockMapFacilitiesToSendToGift).not.toHaveBeenCalled();
+        });
       });
 
       describe('when no facilities are issued', () => {

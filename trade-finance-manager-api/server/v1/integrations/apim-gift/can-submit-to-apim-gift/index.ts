@@ -123,6 +123,17 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
   const giftFacilitiesResponse = await api.findGiftFacilitiesById(issuedFacilityIds);
 
+  if (giftFacilitiesResponse === false) {
+    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve existing facilities from GIFT', dealId);
+
+    return {
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
+      isBssEwcsDeal,
+      isGefDeal,
+    };
+  }
+
   const { facilitiesToSendToApimGift } = mapFacilitiesToSendToGift({
     dealId,
     giftFacilities: giftFacilitiesResponse,

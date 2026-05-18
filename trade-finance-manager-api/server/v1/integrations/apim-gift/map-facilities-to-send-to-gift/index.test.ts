@@ -68,7 +68,7 @@ describe('mapFacilitiesToSendToGift', () => {
     jest.restoreAllMocks();
   });
 
-  describe('when no facilities exist in GIFT', () => {
+  describe('when GIFT facility lookup fails', () => {
     it('should return all issued TFM facilities', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
@@ -82,10 +82,10 @@ describe('mapFacilitiesToSendToGift', () => {
       });
 
       // Assert
-      expect(result.facilitiesToSendToApimGift).toEqual(issuedFacilities);
+      expect(result.facilitiesToSendToApimGift).toEqual([]);
     });
 
-    it('should log that all facilities can be submitted', () => {
+    it('should log that facilities will not be submitted', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
       const giftFacilitiesResponse = false;
@@ -101,7 +101,7 @@ describe('mapFacilitiesToSendToGift', () => {
       // Assert
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(
         2,
-        'No facilities found in APIM GIFT for deal %s - all issued facilities can be submitted to APIM GIFT',
+        'Failed to retrieve existing GIFT facilities for deal %s - no issued facilities will be submitted to APIM GIFT',
         MOCK_DEAL_ID,
       );
     });
@@ -123,11 +123,29 @@ describe('mapFacilitiesToSendToGift', () => {
     });
   });
 
+  describe('when no facilities exist in GIFT', () => {
+    it('should return all issued TFM facilities', () => {
+      // Arrange
+      const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
+      const giftFacilitiesResponse: object[] = [];
+
+      // Act
+      const result = mapFacilitiesToSendToGift({
+        dealId: MOCK_DEAL_ID,
+        giftFacilities: giftFacilitiesResponse,
+        issuedTfmFacilities: issuedFacilities,
+      });
+
+      // Assert
+      expect(result.facilitiesToSendToApimGift).toEqual(issuedFacilities);
+    });
+  });
+
   describe('when all issued facilities exist in GIFT', () => {
     it('should return an empty array', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }, { facilityId: 'FACILITY-002' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000002' }];
 
       // Act
       const result = mapFacilitiesToSendToGift({
@@ -143,7 +161,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should log that all facilities already exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }, { facilityId: 'FACILITY-002' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000002' }];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -155,8 +173,8 @@ describe('mapFacilitiesToSendToGift', () => {
 
       // Assert
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'All issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, [
-        'FACILITY-001',
-        'FACILITY-002',
+        '0000000001',
+        '0000000002',
       ]);
     });
   });
@@ -165,7 +183,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should return only the facilities that do not exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
 
       // Act
       const result = mapFacilitiesToSendToGift({
@@ -183,7 +201,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should log facilities that exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -194,13 +212,13 @@ describe('mapFacilitiesToSendToGift', () => {
       });
 
       // Assert
-      expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Some issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, ['FACILITY-001']);
+      expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Some issued facilities for deal %s already exist in GIFT: %o', MOCK_DEAL_ID, ['0000000001']);
     });
 
     it('should log facilities that do not exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }];
       const consoleInfoSpy = jest.spyOn(console, 'info');
 
       // Act
@@ -212,15 +230,15 @@ describe('mapFacilitiesToSendToGift', () => {
 
       // Assert
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(3, 'Some issued facilities for deal %s do not exist in GIFT: %o', MOCK_DEAL_ID, [
-        'FACILITY-002',
-        'FACILITY-003',
+        '0000000002',
+        '0000000003',
       ]);
     });
 
     it('should return correct facilities when multiple exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];
-      const giftFacilitiesResponse = [{ facilityId: 'FACILITY-001' }, { facilityId: 'FACILITY-003' }];
+      const giftFacilitiesResponse = [{ facilityId: '0000000001' }, { facilityId: '0000000003' }];
 
       // Act
       const result = mapFacilitiesToSendToGift({
@@ -301,7 +319,7 @@ describe('mapFacilitiesToSendToGift', () => {
       // Act
       mapFacilitiesToSendToGift({
         dealId: MOCK_DEAL_ID,
-        giftFacilities: false,
+        giftFacilities: [],
         issuedTfmFacilities: [],
       });
 

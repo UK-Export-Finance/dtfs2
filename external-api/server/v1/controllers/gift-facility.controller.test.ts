@@ -264,12 +264,16 @@ describe('create', () => {
     jest.resetAllMocks();
   });
 
-  it(`should return ${HttpStatusCode.Created} without response data`, async () => {
+  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
     // Arrange
     const requestBody = { test: true };
+    const responseData = { facilityId: 'FACILITY-001' };
     mockRequest.body = requestBody;
 
-    jest.mocked(axios).mockResolvedValueOnce(mockTfsResponse);
+    jest.mocked(axios).mockResolvedValueOnce({
+      ...mockTfsResponse,
+      data: responseData,
+    });
 
     // Act
     await create(mockRequest, mockResponse);
@@ -285,6 +289,7 @@ describe('create', () => {
     });
 
     expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
+    expect(mockResponse._getData()).toEqual(responseData);
   });
 
   it('should fallback to 500 when axios throws without an HTTP response', async () => {

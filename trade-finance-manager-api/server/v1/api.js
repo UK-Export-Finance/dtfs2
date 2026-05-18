@@ -1988,9 +1988,11 @@ const findGiftFacilitiesById = async (facilityIds) => {
   try {
     console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIds);
 
+    const queryString = new URLSearchParams({ ids: facilityIds }).toString();
+
     const response = await axios({
-      method: 'post',
-      url: `${EXTERNAL_API_URL}/gift/facilities?ids=${facilityIds}`,
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/gift/facilities?${queryString}`,
       headers: headers.external,
     });
 
@@ -2002,7 +2004,6 @@ const findGiftFacilitiesById = async (facilityIds) => {
     console.error(
       'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
       facilityIds,
-      status,
       status,
       responseBody,
       error,

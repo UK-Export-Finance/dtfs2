@@ -36,7 +36,15 @@ export const mapFacilitiesToSendToGift = ({
 }: MapFacilitiesToSendToGiftParams): MapFacilitiesToSendToGiftReturnShape => {
   console.info('Mapping issued facilities for deal %s to determine if any should be sent to APIM GIFT', dealId);
 
-  const giftFacilityIds = new Set(Array.isArray(giftFacilities) ? giftFacilities.filter(hasId).map((facility) => String(facility.facilityId)) : []);
+  if (giftFacilities === false) {
+    console.info('Failed to retrieve existing GIFT facilities for deal %s - no issued facilities will be submitted to APIM GIFT', dealId);
+
+    return {
+      facilitiesToSendToApimGift: [],
+    };
+  }
+
+  const giftFacilityIds = new Set(giftFacilities.filter(hasId).map((facility) => String(facility.facilityId)));
 
   if (giftFacilityIds.size === 0) {
     console.info('No facilities found in APIM GIFT for deal %s - all issued facilities can be submitted to APIM GIFT', dealId);

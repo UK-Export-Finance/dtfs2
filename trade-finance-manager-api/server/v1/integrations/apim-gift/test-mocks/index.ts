@@ -24,36 +24,36 @@ export const mockTfmDeal = {
 } as TfmDeal;
 
 export const mockTfmIssuedFacility1 = {
-  _id: new ObjectId('61f7a4edcf809301e78fbe53'),
+  _id: new ObjectId('61f7a4edcf809301e78fbe51'),
   facilitySnapshot: {
-    ukefFacilityId: 'FACILITY-001',
+    ukefFacilityId: '0000000001',
     hasBeenIssued: true,
   },
   tfm: {},
 } as unknown as TfmFacility;
 
 export const mockTfmIssuedFacility2 = {
-  _id: new ObjectId('61f7a4edcf809301e78fbe54'),
+  _id: new ObjectId('61f7a4edcf809301e78fbe52'),
   facilitySnapshot: {
-    ukefFacilityId: 'FACILITY-002',
+    ukefFacilityId: '0000000002',
     hasBeenIssued: true,
   },
   tfm: {},
 } as unknown as TfmFacility;
 
 export const mockTfmIssuedFacility3 = {
-  _id: new ObjectId('61f7a4edcf809301e78fbe55'),
+  _id: new ObjectId('61f7a4edcf809301e78fbe53'),
   facilitySnapshot: {
-    ukefFacilityId: 'FACILITY-003',
+    ukefFacilityId: '0000000003',
     hasBeenIssued: true,
   },
   tfm: {},
 } as unknown as TfmFacility;
 
 export const mockTfmIssuedFacility4 = {
-  _id: new ObjectId('61f7a4edcf809301e78fbe56'),
+  _id: new ObjectId('61f7a4edcf809301e78fbe54'),
   facilitySnapshot: {
-    ukefFacilityId: '0030012345',
+    ukefFacilityId: '0000000004',
     hasBeenIssued: true,
   },
   tfm: {},
@@ -62,7 +62,7 @@ export const mockTfmIssuedFacility4 = {
 export const mockUnissuedFacility = {
   _id: '61f7a4edcf809301e78fbe55',
   facilitySnapshot: {
-    ukefFacilityId: 'FACILITY-003',
+    ukefFacilityId: '0000000005',
     hasBeenIssued: false,
   },
 } as unknown as TfmFacility;
