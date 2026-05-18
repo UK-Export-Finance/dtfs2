@@ -14,7 +14,7 @@ type SubmitFacilitiesToApimGiftParams = {
 /**
  * Submits facilities to the APIM/GIFT.
  * If only one facility is provided, create a single payload and submits it.
- * If multiple facilities are provided, create multiple payloads and submits them in parallel.
+ * If multiple facilities are provided, create multiple payloads and submit them sequentially.
  * The function returns the response from the APIM/GIFT integration, which could be a single facility or an array of facilities depending on the input.
  * @param {SubmitFacilitiesToApimGiftParams} params - An object containing the deal and facilities to be submitted.
  * @param {TfmDeal} params.deal - The TFM deal associated with the facilities being submitted.
@@ -59,11 +59,26 @@ export const submitFacilitiesToApimGift = async ({
     creditRiskRatings,
   });
 
-  const promises = await Promise.all(payloads.map((payload: ApimGiftFacilityCreationPayload) => api.createGiftFacility(payload)));
+  const attemptedFacilityIds = payloads.map((payload: ApimGiftFacilityCreationPayload) => String(payload?.overview?.facilityId));
+
+  console.info('APIM GIFT debug - deal %s attempting to submit %s facilities. Facility IDs: %o', deal?._id, payloads.length, attemptedFacilityIds);
+
+  const responses: Array<TfmFacility | false> = [];
+
+  /**
+   * NOTE: We need to use a for loop instead of Promise.all, to ensure that the calls are sequential.
+   * Promise.all is not sequential.
+   * If the calls are not sequential, GIFT will error with a database deadlock error.
+   */
+  for (const payload of payloads) {
+    const response = await api.createGiftFacility(payload);
+
+    responses.push(response);
+  }
 
   /**
    * For typing, the response from the APIM/GIFT integration is expected to be an array of TfmFacility objects, but in the case where all API calls fail, this would result in an empty array.
-   * Therefore we need ot filter the responses to ensure we only return the successful responses, which could be an array of TfmFacility objects or an empty array if all API calls fail.
+   * Therefore we need to filter the responses to ensure we only return the successful responses, which could be an array of TfmFacility objects or an empty array if all API calls fail.
    *
    * If the API call to create a facility in APIM/GIFT fails for any of the facilities, we do NOT want to throw an error.
    * Instead, continue with the successful responses, which could result in some facilities being created in GIFT and some not being created.
@@ -73,7 +88,7 @@ export const submitFacilitiesToApimGift = async ({
    * The alternative of this would be to have retry logic in DTFS, but given the low likelihood of the API calls failing and the fact that facility creation in GIFT can be "best effort", this is not necessary.
    * Note that this is an edge case scenario as most facilities should be able to be created in GIFT without issue.
    */
-  const successfulResponses = promises.filter((response): response is TfmFacility => Boolean(response));
+  const successfulResponses: TfmFacility[] = responses.filter((response): response is TfmFacility => Boolean(response));
 
   return successfulResponses;
 };
