@@ -56,9 +56,15 @@ describe('get', () => {
 
   it(`should fallback to ${HttpStatusCode.InternalServerError} when axios throws without an HTTP response`, async () => {
     // Arrange
-    const mockError = new Error('Mock network error');
+    const mockResponseBody = {
+      message: `Mock response data for get facility ${mockFacilityId}`,
+    };
 
-    const expectedResponseBody = { message: `No response received from APIM TFS GIFT - get facility ${mockFacilityId} endpoint` };
+    const mockError = {
+      response: {
+        data: mockResponseBody,
+      },
+    };
 
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
@@ -75,7 +81,7 @@ describe('get', () => {
       'Error calling APIM TFS GIFT - get facility endpoint - facilityId %s status %s responseBody %o error %o',
       mockFacilityId,
       HttpStatusCode.InternalServerError,
-      expectedResponseBody,
+      mockResponseBody,
       mockError,
     );
 
@@ -176,7 +182,16 @@ describe('getMany', () => {
     const ids = facilityIds.join(',');
     mockRequest.query = { ids };
 
-    const mockError = new Error('Mock network error');
+    const mockResponseBody = {
+      message: `Mock response data for get facilities ids=${ids}`,
+    };
+
+    const mockError = {
+      response: {
+        data: mockResponseBody,
+      },
+    };
+
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
     // Act
@@ -188,7 +203,7 @@ describe('getMany', () => {
       'Error calling APIM TFS GIFT - get facilities endpoint - ids %s status %s responseBody %o error %o',
       ids,
       HttpStatusCode.InternalServerError,
-      { message: `No response received from APIM TFS GIFT - get facilities endpoint ids=${ids}` },
+      mockResponseBody,
       mockError,
     );
 

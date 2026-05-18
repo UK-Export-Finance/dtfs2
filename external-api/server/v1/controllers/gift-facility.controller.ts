@@ -59,7 +59,8 @@ export const get = async (req: Request, res: Response) => {
       headers,
     }).catch((error: any) => {
       const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
-      const responseBody = error?.response?.data ?? { message: `No response received from APIM TFS GIFT - get facility ${facilityId} endpoint` };
+
+      const responseBody = error?.response?.data;
 
       console.error(
         'Error calling APIM TFS GIFT - get facility endpoint - facilityId %s status %s responseBody %o error %o',
@@ -128,7 +129,7 @@ export const getMany = async (req: Request, res: Response) => {
     headers,
   }).catch((error: any) => {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
-    const responseBody = error?.response?.data ?? { message: `No response received from APIM TFS GIFT - get facilities endpoint - ids=${ids}` };
+    const responseBody = error?.response?.data;
 
     console.error('Error calling APIM TFS GIFT - get facilities endpoint - ids %s status %s responseBody %o error %o', ids, status, responseBody, error);
 

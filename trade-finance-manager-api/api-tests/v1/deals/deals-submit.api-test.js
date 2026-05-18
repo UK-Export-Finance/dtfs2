@@ -372,7 +372,7 @@ describe('/v1/deals', () => {
         hasBeenIssued: true,
       };
 
-      describe('when all issued facilities are not in GIFT', async () => {
+      describe('when all issued facilities are not in GIFT', () => {
         it('should call submitFacilitiesToApimGift with all issued facilities', async () => {
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: true,
@@ -392,7 +392,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when there are no issued facilities to send to GIFT', async () => {
+      describe('when there are no issued facilities to send to GIFT', () => {
         it('should not call submitFacilitiesToApimGift', async () => {
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: false,
@@ -406,7 +406,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when some issued facilities are in GIFT, some are not', async () => {
+      describe('when some issued facilities are in GIFT, some are not', () => {
         it('should call submitFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
           canSubmitToApimGift.mockResolvedValueOnce({
             canSubmitFacilitiesToApimGift: true,
