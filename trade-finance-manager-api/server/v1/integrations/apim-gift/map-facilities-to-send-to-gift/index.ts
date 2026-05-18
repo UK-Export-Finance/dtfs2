@@ -8,6 +8,7 @@ type MapFacilitiesToSendToGiftParams = {
 
 type MapFacilitiesToSendToGiftReturnShape = {
   facilitiesToSendToApimGift: TfmFacility[];
+  facilityIds?: string[];
 };
 
 type GiftFacility = {
@@ -15,11 +16,11 @@ type GiftFacility = {
 };
 
 /**
- * Type guard to check if an object is a GiftFacility.
+ * Type guard to check if an object is a GiftFacility / has a GIFT facilityId property.
  * @param facility - The object to check.
  * @returns True if the object has a facilityId property, false otherwise.
  */
-export const hasId = (facility: object): facility is GiftFacility => 'facilityId' in facility;
+export const hasGiftFacilityId = (facility: object): facility is GiftFacility => 'facilityId' in facility;
 
 /**
  * Map issued TFM facilities to determine which can be sent to APIM GIFT based on whether they already exist in GIFT.
@@ -41,10 +42,11 @@ export const mapFacilitiesToSendToGift = ({
 
     return {
       facilitiesToSendToApimGift: [],
+      facilityIds: [],
     };
   }
 
-  const giftFacilityIds = new Set(giftFacilities.filter(hasId).map((facility) => String(facility.facilityId)));
+  const giftFacilityIds = new Set(giftFacilities.filter(hasGiftFacilityId).map((facility) => String(facility.facilityId)));
 
   if (giftFacilityIds.size === 0) {
     console.info('No facilities found in APIM GIFT for deal %s - all issued facilities can be submitted to APIM GIFT', dealId);
@@ -62,13 +64,14 @@ export const mapFacilitiesToSendToGift = ({
   const facilitiesNotInGift = issuedTfmFacilities.filter(({ facilitySnapshot: { ukefFacilityId } }) => !giftFacilityIds.has(String(ukefFacilityId)));
 
   const facilitiesInGiftIds = facilitiesInGift.map((facility) => facility.facilitySnapshot.ukefFacilityId);
-  const facilitiesNotInGiftIds = facilitiesNotInGift.map((facility) => facility.facilitySnapshot.ukefFacilityId);
+  const facilitiesNotInGiftIds = facilitiesNotInGift.map((facility) => String(facility.facilitySnapshot.ukefFacilityId));
 
   if (facilitiesInGiftIds.length === issuedTfmFacilities.length) {
     console.info('All issued facilities for deal %s already exist in GIFT: %o', dealId, facilitiesInGiftIds);
 
     return {
       facilitiesToSendToApimGift: [],
+      facilityIds: [],
     };
   }
 
@@ -80,5 +83,6 @@ export const mapFacilitiesToSendToGift = ({
 
   return {
     facilitiesToSendToApimGift: facilitiesNotInGift,
+    facilityIds: facilitiesNotInGiftIds,
   };
 };

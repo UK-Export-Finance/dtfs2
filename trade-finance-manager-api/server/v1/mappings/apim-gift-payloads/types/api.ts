@@ -10,7 +10,7 @@ type FindFacilitiesByDealIdErrorResponse = {
 export type ApiTypes = {
   createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility> | false;
   findFacilitiesByDealId: (dealId: string) => Promise<TfmFacility[] | FindFacilitiesByDealIdErrorResponse>;
-  findGiftFacilitiesById: (facilityIds: string) => Promise<TfmFacility[] | false>;
+  findGiftFacilitiesById: (facilityIdsQueryString: string) => Promise<TfmFacility[] | false>;
   getCreditRiskRatings: () => Promise<CreditRiskRating[]> | false;
   getFacilityCategories: () => Promise<FacilityCategory[]> | false;
 };

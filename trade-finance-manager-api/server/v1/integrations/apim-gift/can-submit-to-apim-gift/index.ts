@@ -143,16 +143,16 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     };
   }
 
-  const { facilitiesToSendToApimGift } = mapFacilitiesToSendToGift({
+  const { facilitiesToSendToApimGift, facilityIds } = mapFacilitiesToSendToGift({
     dealId,
     giftFacilities: giftFacilitiesResponse,
     issuedTfmFacilities: issuedFacilities,
   });
 
   if (facilitiesToSendToApimGift.length === 0) {
-    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - facilities already exist in GIFT', dealId);
+    console.info('No issued facilities for deal %s can be submitted to APIM GIFT - facilities already exist in GIFT', dealId);
   } else {
-    console.info('Issued facilities for deal %s can be submitted to APIM GIFT', dealId);
+    console.info('Issued facilities %s for deal %s can be submitted to APIM GIFT', facilityIds, dealId);
   }
 
   return {
