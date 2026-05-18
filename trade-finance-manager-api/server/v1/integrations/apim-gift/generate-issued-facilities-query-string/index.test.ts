@@ -13,7 +13,11 @@ describe('generateIssuedFacilitiesQueryString', () => {
       const result = generateIssuedFacilitiesQueryString(issuedFacilities);
 
       // Assert
-      const expected = 'FACILITY-001,FACILITY-002,FACILITY-003';
+      const expected = [
+        mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility3.facilitySnapshot.ukefFacilityId,
+      ].join(',');
 
       expect(result).toEqual(expected);
     });
@@ -26,7 +30,13 @@ describe('generateIssuedFacilitiesQueryString', () => {
       const result = generateIssuedFacilitiesQueryString(issuedFacilities);
 
       // Assert
-      expect(result).toEqual('FACILITY-003,FACILITY-001,FACILITY-002');
+      const expected = [
+        mockTfmIssuedFacility3.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId,
+      ].join(',');
+
+      expect(result).toEqual(expected);
     });
 
     it('should handle mixed facility ID formats', () => {
@@ -37,7 +47,11 @@ describe('generateIssuedFacilitiesQueryString', () => {
       const result = generateIssuedFacilitiesQueryString(issuedFacilities);
 
       // Assert
-      const expected = 'FACILITY-001,0030012345,FACILITY-002';
+      const expected = [
+        mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility4.facilitySnapshot.ukefFacilityId,
+        mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId,
+      ].join(',');
 
       expect(result).toEqual(expected);
     });
@@ -52,7 +66,7 @@ describe('generateIssuedFacilitiesQueryString', () => {
       const result = generateIssuedFacilitiesQueryString(issuedFacilities);
 
       // Assert
-      const expected = 'FACILITY-001';
+      const expected = mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId;
 
       expect(result).toEqual(expected);
     });
@@ -105,7 +119,7 @@ describe('generateIssuedFacilitiesQueryString', () => {
       const result = generateIssuedFacilitiesQueryString(issuedFacilities);
 
       // Assert
-      const expected = `FACILITY-001,${mockUkefFacilityIdWithSpecialChars}`;
+      const expected = `${mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId},${mockUkefFacilityIdWithSpecialChars}`;
 
       expect(result).toEqual(expected);
     });

@@ -140,15 +140,9 @@ export const getMany = async (req: Request, res: Response) => {
     };
   });
 
-  const { status } = response;
-
-  if (status !== HttpStatusCode.Ok) {
-    return res.sendStatus(status);
-  }
-
   const responseData = 'data' in response ? response.data : {};
 
-  return res.status(HttpStatusCode.Ok).send(responseData);
+  return res.status(response.status).send(responseData);
 };
 
 /**
