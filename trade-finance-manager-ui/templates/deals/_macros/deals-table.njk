@@ -19,7 +19,7 @@
       <thead class="govuk-table__head">
         <tr>
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'ukefDealId',
             buttonText: 'Deal ID',
@@ -27,9 +27,9 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'product',
             buttonText: 'Product',
@@ -37,11 +37,11 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'exporter',
             buttonText: 'Exporter',
@@ -49,9 +49,9 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'buyer',
             buttonText: 'Buyer',
@@ -59,9 +59,9 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'bank',
             buttonText: 'Bank',
@@ -69,9 +69,9 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'stage',
             buttonText: 'Stage',
@@ -79,9 +79,9 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'deals',
             fieldName: 'dateReceived',
             buttonText: 'Date received',
@@ -89,7 +89,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
         </tr>
       </thead>
 
@@ -114,7 +114,7 @@
               {{ govukTag({
                 text: deal.tfm.stage | dashIfEmpty,
                 classes: "govuk-tag--blue"
-              })}}
+              }) }}
             </td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">
               {% if deal.tfm.dateReceived %}

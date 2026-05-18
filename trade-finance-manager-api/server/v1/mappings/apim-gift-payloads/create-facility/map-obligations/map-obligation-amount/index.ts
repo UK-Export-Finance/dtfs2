@@ -3,10 +3,40 @@ import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
 
-type MapObligationAmountParams = {
-  isGefDeal: boolean;
+type MapGefObligationAmountParams = {
   facilityType?: string;
   ukefExposure: number;
+};
+
+type MapObligationAmountParams = MapGefObligationAmountParams & {
+  isGefDeal: boolean;
+};
+
+/**
+ * Maps the obligation amount for a GEF facility.
+ * @param {MapGefObligationAmountParams} params - Data required to calculate the obligation amount.
+ * @param {string} params.facilityType - The facility type (e.g. "Cash", "Contingent").
+ * @param {number} params.ukefExposure - The facility's UKEF exposure.
+ * @example
+ * const obligationAmount = mapGefObligationAmount({ facilityType: 'Contingent', ukefExposure: 128.518888 }); => 89.96
+ * const obligationAmount = mapGefObligationAmount({ facilityType: 'Cash', ukefExposure: 128.518888 }); => 109.24
+ * const obligationAmount = mapGefObligationAmount({ facilityType: 'Unknown', ukefExposure: 128.518888 }); => null
+ * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
+ */
+export const mapGefObligationAmount = ({ facilityType, ukefExposure }: MapGefObligationAmountParams): number | null => {
+  if (facilityType === FACILITY_TYPE.CASH) {
+    const multiplier = UKEF_EXPOSURE_PERCENTAGE.CASH;
+
+    return Math.round(ukefExposure * multiplier * 100) / 100;
+  }
+
+  if (facilityType === FACILITY_TYPE.CONTINGENT) {
+    const multiplier = UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
+
+    return Math.round(ukefExposure * multiplier * 100) / 100;
+  }
+
+  return null;
 };
 
 /**
@@ -19,15 +49,7 @@ type MapObligationAmountParams = {
  */
 export const mapObligationAmount = ({ isGefDeal, facilityType, ukefExposure }: MapObligationAmountParams): number | null => {
   if (isGefDeal) {
-    if (facilityType === FACILITY_TYPE.CASH) {
-      return ukefExposure * UKEF_EXPOSURE_PERCENTAGE.CASH;
-    }
-
-    if (facilityType === FACILITY_TYPE.CONTINGENT) {
-      return ukefExposure * UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
-    }
-
-    return null;
+    return mapGefObligationAmount({ facilityType, ukefExposure });
   }
 
   return ukefExposure;

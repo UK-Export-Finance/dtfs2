@@ -24,7 +24,7 @@
 <div class="govuk-grid-row deal">
   {% if deal.dealType === 'GEF' or not filteredFacilities.length > 0%}
     <div class="govuk-grid-column-one-half">
-      {{ notApplicable.render({ id: 'bond-issuer' })}}
+      {{ notApplicable.render({ id: 'bond-issuer' }) }}
     </div>
   {% elif filteredFacilities.length > 0 %}
     {% set componentData = {
