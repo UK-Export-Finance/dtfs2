@@ -305,7 +305,7 @@ describe('mapFacilitiesToSendToGift', () => {
     it('should treat facilities without facilityId as not present', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2];
-      const giftFacilitiesResponse = [{ someOtherProperty: 'FACILITY-001' }, { anotherProperty: 'FACILITY-002' }];
+      const giftFacilitiesResponse = [{ someOtherProperty: '0000000002' }, { anotherProperty: '0000000002' }];
 
       // Act
       const result = mapFacilitiesToSendToGift({

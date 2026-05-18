@@ -176,8 +176,9 @@ describe('getMany', () => {
   describe('when APIM TFS returns success', () => {
     it(`should return ${HttpStatusCode.Ok} and response data`, async () => {
       // Arrange
-      const facilityIds = ['FACILITY-001', 'FACILITY-002'];
+      const facilityIds = ['0000000001', '0000000002'];
       const ids = facilityIds.join(',');
+
       const mockResponseData = {
         facilities: [
           { facilityId: facilityIds[0], status: HttpStatusCode.Ok },
@@ -207,7 +208,7 @@ describe('getMany', () => {
   describe('when APIM TFS throws without an HTTP response', () => {
     it(`should fallback to ${HttpStatusCode.InternalServerError}`, async () => {
       // Arrange
-      const facilityIds = ['FACILITY-001'];
+      const facilityIds = ['0000000001'];
       const ids = facilityIds.join(',');
       mockRequest.query = { ids };
 
@@ -243,7 +244,7 @@ describe('getMany', () => {
   describe('when APIM TFS get facilities returns an HTTP error response', () => {
     it(`should forward non-${HttpStatusCode.Ok} status`, async () => {
       // Arrange
-      const facilityIds = ['FACILITY-001', 'FACILITY-002'];
+      const facilityIds = ['0000000001', '0000000002'];
       const ids = facilityIds.join(',');
       mockRequest.query = { ids };
 
@@ -299,7 +300,7 @@ describe('create', () => {
   it(`should return ${HttpStatusCode.Created} with response data`, async () => {
     // Arrange
     const requestBody = { test: true };
-    const responseData = { facilityId: 'FACILITY-001' };
+    const responseData = { facilityId: '0000000001' };
     mockRequest.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
