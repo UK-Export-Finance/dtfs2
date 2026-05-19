@@ -1,4 +1,5 @@
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
 {% macro render(params) %}
   {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
@@ -11,5 +12,5 @@
     attributes: {
     'data-cy': 'utilisation-report-reconciliation-status'
     }
-    }) }}
+  }) }}
 {% endmacro %}
