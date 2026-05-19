@@ -11,10 +11,11 @@ context('Portal 2FA Journey - Account suspension - too many attempts to login ar
   });
 
   describe('when handling partial auth session', () => {
-    it('should redirect to login when accessing the suspension page without partial auth', () => {
+    it('should render the suspension page when accessed directly without a partial auth session', () => {
       temporarilySuspendedAccessCode.visit();
 
-      cy.url().should('eq', relative('/login'));
+      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
     });
 
     it('should keep the partial auth session while suspended', () => {
@@ -24,6 +25,41 @@ context('Portal 2FA Journey - Account suspension - too many attempts to login ar
       cy.visit('/login/temporarily-suspended-access-code');
       cy.url().should('contain', '/login/temporarily-suspended-access-code');
       cy.getCookie('dtfs-session').should('exist');
+    });
+  });
+
+  describe('when an already-suspended user re-submits the login form', () => {
+    beforeEach(() => {
+      cy.task('updatePortalUserByUsername', {
+        username: BANK1_MAKER1.username,
+        update: { 'user-status': 'blocked' },
+      });
+    });
+
+    it('should redirect to the suspended account page instead of silently returning to /login', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+    });
+
+    it('should display the suspension heading and message on re-submission', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+      cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
+      cy.assertText(
+        temporarilySuspendedAccessCode.message(),
+        'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
+      );
+    });
+
+    it('should render the page accessible to the suspended user without requiring a partial auth session', () => {
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      temporarilySuspendedAccessCode
+        .contactUsEmail()
+        .should('have.attr', 'href')
+        .and('match', /^mailto:/);
     });
   });
 
