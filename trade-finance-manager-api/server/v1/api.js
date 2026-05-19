@@ -1981,14 +1981,14 @@ const createGiftFacility = async (facilityData) => {
 
 /**
  * Find GIFT facilities by their IDs.
- * @param {string} facilityIds - The IDs of the facilities to find
- * @returns {Promise<object|boolean>} The found facilities if successful, otherwise false
+ * @param {string} facilityIdsQueryString - Comma-separated facility IDs to find.
+ * @returns {Promise<{ facilities: object[] }|false>} The API response payload if successful, otherwise false.
  */
-const findGiftFacilitiesById = async (facilityIds) => {
+const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
   try {
-    console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIds);
+    console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIdsQueryString);
 
-    const queryString = new URLSearchParams({ ids: facilityIds }).toString();
+    const queryString = new URLSearchParams({ ids: facilityIdsQueryString }).toString();
 
     const response = await axios({
       method: 'get',
@@ -2003,7 +2003,7 @@ const findGiftFacilitiesById = async (facilityIds) => {
 
     console.error(
       'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
-      facilityIds,
+      facilityIdsQueryString,
       status,
       responseBody,
       error,
@@ -2103,5 +2103,5 @@ module.exports = {
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
   createGiftFacility,
-  findGiftFacilitiesById,
+  findGiftFacilitiesByIds,
 };

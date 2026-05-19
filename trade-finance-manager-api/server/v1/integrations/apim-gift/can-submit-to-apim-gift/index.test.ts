@@ -10,7 +10,7 @@ jest.mock('../../../api', () => ({
   __esModule: true,
   default: {
     findFacilitiesByDealId: jest.fn(),
-    findGiftFacilitiesById: jest.fn(),
+    findGiftFacilitiesByIds: jest.fn(),
   },
 }));
 
@@ -35,6 +35,7 @@ jest.mock('../map-facilities-to-send-to-gift', () => ({
 
 const mockFeatureFlag = jest.mocked(isTfmApimGiftIntegrationEnabled);
 const mockApi = jest.mocked(apiModule) as jest.Mocked<ApiTypes>;
+const mockFindGiftFacilitiesByIds = mockApi.findGiftFacilitiesByIds as jest.MockedFunction<ApiTypes['findGiftFacilitiesByIds']>;
 const mockGenerateIssuedFacilitiesQueryString = jest.mocked(generateIssuedFacilitiesQueryStringModule.generateIssuedFacilitiesQueryString);
 const mockMapFacilitiesToSendToGift = jest.mocked(mapFacilitiesToSendToGiftModule.mapFacilitiesToSendToGift);
 
@@ -116,7 +117,7 @@ describe('canSubmitToApimGift', () => {
 
         mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility]);
         mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(String(mockIssuedFacility.facilitySnapshot.ukefFacilityId));
-        mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
+        mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
         mockMapFacilitiesToSendToGift.mockReturnValueOnce({
           facilitiesToSendToApimGift: [mockIssuedFacility],
         });
@@ -135,7 +136,7 @@ describe('canSubmitToApimGift', () => {
           mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
             [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
           );
-          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([]);
+          mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
             facilitiesToSendToApimGift: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
           });
@@ -165,10 +166,12 @@ describe('canSubmitToApimGift', () => {
           mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
             [mockIssuedFacility1.facilitySnapshot.ukefFacilityId, mockIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
           );
-          mockApi.findGiftFacilitiesById.mockResolvedValueOnce([
-            { ...mockGiftFacility, facilityId: String(mockIssuedFacility1.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
-            { ...mockGiftFacility, facilityId: String(mockIssuedFacility2.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
-          ]);
+          mockFindGiftFacilitiesByIds.mockResolvedValueOnce({
+            facilities: [
+              { ...mockGiftFacility, facilityId: String(mockIssuedFacility1.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
+              { ...mockGiftFacility, facilityId: String(mockIssuedFacility2.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
+            ],
+          });
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
             facilitiesToSendToApimGift: [],
           });
@@ -195,7 +198,7 @@ describe('canSubmitToApimGift', () => {
           mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
             [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
           );
-          mockApi.findGiftFacilitiesById.mockResolvedValueOnce(false);
+          mockFindGiftFacilitiesByIds.mockResolvedValueOnce(false);
 
           // Act
           const result = await canSubmitToApimGift(mockDeal);
@@ -325,7 +328,7 @@ describe('canSubmitToApimGift', () => {
         expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
       });
 
-      it('should NOT call findGiftFacilitiesById', async () => {
+      it('should NOT call findGiftFacilitiesByIds', async () => {
         // Arrange
         const mockDeal = {
           ...mockTfmDeal,
@@ -343,7 +346,7 @@ describe('canSubmitToApimGift', () => {
         await canSubmitToApimGift(mockDeal);
 
         // Assert
-        expect(mockApi.findGiftFacilitiesById).not.toHaveBeenCalled();
+        expect(mockApi.findGiftFacilitiesByIds).not.toHaveBeenCalled();
       });
 
       it('should NOT call mapFacilitiesToSendToGift', async () => {

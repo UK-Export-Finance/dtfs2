@@ -7,10 +7,14 @@ type FindFacilitiesByDealIdErrorResponse = {
   data: unknown;
 };
 
+type FindGiftFacilitiesByIdSuccessResponse = {
+  facilities: object[];
+};
+
 export type ApiTypes = {
   createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility> | false;
   findFacilitiesByDealId: (dealId: string) => Promise<TfmFacility[] | FindFacilitiesByDealIdErrorResponse>;
-  findGiftFacilitiesById: (facilityIdsQueryString: string) => Promise<TfmFacility[] | false>;
+  findGiftFacilitiesByIds: (facilityIdsQueryString: string) => Promise<FindGiftFacilitiesByIdSuccessResponse | false>;
   getCreditRiskRatings: () => Promise<CreditRiskRating[]> | false;
   getFacilityCategories: () => Promise<FacilityCategory[]> | false;
 };

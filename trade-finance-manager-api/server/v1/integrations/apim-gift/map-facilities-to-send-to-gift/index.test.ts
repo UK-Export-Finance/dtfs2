@@ -206,8 +206,6 @@ describe('mapFacilitiesToSendToGift', () => {
       ]);
     });
 
-    // (Redundant with above, merged into one test)
-
     it('should return correct facilities when multiple exist in GIFT', () => {
       // Arrange
       const issuedFacilities = [mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockTfmIssuedFacility3];

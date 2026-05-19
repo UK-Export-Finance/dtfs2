@@ -128,9 +128,9 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
   console.info('Issued facilities for deal %s could be submitted to APIM GIFT', dealId);
 
-  const issuedFacilityIds = generateIssuedFacilitiesQueryString(issuedFacilities);
+  const issuedFacilitiesQueryString = generateIssuedFacilitiesQueryString(issuedFacilities);
 
-  const giftFacilitiesResponse = await api.findGiftFacilitiesById(issuedFacilityIds);
+  const giftFacilitiesResponse = await api.findGiftFacilitiesByIds(issuedFacilitiesQueryString);
 
   if (giftFacilitiesResponse === false) {
     console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve existing facilities from GIFT', dealId);
@@ -143,16 +143,20 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
     };
   }
 
+  const giftFacilities = Array.isArray(giftFacilitiesResponse.facilities) ? giftFacilitiesResponse.facilities : [];
+
   const { facilitiesToSendToApimGift, facilityIds } = mapFacilitiesToSendToGift({
     dealId,
-    giftFacilities: giftFacilitiesResponse,
+    giftFacilities,
     issuedTfmFacilities: issuedFacilities,
   });
 
   if (facilitiesToSendToApimGift.length === 0) {
     console.info('No issued facilities for deal %s can be submitted to APIM GIFT - facilities already exist in GIFT', dealId);
   } else {
-    console.info('Issued facilities %s for deal %s can be submitted to APIM GIFT', facilityIds, dealId);
+    const facilityIdsForLog = facilityIds ?? generateIssuedFacilitiesQueryString(facilitiesToSendToApimGift);
+
+    console.info('Issued facilities %s for deal %s can be submitted to APIM GIFT', facilityIdsForLog, dealId);
   }
 
   return {
