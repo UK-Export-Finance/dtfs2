@@ -2,6 +2,11 @@ import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_
 import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 import { isAmendmentDeclined } from './is-amendment-declined';
 
+type CanSendToAcbsParams = {
+  amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId;
+  isTaskUpdate?: boolean;
+};
+
 /**
  * Determines if an amendment can be sent to ACBS based on its type, status, user involvement, and amendment details.
  *
@@ -19,10 +24,10 @@ import { isAmendmentDeclined } from './is-amendment-declined';
  * If the amendment update is part of a task update, it should not be sent to ACBS, hence the `isTaskUpdate` flag is used to prevent that.
  *
  * @param amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
- * @param isTaskUpdate - Optional flag indicating if the amendment update is part of a task update.
+ * @param isTaskUpdate - Optional flag indicating if the amendment update is part of a task update. Defaults to false.
  * @returns `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
-export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId, isTaskUpdate = false) => {
+export const canSendToAcbs = ({ amendment, isTaskUpdate = false }: CanSendToAcbsParams) => {
   // Amendment type
   const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
 

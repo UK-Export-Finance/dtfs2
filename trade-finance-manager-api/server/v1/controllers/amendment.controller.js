@@ -243,6 +243,7 @@ const updateFacilityAmendment = async (req, res) => {
 
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
+
   // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
   let isTaskUpdate = false;
 
@@ -335,14 +336,14 @@ const updateFacilityAmendment = async (req, res) => {
 
       // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {
-        // TFM Facility update + ACBS Interaction
-        if (canSendToAcbs(amendment, isTaskUpdate)) {
-          // Amend facility TFM properties
-          await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
+        // Amend facility TFM properties
+        await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-          // Amendment email notification to PDC
-          await internalAmendmentEmail(ukefFacilityId);
+        // Amendment email notification to PDC
+        await internalAmendmentEmail(ukefFacilityId);
 
+        // Submit to ACBS
+        if (canSendToAcbs({ amendment, isTaskUpdate })) {
           // Amend facility ACBS records
           acbs.amendAcbsFacility(amendment, facility, deal);
         }
@@ -384,7 +385,7 @@ const sendAmendmentToAcbs = async (req, res) => {
     if (amendmentId && facilityId) {
       let amendment = await api.getAmendmentById(facilityId, amendmentId);
 
-      // Fetch facility object
+      // Fetch facility
       const facility = await api.findOneFacility(facilityId);
       const { ukefFacilityId } = facility.facilitySnapshot;
 
@@ -413,10 +414,10 @@ const sendAmendmentToAcbs = async (req, res) => {
 
       // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {
-        // TFM Facility update + ACBS Interaction
-        if (canSendToAcbs(amendment)) {
-          // Amendment email notification to PDC
-          await internalAmendmentEmail(ukefFacilityId);
+        // Amendment email notification to PDC
+        await internalAmendmentEmail(ukefFacilityId);
+
+        if (canSendToAcbs({ amendment })) {
           // Amend facility ACBS records
           acbs.amendAcbsFacility(amendment, facility, deal);
         }
