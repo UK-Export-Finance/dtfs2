@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% import '../../amendments/_macros/amendment-ukef-decision-summary.njk' as summaryDetails %}
 {% import '../../amendments/_macros/amendment-future-effective-date-facility-bar.njk' as amendmentFutureEffectiveDateFacilityBar %}
 {% import './amendment-eligibility-criteria.njk' as eligibilityCriteria %}
@@ -16,12 +16,13 @@
         
         {% if amendment.futureEffectiveDatePortalAmendment %}
           <div class="govuk-!-padding-bottom-6">
-          {% set amendmentFutureEffectiveDateFacilityBarParams = {
-            futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment,
-            isOnAmendmentTab: true,
-            amendmentIndex: loop.index
-          } %}
-          {{ amendmentFutureEffectiveDateFacilityBar.render(amendmentFutureEffectiveDateFacilityBarParams) }}
+            {% set amendmentFutureEffectiveDateFacilityBarParams = {
+              futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment,
+              isOnAmendmentTab: true,
+              amendmentIndex: loop.index
+            } %}
+
+            {{ amendmentFutureEffectiveDateFacilityBar.render(amendmentFutureEffectiveDateFacilityBarParams) }}
           </div>
         {% endif %}
 
@@ -71,7 +72,9 @@
                 attributes: { "data-cy": "amendment--details-"+loop.index+"-banks-decision" }
               }) }}
             {% endset %}
+
             {% set bankDecision = { html: banksDecisionHtml, rowspan: 2, classes: "gov-table__grey-table-column gov-table_cell-vertical-align-middle" } %}
+
             {% set defaultCoverEndDate = (defaultCoverEndDate.push(bankDecision), defaultCoverEndDate) %}
           {% endif %}
 
@@ -99,6 +102,7 @@
 
           {% if amendment.requireUkefApproval === 'Yes' %}
             {% set banksDecisionHtml = '' %}
+
             {% if amendment.changeCoverEndDate === false %}
               {% set banksDecisionHtml %}
                 {{ govukTag({
@@ -108,7 +112,9 @@
                 }) }}
               {% endset %}
             {% endif %}
+
             {% set bankDecision = { html: banksDecisionHtml, classes: "gov-table__grey-table-column gov-table_cell-vertical-align-middle", rowspan: 2 } %}
+
             {% set defaultFacilityValue = (defaultFacilityValue.push(bankDecision), defaultFacilityValue) %}
           {% endif %}
 
@@ -150,6 +156,7 @@
             }
           ]
         %}
+
         {% if amendment.requireUkefApproval === 'Yes' %}
           {% set bankDecision = { text: "Bank's decision" } %}
           {% set head = (head.push(bankDecision), head) %}

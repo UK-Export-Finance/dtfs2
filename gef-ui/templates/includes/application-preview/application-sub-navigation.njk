@@ -1,4 +1,4 @@
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 
 {% set applicationNotice = 
    {
@@ -34,9 +34,9 @@
 %}
 
 {% if isPortalAmendmentsFeatureFlagEnabled %}
-   {% set items = [applicationNotice, amendments, activity] %}
+  {% set items = [applicationNotice, amendments, activity] %}
 {% else %}
-   {% set items = [applicationNotice, activity] %}
+  {% set items = [applicationNotice, activity] %}
 {% endif %}
 
   <div class="govuk-grid-row">
@@ -46,7 +46,7 @@
          items: items,
          attributes: {
           'data-cy': 'application-preview-sub-navigation'
-        }
-         }) }}
+         }
+      }) }}
     </div>
   </div>
