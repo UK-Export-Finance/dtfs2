@@ -243,6 +243,7 @@ const updateFacilityAmendment = async (req, res) => {
 
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
+
   // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
   let isTaskUpdate = false;
 
