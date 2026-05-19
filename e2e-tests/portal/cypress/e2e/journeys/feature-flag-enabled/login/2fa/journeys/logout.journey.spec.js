@@ -57,10 +57,12 @@ context('2FA Journey - Logout', () => {
       cy.url().should('eq', relative('/login'));
     });
 
-    it('should redirect to login when visiting /user/profile after logout', () => {
-      cy.visit('/user/profile');
+    it('should redirect to login when visiting /user/:_id after logout', () => {
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('eq', relative('/login'));
+        cy.url().should('eq', relative('/login'));
+      });
     });
 
     it('should redirect to login when visiting /dashboard/deals/0 after logout', () => {

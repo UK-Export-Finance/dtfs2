@@ -19,7 +19,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     });
 
     it('should keep the partial auth session while suspended', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
 
       cy.getCookie('dtfs-session').should('exist');
       cy.visit('/login/temporarily-suspended-access-code');
@@ -65,7 +65,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
 
   describe('when reaching the suspension page', () => {
     it('should show contact information on the suspension page', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
 
       temporarilySuspendedAccessCode
         .contactUsEmail()
@@ -101,19 +101,19 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     });
 
     it('should reach the suspension page after exhausting all resend attempts', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
 
       cy.url().should('contain', '/login/temporarily-suspended-access-code');
     });
 
     it('should display the suspension heading', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
 
       cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
     });
 
     it('should display the suspension message', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
 
       cy.assertText(
         temporarilySuspendedAccessCode.message(),
@@ -124,7 +124,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
 
   describe('when attempting to access protected routes while suspended', () => {
     beforeEach(() => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
     });
 
     it('should redirect to login when attempting to access /dashboard', () => {
@@ -148,7 +148,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
 
   describe('when attempting to directly access 2FA routes while suspended', () => {
     beforeEach(() => {
-      cy.goToSuspendedPage(BANK1_MAKER1.username);
+      cy.goToSuspendedPage(BANK1_MAKER1);
     });
 
     it('should not allow bypassing suspension by visiting /login/check-your-email-access-code', () => {

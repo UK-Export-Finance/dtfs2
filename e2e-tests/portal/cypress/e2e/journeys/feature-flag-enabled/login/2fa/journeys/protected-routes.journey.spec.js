@@ -23,10 +23,12 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.url().should('eq', relative('/login'));
     });
 
-    it('should redirect to login when visiting /user/profile without a session', () => {
-      cy.visit('/user/profile');
+    it('should redirect to login when visiting /user/<user._id> without a session', () => {
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('eq', relative('/login'));
+        cy.url().should('eq', relative('/login'));
+      });
     });
 
     it('should redirect to login when visiting /contract/12345 without a session', () => {
@@ -52,10 +54,12 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.url().should('eq', relative('/login'));
     });
 
-    it('should redirect to login when visiting /user/profile mid-2FA', () => {
-      cy.visit('/user/profile');
+    it('should redirect to login when visiting /user/<user._id> mid-2FA', () => {
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('eq', relative('/login'));
+        cy.url().should('eq', relative('/login'));
+      });
     });
 
     it('should redirect to login when visiting /contract/12345 mid-2FA', () => {
@@ -83,10 +87,12 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.url().should('contain', '/dashboard');
     });
 
-    it('should successfully access /user/profile after full 2FA', () => {
-      cy.visit('/user/profile');
+    it('should successfully access /user/<user._id> after full 2FA', () => {
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('contain', '/user/profile');
+        cy.url().should('contain', `/user/${user._id}`);
+      });
     });
 
     it('should redirect away from /login/check-your-email-access-code after full auth', () => {

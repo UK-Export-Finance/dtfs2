@@ -19,7 +19,7 @@ context('2FA Journey - Access code expiry', () => {
     });
 
     it('should keep the partial auth session after redirecting to the expired page', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
 
       cy.getCookie('dtfs-session').should('exist');
     });
@@ -27,14 +27,14 @@ context('2FA Journey - Access code expiry', () => {
 
   describe('when logging in with an expired access code', () => {
     it('should display the heading and request new code button', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
 
       cy.assertText(accessCodeExpired.heading(), 'Your access code has expired');
       cy.assertText(accessCodeExpired.requestNewCodeButton(), 'Request a new code');
     });
 
     it('should display the security and suspend information', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
 
       cy.assertText(
         accessCodeExpired.securityInfo(),
@@ -49,19 +49,19 @@ context('2FA Journey - Access code expiry', () => {
 
   describe('when displaying remaining attempts after expiry', () => {
     it('should show "You have 2 attempts remaining." when the OTP send count starts at 0', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
 
       cy.assertText(accessCodeExpired.attemptsInfo(), 'You have 2 attempts remaining.');
     });
 
     it('should show "You have 1 attempts remaining." when the OTP send count starts at 1', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 1 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 1 });
 
       cy.assertText(accessCodeExpired.attemptsInfo(), 'You have 1 attempts remaining.');
     });
 
     it('should show "You have 0 attempts remaining." when the OTP send count starts at 2', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 2 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 2 });
 
       cy.assertText(accessCodeExpired.attemptsInfo(), 'You have 0 attempts remaining.');
     });
@@ -69,21 +69,21 @@ context('2FA Journey - Access code expiry', () => {
 
   describe('when requesting a new code from the expired page', () => {
     it('should redirect to new-access-code when no sends have been used', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
       accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/new-access-code');
     });
 
     it('should redirect to resend-another-access-code when one send has been used', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 1 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 1 });
       accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/resend-another-access-code');
     });
 
     it('should allow successful login after requesting a new code', () => {
-      cy.submitExpiredAccessCode({ username: BANK1_MAKER1.username, count: 0 });
+      cy.submitExpiredAccessCode({ ...BANK1_MAKER1, count: 0 });
       accessCodeExpired.requestNewCodeButton().click();
 
       cy.url().should('contain', '/login/new-access-code');
