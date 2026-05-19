@@ -13,15 +13,16 @@ const facilityId = '111';
 
 describe('facilities routes', () => {
   beforeEach(() => {
-    jest.spyOn(api, 'getFacility').mockResolvedValue(MOCK_ISSUED_FACILITY);
-    jest.spyOn(api, 'createFacility').mockResolvedValue(MOCK_ISSUED_FACILITY);
-    jest.spyOn(api, 'updateFacility').mockResolvedValue(MOCK_ISSUED_FACILITY);
-    jest.spyOn(api, 'updateApplication').mockResolvedValue({});
+    api.getFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.createFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.updateFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.updateApplication.mockResolvedValue({});
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
+
   describe('GET /application-details/:dealId/facilities', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities`, {}, headers),
@@ -41,7 +42,8 @@ describe('facilities routes', () => {
       );
 
       expect(response.status).toEqual(200);
-      expect(response.text).toContain('Facilities');
+      expect(response.text).toContain('Add a facility');
+      expect(response.text).toContain('data-cy="has-been-issued-heading"');
     });
   });
 

@@ -11,11 +11,11 @@ const dealId = '123';
 
 describe('about exporter routes', () => {
   beforeEach(() => {
-    jest.spyOn(api, 'getApplication').mockResolvedValue(MOCK_BASIC_DEAL);
+    api.getApplication.mockResolvedValue(MOCK_BASIC_DEAL);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('GET /application-details/:dealId/about-exporter', () => {
