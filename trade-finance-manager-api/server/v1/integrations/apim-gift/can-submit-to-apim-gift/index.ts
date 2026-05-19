@@ -1,7 +1,9 @@
 import { DEAL_SUBMISSION_TYPE, isTfmApimGiftIntegrationEnabled, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
 import { getDealTypeFlags } from '../../../mappings/apim-gift-payloads/create-facility/get-deal-type-flags';
+import { mapFacilitiesToSendToGift } from '../map-facilities-to-send-to-gift';
 import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
+import { generateIssuedFacilitiesQueryString } from '../generate-issued-facilities-query-string';
 
 const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
 
@@ -22,100 +24,145 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
  * @returns {CanSubmitFacilitiesToApimGiftReturnShape} An object indicating whether the deal can be submitted and relevant details.
  */
 export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilitiesToApimGiftReturnShape> => {
-  console.info('Checking if issued facilities for deal %s can be submitted to APIM GIFT', deal?._id);
+  const dealId = String(deal?._id);
+
+  console.info('Checking if issued facilities for deal %s can be submitted to APIM GIFT', dealId);
 
   const api = apiModule as ApiTypes;
 
-  if (isTfmApimGiftIntegrationEnabled()) {
-    const { dealType, submissionType } = deal.dealSnapshot;
+  if (!isTfmApimGiftIntegrationEnabled()) {
+    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - feature flag disabled', dealId);
 
-    const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
+    return {
+      canSubmitFacilitiesToApimGift: false,
+    };
+  }
 
-    const validDealType = isBssEwcsDeal || isGefDeal;
-    const validSubmissionType = submissionType === AIN || submissionType === MIN;
+  const { dealType, submissionType } = deal.dealSnapshot;
 
-    /**
-     * NOTE: During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
-     * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
-     *
-     * BSS/EWCS/GEF should only send facilities to APIM/GIFT if the buyer party URN is populated.
-     *
-     * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
-     */
-    const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());
+  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
 
-    if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
-      console.info(
-        'Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid deal type, submission type, or missing exporter credit rating',
-        deal?._id,
-      );
+  const validDealType = isBssEwcsDeal || isGefDeal;
+  const validSubmissionType = submissionType === AIN || submissionType === MIN;
 
-      return {
-        canSubmitFacilitiesToApimGift: false,
-      };
-    }
+  /**
+   * NOTE: During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
+   * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
+   *
+   * BSS/EWCS/GEF should only send facilities to APIM/GIFT if the buyer party URN is populated.
+   *
+   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+   */
+  const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());
 
-    /**
-     * NOTE: During first BSS/EWCS deal submission, tfm.parties.buyer?.partyUrn will always be an empty string.
-     *
-     * The buyer party URN is populated in TFM - after the first deal submission.
-     * BSS/EWCS should only send facilities to APIM/GIFT if the buyer party URN is populated.
-     *
-     * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
-     * For GEF deals, there is no requirement for a buyer party URN to be populated to submit facilities to APIM/GIFT, so GEF deals can submit facilities on the first submission.
-     * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
-     * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
-     */
-    const hasBuyerPartyUrn = Boolean(deal.tfm.parties.buyer?.partyUrn);
+  if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
+    console.info(
+      'Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid deal type, submission type, or missing exporter credit rating',
+      dealId,
+    );
 
-    const isValidBssEwcsDeal = isBssEwcsDeal && hasBuyerPartyUrn;
+    return {
+      canSubmitFacilitiesToApimGift: false,
+    };
+  }
 
-    if (!isValidBssEwcsDeal && !isGefDeal) {
-      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid BSS/EWCS or GEF deal', deal?._id);
+  /**
+   * NOTE: During first BSS/EWCS deal submission, tfm.parties.buyer?.partyUrn will always be an empty string.
+   *
+   * The buyer party URN is populated in TFM - after the first deal submission.
+   * BSS/EWCS should only send facilities to APIM/GIFT if the buyer party URN is populated.
+   *
+   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+   * For GEF deals, there is no requirement for a buyer party URN to be populated to submit facilities to APIM/GIFT, so GEF deals can submit facilities on the first submission.
+   * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
+   * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
+   */
+  const hasBuyerPartyUrn = Boolean(deal.tfm.parties.buyer?.partyUrn);
 
-      return {
-        canSubmitFacilitiesToApimGift: false,
-      };
-    }
+  const isValidBssEwcsDeal = isBssEwcsDeal && hasBuyerPartyUrn;
 
-    let facilities: TfmFacility[] = [];
+  if (!isValidBssEwcsDeal && !isGefDeal) {
+    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - invalid BSS/EWCS or GEF deal', dealId);
 
-    try {
-      const dealId = deal._id.toString();
+    return {
+      canSubmitFacilitiesToApimGift: false,
+    };
+  }
 
-      const response = await api.findFacilitiesByDealId(dealId);
+  let facilities: TfmFacility[] = [];
+  let findFacilitiesByDealIdFailed = false;
 
-      facilities = Array.isArray(response) ? response : [];
-    } catch {
-      // Swallow errors and default facilities to an empty array
-      facilities = [];
-    }
+  try {
+    // Get TFM facilities by deal ID.
+    const response = await api.findFacilitiesByDealId(dealId);
 
-    let issuedFacilities: TfmFacility[] = [];
+    facilities = Array.isArray(response) ? response : [];
+  } catch {
+    // Swallow errors and default facilities to an empty array
+    findFacilitiesByDealIdFailed = true;
+    facilities = [];
+  }
 
-    if (Array.isArray(facilities)) {
-      issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
-    }
+  let issuedFacilities: TfmFacility[] = [];
 
-    const canSubmitFacilitiesToApimGift = validDealType && validSubmissionType && issuedFacilities.length > 0;
+  if (Array.isArray(facilities)) {
+    issuedFacilities = facilities.filter((facility) => Boolean(facility.facilitySnapshot?.hasBeenIssued));
+  }
 
-    if (!canSubmitFacilitiesToApimGift) {
-      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', deal?._id);
+  const validCoreChecks = validDealType && validSubmissionType && issuedFacilities.length > 0;
+
+  if (!validCoreChecks) {
+    if (findFacilitiesByDealIdFailed) {
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve facilities from TFM', dealId);
     } else {
-      console.info('Issued facilities for deal %s can be submitted to APIM GIFT', deal?._id);
+      console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - no issued facilities', dealId);
     }
 
     return {
-      canSubmitFacilitiesToApimGift,
-      issuedFacilities,
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
       isBssEwcsDeal,
       isGefDeal,
     };
   }
 
-  console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - feature flag disabled', deal?._id);
+  console.info('Issued facilities for deal %s could be submitted to APIM GIFT', dealId);
+
+  const issuedFacilitiesQueryString = generateIssuedFacilitiesQueryString(issuedFacilities);
+
+  const giftFacilitiesResponse = await api.findGiftFacilitiesByIds(issuedFacilitiesQueryString);
+
+  if (giftFacilitiesResponse === false) {
+    console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - failed to retrieve existing facilities from GIFT', dealId);
+
+    return {
+      canSubmitFacilitiesToApimGift: false,
+      issuedFacilities: [],
+      isBssEwcsDeal,
+      isGefDeal,
+    };
+  }
+
+  const giftFacilities = Array.isArray(giftFacilitiesResponse.facilities) ? giftFacilitiesResponse.facilities : [];
+
+  const { facilitiesToSendToApimGift, facilityIds } = mapFacilitiesToSendToGift({
+    dealId,
+    giftFacilities,
+    issuedTfmFacilities: issuedFacilities,
+  });
+
+  if (facilitiesToSendToApimGift.length === 0) {
+    console.info('No issued facilities for deal %s can be submitted to APIM GIFT - facilities already exist in GIFT', dealId);
+  } else {
+    const facilityIdsForLog = facilityIds ?? generateIssuedFacilitiesQueryString(facilitiesToSendToApimGift);
+
+    console.info('Issued facilities %s for deal %s can be submitted to APIM GIFT', facilityIdsForLog, dealId);
+  }
 
   return {
-    canSubmitFacilitiesToApimGift: false,
+    canSubmitFacilitiesToApimGift: facilitiesToSendToApimGift.length > 0,
+    issuedFacilities: facilitiesToSendToApimGift,
+    isBssEwcsDeal,
+    isGefDeal,
   };
 };
