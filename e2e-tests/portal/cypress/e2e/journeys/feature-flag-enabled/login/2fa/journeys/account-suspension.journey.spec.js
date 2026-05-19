@@ -5,7 +5,7 @@ const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-context('Portal 2FA Journey - Account suspension - too many attempts to login are made', () => {
+context('Portal 2FA Journey - Account suspension - too many access-code resend/request attempts are made', () => {
   beforeEach(() => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
   });

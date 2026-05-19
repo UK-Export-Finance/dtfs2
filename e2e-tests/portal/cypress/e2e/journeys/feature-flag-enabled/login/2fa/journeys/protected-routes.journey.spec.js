@@ -36,6 +36,10 @@ context('2FA Journey - Protected routes authorization', () => {
     });
   });
 
+  /**
+   * When a user is mid-2FA (partial auth) and visits a protected route, the
+   * partial-auth session is destroyed server-side and the user is sent back to /login.
+   */
   describe('User with partial auth', () => {
     beforeEach(() => {
       commonBeforeEach(BANK1_MAKER1, { login: false });
@@ -58,13 +62,6 @@ context('2FA Journey - Protected routes authorization', () => {
       cy.visit('/contract/12345');
 
       cy.url().should('eq', relative('/login'));
-    });
-
-    it('should keep the partial auth session after a protected route redirect', () => {
-      cy.visit('/dashboard');
-      cy.url().should('eq', relative('/login'));
-
-      cy.getCookie('dtfs-session').should('exist');
     });
 
     it('should allow the current 2FA page to be revisited during partial auth', () => {

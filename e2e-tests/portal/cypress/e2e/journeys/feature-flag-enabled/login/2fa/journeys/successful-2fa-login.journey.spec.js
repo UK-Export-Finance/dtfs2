@@ -58,10 +58,12 @@ context('2FA Journey - Successful login flow', () => {
       cy.url().should('contain', '/dashboard');
     });
 
-    it('should allow access to /user/profile after successful 2FA', () => {
-      cy.visit('/user/profile');
+    it('should allow access to /user/<user._id> after successful 2FA', () => {
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('contain', '/user/profile');
+        cy.url().should('contain', `/user/${user._id}`);
+      });
     });
   });
 

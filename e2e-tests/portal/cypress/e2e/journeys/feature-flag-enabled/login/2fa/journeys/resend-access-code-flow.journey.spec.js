@@ -6,11 +6,18 @@ const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const enterJourneyAtSendCount = (count) => {
+/**
+ * Logs the user in and then clicks the "request a new code" link the given number of times to
+ * advance the UI from /login/check-your-email-access-code to /login/new-access-code (1 click)
+ * or /login/resend-another-access-code (2 clicks).
+ *
+ * Note: this is the number of UI transitions to perform after the initial login, not the user's
+ * persisted `signInOTPSendCount`. Do not pass the database send-count value here.
+ */
+const enterJourneyAtRequestCodeClicks = (requestCodeClicks) => {
   cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-  // advance pages via UI clicks: 0 -> check, 1 -> new, 2 -> resend-another
-  for (let i = 0; i < count; i += 1) {
+  for (let i = 0; i < requestCodeClicks; i += 1) {
     if (i === 0) {
       checkYourEmailAccessCode.requestCodeLink().click();
     } else if (i === 1) {
@@ -32,7 +39,7 @@ context('2FA Journey - Resend access code flow', () => {
   });
 
   it('should move from check-your-email to new-access-code when requesting the first new code', () => {
-    enterJourneyAtSendCount(0);
+    enterJourneyAtRequestCodeClicks(0);
 
     cy.url().should('eq', relative('/login/check-your-email-access-code'));
     cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');
@@ -44,7 +51,7 @@ context('2FA Journey - Resend access code flow', () => {
   });
 
   it('should move from new-access-code to resend-another-access-code when requesting another code', () => {
-    enterJourneyAtSendCount(1);
+    enterJourneyAtRequestCodeClicks(1);
 
     cy.url().should('contain', '/login/new-access-code');
     cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
@@ -56,7 +63,7 @@ context('2FA Journey - Resend access code flow', () => {
   });
 
   it('should end the resend flow on resend-another-access-code with no further request link', () => {
-    enterJourneyAtSendCount(2);
+    enterJourneyAtRequestCodeClicks(2);
 
     cy.url().should('contain', '/login/resend-another-access-code');
 
@@ -66,21 +73,21 @@ context('2FA Journey - Resend access code flow', () => {
   });
 
   it('should allow successful login from the new-access-code page', () => {
-    enterJourneyAtSendCount(1);
+    enterJourneyAtRequestCodeClicks(1);
     submitValidAccessCode(newAccessCode);
 
     cy.url().should('not.contain', '/login');
   });
 
   it('should allow successful login from the resend-another-access-code page', () => {
-    enterJourneyAtSendCount(2);
+    enterJourneyAtRequestCodeClicks(2);
     submitValidAccessCode(resendAnotherAccessCode);
 
     cy.url().should('not.contain', '/login');
   });
 
   it('should progress through the full resend journey with the expected attempts remaining', () => {
-    enterJourneyAtSendCount(0);
+    enterJourneyAtRequestCodeClicks(0);
 
     cy.url().should('eq', relative('/login/check-your-email-access-code'));
     cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');

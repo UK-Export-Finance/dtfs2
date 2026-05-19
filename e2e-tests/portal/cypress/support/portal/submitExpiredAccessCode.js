@@ -29,14 +29,12 @@ module.exports = ({ username, count = 0 }) =>
     // Replace the valid token with an expired one, then submit the code
     cy.overridePortalUserSignInOTPWithExpiredToken({ username });
 
-    // choose the correct page input to fill
-    const currentUrl = Cypress.$(window).location?.pathname || '';
-
-    // Fallback: prefer checkYourEmail input if unable to detect
+    // The page is determined by how many request-code clicks we just performed:
+    // 0 -> check-your-email, 1 -> new-access-code, 2 -> resend-another-access-code.
     let input;
-    if (currentUrl.includes('new-access-code') || count === 1) {
+    if (count === 1) {
       input = newAccessCode.accessCodeInput();
-    } else if (currentUrl.includes('resend-another-access-code') || count === 2) {
+    } else if (count === 2) {
       input = resendAnotherAccessCode.accessCodeInput();
     } else {
       input = checkYourEmailAccessCode.accessCodeInput();
