@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/UK-Export-Finance/dtfs2/compare/v3.0.0...v3.0.1) (2026-05-20)
+
+
+### Bug Fixes
+
+* **DTFS2-8436:** create gift facilities - sequential api calls ([#4750](https://github.com/UK-Export-Finance/dtfs2/issues/4750)) ([96835e6](https://github.com/UK-Export-Finance/dtfs2/commit/96835e67c0c332b897db58528ff192888f0dd309))
+
 ## [3.0.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v3.0.0) (2026-05-14)
 
 
