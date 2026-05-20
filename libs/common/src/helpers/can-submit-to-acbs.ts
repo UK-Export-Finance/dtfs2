@@ -26,7 +26,7 @@ type CanSendToAcbsParams = {
  * @param params - An object containing the amendment and an optional flag for task updates.
  * @param params.amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
  * @param params.isTaskUpdate - Optional flag indicating if the amendment update is part of a task update. Defaults to false.
- * @returns {Boolean} `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
+ * @returns {boolean} `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
 export const canSendToAcbs = ({ amendment, isTaskUpdate = false }: CanSendToAcbsParams) => {
   // Amendment type
