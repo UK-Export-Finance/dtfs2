@@ -13,7 +13,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -27,7 +27,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -42,7 +42,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -64,7 +64,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -83,7 +83,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -104,7 +104,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeTruthy();
@@ -125,7 +125,7 @@ describe('canSendToAcbs', () => {
         } as PortalFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeTruthy();
@@ -141,7 +141,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -155,7 +155,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -170,7 +170,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -188,7 +188,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -204,7 +204,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -221,7 +221,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -238,7 +238,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment, true);
+        const response = canSendToAcbs({ amendment: mockAmendment, isTaskUpdate: true });
 
         // Assert
         expect(response).toBeFalsy();
@@ -255,7 +255,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeTruthy();
@@ -272,7 +272,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeTruthy();
@@ -400,7 +400,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeFalsy();
@@ -464,7 +464,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment);
+        const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
         expect(response).toBeTruthy();
@@ -477,7 +477,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment, true);
+        const response = canSendToAcbs({ amendment: mockAmendment, isTaskUpdate: true });
 
         // Assert
         expect(response).toBeFalsy();

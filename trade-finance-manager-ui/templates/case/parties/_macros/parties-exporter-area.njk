@@ -5,7 +5,7 @@
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 {% import '../../_macros/supplier-type.njk' as supplierType %}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% macro render(params) %}
   {% set deal = params.deal %}
