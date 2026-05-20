@@ -405,11 +405,11 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        // Amendment email notification to PDC
-        await internalAmendmentEmail(ukefFacilityId);
-
         // Submit to ACBS
         if (canSendToAcbs({ amendment, isTaskUpdate })) {
+          // Amendment email notification to PDC
+          await internalAmendmentEmail(ukefFacilityId);
+
           // Amend facility ACBS records
           acbs.amendAcbsFacility(amendment, facility, deal);
         }
@@ -479,12 +479,11 @@ const sendAmendmentToAcbs = async (req, res) => {
         };
       }
 
-      // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {
-        // Amendment email notification to PDC
-        await internalAmendmentEmail(ukefFacilityId);
-
         if (canSendToAcbs({ amendment })) {
+          // Amendment email notification to PDC
+          await internalAmendmentEmail(ukefFacilityId);
+
           // Amend facility ACBS records
           acbs.amendAcbsFacility(amendment, facility, deal);
         }

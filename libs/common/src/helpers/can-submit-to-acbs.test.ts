@@ -238,7 +238,7 @@ describe('canSendToAcbs', () => {
         } as TfmFacilityAmendmentWithUkefId;
 
         // Act
-        const response = canSendToAcbs(mockAmendment, true);
+        const response = canSendToAcbs({ amendment: mockAmendment, isTaskUpdate: true });
 
         // Assert
         expect(response).toBeFalsy();
