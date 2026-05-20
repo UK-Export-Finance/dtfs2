@@ -55,6 +55,9 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v6
 
+      - name: Azure config dir 🔧
+        run: echo "AZURE_CONFIG_DIR=/tmp/azure-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.acr }}" >> $GITHUB_ENV
+
       - name: Subscription 🛠️
         run: |
           if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
@@ -102,6 +105,79 @@ jobs:
                   "facts": [
                     { "name": "ACR", "value": "${{ matrix.acr }}" },
                     { "name": "Resource group", "value": "${{ env.RESOURCE_GROUP }}" },
+                    { "name": "Commit", "value": "${{ github.sha }}" }
+                  ],
+                  "markdown": true
+                }
+              ],
+              "potentialAction": [
+                {
+                  "@type": "OpenUri",
+                  "name": "Workflow",
+                  "targets": [
+                    {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+            '
+
+  purge1:
+    name: Purge1 🗑️
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        acr: ['crdtfsdev0012lpd66flpami2']
+
+    concurrency:
+      group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v6
+
+      - name: Azure config dir 🔧
+        run: echo "AZURE_CONFIG_DIR=/tmp/azure-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.acr }}" >> $GITHUB_ENV
+
+      - name: Execute (DEV1) ⚡
+        uses: ./.github/actions/acr
+        with:
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
+          subscription: ${{ secrets.DEV1_SUBSCRIPTION }}
+          group: ${{ secrets.DEV1_RESOURCE_GROUP }}
+          acr: ${{ matrix.acr }}
+          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
+
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+          content: '
+                      {
+              "@type": "MessageCard",
+              "@context": "http://schema.org/extensions",
+              "themeColor": "00703c",
+              "title": "🗑️ ${{ matrix.acr }} purge",
+              "summary": "Purged artefacts from ''${{ matrix.acr }}'' Azure container registry",
+              "sections": [
+                {
+                  "activityTitle": "ACR Purge",
+                  "activitySubtitle": "Purged artefacts from **${{ matrix.acr }}** Azure container registry",
+                  "facts": [
+                    { "name": "ACR", "value": "${{ matrix.acr }}" },
+                    { "name": "Resource group", "value": "${{ secrets.DEV1_RESOURCE_GROUP }}" },
                     { "name": "Commit", "value": "${{ github.sha }}" }
                   ],
                   "markdown": true

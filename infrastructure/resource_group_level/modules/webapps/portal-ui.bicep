@@ -1,5 +1,4 @@
 param location string
-param environment string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -32,7 +31,7 @@ param websiteHttploggingRetentionDays string
 param websiteHealthcheckingMax string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
-var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:latest'
 var portalApiUrl = 'https://${portalApiHostname}'
 var staticSettings = {
   PORTAL_API_URL: portalApiUrl
@@ -95,7 +94,7 @@ module portalUiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsCombined
-    deployApplicationInsights: false 
+    deployApplicationInsights: false
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
     product: product
