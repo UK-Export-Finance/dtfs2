@@ -161,7 +161,7 @@ describe('updated facility amendment API call', () => {
       );
 
       expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-      expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
+      expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: false });
     });
   });
 
@@ -204,7 +204,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
     });
 
@@ -236,7 +236,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
     });
 
@@ -254,7 +254,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: false });
       });
     });
   });

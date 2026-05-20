@@ -32,7 +32,7 @@ export const canSendToAcbs = ({ amendment, isTaskUpdate = false }: CanSendToAcbs
   // Amendment type
   const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
 
-  // Ensure at least one of the attribute has been amended
+  // Ensure at least one of the attributes has been amended
   const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
 
   /**
@@ -54,7 +54,7 @@ export const canSendToAcbs = ({ amendment, isTaskUpdate = false }: CanSendToAcbs
 
   // Manual amendment - TFM only
   if (isAmendmentManual && !isPortalAmendment) {
-    // Bank Decision
+    // Bank decision
     const submitted = amendment.bankDecision?.submitted;
     const decision = amendment.bankDecision?.decision;
 
