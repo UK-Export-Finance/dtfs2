@@ -759,10 +759,86 @@ apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
 
 /**
  * @openapi
+ * /gift/facilities:
+ *   get:
+ *     summary: Get multiple GIFT facilities from APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Get multiple GIFT facilities from APIM TFS's GIFT endpoint by a comma-separated list of facility IDs.
+ *       Example endpoint: /gift/facilities?ids=0000000001,0000000002
+ *     parameters:
+ *       - in: query
+ *         name: ids
+ *         schema:
+ *           type: string
+ *           example: 0000000001,0000000002
+ *         required: true
+ *         description: Comma-separated GIFT facility IDs.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilitiesBulkResponse'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/gift/facilities', giftFacility.getMany);
+
+/**
+ * @openapi
+ * /gift/facility/{facilityId}:
+ *   get:
+ *     summary: Get a GIFT facility from APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Get a GIFT facility from APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *           example: 0000000001
+ *         required: true
+ *         description: The GIFT facility ID.
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       404:
+ *         description: Not found
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
+ */
+apiRoutes.get('/gift/facility/:facilityId', giftFacility.get);
+
+/**
+ * @openapi
  * /gift/facility:
  *   post:
  *     summary: Send a facility to APIM TFS's GIFT endpoint
- *     tags: [APIM, Gift Facility]
+ *     tags: [APIM, GIFT Facility]
  *     description: >-
  *       Send a facility to APIM TFS's GIFT endpoint.
  *     responses:

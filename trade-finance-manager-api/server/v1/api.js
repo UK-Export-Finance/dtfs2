@@ -1964,12 +1964,46 @@ const createGiftFacility = async (facilityData) => {
     return response.data;
   } catch (error) {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
-    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility endpoint' };
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility creation endpoint' };
 
     console.error(
       'Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o error %o',
       facilityId,
       dealId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
+/**
+ * Find GIFT facilities by their IDs.
+ * @param {string} facilityIdsQueryString - Comma-separated facility IDs to find.
+ * @returns {Promise<{ facilities: object[] }|false>} The API response payload if successful, otherwise false.
+ */
+const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
+  try {
+    console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIdsQueryString);
+
+    const queryString = new URLSearchParams({ ids: facilityIdsQueryString }).toString();
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/gift/facilities?${queryString}`,
+      headers: headers.external,
+    });
+
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
+
+    console.error(
+      'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
+      facilityIdsQueryString,
       status,
       responseBody,
       error,
@@ -2069,4 +2103,5 @@ module.exports = {
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
   createGiftFacility,
+  findGiftFacilitiesByIds,
 };
