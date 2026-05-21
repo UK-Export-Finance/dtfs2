@@ -376,12 +376,12 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
 
 /**
  * @openapi
- * /amendment/facility/{facilityId}/amendment/{amendmentId}/acbs:
+ * /amendment/facility/{facilityId}/amendment/{amendmentId}:
  *   post:
- *     summary: Submits an amendment to ACBS for a specific facility and amendment.
+ *     summary: Submits a facility amendment to ACBS and APIM GIFT for a specific facility.
  *     tags:
  *       - TFM - Amendments
- *     description: This endpoint submits the amendment to ACBS after the pre-requisites ACBS checks have passed.
+ *     description: This endpoint submits the facility amendment to ACBS and APIM GIFT after the pre-requisites ACBS checks have passed.
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -409,13 +409,13 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
  *               _id: '123'
  *     responses:
  *       '200':
- *         description: Amendment submitted to ACBS successfully
+ *         description: Facility amendment submitted to ACBS and APIM GIFT successfully
  *       '400':
  *         description: Bad request
  *       '422':
- *         description: Unable to submit amendment to ACBS
+ *         description: Unable to submit facility amendment to ACBS and APIM GIFT
  */
-openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId/acbs').post(amendmentController.sendAmendmentToAcbs);
+openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId').post(amendmentController.sendFacilityAmendment);
 
 /**
  * @openapi
