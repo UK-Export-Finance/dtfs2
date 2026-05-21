@@ -6,6 +6,9 @@ jest.mock('../../server/services/api', () => ({
   getFacilities: jest.fn(),
   getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
+  getCompanyByRegistrationNumber: jest.fn(),
+  getMandatoryCriteria: jest.fn(),
+  cloneApplication: jest.fn(),
 }));
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
