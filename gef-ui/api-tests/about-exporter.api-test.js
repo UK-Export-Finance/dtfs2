@@ -9,9 +9,25 @@ const { get, post } = createApi(app);
 
 const dealId = '123';
 
+const validIndustry = {
+  name: 'Manufacturing',
+  class: {
+    name: 'Industry class',
+  },
+};
+
+const MOCK_DEAL_WITH_VALID_INDUSTRY = {
+  ...MOCK_BASIC_DEAL,
+  exporter: {
+    ...MOCK_BASIC_DEAL.exporter,
+    industries: [validIndustry],
+    selectedIndustry: validIndustry,
+  },
+};
+
 describe('about exporter routes', () => {
   beforeEach(() => {
-    api.getApplication.mockResolvedValue(MOCK_BASIC_DEAL);
+    api.getApplication.mockResolvedValue(MOCK_DEAL_WITH_VALID_INDUSTRY);
   });
 
   afterEach(() => {
