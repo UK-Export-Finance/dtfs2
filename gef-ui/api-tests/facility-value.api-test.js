@@ -31,9 +31,13 @@ describe('facility value routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/facility-value', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-value`),
+      makeRequestWithHeaders: (headers) =>
+        post({ coverPercentage: '80', interestPercentage: '5' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-value`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: 302,
+      successHeaders: {
+        location: `/gef/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`,
+      },
     });
   });
 });

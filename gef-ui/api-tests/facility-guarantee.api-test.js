@@ -31,9 +31,13 @@ describe('facility guarantee routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/facility-guarantee', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`),
+      makeRequestWithHeaders: (headers) =>
+        post({ feeType: 'At maturity', dayCountBasis: '365' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: 302,
+      successHeaders: {
+        location: `/gef/application-details/${dealId}`,
+      },
     });
   });
 });

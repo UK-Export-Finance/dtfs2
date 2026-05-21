@@ -31,9 +31,13 @@ describe('facility currency routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/facility-currency', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-currency`),
+      makeRequestWithHeaders: (headers) =>
+        post({ currencyId: 'GBP', facilityType: 'Cash' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-currency`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: 302,
+      successHeaders: {
+        location: `/gef/application-details/${dealId}/facilities/${facilityId}/facility-value`,
+      },
     });
   });
 });

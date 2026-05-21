@@ -31,9 +31,12 @@ describe('about facility routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/about-facility', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({ facilityType: 'CASH' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/about-facility`),
+      makeRequestWithHeaders: (headers) =>
+        post({ facilityType: 'CASH', hasBeenIssued: 'false', monthsOfCover: '12' }, headers).to(
+          `/application-details/${dealId}/facilities/${facilityId}/about-facility`,
+        ),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: 302,
     });
   });
 });
