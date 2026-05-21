@@ -4,6 +4,10 @@ jest.mock('../../server/services/api', () => ({
   validateBank: () => ({ isValid: true }),
   getApplication: jest.fn(),
   getFacilities: jest.fn(),
+  getFacility: jest.fn(),
+  createFacility: jest.fn(),
+  updateFacility: jest.fn(),
+  updateApplication: jest.fn(),
   getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
 }));
