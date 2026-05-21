@@ -27,3 +27,5 @@ export type AmendmentPayloadReplaceExpiryDate = {
   amendmentType: typeof AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
   amendmentData: AmendmentDataPayloadReplaceExpiryDate;
 };
+
+export type ApimGiftFacilityAmendmentPayload = AmendmentPayloadIncreaseAmount | AmendmentPayloadDecreaseAmount | AmendmentPayloadReplaceExpiryDate;
