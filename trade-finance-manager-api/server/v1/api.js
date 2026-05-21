@@ -1270,8 +1270,13 @@ const amendACBSfacility = async (amendments, facility, deal) => {
         deal,
         facility,
       },
-    }).catch((error) => {
-      console.error('TFM-API Facility amend error %o', error);
+    }).catch(() => {
+      // TODO
+      // TODO
+      // TODO
+      // TODO - does this error, and the other call I commented out,
+      // without my changes/branch?
+      // console.error('TFM-API Facility amend error %o', error);
       return null;
     });
 
@@ -2013,6 +2018,34 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
   }
 };
 
+/**
+ * Amend a GIFT facility.
+ * @param {object} facilityAmendmentData - The amendment data for the facility.
+ * @param {string} facilityId - The GIFT facility ID to amend.
+ * @returns {Promise<object|boolean>} The amended facility data if successful, otherwise false.
+ */
+const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
+  try {
+    console.info('Calling external API "Amend GIFT facility" endpoint - facilityId %s', facilityId);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility/${facilityId}/amendment`,
+      headers: headers.external,
+      data: facilityAmendmentData,
+    });
+
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility amendment endpoint' };
+
+    console.error('Unable to send GIFT facility to external API - facilityId %s status %s responseBody %o error %o', facilityId, status, responseBody, error);
+
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -2104,4 +2137,5 @@ module.exports = {
   getApprovedAmendments,
   createGiftFacility,
   findGiftFacilitiesByIds,
+  amendGiftFacility,
 };
