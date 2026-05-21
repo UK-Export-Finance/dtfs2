@@ -8,6 +8,11 @@ const { MOCK_ISSUED_FACILITY } = require('../server/utils/mocks/mock-facilities'
 
 const { get, post } = createApi(app);
 
+api.getFacility = jest.fn();
+api.createFacility = jest.fn();
+api.updateFacility = jest.fn();
+api.updateApplication = jest.fn();
+
 const dealId = '123';
 const facilityId = '111';
 
