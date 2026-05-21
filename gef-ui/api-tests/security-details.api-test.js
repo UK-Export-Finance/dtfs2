@@ -9,10 +9,13 @@ const { get, post } = createApi(app);
 
 const dealId = '123';
 
+const cloneMock = (value) => JSON.parse(JSON.stringify(value));
+
 describe('security details routes', () => {
   beforeEach(() => {
-    api.getApplication.mockResolvedValue(MOCK_BASIC_DEAL);
-    api.getFacilities.mockResolvedValue(MOCK_BASIC_DEAL.facilities);
+    const mockDeal = cloneMock(MOCK_BASIC_DEAL);
+    api.getApplication.mockResolvedValue(mockDeal);
+    api.getFacilities.mockResolvedValue(mockDeal.facilities);
   });
 
   afterEach(() => {
