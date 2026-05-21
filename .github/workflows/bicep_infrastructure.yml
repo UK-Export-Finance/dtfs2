@@ -21,10 +21,21 @@ run-name: DTFS base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches: [infrastructure]
+    branches:
+      - dev
+      - main
+      - staging
+      - production
     paths:
-      - '.github/workflows/development_infrastructure.yml'
+      - '.github/workflows/bicep_infrastructure.yml'
+      - 'infrastructure/**'
+
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target deployment environment'
+        required: true
+        type: environment
 
 env:
   PRODUCT: dtfs2
@@ -89,77 +100,121 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
-      - name: Replace GitHub variables into parameters.json
+      - name: Set bicep properties ✨
         run: |
-          # Replace GitHub variables into parameters.json
-          sed -i "s|{{ENVIRONMENT}}|${{ vars.ENVIRONMENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PRODUCT}}|${{ vars.PRODUCT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TARGET}}|${{ vars.TARGET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{VERSION}}|${{ vars.VERSION || 'v1' }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}|${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_VNET_ADDRESS_PREFIX}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_APPGW_CIDR_PREFIX}}|${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR}}|${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_ACA_CLAMAV_CIDR}}|${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_DEV_SNET_PRIVATE_EP_CIDR}}|${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PROD_SUBNET_CIDR}}|${{ secrets.PROD_SUBNET_CIDR }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ROUTE_TBL_NEXT_HOP_ADDRESS}}|${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_VPN_IPS}}|${{ secrets.UKEF_VPN_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZ_PORTAL_IPS}}|${{ secrets.AZ_PORTAL_IPS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_KEY}}|${{ secrets.APIM_TFS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_VALUE}}|${{ secrets.APIM_TFS_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_TFS_URL}}|${{ secrets.APIM_TFS_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_KEY}}|${{ secrets.APIM_MDM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_URL}}|${{ secrets.APIM_MDM_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_VALUE}}|${{ secrets.APIM_MDM_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_MDM_KEY_VAULT_NAME}}|${{ secrets.APIM_MDM_KEY_VAULT_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{COMPANIES_HOUSE_API_URL}}|${{ secrets.COMPANIES_HOUSE_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ORDNANCE_SURVEY_API_URL}}|${{ secrets.ORDNANCE_SURVEY_API_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{RATE_LIMIT_THRESHOLD}}|${{ secrets.RATE_LIMIT_THRESHOLD }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_URL}}|${{ secrets.APIM_ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{CORS_ORIGIN}}|${{ secrets.CORS_ORIGIN }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_KEY}}|${{ secrets.APIM_ESTORE_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{APIM_ESTORE_VALUE}}|${{ secrets.APIM_ESTORE_VALUE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{COMPANIES_HOUSE_API_KEY}}|${{ secrets.COMPANIES_HOUSE_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{GOV_NOTIFY_EMAIL_RECIPIENT}}|${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{GOV_NOTIFY_API_KEY}}|${{ secrets.GOV_NOTIFY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{EXTERNAL_API_KEY}}|${{ secrets.EXTERNAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ORDNANCE_SURVEY_API_KEY}}|${{ secrets.ORDNANCE_SURVEY_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE}}|${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{DTFS_CENTRAL_API_KEY}}|${{ secrets.DTFS_CENTRAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PORTAL_UI_URL}}|${{ vars.PORTAL_UI_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH}}|${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_UTILISATION_REPORTS_FILESHARE_NAME}}|${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PDC_INPUTTERS_EMAIL_RECIPIENT}}|${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_PORTAL_EXPORT_FOLDER}}|${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_PORTAL_FILESHARE_NAME}}|${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{JWT_VALIDATING_KEY}}|${{ secrets.JWT_VALIDATING_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PORTAL_API_KEY}}|${{ secrets.PORTAL_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}|${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TFM_API_KEY}}|${{ secrets.TFM_API_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}}|${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{SESSION_SECRET}}|${{ secrets.SESSION_SECRET }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_SYSTEM_KEY}}|${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ESTORE_URL}}|${{ secrets.ESTORE_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_TFM_API_REPORTS_KEY}}|${{ secrets.UKEF_TFM_API_REPORTS_KEY }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}|${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_INTERNAL_NOTIFICATION}}|${{ secrets.UKEF_INTERNAL_NOTIFICATION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{AZURE_DNS_SERVER_IP}}|${{ secrets.AZURE_DNS_SERVER_IP }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{NSG_SOURCE_ADDRESS_PREFIX}}|${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{UKEF_SOURCE_ADDRESS_PREFIX}}|${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TEST_SOURCE_ADDRESS_PREFIX}}|${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{WEBSITE_HTTPLOGGING_RETENTION_DAYS}}|${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{WEBSITE_DYNAMIC_CACHE}}|${{ vars.WEBSITE_DYNAMIC_CACHE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{WEBSITE_NODE_DEFAULT_VERSION}}|${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{WEBSITE_HEALTHCHECKING_MAX}}|${{ vars.WEBSITE_HEALTHCHECKING_MAX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{TIMEZONE}}|${{ vars.TIMEZONE }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{PEERING_VNET_NAME}}|${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{REDIRECT_URL}}|${{ vars.REDIRECT_URL }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          sed -i "s|{{ASP_SKU}}|${{ vars.ASP_SKU }}|g" ./infrastructure/resource_group_level/parameters_dev.json
-          
+          BICEP_PARAMETERS="environment=${{ vars.ENVIRONMENT }} \
+          product=${{ vars.PRODUCT }} \
+          target=${{ vars.TARGET }} \
+          version=${{ vars.VERSION || 'v1' }} \
+          peeringRemoteVnetSubscriptionId=${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }} \
+          azDevVnetAddressPrefix=${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }} \
+          azDevSnetAppgwCidrPrefix=${{ secrets.AZ_DEV_SNET_APPGW_CIDR_PREFIX }} \
+          azDevSnetAspEgressPrefixCidr=${{ secrets.AZ_DEV_SNET_ASP_EGRESS_PREFIX_CIDR }} \
+          azDevSnetAcaClamavCidr=${{ secrets.AZ_DEV_SNET_ACA_CLAMAV_CIDR }} \
+          azDevSnetPrivateEpCidr=${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }} \
+          prodSubnetCidr=${{ secrets.PROD_SUBNET_CIDR }} \
+          routeTblNextHopAddress=${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }} \
+          ukefVpnIps=${{ secrets.UKEF_VPN_IPS }} \
+          azPortalIps=${{ secrets.AZ_PORTAL_IPS }} \
+          apimTfsKey=${{ secrets.APIM_TFS_KEY }} \
+          apimTfsValue=${{ secrets.APIM_TFS_VALUE }} \
+          apimTfsUrl=${{ secrets.APIM_TFS_URL }} \
+          apimMdmKey=${{ secrets.APIM_MDM_KEY }} \
+          apimMdmUrl=${{ secrets.APIM_MDM_URL }} \
+          apimMdmValue=${{ secrets.APIM_MDM_VALUE }} \
+          apimMdmKeyVaultName=${{ secrets.APIM_MDM_KEY_VAULT_NAME }} \
+          companiesHouseApiUrl=${{ secrets.COMPANIES_HOUSE_API_URL }} \
+          ordnanceSurveyApiUrl=${{ secrets.ORDNANCE_SURVEY_API_URL }} \
+          rateLimitThreshold=${{ secrets.RATE_LIMIT_THRESHOLD }} \
+          apimEstoreUrl=${{ secrets.APIM_ESTORE_URL }} \
+          corsOrigin=${{ secrets.CORS_ORIGIN }} \
+          apimEstoreKey=${{ secrets.APIM_ESTORE_KEY }} \
+          apimEstoreValue=${{ secrets.APIM_ESTORE_VALUE }} \
+          companiesHouseApiKey=${{ secrets.COMPANIES_HOUSE_API_KEY }} \
+          govNotifyEmailRecipient=${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }} \
+          govNotifyApiKey=${{ secrets.GOV_NOTIFY_API_KEY }} \
+          externalApiKey=${{ secrets.EXTERNAL_API_KEY }} \
+          ordnanceSurveyApiKey=${{ secrets.ORDNANCE_SURVEY_API_KEY }} \
+          utilisationReportCreationForBanksSchedule=${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }} \
+          dtfsCentralApiKey=${{ secrets.DTFS_CENTRAL_API_KEY }} \
+          portalUiUrl=${{ vars.PORTAL_UI_URL }} \
+          utilisationReportDueDateBusinessDaysFromStartOfMonth=${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+          utilisationReportOverdueChaserDateBusinessDaysFromStartOfMonth=${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+          utilisationReportReportingPeriodStartEmailSchedule=${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }} \
+          utilisationReportOverdueEmailSchedule=${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }} \
+          azureUtilisationReportsFileshareName=${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }} \
+          pdcInputtersEmailRecipient=${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }} \
+          azurePortalExportFolder=${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }} \
+          azurePortalFileshareName=${{ secrets.AZURE_PORTAL_FILESHARE_NAME }} \
+          jwtValidatingKey=${{ secrets.JWT_VALIDATING_KEY }} \
+          portalApiKey=${{ secrets.PORTAL_API_KEY }} \
+          utilisationReportDueEmailSchedule=${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }} \
+          tfmApiKey=${{ secrets.TFM_API_KEY }} \
+          utilisationReportMaxFileSizeBytes=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
+          sessionSecret=${{ secrets.SESSION_SECRET }} \
+          ukefTfmApiSystemKey=${{ secrets.UKEF_TFM_API_SYSTEM_KEY }} \
+          estoreUrl=${{ secrets.ESTORE_URL }} \
+          ukefTfmApiReportsKey=${{ secrets.UKEF_TFM_API_REPORTS_KEY }} \
+          azureNumberGeneratorFunctionSchedule=${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }} \
+          ukefInternalNotification=${{ secrets.UKEF_INTERNAL_NOTIFICATION }} \
+          azureDnsServerIp=${{ secrets.AZURE_DNS_SERVER_IP }} \
+          nsgSourceAddressPrefix=${{ vars.NSG_SOURCE_ADDRESS_PREFIX }} \
+          ukefSourceAddressPrefix=${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }} \
+          testSourceAddressPrefix=${{ vars.TEST_SOURCE_ADDRESS_PREFIX }} \
+          websiteHttploggingRetentionDays=${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }} \
+          websiteDynamicCache=${{ vars.WEBSITE_DYNAMIC_CACHE }} \
+          websiteNodeDefaultVersion=${{ vars.WEBSITE_NODE_DEFAULT_VERSION }} \
+          websiteHealthcheckingMax=${{ vars.WEBSITE_HEALTHCHECKING_MAX }} \
+          timezone=${{ vars.TIMEZONE }} \
+          peeringVnetName=${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }} \
+          redirectUrl=${{ vars.REDIRECT_URL }} \
+          aspSku=${{ vars.ASP_SKU }} \
+          jwtSigningKey=${{ secrets.JWT_SIGNING_KEY }} \
+          azurePortalStorageAccessKey=${{ secrets.AZURE_PORTAL_ACCESS_KEY }} \
+          azurePortalStorageAccount=${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }} \
+          changeStreamEnabled=${{ vars.CHANGE_STREAM_ENABLED }} \
+          deletionAuditLogsTtlSeconds=${{ vars.DELETION_AUDIT_LOGS_TTLSCONDS }} \
+          dockerEnableCi=${{ vars.DOCKER_ENABLE_CI }} \
+          dtfsCentralApiKeyUrl=${{ vars.DTFS_CENTRAL_API_KEY_URL }} \
+          externalApiUrl=${{ vars.EXTERNAL_API_URL }} \
+          ffPortal2faEnabled=${{ vars.FF_PORTAL_2FA_ENABLED }} \
+          ffPortalFacilityAmendmentsEnabled=${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }} \
+          gefDealVersion=${{ vars.GEF_DEAL_VERSION }} \
+          log4jFormatMsgNoLookups=${{ vars.LOG4J_FORMAT_MSG_NO_LOOKUPS }} \
+          maintenanceActive=${{ vars.MAINTENANCE_ACTIVE }} \
+          maintenanceTimestamp=${{ vars.MAINTENANCE_TIMESTAMP }} \
+          mongoInitdbDatabase=${{ secrets.MONGO_INITDB_DATABASE }} \
+          nodeEnv=${{ secrets.NODE_ENV }} \
+          tfmApiUrl=${{ vars.TFM_API_URL }} \
+          tfmUiUrl=${{ vars.TFM_UI_URL }} \
+          tz=${{ vars.TZ }} \
+          ukefGefReportingEmailRecipient=${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }} \
+          utilisationReportSubmissionPeriodStartEmailSchedule=${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }} \
+          websiteDynamicCache=${{ vars.WEBSITE_DYNAMIC_CACHE }} \
+          websiteHealthcheckMaxpingfailures=${{ vars.WEBSITE_HEALTHCHECKING_MAX }} \
+          websiteHttploggingRetentionDays=${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }} \
+          websiteLocalCacheOptions=${{ vars.WEBSITE_LOCAL_CACHE_OPTIONS }} \
+          websiteNodeDefaultVersion=${{ vars.WEBSITE_NODE_DEFAULT_VERSION }} \
+          websiteVnetRouteAll=${{ vars.WEBSITE_VNET_ROUTE_ALL }} \
+          websitesEnableAppServiceStorage=${{ vars.WEBSITES_ENABLE_APP_SERVICE_STORAGE }} \
+          websitesPort=${{ vars.WEBSITES_PORT }} \
+          acbsDurableFunctionsLogDeletionSchedule=${{ secrets.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }} \
+          auditApiPassword=${{ secrets.AUDIT_API_PASSWORD }} \
+          auditApiUrl=${{ secrets.AUDIT_API_URL }} \
+          auditApiUsername=${{ secrets.AUDIT_API_USERNAME }} \
+          dealCancellationSchedule=${{ vars.DEAL_CANCELLATION_SCHEDULE }} \
+          deletionAuditLogsTtlSeconds=${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }} \
+          ffTfmDealCancellationEnabled=${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }} \
+          recordCorrectionTransientFormDataDeleteSchedule=${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }} \
+          sqlDbHost=${{ secrets.SQL_DB_HOST }} \
+          sqlDbLoggingEnabled=${{ vars.SQL_DB_LOGGING_ENABLED }} \
+          sqlDbName=${{ secrets.SQL_DB_NAME }} \
+          sqlDbPassword=${{ secrets.SQL_DB_PASSWORD }} \
+          sqlDbPort=${{ secrets.SQL_DB_PORT }} \
+          sqlDbUsername=${{ secrets.SQL_DB_USERNAME }} \"
+
+          echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> $GITHUB_ENV
+
       - name: Install Bicep
         run: |
           az config set bicep.use_binary_from_path=False
@@ -173,6 +228,6 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
           template: ./infrastructure/resource_group_level/main.bicep
-          parameters: ./infrastructure/resource_group_level/parameters_dev.json
+          parameters: ${{ env.BICEP_PARAMETERS }}
           scope: resourcegroup
 
