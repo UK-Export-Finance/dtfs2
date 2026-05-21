@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const automaticCover = {
   companyNameTitle: () => cy.get('[data-cy="company-name-title"]'),
   registeredCompanyAddressTitle: () => cy.get('[data-cy="registered-company-address-title"]'),
