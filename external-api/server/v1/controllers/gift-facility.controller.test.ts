@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { create, get, getMany } from './gift-facility.controller';
+import { amend, create, get, getMany } from './gift-facility.controller';
 
 dotenv.config();
 
@@ -387,6 +387,125 @@ describe('create', () => {
       expect(console.error).toHaveBeenNthCalledWith(
         1,
         'Error calling APIM TFS GIFT - create facility endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        mockAxiosError.response.status,
+        mockAxiosError.response.data,
+        mockAxiosError,
+      );
+
+      expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
+    });
+  });
+});
+
+describe('amend', () => {
+  const mockFacilityId = 'mock-facility-id';
+
+  beforeEach(() => {
+    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks());
+
+    console.info = jest.fn();
+    console.error = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
+    // Arrange
+    const requestBody = {
+      amount: 13800,
+      coverEndDate: '2026-12-20',
+    };
+    const responseData = { facilityId: mockFacilityId, amended: true };
+    mockRequest.params = { facilityId: mockFacilityId };
+    mockRequest.body = requestBody;
+
+    jest.mocked(axios).mockResolvedValueOnce({
+      status: HttpStatusCode.Created,
+      data: responseData,
+    });
+
+    // Act
+    await amend(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+
+    expect(axios).toHaveBeenNthCalledWith(1, {
+      method: 'POST',
+      url: `${APIM_TFS_URL}v2/gift/facility/${mockFacilityId}/amendment`,
+      headers,
+      data: requestBody,
+    });
+
+    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
+    expect(mockResponse._getData()).toEqual(responseData);
+  });
+
+  it('should fallback to 500 when axios throws without an HTTP response', async () => {
+    // Arrange
+    const mockError = new Error('Mock network error');
+    const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - amend facility endpoint' };
+
+    jest.mocked(axios).mockRejectedValueOnce(mockError);
+
+    // Act
+    mockRequest.params = {
+      facilityId: mockFacilityId,
+    };
+    mockRequest.body = {
+      amount: 13800,
+      coverEndDate: '2026-12-20',
+    };
+
+    await amend(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
+      mockFacilityId,
+      HttpStatusCode.InternalServerError,
+      expectedResponseBody,
+      mockError,
+    );
+
+    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+  });
+
+  describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
+    it(`should forward non-${HttpStatusCode.Created} status`, async () => {
+      // Arrange
+      const mockAxiosError = {
+        response: {
+          status: HttpStatusCode.BadGateway,
+          data: {
+            status: HttpStatusCode.BadGateway,
+            message: 'Mock upstream error',
+            errors: [{ code: 'UPSTREAM_FAILURE' }],
+          },
+        },
+      };
+
+      jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+      // Act
+      mockRequest.params = {
+        facilityId: mockFacilityId,
+      };
+      mockRequest.body = {
+        amount: 13800,
+        coverEndDate: '2026-12-20',
+      };
+
+      await amend(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
         mockFacilityId,
         mockAxiosError.response.status,
         mockAxiosError.response.data,

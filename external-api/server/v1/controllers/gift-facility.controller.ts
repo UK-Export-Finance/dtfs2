@@ -220,3 +220,61 @@ export const create = async (req: Request, res: Response) => {
       .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during APIM TFS GIFT - create facility endpoint call' });
   }
 };
+
+// TODO add IDs to logs below and above
+
+export const amend = async (req: Request, res: Response) => {
+  try {
+    console.info('⚡️ Invoking APIM TFS GIFT - amend facility endpoint');
+
+    const { facilityId } = req.params;
+
+    const url = `${APIM_TFS_URL}v2/gift/facility/${facilityId}/amendment`;
+
+    const response = await axios({
+      method: 'POST',
+      url,
+      headers,
+      data: req.body,
+    }).catch((error: any) => {
+      const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+      const responseBody = error?.response?.data ?? { message: 'No response received from APIM TFS GIFT - amend facility endpoint' };
+
+      console.error(
+        'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
+        facilityId,
+        status,
+        responseBody,
+        error,
+      );
+
+      return {
+        status,
+      };
+    });
+
+    const { status } = response;
+
+    if (status !== HttpStatusCode.Created) {
+      return res.sendStatus(status);
+    }
+
+    console.info('✅ Successfully amended GIFT facility');
+
+    const responseData = 'data' in response ? response.data : undefined;
+
+    return res.status(status).send(responseData);
+  } catch (error: any) {
+    console.error('Error calling APIM TFS GIFT - amend facility endpoint %o', error);
+
+    if (error?.response?.status) {
+      return res.sendStatus(error.response.status);
+    }
+
+    console.error('🚩 Error occurred during APIM TFS GIFT - amend facility endpoint call %o', error);
+
+    return res
+      .status(HttpStatusCode.InternalServerError)
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during APIM TFS GIFT - amend facility endpoint call' });
+  }
+};

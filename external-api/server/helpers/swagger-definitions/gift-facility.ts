@@ -32,4 +32,19 @@
  *         type: string
  *         description: Error message
  *         example: 'ids query parameter is required'
+ *   GiftFacilityAmendmentRequestBody:
+ *     type: object
+ *     required:
+ *       - amount
+ *       - coverEndDate
+ *     properties:
+ *       amount:
+ *         type: number
+ *         description: The amended facility amount.
+ *         example: 13800
+ *       coverEndDate:
+ *         type: string
+ *         format: date
+ *         description: The amended facility cover end date in YYYY-MM-DD format.
+ *         example: '2026-12-20'
  */
