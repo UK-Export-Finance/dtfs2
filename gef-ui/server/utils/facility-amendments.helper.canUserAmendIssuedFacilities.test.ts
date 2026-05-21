@@ -6,8 +6,7 @@ const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
 const { UKEF_ACKNOWLEDGED, DRAFT, CANCELLED, CHANGES_REQUIRED } = DEAL_STATUS;
 const { MAKER, CHECKER, ADMIN } = ROLES;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
+jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => ({
   ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
   isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
 }));
