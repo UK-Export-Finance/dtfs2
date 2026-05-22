@@ -544,6 +544,7 @@ module.exports = {
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
   getAllAmendments,
+  submitToAcbs,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
