@@ -18,6 +18,11 @@ const headers = {
   },
 };
 
+/**
+ * Finds a single portal deal by id.
+ * @param {string} dealId - Portal deal id.
+ * @returns {Promise<object | false | { status: number, data: string }>} Portal deal payload, false on request failure, or validation error object.
+ */
 const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -37,6 +42,13 @@ const findOnePortalDeal = async (dealId) => {
   }
 };
 
+/**
+ * Updates a portal deal.
+ * @param {string} dealId - Portal deal id.
+ * @param {object} update - Partial deal update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalDeal = async (dealId, update, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -64,6 +76,14 @@ const updatePortalDeal = async (dealId, update, auditDetails) => {
   }
 };
 
+/**
+ * Updates the status of a portal BSS deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - Portal deal id.
+ * @param {string} params.status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -91,6 +111,14 @@ const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 };
 
+/**
+ * Adds a comment to a portal deal.
+ * @param {string} dealId - Portal deal id.
+ * @param {string} commentType - Comment category.
+ * @param {string} comment - Comment text.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object>} API response payload.
+ */
 const addPortalDealComment = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
@@ -114,6 +142,13 @@ const addPortalDealComment = async (dealId, commentType, comment, auditDetails) 
   return response.data;
 };
 
+/**
+ * Updates the status of a portal facility.
+ * @param {string} facilityId - Portal facility id.
+ * @param {string} status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -141,6 +176,13 @@ const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   }
 };
 
+/**
+ * Updates a portal facility.
+ * @param {string} facilityId - Portal facility id.
+ * @param {object} update - Partial facility update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalFacility = async (facilityId, update, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -228,6 +270,13 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
   }
 };
 
+/**
+ * Updates the snapshot object for a TFM deal.
+ * @param {string} dealId - TFM deal id.
+ * @param {object} snapshotUpdate - Partial snapshot update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -254,6 +303,13 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   }
 };
 
+/**
+ * Submits a deal to workflow processing.
+ * @param {string} dealType - Deal type.
+ * @param {string} dealId - Deal id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const submitDeal = async (dealType, dealId, auditDetails) => {
   try {
     const response = await axios({
@@ -395,6 +451,11 @@ const submitDealCancellation = async ({ dealId, cancellation, auditDetails }) =>
   }
 };
 
+/**
+ * Finds a single TFM facility by id.
+ * @param {string} facilityId - TFM facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Facility payload or error object.
+ */
 const findOneFacility = async (facilityId) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -474,6 +535,14 @@ const getApprovedAmendments = async (dealId) => {
   }
 };
 
+/**
+ * Updates a TFM facility.
+ * @param {object} params - Update parameters.
+ * @param {string} params.facilityId - Facility id.
+ * @param {object} params.tfmUpdate - Partial TFM update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -500,6 +569,12 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   }
 };
 
+/**
+ * Creates a facility amendment.
+ * @param {string} facilityId - Facility id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -522,6 +597,14 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
   }
 };
 
+/**
+ * Updates a facility amendment.
+ * @param {string} facilityId - Facility id.
+ * @param {string} amendmentId - Amendment id.
+ * @param {object} payload - Amendment update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -547,6 +630,11 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDe
   }
 };
 
+/**
+ * Gets the in-progress amendment for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<{ status: number, data: object }>} Response wrapper containing amendment data or error details.
+ */
 const getAmendmentInProgress = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -568,6 +656,11 @@ const getAmendmentInProgress = async (facilityId) => {
   }
 };
 
+/**
+ * Gets completed amendments for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Completed amendment payload or error object.
+ */
 const getCompletedAmendment = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -589,6 +682,11 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment value for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment value payload or error object.
+ */
 const getLatestCompletedAmendmentValue = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -610,6 +708,11 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment cover end date for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment date payload or error object.
+ */
 const getLatestCompletedAmendmentDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -634,6 +737,11 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed facility end date amendment for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (!isValid) {
@@ -657,6 +765,12 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
   }
 };
 
+/**
+ * Gets a specific amendment by facility id and amendment id.
+ * @param {string} facilityId - Facility id.
+ * @param {string} amendmentId - Amendment id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -678,6 +792,11 @@ const getAmendmentById = async (facilityId, amendmentId) => {
   }
 };
 
+/**
+ * Gets amendments for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentByFacilityId = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -699,6 +818,11 @@ const getAmendmentByFacilityId = async (facilityId) => {
   }
 };
 
+/**
+ * Gets amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentsByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -720,6 +844,11 @@ const getAmendmentsByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets in-progress amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentInProgressByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -741,6 +870,11 @@ const getAmendmentInProgressByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets completed amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -762,6 +896,11 @@ const getCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -783,6 +922,10 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets all in-progress amendments.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAllAmendmentsInProgress = async () => {
   const isValid = hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -804,6 +947,14 @@ const getAllAmendmentsInProgress = async () => {
   }
 };
 
+/**
+ * Updates a GEF portal facility.
+ * @param {object} params - Update parameters.
+ * @param {string} params.facilityId - Facility id.
+ * @param {object} params.facilityUpdate - Partial facility update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -827,6 +978,12 @@ const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) =
   }
 };
 
+/**
+ * Queries TFM deals using query parameters.
+ * @param {object} params - Query parameters wrapper.
+ * @param {object} params.queryParams - Query string parameters.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const queryDeals = async ({ queryParams }) => {
   try {
     const response = await axios({
@@ -845,6 +1002,12 @@ const queryDeals = async ({ queryParams }) => {
   }
 };
 
+/**
+ * Gets party information from external-api by company registration number.
+ * @param {object} params - Query parameters wrapper.
+ * @param {string} params.companyRegNo - Company registration number.
+ * @returns {Promise<object | false>} Company payload or false when the request fails.
+ */
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
@@ -1077,6 +1240,12 @@ const findPortalUserById = async (userId) => {
   }
 };
 
+/**
+ * Updates task assignments for a TFM user.
+ * @param {string} userId - TFM user id.
+ * @param {object[]} updatedTasks - Updated task list.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -1132,6 +1301,11 @@ const findOneTeam = async (teamId) => {
   }
 };
 
+/**
+ * Retrieves members of a TFM team.
+ * @param {string} teamId - Team id.
+ * @returns {Promise<object | { status: number, data: string }>} Team members payload or error object.
+ */
 const findTeamMembers = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
@@ -1154,6 +1328,12 @@ const findTeamMembers = async (teamId) => {
   }
 };
 
+/**
+ * Gets a currency exchange rate.
+ * @param {string} source - Source currency code.
+ * @param {string} target - Target currency code.
+ * @returns {Promise<object | { status: number, data: string }>} Exchange rate payload or error object.
+ */
 const getCurrencyExchangeRate = async (source, target) => {
   try {
     const sourceIsValid = isValidCurrencyCode(source);
@@ -1176,6 +1356,13 @@ const getCurrencyExchangeRate = async (source, target) => {
   }
 };
 
+/**
+ * Gets exposure period details for a facility date range.
+ * @param {string} startDate - Start date.
+ * @param {string} endDate - End date.
+ * @param {string} type - Facility type.
+ * @returns {Promise<object | { status: number, data: string }>} Exposure period payload or error object.
+ */
 const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
@@ -1191,6 +1378,11 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   }
 };
 
+/**
+ * Gets a premium schedule from external-api.
+ * @param {object} premiumScheduleParameters - Premium schedule query payload.
+ * @returns {Promise<object | null>} Premium schedule payload or null when unavailable.
+ */
 const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
@@ -1210,6 +1402,12 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
   }
 };
 
+/**
+ * Creates ACBS records for a deal and bank.
+ * @param {object} deal - Deal payload.
+ * @param {object} bank - Bank payload.
+ * @returns {Promise<object | false | {}>} API response payload, false on request failure, or empty object when inputs are missing.
+ */
 const createACBS = async (deal, bank) => {
   if (!!deal && !!bank) {
     try {
@@ -1231,6 +1429,12 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
+/**
+ * Issues an ACBS facility.
+ * @param {object} facility - Facility payload including UKEF facility id.
+ * @param {object} deal - Deal payload.
+ * @returns {Promise<object | { status: number, data: string } | {}>} API response payload, error object on failure, or empty object when inputs are missing.
+ */
 const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
@@ -1282,6 +1486,11 @@ const amendACBSfacility = async (amendments, facility, deal) => {
   return null;
 };
 
+/**
+ * Calls the Azure functions API endpoint used by ACBS integrations.
+ * @param {string} [url] - Optional URL to rewrite to configured Azure function host.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const getFunctionsAPI = async (url = '') => {
   const modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, AZURE_ACBS_FUNCTION_URL) : AZURE_ACBS_FUNCTION_URL;
 
@@ -1320,6 +1529,13 @@ const createEstoreSite = async (data) => {
   }
 };
 
+/**
+ * Sends an email via external-api.
+ * @param {string} templateId - GOV.UK Notify template id.
+ * @param {string} sendToEmailAddress - Recipient email address.
+ * @param {object} emailVariables - Template variables.
+ * @returns {Promise<object | false>} API response payload or false when the request fails.
+ */
 const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
@@ -1339,6 +1555,11 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   }
 };
 
+/**
+ * Finds a single GEF portal deal by id.
+ * @param {string} dealId - GEF portal deal id.
+ * @returns {Promise<object | false | { status: number, data: string }>} Deal payload, false on request failure, or validation error object.
+ */
 const findOneGefDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1362,6 +1583,14 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
+/**
+ * Updates status for a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {string} params.status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1389,6 +1618,14 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 };
 
+/**
+ * Updates a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {object} params.dealUpdate - Partial deal update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1416,6 +1653,13 @@ const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   }
 };
 
+/**
+ * Updates MIN activity for a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1442,6 +1686,14 @@ const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   }
 };
 
+/**
+ * Adds an underwriter comment to a GEF portal deal.
+ * @param {string} dealId - GEF portal deal id.
+ * @param {string} commentType - Comment category.
+ * @param {string} comment - Comment text.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object>} API response payload.
+ */
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
@@ -1460,6 +1712,12 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, audi
   return response.data;
 };
 
+/**
+ * Gets all facilities with optional filters.
+ * @param {object} params - Query parameters wrapper.
+ * @param {object} params.queryParams - Query string parameters.
+ * @returns {Promise<object | { status: number, data: string }>} Facilities payload or error object.
+ */
 const getAllFacilities = async ({ queryParams }) => {
   try {
     const response = await axios({
@@ -1477,6 +1735,11 @@ const getAllFacilities = async ({ queryParams }) => {
   }
 };
 
+/**
+ * Finds a bank by numeric id.
+ * @param {string | number} bankId - Bank id.
+ * @returns {Promise<object | { status: number, data: string }>} Bank payload or error object.
+ */
 const findBankById = async (bankId) => {
   try {
     const isValidBankId = isValidNumericId(bankId);
@@ -1518,6 +1781,11 @@ const getBanks = async (queryParams = {}) => {
   return response.data;
 };
 
+/**
+ * Gets GEF mandatory criteria by version number.
+ * @param {string | number} version - Mandatory criteria version.
+ * @returns {Promise<object | { status: number, data: string }>} Mandatory criteria payload or error object.
+ */
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
@@ -1552,6 +1820,11 @@ const getBankHolidays = async () => {
   return response.data;
 };
 
+/**
+ * Gets utilisation reconciliation summary for a submission month.
+ * @param {string} submissionMonth - Submission month in expected API format.
+ * @returns {Promise<import('./api-response-types').UtilisationReportsReconciliationSummaryResponseBody>}
+ */
 const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
   const url = `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`;
   const response = await axios.get(url, {
