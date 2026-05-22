@@ -1,6 +1,6 @@
 const { createMocks } = require('node-mocks-http');
 const { HttpStatusCode } = require('axios');
-const { AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { AMENDMENT_QUERY_STATUSES, DEAL_TYPE, DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   amendmentEmailEligible,
@@ -23,6 +23,9 @@ const {
   createAmendmentTFMObject,
   sendFacilityAmendment,
 } = require('./amendment.controller');
+
+const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
+const mockAmendmentId = '66b1f2f6f4b5a8f3c7d9e012';
 
 jest.mock('../api', () => ({
   createFacilityAmendment: jest.fn(),
@@ -88,25 +91,25 @@ describe('amendment.controller remaining exports', () => {
   describe('createFacilityAmendment', () => {
     it(`should return ${HttpStatusCode.Ok} with amendmentId when amendment is created`, async () => {
       // Arrange
-      api.createFacilityAmendment.mockResolvedValue({ amendmentId: 'amendment-1' });
+      api.createFacilityAmendment.mockResolvedValue({ amendmentId: mockAmendmentId });
 
-      const { req, res } = createMocks({ body: { facilityId: 'facility-1' } });
+      const { req, res } = createMocks({ body: { facilityId: mockFacilityId } });
       req.user = { _id: 'user-1' };
 
       // Act
       await createFacilityAmendment(req, res);
 
       // Assert
-      expect(api.createFacilityAmendment).toHaveBeenNthCalledWith(1, 'facility-1', { id: 'mock-user-id', userType: 'tfm' });
+      expect(api.createFacilityAmendment).toHaveBeenNthCalledWith(1, mockFacilityId, { id: 'mock-user-id', userType: 'tfm' });
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toEqual({ amendmentId: 'amendment-1' });
+      expect(res._getData()).toEqual({ amendmentId: mockAmendmentId });
     });
 
     it(`should return ${HttpStatusCode.UnprocessableEntity} when amendment cannot be created`, async () => {
       // Arrange
       api.createFacilityAmendment.mockResolvedValue({});
 
-      const { req, res } = createMocks({ body: { facilityId: 'facility-1' }, user: { _id: 'user-1' } });
+      const { req, res } = createMocks({ body: { facilityId: mockFacilityId }, user: { _id: 'user-1' } });
 
       // Act
       await createFacilityAmendment(req, res);
@@ -120,16 +123,16 @@ describe('amendment.controller remaining exports', () => {
   describe('getAmendmentById', () => {
     it(`should return ${HttpStatusCode.Ok} when amendment exists`, async () => {
       // Arrange
-      const amendment = { amendmentId: 'a1' };
+      const amendment = { amendmentId: mockAmendmentId };
       api.getAmendmentById.mockResolvedValue(amendment);
 
-      const { req, res } = createMocks({ params: { facilityId: 'f1', amendmentId: 'a1' } });
+      const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentId: mockAmendmentId } });
 
       // Act
       await getAmendmentById(req, res);
 
       // Assert
-      expect(api.getAmendmentById).toHaveBeenNthCalledWith(1, 'f1', 'a1');
+      expect(api.getAmendmentById).toHaveBeenNthCalledWith(1, mockFacilityId, mockAmendmentId);
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(amendment);
     });
@@ -138,7 +141,7 @@ describe('amendment.controller remaining exports', () => {
       // Arrange
       api.getAmendmentById.mockResolvedValue(null);
 
-      const { req, res } = createMocks({ params: { facilityId: 'f1', amendmentId: 'a1' } });
+      const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentId: mockAmendmentId } });
 
       // Act
       await getAmendmentById(req, res);
@@ -152,16 +155,16 @@ describe('amendment.controller remaining exports', () => {
   describe('getAmendmentByFacilityId', () => {
     it(`should return ${HttpStatusCode.Ok} for in-progress query`, async () => {
       // Arrange
-      const inProgressAmendments = [{ amendmentId: 'a1' }];
+      const inProgressAmendments = [{ amendmentId: mockAmendmentId }];
       api.getAmendmentInProgress.mockResolvedValue({ data: inProgressAmendments });
 
-      const { req, res } = createMocks({ params: { facilityId: 'f1', amendmentIdOrStatus: AMENDMENT_QUERY_STATUSES.IN_PROGRESS } });
+      const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentIdOrStatus: AMENDMENT_QUERY_STATUSES.IN_PROGRESS } });
 
       // Act
       await getAmendmentByFacilityId(req, res);
 
       // Assert
-      expect(api.getAmendmentInProgress).toHaveBeenNthCalledWith(1, 'f1');
+      expect(api.getAmendmentInProgress).toHaveBeenNthCalledWith(1, mockFacilityId);
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(inProgressAmendments);
     });
@@ -170,7 +173,7 @@ describe('amendment.controller remaining exports', () => {
       // Arrange
       api.getAmendmentByFacilityId.mockResolvedValue(null);
 
-      const { req, res } = createMocks({ params: { facilityId: 'f1' } });
+      const { req, res } = createMocks({ params: { facilityId: mockFacilityId } });
 
       // Act
       await getAmendmentByFacilityId(req, res);
@@ -184,7 +187,7 @@ describe('amendment.controller remaining exports', () => {
   describe('getAllAmendments', () => {
     it(`should return ${HttpStatusCode.Ok} for in-progress amendments`, async () => {
       // Arrange
-      const amendments = [{ amendmentId: 'a1' }];
+      const amendments = [{ amendmentId: mockAmendmentId }];
       api.getAllAmendmentsInProgress.mockResolvedValue(amendments);
 
       const { req, res } = createMocks({ params: { status: AMENDMENT_QUERY_STATUSES.IN_PROGRESS } });
@@ -215,7 +218,7 @@ describe('amendment.controller remaining exports', () => {
     it('should send all amendment emails when flags are eligible and unsent', async () => {
       // Arrange
       const amendment = {
-        amendmentId: 'a1',
+        amendmentId: mockAmendmentId,
         dealId: 'd1',
         automaticApprovalEmail: true,
         automaticApprovalEmailSent: false,
@@ -237,7 +240,7 @@ describe('amendment.controller remaining exports', () => {
       api.findPortalUserById.mockResolvedValue({ _id: 'maker-1', email: 'maker@example.com' });
 
       // Act
-      await sendAmendmentEmail('a1', 'f1', { id: 'u1', userType: 'tfm' });
+      await sendAmendmentEmail(mockAmendmentId, mockFacilityId, { id: 'u1', userType: 'tfm' });
 
       // Assert
       expect(sendAutomaticAmendmentEmail).toHaveBeenCalledTimes(1);
@@ -254,7 +257,7 @@ describe('amendment.controller remaining exports', () => {
       api.updateDeal.mockResolvedValue({ ok: true });
 
       // Act
-      const result = await updateTFMDealLastUpdated('a1', 'f1', { id: 'u1', userType: 'tfm' });
+      const result = await updateTFMDealLastUpdated(mockAmendmentId, mockFacilityId, { id: 'u1', userType: 'tfm' });
 
       // Assert
       expect(api.updateDeal).toHaveBeenCalledTimes(1);
@@ -271,7 +274,7 @@ describe('amendment.controller remaining exports', () => {
       api.getAmendmentById.mockResolvedValue({});
 
       // Act
-      const result = await updateTFMDealLastUpdated('a1', 'f1', { id: 'u1', userType: 'tfm' });
+      const result = await updateTFMDealLastUpdated(mockAmendmentId, mockFacilityId, { id: 'u1', userType: 'tfm' });
 
       // Assert
       expect(api.updateDeal).not.toHaveBeenCalled();
@@ -293,12 +296,12 @@ describe('amendment.controller remaining exports', () => {
       addLatestAmendmentFacilityEndDate.mockResolvedValue({ fromValue: true, fromCoverEndDate: true, fromFacilityEndDate: true });
 
       // Act
-      const result = await createAmendmentTFMObject('a1', 'f1', { id: 'u1', userType: 'tfm' });
+      const result = await createAmendmentTFMObject(mockAmendmentId, mockFacilityId, { id: 'u1', userType: 'tfm' });
 
       // Assert
       expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
-        'f1',
-        'a1',
+        mockFacilityId,
+        mockAmendmentId,
         {
           tfm: { fromValue: true, fromCoverEndDate: true, fromFacilityEndDate: true },
         },
@@ -312,45 +315,50 @@ describe('amendment.controller remaining exports', () => {
     it(`should return ${HttpStatusCode.Ok} when amendment is submitted to APIM GIFT and ACBS flow completes`, async () => {
       // Arrange
       const amendment = {
-        amendmentId: 'a1',
+        amendmentId: mockAmendmentId,
         dealId: 'd1',
         changeFacilityValue: false,
       };
 
       api.getAmendmentById.mockResolvedValue(amendment);
-      api.findOneFacility.mockResolvedValue({ _id: 'f1', facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
+      api.findOneFacility.mockResolvedValue({ _id: mockFacilityId, facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
       api.findOneDeal.mockResolvedValue({
         tfm: {},
-        dealSnapshot: { dealType: 'BSS', submissionType: 'AIN', submissionDate: 1, exporter: { companyName: 'ACME' } },
+        dealSnapshot: {
+          dealType: DEAL_TYPE.BSS,
+          submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          submissionDate: 1,
+          exporter: { companyName: 'ACME' },
+        },
       });
 
-      const { req, res } = createMocks({ params: { amendmentId: 'a1', facilityId: 'f1' } });
+      const { req, res } = createMocks({ params: { amendmentId: mockAmendmentId, facilityId: mockFacilityId } });
 
       // Act
       await sendFacilityAmendment(req, res);
 
       // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', 'a1', 'f1');
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', mockAmendmentId, mockFacilityId);
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     });
 
     it(`should return ${HttpStatusCode.BadGateway} when submission throws`, async () => {
       // Arrange
-      api.getAmendmentById.mockResolvedValue({ amendmentId: 'a1', dealId: 'd1' });
-      api.findOneFacility.mockResolvedValue({ _id: 'f1', facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
+      api.getAmendmentById.mockResolvedValue({ amendmentId: mockAmendmentId, dealId: 'd1' });
+      api.findOneFacility.mockResolvedValue({ _id: mockFacilityId, facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
 
-      const { req, res } = createMocks({ params: { amendmentId: 'a1', facilityId: 'f1' } });
+      const { req, res } = createMocks({ params: { amendmentId: mockAmendmentId, facilityId: mockFacilityId } });
 
       // Act
       await sendFacilityAmendment(req, res);
 
       // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', 'a1', 'f1');
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', mockAmendmentId, mockFacilityId);
       expect(console.error).toHaveBeenNthCalledWith(
         1,
         'Unable to send facility amendment %s to ACBS and APIM GIFT for facility %s %o',
-        'a1',
-        'f1',
+        mockAmendmentId,
+        mockFacilityId,
         expect.any(Error),
       );
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadGateway);
