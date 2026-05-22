@@ -450,7 +450,11 @@ const updateFacilityAmendment = async (req, res) => {
  * @throws {Error} Throws when ACBS submission orchestration fails.
  */
 const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
+  const { amendmentId } = amendment;
+
   try {
+    console.info('Sending facility amendment %s to ACBS for facility %s', amendmentId, ukefFacilityId);
+
     // Fetch deal object from deal-tfm
     const tfmDeal = await api.findOneDeal(amendment.dealId);
 
@@ -484,15 +488,11 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
 
     return amendmentWithUkefExposure;
   } catch (error) {
-    console.error('Unable to send facility amendment to ACBS %o', error);
+    console.error('Unable to send facility amendment %s to ACBS for facility %s %o', amendmentId, ukefFacilityId, error);
 
-    throw new Error('Unable to send facility amendment to ACBS');
+    throw new Error(`Unable to send facility amendment ${amendmentId} to ACBS for facility ${ukefFacilityId}`);
   }
 };
-
-// TODO
-// TODO
-// logs
 
 /**
  * Sends a facility amendment to ACBS and APIM GIFT for a given facility and amendment ID.
@@ -514,6 +514,8 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
 const sendFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
 
+  console.info('Sending facility amendment %s to ACBS and APIM GIFT for facility %s', amendmentId, facilityId);
+
   try {
     if (amendmentId && facilityId) {
       const amendment = await api.getAmendmentById(facilityId, amendmentId);
@@ -529,7 +531,7 @@ const sendFacilityAmendment = async (req, res) => {
       return res.status(HttpStatusCode.Ok).send();
     }
   } catch (error) {
-    console.error('Unable to send facility amendment to ACBS and APIM GIFT %o', error);
+    console.error('Unable to send facility amendment %s to ACBS and APIM GIFT for facility %s %o', amendmentId, facilityId, error);
 
     return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
   }

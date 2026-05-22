@@ -1,4 +1,4 @@
-const { canSendToAcbs } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, DEAL_TYPE, SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { internalAmendmentEmail } = require('../helpers/amendment.helpers');
@@ -25,7 +25,8 @@ describe('submitToAcbs', () => {
   const ukefFacilityId = '0034818759';
 
   const amendment = {
-    dealId: 'mock-deal-id',
+    amendmentId: '1234',
+    dealId: '00345678910',
     changeFacilityValue: true,
     tfm: {
       exposure: {
@@ -41,8 +42,8 @@ describe('submitToAcbs', () => {
   const tfmDeal = {
     tfm: {},
     dealSnapshot: {
-      dealType: 'BSS',
-      submissionType: 'Automatic Inclusion Notice',
+      dealType: DEAL_TYPE.BSS_EWCS,
+      submissionType: SUBMISSION_TYPE.AIN,
       submissionDate: 1779114849408,
       exporter: {
         companyName: 'Mock Exporter Ltd',
@@ -52,6 +53,8 @@ describe('submitToAcbs', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    console.info = jest.fn();
+    console.error = jest.fn();
   });
 
   it('should send amendment to ACBS and return amendment enriched with ukefExposure', async () => {
@@ -63,6 +66,8 @@ describe('submitToAcbs', () => {
     const result = await submitToAcbs(amendment, facility, ukefFacilityId);
 
     // Assert
+    expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS for facility %s', amendment.amendmentId, ukefFacilityId);
+
     expect(api.findOneDeal).toHaveBeenNthCalledWith(1, amendment.dealId);
 
     expect(canSendToAcbs).toHaveBeenNthCalledWith(1, { amendment });
@@ -93,6 +98,8 @@ describe('submitToAcbs', () => {
       const result = await submitToAcbs(amendment, facility, ukefFacilityId);
 
       // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS for facility %s', amendment.amendmentId, ukefFacilityId);
+
       expect(api.findOneDeal).toHaveBeenNthCalledWith(1, amendment.dealId);
       expect(canSendToAcbs).toHaveBeenNthCalledWith(1, { amendment });
 
@@ -104,12 +111,22 @@ describe('submitToAcbs', () => {
   });
 
   describe('when submission orchestration fails', () => {
-    it('should throw standard error', async () => {
+    it('should log error and throw standard error with identifiers', async () => {
       // Arrange
       api.findOneDeal.mockRejectedValue(new Error('Mock error'));
 
       // Act / Assert
-      await expect(submitToAcbs(amendment, facility, ukefFacilityId)).rejects.toThrow('Unable to send facility amendment to ACBS');
+      await expect(submitToAcbs(amendment, facility, ukefFacilityId)).rejects.toThrow(
+        `Unable to send facility amendment ${amendment.amendmentId} to ACBS for facility ${ukefFacilityId}`,
+      );
+
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Unable to send facility amendment %s to ACBS for facility %s %o',
+        amendment.amendmentId,
+        ukefFacilityId,
+        expect.any(Error),
+      );
     });
   });
 });
