@@ -301,8 +301,13 @@ describe('create', () => {
 
   it(`should return ${HttpStatusCode.Created} with response data`, async () => {
     // Arrange
-    const requestBody = { test: true };
-    const responseData = { facilityId: '0000000001' };
+    const mockFacilityId = '0000000001';
+    const requestBody = {
+      overview: {
+        facilityId: mockFacilityId,
+      },
+    };
+    const responseData = { facilityId: mockFacilityId };
     mockRequest.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
@@ -315,6 +320,8 @@ describe('create', () => {
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - create facility endpoint %s', mockFacilityId);
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ Successfully created GIFT facility %s', mockFacilityId);
 
     expect(axios).toHaveBeenNthCalledWith(1, {
       method: 'POST',
@@ -345,6 +352,7 @@ describe('create', () => {
     await create(mockRequest, mockResponse);
 
     // Assert
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - create facility endpoint %s', mockFacilityId);
     expect(console.error).toHaveBeenNthCalledWith(
       1,
       'Error calling APIM TFS GIFT - create facility endpoint - facilityId %s status %s responseBody %o error %o',
@@ -384,6 +392,7 @@ describe('create', () => {
       await create(mockRequest, mockResponse);
 
       // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - create facility endpoint %s', mockFacilityId);
       expect(console.error).toHaveBeenNthCalledWith(
         1,
         'Error calling APIM TFS GIFT - create facility endpoint - facilityId %s status %s responseBody %o error %o',
@@ -432,6 +441,8 @@ describe('amend', () => {
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ Successfully amended GIFT facility');
 
     expect(axios).toHaveBeenNthCalledWith(1, {
       method: 'POST',
@@ -463,6 +474,7 @@ describe('amend', () => {
     await amend(mockRequest, mockResponse);
 
     // Assert
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
     expect(console.error).toHaveBeenNthCalledWith(
       1,
       'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
@@ -503,6 +515,7 @@ describe('amend', () => {
       await amend(mockRequest, mockResponse);
 
       // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
       expect(console.error).toHaveBeenNthCalledWith(
         1,
         'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',

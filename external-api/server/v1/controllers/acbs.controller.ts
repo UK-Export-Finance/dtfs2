@@ -253,6 +253,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { amendments, facility, deal } = req.body;
+
     // Construct payload
     const payload = {
       facilityIdentifier: id,
