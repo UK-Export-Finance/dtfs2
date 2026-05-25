@@ -633,7 +633,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDe
 /**
  * Gets the in-progress amendment for a facility.
  * @param {string} facilityId - Facility id.
- * @returns {Promise<{ status: number, data: object }>} Response wrapper containing amendment data or error details.
+ * @returns {Promise<{ status: number, data: object | string }>} Response wrapper containing amendment data or error details.
  */
 const getAmendmentInProgress = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);

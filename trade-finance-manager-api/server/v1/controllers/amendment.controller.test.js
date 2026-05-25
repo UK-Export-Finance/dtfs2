@@ -1,6 +1,6 @@
 const { createMocks } = require('node-mocks-http');
 const { HttpStatusCode } = require('axios');
-const { AMENDMENT_QUERY_STATUSES, DEAL_TYPE, DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
+const { AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   amendmentEmailEligible,
@@ -21,7 +21,6 @@ const {
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
-  sendFacilityAmendment,
 } = require('./amendment.controller');
 
 const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
@@ -308,74 +307,6 @@ describe('amendment.controller remaining exports', () => {
         { id: 'u1', userType: 'tfm' },
       );
       expect(result).toEqual({ fromValue: true, fromCoverEndDate: true, fromFacilityEndDate: true });
-    });
-  });
-
-  describe('sendFacilityAmendment', () => {
-    it(`should return ${HttpStatusCode.Ok} when amendment is submitted to APIM GIFT and ACBS flow completes`, async () => {
-      // Arrange
-      const amendment = {
-        amendmentId: mockAmendmentId,
-        dealId: 'd1',
-        changeFacilityValue: false,
-      };
-
-      api.getAmendmentById.mockResolvedValue(amendment);
-      api.findOneFacility.mockResolvedValue({ _id: mockFacilityId, facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
-      api.findOneDeal.mockResolvedValue({
-        tfm: {},
-        dealSnapshot: {
-          dealType: DEAL_TYPE.BSS,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          submissionDate: 1,
-          exporter: { companyName: 'ACME' },
-        },
-      });
-
-      const { req, res } = createMocks({ params: { amendmentId: mockAmendmentId, facilityId: mockFacilityId } });
-
-      // Act
-      await sendFacilityAmendment(req, res);
-
-      // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', mockAmendmentId, mockFacilityId);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-    });
-
-    it(`should return ${HttpStatusCode.BadGateway} when submission throws`, async () => {
-      // Arrange
-      api.getAmendmentById.mockResolvedValue({ amendmentId: mockAmendmentId, dealId: 'd1' });
-      api.findOneFacility.mockResolvedValue({ _id: mockFacilityId, facilitySnapshot: { ukefFacilityId: 'ukef-1' } });
-
-      const { req, res } = createMocks({ params: { amendmentId: mockAmendmentId, facilityId: mockFacilityId } });
-
-      // Act
-      await sendFacilityAmendment(req, res);
-
-      // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', mockAmendmentId, mockFacilityId);
-      expect(console.error).toHaveBeenNthCalledWith(
-        1,
-        'Unable to send facility amendment %s to ACBS and APIM GIFT for facility %s %o',
-        mockAmendmentId,
-        mockFacilityId,
-        expect.any(Error),
-      );
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadGateway);
-      expect(res._getData()).toEqual({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
-    });
-
-    it(`should return ${HttpStatusCode.UnprocessableEntity} when params are missing`, async () => {
-      // Arrange
-      const { req, res } = createMocks({ params: { amendmentId: null, facilityId: null } });
-
-      // Act
-      await sendFacilityAmendment(req, res);
-
-      // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sending facility amendment %s to ACBS and APIM GIFT for facility %s', null, null);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.UnprocessableEntity);
-      expect(res._getData()).toEqual({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
     });
   });
 });
