@@ -4,9 +4,6 @@ import { mapCounterparties } from '.';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapCounterparties', () => {
-  const startDate = '2024-01-28';
-  const exitDate = '2026-02-14';
-
   describe('when isBssEwcsDeal is true', () => {
     const isBssEwcsDeal = true;
     const isGefDeal = false;
@@ -23,16 +20,12 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            startDate,
-            exitDate,
             roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
         ];
@@ -53,16 +46,12 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            startDate,
-            exitDate,
             roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
@@ -84,22 +73,16 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            startDate,
-            exitDate,
             roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            startDate,
-            exitDate,
             roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
@@ -118,8 +101,6 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
@@ -144,16 +125,12 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.issuingBank,
-            startDate,
-            exitDate,
             roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
           },
         ];
@@ -172,8 +149,6 @@ describe('mapCounterparties', () => {
           isBssEwcsDeal,
           isGefDeal,
           partyUrns: mockPartyUrns,
-          startDate,
-          exitDate,
         });
 
         // Assert
@@ -192,8 +167,6 @@ describe('mapCounterparties', () => {
         isBssEwcsDeal,
         isGefDeal,
         partyUrns: {},
-        startDate,
-        exitDate,
       });
 
       // Assert
