@@ -1,10 +1,12 @@
+import { getFormattedUTCDateString } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../../mappings/apim-gift-payloads/constants';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import apiModule from '../../../api';
-import { ApimGiftFacilityAmendmentPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
+import { ApimGiftFacilityAmendmentPayload } from '../../../mappings/apim-gift-payloads/types';
 
 type ApimGiftAmendmentType = (typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE)[keyof typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE];
 
+// TODO: this is not APIM/GIFT, this is input/structure from TFM
 type ApimGiftFacilityAmendment = {
   changeFacilityValue?: boolean;
   changeCoverEndDate?: boolean;
@@ -20,7 +22,7 @@ type ApimGiftFacilityAmendment = {
 };
 
 export const getAmendmentFields = (amendment: ApimGiftFacilityAmendment) => {
-  const amount = amendment.ukefDecision?.value ?? amendment.value;
+  const amount = Number(amendment.ukefDecision?.value);
   const coverEndDate = amendment.ukefDecision?.coverEndDate ?? amendment.coverEndDate;
   const effectiveDate = Number(amendment.ukefDecision?.effectiveDate ?? amendment.effectiveDate);
 
@@ -31,34 +33,30 @@ export const getAmendmentFields = (amendment: ApimGiftFacilityAmendment) => {
   };
 };
 
-export const getAmountAmendmentType = (amendment: ApimGiftFacilityAmendment, amount: number): ApimGiftAmendmentType | null => {
-  if (!amendment.changeFacilityValue) {
-    return null;
-  }
-
-  const originalValue = amendment.currentValue;
-
-  if (typeof amount !== 'number' || typeof originalValue !== 'number') {
-    return null;
-  }
-
-  if (amount > originalValue) {
+export const getAmountAmendmentType = (currentAmount: number, newAmount: number): ApimGiftAmendmentType | null => {
+  if (newAmount > currentAmount) {
     return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT;
   }
 
-  if (amount < originalValue) {
+  if (newAmount < currentAmount) {
     return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT;
   }
 
   return null;
 };
 
-export const getAmendmentType = (amendment: ApimGiftFacilityAmendment, amount?: number): ApimGiftAmendmentType | null => {
-  if (amount) {
-    return getAmountAmendmentType(amendment, amount);
+export const getAmendmentType = (amendment: ApimGiftFacilityAmendment, amount: number): ApimGiftAmendmentType | null => {
+  const { changeCoverEndDate, changeFacilityValue } = amendment;
+
+  if (changeCoverEndDate) {
+    return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
   }
 
-  return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
+  if (changeFacilityValue) {
+    return getAmountAmendmentType(amendment.currentValue ?? 0, Number(amount));
+  }
+
+  return null;
 };
 
 export const buildAmendmentPayload = (amendment: ApimGiftFacilityAmendment): ApimGiftFacilityAmendmentPayload | null => {
@@ -66,29 +64,28 @@ export const buildAmendmentPayload = (amendment: ApimGiftFacilityAmendment): Api
 
   const amendmentType = getAmendmentType(amendment, amount);
 
-  if (!amendmentType) {
+  if (!amendmentType || !effectiveDate) {
     return null;
   }
 
   if (amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT || amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT) {
-    if (typeof amount !== 'number' || !effectiveDate) {
+    if (typeof amount !== 'number') {
       return null;
     }
 
     return APIM_GIFT_PAYLOADS.amendFacility[amendmentType]({
       amount,
-      date: new Date(effectiveDate * 1000).toISOString().slice(0, 10),
+      date: getFormattedUTCDateString(effectiveDate),
     });
   }
 
-  if (!effectiveDate) {
-    return null;
+  if (amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE) {
+    return APIM_GIFT_PAYLOADS.amendFacility[amendmentType]({
+      expiryDate: getFormattedUTCDateString(effectiveDate),
+    });
   }
 
-  return APIM_GIFT_PAYLOADS.amendFacility[amendmentType]({
-    // TODO: helper
-    expiryDate: new Date(effectiveDate * 1000).toISOString().slice(0, 10),
-  });
+  return null;
 };
 
 // TODO:
@@ -99,11 +96,34 @@ type TempType = {
   ukefFacilityId: string;
 };
 
-export const submitFacilityAmendmentsToApimGift = async ({ amendment, ukefFacilityId }: TempType) => {
-  const api = apiModule as ApiTypes;
+type GiftAmendFacilityResponse = object | false;
+
+type GiftAmendApi = {
+  amendGiftFacility: (facilityAmendmentData: ApimGiftFacilityAmendmentPayload, facilityId: string) => Promise<GiftAmendFacilityResponse>;
+};
+
+const hasGiftAmendApi = (value: unknown): value is GiftAmendApi => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  return typeof (value as { amendGiftFacility?: unknown }).amendGiftFacility === 'function';
+};
+
+export const submitFacilityAmendmentsToApimGift = async ({ amendment, ukefFacilityId }: TempType): Promise<GiftAmendFacilityResponse> => {
+  const maybeApiModule: unknown = apiModule;
+
+  if (!hasGiftAmendApi(maybeApiModule)) {
+    return false;
+  }
 
   const payload = buildAmendmentPayload(amendment);
 
-  // @ts-ignore
-  await api.amendGiftFacility(payload, ukefFacilityId);
+  if (!payload) {
+    return false;
+  }
+
+  const response = await maybeApiModule.amendGiftFacility(payload, ukefFacilityId);
+
+  return response;
 };

@@ -50,12 +50,30 @@ export const getMonthName = (monthNumber: OneIndexedMonth) => {
 export const getUnixTimestampSeconds: (date: Date) => UnixTimestampSeconds = getUnixTime;
 
 /**
- * Returns the current date and time in ISO 8601 format.
+ * Returns the current date and time as an ISO 8601 string.
  *
  * @param {Date} date JavaScript date object
  * @returns {string} The current date and time as an ISO 8601 string.
+ * @example
+ * getISO8601(new Date('2024-01-01T00:00:00Z')); // returns '2024-01-01T00:00:00.000Z'
+ * getISO8601(); // returns the current date and time in ISO 8601 format, e.g. '2024-06-01T12:34:56.789Z'
  */
 export const getISO8601 = (date: Date = now()): string => date.toISOString();
+
+/**
+ * Converts a Unix timestamp (in seconds) to a UTC date string in the format 'YYYY-MM-DD'.
+ * @param date - The Unix timestamp in seconds.
+ * @returns {string} The UTC date string in the format 'YYYY-MM-DD'.
+ */
+export const getFormattedUTCDateString = (date: number): string => {
+  // Convert the Unix timestamp (in seconds) to milliseconds and create a Date object
+  const isoString = new Date(date * 1000).toISOString();
+
+  // Extract the date portion (first 10 characters) of the ISO string, which is in the format 'YYYY-MM-DD'
+  const formattedDate = isoString.slice(0, 10);
+
+  return formattedDate;
+};
 
 /**
  * Adds a specified number of years to a given date.
@@ -114,6 +132,7 @@ export const differenceInDays = (startEpoch: number, endEpoch: number): number =
    * Above is derived from 1000 ms * 60 seconds * 60 minutes * 24 hours
    */
   const differenceMs = endEpoch - startEpoch;
+
   // Only divide if EPOCH in microseconds is greater than or equal to 24 hours
   return differenceMs >= EPOCH.MS.ONE_DAY ? Math.round(differenceMs / EPOCH.MS.ONE_DAY) : differenceMs;
 };
