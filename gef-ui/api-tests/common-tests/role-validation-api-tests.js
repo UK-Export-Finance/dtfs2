@@ -2,7 +2,20 @@ jest.mock('../../server/services/api', () => ({
   ...jest.requireActual('../../server/services/api'),
   validateToken: () => true,
   validateBank: () => ({ isValid: true }),
+  getApplication: jest.fn(),
+  getFacilities: jest.fn(),
+  getFacility: jest.fn(),
+  createFacility: jest.fn(),
+  updateFacility: jest.fn(),
+  deleteFacility: jest.fn(),
+  updateApplication: jest.fn(),
+  getUserDetails: jest.fn(),
+  setApplicationStatus: jest.fn(),
+  getCompanyByRegistrationNumber: jest.fn(),
+  getMandatoryCriteria: jest.fn(),
+  cloneApplication: jest.fn(),
 }));
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
