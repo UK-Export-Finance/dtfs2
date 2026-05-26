@@ -1460,8 +1460,72 @@ portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLa
  */
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
+/**
+ * @openapi
+ * /portal/users/me/sign-in-code:
+ *   post:
+ *     summary: Create and email a sign in OTP to the user
+ *     tags: [User]
+ *     description: Create and email a sign in OTP to the user
+ *     requestBody:
+ *       description: Required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/PortalUser'
+ *               auditDetails:
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       201:
+ *         description: Created - OTP created and emailed successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Missing or invalid request body
+ *       500:
+ *         description: Internal Server Error
+ */
 portalRouter.route('/users/me/sign-in-code').post(loginController.createAndEmailSignInOTP);
 
+/**
+ * @openapi
+ * /portal/users/me/validate-sign-in-code:
+ *   post:
+ *     summary: Validate a sign in OTP and sign in the user if valid
+ *     tags: [User]
+ *     description: Validate a sign in OTP and sign in the user if valid
+ *     requestBody:
+ *       description: Required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               signInOTPCode:
+ *                 type: string
+ *               auditDetails:
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       200:
+ *         description: OK - OTP valid and user signed in successfully
+ *       400:
+ *         description: Bad request - invalid userId or OTP format
+ *       401:
+ *         description: Unauthorized - invalid or expired OTP
+ *       403:
+ *         description: Forbidden - user is blocked or disabled
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
 portalRouter.route('/users/me/validate-sign-in-code').post(loginController.validateOTPAndSignIn);
 
 module.exports = portalRouter;

@@ -1,4 +1,5 @@
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
 {% macro render(params) %}
   {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
@@ -9,7 +10,7 @@
     text: displayStatus,
     classes: tagColourClass,
     attributes: {
-    'data-cy': 'utilisation-report-reconciliation-status'
+      'data-cy': 'utilisation-report-reconciliation-status'
     }
-    }) }}
+  }) }}
 {% endmacro %}

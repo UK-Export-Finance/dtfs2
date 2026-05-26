@@ -24,6 +24,7 @@ const MOCK_GEF_DEAL_AIN = require('../../../server/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../server/v1/__mocks__/mock-gef-deal-MIN');
 const { MOCK_PORTAL_USERS } = require('../../../server/v1/__mocks__/mock-portal-users');
+const { MOCK_FACILITIES } = require('../../../server/v1/__mocks__/mock-facilities');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -119,7 +120,7 @@ describe('/v1/deals', () => {
       expect(tfmDataWithPartiesObject).toEqual(expected);
     });
 
-    it('returns the requested resource if no companies house no given', async () => {
+    it('returns the requested resource if no companies house number is given', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;
@@ -359,6 +360,87 @@ describe('/v1/deals', () => {
       expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
         deal: submittedDeal,
         facilities: mockIssuedFacilities,
+      });
+    });
+
+    describe('submitFacilitiesToApimGift only called with facilities not already in GIFT', () => {
+      const mockFacility1 = {
+        ...MOCK_FACILITIES[0],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[0].facilitySnapshot,
+          ukefFacilityId: 'FACILITY_A',
+        },
+      };
+
+      const mockFacility2 = {
+        ...MOCK_FACILITIES[1],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[1].facilitySnapshot,
+          ukefFacilityId: 'FACILITY_B',
+        },
+      };
+
+      const mockFacility3 = {
+        ...MOCK_FACILITIES[2],
+        facilitySnapshot: {
+          ...MOCK_FACILITIES[2].facilitySnapshot,
+          _id: 'mock-facility-3',
+          ukefFacilityId: 'FACILITY_C',
+        },
+      };
+
+      describe('when all issued facilities are not in GIFT', () => {
+        it('should call submitFacilitiesToApimGift with all issued facilities', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: [mockFacility1, mockFacility2],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: [mockFacility1, mockFacility2],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
+      });
+
+      describe('when there are no issued facilities to send to GIFT', () => {
+        it('should not call submitFacilitiesToApimGift', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: false,
+            issuedFacilities: [], // no facilities to send
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when some issued facilities are in GIFT, some are not', () => {
+        it('should call submitFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
+          canSubmitToApimGift.mockResolvedValueOnce({
+            canSubmitFacilitiesToApimGift: true,
+            issuedFacilities: [mockFacility2, mockFacility3], // only facility 2 and 3 are not in GIFT
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+            deal: submittedDeal,
+            facilities: [mockFacility2, mockFacility3],
+            isBssEwcsDeal: true,
+            isGefDeal: false,
+          });
+        });
       });
     });
   });

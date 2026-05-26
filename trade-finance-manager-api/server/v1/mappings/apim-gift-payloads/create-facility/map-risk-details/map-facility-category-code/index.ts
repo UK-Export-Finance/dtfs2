@@ -13,6 +13,7 @@ type MapFacilityCategoryCodeParams = {
  * where the category description includes both "GEF" and the TFM facility category code.
  * This is required because GEF facility categories are not codes.
  * Any other product/facility does not require a facility category code in the payload.
+ * NOTE: BSS/EWCS facilities are expected to have a null facility category code.
  * @param {MapFacilityCategoryCodeParams} params - Data required to map the facility category code for GEF facilities.
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM.
  * @param {string} [params.facilityType] - Facility type (e.g. "Cash", "Contingent").

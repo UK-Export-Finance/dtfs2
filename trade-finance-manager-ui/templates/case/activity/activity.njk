@@ -1,8 +1,8 @@
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+{% from "moj/components/timeline/macro.njk" import mojTimeline %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/deal-submitted.njk' as dealSubmitted %}
 {% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import  "./_macros/cancellation-activity-html.njk" as cancellationActivityHtml %}
 
 {% extends "case/case.njk" %}
@@ -31,6 +31,7 @@
     hasAmendmentInProgressSubmittedFromPim: hasAmendmentInProgressSubmittedFromPim,
     amendmentsInProgressSubmittedFromPim: amendmentsInProgressSubmittedFromPim
   } %}
+
   {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
   <div class="govuk-grid-row" data-cy="case-activity">
