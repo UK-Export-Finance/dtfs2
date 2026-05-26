@@ -31,6 +31,7 @@ const {
   MOCK_TASKS,
   TASKS_UPDATE_MOCK_REQUEST,
 } = require('../__mocks__/mock-amendment-tasks-assign-by-team');
+
 const { MOCK_FACILITIES } = require('../__mocks__/mock-facilities');
 const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
 
@@ -81,6 +82,7 @@ afterEach(() => {
 describe('updated facility amendment API call', () => {
   let getTasksAssignedToUserByGroupMock;
 
+  // TODO: extract into own file/test?
   describe('getTasksAssignedToUserByGroup', () => {
     it('should call getTasksAssignedToUserByGroup if request contains leadUnderwriter', async () => {
       // Arrange
@@ -159,7 +161,7 @@ describe('updated facility amendment API call', () => {
       );
 
       expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-      expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
+      expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: false });
     });
   });
 
@@ -202,7 +204,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
     });
 
@@ -234,7 +236,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, true);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
     });
 
@@ -252,7 +254,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith(MOCK_AMENDMENT, false);
+        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: false });
       });
     });
   });

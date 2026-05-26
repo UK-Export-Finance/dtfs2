@@ -58,6 +58,8 @@ const getPortalDeal = async (dealId, dealType) => {
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   try {
+    console.info('TFM deal %s submitDealAfterUkefIds', dealId);
+
     const deal = await getPortalDeal(dealId, dealType);
 
     if (!deal) {
@@ -109,6 +111,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       // TFM tasks
       if (acceptableTaskSubmissionTypes.includes(updatedMappedDeal.submissionType)) {
         dealUpdate = await createDealTasks(dealUpdate, auditDetails);
+
         const { firstTaskEmail } = await sendDealSubmitEmails(dealUpdate);
 
         /**
@@ -122,22 +125,24 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities } = await canSubmitToApimGift(tfmDeal);
+      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
-        console.info('TFM deal %s submitDealAfterUkefIds - calling submitFacilitiesToApimGift', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling submitFacilitiesToApimGift', dealId);
 
         await submitFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
         });
       }
 
       // Submit to ACBS
-      const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+      const canSubmitDealToACBS = await canSubmitToACBS({ deal: tfmDeal });
 
       if (canSubmitDealToACBS) {
-        console.info('TFM deal %s submitDealAfterUkefIds - calling createACBS', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling createACBS', dealId);
 
         await createACBS(dealId);
       }
@@ -146,6 +151,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     }
 
     if (isDealResubmission) {
+      console.info('TFM deal %s submitDealAfterUkefIds - resubmission', dealId);
+
       let tfmDeal = await findOneTfmDeal(dealId);
       /**
        * checks if can update to MIN
@@ -156,6 +163,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
       if (isUpdatingToMIN) {
         mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+
         console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
       }
 
@@ -170,7 +178,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
        * Not fetching the latest portal deal status would cause TFM deal status to be
        * an `Application` rather than `Confirmed`.
        */
-
       const updatedPortalDeal = await getPortalDeal(dealId, dealType);
       const { status } = updatedPortalDeal;
       mappedDeal.status = status;
@@ -208,15 +215,33 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
       tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-      const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+      // Submit facilities to APIM/GIFT
+      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
+
+      if (canSubmitFacilitiesToApimGift) {
+        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling submitFacilitiesToApimGift', dealId);
+
+        await submitFacilitiesToApimGift({
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+      }
+
+      // Submit to ACBS
+      const canSubmitDealToACBS = await canSubmitToACBS({ deal: tfmDeal });
 
       if (canSubmitDealToACBS) {
-        console.info('TFM deal %s resubmission - submitDealAfterUkefIds - calling createACBS', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling createACBS', dealId);
 
         await createACBS(dealId);
       }
 
-      const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
+      const canIssueFacilityInACBS = await canSubmitToACBS({
+        deal: tfmDeal,
+        firstSubmissionCheck: false,
+      });
 
       if (canIssueFacilityInACBS) {
         await issueAcbsFacilities(dealUpdate);
