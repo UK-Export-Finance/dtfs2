@@ -2,6 +2,11 @@ import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_
 import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 import { isAmendmentDeclined } from './is-amendment-declined';
 
+type CanSendToAcbsParams = {
+  amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId;
+  isTaskUpdate?: boolean;
+};
+
 /**
  * Determines if an amendment can be sent to ACBS based on its type, status, user involvement, and amendment details.
  *
@@ -18,15 +23,16 @@ import { isAmendmentDeclined } from './is-amendment-declined';
  *
  * If the amendment update is part of a task update, it should not be sent to ACBS, hence the `isTaskUpdate` flag is used to prevent that.
  *
- * @param amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
- * @param isTaskUpdate - Optional flag indicating if the amendment update is part of a task update.
- * @returns `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
+ * @param params - An object containing the amendment and an optional flag for task updates.
+ * @param params.amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
+ * @param params.isTaskUpdate - Optional flag indicating if the amendment update is part of a task update. Defaults to false.
+ * @returns {boolean} `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
-export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId, isTaskUpdate = false) => {
+export const canSendToAcbs = ({ amendment, isTaskUpdate = false }: CanSendToAcbsParams) => {
   // Amendment type
   const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
 
-  // Ensure at least one of the attribute has been amended
+  // Ensure at least one of the attributes has been amended
   const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
 
   /**
@@ -48,7 +54,7 @@ export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | Tfm
 
   // Manual amendment - TFM only
   if (isAmendmentManual && !isPortalAmendment) {
-    // Bank Decision
+    // Bank decision
     const submitted = amendment.bankDecision?.submitted;
     const decision = amendment.bankDecision?.decision;
 
