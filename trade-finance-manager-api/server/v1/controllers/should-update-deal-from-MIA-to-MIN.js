@@ -18,7 +18,7 @@ const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
   const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
   const hasApprovedDecision = ukefApprovedDecisions.includes(tfmDeal?.underwriterManagersDecision?.decision);
 
-  console.info('Updating deal %s submission type to MIN %s %s', deal._id, isMIA, hasApprovedDecision);
+  console.info('Updating deal %s submission type to MIN. isMIA=%s, hasApprovedDecision=%s', deal._id, isMIA, hasApprovedDecision);
 
   return isMIA && hasApprovedDecision;
 };

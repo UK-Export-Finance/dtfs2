@@ -58,6 +58,7 @@ export const getByCompaniesHouseIndustryCode = async (req: Request, res: Respons
       headers,
     }).catch((error: any) => {
       console.error('Error calling UKEF Industry Code API, %o', error);
+
       return {
         data: error.response?.data,
         status: error.response?.status,

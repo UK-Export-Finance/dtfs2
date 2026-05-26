@@ -1,4 +1,4 @@
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% import '../../_macros/table-heading.njk' as tableHeading %}
 
 {% macro render(params) %}
@@ -27,7 +27,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -37,7 +37,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -47,7 +47,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -57,7 +57,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -67,7 +67,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -77,7 +77,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
 
           {{tableHeading.render({
             tableName: 'facilities',
@@ -87,7 +87,7 @@
             sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
-          })}}
+          }) }}
         </tr>
       </thead>
 
@@ -127,10 +127,10 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-value">{{ facility.currencyAndValue | dashIfEmpty}}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-coverEndDate">{{ facility.coverEndDate | dashIfEmpty }}</td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-facilityStage">
-              {{govukTag({
+              {{ govukTag({
                 text: facilityStage | dashIfEmpty,
                 classes: "govuk-tag--blue"
-              })}}
+              }) }}
             </td>
           </tr>
         {% endfor %}
