@@ -1,6 +1,7 @@
 const { createMocks } = require('node-mocks-http');
 const { HttpStatusCode } = require('axios');
 const { AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const {
   amendmentEmailEligible,
@@ -83,6 +84,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 describe('amendment.controller remaining exports', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    generateTfmAuditDetails.mockReturnValue({ id: 'mock-user-id', userType: 'tfm' });
     console.info = jest.fn();
     console.error = jest.fn();
   });
