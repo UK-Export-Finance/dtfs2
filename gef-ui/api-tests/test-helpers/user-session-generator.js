@@ -3,7 +3,7 @@ const signature = require('cookie-signature');
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { getUserWithRoles } = require('./user-generator');
 
-const generateUserSession = (roles) => {
+const generateUserSession = (roles, extraSessionData = {}) => {
   const sessionId = crypto.randomBytes(8).toString('hex');
   const sessionCookie = `s:${signature.sign(sessionId, process.env.SESSION_SECRET)}`;
   const sessionKey = `sess:${sessionId}`;
@@ -25,6 +25,7 @@ const generateUserSession = (roles) => {
     flash: {},
     sortBy: { order: 'updatedAt' },
     EX: 604800,
+    ...extraSessionData,
   };
   return { sessionKey, sessionCookie, data };
 };
