@@ -8,9 +8,7 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 describe('mapObligations', () => {
   const bssSubtypeName = 'Performance bond';
   const currency = 'GBP';
-  const effectiveDate = '2024-01-28';
   const facilityType = FACILITY_TYPE.CASH;
-  const maturityDate = '2026-02-14';
   const ukefExposure = 1500;
 
   describe('when isBssEwcsDeal is true', () => {
@@ -22,10 +20,8 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
-        effectiveDate,
         isBssEwcsDeal,
         isGefDeal,
-        maturityDate,
         bssSubtypeName,
         ukefExposure,
       });
@@ -35,8 +31,6 @@ describe('mapObligations', () => {
         {
           amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
           currency,
-          effectiveDate,
-          maturityDate,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS['Performance bond'],
         },
@@ -55,10 +49,8 @@ describe('mapObligations', () => {
         // Act
         const result = mapObligations({
           currency,
-          effectiveDate,
           isBssEwcsDeal,
           isGefDeal,
-          maturityDate,
           bssSubtypeName: unmappedBssSubtypeName,
           ukefExposure,
         });
@@ -68,8 +60,6 @@ describe('mapObligations', () => {
           {
             amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
             currency,
-            effectiveDate,
-            maturityDate,
             repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
             subtypeCode: null,
           },
@@ -89,11 +79,9 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
-        effectiveDate,
         isBssEwcsDeal,
         isGefDeal,
         facilityType,
-        maturityDate,
         ukefExposure,
       });
 
@@ -102,8 +90,6 @@ describe('mapObligations', () => {
         {
           amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
           currency,
-          effectiveDate,
-          maturityDate,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,
         },
@@ -122,10 +108,8 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
-        effectiveDate,
         isBssEwcsDeal,
         isGefDeal,
-        maturityDate,
         ukefExposure,
       });
 
@@ -134,8 +118,6 @@ describe('mapObligations', () => {
         {
           amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
           currency,
-          effectiveDate,
-          maturityDate,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,
         },
