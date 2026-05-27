@@ -488,6 +488,7 @@ const findFacilitiesByDealId = async (dealId) => {
 
     if (!isValidDealId) {
       console.error('findFacilitiesByDealId: Invalid deal id %s', dealId);
+
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -2254,8 +2255,9 @@ const createGiftFacility = async (facilityData) => {
 
 /**
  * Find GIFT facilities by their IDs.
+ * NOTE: If no GIFT facilities are found, APIM returns a 404. This is a valid status.
  * @param {string} facilityIdsQueryString - Comma-separated facility IDs to find.
- * @returns {Promise<{ facilities: object[] }|false>} The API response payload if successful, otherwise false.
+ * @returns {Promise<{ facilities: object[] }|false>} The API response payload if successful. A 404 is treated as no facilities found and returns an empty `facilities` array. Other failures return false.
  */
 const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
   try {
@@ -2273,6 +2275,14 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
   } catch (error) {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
     const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
+
+    if (status === HttpStatusCode.NotFound) {
+      console.info('No GIFT facilities found for ids %o', facilityIdsQueryString);
+
+      return {
+        facilities: [],
+      };
+    }
 
     console.error(
       'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
