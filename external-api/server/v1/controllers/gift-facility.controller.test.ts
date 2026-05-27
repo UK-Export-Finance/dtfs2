@@ -283,9 +283,9 @@ describe('getMany', () => {
 
 describe('create', () => {
   // Arrange
-  const mockTfsResponse = {
+  const mockApimTfsResponse = {
     data: {},
-    status: HttpStatusCode.Created,
+    status: HttpStatusCode.Accepted,
   };
 
   beforeEach(() => {
@@ -299,7 +299,7 @@ describe('create', () => {
     jest.resetAllMocks();
   });
 
-  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
+  it(`should return ${HttpStatusCode.Accepted} with response data`, async () => {
     // Arrange
     const mockFacilityId = '0000000001';
     const requestBody = {
@@ -311,7 +311,7 @@ describe('create', () => {
     mockRequest.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
-      ...mockTfsResponse,
+      ...mockApimTfsResponse,
       data: responseData,
     });
 
@@ -330,11 +330,11 @@ describe('create', () => {
       data: requestBody,
     });
 
-    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
+    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Accepted);
     expect(mockResponse._getData()).toEqual(responseData);
   });
 
-  it('should fallback to 500 when axios throws without an HTTP response', async () => {
+  it(`should fallback to ${HttpStatusCode.InternalServerError} when axios throws without an HTTP response`, async () => {
     // Arrange
     const mockError = new Error('Mock network error');
     const mockFacilityId = 'mock-facility-id';
@@ -366,7 +366,7 @@ describe('create', () => {
   });
 
   describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
-    it(`should forward non-${HttpStatusCode.Created} status`, async () => {
+    it(`should forward non-${HttpStatusCode.Accepted} status`, async () => {
       // Arrange
       const mockFacilityId = 'mock-facility-id';
       const mockAxiosError = {
@@ -421,18 +421,20 @@ describe('amend', () => {
     jest.resetAllMocks();
   });
 
-  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
+  it(`should return ${HttpStatusCode.Accepted} with response data`, async () => {
     // Arrange
     const requestBody = {
       amount: 13800,
       coverEndDate: '2026-12-20',
     };
+
     const responseData = { facilityId: mockFacilityId, amended: true };
+
     mockRequest.params = { facilityId: mockFacilityId };
     mockRequest.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
-      status: HttpStatusCode.Created,
+      status: HttpStatusCode.Accepted,
       data: responseData,
     });
 
@@ -451,7 +453,7 @@ describe('amend', () => {
       data: requestBody,
     });
 
-    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
+    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Accepted);
     expect(mockResponse._getData()).toEqual(responseData);
   });
 

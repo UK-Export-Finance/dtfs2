@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
+const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendment-to-apim-gift');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -524,9 +524,30 @@ const sendFacilityAmendment = async (req, res) => {
 
       const { ukefFacilityId } = facility.facilitySnapshot;
 
-      await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+      // Fetch deal object from deal-tfm
+      // const tfmDeal = await api.findOneDeal(amendment.dealId);
 
-      await submitToAcbs(amendment, facility, ukefFacilityId);
+      // Construct acceptable deal object
+      // const deal = {
+      //   dealSnapshot: {
+      //     dealType: tfmDeal.dealSnapshot.dealType,
+      //     submissionType: tfmDeal.dealSnapshot.submissionType,
+      //     submissionDate: tfmDeal.dealSnapshot.submissionDate,
+      //   },
+      //   exporter: {
+      //     companyName: tfmDeal.dealSnapshot.exporter.companyName,
+      //   },
+      // };
+
+      await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
+
+      // if (canSendToAcbs({ amendment })) {
+      //   // Amendment email notification to PDC
+      //   await internalAmendmentEmail(ukefFacilityId);
+
+      //   // Amend facility ACBS records
+      //   acbs.amendAcbsFacility(amendment, facility, deal);
+      // }
 
       return res.status(HttpStatusCode.Ok).send();
     }

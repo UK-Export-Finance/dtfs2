@@ -196,6 +196,17 @@ describe('date helpers', () => {
       // Assert
       expect(result).toEqual(expectedDateString);
     });
+
+    it('should return the expected date for Unix timestamp in milliseconds', () => {
+      // Arrange
+      const timestampMilliseconds = 1835049600000;
+
+      // Act
+      const result = getFormattedUTCDateString(timestampMilliseconds);
+
+      // Assert
+      expect(result).toEqual('2028-02-25');
+    });
   });
 
   describe('addYear', () => {

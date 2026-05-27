@@ -61,6 +61,7 @@ export const submitFacilitiesToApimGift = async ({
 
   const attemptedFacilityIds = payloads.map((payload: ApimGiftFacilityCreationPayload) => String(payload?.overview?.facilityId));
 
+  // TODO - rename or remove, or is already being done in another PR?
   console.info('APIM GIFT debug - deal %s attempting to submit %s facilities. Facility IDs: %o', deal?._id, payloads.length, attemptedFacilityIds);
 
   const responses: Array<TfmFacility | false> = [];

@@ -61,13 +61,14 @@ export const getUnixTimestampSeconds: (date: Date) => UnixTimestampSeconds = get
 export const getISO8601 = (date: Date = now()): string => date.toISOString();
 
 /**
- * Converts a Unix timestamp (in seconds) to a UTC date string in the format 'YYYY-MM-DD'.
- * @param date - The Unix timestamp in seconds.
+ * Converts a Unix timestamp to a UTC date string in the format 'YYYY-MM-DD'.
+ * Accepts epoch values in either seconds or milliseconds.
+ * @param date - The Unix timestamp in seconds or milliseconds.
  * @returns {string} The UTC date string in the format 'YYYY-MM-DD'.
  */
 export const getFormattedUTCDateString = (date: number): string => {
-  // Convert the Unix timestamp (in seconds) to milliseconds and create a Date object
-  const isoString = new Date(date * 1000).toISOString();
+  const epochMilliseconds = date < 1e12 ? date * 1000 : date;
+  const isoString = new Date(epochMilliseconds).toISOString();
 
   // Extract the date portion (first 10 characters) of the ISO string, which is in the format 'YYYY-MM-DD'
   const formattedDate = isoString.slice(0, 10);

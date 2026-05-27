@@ -198,7 +198,7 @@ export const create = async (req: Request, res: Response) => {
 
     const { status } = response;
 
-    if (status !== HttpStatusCode.Created) {
+    if (status !== HttpStatusCode.Accepted) {
       return res.sendStatus(status);
     }
 
@@ -260,7 +260,7 @@ export const amend = async (req: Request, res: Response) => {
 
     const { status } = response;
 
-    if (status !== HttpStatusCode.Created) {
+    if (status !== HttpStatusCode.Accepted) {
       return res.sendStatus(status);
     }
 

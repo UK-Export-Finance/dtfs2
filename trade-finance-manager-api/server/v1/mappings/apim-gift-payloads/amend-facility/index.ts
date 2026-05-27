@@ -1,14 +1,133 @@
+import { getFormattedUTCDateString } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../constants';
-import { decreaseAmount } from './decrease-amount';
-import { increaseAmount } from './increase-amount';
-import { replaceExpiryDate } from './replace-expiry-date';
+import { ApimGiftAmendmentType, ApimGiftFacilityAmendmentPayload, TfmFacilityAmendmentData } from '../types';
 
-const {
-  AMENDMENT_TYPE: { DECREASE_AMOUNT, INCREASE_AMOUNT, REPLACE_EXPIRY_DATE },
-} = APIM_GIFT_INTEGRATION;
+type AmendmentFields = {
+  amount: number;
+  coverEndDate: number;
+  effectiveDate: number;
+};
 
-export const amendFacility = {
-  [DECREASE_AMOUNT]: decreaseAmount,
-  [INCREASE_AMOUNT]: increaseAmount,
-  [REPLACE_EXPIRY_DATE]: replaceExpiryDate,
+/**
+ * Extracts amendment values from TFM amendment data, preferring UKEF decision values where present.
+ * @param {TfmFacilityAmendmentData} amendment - The facility amendment data from TFM.
+ * @returns {AmendmentFields} An object containing amount, cover end date and effective date values for APIM/GIFT payload construction.
+ */
+export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): AmendmentFields => {
+  const amount = Number(amendment.value);
+  const coverEndDate = Number(amendment?.tfm?.coverEndDate);
+  const effectiveDate = Number(amendment.effectiveDate);
+
+  return {
+    amount,
+    coverEndDate,
+    effectiveDate,
+  };
+};
+
+type GetAmountAmendmentTypeParams = {
+  currentAmount: number;
+  newAmount: number;
+};
+
+/**
+ * Resolves APIM/GIFT amendment type for an "amount change", by comparing current and new values.
+ * @param {GetAmountAmendmentTypeParams} params - The parameters for determining the amount amendment type.
+ * @param {number} params.currentAmount - The current facility amount.
+ * @param {number} params.newAmount - The amended facility amount.
+ * @returns {ApimGiftAmendmentType | null} APIM/GIFT "amount" amendment type, or null if there is no change.
+ */
+export const getAmountAmendmentType = ({ currentAmount, newAmount }: GetAmountAmendmentTypeParams): ApimGiftAmendmentType | null => {
+  if (newAmount > currentAmount) {
+    return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT;
+  }
+
+  if (newAmount < currentAmount) {
+    return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT;
+  }
+
+  return null;
+};
+
+type GetAmendmentTypeParams = {
+  amendment: TfmFacilityAmendmentData;
+  amount: number;
+};
+
+/**
+ * Resolves the APIM/GIFT amendment type from TFM amendment flags and values.
+ * @param {GetAmendmentTypeParams} params - The parameters for determining the amendment type.
+ * @param {TfmFacilityAmendmentData} params.amendment - The facility amendment data from TFM.
+ * @param {number} params.amount - The amended amount extracted from amendment data.
+ * @returns {ApimGiftAmendmentType | null} The APIM/GIFT amendment type, or null when the amendment cannot be mapped.
+ */
+export const getAmendmentType = ({ amendment, amount }: GetAmendmentTypeParams): ApimGiftAmendmentType | null => {
+  const { changeCoverEndDate, changeFacilityValue } = amendment;
+
+  if (changeCoverEndDate) {
+    return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
+  }
+
+  if (changeFacilityValue && typeof amendment.currentValue === 'number') {
+    const { currentValue } = amendment;
+
+    return getAmountAmendmentType({
+      currentAmount: currentValue,
+      newAmount: amount,
+    });
+  }
+
+  return null;
+};
+
+const getAmountDifference = (previousAmount: number, newAmount: number): number => {
+  return Math.abs(previousAmount - newAmount);
+};
+
+/**
+ * Builds an APIM/GIFT amendment payload from TFM amendment data.
+ * @param {TfmFacilityAmendmentData} amendment - The facility amendment data from TFM.
+ * @returns {ApimGiftFacilityAmendmentPayload | null} APIM/GIFT payload for amount or expiry date amendments, or null if no valid payload can be produced.
+ */
+export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFacilityAmendmentPayload | null => {
+  console.info('>>>>>>>>>>>>>>>>>>>>>>>>>>  amendFacility - amendment ', JSON.stringify(amendment));
+
+  // const { amount, effectiveDate } = getAmendmentFields(amendment);
+  const bla = getAmendmentFields(amendment);
+
+  console.info('>>>>>>>>>>>>>>>>>>>>>>>>>>  amendFacility - amendment field ', JSON.stringify(bla));
+
+  const { amount, effectiveDate } = bla;
+
+  const amendmentType = getAmendmentType({ amendment, amount });
+
+  if (amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT || amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT) {
+    const amountDifference = getAmountDifference(Number(amendment.currentValue), amount);
+
+    const payload = {
+      amendmentType,
+      amendmentData: {
+        // amount,
+        amount: amountDifference,
+        date: getFormattedUTCDateString(effectiveDate),
+      },
+    };
+
+    return payload;
+  }
+
+  if (amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE) {
+    const temp = Number(amendment?.tfm?.coverEndDate);
+
+    const payload = {
+      amendmentType,
+      amendmentData: {
+        expiryDate: getFormattedUTCDateString(temp),
+      },
+    };
+
+    return payload;
+  }
+
+  return null;
 };
