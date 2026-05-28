@@ -33,7 +33,7 @@ describe('facilities routes', () => {
     it('should render the facilities page (happy path)', async () => {
       const { sessionCookie } = await storage.saveUserSession([MAKER]);
 
-      const response = await get(
+      const expected = await get(
         `/application-details/${dealId}/facilities`,
         {},
         {
@@ -41,9 +41,9 @@ describe('facilities routes', () => {
         },
       );
 
-      expect(response.status).toEqual(200);
-      expect(response.text).toContain('Add a facility');
-      expect(response.text).toContain('data-cy="has-been-issued-heading"');
+      expect(expected.status).toEqual(200);
+      expect(expected.text).toContain('Add a facility');
+      expect(expected.text).toContain('data-cy="has-been-issued-heading"');
     });
   });
 

@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -25,7 +26,7 @@ describe('application abandon routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/abandon`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -33,7 +34,7 @@ describe('application abandon routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/abandon`),
       whitelistedRoles: [MAKER],
-      successCode: 302,
+      successCode: HttpStatusCode.Found,
       successHeaders: {
         location: '/dashboard',
       },
