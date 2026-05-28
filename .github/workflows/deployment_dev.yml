@@ -30,7 +30,7 @@ run-name: 🚀 Deploying to dev1
 
 on:
   schedule:
-    - cron: '0 19 * * *'
+    - cron: '0 21 * * *'
 
   push:
     branches:
@@ -42,7 +42,7 @@ env:
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
 
 jobs:
-  # 1. Base actions configrations
+  # 1. Base actions configurations
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
@@ -107,7 +107,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
@@ -142,7 +142,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions

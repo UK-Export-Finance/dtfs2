@@ -223,7 +223,7 @@ param FF_PORTAL_FACILITY_AMENDMENTS_ENABLED string
 @description('Flag to enable or disable cancellation of deals within the portal.')
 param FF_TFM_DEAL_CANCELLATION_ENABLED string
 
-@description('Flag to enable or disable the use of the new TFM API for deal data retrieval in the portal.')
+@description('Flag to enable or disable maintenance mode for the application.')
 param MAINTENANCE_ACTIVE string
 
 @description('Timestamp indicating when the next maintenance window will occur')
@@ -250,7 +250,7 @@ param DELETION_AUDIT_LOGS_TTL_SECONDS string
 @description('CRON schedule controlling when the eStore cron manager function runs.')
 param ESTORE_CRON_MANAGER_SCHEDULE string
 
-@description('API key used to authenticate with the Companies House API.')
+@description('Password used to authenticate with the audit API.')
 @secure()
 param AUDIT_API_PASSWORD string
 
@@ -265,7 +265,7 @@ param AUDIT_API_URL string
 @secure()
 param AUDIT_API_USERNAME string
 
-@description('CRON schedule controlling when the Azure number generator function runs.')
+@description('CRON schedule controlling when the deal cancellation function runs.')
 param DEAL_CANCELLATION_SCHEDULE string
 
 @description('The URL of the DTFS Central API, used for retrieving data from or sending data to the API.')
@@ -278,17 +278,17 @@ param EXTERNAL_API_URL string
 @description('The URL of the portal API, used for retrieving data from or sending data to the portal.')
 param PORTAL_API_URL string
 
-@description('The email address of the recipient for UKEF GEF reporting emails.')
+@description('The schedule used to delete transient record correction form data.')
 param RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE string
 
-@description('The email address of the recipient for UKEF GEF reporting emails.')
+@description('The hostname of the SQL database server.')
 @secure()
 param SQL_DB_HOST string
 
-@description('The name of the SQL database to connect to.')
+@description('Whether SQL database logging is enabled.')
 param SQL_DB_LOGGING_ENABLED string
 
-@description('The username for authenticating with the SQL database.')
+@description('The name of the SQL database to connect to.')
 @secure()
 param SQL_DB_NAME string
 
@@ -326,10 +326,10 @@ param ENTRA_ID_CLIENT_ID string
 @secure()
 param ENTRA_ID_CLIENT_SECRET string
 
-@description('The tenant ID for the Azure AD application used for authentication.')
+@description('The cloud instance for the Azure AD application used for authentication.')
 param ENTRA_ID_CLOUD_INSTANCE string
 
-@description('The tenant ID for the Azure AD application used for authentication.')
+@description('The redirect URL for the Azure AD application used for authentication.')
 param ENTRA_ID_REDIRECT_URL string
 
 @description('The tenant ID for the Azure AD application used for authentication.')
@@ -342,7 +342,7 @@ param FF_SALESFORCE_CUSTOMER_CREATION_ENABLED string
 @description('Flag to enable or disable the TFM facility end date feature.')
 param FF_TFM_FACILITY_END_DATE_ENABLED string
 
-@description('Flag to enable or disable the TFM payment reconciliation feature.')
+@description('The URL for the contact-us self-service portal.')
 param CONTACT_US_SELF_SERVICE_PORTAL_URL string
 
 @description('Flag to enable or disable the TFM payment reconciliation feature.')
@@ -352,13 +352,13 @@ param FF_TFM_PAYMENT_RECONCILIATION_ENABLED string
 param azureDnsServerIp string
 
 @description('Source IP prefix allowed by the NSG to access restricted resources.')
-param nsgSourceAddressPrefix string 
+param nsgSourceAddressPrefix string
 
 @description('UKEF network source IP prefix permitted by network security rules.')
-param ukefSourceAddressPrefix string 
+param ukefSourceAddressPrefix string
 
 @description('Test network source IP prefix used for development or validation access.')
-param testSourceAddressPrefix string 
+param testSourceAddressPrefix string
 
 @description('Number of days to retain HTTP logs for App Service.')
 param websiteHttploggingRetentionDays string
@@ -422,9 +422,9 @@ var parametersMap = {
       name: 'dev'
       sku: { name: 'Standard' }
     }
-    asp: { 
+    asp: {
       name: 'dev'
-      sku: aspSku 
+      sku: aspSku
     }
     cosmosDb: union(commonCosmos, {
       capacityMode: 'Provisioned Throughput'
@@ -540,33 +540,20 @@ var functionAdditionalSecureSettings = { }
 var dtfsCentralApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
-  AUDIT_API_PASSWORD: AUDIT_API_PASSWORD
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
   AUDIT_API_URL: AUDIT_API_URL
-  AUDIT_API_USERNAME: AUDIT_API_USERNAME
   CHANGE_STREAM_ENABLED: CHANGE_STREAM_ENABLED
   DEAL_CANCELLATION_SCHEDULE: DEAL_CANCELLATION_SCHEDULE
   DELETION_AUDIT_LOGS_TTL_SECONDS: DELETION_AUDIT_LOGS_TTL_SECONDS
   DTFS_CENTRAL_API_URL  : DTFS_CENTRAL_API_URL
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
   EXTERNAL_API_URL: EXTERNAL_API_URL
   FF_PORTAL_2FA_ENABLED: FF_PORTAL_2FA_ENABLED
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED : FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
   FF_TFM_DEAL_CANCELLATION_ENABLED: FF_TFM_DEAL_CANCELLATION_ENABLED
   MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
   PORTAL_API_URL: PORTAL_API_URL
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE
-  SQL_DB_HOST: SQL_DB_HOST
-  SQL_DB_LOGGING_ENABLED: SQL_DB_LOGGING_ENABLED
-  SQL_DB_NAME: SQL_DB_NAME
-  SQL_DB_PASSWORD: SQL_DB_PASSWORD
-  SQL_DB_PORT: SQL_DB_PORT
-  SQL_DB_USERNAME: SQL_DB_USERNAME
-  TFM_API_KEY: TFM_API_KEY
   TFM_API_URL: TFM_API_URL
   TFM_UI_URL: TFM_UI_URL
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
@@ -574,6 +561,19 @@ var dtfsCentralApiSettings = {
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  AUDIT_API_PASSWORD: AUDIT_API_PASSWORD
+  AUDIT_API_USERNAME: AUDIT_API_USERNAME
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  SQL_DB_HOST: SQL_DB_HOST
+  SQL_DB_LOGGING_ENABLED: SQL_DB_LOGGING_ENABLED
+  SQL_DB_NAME: SQL_DB_NAME
+  SQL_DB_PASSWORD: SQL_DB_PASSWORD
+  SQL_DB_PORT: SQL_DB_PORT
+  SQL_DB_USERNAME: SQL_DB_USERNAME
+  TFM_API_KEY: TFM_API_KEY
 }
 
 var externalApiSettings = {
@@ -584,7 +584,6 @@ var externalApiSettings = {
     ESTORE_CRON_MANAGER_SCHEDULE: ESTORE_CRON_MANAGER_SCHEDULE
     MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
     MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
-    UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
 }
 
 var externalApiSecureSettings = {
@@ -602,6 +601,7 @@ var externalApiSecureSettings = {
   ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
   GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
 }
 
 var externalApiAdditionalSecureSettings = {
@@ -650,7 +650,7 @@ var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = { }
 
 var portalUISettings = {
-  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD 
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
   PORTAL_UI_URL: PORTAL_UI_URL
@@ -733,7 +733,6 @@ var tfmApiSettings = {
   CHANGE_STREAM_ENABLED: CHANGE_STREAM_ENABLED
   CONTINGENT_UTILISATION_PERCENTAGE: CONTINGENT_UTILISATION_PERCENTAGE
   ENTRA_ID_CLIENT_ID: ENTRA_ID_CLIENT_ID
-  ENTRA_ID_CLIENT_SECRET: ENTRA_ID_CLIENT_SECRET
   ENTRA_ID_CLOUD_INSTANCE: ENTRA_ID_CLOUD_INSTANCE
   ENTRA_ID_REDIRECT_URL: ENTRA_ID_REDIRECT_URL
   ENTRA_ID_TENANT_ID: ENTRA_ID_TENANT_ID
@@ -741,7 +740,6 @@ var tfmApiSettings = {
   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
   FF_TFM_DEAL_CANCELLATION_ENABLED : FF_TFM_DEAL_CANCELLATION_ENABLED
   FF_TFM_FACILITY_END_DATE_ENABLED: FF_TFM_FACILITY_END_DATE_ENABLED
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
   MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
   DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
@@ -753,6 +751,7 @@ var tfmApiSecureSettings = {
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
   JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  ENTRA_ID_CLIENT_SECRET: ENTRA_ID_CLIENT_SECRET
 }
 
 var tfmApiAdditionalSecureSettings = {
@@ -777,8 +776,8 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
     target: target
     frontDoorAccess: frontDoorAccess
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
-    nsgSourceAddressPrefix: nsgSourceAddressPrefix  
-    ukefSourceAddressPrefix: ukefSourceAddressPrefix  
+    nsgSourceAddressPrefix: nsgSourceAddressPrefix
+    ukefSourceAddressPrefix: ukefSourceAddressPrefix
     testSourceAddressPrefix: testSourceAddressPrefix
   }
 }
@@ -1115,6 +1114,7 @@ module portalUI 'modules/webapps/portal-ui.bicep' = {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
+    environment: environment
     location: location
     product: product
     version: version

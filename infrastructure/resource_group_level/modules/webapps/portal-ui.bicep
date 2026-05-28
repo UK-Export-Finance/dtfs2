@@ -1,4 +1,5 @@
 param location string
+param environment string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -31,7 +32,7 @@ param websiteHttploggingRetentionDays string
 param websiteHealthcheckingMax string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
-var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:latest'
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 var portalApiUrl = 'https://${portalApiHostname}'
 var staticSettings = {
   PORTAL_API_URL: portalApiUrl
