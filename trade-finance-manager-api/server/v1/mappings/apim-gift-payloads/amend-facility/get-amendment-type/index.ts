@@ -40,6 +40,10 @@ type GetAmendmentTypeParams = {
 export const getAmendmentType = ({ amendment, newAmount }: GetAmendmentTypeParams): ApimGiftAmendmentType | null => {
   const { changeCoverEndDate, changeFacilityValue, currentValue: currentAmount } = amendment;
 
+  if (changeCoverEndDate && changeFacilityValue) {
+    throw new Error('Unsupported APIM/GIFT amendment mapping: cover end date and facility value cannot be mapped as a single amendment type.');
+  }
+
   if (changeCoverEndDate) {
     return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
   }

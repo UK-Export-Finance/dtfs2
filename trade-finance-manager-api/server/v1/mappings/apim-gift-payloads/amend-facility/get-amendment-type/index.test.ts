@@ -66,6 +66,25 @@ describe('getAmountAmendmentType', () => {
 });
 
 describe('getAmendmentType', () => {
+  describe('when changeCoverEndDate and changeFacilityValue are both true', () => {
+    it('should throw an error', () => {
+      // Arrange
+      const params = {
+        amendment: {
+          ...mockAmendmentBase,
+          changeCoverEndDate: true,
+          changeFacilityValue: true,
+        },
+        newAmount: 130,
+      };
+
+      // Act / Assert
+      expect(() => getAmendmentType(params)).toThrow(
+        'Unsupported APIM/GIFT amendment mapping: cover end date and facility value cannot be mapped as a single amendment type.',
+      );
+    });
+  });
+
   describe('when changeCoverEndDate is true', () => {
     it(`should return "${REPLACE_EXPIRY_DATE}"`, () => {
       // Arrange

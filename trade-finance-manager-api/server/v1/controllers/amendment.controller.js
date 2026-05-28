@@ -524,30 +524,15 @@ const sendFacilityAmendment = async (req, res) => {
 
       const { ukefFacilityId } = facility.facilitySnapshot;
 
-      // Fetch deal object from deal-tfm
-      const tfmDeal = await api.findOneDeal(amendment.dealId);
-
-      // Construct acceptable deal object
-      const deal = {
-        dealSnapshot: {
-          dealType: tfmDeal.dealSnapshot.dealType,
-          submissionType: tfmDeal.dealSnapshot.submissionType,
-          submissionDate: tfmDeal.dealSnapshot.submissionDate,
-        },
-        exporter: {
-          companyName: tfmDeal.dealSnapshot.exporter.companyName,
-        },
-      };
-
       await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
 
-      if (canSendToAcbs({ amendment })) {
-        // Amendment email notification to PDC
-        await internalAmendmentEmail(ukefFacilityId);
+      const sentToApimGift = await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
 
-        // Amend facility ACBS records
-        acbs.amendAcbsFacility(amendment, facility, deal);
+      if (!sentToApimGift) {
+        throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
       }
+
+      await submitToAcbs(amendment, facility, ukefFacilityId);
 
       return res.status(HttpStatusCode.Ok).send();
     }

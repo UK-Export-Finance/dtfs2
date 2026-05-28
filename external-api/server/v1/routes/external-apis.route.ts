@@ -880,8 +880,8 @@ apiRoutes.post('/gift/facility', giftFacility.create);
  *           schema:
  *             $ref: '#/definitions/GiftFacilityAmendmentRequestBody'
  *     responses:
- *       201:
- *         description: Created
+ *       202:
+ *         description: Accepted
  *       400:
  *         description: Bad request
  *       401:

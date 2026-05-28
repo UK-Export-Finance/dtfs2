@@ -52,6 +52,10 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     dealSnapshot: {
       dealType: DEAL_TYPE.BSS,
       submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      submissionDate: '2024-01-01T00:00:00.000Z',
+      exporter: {
+        companyName: 'Mock Exporter Ltd',
+      },
     },
   };
 

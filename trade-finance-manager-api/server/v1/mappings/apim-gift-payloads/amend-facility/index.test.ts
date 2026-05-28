@@ -43,6 +43,7 @@ describe('amendFacility', () => {
     // Arrange
     const mockAmendment = {
       ...mockAmendmentBase,
+      value: 70,
       changeFacilityValue: true,
       changeCoverEndDate: false,
     };

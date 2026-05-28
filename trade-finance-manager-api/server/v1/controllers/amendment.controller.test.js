@@ -22,7 +22,9 @@ const {
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
+  sendFacilityAmendment,
 } = require('./amendment.controller');
+const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendment-to-apim-gift');
 
 const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
 const mockAmendmentId = '66b1f2f6f4b5a8f3c7d9e012';
@@ -61,6 +63,10 @@ jest.mock('../helpers/amendment.helpers', () => ({
 }));
 
 jest.mock('../rest-mappings/helpers/isGefFacility', () => jest.fn());
+
+jest.mock('../integrations/apim-gift/submit-facility-amendment-to-apim-gift', () => ({
+  submitFacilityAmendmentToApimGift: jest.fn(),
+}));
 
 jest.mock('./amend-issued-facility', () => ({
   amendIssuedFacility: jest.fn(),
@@ -309,6 +315,33 @@ describe('amendment.controller remaining exports', () => {
         { id: 'u1', userType: 'tfm' },
       );
       expect(result).toEqual({ fromValue: true, fromCoverEndDate: true, fromFacilityEndDate: true });
+    });
+  });
+
+  describe('sendFacilityAmendment', () => {
+    describe('when APIM GIFT does not accept the amendment submission', () => {
+      it(`should return ${HttpStatusCode.BadGateway} and not continue to ACBS submission`, async () => {
+        // Arrange
+        const amendment = { amendmentId: mockAmendmentId, dealId: 'deal-1' };
+
+        api.getAmendmentById.mockResolvedValue(amendment);
+        api.findOneFacility.mockResolvedValue({ facilitySnapshot: { ukefFacilityId: '0030537688' } });
+        submitFacilityAmendmentToApimGift.mockResolvedValue(false);
+
+        const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentId: mockAmendmentId } });
+
+        // Act
+        await sendFacilityAmendment(req, res);
+
+        // Assert
+        expect(submitFacilityAmendmentToApimGift).toHaveBeenNthCalledWith(1, {
+          amendment,
+          ukefFacilityId: '0030537688',
+        });
+        expect(api.findOneDeal).not.toHaveBeenCalled();
+        expect(res._getStatusCode()).toBe(HttpStatusCode.BadGateway);
+        expect(res._getData()).toEqual({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
+      });
     });
   });
 });
