@@ -1475,13 +1475,9 @@ const amendACBSfacility = async (amendments, facility, deal) => {
         deal,
         facility,
       },
-    }).catch(() => {
-      // TODO
-      // TODO
-      // TODO
-      // TODO - does this error, and the other call I commented out,
-      // without my changes/branch?
-      // console.error('TFM-API Facility amend error %o', error);
+    }).catch((error) => {
+      console.error('TFM-API Facility amend error %o', error);
+
       return null;
     });
 

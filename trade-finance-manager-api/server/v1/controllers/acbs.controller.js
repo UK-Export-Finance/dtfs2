@@ -2,10 +2,10 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { MONGO_DB_COLLECTIONS, DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-// const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-// const {
-//   PAYLOAD_VERIFICATION: { ACBS },
-// } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const {
+  PAYLOAD_VERIFICATION: { ACBS },
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -13,7 +13,7 @@ const CONSTANTS = require('../../constants');
 const { formatAmendmentDates } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
 const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
-// const { findOneTfmDeal } = require('./deal.controller');
+const { findOneTfmDeal } = require('./deal.controller');
 
 /**
  * Adds a log entry to the ACBS log collection in the database.
@@ -66,50 +66,51 @@ const createACBS = async (dealId) => {
     return false;
   }
 
-  // const deal = await findOneTfmDeal(dealId);
+  const deal = await findOneTfmDeal(dealId);
 
-  // // Check if the dealSnapshot has a bank property
-  // if (!deal?.dealSnapshot?.bank) {
-  //   return false;
-  // }
+  // Check if the dealSnapshot has a bank property
+  if (!deal?.dealSnapshot?.bank) {
+    return false;
+  }
 
-  // const { bank } = deal.dealSnapshot;
-  // const { id, name, partyUrn } = bank;
+  const { bank } = deal.dealSnapshot;
+  const { id, name, partyUrn } = bank;
 
-  // // ACBS deal payload objects
-  // const acbsBank = {
-  //   id,
-  //   name,
-  //   partyUrn,
-  // };
+  // ACBS deal payload objects
+  const acbsBank = {
+    id,
+    name,
+    partyUrn,
+  };
 
-  // /**
-  //  * 1. Property `auditRecord` does not need to be send to ACBS DOF
-  //  * 2. Ensure `acbsDeal` object has required properties before expensive
-  //  * API execution
-  //  */
-  // const { auditRecord, ...acbsDeal } = deal;
+  /**
+   * 1. Property `auditRecord` does not need to be send to ACBS DOF
+   * 2. Ensure `acbsDeal` object has required properties before expensive
+   * API execution
+   */
+  const { auditRecord, ...acbsDeal } = deal;
 
-  // // Imperative properties check
-  // if (!isVerifiedPayload({ payload: acbsBank, template: ACBS.BANK })) {
-  //   console.error('Invalid ACBS bank payload, terminating API call for deal %s', acbsDeal._id);
-  //   return false;
-  // }
+  // Imperative properties check
+  if (!isVerifiedPayload({ payload: acbsBank, template: ACBS.BANK })) {
+    console.error('Invalid ACBS bank payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
 
-  // if (!isVerifiedPayload({ payload: acbsDeal, template: ACBS.DEAL })) {
-  //   console.error('Invalid ACBS deal payload, terminating API call for deal %s', acbsDeal._id);
-  //   return false;
-  // }
+  if (!isVerifiedPayload({ payload: acbsDeal, template: ACBS.DEAL })) {
+    console.error('Invalid ACBS deal payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
 
-  // const acbsTaskLinks = await api.createACBS(acbsDeal, acbsBank);
+  const acbsTaskLinks = await api.createACBS(acbsDeal, acbsBank);
 
-  // // Check if the ACBS task is successfully created
-  // if (acbsTaskLinks) {
-  //   // Add the ACBS task to the log using the addToACBSLog function
-  //   return await addToACBSLog({ deal, bank, acbsTaskLinks });
-  // }
+  // Check if the ACBS task is successfully created
+  if (acbsTaskLinks) {
+    // Add the ACBS task to the log using the addToACBSLog function
+    return await addToACBSLog({ deal, bank, acbsTaskLinks });
+  }
 
-  // console.error('Unable to add ACBS call to the log for deal %s', acbsDeal._id);
+  console.error('Unable to add ACBS call to the log for deal %s', acbsDeal._id);
+
   return false;
 };
 
