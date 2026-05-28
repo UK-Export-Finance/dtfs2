@@ -33,6 +33,7 @@ const allRoles = Object.values(ROLES);
  * @param {object} [params.successHeaders] - Headers to validate in the success response.
  * @param {boolean} [params.disableHappyPath=false] - Flag to disable happy path tests.
  * @param {string} [params.redirectUrlForInvalidRoles='/'] - URL to redirect to for non-whitelisted roles.
+ * @param {object} [params.extraSessionData={}] - Additional session data merged into the saved user session before making the request.
  */
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
