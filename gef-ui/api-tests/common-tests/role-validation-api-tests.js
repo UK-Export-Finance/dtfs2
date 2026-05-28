@@ -4,10 +4,12 @@ jest.mock('../../server/services/api', () => ({
   validateBank: () => ({ isValid: true }),
   getApplication: jest.fn(),
   getFacilities: jest.fn(),
+  getFacility: jest.fn(),
   getUserDetails: jest.fn(),
   getPortalAmendmentsOnDeal: jest.fn(),
   updateApplication: jest.fn(),
   setApplicationStatus: jest.fn(),
+  deleteFacility: jest.fn(),
 }));
 
 jest.mock('@ukef/dtfs2-common', () => ({
