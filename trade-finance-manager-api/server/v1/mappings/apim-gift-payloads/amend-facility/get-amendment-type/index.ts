@@ -38,17 +38,15 @@ type GetAmendmentTypeParams = {
  * @returns {ApimGiftAmendmentType | null} The APIM/GIFT amendment type, or null when the amendment cannot be mapped.
  */
 export const getAmendmentType = ({ amendment, newAmount }: GetAmendmentTypeParams): ApimGiftAmendmentType | null => {
-  const { changeCoverEndDate, changeFacilityValue } = amendment;
+  const { changeCoverEndDate, changeFacilityValue, currentValue: currentAmount } = amendment;
 
   if (changeCoverEndDate) {
     return APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
   }
 
-  if (changeFacilityValue && typeof amendment.currentValue === 'number') {
-    const { currentValue } = amendment;
-
+  if (changeFacilityValue && currentAmount) {
     return getAmountAmendmentType({
-      currentAmount: currentValue,
+      currentAmount,
       newAmount,
     });
   }
