@@ -35,10 +35,7 @@ export type ApimGiftFacilityOverview = {
 
 export type ApimAccrualSchedule = {
   accrualScheduleTypeCode: ApimGiftAccrualScheduleTypeCode;
-  accrualEffectiveDate: string;
-  accrualMaturityDate: string;
   accrualFrequencyCode: ApimGiftAccrualFrequencyCodeType | null;
-  firstCycleAccrualEndDate: string;
   accrualDayBasisCode: ApimGiftDayBasisType | null;
   baseRate: number;
   spreadRate: number | null;
@@ -47,16 +44,12 @@ export type ApimAccrualSchedule = {
 
 export type ApimGiftCounterparty = {
   counterpartyUrn: string;
-  startDate: string;
-  exitDate: string;
   roleCode: (typeof COUNTERPARTY_ROLE_CODE)[keyof typeof COUNTERPARTY_ROLE_CODE];
 };
 
 export type ApimGiftObligation = {
   amount: number | null;
   currency: string;
-  effectiveDate: string;
-  maturityDate: string;
   repaymentType: ApimGiftRepaymentType;
   subtypeCode: string | null;
 };
