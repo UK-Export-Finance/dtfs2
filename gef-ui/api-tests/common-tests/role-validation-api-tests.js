@@ -21,21 +21,13 @@ const allRoles = Object.values(ROLES);
  * @param {import('@ukef/dtfs2-common').Role[]} params.whitelistedRoles - List of roles that are allowed.
  * @param {number} params.successCode - The expected success status code for whitelisted roles.
  * @param {object} [params.successHeaders] - Headers to validate in the success response.
- * @param {boolean} [params.disableHappyPath=false] - Flag to disable happy path tests.
  * @param {string} [params.redirectUrlForInvalidRoles='/'] - URL to redirect to for non-whitelisted roles.
  */
-const withRoleValidationApiTests = ({
-  makeRequestWithHeaders,
-  whitelistedRoles,
-  successCode,
-  successHeaders,
-  disableHappyPath = false, // TODO DTFS2-6697: remove and test happy paths.
-  redirectUrlForInvalidRoles = '/',
-}) => {
+const withRoleValidationApiTests = ({ makeRequestWithHeaders, whitelistedRoles, successCode, successHeaders, redirectUrlForInvalidRoles = '/' }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
-    const includeWhitelistedRolesTests = !disableHappyPath && whitelistedRoles.length;
+    const includeWhitelistedRolesTests = whitelistedRoles.length;
     const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length;
 
     if (includeWhitelistedRolesTests || includeNonWhitelistedRolesTests) {
