@@ -1,7 +1,7 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import apiModule from '../../../api';
-import { ApimGiftFacilityCreationPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
+import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 import { getReferenceData } from './get-reference-data';
 
 type SubmitFacilitiesToApimGiftParams = {
@@ -58,11 +58,6 @@ export const submitFacilitiesToApimGift = async ({
     facilityCategories,
     creditRiskRatings,
   });
-
-  const attemptedFacilityIds = payloads.map((payload: ApimGiftFacilityCreationPayload) => String(payload?.overview?.facilityId));
-
-  // TODO - rename or remove, or is already being done in another PR?
-  console.info('APIM GIFT debug - deal %s attempting to submit %s facilities. Facility IDs: %o', deal?._id, payloads.length, attemptedFacilityIds);
 
   const responses: Array<TfmFacility | false> = [];
 

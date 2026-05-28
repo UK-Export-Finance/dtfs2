@@ -20,8 +20,6 @@ export const submitFacilityAmendmentToApimGift = async ({
   amendment,
   ukefFacilityId,
 }: SubmitFacilityAmendmentToApimGiftParams): Promise<SubmitFacilityAmendmentToApimGiftResponse> => {
-  console.info('==================== submitFacilityAmendmentToApimGift - amendment ', JSON.stringify(amendment));
-
   const payload = APIM_GIFT_PAYLOADS.amendFacility(amendment);
 
   if (!payload) {
