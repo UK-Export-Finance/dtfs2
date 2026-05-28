@@ -1,8 +1,3 @@
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  verify: jest.fn((req, res, next) => next()),
-}));
-
 const stream = require('stream');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { MAKER, CHECKER } = require('../server/constants/roles');

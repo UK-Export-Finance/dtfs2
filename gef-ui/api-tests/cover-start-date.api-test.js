@@ -1,8 +1,3 @@
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  verify: jest.fn((req, res, next) => next()),
-}));
-
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -14,7 +9,7 @@ const cloneMock = (value) => JSON.parse(JSON.stringify(value));
 
 const { get } = createApi(app);
 
-const dealId = '123';
+const dealId = MOCK_BASIC_DEAL._id;
 
 describe('cover start date routes', () => {
   beforeEach(() => {
