@@ -1,4 +1,4 @@
-const { canSendToAcbs, DEAL_TYPE, SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { internalAmendmentEmail } = require('../helpers/amendment.helpers');
@@ -43,7 +43,7 @@ describe('submitToAcbs', () => {
     tfm: {},
     dealSnapshot: {
       dealType: DEAL_TYPE.BSS_EWCS,
-      submissionType: SUBMISSION_TYPE.AIN,
+      submissionType: DEAL_SUBMISSION_TYPE.AIN,
       submissionDate: 1779114849408,
       exporter: {
         companyName: 'Mock Exporter Ltd',

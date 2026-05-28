@@ -1,4 +1,5 @@
-const { canSendToAcbs, DEAL_TYPE, DEAL_SUBMISSION_TYPE, HttpStatusCode } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
+const { canSendToAcbs, DEAL_TYPE, DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const api = require('../../../server/v1/api');
