@@ -4,19 +4,19 @@ import { ApimGiftAmendmentType, ApimGiftFacilityAmendmentPayload, TfmFacilityAme
 
 type AmendmentFields = {
   amount: number;
-  coverEndDate: number;
-  effectiveDate: number;
+  coverEndDate: string;
+  effectiveDate: string;
 };
 
 /**
- * Extracts amendment values from TFM amendment data, preferring UKEF decision values where present.
+ * Extracts amendment values from TFM amendment data.
  * @param {TfmFacilityAmendmentData} amendment - The facility amendment data from TFM.
  * @returns {AmendmentFields} An object containing amount, cover end date and effective date values for APIM/GIFT payload construction.
  */
 export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): AmendmentFields => {
   const amount = Number(amendment.value);
-  const coverEndDate = Number(amendment?.tfm?.coverEndDate);
-  const effectiveDate = Number(amendment.effectiveDate);
+  const coverEndDate = getFormattedUTCDateString(Number(amendment?.tfm?.coverEndDate));
+  const effectiveDate = getFormattedUTCDateString(Number(amendment.effectiveDate));
 
   return {
     amount,
@@ -90,14 +90,7 @@ const getAmountDifference = (previousAmount: number, newAmount: number): number 
  * @returns {ApimGiftFacilityAmendmentPayload | null} APIM/GIFT payload for amount or expiry date amendments, or null if no valid payload can be produced.
  */
 export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFacilityAmendmentPayload | null => {
-  console.info('>>>>>>>>>>>>>>>>>>>>>>>>>>  amendFacility - amendment ', JSON.stringify(amendment));
-
-  // const { amount, effectiveDate } = getAmendmentFields(amendment);
-  const bla = getAmendmentFields(amendment);
-
-  console.info('>>>>>>>>>>>>>>>>>>>>>>>>>>  amendFacility - amendment field ', JSON.stringify(bla));
-
-  const { amount, effectiveDate } = bla;
+  const { amount, coverEndDate, effectiveDate } = getAmendmentFields(amendment);
 
   const amendmentType = getAmendmentType({ amendment, amount });
 
@@ -107,9 +100,8 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
     const payload = {
       amendmentType,
       amendmentData: {
-        // amount,
         amount: amountDifference,
-        date: getFormattedUTCDateString(effectiveDate),
+        date: effectiveDate,
       },
     };
 
@@ -117,12 +109,10 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
   }
 
   if (amendmentType === APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE) {
-    const temp = Number(amendment?.tfm?.coverEndDate);
-
     const payload = {
       amendmentType,
       amendmentData: {
-        expiryDate: getFormattedUTCDateString(temp),
+        expiryDate: coverEndDate,
       },
     };
 
