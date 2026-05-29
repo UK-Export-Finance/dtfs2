@@ -524,8 +524,6 @@ const sendFacilityAmendment = async (req, res) => {
 
       const { ukefFacilityId } = facility.facilitySnapshot;
 
-      await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
-
       const sentToApimGift = await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
 
       if (!sentToApimGift) {

@@ -842,8 +842,8 @@ apiRoutes.get('/gift/facility/:facilityId', giftFacility.get);
  *     description: >-
  *       Send a facility to APIM TFS's GIFT endpoint.
  *     responses:
- *       201:
- *         description: Created
+ *       202:
+ *         description: Accepted
  *       400:
  *         description: Bad request
  *       401:
