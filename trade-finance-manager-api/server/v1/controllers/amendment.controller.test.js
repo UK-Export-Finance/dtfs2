@@ -24,7 +24,7 @@ const {
   createAmendmentTFMObject,
   sendFacilityAmendment,
 } = require('./amendment.controller');
-const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendment-to-apim-gift');
+const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
 const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
 const mockAmendmentId = '66b1f2f6f4b5a8f3c7d9e012';
