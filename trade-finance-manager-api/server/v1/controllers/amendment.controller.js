@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendment-to-apim-gift');
+const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -524,7 +524,7 @@ const sendFacilityAmendment = async (req, res) => {
 
       const { ukefFacilityId } = facility.facilitySnapshot;
 
-      const sentToApimGift = await submitFacilityAmendmentToApimGift({ amendment, ukefFacilityId });
+      const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
 
       if (!sentToApimGift) {
         throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);

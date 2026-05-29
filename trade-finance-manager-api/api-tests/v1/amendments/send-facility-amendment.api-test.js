@@ -5,7 +5,7 @@ const { createApi } = require('../../api');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
 const { internalAmendmentEmail } = require('../../../server/v1/helpers/amendment.helpers');
-const { submitFacilityAmendmentToApimGift } = require('../../../server/v1/integrations/apim-gift/submit-facility-amendment-to-apim-gift');
+const { submitFacilityAmendmentsToApimGift } = require('../../../server/v1/integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
 const { as } = createApi(app);
 
@@ -19,7 +19,7 @@ jest.mock('../../../server/v1/helpers/amendment.helpers', () => ({
 }));
 
 jest.mock('../../../server/v1/integrations/apim-gift/submit-facility-amendment-to-apim-gift', () => ({
-  submitFacilityAmendmentToApimGift: jest.fn(),
+  submitFacilityAmendmentsToApimGift: jest.fn(),
 }));
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -67,7 +67,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     api.findOneFacility = jest.fn().mockResolvedValue(facility);
     api.findOneDeal = jest.fn().mockResolvedValue(tfmDeal);
 
-    submitFacilityAmendmentToApimGift.mockResolvedValue({ ok: true });
+    submitFacilityAmendmentsToApimGift.mockResolvedValue({ ok: true });
     canSendToAcbs.mockReturnValue(true);
   });
 
@@ -79,7 +79,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
       // Assert
       expect(status).toEqual(HttpStatusCode.Ok);
 
-      expect(submitFacilityAmendmentToApimGift).toHaveBeenNthCalledWith(1, {
+      expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
         amendment,
         ukefFacilityId: mockUkefFacilityId,
       });
@@ -110,7 +110,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
       // Assert
       expect(status).toEqual(HttpStatusCode.Ok);
 
-      expect(submitFacilityAmendmentToApimGift).toHaveBeenNthCalledWith(1, {
+      expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
         amendment,
         ukefFacilityId: mockUkefFacilityId,
       });
@@ -124,7 +124,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
   describe('when APIM GIFT submission throws', () => {
     it(`should return ${HttpStatusCode.BadGateway}`, async () => {
       // Arrange
-      submitFacilityAmendmentToApimGift.mockRejectedValue(new Error('upstream failed'));
+      submitFacilityAmendmentsToApimGift.mockRejectedValue(new Error('upstream failed'));
 
       // Act
       const { status, body } = await as().post({}).to(url);

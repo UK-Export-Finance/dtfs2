@@ -16,7 +16,7 @@ const mockAmendmentBase: TfmFacilityAmendmentData = {
 };
 
 describe('amendFacility', () => {
-  it(`should map "${INCREASE_AMOUNT}" to APIM GIFT payload`, () => {
+  it(`should return an array containing an "${INCREASE_AMOUNT}" payload`, () => {
     // Arrange
     const mockAmendment = {
       ...mockAmendmentBase,
@@ -28,18 +28,20 @@ describe('amendFacility', () => {
     const result = amendFacility(mockAmendment);
 
     // Assert
-    const expected = {
-      amendmentType: INCREASE_AMOUNT,
-      amendmentData: {
-        amount: 30,
-        date: '2024-01-01',
+    const expected = [
+      {
+        amendmentType: INCREASE_AMOUNT,
+        amendmentData: {
+          amount: 30,
+          date: '2024-01-01',
+        },
       },
-    };
+    ];
 
     expect(result).toEqual(expected);
   });
 
-  it(`should map "${DECREASE_AMOUNT}" to APIM GIFT payload`, () => {
+  it(`should return an array containing a "${DECREASE_AMOUNT}" payload`, () => {
     // Arrange
     const mockAmendment = {
       ...mockAmendmentBase,
@@ -52,18 +54,20 @@ describe('amendFacility', () => {
     const result = amendFacility(mockAmendment);
 
     // Assert
-    const expected = {
-      amendmentType: DECREASE_AMOUNT,
-      amendmentData: {
-        amount: 30,
-        date: '2024-01-01',
+    const expected = [
+      {
+        amendmentType: DECREASE_AMOUNT,
+        amendmentData: {
+          amount: 30,
+          date: '2024-01-01',
+        },
       },
-    };
+    ];
 
     expect(result).toEqual(expected);
   });
 
-  it(`should map "${REPLACE_EXPIRY_DATE}" amendment to APIM GIFT payload`, () => {
+  it(`should return an array containing a "${REPLACE_EXPIRY_DATE}" payload`, () => {
     // Arrange
     const mockAmendment = {
       ...mockAmendmentBase,
@@ -75,18 +79,51 @@ describe('amendFacility', () => {
     const result = amendFacility(mockAmendment);
 
     // Assert
-    const expected = {
-      amendmentType: REPLACE_EXPIRY_DATE,
-      amendmentData: {
-        expiryDate: '2024-02-01',
+    const expected = [
+      {
+        amendmentType: REPLACE_EXPIRY_DATE,
+        amendmentData: {
+          expiryDate: '2024-02-01',
+        },
       },
-    };
+    ];
 
     expect(result).toEqual(expected);
   });
 
-  describe('when the amendment cannot be mapped to a valid APIM GIFT amendment type', () => {
-    it('should return null', () => {
+  it(`should return an array containing both an amount payload and a "${REPLACE_EXPIRY_DATE}" payload when both flags are set`, () => {
+    // Arrange
+    const mockAmendment = {
+      ...mockAmendmentBase,
+      changeFacilityValue: true,
+      changeCoverEndDate: true,
+    };
+
+    // Act
+    const result = amendFacility(mockAmendment);
+
+    // Assert
+    const expected = [
+      {
+        amendmentType: INCREASE_AMOUNT,
+        amendmentData: {
+          amount: 30,
+          date: '2024-01-01',
+        },
+      },
+      {
+        amendmentType: REPLACE_EXPIRY_DATE,
+        amendmentData: {
+          expiryDate: '2024-02-01',
+        },
+      },
+    ];
+
+    expect(result).toEqual(expected);
+  });
+
+  describe('when the amendment cannot be mapped to any valid APIM GIFT amendment type', () => {
+    it('should return an empty array', () => {
       // Arrange
       const mockAmendment = {
         ...mockAmendmentBase,
@@ -98,7 +135,7 @@ describe('amendFacility', () => {
       const result = amendFacility(mockAmendment);
 
       // Assert
-      expect(result).toBeNull();
+      expect(result).toEqual([]);
     });
   });
 });
