@@ -53,11 +53,11 @@ export class PortalFacilityAmendmentService {
   /**
    * Upserts the portal amendment draft on a facility
    *
-   * @param updateStatusParams
-   * @param updateStatusParams.dealId - the deal Id the facility exists on
-   * @param updateStatusParams.facilityId - the facility Id the amendment is for
-   * @param updateStatusParams.amendment - the amendment to upsert
-   * @param updateStatusParams.auditDetails - the users audit details
+   * @param params
+   * @param params.dealId - the deal Id the facility exists on
+   * @param params.facilityId - the facility Id the amendment is for
+   * @param params.amendment - the amendment to upsert
+   * @param params.auditDetails - the users audit details
    */
   public static async upsertPortalFacilityAmendmentDraft({
     dealId,

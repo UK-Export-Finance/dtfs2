@@ -35,10 +35,10 @@ export const requestNewAccessCode = async (req: GetNewAccessCodePageRequest, res
 
     console.error('Error requesting new access code: attemptsLeft is not >= -1, value received: %s', attemptsLeft);
 
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   } catch (error) {
     console.error('Error requesting new access code: %o', error);
 
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };

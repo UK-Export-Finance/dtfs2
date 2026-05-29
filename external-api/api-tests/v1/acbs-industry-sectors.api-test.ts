@@ -1,19 +1,34 @@
 import { industrySector } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import nock from 'nock';
+import * as dotenv from 'dotenv';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
 
+dotenv.config();
+
+const { APIM_MDM_URL } = process.env;
+
 describe('findACBSIndustrySector', () => {
+  beforeEach(() => {
+    nock.abortPendingRequests();
+    nock.cleanAll();
+  });
+
   const invalidIndustryCodeTestCases = [0, 1, 12, 123, 1234, 0o001];
 
+  const ukefIndustryId = 35220;
+
+  const baseUrl = String(APIM_MDM_URL);
+  const url = `/v1/sector-industries?ukefIndustryId=${ukefIndustryId}`;
+
   it(`should return ${HttpStatusCode.Ok} status code from industry sector lookup with a valid industry ID`, async () => {
-    // Arrange
-    const expected: Array<industrySector> = [
+    const mockResponseData = [
       {
         id: 321,
         ukefSectorId: '1004',
         ukefSectorName: 'Electricity, gas, steam and air conditioning supply',
         internalNo: null,
-        ukefIndustryId: '35220',
+        ukefIndustryId: String(ukefIndustryId),
         ukefIndustryName: 'Distribution of gaseous fuels through mains',
         acbsSectorId: '3',
         acbsSectorName: 'CIVIL: POWER',
@@ -26,8 +41,13 @@ describe('findACBSIndustrySector', () => {
       },
     ];
 
+    nock(baseUrl).get(url).reply(HttpStatusCode.Ok, mockResponseData);
+
+    // Arrange
+    const expected: Array<industrySector> = mockResponseData;
+
     // Act
-    const { status, data } = await findACBSIndustrySector(35220);
+    const { status, data } = await findACBSIndustrySector(ukefIndustryId);
 
     // Assert
     const responseData = data[0] as industrySector;

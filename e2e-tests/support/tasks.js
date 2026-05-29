@@ -53,6 +53,18 @@ module.exports = {
       return users.findOne({ username: { $eq: username } });
     };
 
+    /**
+     * Updates a portal user document by username for E2E setup/teardown.
+     *
+     * This is used by tests that need to temporarily adjust a seeded user's
+     * role or other simple fields without going through the UI.
+     */
+    const updatePortalUserByUsername = async ({ username, update }) => {
+      const users = await getUsersCollection();
+
+      return users.updateOne({ username: { $eq: username } }, { $set: update });
+    };
+
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
@@ -417,6 +429,7 @@ module.exports = {
       log,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
+      updatePortalUserByUsername,
       overridePortalUserSignInOTPSendCount,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
