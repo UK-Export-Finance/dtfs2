@@ -12,11 +12,107 @@ dotenv.config();
 
 const { APIM_TFS_URL } = process.env;
 
-const { post } = api(app);
+const { post, get } = api(app);
 
 describe('/gift', () => {
+  const baseUrl = String(APIM_TFS_URL);
+
+  describe('GET /facilities?ids=...', () => {
+    const facilityIds = ['11111', '22222'];
+    const ids = facilityIds.join(',');
+
+    const mockResponseBody = {
+      facilities: [
+        { facilityId: facilityIds[0], status: HttpStatusCode.Ok },
+        { facilityId: facilityIds[1], status: HttpStatusCode.NotFound },
+      ],
+    };
+
+    describe(`when ids query parameter is provided`, () => {
+      it(`should return ${HttpStatusCode.Ok} with APIM TFS data`, async () => {
+        // Arrange
+        nock.abortPendingRequests();
+        nock.cleanAll();
+
+        nock(baseUrl).get('/v2/gift/facilities').query({ ids }).reply(HttpStatusCode.Ok, mockResponseBody);
+
+        // Act
+        const response = await get(`/gift/facilities?ids=${ids}`);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+        expect(response.body).toEqual(mockResponseBody);
+      });
+    });
+
+    describe(`when ids query parameter is missing`, () => {
+      it(`should return ${HttpStatusCode.BadRequest}`, async () => {
+        // Act
+        const response = await get('/gift/facilities');
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
+        expect(response.body).toEqual({ status: HttpStatusCode.BadRequest, message: 'ids query parameter is required' });
+      });
+    });
+  });
+
+  describe('GET /facility/:facilityId', () => {
+    const mockFacilityId = '12345';
+    const url = `/v2/gift/facility/${mockFacilityId}`;
+
+    describe(`when APIM TFS returns ${HttpStatusCode.Ok}`, () => {
+      it(`should return a ${HttpStatusCode.Ok} status with data received from APIM TFS`, async () => {
+        // Arrange
+        nock.abortPendingRequests();
+        nock.cleanAll();
+
+        nock(baseUrl).get(url).reply(HttpStatusCode.Ok, {});
+
+        // Act
+        const { status } = await get(`/gift/facility/${mockFacilityId}`);
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.Ok);
+      });
+    });
+
+    describe(`when APIM TFS returns ${HttpStatusCode.NotFound}`, () => {
+      it(`should return a ${HttpStatusCode.NotFound} status`, async () => {
+        // Arrange
+        nock.abortPendingRequests();
+        nock.cleanAll();
+
+        nock(baseUrl).get(url).reply(HttpStatusCode.NotFound, {});
+
+        // Act
+        const { status } = await get(`/gift/facility/${mockFacilityId}`);
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.NotFound);
+      });
+    });
+
+    describe(`when the APIM TFS endpoint returns a status that is NOT ${HttpStatusCode.Ok} or ${HttpStatusCode.NotFound}`, () => {
+      it('should return the same status from the APIM TFS endpoint', async () => {
+        // Arrange
+        nock.abortPendingRequests();
+        nock.cleanAll();
+
+        const mockStatusCode = HttpStatusCode.BadGateway;
+
+        nock(baseUrl).persist().get(url).reply(mockStatusCode, {});
+
+        // Act
+        const { status } = await get(`/gift/facility/${mockFacilityId}`);
+
+        // Assert
+        expect(status).toEqual(mockStatusCode);
+      });
+    });
+  });
+
   describe('POST /facility', () => {
-    const baseUrl = String(APIM_TFS_URL);
     const url = '/v2/gift/facility';
     const mockBody = APIM_GIFT_PAYLOADS_EXAMPLES.CREATE_FACILITY.VALID_PAYLOAD;
 
