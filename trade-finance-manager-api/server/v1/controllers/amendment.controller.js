@@ -506,7 +506,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
  * 6. Handles errors and sends appropriate HTTP responses.
  *
  * @async
- * @function sendAmendment
+ * @function sendFacilityAmendment
  * @param {import('express').Request} req - Express request object, expects `amendmentId` and `facilityId` in params.
  * @param {import('express').Response} res - Express response object.
  * @returns {Promise<void>} Sends HTTP response with appropriate status code.

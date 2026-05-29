@@ -123,6 +123,24 @@ describe('submitFacilityAmendmentsToApimGift', () => {
       // Assert
       expect(result).toEqual([mockAmountApiResponse, mockExpiryDateApiResponse]);
     });
+
+    describe('when an API response is false', () => {
+      it('should return false and stop processing', async () => {
+        // Arrange
+        amendFacilityPayloadSpy.mockReset();
+        amendGiftFacilitySpy.mockReset();
+
+        amendFacilityPayloadSpy.mockReturnValueOnce([mockAmountPayload, mockExpiryDatePayload] as never);
+        amendGiftFacilitySpy.mockResolvedValueOnce(false as never);
+
+        // Act
+        const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+
+        // Assert
+        expect(result).toEqual(false);
+        expect(amendGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockAmountPayload, mockUkefFacilityId);
+      });
+    });
   });
 
   describe('when the amendment cannot be mapped to any APIM GIFT payload', () => {

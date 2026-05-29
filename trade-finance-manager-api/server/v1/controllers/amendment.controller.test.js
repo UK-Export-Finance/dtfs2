@@ -24,7 +24,7 @@ const {
   createAmendmentTFMObject,
   sendFacilityAmendment,
 } = require('./amendment.controller');
-const { submitFacilityAmendmentToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
+const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
 const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
 const mockAmendmentId = '66b1f2f6f4b5a8f3c7d9e012';
@@ -64,8 +64,8 @@ jest.mock('../helpers/amendment.helpers', () => ({
 
 jest.mock('../rest-mappings/helpers/isGefFacility', () => jest.fn());
 
-jest.mock('../integrations/apim-gift/submit-facility-amendment-to-apim-gift', () => ({
-  submitFacilityAmendmentToApimGift: jest.fn(),
+jest.mock('../integrations/apim-gift/submit-facility-amendments-to-apim-gift', () => ({
+  submitFacilityAmendmentsToApimGift: jest.fn(),
 }));
 
 jest.mock('./amend-issued-facility', () => ({
@@ -326,7 +326,7 @@ describe('amendment.controller remaining exports', () => {
 
         api.getAmendmentById.mockResolvedValue(amendment);
         api.findOneFacility.mockResolvedValue({ facilitySnapshot: { ukefFacilityId: '0030537688' } });
-        submitFacilityAmendmentToApimGift.mockResolvedValue(false);
+        submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
 
         const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentId: mockAmendmentId } });
 
@@ -334,7 +334,7 @@ describe('amendment.controller remaining exports', () => {
         await sendFacilityAmendment(req, res);
 
         // Assert
-        expect(submitFacilityAmendmentToApimGift).toHaveBeenNthCalledWith(1, {
+        expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
           amendment,
           ukefFacilityId: '0030537688',
         });

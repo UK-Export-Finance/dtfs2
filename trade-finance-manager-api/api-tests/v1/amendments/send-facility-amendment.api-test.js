@@ -18,7 +18,7 @@ jest.mock('../../../server/v1/helpers/amendment.helpers', () => ({
   internalAmendmentEmail: jest.fn(),
 }));
 
-jest.mock('../../../server/v1/integrations/apim-gift/submit-facility-amendment-to-apim-gift', () => ({
+jest.mock('../../../server/v1/integrations/apim-gift/submit-facility-amendments-to-apim-gift', () => ({
   submitFacilityAmendmentsToApimGift: jest.fn(),
 }));
 

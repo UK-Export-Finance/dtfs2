@@ -40,6 +40,10 @@ export const submitFacilityAmendmentsToApimGift = async ({
   for (const payload of payloads) {
     const response = await api.amendGiftFacility(payload, ukefFacilityId);
 
+    if (!response) {
+      return false;
+    }
+
     responses.push(response);
   }
 
