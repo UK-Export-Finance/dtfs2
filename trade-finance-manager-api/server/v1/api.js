@@ -2319,7 +2319,13 @@ const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
     const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility amendment endpoint' };
 
-    console.error('Unable to send GIFT facility to external API - facilityId %s status %s responseBody %o error %o', facilityId, status, responseBody, error);
+    console.error(
+      'Unable to send GIFT facility amendment to external API - facilityId %s status %s responseBody %o error %o',
+      facilityId,
+      status,
+      responseBody,
+      error,
+    );
 
     return false;
   }
