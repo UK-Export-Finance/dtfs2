@@ -18,16 +18,16 @@ users.forEach((user) => {
       const exporterName = 'exporterName';
       const facilityType = FACILITY_TYPE.CASH;
       const userRoles = [user];
-      const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
       const canSubmitFacilityAmendmentToChecker = false;
+      const canSubmitFacilityAmendmentToUkef = false;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
         exporterName,
         facilityType,
-        submitAmendment,
+        canSubmitAmendmentToUkef: canSubmitFacilityAmendmentToUkef,
         dealId,
         facilityId,
         amendmentId,
@@ -116,8 +116,14 @@ users.forEach((user) => {
         if (user === ROLES.CHECKER) {
           wrapper.expectElement('[data-cy="submit-button"]').toExist();
           wrapper.expectText('[data-cy="submit-button"]').toRead('Submit to UKEF');
+          wrapper
+            .expectLink('[data-cy="submit-button"]')
+            .toLinkTo(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`, 'Submit to UKEF');
           wrapper.expectElement('[data-cy="return-button"]').toExist();
           wrapper.expectText('[data-cy="return-button"]').toRead('Return to maker');
+          wrapper
+            .expectLink('[data-cy="return-button"]')
+            .toLinkTo(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/return-to-maker`, 'Return to maker');
         }
       });
     });

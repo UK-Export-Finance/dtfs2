@@ -18,17 +18,17 @@ users.forEach((user) => {
       const exporterName = 'exporterName';
       const facilityType = FACILITY_TYPE.CASH;
       const userRoles = [user];
-      const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
       const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitAmendmentToUkef = false;
       const canSubmitFacilityAmendmentToChecker = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
         exporterName,
         facilityType,
-        submitAmendment,
+        canSubmitAmendmentToUkef,
         dealId,
         facilityId,
         amendmentId,
@@ -94,12 +94,26 @@ users.forEach((user) => {
         }
 
         if (user === ROLES.CHECKER) {
+          wrapper.expectElement('[data-cy="submit-button"]').notToExist();
+          wrapper.expectElement('[data-cy="return-button"]').notToExist();
+        }
+      });
+
+      if (user === ROLES.CHECKER) {
+        it('should render checker submit controls when canSubmitAmendmentToUkef is true', () => {
+          const checkerSubmitParams: AmendmentDetailsViewModel = {
+            ...params,
+            canSubmitAmendmentToUkef: true,
+          };
+
+          const wrapper = render(checkerSubmitParams);
+
           wrapper.expectElement('[data-cy="submit-button"]').toExist();
           wrapper.expectText('[data-cy="submit-button"]').toRead('Submit to UKEF');
           wrapper.expectElement('[data-cy="return-button"]').toExist();
           wrapper.expectText('[data-cy="return-button"]').toRead('Return to maker');
-        }
-      });
+        });
+      }
     });
   });
 });

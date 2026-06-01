@@ -96,4 +96,32 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
 
     expect(result).toEqual(expected);
   });
+
+  it(`should return the expected view model when portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
+    // Arrange
+    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build();
+    const userRoles = [ROLES.CHECKER];
+    const canSubmitFacilityAmendmentToChecker = false;
+
+    // Act
+    const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
+
+    // Assert
+    const expected = {
+      userRoles,
+      exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
+      submitAmendment: false,
+      dealId: deal._id,
+      facilityId: facility._id,
+      amendmentId: amendment.amendmentId,
+      effectiveDate: '',
+      banner,
+      canSubmitFacilityAmendmentToChecker,
+      previousPage: `/gef/application-details/${deal._id}`,
+      amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
+    };
+
+    expect(result).toEqual(expected);
+  });
 });

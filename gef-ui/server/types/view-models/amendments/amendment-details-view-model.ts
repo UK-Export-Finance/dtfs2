@@ -4,7 +4,7 @@ export type AmendmentDetailsViewModel = {
   userRoles: string[];
   exporterName: string;
   facilityType: string;
-  submitAmendment: boolean;
+  canSubmitAmendmentToUkef: boolean;
   dealId: string;
   facilityId: string;
   amendmentId: string;
