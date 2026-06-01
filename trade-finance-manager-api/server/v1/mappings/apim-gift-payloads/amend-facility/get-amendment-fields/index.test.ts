@@ -48,4 +48,20 @@ describe('getAmendmentFields', () => {
       expect(result.coverEndDate).toEqual('');
     });
   });
+
+  describe('when effectiveDate is not provided', () => {
+    it('should return effectiveDate as an empty string', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        effectiveDate: undefined,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.effectiveDate).toEqual('');
+    });
+  });
 });
