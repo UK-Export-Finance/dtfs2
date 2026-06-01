@@ -490,7 +490,7 @@ describe('amend', () => {
   });
 
   describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
-    it(`should forward non-${HttpStatusCode.Created} status`, async () => {
+    it(`should forward non-${HttpStatusCode.Accepted} status`, async () => {
       // Arrange
       const mockAxiosError = {
         response: {
