@@ -111,8 +111,6 @@ export const createFacility = async ({
       ukefFacilityId,
     }),
     accrualSchedules: mapAccrualSchedules({
-      effectiveDate,
-      maturityDate: expiryDate,
       dayCountBasis,
       feeFrequency,
       feeType,
@@ -122,17 +120,13 @@ export const createFacility = async ({
       isBssEwcsDeal,
       isGefDeal,
       partyUrns,
-      startDate: effectiveDate,
-      exitDate: expiryDate,
     }),
     obligations: mapObligations({
       bssSubtypeName,
       currency,
-      effectiveDate,
       isBssEwcsDeal,
       facilityType,
       isGefDeal,
-      maturityDate: expiryDate,
       ukefExposure: facilityAmount,
     }),
     riskDetails: await mapRiskDetails({
