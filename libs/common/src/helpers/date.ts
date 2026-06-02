@@ -67,13 +67,13 @@ export const getISO8601 = (date: Date = now()): string => date.toISOString();
  * @returns {string} The UTC date string in the format 'YYYY-MM-DD'.
  */
 export const getFormattedUTCDateString = (date: number): string => {
-  const MAX_MILLISECONDS = 9_999_999_999; // Maximum timestamp in milliseconds (equivalent to Sat Nov 20 2286 17:46:39 GMT+0000)
+  const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
 
   /**
    * If the date is less than the maximum milliseconds,
    * assume it's in seconds and convert to milliseconds
    */
-  const epochMilliseconds = date < MAX_MILLISECONDS ? date * 1000 : date;
+  const epochMilliseconds = date < MAX_EPOCH_SECONDS ? date * 1000 : date;
 
   const isoString = new Date(epochMilliseconds).toISOString();
 

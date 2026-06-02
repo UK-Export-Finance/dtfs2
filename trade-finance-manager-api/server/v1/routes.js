@@ -381,7 +381,7 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
  *     summary: Submits a facility amendment to ACBS and APIM GIFT for a specific facility.
  *     tags:
  *       - TFM - Amendments
- *     description: This endpoint submits the facility amendment to ACBS and APIM GIFT after the pre-requisites ACBS checks have passed.
+ *     description: This endpoint submits the facility amendment to APIM GIFT and, if ACBS submission pre-requisites are met, also submits the amendment to ACBS.
  *     parameters:
  *       - in: path
  *         name: facilityId

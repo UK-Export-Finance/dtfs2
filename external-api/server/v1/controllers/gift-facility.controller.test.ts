@@ -424,8 +424,10 @@ describe('amend', () => {
   it(`should return ${HttpStatusCode.Accepted} with response data`, async () => {
     // Arrange
     const requestBody = {
-      amount: 13800,
-      coverEndDate: '2026-12-20',
+      amendmentType: 'ReplaceExpiryDate',
+      amendmentData: {
+        expiryDate: '2026-12-20',
+      },
     };
 
     const responseData = { facilityId: mockFacilityId, amended: true };
@@ -461,8 +463,10 @@ describe('amend', () => {
     it(`should return ${HttpStatusCode.Accepted} with default success body`, async () => {
       // Arrange
       const requestBody = {
-        amount: 13800,
-        coverEndDate: '2026-12-20',
+        amendmentType: 'ReplaceExpiryDate',
+        amendmentData: {
+          expiryDate: '2026-12-20',
+        },
       };
 
       mockRequest.params = { facilityId: mockFacilityId };
@@ -494,9 +498,12 @@ describe('amend', () => {
       mockRequest.params = {
         facilityId: mockFacilityId,
       };
+
       mockRequest.body = {
-        amount: 13800,
-        coverEndDate: '2026-12-20',
+        amendmentType: 'ReplaceExpiryDate',
+        amendmentData: {
+          expiryDate: '2026-12-20',
+        },
       };
 
       await amend(mockRequest, mockResponse);
@@ -536,9 +543,12 @@ describe('amend', () => {
       mockRequest.params = {
         facilityId: mockFacilityId,
       };
+
       mockRequest.body = {
-        amount: 13800,
-        coverEndDate: '2026-12-20',
+        amendmentType: 'ReplaceExpiryDate',
+        amendmentData: {
+          expiryDate: '2026-12-20',
+        },
       };
 
       await amend(mockRequest, mockResponse);

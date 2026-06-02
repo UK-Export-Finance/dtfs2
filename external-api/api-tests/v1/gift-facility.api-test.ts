@@ -157,8 +157,10 @@ describe('/gift', () => {
     const facilityId = '12345';
     const url = `/v2/gift/facility/${facilityId}/amendment`;
     const mockBody = {
-      amount: 13800,
-      coverEndDate: '2026-12-20',
+      amendmentType: 'ReplaceExpiryDate',
+      amendmentData: {
+        expiryDate: '2026-12-20',
+      },
     };
 
     it(`should return ${HttpStatusCode.Accepted} with APIM TFS response body`, async () => {
