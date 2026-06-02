@@ -69,7 +69,7 @@ context('2FA Journey - Resend access code flow', () => {
 
     cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
     cy.assertText(resendAnotherAccessCode.supportInfo(), 'If you are still having problems signing in, contact us for support.');
-    cy.get('[data-cy="request-code-link"]').should('not.exist');
+    resendAnotherAccessCode.requestCodeLink().should('not.exist');
   });
 
   it('should allow successful login from the new-access-code page', () => {

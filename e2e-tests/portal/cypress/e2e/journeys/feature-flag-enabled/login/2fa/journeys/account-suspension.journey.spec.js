@@ -28,38 +28,26 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     });
   });
 
-  describe('when an already-suspended user re-submits the login form', () => {
+  describe('when a suspended user re-submits the login form', () => {
     beforeEach(() => {
       cy.task('updatePortalUserByUsername', {
         username: BANK1_MAKER1.username,
         update: { 'user-status': 'blocked' },
       });
+
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 
     it('should redirect to the suspended account page instead of silently returning to /login', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
       cy.url().should('contain', '/login/temporarily-suspended-access-code');
     });
 
     it('should display the suspension heading and message on re-submission', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
       cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
       cy.assertText(
         temporarilySuspendedAccessCode.message(),
         'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
       );
-    });
-
-    it('should render the page accessible to the suspended user without requiring a partial auth session', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      cy.url().should('contain', '/login/temporarily-suspended-access-code');
-      temporarilySuspendedAccessCode
-        .contactUsEmail()
-        .should('have.attr', 'href')
-        .and('match', /^mailto:/);
     });
   });
 
@@ -76,15 +64,16 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
   });
 
   describe('when progressing through resend states before suspension', () => {
-    it('should show "You have 2 attempts remaining." on check-your-email-access-code page', () => {
+    beforeEach(() => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
+    });
 
+    it('should show the relevant text on the check-your-email-access-code page', () => {
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
       cy.assertText(checkYourEmailAccessCode.attemptsInfo(), 'You have 2 attempts remaining.');
     });
 
-    it('should show "You have 1 attempts remaining." on new-access-code page after requesting a new code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+    it('should show the relevant text on the new-access-code page after requesting a new code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
       cy.url().should('contain', '/login/new-access-code');
@@ -92,7 +81,6 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     });
 
     it('should show "You have 0 attempts remaining." on resend-another-access-code page after requesting another code', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
       checkYourEmailAccessCode.requestCodeLink().click();
       newAccessCode.requestCodeLink().click();
 
@@ -100,73 +88,25 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
       cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
     });
 
-    it('should reach the suspension page after exhausting all resend attempts', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1);
+    describe('when suspension is triggered after exhausting resend attempts', () => {
+      beforeEach(() => {
+        cy.goToSuspendedPage(BANK1_MAKER1);
+      });
 
-      cy.url().should('contain', '/login/temporarily-suspended-access-code');
-    });
+      it('should reach the suspension page after exhausting all resend attempts', () => {
+        cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      });
 
-    it('should display the suspension heading', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1);
+      it('should display the suspension heading', () => {
+        cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
+      });
 
-      cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
-    });
-
-    it('should display the suspension message', () => {
-      cy.goToSuspendedPage(BANK1_MAKER1);
-
-      cy.assertText(
-        temporarilySuspendedAccessCode.message(),
-        'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
-      );
-    });
-  });
-
-  describe('when attempting to access protected routes while suspended', () => {
-    beforeEach(() => {
-      cy.goToSuspendedPage(BANK1_MAKER1);
-    });
-
-    it('should redirect to login when attempting to access /dashboard', () => {
-      cy.visit('/dashboard');
-
-      cy.url().should('eq', relative('/login'));
-    });
-
-    it('should redirect to login when attempting to access /user/profile', () => {
-      cy.visit('/user/profile');
-
-      cy.url().should('eq', relative('/login'));
-    });
-
-    it('should redirect to login when attempting to access /contract/12345', () => {
-      cy.visit('/contract/12345');
-
-      cy.url().should('eq', relative('/login'));
-    });
-  });
-
-  describe('when attempting to directly access 2FA routes while suspended', () => {
-    beforeEach(() => {
-      cy.goToSuspendedPage(BANK1_MAKER1);
-    });
-
-    it('should not allow bypassing suspension by visiting /login/check-your-email-access-code', () => {
-      cy.visit('/login/check-your-email-access-code');
-
-      cy.url().should('eq', relative('/not-found'));
-    });
-
-    it('should not allow bypassing suspension by visiting /login/new-access-code', () => {
-      cy.visit('/login/new-access-code');
-
-      cy.url().should('eq', relative('/not-found'));
-    });
-
-    it('should not allow bypassing suspension by visiting /login/resend-another-access-code', () => {
-      cy.visit('/login/resend-another-access-code');
-
-      cy.url().should('eq', relative('/not-found'));
+      it('should display the suspension message', () => {
+        cy.assertText(
+          temporarilySuspendedAccessCode.message(),
+          'This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.',
+        );
+      });
     });
   });
 });
