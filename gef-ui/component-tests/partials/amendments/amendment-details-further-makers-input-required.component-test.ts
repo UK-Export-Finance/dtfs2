@@ -21,14 +21,14 @@ users.forEach((user) => {
       const effectiveDate = '25/07/2025';
       const banner = true;
       const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-      const canSubmitAmendmentToUkef = false;
+      const canSubmitAmendment = false;
       const canSubmitFacilityAmendmentToChecker = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
         exporterName,
         facilityType,
-        canSubmitAmendmentToUkef,
+        canSubmitAmendment,
         dealId,
         facilityId,
         amendmentId,
@@ -100,10 +100,10 @@ users.forEach((user) => {
       });
 
       if (user === ROLES.CHECKER) {
-        it('should render checker submit controls when canSubmitAmendmentToUkef is true', () => {
+        it('should render checker submit controls when canSubmitAmendment is true', () => {
           const checkerSubmitParams: AmendmentDetailsViewModel = {
             ...params,
-            canSubmitAmendmentToUkef: true,
+            canSubmitAmendment: true,
           };
 
           const wrapper = render(checkerSubmitParams);
