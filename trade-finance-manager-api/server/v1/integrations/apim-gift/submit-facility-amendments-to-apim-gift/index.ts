@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import apiModule from '../../../api';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import { ApiTypes, TfmFacilityAmendmentData } from '../../../mappings/apim-gift-payloads/types';
@@ -7,7 +8,7 @@ type SubmitFacilityAmendmentToApimGiftParams = {
   ukefFacilityId: string;
 };
 
-type SubmitFacilityAmendmentToApimGiftResponse = (object | false)[] | false;
+type SubmitFacilityAmendmentToApimGiftResponse = number[] | false;
 
 /**
  * Submits facility amendments to APIM/GIFT.
@@ -30,7 +31,7 @@ export const submitFacilityAmendmentsToApimGift = async ({
 
   const api = apiModule as ApiTypes;
 
-  const responses: Array<object | false> = [];
+  const responses: number[] = [];
 
   /**
    * NOTE: We need to use a for loop instead of Promise.all, to ensure that the calls are sequential.
@@ -40,7 +41,7 @@ export const submitFacilityAmendmentsToApimGift = async ({
   for (const payload of payloads) {
     const response = await api.amendGiftFacility(payload, ukefFacilityId);
 
-    if (!response) {
+    if (response !== HttpStatusCode.Accepted) {
       return false;
     }
 

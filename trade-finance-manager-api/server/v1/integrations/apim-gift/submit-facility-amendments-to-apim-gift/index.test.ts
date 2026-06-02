@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import apiModule from '../../../api';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import { APIM_GIFT_INTEGRATION } from '../../../mappings/apim-gift-payloads/constants';
@@ -51,8 +52,8 @@ const mockExpiryDatePayload = {
   },
 };
 
-const mockAmountApiResponse = { status: 'ok', type: 'amount' };
-const mockExpiryDateApiResponse = { status: 'ok', type: 'expiryDate' };
+const mockAmountApiResponse = HttpStatusCode.Accepted;
+const mockExpiryDateApiResponse = HttpStatusCode.Accepted;
 
 describe('submitFacilityAmendmentsToApimGift', () => {
   beforeEach(() => {
@@ -124,14 +125,14 @@ describe('submitFacilityAmendmentsToApimGift', () => {
       expect(result).toEqual([mockAmountApiResponse, mockExpiryDateApiResponse]);
     });
 
-    describe('when an API response is false', () => {
+    describe('when an API response is not accepted', () => {
       it('should return false and stop processing', async () => {
         // Arrange
         amendFacilityPayloadSpy.mockReset();
         amendGiftFacilitySpy.mockReset();
 
         amendFacilityPayloadSpy.mockReturnValueOnce([mockAmountPayload, mockExpiryDatePayload] as never);
-        amendGiftFacilitySpy.mockResolvedValueOnce(false as never);
+        amendGiftFacilitySpy.mockResolvedValueOnce(HttpStatusCode.BadGateway as never);
 
         // Act
         const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });

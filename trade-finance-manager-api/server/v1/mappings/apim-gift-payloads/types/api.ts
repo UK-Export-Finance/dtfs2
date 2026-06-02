@@ -12,7 +12,7 @@ type FindGiftFacilitiesByIdSuccessResponse = {
   facilities: object[];
 };
 
-type GiftAmendFacilityResponse = object;
+type GiftAmendFacilityResponse = number;
 
 export type ApiTypes = {
   createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility> | false;

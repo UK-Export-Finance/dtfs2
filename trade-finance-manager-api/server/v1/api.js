@@ -2301,7 +2301,7 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
  * Amend a GIFT facility.
  * @param {object} facilityAmendmentData - The amendment data for the facility.
  * @param {string} facilityId - The GIFT facility ID to amend.
- * @returns {Promise<object|boolean>} The amended facility data if successful, otherwise false.
+ * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
  */
 const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
   try {
@@ -2314,7 +2314,7 @@ const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
       data: facilityAmendmentData,
     });
 
-    return response.data;
+    return response.status;
   } catch (error) {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
     const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility amendment endpoint' };
