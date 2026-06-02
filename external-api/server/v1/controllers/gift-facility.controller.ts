@@ -266,7 +266,12 @@ export const amend = async (req: Request, res: Response) => {
 
     console.info('✅ Successfully amended GIFT facility');
 
-    const responseData = 'data' in response ? response.data : undefined;
+    const responseData =
+      'data' in response
+        ? response.data
+        : {
+            success: true,
+          };
 
     return res.status(status).send(responseData);
   } catch (error: any) {

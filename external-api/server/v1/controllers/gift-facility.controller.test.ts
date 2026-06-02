@@ -457,36 +457,63 @@ describe('amend', () => {
     expect(mockResponse._getData()).toEqual(responseData);
   });
 
-  it('should fallback to 500 when axios throws without an HTTP response', async () => {
-    // Arrange
-    const mockError = new Error('Mock network error');
-    const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - amend facility endpoint' };
+  describe('when APIM TFS does not return response data', () => {
+    it(`should return ${HttpStatusCode.Accepted} with default success body`, async () => {
+      // Arrange
+      const requestBody = {
+        amount: 13800,
+        coverEndDate: '2026-12-20',
+      };
 
-    jest.mocked(axios).mockRejectedValueOnce(mockError);
+      mockRequest.params = { facilityId: mockFacilityId };
+      mockRequest.body = requestBody;
 
-    // Act
-    mockRequest.params = {
-      facilityId: mockFacilityId,
-    };
-    mockRequest.body = {
-      amount: 13800,
-      coverEndDate: '2026-12-20',
-    };
+      jest.mocked(axios).mockResolvedValueOnce({
+        status: HttpStatusCode.Accepted,
+      } as any);
 
-    await amend(mockRequest, mockResponse);
+      // Act
+      await amend(mockRequest, mockResponse);
 
-    // Assert
-    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
-    expect(console.error).toHaveBeenNthCalledWith(
-      1,
-      'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
-      mockFacilityId,
-      HttpStatusCode.InternalServerError,
-      expectedResponseBody,
-      mockError,
-    );
+      // Assert
+      const expected = { success: true };
 
-    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(mockResponse._getData()).toEqual(expected);
+    });
+  });
+
+  describe('when axios throws without an HTTP response', () => {
+    it(`should fallback to ${HttpStatusCode.InternalServerError}`, async () => {
+      // Arrange
+      const mockError = new Error('Mock network error');
+      const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - amend facility endpoint' };
+
+      jest.mocked(axios).mockRejectedValueOnce(mockError);
+
+      // Act
+      mockRequest.params = {
+        facilityId: mockFacilityId,
+      };
+      mockRequest.body = {
+        amount: 13800,
+        coverEndDate: '2026-12-20',
+      };
+
+      await amend(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        HttpStatusCode.InternalServerError,
+        expectedResponseBody,
+        mockError,
+      );
+
+      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    });
   });
 
   describe('when APIM TFS GIFT facility returns an HTTP error response', () => {

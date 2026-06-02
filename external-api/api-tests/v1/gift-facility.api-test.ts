@@ -152,4 +152,49 @@ describe('/gift', () => {
       });
     });
   });
+
+  describe('POST /facility/:facilityId/amendment', () => {
+    const facilityId = '12345';
+    const url = `/v2/gift/facility/${facilityId}/amendment`;
+    const mockBody = {
+      amount: 13800,
+      coverEndDate: '2026-12-20',
+    };
+
+    it(`should return ${HttpStatusCode.Accepted} with APIM TFS response body`, async () => {
+      // Arrange
+      nock.abortPendingRequests();
+      nock.cleanAll();
+
+      const apimResponseBody = {
+        success: true,
+        facilityId,
+        amendedAt: '2026-06-02T10:30:00.000Z',
+      };
+
+      nock(baseUrl).post(url).reply(HttpStatusCode.Accepted, apimResponseBody);
+
+      // Act
+      const response = await post(mockBody).to(`/gift/facility/${facilityId}/amendment`);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Accepted);
+      expect(response.body).toEqual(apimResponseBody);
+    });
+
+    it(`should return ${HttpStatusCode.Accepted} with an empty body when APIM returns no data`, async () => {
+      // Arrange
+      nock.abortPendingRequests();
+      nock.cleanAll();
+
+      nock(baseUrl).post(url).reply(HttpStatusCode.Accepted);
+
+      // Act
+      const response = await post(mockBody).to(`/gift/facility/${facilityId}/amendment`);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Accepted);
+      expect(response.body).toEqual({});
+    });
+  });
 });
