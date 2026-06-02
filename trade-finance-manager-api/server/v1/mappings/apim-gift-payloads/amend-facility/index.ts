@@ -31,7 +31,10 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
     if (amountAmendmentType) {
       const payload = {
         amendmentType: amountAmendmentType,
-        amendmentData: { amount: amountDifference, date: effectiveDate },
+        amendmentData: {
+          amount: amountDifference,
+          date: effectiveDate,
+        },
       };
 
       payloads.push(payload);
@@ -41,7 +44,9 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
   if (changeCoverEndDate) {
     payloads.push({
       amendmentType: REPLACE_EXPIRY_DATE,
-      amendmentData: { expiryDate: coverEndDate },
+      amendmentData: {
+        expiryDate: coverEndDate,
+      },
     });
   }
 

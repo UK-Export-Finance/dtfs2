@@ -464,7 +464,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
       amendmentWithUkefExposure.ukefExposure = amendment.tfm.exposure.ukefExposureValue;
     }
 
-    if (facility._id && amendmentWithUkefExposure && tfmDeal.tfm) {
+    if (facility._id && amendmentWithUkefExposure && tfmDeal?.tfm) {
       if (canSendToAcbs({ amendment: amendmentWithUkefExposure })) {
         // Amendment email notification to PDC
         await internalAmendmentEmail(ukefFacilityId);
