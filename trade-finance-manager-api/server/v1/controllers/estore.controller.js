@@ -10,8 +10,10 @@ const mapCreateEstore = require('../mappings/map-create-estore');
  */
 const createEstoreSite = async (deal) => {
   const estoreDeal = deal;
+
   // 1. Creates eStore object by mapping through the deal
   const eStoreInput = mapCreateEstore(deal);
+
   // 2. Creates eStore directories and upload files
   await api.createEstoreSite(eStoreInput);
 
