@@ -34,7 +34,7 @@ context('2FA Journey - Successful login flow', () => {
     it('should successfully login and reach the application after entering the correct access code', () => {
       complete2faLogin();
 
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login'));
       cy.url().should('match', /\/(dashboard|deals|contracts)/);
     });
 
@@ -43,7 +43,7 @@ context('2FA Journey - Successful login flow', () => {
 
       cy.getCookie('dtfs-session').should('exist');
       cy.visit('/dashboard');
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
 
@@ -55,14 +55,14 @@ context('2FA Journey - Successful login flow', () => {
     it('should allow access to /dashboard after successful 2FA', () => {
       cy.visit('/dashboard');
 
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('should allow access to /user/<user._id> after successful 2FA', () => {
       cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
         cy.visit(`/user/${user._id}`);
 
-        cy.url().should('contain', `/user/${user._id}`);
+        cy.url().should('eq', relative(`/user/${user._id}`));
       });
     });
   });
@@ -75,22 +75,22 @@ context('2FA Journey - Successful login flow', () => {
     it('should redirect away from /login/check-your-email-access-code after successful login', () => {
       cy.visit('/login/check-your-email-access-code');
 
-      cy.url().should('not.contain', '/login/check-your-email-access-code');
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login/check-your-email-access-code'));
+      cy.url().should('not.eq', relative('/login'));
     });
 
     it('should redirect away from /login/new-access-code after successful login', () => {
       cy.visit('/login/new-access-code');
 
-      cy.url().should('not.contain', '/login/new-access-code');
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login/new-access-code'));
+      cy.url().should('not.eq', relative('/login'));
     });
 
     it('should redirect away from /login/resend-another-access-code after successful login', () => {
       cy.visit('/login/resend-another-access-code');
 
-      cy.url().should('not.contain', '/login/resend-another-access-code');
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login/resend-another-access-code'));
+      cy.url().should('not.eq', relative('/login'));
     });
   });
 });

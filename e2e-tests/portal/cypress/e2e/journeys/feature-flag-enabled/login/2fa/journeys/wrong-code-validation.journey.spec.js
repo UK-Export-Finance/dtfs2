@@ -48,9 +48,9 @@ context('2FA Journey - Wrong access code validation', () => {
       visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
-      errorSummary().should('contain', 'Enter access code');
+      errorSummary().find('a').should('have.text', 'Enter access code');
       cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: Enter access code');
-      cy.url().should('contain', '/login/check-your-email-access-code');
+      cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
   });
 
@@ -59,9 +59,9 @@ context('2FA Journey - Wrong access code validation', () => {
       visitNewAccessCodePage();
       submitAccessCode(newAccessCode);
 
-      errorSummary().should('contain', 'Enter access code');
+      errorSummary().find('a').should('have.text', 'Enter access code');
       cy.assertText(newAccessCode.inlineError(), 'Error: Enter access code');
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
     });
   });
 
@@ -70,9 +70,9 @@ context('2FA Journey - Wrong access code validation', () => {
       visitResendAnotherAccessCodePage();
       submitAccessCode(resendAnotherAccessCode);
 
-      errorSummary().should('contain', 'Enter access code');
+      errorSummary().find('a').should('have.text', 'Enter access code');
       cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: Enter access code');
-      cy.url().should('contain', '/login/resend-another-access-code');
+      cy.url().should('eq', relative('/login/resend-another-access-code'));
     });
   });
 
@@ -83,7 +83,7 @@ context('2FA Journey - Wrong access code validation', () => {
 
       errorSummary().should('exist');
       cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
-      cy.url().should('contain', '/login/check-your-email-access-code');
+      cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
   });
 
@@ -94,7 +94,7 @@ context('2FA Journey - Wrong access code validation', () => {
 
       errorSummary().should('exist');
       cy.assertText(newAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
     });
   });
 
@@ -105,7 +105,7 @@ context('2FA Journey - Wrong access code validation', () => {
 
       errorSummary().should('exist');
       cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: The access code you have entered is incorrect');
-      cy.url().should('contain', '/login/resend-another-access-code');
+      cy.url().should('eq', relative('/login/resend-another-access-code'));
     });
   });
 
@@ -115,8 +115,8 @@ context('2FA Journey - Wrong access code validation', () => {
       submitAccessCode(checkYourEmailAccessCode);
 
       errorSummary().should('be.visible');
-      errorSummary().should('contain', 'There is a problem');
-      errorSummary().find('a').should('have.attr', 'href').and('contain', '#');
+      cy.assertText(errorSummary().find('.govuk-error-summary__title'), 'There is a problem');
+      errorSummary().find('a').should('have.attr', 'href', '#sixDigitAccessCode');
     });
   });
 
@@ -131,7 +131,7 @@ context('2FA Journey - Wrong access code validation', () => {
         submitAccessCode(checkYourEmailAccessCode, PORTAL_2FA_ACCESS_CODE);
       });
 
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login'));
     });
 
     it('should allow successful login after correcting an empty access code', () => {
@@ -144,7 +144,7 @@ context('2FA Journey - Wrong access code validation', () => {
         submitAccessCode(checkYourEmailAccessCode, PORTAL_2FA_ACCESS_CODE);
       });
 
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login'));
     });
   });
 

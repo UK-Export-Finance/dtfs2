@@ -1,6 +1,7 @@
 const checkYourEmailAccessCode = require('../../e2e/pages/login/check-your-email-access-code');
 const newAccessCode = require('../../e2e/pages/login/new-access-code');
 const resendAnotherAccessCode = require('../../e2e/pages/login/resend-another-access-code');
+const relative = require('../../e2e/relativeURL');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../e2e-fixtures/portal-users.fixture');
 
 /**
@@ -16,29 +17,20 @@ const { PORTAL_2FA_ACCESS_CODE } = require('../../../../e2e-fixtures/portal-user
  *                           (0 -> check-your-email, 1 -> new-access-code, 2 -> resend-another-access-code).
  */
 module.exports = ({ username, password, count = 0 }) => {
-  /**
-   * Fail fast if `count` is out of range. Only 0, 1 and 2 map to a real 2FA page
-   * (check-your-email, new-access-code, resend-another-access-code respectively);
-   * any other value would silently fall through to the check-your-email selector.
-   */
-  if (![0, 1, 2].includes(count)) {
-    throw new Error(`submitExpiredAccessCode: 'count' must be 0, 1 or 2 (received ${count}).`);
-  }
-
   // Enter credentials to start the 2FA journey
   cy.enterUsernameAndPassword({ username, password });
 
   // Ensure we're on the check-your-email page, then click the request link 'count' times
-  cy.url().should('contain', '/login/check-your-email-access-code');
+  cy.url().should('eq', relative('/login/check-your-email-access-code'));
 
   // each click advances to next page: check -> new -> resend-another
   for (let i = 0; i < count; i += 1) {
     if (i === 0) {
       checkYourEmailAccessCode.requestCodeLink().click();
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
     } else if (i === 1) {
       newAccessCode.requestCodeLink().click();
-      cy.url().should('contain', '/login/resend-another-access-code');
+      cy.url().should('eq', relative('/login/resend-another-access-code'));
     }
   }
 

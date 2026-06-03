@@ -84,29 +84,29 @@ context('2FA Journey - Protected routes authorization', () => {
     it('should successfully access /dashboard after full 2FA', () => {
       cy.visit('/dashboard');
 
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('should successfully access /user/<user._id> after full 2FA', () => {
       cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
         cy.visit(`/user/${user._id}`);
 
-        cy.url().should('contain', `/user/${user._id}`);
+        cy.url().should('eq', relative(`/user/${user._id}`));
       });
     });
 
     it('should redirect away from /login/check-your-email-access-code after full auth', () => {
       cy.visit('/login/check-your-email-access-code');
 
-      cy.url().should('not.contain', '/login/check-your-email-access-code');
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login/check-your-email-access-code'));
+      cy.url().should('not.eq', relative('/login'));
     });
 
     it('should redirect away from /login/new-access-code after full auth', () => {
       cy.visit('/login/new-access-code');
 
-      cy.url().should('not.contain', '/login/new-access-code');
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login/new-access-code'));
+      cy.url().should('not.eq', relative('/login'));
     });
   });
 });

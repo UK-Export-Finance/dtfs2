@@ -30,16 +30,16 @@ context('2FA Journey - Access code expiry', () => {
   });
 
   describe('when logging in with an expired access code', () => {
-    it('should display the heading and request new code button', () => {
+    beforeEach(() => {
       submitExpiredAccessCode();
+    });
 
+    it('should display the heading and request new code button', () => {
       cy.assertText(accessCodeExpired.heading(), 'Your access code has expired');
       cy.assertText(accessCodeExpired.requestNewCodeButton(), 'Request a new code');
     });
 
     it('should display the security and suspend information', () => {
-      submitExpiredAccessCode();
-
       cy.assertText(
         accessCodeExpired.securityInfo(),
         'For security, access codes expire after 30 minutes. You can request for a new access code to be sent to your email address.',
@@ -76,28 +76,28 @@ context('2FA Journey - Access code expiry', () => {
       submitExpiredAccessCode();
       accessCodeExpired.requestNewCodeButton().click();
 
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
     });
 
     it('should redirect to resend-another-access-code when one send has been used', () => {
       submitExpiredAccessCode(1);
       accessCodeExpired.requestNewCodeButton().click();
 
-      cy.url().should('contain', '/login/resend-another-access-code');
+      cy.url().should('eq', relative('/login/resend-another-access-code'));
     });
 
     it('should allow successful login after requesting a new code', () => {
       submitExpiredAccessCode();
       accessCodeExpired.requestNewCodeButton().click();
 
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
 
       cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
         cy.keyboardInput(newAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
         cy.clickSubmitButton();
       });
 
-      cy.url().should('not.contain', '/login');
+      cy.url().should('not.eq', relative('/login'));
     });
   });
 });

@@ -92,6 +92,8 @@ Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'))
 Cypress.Commands.add('login', require('./portal/login'));
 Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
+Cypress.Commands.add('enterJourneyAtRequestCodeClicks', require('./portal/enterJourneyAtRequestCodeClicks'));
+Cypress.Commands.add('submitValidAccessCode', require('./portal/submitValidAccessCode'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
 Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));

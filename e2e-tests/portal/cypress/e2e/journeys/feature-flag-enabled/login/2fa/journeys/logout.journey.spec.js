@@ -12,7 +12,7 @@ context('2FA Journey - Logout', () => {
       cy.loginOTP(BANK1_MAKER1);
       cy.visit('/dashboard');
 
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('should display logout link when user is authenticated', () => {
@@ -45,7 +45,7 @@ context('2FA Journey - Logout', () => {
       cy.loginOTP(BANK1_MAKER1);
       cy.visit('/dashboard');
 
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
       header.logout().click();
 
       cy.url().should('eq', relative('/login'));
@@ -110,7 +110,7 @@ context('2FA Journey - Logout', () => {
 
     it('should require full re-authentication after logout', () => {
       cy.visit('/dashboard');
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
 
       header.logout().click();
 
@@ -124,7 +124,7 @@ context('2FA Journey - Logout', () => {
 
     it('should not restore the previous session when navigating back after logout', () => {
       cy.visit('/dashboard');
-      cy.url().should('contain', '/dashboard');
+      cy.url().should('eq', relative('/dashboard/deals/0'));
 
       header.logout().click();
 

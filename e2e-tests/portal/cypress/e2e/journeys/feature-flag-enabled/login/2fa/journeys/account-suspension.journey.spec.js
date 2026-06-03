@@ -14,7 +14,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     it('should render the suspension page when accessed directly without a partial auth session', () => {
       temporarilySuspendedAccessCode.visit();
 
-      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
       cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
     });
 
@@ -23,7 +23,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
 
       cy.getCookie('dtfs-session').should('exist');
       cy.visit('/login/temporarily-suspended-access-code');
-      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
       cy.getCookie('dtfs-session').should('exist');
     });
   });
@@ -39,7 +39,7 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     });
 
     it('should redirect to the suspended account page instead of silently returning to /login', () => {
-      cy.url().should('contain', '/login/temporarily-suspended-access-code');
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
     });
 
     it('should display the suspension heading and message on re-submission', () => {
@@ -76,25 +76,26 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
     it('should show the relevant text on the new-access-code page after requesting a new code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
 
-      cy.url().should('contain', '/login/new-access-code');
+      cy.url().should('eq', relative('/login/new-access-code'));
       cy.assertText(newAccessCode.attemptsInfo(), 'You have 1 attempts remaining.');
     });
 
-    it('should show "You have 0 attempts remaining." on resend-another-access-code page after requesting another code', () => {
+    it('should show the relevant text on the resend-another-access-code page after requesting another code', () => {
       checkYourEmailAccessCode.requestCodeLink().click();
       newAccessCode.requestCodeLink().click();
 
-      cy.url().should('contain', '/login/resend-another-access-code');
+      cy.url().should('eq', relative('/login/resend-another-access-code'));
       cy.assertText(resendAnotherAccessCode.attemptsInfo(), 'You have 0 attempts remaining.');
     });
 
     describe('when suspension is triggered after exhausting resend attempts', () => {
       beforeEach(() => {
+        commonBeforeEach(BANK1_MAKER1, { login: false });
         cy.goToSuspendedPage(BANK1_MAKER1);
       });
 
       it('should reach the suspension page after exhausting all resend attempts', () => {
-        cy.url().should('contain', '/login/temporarily-suspended-access-code');
+        cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
       });
 
       it('should display the suspension heading', () => {
