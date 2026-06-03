@@ -4,6 +4,7 @@
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';
+import { addDays, addYears, format, formatISO } from 'date-fns';
 import { APIM_GIFT_PAYLOADS_EXAMPLES } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -156,10 +157,12 @@ describe('/gift', () => {
   describe('POST /facility/:facilityId/amendment', () => {
     const facilityId = '12345';
     const url = `/v2/gift/facility/${facilityId}/amendment`;
+    const expiryDate = format(addYears(new Date(), 1), 'yyyy-MM-dd');
+    const amendedAt = formatISO(addDays(new Date(), 1));
     const mockBody = {
       amendmentType: 'ReplaceExpiryDate',
       amendmentData: {
-        expiryDate: '2026-12-20',
+        expiryDate,
       },
     };
 
@@ -171,7 +174,7 @@ describe('/gift', () => {
       const apimResponseBody = {
         success: true,
         facilityId,
-        amendedAt: '2026-06-02T10:30:00.000Z',
+        amendedAt,
       };
 
       nock(baseUrl).post(url).reply(HttpStatusCode.Accepted, apimResponseBody);
@@ -181,7 +184,7 @@ describe('/gift', () => {
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Accepted);
-      expect(response.body).toEqual(apimResponseBody);
+      expect(response.body).toEqual({ success: true });
     });
 
     it(`should return ${HttpStatusCode.Accepted} with an empty body when APIM returns no data`, async () => {
@@ -196,7 +199,7 @@ describe('/gift', () => {
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Accepted);
-      expect(response.body).toEqual({});
+      expect(response.body).toEqual({ success: true });
     });
   });
 });

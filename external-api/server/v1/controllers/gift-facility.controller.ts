@@ -266,14 +266,9 @@ export const amend = async (req: Request, res: Response) => {
 
     console.info('✅ Successfully amended GIFT facility');
 
-    const responseData =
-      'data' in response
-        ? response.data
-        : {
-            success: true,
-          };
-
-    return res.status(status).send(responseData);
+    return res.status(status).send({
+      success: true,
+    });
   } catch (error: any) {
     console.error('Error calling APIM TFS GIFT - amend facility endpoint for facility %s %o', facilityId, error);
 

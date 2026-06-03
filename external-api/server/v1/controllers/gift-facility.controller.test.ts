@@ -430,14 +430,11 @@ describe('amend', () => {
       },
     };
 
-    const responseData = { facilityId: mockFacilityId, amended: true };
-
     mockRequest.params = { facilityId: mockFacilityId };
     mockRequest.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
       status: HttpStatusCode.Accepted,
-      data: responseData,
     });
 
     // Act
@@ -456,34 +453,7 @@ describe('amend', () => {
     });
 
     expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Accepted);
-    expect(mockResponse._getData()).toEqual(responseData);
-  });
-
-  describe('when APIM TFS does not return response data', () => {
-    it(`should return ${HttpStatusCode.Accepted} with default success body`, async () => {
-      // Arrange
-      const requestBody = {
-        amendmentType: 'ReplaceExpiryDate',
-        amendmentData: {
-          expiryDate: '2026-12-20',
-        },
-      };
-
-      mockRequest.params = { facilityId: mockFacilityId };
-      mockRequest.body = requestBody;
-
-      jest.mocked(axios).mockResolvedValueOnce({
-        status: HttpStatusCode.Accepted,
-      } as any);
-
-      // Act
-      await amend(mockRequest, mockResponse);
-
-      // Assert
-      const expected = { success: true };
-
-      expect(mockResponse._getData()).toEqual(expected);
-    });
+    expect(mockResponse._getData()).toEqual({ success: true });
   });
 
   describe('when axios throws without an HTTP response', () => {
