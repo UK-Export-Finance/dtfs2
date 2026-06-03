@@ -84,7 +84,7 @@ jobs:
           node: ${{ vars.NODE_VERSION }}
           log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
-  # 3. micro-serices WebApp deployments
+  # 3. micro-services WebApp deployments
   webapp:
     name: WebApp 🌐
     needs: [setup, database]
