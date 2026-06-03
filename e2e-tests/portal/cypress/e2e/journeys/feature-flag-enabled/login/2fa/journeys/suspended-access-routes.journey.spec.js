@@ -21,9 +21,11 @@ context('Portal 2FA Journey - Suspended access routes', () => {
     });
 
     it('should redirect to login when attempting to access /user/profile', () => {
-      cy.visit('/user/profile');
+      cy.getUserByUsername(BANK1_MAKER1.username).then((user) => {
+        cy.visit(`/user/${user._id}`);
 
-      cy.url().should('eq', relative('/login'));
+        cy.url().should('eq', relative('/login'));
+      });
     });
 
     it('should redirect to login when attempting to access /contract/12345', () => {
