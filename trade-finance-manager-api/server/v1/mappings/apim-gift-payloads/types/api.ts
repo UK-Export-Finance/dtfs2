@@ -16,7 +16,7 @@ type GiftAmendFacilityResponse = number;
 
 export type ApiTypes = {
   createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility> | false;
-  amendGiftFacility: (facilityAmendmentData: ApimGiftFacilityAmendmentPayload, facilityId: string) => Promise<GiftAmendFacilityResponse> | false;
+  amendGiftFacility: (facilityAmendmentData: ApimGiftFacilityAmendmentPayload, facilityId: string) => Promise<GiftAmendFacilityResponse | false>;
   findFacilitiesByDealId: (dealId: string) => Promise<TfmFacility[] | FindFacilitiesByDealIdErrorResponse>;
   findGiftFacilitiesByIds: (facilityIdsQueryString: string) => Promise<FindGiftFacilitiesByIdSuccessResponse | false>;
   getCreditRiskRatings: () => Promise<CreditRiskRating[]> | false;

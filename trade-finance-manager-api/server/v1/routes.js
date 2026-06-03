@@ -409,11 +409,11 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
  *               _id: '123'
  *     responses:
  *       '200':
- *         description: Facility amendment submitted to ACBS and APIM GIFT successfully
+ *         description: Facility amendment submitted to APIM GIFT successfully (and to ACBS when eligible)
  *       '400':
  *         description: Bad request
  *       '422':
- *         description: Unable to submit facility amendment to ACBS and APIM GIFT
+ *         description: Unable to submit facility amendment to APIM GIFT (and to ACBS when eligible)
  */
 openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId').post(amendmentController.sendFacilityAmendment);
 

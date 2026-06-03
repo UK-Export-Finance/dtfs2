@@ -70,7 +70,7 @@ export const getFormattedUTCDateString = (date: number): string => {
   const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
 
   /**
-   * If the date is less than the maximum milliseconds,
+   * If the epoch value is less than the maximum plausible epoch timestamp in seconds,
    * assume it's in seconds and convert to milliseconds
    */
   const epochMilliseconds = date < MAX_EPOCH_SECONDS ? date * 1000 : date;
