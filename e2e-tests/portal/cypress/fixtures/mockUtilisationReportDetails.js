@@ -98,7 +98,7 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 const tfmFacilityForReport = {
   facilitySnapshot: {
     type: FACILITY_TYPE.CASH,
-    ukefFacilityId: '00001371',
+    ukefFacilityId: '0000001371',
     value: 1000,
     coverStartDate: new Date().getTime(),
     coverEndDate: addMonths(new Date(), 5).getTime(),
@@ -121,7 +121,7 @@ const ewcsTfmFacilityForReport = {
   facilitySnapshot: {
     ...tfmFacilityForReport.facilitySnapshot,
     type: FACILITY_TYPE.LOAN,
-    ukefFacilityId: '00001507',
+    ukefFacilityId: '0000001507',
   },
 };
 

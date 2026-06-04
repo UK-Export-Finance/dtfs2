@@ -382,8 +382,9 @@ module.exports = {
     /**
      * Generates the specified number of TFM facilities and inserts them directly
      * into the db. It also inserts two deals (to link the facilities to).
-     * The UKEF facility ID of the first generated facility is 10000001;
-     * this is incremented for each subsequent facility. The inserted facilities
+     * The UKEF facility ID of the first generated facility is 0000000001;
+     * this is incremented for each subsequent facility while preserving
+     * a 10-digit format prefixed with 00. The inserted facilities
      * alternate with respect to which of the two deals they are linked to. This
      * is to allow easy testing of searching and sorting
      * @param {object} numberOfFacilitiesToInsert The number of facilities to insert
@@ -397,7 +398,7 @@ module.exports = {
       const facilities = await getTfmFacilitiesCollection();
       const facilitiesToInsert = [];
       for (let i = 0; i < numberOfFacilitiesToInsert; i += 1) {
-        const ukefFacilityId = (10000001 + i).toString();
+        const ukefFacilityId = `00${String(i + 1).padStart(8, '0')}`;
         const dealObjectId = dealObjectIds[i % 2];
         facilitiesToInsert.push(createTfmFacilityToInsertIntoDb(ukefFacilityId, dealObjectId));
       }

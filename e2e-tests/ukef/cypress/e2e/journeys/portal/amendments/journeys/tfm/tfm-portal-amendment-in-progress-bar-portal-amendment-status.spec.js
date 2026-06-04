@@ -16,7 +16,7 @@ const CHANGED_FACILITY_VALUE = '20000';
 
 const mockFacility1 = {
   ...mockFacility,
-  ukefFacilityId: '00000013',
+  ukefFacilityId: '0000000013',
 };
 
 context('Amendments - TFM - Amendments details page - Portal amendment in progress bar while a portal amendment is in progress', () => {
