@@ -11,7 +11,7 @@ const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
 const mockFacility2 = {
   ...mockFacility,
-  ukefFacilityId: '10000013',
+  ukefFacilityId: '00000013',
 };
 
 const CHANGED_FACILITY_VALUE = '20000';
