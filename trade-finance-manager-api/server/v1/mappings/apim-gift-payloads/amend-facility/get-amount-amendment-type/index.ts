@@ -11,7 +11,7 @@ type GetAmountAmendmentTypeParams = {
  * @param {GetAmountAmendmentTypeParams} params - The parameters for determining the amount amendment type.
  * @param {number} params.currentAmount - The current facility amount.
  * @param {number} params.newAmount - The amended facility amount.
- * @returns {AmountAmendmentType | null} APIM/GIFT "amount" amendment type, or null if there is no change.
+ * @returns {ApimGiftAmountAmendmentType | null} APIM/GIFT "amount" amendment type, or null if there is no change.
  */
 export const getAmountAmendmentType = ({ currentAmount, newAmount }: GetAmountAmendmentTypeParams): ApimGiftAmountAmendmentType | null => {
   if (newAmount > currentAmount) {
