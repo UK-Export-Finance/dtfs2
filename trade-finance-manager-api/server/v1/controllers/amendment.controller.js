@@ -530,7 +530,7 @@ const sendFacilityAmendment = async (req, res) => {
         throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
       }
 
-      await submitToAcbs(amendment, facility, ukefFacilityId);
+      // await submitToAcbs(amendment, facility, ukefFacilityId);
 
       return res.status(HttpStatusCode.Ok).send();
     }
