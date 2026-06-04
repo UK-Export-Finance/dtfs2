@@ -54,7 +54,7 @@ const BOND_FACILITY = {
   name: `mock ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS} facility`,
   submittedAsIssuedDate: Date.now(),
   requestedCoverStartDate: '1606900616652',
-  ukefFacilityId: '0034567890',
+  ukefFacilityId: '0034567891',
 };
 
 module.exports = {

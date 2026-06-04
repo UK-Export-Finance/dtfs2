@@ -170,7 +170,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         requestedCoverStartDate: '1644160701000',
         name: 'Test-123',
         updatedAt: 1707232703089,
-        ukefFacilityId: '0000000008',
+        ukefFacilityId: '0000000009',
         createdDate: 1707232703089,
         dealId: new ObjectId(),
       },

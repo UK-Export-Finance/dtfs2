@@ -14,12 +14,12 @@ const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
 const mockFacility2 = {
   ...mockFacility,
-  ukefFacilityId: '0000000013',
+  ukefFacilityId: '0020000008',
 };
 
 const mockFacility3 = {
   ...mockFacility,
-  ukefFacilityId: '0000000014',
+  ukefFacilityId: '0020000009',
 };
 
 const CHANGED_FACILITY_VALUE_1 = '20000';
