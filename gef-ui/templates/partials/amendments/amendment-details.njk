@@ -5,7 +5,7 @@
 {% import '../print-button.njk' as printButton %}
 
 {% block pageTitle -%}
-  {% if canSubmitFacilityAmendmentToChecker %}
+  {% if submitAmendmentToChecker %}
     Check your answers before submitting the amendment request
   {% else %}
     Amendment details
@@ -25,7 +25,7 @@
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       <div class="govuk-grid-row">
-        {% if canSubmitFacilityAmendmentToChecker %}
+        {% if submitAmendmentToChecker %}
           <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
             <span class="govuk-caption-l" data-cy="heading-caption">
               {{ exporterName }}, {{ facilityType }} facility
@@ -61,11 +61,11 @@
 
       {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
 
-      {% if canSubmitFacilityAmendment %}
+      {% if submitAmendment %}
         {% include "../../includes/submit/submit-to-ukef.njk" %}
       {% endif %}
 
-      {% if canSubmitFacilityAmendmentToChecker %}
+      {% if submitAmendmentToChecker %}
         {% include "../../includes/submit-amendment/submit-amendment-to-checker.njk" %}
       {% endif %}
     </form>

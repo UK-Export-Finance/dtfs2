@@ -4,11 +4,11 @@ export type AmendmentDetailsViewModel = {
   userRoles: string[];
   exporterName: string;
   facilityType: string;
-  canSubmitFacilityAmendment: boolean;
+  submitAmendment: boolean;
   dealId: string;
   facilityId: string;
   amendmentId: string;
-  canSubmitFacilityAmendmentToChecker: boolean;
+  submitAmendmentToChecker: boolean;
   previousPage: string;
   effectiveDate: string;
   banner?: boolean;

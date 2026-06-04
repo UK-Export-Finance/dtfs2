@@ -20,18 +20,18 @@ users.forEach((user) => {
       const userRoles = [user];
       const effectiveDate = '25/07/2025';
       const banner = true;
-      const canSubmitFacilityAmendmentToChecker = false;
-      const canSubmitFacilityAmendment = false;
+      const submitAmendmentToChecker = false;
+      const submitAmendment = false;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
         exporterName,
         facilityType,
-        canSubmitFacilityAmendment,
+        submitAmendment,
         dealId,
         facilityId,
         amendmentId,
-        canSubmitFacilityAmendmentToChecker,
+        submitAmendmentToChecker,
         previousPage,
         effectiveDate,
         banner,
@@ -116,7 +116,7 @@ users.forEach((user) => {
         if (user === ROLES.CHECKER) {
           const checkerWrapper = render({
             ...params,
-            canSubmitFacilityAmendment: true,
+            submitAmendment: true,
           });
 
           checkerWrapper.expectElement('[data-cy="submit-button"]').toExist();
