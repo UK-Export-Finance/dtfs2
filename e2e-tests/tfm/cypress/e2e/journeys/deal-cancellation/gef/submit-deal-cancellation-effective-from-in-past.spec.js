@@ -14,7 +14,7 @@ import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 context('Deal cancellation - submit cancellation with "effectiveFrom" in past', () => {
   let dealId;
   let facility;
-  const ukefDealId = 10000001;
+  const ukefDealId = '0000000001';
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {

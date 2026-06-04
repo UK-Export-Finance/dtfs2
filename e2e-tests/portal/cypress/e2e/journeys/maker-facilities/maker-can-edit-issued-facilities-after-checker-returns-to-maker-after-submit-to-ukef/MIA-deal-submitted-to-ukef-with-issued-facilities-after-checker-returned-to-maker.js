@@ -45,7 +45,7 @@ const deal = {
       username: 'CHECKER',
     },
     submissionDate: now.valueOf(),
-    ukefDealId: '1001349',
+    ukefDealId: '0001001349',
     approvalDate: '1599048727451',
   },
   eligibility: {
