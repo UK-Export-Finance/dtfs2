@@ -17,7 +17,7 @@ export type TfmFacilityAmendmentData = {
     coverEndDate?: string;
     effectiveDate?: string;
   };
-  tfm: {
+  tfm?: {
     coverEndDate?: number;
   };
 };

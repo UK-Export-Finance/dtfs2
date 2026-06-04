@@ -395,18 +395,6 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
  *         schema:
  *           type: string
  *         description: The ID of the amendment.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user:
- *                 type: object
- *           example:
- *             user:
- *               _id: '123'
  *     responses:
  *       '200':
  *         description: Facility amendment submitted to APIM GIFT successfully (and to ACBS when eligible)

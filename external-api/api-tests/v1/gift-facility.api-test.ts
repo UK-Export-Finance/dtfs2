@@ -119,10 +119,25 @@ describe('/gift', () => {
 
     const mockApimTfsResponse = {
       data: {},
-      status: HttpStatusCode.Created,
+      status: HttpStatusCode.Accepted,
     };
 
-    it(`should return a ${HttpStatusCode.Created} status with data received from APIM TFS`, async () => {
+    it(`should return a ${HttpStatusCode.Accepted} status with data received from APIM TFS`, async () => {
+      // Arrange
+      nock.abortPendingRequests();
+      nock.cleanAll();
+
+      nock(baseUrl).post(url).reply(HttpStatusCode.Accepted, mockApimTfsResponse);
+
+      // Act
+      const response = await post(mockBody).to('/gift/facility');
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Accepted);
+      expect(response.body).toEqual(mockApimTfsResponse);
+    });
+
+    it(`should return ${HttpStatusCode.Created} with an empty body when APIM returns ${HttpStatusCode.Created}`, async () => {
       // Arrange
       nock.abortPendingRequests();
       nock.cleanAll();
@@ -130,14 +145,15 @@ describe('/gift', () => {
       nock(baseUrl).post(url).reply(HttpStatusCode.Created, mockApimTfsResponse);
 
       // Act
-      const { status } = await post(mockBody).to('/gift/facility');
+      const response = await post(mockBody).to('/gift/facility');
 
       // Assert
-      expect(status).toEqual(HttpStatusCode.Created);
+      expect(response.status).toEqual(HttpStatusCode.Created);
+      expect(response.body).toEqual({});
     });
 
-    describe(`when the APIM TFS endpoint returns a status that is NOT ${HttpStatusCode.Created}`, () => {
-      it(`should return the same status from the APIM TFS endpoint`, async () => {
+    describe(`when the APIM TFS endpoint returns a status that is NOT ${HttpStatusCode.Accepted}`, () => {
+      it(`should return the same status from the APIM TFS endpoint and no body`, async () => {
         // Arrange
         nock.abortPendingRequests();
         nock.cleanAll();
@@ -147,9 +163,10 @@ describe('/gift', () => {
         nock(baseUrl).persist().post(url).reply(mockStatusCode, mockApimTfsResponse);
 
         // Act
-        const { status } = await post(mockBody).to('/gift/facility');
+        const response = await post(mockBody).to('/gift/facility');
 
-        expect(status).toEqual(mockStatusCode);
+        expect(response.status).toEqual(mockStatusCode);
+        expect(response.body).toEqual({});
       });
     });
   });
@@ -166,7 +183,7 @@ describe('/gift', () => {
       },
     };
 
-    it(`should return ${HttpStatusCode.Accepted} with APIM TFS response body`, async () => {
+    it(`should return ${HttpStatusCode.Accepted} with a success body`, async () => {
       // Arrange
       nock.abortPendingRequests();
       nock.cleanAll();

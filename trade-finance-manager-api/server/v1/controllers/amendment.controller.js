@@ -522,7 +522,7 @@ const sendFacilityAmendment = async (req, res) => {
 
       const facility = await api.findOneFacility(facilityId);
 
-      const { ukefFacilityId } = facility.facilitySnapshot;
+      const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
       const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
 
