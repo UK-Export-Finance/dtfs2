@@ -29,7 +29,7 @@ const mockAmendment: TfmFacilityAmendmentData = {
   changeFacilityValue: true,
   currentValue: 100,
   value: 120,
-  effectiveDate: '1704067200',
+  effectiveDate: 1704067200,
   tfm: {
     coverEndDate: 1706745600000,
   },
