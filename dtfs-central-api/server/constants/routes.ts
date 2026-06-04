@@ -2,6 +2,7 @@ import { SWAGGER } from '@ukef/dtfs2-common';
 
 export const ROUTES = {
   BANK_ROUTE: 'bank',
+  PORTAL_BANK_LIST_ROUTE: 'portal-bank-list',
   PORTAL_ROUTE: 'portal',
   TFM_ROUTE: 'tfm',
   USER_ROUTE: 'user',
