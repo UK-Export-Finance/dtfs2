@@ -48,7 +48,7 @@ const issuedFacility: Facility = {
   hasBeenIssued: false,
   name: 'Facility one',
   coverStartDate: new Date(1638403200000),
-  ukefFacilityId: '00000011',
+  ukefFacilityId: '0000000011',
   coverDateConfirmed: null,
 };
 

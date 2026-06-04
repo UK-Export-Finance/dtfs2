@@ -17,8 +17,11 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
   const newAmount = Number(amendment.value);
   const previousAmount = Number(amendment.currentValue);
 
-  const coverEndDate = amendment?.tfm?.coverEndDate ? getFormattedUTCDateString(Number(amendment?.tfm?.coverEndDate)) : '';
-  const effectiveDate = amendment.effectiveDate ? getFormattedUTCDateString(Number(amendment.effectiveDate)) : '';
+  const coverEndDate =
+    amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null ? getFormattedUTCDateString(Number(amendment.tfm.coverEndDate)) : '';
+
+  const effectiveDate =
+    amendment.effectiveDate !== undefined && amendment.effectiveDate !== null ? getFormattedUTCDateString(Number(amendment.effectiveDate)) : '';
 
   return {
     newAmount,

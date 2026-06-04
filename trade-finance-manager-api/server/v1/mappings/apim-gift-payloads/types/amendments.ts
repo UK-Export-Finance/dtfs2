@@ -8,14 +8,13 @@ const { AMENDMENT_TYPE } = APIM_GIFT_INTEGRATION;
 export type TfmFacilityAmendmentData = {
   changeFacilityValue?: boolean;
   changeCoverEndDate?: boolean;
-  value?: number;
-  currentValue?: number;
-  effectiveDate?: string;
-  coverEndDate?: string;
+  value?: number | null;
+  currentValue?: number | null;
+  effectiveDate?: number;
+  coverEndDate?: number | null;
   ukefDecision?: {
-    value?: number;
+    value?: string;
     coverEndDate?: string;
-    effectiveDate?: string;
   };
   tfm?: {
     coverEndDate?: number;

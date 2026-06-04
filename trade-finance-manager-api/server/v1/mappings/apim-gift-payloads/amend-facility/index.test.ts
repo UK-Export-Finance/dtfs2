@@ -9,7 +9,7 @@ const {
 const mockAmendmentBase: TfmFacilityAmendmentData = {
   currentValue: 100,
   value: 130,
-  effectiveDate: '1704067200',
+  effectiveDate: 1704067200,
   tfm: {
     coverEndDate: 1706745600000,
   },

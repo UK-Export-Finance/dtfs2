@@ -5,7 +5,7 @@ import { getAmendmentFields } from '.';
 const mockBaseAmendment: TfmFacilityAmendmentData = {
   currentValue: 100,
   value: 130,
-  effectiveDate: '1704067200',
+  effectiveDate: 1704067200,
   tfm: {},
 };
 
@@ -62,6 +62,40 @@ describe('getAmendmentFields', () => {
 
       // Assert
       expect(result.effectiveDate).toEqual('');
+    });
+  });
+
+  describe('when effectiveDate is null', () => {
+    it('should return effectiveDate as an empty string', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        effectiveDate: null as unknown as number,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.effectiveDate).toEqual('');
+    });
+  });
+
+  describe('when tfm.coverEndDate is null', () => {
+    it('should return coverEndDate as an empty string', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        tfm: {
+          coverEndDate: null as unknown as number,
+        },
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.coverEndDate).toEqual('');
     });
   });
 });

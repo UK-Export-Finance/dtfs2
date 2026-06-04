@@ -17,7 +17,7 @@ type SubmitFacilityAmendmentToApimGiftResponse = number[] | false;
  * @param {SubmitFacilityAmendmentToApimGiftParams} params - The parameters for submitting the facility amendment.
  * @param {TfmFacilityAmendmentData} params.amendment - The facility amendment data from TFM.
  * @param {string} params.ukefFacilityId - The UKEF facility ID.
- * @returns The array of responses from the APIM/GIFT system, or false if no valid payloads can be produced.
+ * @returns The array of responses from the APIM/GIFT system, or false if no valid payloads can be produced or any APIM/GIFT submission is not accepted.
  */
 export const submitFacilityAmendmentsToApimGift = async ({
   amendment,
