@@ -29,12 +29,13 @@ export const createAmendmentDetailsViewModel = ({
   banner?: boolean;
 }): AmendmentDetailsViewModel => {
   const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+  const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
   return {
     userRoles,
     exporterName: deal.exporter.companyName,
     facilityType: facility.type,
-    submitAmendment: userRoles.includes(ROLES.CHECKER),
+    submitAmendment,
     dealId: deal._id,
     facilityId: facility._id,
     amendmentId: amendment.amendmentId,

@@ -33,42 +33,45 @@ context('Amendments - TFM - Creating a TFM amendment with a future effective dat
       dealId = insertedDeal._id;
       applicationDetailsUrl = `/gef/application-details/${dealId}`;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
+      return cy
+        .updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1)
+        .then(() => cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1))
+        .then((createdFacility) => {
+          facilityId1 = createdFacility.details._id;
 
-      cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
-        facilityId1 = createdFacility.details._id;
-      });
+          return cy.createGefFacilities(dealId, [mockFacility2], BANK1_MAKER1);
+        })
+        .then((createdFacility) => {
+          facilityId2 = createdFacility.details._id;
 
-      cy.createGefFacilities(dealId, [mockFacility2], BANK1_MAKER1).then((createdFacility) => {
-        facilityId2 = createdFacility.details._id;
+          tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
+          tfmFacilityPage1 = `${TFM_URL}/case/${dealId}/facility/${facilityId1}`;
+          tfmFacilityPage2 = `${TFM_URL}/case/${dealId}/facility/${facilityId2}`;
 
-        tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
-        tfmFacilityPage1 = `${TFM_URL}/case/${dealId}/facility/${facilityId1}`;
-        tfmFacilityPage2 = `${TFM_URL}/case/${dealId}/facility/${facilityId2}`;
-
-        cy.makerLoginSubmitGefDealForReview(insertedDeal);
-        cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
-
-        cy.clearSessionCookies();
-
-        cy.loginAndSubmitPortalAmendmentRequestToUkef({
-          facilityValueExists: true,
-          changedFacilityValue: CHANGED_FACILITY_VALUE,
-          applicationDetailsUrl,
-          facilityId: facilityId1,
-          dealId,
-          effectiveDate: today.date,
-        });
-
-        cy.loginAndSubmitPortalAmendmentRequestToUkef({
-          facilityValueExists: true,
-          changedFacilityValue: CHANGE_FACILITY_VALUE_2,
-          applicationDetailsUrl,
-          facilityId: facilityId2,
-          dealId,
-          effectiveDate: tomorrow.date,
-        });
-      });
+          return cy.makerLoginSubmitGefDealForReview(insertedDeal);
+        })
+        .then(() => cy.checkerLoginSubmitGefDealToUkef(insertedDeal))
+        .then(() => cy.clearSessionCookies())
+        .then(() =>
+          cy.loginAndSubmitPortalAmendmentRequestToUkef({
+            facilityValueExists: true,
+            changedFacilityValue: CHANGED_FACILITY_VALUE,
+            applicationDetailsUrl,
+            facilityId: facilityId1,
+            dealId,
+            effectiveDate: today.date,
+          }),
+        )
+        .then(() =>
+          cy.loginAndSubmitPortalAmendmentRequestToUkef({
+            facilityValueExists: true,
+            changedFacilityValue: CHANGE_FACILITY_VALUE_2,
+            applicationDetailsUrl,
+            facilityId: facilityId2,
+            dealId,
+            effectiveDate: tomorrow.date,
+          }),
+        );
     });
   });
 
