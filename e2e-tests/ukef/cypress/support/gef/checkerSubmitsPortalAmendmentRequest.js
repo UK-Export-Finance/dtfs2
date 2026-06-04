@@ -16,6 +16,9 @@ export const checkerSubmitsPortalAmendmentRequest = ({ amendmentDetailsUrl, subm
   cy.visit(relative(amendmentDetailsUrl));
   cy.url().should('eq', relative(amendmentDetailsUrl));
 
+  // Fail fast with a clear state mismatch message if the checker submit action points to an unexpected route.
+  cy.get('[data-cy="submit-button"]').should('have.attr', 'href', confirmSubmissionToUkefUrl);
+
   cy.clickSubmitButton();
   cy.url().should('eq', relative(confirmSubmissionToUkefUrl));
 

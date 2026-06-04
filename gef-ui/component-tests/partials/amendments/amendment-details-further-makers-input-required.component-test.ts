@@ -22,7 +22,7 @@ users.forEach((user) => {
       const banner = true;
       const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
       const submitAmendment = false;
-      const submitAmendmentToChecker = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitFacilityAmendmentToChecker = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -32,7 +32,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
-        submitAmendmentToChecker,
+        canSubmitFacilityAmendmentToChecker,
         previousPage,
         effectiveDate,
         banner,

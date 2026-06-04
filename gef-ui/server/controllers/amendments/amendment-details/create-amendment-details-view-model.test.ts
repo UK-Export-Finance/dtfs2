@@ -15,7 +15,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL).build();
     const userRoles = [ROLES.MAKER];
-    const submitAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+    const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -31,7 +31,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
       amendmentId: amendment.amendmentId,
       effectiveDate: '',
       banner,
-      submitAmendmentToChecker,
+      canSubmitFacilityAmendmentToChecker,
       previousPage: `/gef/application-details/${deal._id}`,
       amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
     };
@@ -43,7 +43,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build();
     const userRoles = [ROLES.MAKER];
-    const submitAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+    const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -59,7 +59,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
       amendmentId: amendment.amendmentId,
       effectiveDate: '',
       banner,
-      submitAmendmentToChecker,
+      canSubmitFacilityAmendmentToChecker,
       previousPage: `/gef/application-details/${deal._id}`,
       amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, true),
     };
@@ -73,7 +73,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL).build();
     const userRoles = [ROLES.CHECKER];
-    const submitAmendmentToChecker = false;
+    const canSubmitFacilityAmendmentToChecker = false;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -89,7 +89,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
       amendmentId: amendment.amendmentId,
       effectiveDate: '',
       banner,
-      submitAmendmentToChecker,
+      canSubmitFacilityAmendmentToChecker,
       previousPage: `/gef/application-details/${deal._id}`,
       amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
     };
@@ -101,7 +101,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build();
     const userRoles = [ROLES.CHECKER];
-    const submitAmendmentToChecker = false;
+    const canSubmitFacilityAmendmentToChecker = false;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -117,7 +117,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
       amendmentId: amendment.amendmentId,
       effectiveDate: '',
       banner,
-      submitAmendmentToChecker,
+      canSubmitFacilityAmendmentToChecker,
       previousPage: `/gef/application-details/${deal._id}`,
       amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
     };

@@ -28,7 +28,7 @@ export const createAmendmentDetailsViewModel = ({
   userRoles: string[];
   banner?: boolean;
 }): AmendmentDetailsViewModel => {
-  const submitAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+  const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
   return {
     userRoles,
@@ -40,8 +40,8 @@ export const createAmendmentDetailsViewModel = ({
     amendmentId: amendment.amendmentId,
     effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
     banner,
-    submitAmendmentToChecker,
+    canSubmitFacilityAmendmentToChecker,
     previousPage: `/gef/application-details/${deal._id}`,
-    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, submitAmendmentToChecker),
+    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, canSubmitFacilityAmendmentToChecker),
   };
 };

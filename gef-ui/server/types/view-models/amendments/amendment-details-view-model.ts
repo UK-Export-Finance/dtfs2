@@ -8,7 +8,7 @@ export type AmendmentDetailsViewModel = {
   dealId: string;
   facilityId: string;
   amendmentId: string;
-  submitAmendmentToChecker: boolean;
+  canSubmitFacilityAmendmentToChecker: boolean;
   previousPage: string;
   effectiveDate: string;
   banner?: boolean;
