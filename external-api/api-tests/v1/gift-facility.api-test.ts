@@ -142,7 +142,7 @@ describe('/gift', () => {
       nock.abortPendingRequests();
       nock.cleanAll();
 
-      nock(baseUrl).post(url).reply(HttpStatusCode.Created, mockApimTfsResponse);
+      nock(baseUrl).post(url).reply(HttpStatusCode.Created, {});
 
       // Act
       const response = await post(mockBody).to('/gift/facility');
