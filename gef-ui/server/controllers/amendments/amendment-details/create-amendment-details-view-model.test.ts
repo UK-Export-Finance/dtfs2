@@ -14,9 +14,8 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
   it(`should return the expected view model when portal amendment status is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL).build();
-    const userRoles: string[] = [ROLES.MAKER];
+    const userRoles = [ROLES.MAKER];
     const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-    const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -26,7 +25,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
       userRoles,
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
-      submitAmendment,
+      submitAmendment: false,
       dealId: deal._id,
       facilityId: facility._id,
       amendmentId: amendment.amendmentId,
@@ -43,9 +42,8 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
   it(`should return the expected view model when portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build();
-    const userRoles: string[] = [ROLES.MAKER];
+    const userRoles = [ROLES.MAKER];
     const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-    const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -55,7 +53,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.MAKER}`, () => {
       userRoles,
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
-      submitAmendment,
+      submitAmendment: false,
       dealId: deal._id,
       facilityId: facility._id,
       amendmentId: amendment.amendmentId,
@@ -74,9 +72,8 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
   it(`should return the expected view model when portal amendment status is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
     // Arrange
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL).build();
-    const userRoles: string[] = [ROLES.CHECKER];
+    const userRoles = [ROLES.CHECKER];
     const canSubmitFacilityAmendmentToChecker = false;
-    const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
     // Act
     const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -86,36 +83,7 @@ describe(`createAmendmentDetailsViewModel for user role ${ROLES.CHECKER}`, () =>
       userRoles,
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
-      submitAmendment,
-      dealId: deal._id,
-      facilityId: facility._id,
-      amendmentId: amendment.amendmentId,
-      effectiveDate: '',
-      banner,
-      canSubmitFacilityAmendmentToChecker,
-      previousPage: `/gef/application-details/${deal._id}`,
-      amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
-    };
-
-    expect(result).toEqual(expected);
-  });
-
-  it(`should return the expected view model when portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
-    // Arrange
-    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build();
-    const userRoles: string[] = [ROLES.CHECKER];
-    const canSubmitFacilityAmendmentToChecker = false;
-    const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
-
-    // Act
-    const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
-
-    // Assert
-    const expected = {
-      userRoles,
-      exporterName: deal.exporter.companyName,
-      facilityType: facility.type,
-      submitAmendment,
+      submitAmendment: true,
       dealId: deal._id,
       facilityId: facility._id,
       amendmentId: amendment.amendmentId,

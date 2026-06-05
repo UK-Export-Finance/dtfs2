@@ -29,20 +29,26 @@ export const createAmendmentDetailsViewModel = ({
   banner?: boolean;
 }): AmendmentDetailsViewModel => {
   const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-  const submitAmendment = userRoles.includes(ROLES.CHECKER) && amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+  const submitAmendment = userRoles.includes(ROLES.CHECKER);
+
+  const dealId = deal._id;
+  const facilityId = facility._id;
+
+  const effectiveDate = amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '';
+  const amendmentSummaryListParams = mapAmendmentToAmendmentSummaryListParams(amendment, facility, canSubmitFacilityAmendmentToChecker);
 
   return {
     userRoles,
     exporterName: deal.exporter.companyName,
     facilityType: facility.type,
     submitAmendment,
-    dealId: deal._id,
-    facilityId: facility._id,
+    dealId,
+    facilityId,
     amendmentId: amendment.amendmentId,
-    effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
+    effectiveDate,
     banner,
     canSubmitFacilityAmendmentToChecker,
-    previousPage: `/gef/application-details/${deal._id}`,
-    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, canSubmitFacilityAmendmentToChecker),
+    previousPage: `/gef/application-details/${dealId}`,
+    amendmentSummaryListParams,
   };
 };
