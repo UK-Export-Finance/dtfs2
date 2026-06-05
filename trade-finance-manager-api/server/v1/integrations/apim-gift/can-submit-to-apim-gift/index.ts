@@ -28,8 +28,6 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
 
   console.info('Checking if issued facilities for deal %s can be submitted to APIM GIFT', dealId);
 
-  const api = apiModule as ApiTypes;
-
   if (!isTfmApimGiftIntegrationEnabled()) {
     console.info('Issued facilities for deal %s cannot be submitted to APIM GIFT - feature flag disabled', dealId);
 
@@ -37,6 +35,8 @@ export const canSubmitToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacil
       canSubmitFacilitiesToApimGift: false,
     };
   }
+
+  const api = apiModule as ApiTypes;
 
   const { dealType, submissionType } = deal.dealSnapshot;
 
