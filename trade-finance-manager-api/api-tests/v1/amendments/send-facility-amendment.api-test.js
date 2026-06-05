@@ -1,5 +1,5 @@
 const { HttpStatusCode } = require('axios');
-const { canSendToAcbs, DEAL_TYPE, DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, DEAL_TYPE, DEAL_SUBMISSION_TYPE, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const api = require('../../../server/v1/api');
@@ -70,6 +70,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
 
     submitFacilityAmendmentsToApimGift.mockResolvedValue([HttpStatusCode.Accepted]);
     canSendToAcbs.mockReturnValue(true);
+    isTfmApimGiftIntegrationEnabled.mockReturnValue(true);
   });
 
   describe('when the amendment is ACBS-eligible', () => {
