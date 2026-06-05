@@ -34,8 +34,7 @@ context('2FA Journey - Successful login flow', () => {
     it('should successfully login and reach the application after entering the correct access code', () => {
       complete2faLogin();
 
-      cy.url().should('not.eq', relative('/login'));
-      cy.url().should('match', /\/(dashboard|deals|contracts)/);
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('should maintain the session after successful 2FA login', () => {

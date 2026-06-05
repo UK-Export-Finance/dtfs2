@@ -48,7 +48,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
-      errorSummary().find('a').should('have.text', 'Enter access code');
+      cy.assertText(errorSummary().find('a'), 'Enter access code');
       cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
@@ -59,7 +59,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitNewAccessCodePage();
       submitAccessCode(newAccessCode);
 
-      errorSummary().find('a').should('have.text', 'Enter access code');
+      cy.assertText(errorSummary().find('a'), 'Enter access code');
       cy.assertText(newAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/new-access-code'));
     });
@@ -70,7 +70,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitResendAnotherAccessCodePage();
       submitAccessCode(resendAnotherAccessCode);
 
-      errorSummary().find('a').should('have.text', 'Enter access code');
+      cy.assertText(errorSummary().find('a'), 'Enter access code');
       cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/resend-another-access-code'));
     });
