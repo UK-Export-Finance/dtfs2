@@ -198,7 +198,7 @@ export const create = async (req: Request, res: Response) => {
 
     const { status } = response;
 
-    if (status !== HttpStatusCode.Accepted) {
+    if (status !== HttpStatusCode.Accepted && status !== HttpStatusCode.Created) {
       return res.sendStatus(status);
     }
 

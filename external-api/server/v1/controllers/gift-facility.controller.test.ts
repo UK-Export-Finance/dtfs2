@@ -334,6 +334,41 @@ describe('create', () => {
     expect(mockResponse._getData()).toEqual(responseData);
   });
 
+  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
+    // Arrange
+    const mockFacilityId = '0000000002';
+    const requestBody = {
+      overview: {
+        facilityId: mockFacilityId,
+      },
+    };
+    const responseData = { facilityId: mockFacilityId };
+    mockRequest.body = requestBody;
+
+    jest.mocked(axios).mockResolvedValueOnce({
+      data: responseData,
+      status: HttpStatusCode.Created,
+    });
+
+    // Act
+    await create(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - create facility endpoint %s', mockFacilityId);
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ Successfully created GIFT facility %s', mockFacilityId);
+
+    expect(axios).toHaveBeenNthCalledWith(1, {
+      method: 'POST',
+      url: `${APIM_TFS_URL}v2/gift/facility`,
+      headers,
+      data: requestBody,
+    });
+
+    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
+    expect(mockResponse._getData()).toEqual(responseData);
+  });
+
   it(`should fallback to ${HttpStatusCode.InternalServerError} when axios throws without an HTTP response`, async () => {
     // Arrange
     const mockError = new Error('Mock network error');
@@ -366,7 +401,7 @@ describe('create', () => {
   });
 
   describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
-    it(`should forward non-${HttpStatusCode.Accepted} status`, async () => {
+    it(`should forward non-${HttpStatusCode.Accepted} and non-${HttpStatusCode.Created} status`, async () => {
       // Arrange
       const mockFacilityId = 'mock-facility-id';
       const mockAxiosError = {
