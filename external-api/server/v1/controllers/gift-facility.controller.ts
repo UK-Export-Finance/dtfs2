@@ -204,6 +204,10 @@ export const create = async (req: Request, res: Response) => {
 
     console.info('✅ Successfully created GIFT facility %s', facilityId);
 
+    if (status === HttpStatusCode.Created) {
+      return res.status(status).send();
+    }
+
     const responseData = 'data' in response ? response.data : undefined;
 
     return res.status(status).send(responseData);
