@@ -524,7 +524,7 @@ const sendFacilityAmendment = async (req, res) => {
 
       const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
-      if (!isTfmApimGiftIntegrationEnabled()) {
+      if (isTfmApimGiftIntegrationEnabled()) {
         console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
         const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });

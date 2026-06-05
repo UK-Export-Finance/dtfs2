@@ -323,12 +323,12 @@ describe('amendment.controller remaining exports', () => {
   });
 
   describe('sendFacilityAmendment', () => {
-    describe('when APIM/GIFT submission is allowed', () => {
+    describe('when APIM/GIFT submission is not allowed', () => {
       it(`should return ${HttpStatusCode.Ok} without calling APIM GIFT`, async () => {
         // Arrange
         const amendment = { amendmentId: mockAmendmentId, dealId: 'deal-1' };
 
-        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
         api.getAmendmentById.mockResolvedValue(amendment);
         api.findOneFacility.mockResolvedValue({ facilitySnapshot: { ukefFacilityId: '0030537688' }, _id: 'facility-1' });
         api.findOneDeal.mockResolvedValue({ tfm: {} });
@@ -344,12 +344,12 @@ describe('amendment.controller remaining exports', () => {
       });
     });
 
-    describe('when APIM/GIFT submission is not allowed', () => {
+    describe('when APIM/GIFT submission is allowed', () => {
       it(`should return ${HttpStatusCode.BadGateway} and not continue to ACBS submission`, async () => {
         // Arrange
         const amendment = { amendmentId: mockAmendmentId, dealId: 'deal-1' };
 
-        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
+        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
         api.getAmendmentById.mockResolvedValue(amendment);
         api.findOneFacility.mockResolvedValue({ facilitySnapshot: { ukefFacilityId: '0030537688' } });
         submitFacilityAmendmentsToApimGift.mockResolvedValue(false);

@@ -25,6 +25,7 @@ jest.mock('../../../server/v1/integrations/apim-gift/submit-facility-amendments-
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   canSendToAcbs: jest.fn(),
+  isTfmApimGiftIntegrationEnabled: jest.fn(() => true),
 }));
 
 describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () => {
@@ -131,7 +132,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
 
       // Assert
       expect(status).toEqual(HttpStatusCode.BadGateway);
-      expect(body).toEqual({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
+      expect(body).toEqual({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
       expect(acbsController.amendAcbsFacility).not.toHaveBeenCalled();
     });
   });
