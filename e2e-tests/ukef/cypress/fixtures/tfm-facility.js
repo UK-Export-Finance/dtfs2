@@ -11,7 +11,7 @@ const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 export const tfmFacilityForReport = {
   facilitySnapshot: {
     type: FACILITY_TYPE.CASH,
-    ukefFacilityId: '0000001372',
+    ukefFacilityId: '0000001371',
     value: 1000,
     coverStartDate: new Date().getTime(),
     coverEndDate: addMonths(new Date(), 5).getTime(),

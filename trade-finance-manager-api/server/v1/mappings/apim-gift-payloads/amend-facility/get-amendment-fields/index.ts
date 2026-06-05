@@ -14,8 +14,8 @@ type AmendmentFields = {
  * @returns {AmendmentFields} An object containing amount, cover end date and effective date values for APIM/GIFT payload construction.
  */
 export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): AmendmentFields => {
-  const newAmount = Number(amendment.value);
-  const previousAmount = Number(amendment.currentValue);
+  const newAmount = typeof amendment.value === 'number' ? amendment.value : Number.NaN;
+  const previousAmount = typeof amendment.currentValue === 'number' ? amendment.currentValue : Number.NaN;
 
   const coverEndDate =
     amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null ? getFormattedUTCDateString(Number(amendment.tfm.coverEndDate)) : '';

@@ -49,6 +49,66 @@ describe('getAmendmentFields', () => {
     });
   });
 
+  describe('when value is not a number', () => {
+    it('should return newAmount as NaN when value is undefined', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        value: undefined,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.newAmount).toBeNaN();
+    });
+
+    it('should return newAmount as NaN when value is null', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        value: null,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.newAmount).toBeNaN();
+    });
+  });
+
+  describe('when currentValue is not a number', () => {
+    it('should return previousAmount as NaN when currentValue is undefined', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        currentValue: undefined,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.previousAmount).toBeNaN();
+    });
+
+    it('should return previousAmount as NaN when currentValue is null', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        currentValue: null,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.previousAmount).toBeNaN();
+    });
+  });
+
   describe('when effectiveDate is not provided', () => {
     it('should return effectiveDate as an empty string', () => {
       // Arrange
