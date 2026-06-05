@@ -983,21 +983,21 @@ jobs:
       matrix:
         spec:
           [
-            # 'case/activities/*.spec.js',
-            # 'case/AIN/*.spec.js',
-            # 'case/deal-cancellation-disabled/*.spec.js',
-            # 'case/documents/*.spec.js',
-            # 'case/GEF/*.spec.js',
-            # 'case/MIA/*.spec.js',
-            # 'case/parties/*.spec.js',
-            # 'case/parties/agent/*.spec.js',
-            # 'case/parties/bond/*.spec.js',
-            # 'case/parties/buyer/*.spec.js',
-            # 'case/parties/exporter/*.spec.js',
-            # 'case/parties/indemnifier/*.spec.js',
-            # 'case/tasks/*.spec.js',
-            # 'case/tasks/AIN/*.spec.js',
-            # 'case/tasks/MIA/*.spec.js',
+            'case/activities/*.spec.js',
+            'case/AIN/*.spec.js',
+            'case/deal-cancellation-disabled/*.spec.js',
+            'case/documents/*.spec.js',
+            'case/GEF/*.spec.js',
+            'case/MIA/*.spec.js',
+            'case/parties/*.spec.js',
+            'case/parties/agent/*.spec.js',
+            'case/parties/bond/*.spec.js',
+            'case/parties/buyer/*.spec.js',
+            'case/parties/exporter/*.spec.js',
+            'case/parties/indemnifier/*.spec.js',
+            'case/tasks/*.spec.js',
+            'case/tasks/AIN/*.spec.js',
+            'case/tasks/MIA/*.spec.js',
             'case-amendments/add-bank-decision/*.spec.js',
             'case-amendments/add-underwriter-decision/*.spec.js',
             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -1013,15 +1013,15 @@ jobs:
             'case-amendments/underwriting-page-unassigned/*.spec.js',
             'case-amendments/user-flow/*.spec.js',
             'case-underwriting/**/*.spec.js',
-            # 'deals/**/*.spec.js',
-            # 'facility/**/*.spec.js',
-            # 'feedback/**/*.spec.js',
-            # 'footer/**/*.spec.js',
-            # 'header/**/*.spec.js',
-            # 'login/**/*.spec.js',
-            # 'users/**/*.spec.js',
-            # 'utilisation-reports/report-reconciliation/**/*.spec.js',
-            # 'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
+            'deals/**/*.spec.js',
+            'facility/**/*.spec.js',
+            'feedback/**/*.spec.js',
+            'footer/**/*.spec.js',
+            'header/**/*.spec.js',
+            'login/**/*.spec.js',
+            'users/**/*.spec.js',
+            'utilisation-reports/report-reconciliation/**/*.spec.js',
+            'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:
@@ -1197,7 +1197,7 @@ jobs:
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
-  # 7.2. E2E - UKEF - Mocked
+  #7.2. E2E - UKEF - Mocked
   e2e-tests-ukef-mocked-calls:
     name: E2E UKEF - MOCKED 👷
     needs: [setup]
