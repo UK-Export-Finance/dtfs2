@@ -24,11 +24,15 @@ type MapPartyUrnsParams = {
 export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsParams): PartyUrns => {
   const bankPartyUrn = String(deal.dealSnapshot.bank.partyUrn);
   const buyerPartyUrn = deal.tfm.parties.buyer?.partyUrn;
+  const exporterPartyUrn = deal.tfm.parties.exporter.partyUrn;
 
   if (isBssEwcsDeal) {
+    const bondBeneficiary = buyerPartyUrn != null && { bondBeneficiary: String(buyerPartyUrn) };
+
     const partyUrns = {
-      ...(buyerPartyUrn !== null && { bondBeneficiary: String(buyerPartyUrn) }),
+      ...bondBeneficiary,
       bondGiver: bankPartyUrn,
+      exporterPartyUrn,
     };
 
     return partyUrns;
@@ -37,10 +41,13 @@ export const mapPartyUrns = ({ deal, isBssEwcsDeal, isGefDeal }: MapPartyUrnsPar
   if (isGefDeal) {
     const partyUrns = {
       issuingBank: bankPartyUrn,
+      exporterPartyUrn,
     };
 
     return partyUrns;
   }
 
-  return {};
+  return {
+    exporterPartyUrn,
+  };
 };

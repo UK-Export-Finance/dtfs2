@@ -13,6 +13,7 @@ const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
  *     summary: Healthcheck endpoint to verify the service is running.
  *     tags: [Healthcheck]
  *     description: Returns the service status, uptime, current date, and commit hash.
+ *     security: []
  *     responses:
  *       200:
  *         description: Service is running and healthy.

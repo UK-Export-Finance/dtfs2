@@ -157,7 +157,7 @@ npm run pipeline
 From the respective folder (./e2e-tests/portal, ./e2e-tests/gef, ./e2e-tests/ukef,
 ./e2e-tests/tfm):
 
-#### Run an E2E Test Suite :heavy_check_mark:
+#### Run an E2E Test suite :heavy_check_mark:
 
 ```shell
 npx cypress run --config video=false
@@ -179,7 +179,7 @@ npx cypress open .
 
 From the respective folder (./portal-api, ./dtfs-central-api, ./trade-finance-manager-api):
 
-#### Run an API Test Suite :heavy_check_mark:
+#### Run an API Test suite :heavy_check_mark:
 
 ```shell
 npm run api-test
@@ -195,7 +195,7 @@ npm run api-test "**/*/deals-party-db.api-test.js"
 
 From the respective folder (./portal-ui, ./gef-ui, ./trade-finance-manager-ui):
 
-#### Run a UI Test Suite :heavy_check_mark:
+#### Run a UI Test suite :heavy_check_mark:
 
 ```shell
 npm run unit-test

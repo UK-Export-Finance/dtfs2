@@ -92,7 +92,13 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
 
       pages.loanFinancialDetails.currencyInput().should('be.visible');
+
       pages.loanFinancialDetails.currencyInput().should('not.contain', 'RUB'); // should not contain Russian Ruble
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'XAF'); // should not contain CFA Francs
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'HKD'); // should not contain Hong Kong Dollars
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'NGN'); // should not contain Nigerian Naira
+      pages.loanFinancialDetails.currencyInput().should('not.contain', 'ZMK'); // should not contain Zambian Kwacha
+
       pages.loanFinancialDetails.conversionRateInput().should('be.visible');
 
       pages.loanFinancialDetails.conversionRateDateDayInput().should('be.visible');

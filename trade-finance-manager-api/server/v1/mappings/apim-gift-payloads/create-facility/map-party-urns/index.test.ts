@@ -3,6 +3,7 @@ import { mapPartyUrns } from '.';
 
 describe('mapPartyUrns', () => {
   const mockBankPartyUrn = '00112233';
+  const mockExporterPartyUrn = '00778899';
 
   describe('when isBssEwcsDeal is true', () => {
     const isBssEwcsDeal = true;
@@ -22,6 +23,9 @@ describe('mapPartyUrns', () => {
             buyer: {
               partyUrn: mockBuyerPartyUrn,
             },
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
           },
         },
       } as TfmDeal;
@@ -37,13 +41,14 @@ describe('mapPartyUrns', () => {
       const expected = {
         bondBeneficiary: mockBuyerPartyUrn,
         bondGiver: mockBankPartyUrn,
+        exporterPartyUrn: mockExporterPartyUrn,
       };
 
       expect(result).toEqual(expected);
     });
 
     describe('when deal.tfm.parties.buyer.partyUrn is null', () => {
-      it('should return an object with bondBeneficiary as an empty string', () => {
+      it('should return an object without bondBeneficiary', () => {
         // Arrange
         const mockDeal = {
           dealSnapshot: {
@@ -54,11 +59,14 @@ describe('mapPartyUrns', () => {
           tfm: {
             parties: {
               buyer: {
-                partyUrn: '',
+                partyUrn: null,
+              },
+              exporter: {
+                partyUrn: mockExporterPartyUrn,
               },
             },
           },
-        } as TfmDeal;
+        } as unknown as TfmDeal;
 
         // Act
         const result = mapPartyUrns({
@@ -69,8 +77,46 @@ describe('mapPartyUrns', () => {
 
         // Assert
         const expected = {
-          bondBeneficiary: '',
           bondGiver: mockBankPartyUrn,
+          exporterPartyUrn: mockExporterPartyUrn,
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when deal.tfm.parties.buyer.partyUrn is undefined', () => {
+      it('should return an object without bondBeneficiary', () => {
+        // Arrange
+        const mockDeal = {
+          dealSnapshot: {
+            bank: {
+              partyUrn: mockBankPartyUrn,
+            },
+          },
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrn: undefined,
+              },
+              exporter: {
+                partyUrn: mockExporterPartyUrn,
+              },
+            },
+          },
+        } as unknown as TfmDeal;
+
+        // Act
+        const result = mapPartyUrns({
+          deal: mockDeal,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Assert
+        const expected = {
+          bondGiver: mockBankPartyUrn,
+          exporterPartyUrn: mockExporterPartyUrn,
         };
 
         expect(result).toEqual(expected);
@@ -91,7 +137,11 @@ describe('mapPartyUrns', () => {
           },
         },
         tfm: {
-          parties: {},
+          parties: {
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
+          },
         },
       } as TfmDeal;
 
@@ -105,6 +155,7 @@ describe('mapPartyUrns', () => {
       // Assert
       const expected = {
         issuingBank: mockBankPartyUrn,
+        exporterPartyUrn: mockExporterPartyUrn,
       };
 
       expect(result).toEqual(expected);
@@ -112,7 +163,7 @@ describe('mapPartyUrns', () => {
   });
 
   describe('when isBssEwcsDeal and isGefDeal are both false', () => {
-    it('should return an empty object', () => {
+    it('should return an object with exporterPartyUrn', () => {
       // Arrange
       const isBssEwcsDeal = false;
       const isGefDeal = false;
@@ -122,7 +173,11 @@ describe('mapPartyUrns', () => {
           bank: {},
         },
         tfm: {
-          parties: {},
+          parties: {
+            exporter: {
+              partyUrn: mockExporterPartyUrn,
+            },
+          },
         },
       } as unknown as TfmDeal;
 
@@ -134,7 +189,11 @@ describe('mapPartyUrns', () => {
       });
 
       // Assert
-      expect(result).toEqual({});
+      const expected = {
+        exporterPartyUrn: mockExporterPartyUrn,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 });

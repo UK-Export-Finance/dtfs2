@@ -38,7 +38,6 @@ export const createMockDataUser = async (user: PortalUser & { password: string }
     return true;
   } catch (error) {
     throw new Error(`Failed to create mock data user ${user.username} ${String(error)}`);
-    return false;
   }
 };
 

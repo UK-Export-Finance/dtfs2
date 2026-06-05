@@ -1,6 +1,7 @@
 const axios = require('axios');
+const path = require('path');
 const { HEADERS } = require('@ukef/dtfs2-common');
-require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const { gef } = require('./gef/api');
 const { createMockDataUser, createLoggedInUserSession } = require('./database/user-repository');

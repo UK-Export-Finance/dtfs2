@@ -52,6 +52,18 @@ module.exports = {
       return users.findOne({ username: { $eq: username } });
     };
 
+    /**
+     * Updates a portal user document by username for E2E setup/teardown.
+     *
+     * This is used by tests that need to temporarily adjust a seeded user's
+     * role or other simple fields without going through the UI.
+     */
+    const updatePortalUserByUsername = async ({ username, update }) => {
+      const users = await getUsersCollection();
+
+      return users.updateOne({ username: { $eq: username } }, { $set: update });
+    };
+
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
       const saltValue = crypto.randomBytes(64);
@@ -104,6 +116,20 @@ module.exports = {
     };
 
     /**
+     * Override the user's signInOTPSendCount in the DB for E2E tests.
+     *
+     * Note: the app computes attempts remaining as
+     * `MAX_SIGN_IN_ATTEMPTS - signInOTPSendCount` and increments the DB
+     * count before calculating remaining. Specs in this suite set `count`
+     * directly when calling this task. To derive a `count` that yields a
+     * desired `attemptsLeft`, use: `count = MAX_SIGN_IN_ATTEMPTS - 1 - attemptsLeft`.
+     */
+    const overridePortalUserSignInOTPSendCount = async ({ username, count }) => {
+      const users = await getUsersCollection();
+      return users.updateOne({ username: { $eq: username } }, { $set: { signInOTPSendCount: count } });
+    };
+
+    /**
      * overrides portal user's generated OTP with a mocked valid OTP to allow tests to bypass the need to retrieve the OTP from email
      * generates a salt and hash hex for the OTP and adds an expiry
      * inserts the OTP details into the user's record in the database
@@ -121,6 +147,36 @@ module.exports = {
       const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
 
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+            signInTokens: [{ hashHex, saltHex, expiry }],
+          },
+        },
+      );
+    };
+
+    /**
+     * Overrides portal user's generated OTP with an expired token for testing expiry flow.
+     * Sets the expiry timestamp to 31 minutes in the past (beyond the 30-minute OTP duration).
+     * This allows E2E tests to verify that the application correctly detects and handles expired OTPs.
+     */
+    const overridePortalUserSignInOTPWithExpiredToken = async ({ username }) => {
+      const users = await getUsersCollection();
+
+      const thirtyOneMinutesInMilliseconds = 31 * 60 * 1000;
+      const stringType = HEX_STRING_TYPE;
+
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
+      const expiry = Date.now() - thirtyOneMinutesInMilliseconds;
 
       return users.updateOne(
         { username: { $eq: username } },
@@ -372,9 +428,12 @@ module.exports = {
       log,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
+      updatePortalUserByUsername,
+      overridePortalUserSignInOTPSendCount,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
       overridePortalUserSignInOTPWithValidTokenByUsername,
+      overridePortalUserSignInOTPWithExpiredToken,
       resetPortalUserStatusAndNumberOfSignInLinks,
       resetPortalUserStatusAndNumberOfSignInOTPs,
       disablePortalUserByUsername,

@@ -166,6 +166,10 @@ export type TfmFacilityObject = {
   riskProfile?: string;
 };
 
+export type TfmFacilitySnapshot = Facility & {
+  guaranteeFeePayableToUkef?: string;
+};
+
 /**
  * Type of the mongo db "tfm-facilities" collection
  *
@@ -174,7 +178,7 @@ export type TfmFacilityObject = {
  */
 export type TfmFacility = {
   _id: ObjectId;
-  facilitySnapshot: Facility;
+  facilitySnapshot: TfmFacilitySnapshot;
   amendments?: FacilityAmendment[];
   tfm: TfmFacilityObject;
   auditRecord?: AuditDatabaseRecord;

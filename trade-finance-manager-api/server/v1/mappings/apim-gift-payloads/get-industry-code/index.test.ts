@@ -11,7 +11,7 @@ describe('getIndustryCode', () => {
         dealSnapshot: {
           dealType: DEAL_TYPE.BSS_EWCS,
           submissionDetails: {
-            'industry-sector': {
+            'industry-class': {
               code: expectedIndustryCode,
             },
           },
@@ -32,7 +32,7 @@ describe('getIndustryCode', () => {
           dealSnapshot: {
             dealType: DEAL_TYPE.BSS_EWCS,
             submissionDetails: {
-              'industry-sector': {},
+              'industry-class': {},
             },
           },
         } as TfmDeal;

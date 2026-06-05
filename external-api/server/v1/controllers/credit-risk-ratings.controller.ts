@@ -55,7 +55,7 @@ export const findAll = async (req: Request, res: Response) => {
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Credit Risk Ratings API, %o', error);
+      console.error('Error calling Credit Risk Ratings API %o', error);
       return {
         data: error.response?.data,
         status: error.response?.status,

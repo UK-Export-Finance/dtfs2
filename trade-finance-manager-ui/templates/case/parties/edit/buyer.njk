@@ -12,19 +12,20 @@
 {% block content %}
 
   {{ back.render({
-      return: "/case/" + deal._id + "/parties"
+    return: "/case/" + deal._id + "/parties"
   }) }}
 
   <form autocomplete="off" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
     {{ buyerArea.render({
-        deal: deal,
-        tfm: tfm,
-        userCanEdit: userCanEdit,
-        renderEditForm: renderEditForm,
-        errors: errors,
-        urn: urn
-      }) }}
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditForm: renderEditForm,
+      errors: errors,
+      urn: urn
+    }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">

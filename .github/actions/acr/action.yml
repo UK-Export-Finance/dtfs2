@@ -36,7 +36,7 @@ runs:
 
     # Step 2: Log in to Azure.
     - name: Azure 🔐
-      uses: azure/login@v2
+      uses: azure/login@v3
       with:
         creds: ${{ inputs.credentials }}
 
