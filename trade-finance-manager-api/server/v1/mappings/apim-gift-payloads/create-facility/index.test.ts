@@ -99,8 +99,6 @@ describe('createFacility', () => {
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       accrualSchedules: mapAccrualSchedules({
-        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
-        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
@@ -114,17 +112,13 @@ describe('createFacility', () => {
           isBssEwcsDeal,
           isGefDeal,
         }),
-        startDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
-        exitDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
-        effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         isBssEwcsDeal,
         facilityType: facilitySnapshot.type,
         isGefDeal,
-        maturityDate: String(tfm.facilityGuaranteeDates?.guaranteeExpiryDate),
         ukefExposure: Number(tfm.ukefExposure),
       }),
       riskDetails: await mapRiskDetails({
