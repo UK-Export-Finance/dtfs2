@@ -129,6 +129,22 @@ describe('canSubmitToApimGift', () => {
         expect(mockApi.findFacilitiesByDealId).toHaveBeenNthCalledWith(1, mockDeal._id);
       });
 
+      it('should call api.findGiftFacilitiesByIds with the expected query string', async () => {
+        // Arrange
+        const expectedQueryString = [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId].join(',');
+
+        mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1]);
+        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(expectedQueryString);
+        mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
+        mockMapFacilitiesToSendToGift.mockReturnValueOnce({ facilitiesToSendToApimGift: [mockTfmIssuedFacility1] });
+
+        // Act
+        await canSubmitToApimGift(mockDeal);
+
+        // Assert
+        expect(mockApi.findGiftFacilitiesByIds).toHaveBeenNthCalledWith(1, expectedQueryString);
+      });
+
       describe('when issued facilities are not in GIFT', () => {
         it('should return canSubmitFacilitiesToApimGift as true', async () => {
           // Arrange
