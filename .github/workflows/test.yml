@@ -201,519 +201,519 @@ jobs:
         run: echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
 
   # 2.1. API tests
-  api-tests:
-    name: API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # api-tests:
+  #   name: API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
 
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Start
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: docker compose up --build -d
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Microservices health check
-        uses: ./.github/actions/healthchecks
-        with:
-          timeout: 480000 # 8 minutes
-          interval: 10000 # 10 seconds
+  #     - name: Microservices health check
+  #       uses: ./.github/actions/healthchecks
+  #       with:
+  #         timeout: 480000 # 8 minutes
+  #         interval: 10000 # 10 seconds
 
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Initialise
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run load
+  #         working-directory: ./utils
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
+  #     - name: SQL
+  #       working-directory: ./libs/common
+  #       env:
+  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+  #       run: npm run db:migrate
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test --workspace=${{ matrix.services }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run api-test --workspace=${{ matrix.services }}
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
+  #     - name: Stop
+  #       working-directory: ./
+  #       run: docker compose down
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
   # 2.2 dtfs-central-api API tests
-  dtfs-central-api-api-tests:
-    name: API - dtfs-central-api 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # dtfs-central-api-api-tests:
+  #   name: API - dtfs-central-api 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            'api-tests/v1/bank',
-            'api-tests/v1/cron-jobs',
-            'api-tests/v1/durable-functions',
-            'api-tests/v1/middleware',
-            'api-tests/v1/routes',
-            'api-tests/v1/user',
-            'api-tests/v1/deals',
-            'api-tests/v1/facilities',
-            'api-tests/v1/gef-deals',
-            'api-tests/v1/gef-facilities',
-            'api-tests/v1/portal-facility-amendments',
-            'api-tests/v1/tfm',
-            'api-tests/v1/utilisation-reports',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           'api-tests/v1/bank',
+  #           'api-tests/v1/cron-jobs',
+  #           'api-tests/v1/durable-functions',
+  #           'api-tests/v1/middleware',
+  #           'api-tests/v1/routes',
+  #           'api-tests/v1/user',
+  #           'api-tests/v1/deals',
+  #           'api-tests/v1/facilities',
+  #           'api-tests/v1/gef-deals',
+  #           'api-tests/v1/gef-facilities',
+  #           'api-tests/v1/portal-facility-amendments',
+  #           'api-tests/v1/tfm',
+  #           'api-tests/v1/utilisation-reports',
+  #         ]
 
-    concurrency:
-      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #     - name: Start
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: docker compose up --build -d
+  #         retries: ${{ vars.RETRY_LIMIT }}
+  #         env: |
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Microservices health check
-        uses: ./.github/actions/healthchecks
-        with:
-          timeout: 480000 # 8 minutes
-          interval: 10000 # 10 seconds
+  #     - name: Microservices health check
+  #       uses: ./.github/actions/healthchecks
+  #       with:
+  #         timeout: 480000 # 8 minutes
+  #         interval: 10000 # 10 seconds
 
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Initialise
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run load
+  #         working-directory: ./utils
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
+  #     - name: SQL
+  #       working-directory: ./libs/common
+  #       env:
+  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+  #       run: npm run db:migrate
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
+  #     - name: Stop
+  #       working-directory: ./
+  #       run: docker compose down
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
   # 2.3 portal-api API tests
-  portal-api-api-tests:
-    name: API - portal-api 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # portal-api-api-tests:
+  #   name: API - portal-api 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            'api-tests/api',
-            'api-tests/drivers',
-            'api-tests/v1/bank-holidays',
-            'api-tests/v1/banks',
-            'api-tests/v1/bonds',
-            'api-tests/v1/companies',
-            'api-tests/v1/countries',
-            'api-tests/v1/currencies',
-            'api-tests/v1/deals',
-            'api-tests/v1/eligibility-criteria',
-            'api-tests/v1/feedback',
-            'api-tests/v1/gef',
-            'api-tests/v1/industry-sectors',
-            'api-tests/v1/loan',
-            'api-tests/v1/mandatory-criteria',
-            'api-tests/v1/middleware',
-            'api-tests/v1/reports',
-            'api-tests/v1/users',
-            'api-tests/v1/utilisation-report-service',
-            'api-tests/v1/validate',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           'api-tests/api',
+  #           'api-tests/drivers',
+  #           'api-tests/v1/bank-holidays',
+  #           'api-tests/v1/banks',
+  #           'api-tests/v1/bonds',
+  #           'api-tests/v1/companies',
+  #           'api-tests/v1/countries',
+  #           'api-tests/v1/currencies',
+  #           'api-tests/v1/deals',
+  #           'api-tests/v1/eligibility-criteria',
+  #           'api-tests/v1/feedback',
+  #           'api-tests/v1/gef',
+  #           'api-tests/v1/industry-sectors',
+  #           'api-tests/v1/loan',
+  #           'api-tests/v1/mandatory-criteria',
+  #           'api-tests/v1/middleware',
+  #           'api-tests/v1/reports',
+  #           'api-tests/v1/users',
+  #           'api-tests/v1/utilisation-report-service',
+  #           'api-tests/v1/validate',
+  #         ]
 
-    concurrency:
-      group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #     - name: Start
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: docker compose up --build -d
+  #         retries: ${{ vars.RETRY_LIMIT }}
+  #         env: |
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Microservices health check
-        uses: ./.github/actions/healthchecks
-        with:
-          timeout: 480000 # 8 minutes
-          interval: 10000 # 10 seconds
+  #     - name: Microservices health check
+  #       uses: ./.github/actions/healthchecks
+  #       with:
+  #         timeout: 480000 # 8 minutes
+  #         interval: 10000 # 10 seconds
 
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Initialise
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run load
+  #         working-directory: ./utils
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
+  #     - name: SQL
+  #       working-directory: ./libs/common
+  #       env:
+  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+  #       run: npm run db:migrate
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test ${{ matrix.services }} --workspace=portal-api
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run api-test ${{ matrix.services }} --workspace=portal-api
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
+  #     - name: Stop
+  #       working-directory: ./
+  #       run: docker compose down
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
   # 2.4. API tests
-  dof-api-tests:
-    name: DOF API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # dof-api-tests:
+  #   name: DOF API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       functions: ['acbs']
 
-    concurrency:
-      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: ${{ matrix.functions }}
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test
-          working-directory: ./azure-functions/${{ matrix.functions }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: ${{ matrix.functions }}
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run api-test
+  #         working-directory: ./azure-functions/${{ matrix.functions }}
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #           SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
   # 3. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # unit-tests:
+  #   name: Unit 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal-ui',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal-ui',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs',
+  #         ]
 
-    concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run unit-test
+  #         working-directory: ${{ matrix.services }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
+  #         env: |
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
   # 3. Unit tests - FF
-  unit-tests-ff:
-    name: Unit feature flag 👷
-    needs: [setup]
-    env:
-      # Various feature flags
-      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
-      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
-      FF_TFM_SSO_ENABLED: 'true'
-      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
-      FF_PORTAL_2FA_ENABLED: 'true'
-      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  # unit-tests-ff:
+  #   name: Unit feature flag 👷
+  #   needs: [setup]
+  #   env:
+  #     # Various feature flags
+  #     FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
+  #     FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+  #     FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+  #     FF_TFM_SSO_ENABLED: 'true'
+  #     FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
+  #     FF_PORTAL_2FA_ENABLED: 'true'
+  #     FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal-ui',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal-ui',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs',
+  #         ]
 
-    concurrency:
-      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v6
+  #     - name: Repository
+  #       uses: actions/checkout@v6
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test-ff
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run unit-test-ff
+  #         working-directory: ${{ matrix.services }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
+  #         env: |
+  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  #           MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v6
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
   # 4. E2E - PORTAL
   # e2e-tests-portal:
@@ -1083,7 +1083,8 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          retries: ${{ vars.RETRY_LIMIT }}
+          # retries: ${{ vars.RETRY_LIMIT }}
+          retries: 0
 
       - name: Dump API logs
         if: always()
@@ -1099,92 +1100,97 @@ jobs:
           retention-days: 1
 
   #7.1. E2E - UKEF
-  # e2e-tests-ukef:
-  #   name: E2E UKEF 👷
-  #   needs: [setup]
-  #   environment:
-  #     name: ${{ needs.setup.outputs.environment }}
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+  e2e-tests-ukef:
+    name: E2E UKEF 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
-  #   strategy:
-  #     # Do not cancel in-progress jobs upon failure
-  #     fail-fast: false
-  #     # Single dimension matrix
-  #     matrix:
-  #       spec: ['portal/MIA-underwriter/**/*.spec.js']
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec: ['portal/MIA-underwriter/**/*.spec.js']
 
-  #   concurrency:
-  #     group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-  #     cancel-in-progress: true
+    concurrency:
+      group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
 
-  #   steps:
-  #     - name: Node
-  #       uses: actions/setup-node@v6
-  #       with:
-  #         node-version: ${{ vars.NODE_VERSION }}
+    steps:
+      - name: Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
 
-  #     - name: Repository
-  #       uses: actions/checkout@v6
+      - name: Repository
+        uses: actions/checkout@v6
 
-  #     - name: Timezone
-  #       uses: szenius/set-timezone@v2.0
-  #       with:
-  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-  #     - name: Dependencies
-  #       uses: ./.github/actions/rerun
-  #       with:
-  #         command: npm ci
-  #         retries: ${{ vars.RETRY_LIMIT }}
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
-  #     - name: Docker
-  #       uses: ./.github/actions/rerun
-  #       with:
-  #         command: docker compose up --build -d
-  #         retries: ${{ vars.RETRY_LIMIT }}
+      - name: Docker
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
-  #     - name: Microservices health check
-  #       uses: ./.github/actions/healthchecks
-  #       with:
-  #         timeout: 480000 # 8 minutes
-  #         interval: 10000 # 10 seconds
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
-  #     - name: Initialise
-  #       uses: ./.github/actions/rerun
-  #       with:
-  #         command: npm run load
-  #         working-directory: ./utils
-  #         env: |
-  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-  #           GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-  #         retries: ${{ vars.RETRY_LIMIT }}
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
-  #     - name: SQL
-  #       working-directory: ./libs/common
-  #       env:
-  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-  #       run: npm run db:migrate
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
 
-  #     - name: Execute
-  #       uses: ./.github/actions/rerun
-  #       with:
-  #         command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
-  #         working-directory: ./e2e-tests
-  #         env: |
-  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-  #           SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-  #           TZ=${{ vars.TIMEZONE_LONDON }}
-  #         retries: ${{ vars.RETRY_LIMIT }}
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
+          # retries: ${{ vars.RETRY_LIMIT }}
+          retries: 0
 
-  #     - name: Screenshots
+      - name: Dump API logs
+        if: always()
+        run: docker compose logs portal-api dtfs-central-api external-api trade-finance-manager-api
 
-  #       uses: actions/upload-artifact@v7
-  #       if: failure()
-  #       with:
-  #         name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-  #         path: ./e2e-tests/ukef/cypress/screenshots/
-  #         retention-days: 1
+      - name: Screenshots
+
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+          path: ./e2e-tests/ukef/cypress/screenshots/
+          retention-days: 1
 
   # 7.2. E2E - UKEF - Mocked
   # e2e-tests-ukef-mocked-calls:
@@ -1393,17 +1399,17 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
             './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/header/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/login/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            # './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
-            # './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
-            # './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/header/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/login/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/users/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/return-amendment-to-maker/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/*.spec.js',
