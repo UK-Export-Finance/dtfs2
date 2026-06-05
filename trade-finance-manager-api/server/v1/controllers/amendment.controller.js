@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
@@ -514,7 +514,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
 const sendFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
 
-  console.info('Sending facility amendment %s to ACBS and APIM GIFT for facility %s', amendmentId, facilityId);
+  console.info('Sending facility amendment %s to ACBS and/or APIM GIFT for facility %s', amendmentId, facilityId);
 
   try {
     if (amendmentId && facilityId) {
@@ -524,10 +524,14 @@ const sendFacilityAmendment = async (req, res) => {
 
       const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
-      const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+      if (!isTfmApimGiftIntegrationEnabled()) {
+        console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
-      if (!sentToApimGift) {
-        throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+        const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+
+        if (!sentToApimGift) {
+          throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+        }
       }
 
       await submitToAcbs(amendment, facility, ukefFacilityId);
@@ -535,12 +539,12 @@ const sendFacilityAmendment = async (req, res) => {
       return res.status(HttpStatusCode.Ok).send();
     }
   } catch (error) {
-    console.error('Unable to send facility amendment %s to ACBS and APIM GIFT for facility %s %o', amendmentId, facilityId, error);
+    console.error('Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s %o', amendmentId, facilityId, error);
 
-    return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
+    return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
   }
 
-  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to send facility amendment to ACBS and APIM GIFT' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
 };
 
 module.exports = {
