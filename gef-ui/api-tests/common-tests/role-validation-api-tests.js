@@ -17,6 +17,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
   verify: jest.fn((req, res, next) => next()),
 }));
 
+const { HttpStatusCode } = require('axios');
 const { ROLES } = require('../../server/constants');
 const storage = require('../test-helpers/storage/storage');
 
@@ -86,7 +87,7 @@ const withRoleValidationApiTests = ({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
           });
 
-          expect(response.status).toEqual(302);
+          expect(response.status).toEqual(HttpStatusCode.Found);
           expect(response.headers.location).toEqual(redirectUrlForInvalidRoles);
         });
       });
