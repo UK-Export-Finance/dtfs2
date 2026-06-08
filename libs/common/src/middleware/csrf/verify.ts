@@ -1,8 +1,16 @@
-import crypto from 'crypto';
-import { Response, NextFunction } from 'express';
-import { getEpochMs } from '../../helpers/date';
-import { CustomExpressRequest } from '../../types';
-import { CSRF, SSO_URL } from '../../constants';
+import { Request, Response, NextFunction } from 'express';
+import { csrfSync } from 'csrf-sync';
+import { isHttpError } from 'http-errors';
+import { HttpStatusCode } from 'axios';
+import { CSRF, SSO_URL, SSO_URL_FORM } from '../../constants';
+
+const INVALID_CSRF_TOKEN_ERROR_CODE = 'EBADCSRFTOKEN';
+
+const CSRF_TOKEN_BODY_PROPERTY_NAME = '_csrf';
+
+const { csrfSynchronisedProtection } = csrfSync({
+  getTokenFromRequest: (req: Request) => (req.body as Record<string, unknown>)?.[CSRF_TOKEN_BODY_PROPERTY_NAME] as string | undefined,
+});
 
 /**
  * Middleware to verify CSRF tokens for an incoming requests.
@@ -15,16 +23,12 @@ import { CSRF, SSO_URL } from '../../constants';
  * If the token is missing, expired, or invalid, the middleware responds with an Unauthorized status.
  * Otherwise, it calls the next middleware in the stack.
  *
- * @param req - The custom Express request object, containing session, query, and body.
+ * @param req - The Express request object.
  * @param res - The Express response object.
  * @param next - The next middleware function.
  * @returns void or a Response with Unauthorized status if verification fails.
  */
-export const verify = (
-  req: CustomExpressRequest<{ query: { _csrf?: string }; reqBody: { _csrf: string } }>,
-  _res: Response,
-  next: NextFunction,
-): void | Response => {
+export const verify = (req: Request, res: Response, next: NextFunction): void | Response => {
   if (!req?.session) {
     throw new Error('Session has not been initialised.');
   }
@@ -38,69 +42,23 @@ export const verify = (
    * as the request is initiated by an external identity provider
    * This allows users to be redirected back to the application after authentication without encountering CSRF verification errors.
    */
-  if (req.originalUrl.includes(SSO_URL)) {
+  if (req.path === SSO_URL || req.path === SSO_URL_FORM) {
     return next();
   }
 
-  const isCsrfQuery = req.query?._csrf && !req.body?._csrf;
+  return csrfSynchronisedProtection(req, res, (error?: unknown) => {
+    /*
+     * Strip the CSRF token after checking (whether validated or not) to avoid downstream validation issues and
+     * unintentional forwarding (e.g. to the API).
+     */
+    if (req.body && typeof req.body === 'object') {
+      delete (req.body as Record<string, unknown>)[CSRF_TOKEN_BODY_PROPERTY_NAME];
+    }
 
-  /**
-   * Move CSRF token from query to body for file upload
-   */
-  if (isCsrfQuery) {
-    req.body = {
-      ...req.body,
-      _csrf: req.query._csrf as string,
-    };
-  }
+    if (isHttpError(error) && error.code === INVALID_CSRF_TOKEN_ERROR_CODE) {
+      return res.status(HttpStatusCode.Forbidden).send('Invalid CSRF token.');
+    }
 
-  // Server secret
-  const secret = req.session.csrf;
-
-  // CSRF token or secret is void
-  if (!secret) {
-    throw new Error('Invalid CSRF secret.');
-  }
-
-  // Client token
-  const token = req.body._csrf;
-
-  if (!token) {
-    throw new Error('Invalid CSRF token.');
-  }
-
-  const [clientHash, timestamp] = token.split(':');
-  const past = parseInt(String(timestamp), 10);
-
-  // If an invalid CSRF token has been received
-  if (!clientHash || !timestamp || Number.isNaN(past)) {
-    throw new Error('Invalid token has been received.');
-  }
-
-  const now = getEpochMs();
-  const age = now - past;
-
-  /**
-   * Token age validation.
-   *
-   * If the token was generated over 60 minutes ago
-   * then mark the token as stale and send an unauthorised response.
-   */
-  if (age > CSRF.TOKEN.MAX_AGE) {
-    throw new Error('CSRF token is either invalid or has expired.');
-  }
-
-  const serverHash = crypto.createHmac(CSRF.TOKEN.ALGORITHM, secret).update(timestamp).digest('hex');
-  const clientBuffer = Buffer.from(clientHash, 'hex') as unknown as Uint8Array;
-  const serverBuffer = Buffer.from(serverHash, 'hex') as unknown as Uint8Array;
-
-  const equalLength = clientHash.length === serverHash.length;
-  const equalBuffer = crypto.timingSafeEqual(clientBuffer, serverBuffer);
-  const valid = equalLength && equalBuffer;
-
-  if (!valid) {
-    throw new Error('Invalid CSRF token has been supplied.');
-  }
-
-  return next();
+    return next(error);
+  });
 };

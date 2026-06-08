@@ -1,29 +1,28 @@
 import httpMocks, { RequestMethod } from 'node-mocks-http';
-import crypto from 'crypto';
+import { Request, Response } from 'express';
+import createHttpError from 'http-errors';
+import { HttpStatusCode } from 'axios';
+import { csrfSync } from 'csrf-sync';
 import { verify } from './verify';
-import { CSRF } from '../../constants';
-import { getEpochMs } from '../../helpers/date';
+import { CSRF, SSO_URL, SSO_URL_FORM } from '../../constants';
 
-jest.mock('crypto');
+type CsrfCallback = (error?: unknown) => void;
+
+jest.mock('csrf-sync', () => {
+  const mockFn = jest.fn();
+  return {
+    csrfSync: () => ({
+      csrfSynchronisedProtection: mockFn,
+    }),
+  };
+});
+
+const { csrfSynchronisedProtection: mockCsrfSynchronisedProtection } = csrfSync({
+  getTokenFromRequest: () => '',
+}) as unknown as { csrfSynchronisedProtection: jest.Mock<void, [Request, Response, CsrfCallback]> };
 
 describe('verify', () => {
   const next = jest.fn();
-  const now = getEpochMs();
-  const oneHourAgo = now - CSRF.TOKEN.MAX_AGE;
-
-  const UNSAFE_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE', 'TRACE', 'CONNECT'];
-  const invalidTokens = [':', 'ABCD:', ':0', 'ABCD:ABCD', ' ', 'TAMPERED'];
-  const expiredEpochs = [0, 1, oneHourAgo];
-
-  beforeEach(() => {
-    const mockHash = {
-      update: jest.fn().mockReturnThis(),
-      digest: jest.fn().mockReturnValue('ABCD'),
-    };
-
-    (crypto.createHmac as jest.Mock).mockReturnValue(mockHash);
-    (crypto.timingSafeEqual as jest.Mock).mockReturnValueOnce(true);
-  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -42,16 +41,14 @@ describe('verify', () => {
 
     // Assert
     expect(next).not.toHaveBeenCalled();
-    expect(crypto.createHmac).not.toHaveBeenCalled();
+    expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
-  it.each(CSRF.VERIFY.SAFE.HTTP_METHODS)('should return next and not call HMAC if HTTP method is %s', (method) => {
+  it.each(CSRF.VERIFY.SAFE.HTTP_METHODS)('should call next without CSRF verification if HTTP method is %s', (method) => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
       method: method as RequestMethod,
-      session: {
-        csrf: '1234',
-      },
+      session: {},
     });
 
     // Act
@@ -59,17 +56,15 @@ describe('verify', () => {
 
     // Assert
     expect(next).toHaveBeenCalledTimes(1);
-    expect(crypto.createHmac).not.toHaveBeenCalled();
+    expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
-  it('should return next and not call HMAC if the request URL includes the SSO redirect URL', () => {
+  it(`should call next without CSRF verification if the request path matches the ${SSO_URL} redirect URL`, () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
       method: 'POST',
-      session: {
-        csrf: '1234',
-      },
-      originalUrl: '/auth/sso-redirect?code=1234',
+      session: {},
+      path: SSO_URL,
     });
 
     // Act
@@ -77,157 +72,151 @@ describe('verify', () => {
 
     // Assert
     expect(next).toHaveBeenCalledTimes(1);
-    expect(crypto.createHmac).not.toHaveBeenCalled();
+    expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
-  it('should copy CSRF from query to body, when supplied in req.query', () => {
+  it(`should call next without CSRF verification if the request path matches the ${SSO_URL_FORM} redirect URL`, () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
       method: 'POST',
-      session: {
-        csrf: '1234',
-      },
-      query: {
-        _csrf: `ABCD:${now}`,
-      },
+      session: {},
+      path: SSO_URL_FORM,
     });
 
     // Act
     verify(req, res, next);
 
     // Assert
-    expect(req.body).toEqual({
-      _csrf: `ABCD:${now}`,
-    });
-
     expect(next).toHaveBeenCalledTimes(1);
-
-    expect(crypto.createHmac).toHaveBeenCalledTimes(1);
-    expect(crypto.createHmac).toHaveBeenLastCalledWith('SHA512', '1234');
+    expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
-  it('should throw an error if there is no CSRF session secret', () => {
+  it('should call csrfSynchronisedProtection for all other methods', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
       method: 'POST',
       session: {},
       body: {
-        _csrf: `ABCD:${now}`,
+        _csrf: 'token-value',
       },
     });
 
-    // Act + Assert
-    expect(() => verify(req, res, next)).toThrow('Invalid CSRF secret.');
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
+    // Act
+    verify(req, res, next);
 
     // Assert
-    expect(next).toHaveBeenCalledTimes(0);
-    expect(crypto.createHmac).toHaveBeenCalledTimes(0);
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledTimes(1);
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledWith(req, res, expect.any(Function));
   });
 
-  it('should throw an error if there is no CSRF client token', () => {
+  it('should strip the _csrf token from the body after successful verification', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
-      method: 'PUT',
-      session: {
-        csrf: '1234',
-      },
-    });
-
-    // Act + Assert
-    expect(() => verify(req, res, next)).toThrow('Invalid CSRF token.');
-
-    // Assert
-    expect(next).toHaveBeenCalledTimes(0);
-    expect(crypto.createHmac).toHaveBeenCalledTimes(0);
-  });
-
-  it.each(invalidTokens)('should throw an error if the client token is `%s`', (token) => {
-    // Arrange
-    const { req, res } = httpMocks.createMocks({
-      method: 'PATCH',
-      session: {
-        csrf: '1234',
-      },
+      method: 'POST',
+      session: {},
       body: {
-        _csrf: token,
+        _csrf: 'token-value',
+        otherField: 'value',
       },
     });
 
-    // Act + Assert
-    expect(() => verify(req, res, next)).toThrow('Invalid token has been received.');
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
+    // Act
+    verify(req, res, next);
 
     // Assert
-    expect(next).toHaveBeenCalledTimes(0);
-    expect(crypto.createHmac).toHaveBeenCalledTimes(0);
+    expect((req.body as Record<string, unknown>)._csrf).toBeUndefined();
+    expect((req.body as Record<string, unknown>).otherField).toBe('value');
+
+    expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it.each(expiredEpochs)('should throw an error if the token has expired with supplied epoch as `%i`', (epoch) => {
+  it('should strip the _csrf token from the body even when verification fails', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
-      method: 'PATCH',
-      session: {
-        csrf: '1234',
-      },
+      method: 'POST',
+      session: {},
       body: {
-        _csrf: `ABCD:${epoch}`,
+        _csrf: 'invalid-token',
+        otherField: 'value',
       },
     });
 
-    // Act + Assert
-    expect(() => verify(req, res, next)).toThrow('CSRF token is either invalid or has expired.');
+    const csrfError = createHttpError(403, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
+
+    // Act
+    verify(req, res, next);
 
     // Assert
-    expect(next).toHaveBeenCalledTimes(0);
-    expect(crypto.createHmac).toHaveBeenCalledTimes(0);
+    expect((req.body as Record<string, unknown>)._csrf).toBeUndefined();
+    expect((req.body as Record<string, unknown>).otherField).toBe('value');
   });
 
-  it('should throw an error if the client and server hash do not match', () => {
+  it(`should return ${HttpStatusCode.Forbidden} Forbidden when CSRF token is invalid`, () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
-      method: 'PATCH',
-      session: {
-        csrf: '1234',
-      },
+      method: 'POST',
+      session: {},
       body: {
-        _csrf: `INVALID:${now}`,
+        _csrf: 'invalid-token',
       },
     });
 
-    // Act + Assert
-    expect(() => verify(req, res, next)).toThrow('Invalid CSRF token has been supplied.');
+    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
+
+    // Act
+    verify(req, res, next);
 
     // Assert
-    expect(next).toHaveBeenCalledTimes(0);
+    expect(res.statusCode).toBe(HttpStatusCode.Forbidden);
+    expect(res._getData()).toBe('Invalid CSRF token.');
 
-    expect(crypto.createHmac).toHaveBeenCalledTimes(1);
-    expect(crypto.createHmac).toHaveBeenLastCalledWith('SHA512', '1234');
-
-    expect(crypto.timingSafeEqual).toHaveBeenCalledTimes(1);
-    expect(crypto.timingSafeEqual).toHaveBeenCalledWith(Buffer.from('INVALID', 'hex'), Buffer.from('ABCD', 'hex'));
+    expect(next).not.toHaveBeenCalled();
   });
 
-  it.each(UNSAFE_METHOD)('should return next and call HMAC if HTTP method is %s', (method) => {
+  it('should call next with the error when a non-CSRF error occurs', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
-      method: method as RequestMethod,
-      session: {
-        csrf: '1234',
-      },
+      method: 'POST',
+      session: {},
       body: {
-        _csrf: `ABCD:${now}`,
+        _csrf: 'token-value',
       },
     });
+
+    const genericError = new Error('Something went wrong');
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(genericError));
 
     // Act
     verify(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(genericError);
+  });
 
-    expect(crypto.createHmac).toHaveBeenCalledTimes(1);
-    expect(crypto.createHmac).toHaveBeenLastCalledWith('SHA512', '1234');
+  it('should call next without error when no error is passed to the callback', () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks({
+      method: 'POST',
+      session: {},
+      body: {
+        _csrf: 'valid-token',
+      },
+    });
 
-    expect(crypto.timingSafeEqual).toHaveBeenCalledTimes(1);
-    expect(crypto.timingSafeEqual).toHaveBeenCalledWith(Buffer.from('ABCD', 'hex'), Buffer.from('ABCD', 'hex'));
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
+    // Act
+    verify(req, res, next);
+
+    // Assert
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(undefined);
   });
 });
