@@ -12,6 +12,7 @@ module.exports = {
   dashboardFilters,
   dashboardSubNavigation,
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  errorSummaryLink: () => cy.get('[data-cy="error-summary-link"]'),
   errorSummaryLinks: () => cy.get('.govuk-error-summary__list a'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
