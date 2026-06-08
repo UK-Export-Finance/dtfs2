@@ -219,4 +219,49 @@ describe('verify', () => {
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledWith(undefined);
   });
+
+  it('should call csrfSynchronisedProtection when the CSRF token is in the query string', () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks({
+      method: 'POST',
+      session: {},
+      body: {},
+      query: {
+        _csrf: 'query-token-value',
+      },
+    });
+
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
+    // Act
+    verify(req, res, next);
+
+    // Assert
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledTimes(1);
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledWith(req, res, expect.any(Function));
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(undefined);
+  });
+
+  it(`should return ${HttpStatusCode.Forbidden} Forbidden when no CSRF token is in body or query`, () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks({
+      method: 'POST',
+      session: {},
+      body: {},
+      query: {},
+    });
+
+    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
+
+    // Act
+    verify(req, res, next);
+
+    // Assert
+    expect(res.statusCode).toBe(HttpStatusCode.Forbidden);
+    expect(res._getData()).toBe('Invalid CSRF token.');
+    expect(next).not.toHaveBeenCalled();
+  });
 });

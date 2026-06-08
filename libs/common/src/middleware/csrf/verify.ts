@@ -9,7 +9,9 @@ const INVALID_CSRF_TOKEN_ERROR_CODE = 'EBADCSRFTOKEN';
 const CSRF_TOKEN_BODY_PROPERTY_NAME = '_csrf';
 
 const { csrfSynchronisedProtection } = csrfSync({
-  getTokenFromRequest: (req: Request) => (req.body as Record<string, unknown>)?.[CSRF_TOKEN_BODY_PROPERTY_NAME] as string | undefined,
+  getTokenFromRequest: (req: Request) =>
+    ((req.body as Record<string, unknown>)?.[CSRF_TOKEN_BODY_PROPERTY_NAME] as string | undefined) ??
+    ((req.query as Record<string, unknown>)?.[CSRF_TOKEN_BODY_PROPERTY_NAME] as string | undefined),
 });
 
 /**

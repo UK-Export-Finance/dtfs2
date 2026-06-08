@@ -13,8 +13,7 @@ const { generateToken } = csrfSync({
  *
  * - Ensures that the session is initialised; throws an error if not.
  * - Generates a session-specific CSRF secret if one does not exist.
- * The call to `generateToken` will create a new token if one does not already exist in `req.session.csrfToken`,
- * otherwise it will return the existing token.
+ * The call to `generateToken` will create a new token
  *
  * @param req - Express request object, expected to have a session property.
  * @param res - Express response object, used to attach the CSRF token.
