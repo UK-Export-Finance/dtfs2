@@ -5,7 +5,7 @@ const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
-const { errorSummary } = require('../../../../../partials');
+const { errorSummary, errorSummaryLink } = require('../../../../../partials');
 
 const visitCheckYourEmailPage = () => {
   cy.enterUsernameAndPassword(BANK1_MAKER1);
@@ -48,7 +48,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitCheckYourEmailPage();
       submitAccessCode(checkYourEmailAccessCode);
 
-      cy.assertText(errorSummary().find('a'), 'Enter access code');
+      cy.assertText(errorSummaryLink(), 'Enter access code');
       cy.assertText(checkYourEmailAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/check-your-email-access-code'));
     });
@@ -59,7 +59,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitNewAccessCodePage();
       submitAccessCode(newAccessCode);
 
-      cy.assertText(errorSummary().find('a'), 'Enter access code');
+      cy.assertText(errorSummaryLink(), 'Enter access code');
       cy.assertText(newAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/new-access-code'));
     });
@@ -70,7 +70,7 @@ context('2FA Journey - Wrong access code validation', () => {
       visitResendAnotherAccessCodePage();
       submitAccessCode(resendAnotherAccessCode);
 
-      cy.assertText(errorSummary().find('a'), 'Enter access code');
+      cy.assertText(errorSummaryLink(), 'Enter access code');
       cy.assertText(resendAnotherAccessCode.inlineError(), 'Error: Enter access code');
       cy.url().should('eq', relative('/login/resend-another-access-code'));
     });
@@ -116,7 +116,7 @@ context('2FA Journey - Wrong access code validation', () => {
 
       errorSummary().should('be.visible');
       cy.assertText(errorSummary().find('.govuk-error-summary__title'), 'There is a problem');
-      errorSummary().find('a').should('have.attr', 'href', '#sixDigitAccessCode');
+      errorSummaryLink().should('have.attr', 'href', '#sixDigitAccessCode');
     });
   });
 
