@@ -35,11 +35,16 @@ root:
 npm run db:migrate -w libs/common
 ```
 
-_. In a second terminal, navigate to the `e2e-tests` folder
-_. Make sure you have a copy of your `.env` file within the folder for the
-service you want to test. (e.g. if you want to test the `gef` service, copy
-your top level `.env` file into the `./gef` directory)
-\*. Run one of the following commands to start Cypress:
+In a second terminal, navigate to the `e2e-tests` folder.
+
+\*.Ensure that the .env is copied into each child directory in `e2e-tests`:
+
+- ./e2e-tests/portal
+- ./e2e-tests/gef
+- ./e2e-tests/ukef
+- ./e2e-tests/tfm
+
+\*. Then each E2E suite can be run from the `e2e-tests` directory by selecting the project, e.g `--project=tfm`
 
 ### **Running the E2E tests using the GUI**
 
@@ -47,7 +52,7 @@ To run a suite the tests using the Cypress GUI (graphical user interface),
 where you see the tests happen real-time on a browser window, use:
 
 ```shell
-npx cypress open --project ./{service name}
+npx cypress open --project=tfm
 ```
 
 e.g. `npx cypress open --project ./gef`
@@ -59,7 +64,7 @@ This mode is helpful for live debugging.
 To run a suite in headless mode (without displaying the GUI) use:
 
 ```shell
-npx cypress run --project ./{service name}
+npx cypress run --project=tfm
 ```
 
 If you want to run a specific E2E test file, you can use the following command
