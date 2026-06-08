@@ -1,6 +1,6 @@
 /**
- * mock out number generator call and use zero-prefixed 10 digit UKEF ID format ("00" + 8 digits)
- * reduced in size from 10 as premium schedule cannot handle large numbers
+ * Mock out number generator call and use a zero-prefixed 10 digit UKEF ID format ("00" + 8 digits).
+ * Keep numeric values small to avoid issues in downstream test calculations.
  */
 let ukefId = 0;
 
