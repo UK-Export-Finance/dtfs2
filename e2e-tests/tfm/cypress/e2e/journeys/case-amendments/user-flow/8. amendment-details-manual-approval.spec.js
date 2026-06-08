@@ -12,19 +12,33 @@ context('Amendments - Manual approval journey', () => {
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
+    let facilityId;
+    let ukefFacilityId;
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      return cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+
+        if (!dealId) {
+          throw new Error('Expected a created deal id in before hook');
+        }
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
-        });
+          facilityId = createdFacilities[0]?._id;
+          ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
+          if (!facilityId) {
+            throw new Error('Expected a created facility id in before hook');
+          }
+          if (!ukefFacilityId) {
+            throw new Error('Expected a created UKEF facility id in before hook');
+          }
 
-        cy.submitDeal(dealId, dealType, PIM_USER_1);
+          return cy.submitDeal(dealId, dealType, PIM_USER_1);
+        });
       });
     });
 
@@ -37,7 +51,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display facility details and values on deal and facility page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
@@ -60,7 +73,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should take you to `Check your answers page` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -104,7 +116,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should validate the content on `Check your answers` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -135,25 +146,25 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display the `Not added` decision for Cover end date AND Facility value', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+      const rowIndex = 1;
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.d_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
+      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
+      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.d_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', tomorrow.dayLong);
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
-      amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-      amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
+      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
@@ -177,19 +188,33 @@ context('Amendments - Manual approval journey', () => {
 
   describe('Amendment details - Change the Cover end date', () => {
     let dealId;
+    let facilityId;
+    let ukefFacilityId;
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      return cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+
+        if (!dealId) {
+          throw new Error('Expected a created deal id in before hook');
+        }
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
-        });
+          facilityId = createdFacilities[0]?._id;
+          ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
+          if (!facilityId) {
+            throw new Error('Expected a created facility id in before hook');
+          }
+          if (!ukefFacilityId) {
+            throw new Error('Expected a created UKEF facility id in before hook');
+          }
 
-        cy.submitDeal(dealId, dealType, PIM_USER_1);
+          return cy.submitDeal(dealId, dealType, PIM_USER_1);
+        });
       });
     });
 
@@ -202,7 +227,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display facility details and values on deal and facility page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
@@ -223,7 +247,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should take you to `Check your answers page` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -261,7 +284,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should validate the content on `Check your answers` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -290,25 +312,25 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display the `Not added` decision for Cover end date', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+      const rowIndex = 1;
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
+      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
+      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', tomorrow.dayLong);
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
-      amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
-      amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('not.exist');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('not.exist');
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
@@ -330,19 +352,33 @@ context('Amendments - Manual approval journey', () => {
 
   describe('Amendment details - Change the Facility value', () => {
     let dealId;
+    let facilityId;
+    let ukefFacilityId;
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      return cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+
+        if (!dealId) {
+          throw new Error('Expected a created deal id in before hook');
+        }
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
-        });
+          facilityId = createdFacilities[0]?._id;
+          ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
+          if (!facilityId) {
+            throw new Error('Expected a created facility id in before hook');
+          }
+          if (!ukefFacilityId) {
+            throw new Error('Expected a created UKEF facility id in before hook');
+          }
 
-        cy.submitDeal(dealId, dealType, PIM_USER_1);
+          return cy.submitDeal(dealId, dealType, PIM_USER_1);
+        });
       });
     });
 
@@ -355,7 +391,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display facility details and values on deal and facility page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
@@ -376,7 +411,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should take you to `Check your answers page` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -414,7 +448,6 @@ context('Amendments - Manual approval journey', () => {
 
     it('should validate the content on `Check your answers` page', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
@@ -444,25 +477,25 @@ context('Amendments - Manual approval journey', () => {
 
     it('should display the `Not added` decision for Facility value', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+      const rowIndex = 1;
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('not.exist');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
+      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
+      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('not.exist');
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('not.exist');
 
-      amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-      amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
+      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
+      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
     });
 
     it('should display facility details and values on deal and facility page as amendment not completed', () => {
       cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);

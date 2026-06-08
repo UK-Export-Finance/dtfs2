@@ -17,18 +17,28 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
   let ukefDealId;
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
-      ukefDealId = insertedDeal?.details?.ukefDealId;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id;
+        ukefDealId = insertedDeal?.details?.ukefDealId;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        if (!dealId || !ukefDealId) {
+          throw new Error('E2E setup failed: expected inserted deal to include _id and details.ukefDealId.');
+        }
 
-      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
-        facility = createdFacility.details;
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacility) => {
+        facility = createdFacility?.details;
+
+        if (!facility?._id) {
+          throw new Error('E2E setup failed: expected created facility to include details._id.');
+        }
+
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {

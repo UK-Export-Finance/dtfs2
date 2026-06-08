@@ -14,11 +14,12 @@ import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 context('Deal cancellation - submit cancellation with "effectiveFrom" in future', () => {
   let dealId;
   let facility;
-  const ukefDealId = '0000000001';
+  let ukefDealId;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
+      ukefDealId = insertedDeal?.details?.ukefDealId;
 
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
@@ -48,7 +49,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     });
 
     describe('after submitting the cancellation', () => {
-      const expectedSuccessBannerText = `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
+      const expectedSuccessBannerText = () => `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
 
       it('should redirect you to the deal summary page', () => {
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
@@ -58,11 +59,11 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         cy.reload();
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
 
       it('should not show the "Cancel Deal" button', () => {
@@ -106,19 +107,19 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
 
       it('should display the cancellation success banner on each of the other sub navigation tabs', () => {
         caseSubNavigation.tasksLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.partiesLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.documentsLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.activityLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.underwritingLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
     });
   });
