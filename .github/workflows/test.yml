@@ -837,7 +837,7 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
           # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -950,8 +950,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -1084,8 +1083,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -1172,8 +1170,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -1270,8 +1267,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE_LONDON }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -1488,8 +1484,7 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
@@ -1576,8 +1571,7 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
-          retries: 0
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
         uses: actions/upload-artifact@v7
