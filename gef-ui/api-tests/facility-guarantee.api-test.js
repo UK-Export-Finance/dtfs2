@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -25,7 +26,7 @@ describe('facility guarantee routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -34,7 +35,7 @@ describe('facility guarantee routes', () => {
       makeRequestWithHeaders: (headers) =>
         post({ feeType: 'At maturity', dayCountBasis: '365' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`),
       whitelistedRoles: [MAKER],
-      successCode: 302,
+      successCode: HttpStatusCode.Found,
       successHeaders: {
         location: `/gef/application-details/${dealId}`,
       },
