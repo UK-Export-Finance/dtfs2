@@ -836,7 +836,6 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE_LONDON }}
-          # retries: ${{ vars.RETRY_LIMIT }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
