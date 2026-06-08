@@ -4,6 +4,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -50,7 +51,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -58,7 +59,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/about`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -66,7 +67,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/about`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -74,7 +75,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/change`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -82,7 +83,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/change`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -90,7 +91,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/change-to-unissued`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -98,7 +99,7 @@ describe('unissued facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/change-to-unissued`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 });

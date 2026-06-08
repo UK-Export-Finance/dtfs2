@@ -5,6 +5,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 const request = require('supertest');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -37,7 +38,7 @@ describe('supporting information upload routes', () => {
           .set(headers)
           .attach('documents', Buffer.from('test'), 'test.exe'),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -46,7 +47,7 @@ describe('supporting information upload routes', () => {
       makeRequestWithHeaders: (headers) =>
         post({ delete: 'mock-file.pdf' }, headers).to(`/application-details/${dealId}/supporting-information/document/${documentType}/delete`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 });

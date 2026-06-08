@@ -4,6 +4,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -31,7 +32,7 @@ describe('select exporters correspondence address routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/select-exporters-correspondence-address`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
       extraSessionData: { addresses: mockAddresses, postcode: 'AA1 1AA' },
     });
   });
@@ -40,7 +41,7 @@ describe('select exporters correspondence address routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/select-exporters-correspondence-address`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
       extraSessionData: { addresses: mockAddresses, postcode: 'AA1 1AA' },
     });
   });
