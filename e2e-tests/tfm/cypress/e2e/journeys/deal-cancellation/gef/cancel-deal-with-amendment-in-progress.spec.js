@@ -16,20 +16,27 @@ import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 context('Deal cancellation - submit cancellation with an amendment in progress', () => {
   let dealId;
   let facility;
-  const ukefDealId = '0000000001';
+  let ukefDealId;
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id;
+        ukefDealId = insertedDeal?.details?.ukefDealId;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacility) => {
+        facility = createdFacility?.details;
 
-      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
-        facility = createdFacility.details;
+        if (!facility?._id) {
+          throw new Error('E2E setup failed: expected created facility to include details._id.');
+        }
+
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {

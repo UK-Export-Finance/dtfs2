@@ -20,22 +20,12 @@ context('Amendments - Manual approval journey', () => {
       return cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal?._id || insertedDeal?.deal?._id;
 
-        if (!dealId) {
-          throw new Error('Expected a created deal id in before hook');
-        }
-
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
         return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
           facilityId = createdFacilities[0]?._id;
           ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
-          if (!facilityId) {
-            throw new Error('Expected a created facility id in before hook');
-          }
-          if (!ukefFacilityId) {
-            throw new Error('Expected a created UKEF facility id in before hook');
-          }
 
           return cy.submitDeal(dealId, dealType, PIM_USER_1);
         });

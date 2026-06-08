@@ -22,10 +22,6 @@ context('Facility page', () => {
       .then((insertedDeal) => {
         dealOne = insertedDeal;
 
-        if (!dealOne?._id) {
-          throw new Error('E2E setup failed: expected first inserted deal to include _id.');
-        }
-
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
         return cy
@@ -38,10 +34,6 @@ context('Facility page', () => {
       .then(() => cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1))
       .then((insertedDeal) => {
         dealTwo = insertedDeal;
-
-        if (!dealTwo?._id) {
-          throw new Error('E2E setup failed: expected second inserted deal to include _id.');
-        }
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
