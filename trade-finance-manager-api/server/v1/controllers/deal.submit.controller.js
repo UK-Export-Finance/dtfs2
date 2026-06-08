@@ -1,7 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -125,12 +125,12 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
+      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
-        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling submitFacilitiesToApimGift', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling sendFacilitiesToApimGift', dealId);
 
-        await submitFacilitiesToApimGift({
+        await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
           isBssEwcsDeal,
@@ -216,12 +216,12 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSubmitToApimGift(tfmDeal);
+      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
 
       if (canSubmitFacilitiesToApimGift) {
-        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling submitFacilitiesToApimGift', dealId);
+        console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling sendFacilitiesToApimGift', dealId);
 
-        await submitFacilitiesToApimGift({
+        await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
           isBssEwcsDeal,
