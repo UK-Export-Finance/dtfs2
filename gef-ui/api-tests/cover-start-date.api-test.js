@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -27,7 +28,7 @@ describe('cover start date routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/cover-start-date`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 });

@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -27,7 +28,7 @@ describe('application details routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}`, {}, headers),
       whitelistedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -35,7 +36,7 @@ describe('application details routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}`),
       whitelistedRoles: [MAKER],
-      successCode: 302,
+      successCode: HttpStatusCode.Found,
       successHeaders: { location: `/gef/application-details/${dealId}/submit` },
     });
   });

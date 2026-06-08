@@ -1,5 +1,6 @@
 const stream = require('stream');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER, CHECKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -29,7 +30,7 @@ describe('downloadFile routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/file/${fileId}`, {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
   });
 });
