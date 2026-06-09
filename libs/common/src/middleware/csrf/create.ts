@@ -1,12 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { csrfSync } from 'csrf-sync';
 import { SSO_URL, SSO_URL_FORM } from '../../constants';
-
-const CSRF_TOKEN_BODY_PROPERTY_NAME = '_csrf';
-
-const { generateToken } = csrfSync({
-  getTokenFromRequest: (req: Request) => (req.body as Record<string, unknown>)?.[CSRF_TOKEN_BODY_PROPERTY_NAME] as string | undefined,
-});
+import { generateToken } from './csrf-sync-instance';
 
 /**
  * Express middleware to generate and attach a CSRF token to the response.

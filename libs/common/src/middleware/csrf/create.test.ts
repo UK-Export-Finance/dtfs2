@@ -1,20 +1,14 @@
 import httpMocks from 'node-mocks-http';
-import { csrfSync } from 'csrf-sync';
+import { Request } from 'express';
 import { create } from './create';
 import { SSO_URL, SSO_URL_FORM } from '../../constants';
+import { generateToken } from './csrf-sync-instance';
 
-jest.mock('csrf-sync', () => {
-  const mockFn = jest.fn();
-  return {
-    csrfSync: () => ({
-      generateToken: mockFn,
-    }),
-  };
-});
+jest.mock('./csrf-sync-instance', () => ({
+  generateToken: jest.fn(),
+}));
 
-const { generateToken: mockGenerateToken } = csrfSync({
-  getTokenFromRequest: () => '',
-}) as unknown as { generateToken: jest.Mock<string, [Request]> };
+const mockGenerateToken = generateToken as jest.Mock<string, [Request]>;
 
 describe('create', () => {
   const next = jest.fn();

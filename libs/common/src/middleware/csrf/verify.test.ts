@@ -2,24 +2,17 @@ import httpMocks, { RequestMethod } from 'node-mocks-http';
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { HttpStatusCode } from 'axios';
-import { csrfSync } from 'csrf-sync';
 import { verify } from './verify';
 import { CSRF, SSO_URL, SSO_URL_FORM } from '../../constants';
+import { csrfSynchronisedProtection } from './csrf-sync-instance';
 
 type CsrfCallback = (error?: unknown) => void;
 
-jest.mock('csrf-sync', () => {
-  const mockFn = jest.fn();
-  return {
-    csrfSync: () => ({
-      csrfSynchronisedProtection: mockFn,
-    }),
-  };
-});
+jest.mock('./csrf-sync-instance', () => ({
+  csrfSynchronisedProtection: jest.fn(),
+}));
 
-const { csrfSynchronisedProtection: mockCsrfSynchronisedProtection } = csrfSync({
-  getTokenFromRequest: () => '',
-}) as unknown as { csrfSynchronisedProtection: jest.Mock<void, [Request, Response, CsrfCallback]> };
+const mockCsrfSynchronisedProtection = csrfSynchronisedProtection as jest.Mock<void, [Request, Response, CsrfCallback]>;
 
 describe('verify', () => {
   const next = jest.fn();
@@ -44,19 +37,22 @@ describe('verify', () => {
     expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
-  it.each(CSRF.VERIFY.SAFE.HTTP_METHODS)('should call next without CSRF verification if HTTP method is %s', (method) => {
+  it.each(CSRF.VERIFY.SAFE.HTTP_METHODS)('should call csrfSynchronisedProtection for safe HTTP method %s (handled by ignoredMethods)', (method) => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
       method: method as RequestMethod,
       session: {},
     });
 
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
     // Act
     verify(req, res, next);
 
     // Assert
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledTimes(1);
+    expect(mockCsrfSynchronisedProtection).toHaveBeenCalledWith(req, res, expect.any(Function));
     expect(next).toHaveBeenCalledTimes(1);
-    expect(mockCsrfSynchronisedProtection).not.toHaveBeenCalled();
   });
 
   it(`should call next without CSRF verification if the request path matches the ${SSO_URL} redirect URL`, () => {
@@ -130,6 +126,29 @@ describe('verify', () => {
     // Assert
     expect((req.body as Record<string, unknown>)._csrf).toBeUndefined();
     expect((req.body as Record<string, unknown>).otherField).toBe('value');
+
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('should strip the _csrf token from the query after successful verification', () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks({
+      method: 'POST',
+      session: {},
+      query: {
+        _csrf: 'token-value',
+        otherParam: 'value',
+      },
+    });
+
+    mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb());
+
+    // Act
+    verify(req, res, next);
+
+    // Assert
+    expect((req.query as Record<string, unknown>)._csrf).toBeUndefined();
+    expect((req.query as Record<string, unknown>).otherParam).toBe('value');
 
     expect(next).toHaveBeenCalledTimes(1);
   });

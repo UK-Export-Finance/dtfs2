@@ -17,15 +17,12 @@ export const CSRF = {
      * Hashing algorithm used for token generation using HMAC
      */
     ALGORITHM: 'SHA512',
-    /**
-     * CSRF token validity in microseconds
-     * 60 minutes (60 * 60 * 1000)
-     */
-    MAX_AGE: 3600000,
   },
   VERIFY: {
     SAFE: {
       HTTP_METHODS: ['GET', 'HEAD', 'OPTIONS'],
     },
   },
+  CSRF_TOKEN_BODY_PROPERTY_NAME: '_csrf',
+  INVALID_CSRF_TOKEN_ERROR_CODE: 'EBADCSRFTOKEN',
 };
