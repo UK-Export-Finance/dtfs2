@@ -21,7 +21,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
       .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
       .then((insertedDeal) => {
         dealId = insertedDeal?._id;
-        ukefDealId = insertedDeal?.details?.ukefDealId;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
         return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
       })

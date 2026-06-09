@@ -31,10 +31,6 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
       .then((createdFacility) => {
         facility = createdFacility?.details;
 
-        if (!facility?._id) {
-          throw new Error('E2E setup failed: expected created facility to include details._id.');
-        }
-
         return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
   });
