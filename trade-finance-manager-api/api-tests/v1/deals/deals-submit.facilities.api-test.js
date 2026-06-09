@@ -37,7 +37,7 @@ describe('/v1/deals', () => {
     acbsController.issueAcbsFacilities.mockClear();
     canSendToApimGift.mockClear();
     canSendToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
     });
 

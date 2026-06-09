@@ -124,10 +124,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       // Update the deal with all the above modifications
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-      // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+      // Send facilities to APIM/GIFT
+      const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
 
-      if (canSubmitFacilitiesToApimGift) {
+      if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling sendFacilitiesToApimGift', dealId);
 
         await sendFacilitiesToApimGift({
@@ -216,9 +216,9 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+      const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
 
-      if (canSubmitFacilitiesToApimGift) {
+      if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling sendFacilitiesToApimGift', dealId);
 
         await sendFacilitiesToApimGift({

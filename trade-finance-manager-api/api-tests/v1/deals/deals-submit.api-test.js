@@ -53,7 +53,7 @@ describe('/v1/deals', () => {
     acbsController.issueAcbsFacilities.mockClear();
     canSendToApimGift.mockClear();
     canSendToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
     });
 
@@ -349,7 +349,7 @@ describe('/v1/deals', () => {
       );
 
       canSendToApimGift.mockResolvedValueOnce({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities: mockIssuedFacilities,
       });
 
@@ -392,7 +392,7 @@ describe('/v1/deals', () => {
       describe('when all issued facilities are not in GIFT', () => {
         it('should call sendFacilitiesToApimGift with all issued facilities', async () => {
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility1, mockFacility2],
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -412,7 +412,7 @@ describe('/v1/deals', () => {
       describe('when there are no issued facilities to send to GIFT', () => {
         it('should not call sendFacilitiesToApimGift', async () => {
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
             issuedFacilities: [], // no facilities to send
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -426,7 +426,7 @@ describe('/v1/deals', () => {
       describe('when some issued facilities are in GIFT, some are not', () => {
         it('should call sendFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility2, mockFacility3], // only facility 2 and 3 are not in GIFT
             isBssEwcsDeal: true,
             isGefDeal: false,

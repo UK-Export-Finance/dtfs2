@@ -8,7 +8,7 @@ import { generateIssuedFacilitiesQueryString } from '../generate-issued-faciliti
 const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
 
 type CanSubmitFacilitiesToApimGiftReturnShape = {
-  canSubmitFacilitiesToApimGift: boolean;
+  canSendFacilitiesToApimGift: boolean;
   issuedFacilities?: TfmFacility[];
   isBssEwcsDeal?: boolean;
   isGefDeal?: boolean;
@@ -32,7 +32,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - feature flag disabled', dealId);
 
     return {
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
     };
   }
 
@@ -51,7 +51,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
    *
    * BSS/EWCS/GEF should only send facilities to APIM/GIFT if the buyer party URN is populated.
    *
-   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSendFacilitiesToApimGift as false.
    */
   const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());
 
@@ -59,7 +59,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - invalid deal type, submission type, or missing exporter credit rating', dealId);
 
     return {
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
     };
   }
 
@@ -69,7 +69,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
    * The buyer party URN is populated in TFM - after the first deal submission.
    * BSS/EWCS should only send facilities to APIM/GIFT if the buyer party URN is populated.
    *
-   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSubmitFacilitiesToApimGift as false.
+   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSendFacilitiesToApimGift as false.
    * For GEF deals, there is no requirement for a buyer party URN to be populated to submit facilities to APIM/GIFT, so GEF deals can submit facilities on the first submission.
    * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
    * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
@@ -82,7 +82,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - invalid BSS/EWCS or GEF deal', dealId);
 
     return {
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
     };
   }
 
@@ -116,7 +116,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     }
 
     return {
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal,
       isGefDeal,
@@ -133,7 +133,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - failed to retrieve existing facilities from GIFT', dealId);
 
     return {
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal,
       isGefDeal,
@@ -157,7 +157,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
   }
 
   return {
-    canSubmitFacilitiesToApimGift: facilitiesToSendToApimGift.length > 0,
+    canSendFacilitiesToApimGift: facilitiesToSendToApimGift.length > 0,
     issuedFacilities: facilitiesToSendToApimGift,
     isBssEwcsDeal,
     isGefDeal,

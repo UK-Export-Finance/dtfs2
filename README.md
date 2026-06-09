@@ -154,12 +154,7 @@ npm run pipeline
 
 ### E2E Tests :rocket:
 
-Ensure that the .env is copied into each child directory in `e2e-tests`:
-
-- ./e2e-tests/portal
-- ./e2e-tests/gef
-- ./e2e-tests/ukef
-- ./e2e-tests/tfm
+Ensure an `.env` file exists (copy from `.env.sample` from the repository root if needed).
 
 Then each E2E suite can be run from the `e2e-tests` directory by selecting the project, e.g `--project=tfm`
 
@@ -178,7 +173,7 @@ npx cypress run --project=tfm --spec "cypress/e2e/**/my-test.spec.js" --config v
 #### For Live Debugging, Open the GUI and Select the Test :mag_right:
 
 ```shell
-npx cypress open . --project=tfm
+npx cypress open --project=tfm
 ```
 
 ### API Tests :rocket:

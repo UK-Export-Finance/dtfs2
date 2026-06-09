@@ -59,7 +59,7 @@ describe('PUT /v1/parties/:dealId', () => {
 
     canSendToApimGift.mockReset();
     canSendToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal: false,
       isGefDeal: true,
@@ -118,7 +118,7 @@ describe('PUT /v1/parties/:dealId', () => {
       const issuedFacilities = [{ _id: 'facility-1' }];
 
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -141,7 +141,7 @@ describe('PUT /v1/parties/:dealId', () => {
     it(`should not call sendFacilitiesToApimGift when APIM/GIFT submission is not allowed`, async () => {
       // Arrange
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: false,
+        canSendFacilitiesToApimGift: false,
         issuedFacilities: [],
         isBssEwcsDeal: false,
         isGefDeal: true,

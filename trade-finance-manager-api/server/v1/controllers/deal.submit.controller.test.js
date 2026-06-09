@@ -121,7 +121,7 @@ describe('submitDealAfterUkefIds', () => {
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
-    canSendToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
 
     convertDealCurrencies.mockImplementation(async (deal) => deal);
     createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));
@@ -174,7 +174,7 @@ describe('submitDealAfterUkefIds', () => {
     it('should call canSendToApimGift', async () => {
       // Arrange
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal,
         isGefDeal,
@@ -191,7 +191,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should call sendFacilitiesToApimGift when APIM/GIFT submission is allowed', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
-          canSubmitFacilitiesToApimGift: true,
+          canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
@@ -214,7 +214,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should NOT call sendFacilitiesToApimGift', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
-          canSubmitFacilitiesToApimGift: false,
+          canSendFacilitiesToApimGift: false,
           issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
@@ -249,13 +249,13 @@ describe('submitDealAfterUkefIds', () => {
       updatePortalDealStatus.mockResolvedValue();
 
       canSubmitToACBS.mockResolvedValue(false);
-      canSendToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+      canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
     });
 
     it('should call canSendToApimGift with the updated tfmDeal', async () => {
       // Arrange
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal,
         isGefDeal,
@@ -272,7 +272,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should call sendFacilitiesToApimGift with correct parameters', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
-          canSubmitFacilitiesToApimGift: true,
+          canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
@@ -295,7 +295,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should NOT call sendFacilitiesToApimGift', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
-          canSubmitFacilitiesToApimGift: false,
+          canSendFacilitiesToApimGift: false,
           issuedFacilities: [],
           isBssEwcsDeal,
           isGefDeal,

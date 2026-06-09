@@ -94,7 +94,7 @@ describe('updateParty', () => {
     updateDealMock.mockResolvedValue(mockTfmDeal);
 
     canSendToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal: false,
       isGefDeal: true,
@@ -158,7 +158,7 @@ describe('updateParty', () => {
       };
 
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -189,7 +189,7 @@ describe('updateParty', () => {
       const apimGiftError = new Error('APIM/GIFT failed');
 
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -219,7 +219,7 @@ describe('updateParty', () => {
       };
 
       canSendToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: false,
+        canSendFacilitiesToApimGift: false,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,

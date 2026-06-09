@@ -27,10 +27,10 @@ const updateParty = async (req, res) => {
     const auditDetails = generateTfmAuditDetails(req.user._id);
     const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-    // Submit facilities to APIM/GIFT
-    const { canSubmitFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+    // Send facilities to APIM/GIFT
+    const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
 
-    if (canSubmitFacilitiesToApimGift) {
+    if (canSendFacilitiesToApimGift) {
       console.info('TFM deal %s updateParty - calling sendFacilitiesToApimGift', dealId);
 
       try {

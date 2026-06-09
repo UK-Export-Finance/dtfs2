@@ -123,7 +123,7 @@ describe('/v1/deals', () => {
 
     canSubmitToACBS.mockClear();
 
-    canSendToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false });
+    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false });
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -427,7 +427,7 @@ describe('/v1/deals', () => {
           ].filter((facility) => facility.hasBeenIssued);
 
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -497,7 +497,7 @@ describe('/v1/deals', () => {
           ].filter((facility) => facility.hasBeenIssued);
 
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -771,7 +771,7 @@ describe('/v1/deals', () => {
           ].filter((facility) => facility.hasBeenIssued);
 
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -940,7 +940,7 @@ describe('/v1/deals', () => {
           const mockIssuedFacilities = (mockDeal.facilities || []).filter((facility) => facility.hasBeenIssued);
 
           canSendToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: false,
             isGefDeal: true,

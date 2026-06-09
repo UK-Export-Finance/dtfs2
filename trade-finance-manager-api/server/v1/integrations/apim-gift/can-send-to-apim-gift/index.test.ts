@@ -49,13 +49,13 @@ describe('canSendToApimGift', () => {
       mockFeatureFlag.mockReturnValue(false);
     });
 
-    it('should return canSubmitFacilitiesToApimGift as false', async () => {
+    it('should return canSendFacilitiesToApimGift as false', async () => {
       // Act
       const result = await canSendToApimGift(mockTfmDeal);
 
       // Assert
       const expected = {
-        canSubmitFacilitiesToApimGift: false,
+        canSendFacilitiesToApimGift: false,
       };
 
       expect(result).toEqual(expected);
@@ -146,7 +146,7 @@ describe('canSendToApimGift', () => {
       });
 
       describe('when issued facilities are not in GIFT', () => {
-        it('should return canSubmitFacilitiesToApimGift as true', async () => {
+        it('should return canSendFacilitiesToApimGift as true', async () => {
           // Arrange
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
           mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
@@ -162,7 +162,7 @@ describe('canSendToApimGift', () => {
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: true,
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
             isBssEwcsDeal,
             isGefDeal,
@@ -173,7 +173,7 @@ describe('canSendToApimGift', () => {
       });
 
       describe('when issued facilities already exist in GIFT', () => {
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
           const mockIssuedFacility1 = mockTfmIssuedFacility1;
           const mockIssuedFacility2 = mockTfmIssuedFacility2;
@@ -197,7 +197,7 @@ describe('canSendToApimGift', () => {
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
             issuedFacilities: [],
             isBssEwcsDeal,
             isGefDeal,
@@ -208,7 +208,7 @@ describe('canSendToApimGift', () => {
       });
 
       describe('when the lookup of existing GIFT facilities fails', () => {
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
           mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
@@ -221,7 +221,7 @@ describe('canSendToApimGift', () => {
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
             issuedFacilities: [],
             isBssEwcsDeal,
             isGefDeal,
@@ -233,7 +233,7 @@ describe('canSendToApimGift', () => {
       });
 
       describe('when no facilities are issued', () => {
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
 
@@ -242,7 +242,7 @@ describe('canSendToApimGift', () => {
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
             issuedFacilities: [],
             isBssEwcsDeal,
             isGefDeal,
@@ -273,13 +273,13 @@ describe('canSendToApimGift', () => {
         tfm: mockTfmDeal.tfm,
       } as TfmDeal;
 
-      it('should return canSubmitFacilitiesToApimGift as false', async () => {
+      it('should return canSendFacilitiesToApimGift as false', async () => {
         // Act
         const result = await canSendToApimGift(mockDeal);
 
         // Assert
         const expected = {
-          canSubmitFacilitiesToApimGift: false,
+          canSendFacilitiesToApimGift: false,
         };
 
         expect(result).toEqual(expected);
@@ -295,7 +295,7 @@ describe('canSendToApimGift', () => {
     });
 
     describe('when the deal does not have any issued facilities', () => {
-      it('should return canSubmitFacilitiesToApimGift as false', async () => {
+      it('should return canSendFacilitiesToApimGift as false', async () => {
         // Arrange
         const mockDeal = {
           ...mockTfmDeal,
@@ -314,7 +314,7 @@ describe('canSendToApimGift', () => {
 
         // Assert
         const expected = {
-          canSubmitFacilitiesToApimGift: false,
+          canSendFacilitiesToApimGift: false,
           issuedFacilities: [],
           isBssEwcsDeal: true,
           isGefDeal: false,
@@ -409,7 +409,7 @@ describe('canSendToApimGift', () => {
           },
         } as TfmDeal;
 
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
           mockApi.findFacilitiesByDealId.mockResolvedValue([]);
 
           // Act
@@ -417,7 +417,7 @@ describe('canSendToApimGift', () => {
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
           };
 
           expect(result).toEqual(expected);
@@ -450,13 +450,13 @@ describe('canSendToApimGift', () => {
           },
         } as TfmDeal;
 
-        it('should return canSubmitFacilitiesToApimGift as false', async () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
           // Act
           const result = await canSendToApimGift(mockDeal);
 
           // Assert
           const expected = {
-            canSubmitFacilitiesToApimGift: false,
+            canSendFacilitiesToApimGift: false,
           };
 
           expect(result).toEqual(expected);
@@ -473,7 +473,7 @@ describe('canSendToApimGift', () => {
     );
 
     describe('when api.findFacilitiesByDealId throws an error', () => {
-      it('should swallow the error and return canSubmitFacilitiesToApimGift as false', async () => {
+      it('should swallow the error and return canSendFacilitiesToApimGift as false', async () => {
         // Arrange
         const mockDeal = {
           ...mockTfmDeal,
@@ -493,7 +493,7 @@ describe('canSendToApimGift', () => {
         const result = await canSendToApimGift(mockDeal);
 
         // Assert
-        expect(result.canSubmitFacilitiesToApimGift).toEqual(false);
+        expect(result.canSendFacilitiesToApimGift).toEqual(false);
       });
 
       it('should NOT call generateIssuedFacilitiesQueryString', async () => {

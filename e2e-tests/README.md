@@ -37,12 +37,9 @@ npm run db:migrate -w libs/common
 
 In a second terminal, navigate to the `e2e-tests` folder.
 
-\*.Ensure that the .env is copied into each child directory in `e2e-tests`:
+Ensure an `.env` file exists (copy from `.env.sample` from the repository root if needed).
 
-- ./e2e-tests/portal
-- ./e2e-tests/gef
-- ./e2e-tests/ukef
-- ./e2e-tests/tfm
+The Cypress projects under `e2e-tests/*` load environment variables from this root `.env` via each project's `cypress.config.js`
 
 \*. Then each E2E suite can be run from the `e2e-tests` directory by selecting the project, e.g `--project=tfm`
 
