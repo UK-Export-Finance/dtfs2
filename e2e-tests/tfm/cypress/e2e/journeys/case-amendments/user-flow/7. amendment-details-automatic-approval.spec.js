@@ -10,6 +10,13 @@ import { calculateTestFacilityTenorValue } from '../../../../support/utils/facil
 context('Amendments - automatic approval journey', () => {
   const facilityTenor = calculateTestFacilityTenorValue();
 
+  const findAmendmentRowIndex = (expectedHeading) =>
+    cy
+      .contains('[data-cy^="amendment--heading-"]', expectedHeading)
+      .should('be.visible')
+      .invoke('attr', 'data-cy')
+      .then((dataCy) => dataCy.replace('amendment--heading-', ''));
+
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
     let ukefFacilityId;
@@ -188,20 +195,22 @@ context('Amendments - automatic approval journey', () => {
     it('should display the Automatic approval for Cover end date AND Facility value', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
-      const rowIndex = 1;
+      const expectedHeading = `Amendment ${ukefFacilityId}-001`;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
-      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+      findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
-      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
-      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+        amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
+        amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+      });
     });
 
     it('should display amendment changed dates and values on deal and facility page', () => {
@@ -354,20 +363,22 @@ context('Amendments - automatic approval journey', () => {
     it('should display the Automatic approval for Cover end date', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
-      const rowIndex = 1;
+      const expectedHeading = `Amendment ${ukefFacilityId}-001`;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
-      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+      findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
-      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('not.exist');
-      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('not.exist');
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('not.exist');
+        amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('not.exist');
+        amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('not.exist');
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('not.exist');
+      });
     });
 
     it('should display amendment changed dates on deal and facility page', () => {
@@ -516,20 +527,22 @@ context('Amendments - automatic approval journey', () => {
     it('should display the Automatic approval for Facility value', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
-      const rowIndex = 1;
+      const expectedHeading = `Amendment ${ukefFacilityId}-001`;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-      amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', `Amendment ${ukefFacilityId}-001`);
-      amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
-      amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('not.exist');
-      amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('not.exist');
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('not.exist');
+      findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
+        amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('not.exist');
+        amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('not.exist');
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionCoverEndDate().should('not.exist');
 
-      amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
-      amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+        amendmentsPage.amendmentDetails.row(rowIndex).currentFacilityValue().should('contain', 'GBP 12,345.00');
+        amendmentsPage.amendmentDetails.row(rowIndex).newFacilityValue().should('contain', 'GBP 123.00');
+        amendmentsPage.amendmentDetails.row(rowIndex).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+      });
     });
 
     it('should display amendment changed values on deal and facility page', () => {
