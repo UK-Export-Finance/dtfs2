@@ -334,7 +334,7 @@ describe('create', () => {
     expect(mockResponse._getData()).toEqual(responseData);
   });
 
-  it(`should return ${HttpStatusCode.Created} with an empty body`, async () => {
+  it(`should return ${HttpStatusCode.Created} with response data`, async () => {
     // Arrange
     const mockFacilityId = '0000000002';
     const requestBody = {
@@ -366,7 +366,7 @@ describe('create', () => {
     });
 
     expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Created);
-    expect(mockResponse._getData()).toEqual('');
+    expect(mockResponse._getData()).toEqual(responseData);
   });
 
   it(`should fallback to ${HttpStatusCode.InternalServerError} when axios throws without an HTTP response`, async () => {
