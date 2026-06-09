@@ -5,19 +5,23 @@ module.exports = (dealId, facilities, user) => {
   console.info('createGEFFacilities::');
 
   return logIn(user).then((token) => {
-    return Cypress.Promise.all(
-      facilities.map((facilityToInsert) => {
-        const ukefId = getIdFromNumberGenerator();
-        const facilityWithId = {
-          ...facilityToInsert,
-          ukefFacilityId: ukefId,
-        };
+    const updatedFacilities = [];
 
-        return createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
-          const facilityId = createdFacilities.details._id;
-          return updateGefFacilities(facilityId, facilityToInsert, token).then(() => createdFacilities);
+    cy.wrap(facilities).each((facilityToInsert) => {
+      const ukefId = getIdFromNumberGenerator();
+      const facilityWithId = {
+        ...facilityToInsert,
+        ukefFacilityId: ukefId,
+      };
+
+      return createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
+        const facilityId = createdFacilities.details._id;
+        return updateGefFacilities(facilityId, facilityToInsert, token).then((updatedFacility) => {
+          updatedFacilities.push(updatedFacility);
         });
-      }),
-    ).then((createdFacilities) => createdFacilities[0]);
+      });
+    });
+
+    return cy.then(() => updatedFacilities[0]);
   });
 };
