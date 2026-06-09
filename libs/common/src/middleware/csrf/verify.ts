@@ -9,7 +9,7 @@ const { INVALID_CSRF_TOKEN_ERROR_CODE, CSRF_TOKEN_BODY_PROPERTY_NAME } = CSRF;
 /**
  * Middleware to verify CSRF tokens for an incoming requests.
  *
- * This function checks if the request session is initialised, validates the HTTP method,
+ * This function checks if the request session is initialised,
  * and ensures the CSRF token is present and valid using csrf-sync's `csrfSynchronisedProtection` function.
  * For file uploads, it moves the CSRF token from the query to the body if necessary.
  *
