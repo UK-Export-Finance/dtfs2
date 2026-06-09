@@ -447,7 +447,7 @@ const updateFacilityAmendment = async (req, res) => {
  * @param {import('@ukef/dtfs2-common').TfmFacility} facility - The related TFM facility.
  * @param {string} ukefFacilityId - UKEF facility identifier used for notifications.
  * @returns {Promise<import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId>} The amendment that was evaluated/submitted.
- * @throws {Error} Throws when ACBS submission orchestration fails.
+ * @throws {Error} Throws when required data retrieval fails (ACBS submission errors are logged by the ACBS controller).
  */
 const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
   const { amendmentId } = amendment;
