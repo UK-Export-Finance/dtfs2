@@ -10,9 +10,8 @@ const { INVALID_CSRF_TOKEN_ERROR_CODE, CSRF_TOKEN_BODY_PROPERTY_NAME } = CSRF;
  * Middleware to verify CSRF tokens for an incoming requests.
  *
  * This function checks if the request session is initialised, validates the HTTP method,
- * and ensures the CSRF token is present and valid. For file uploads, it moves the CSRF token
- * from the query to the body if necessary. It then verifies the token's age and integrity
- * using a timing-safe comparison.
+ * and ensures the CSRF token is present and valid using csrf-sync's `csrfSynchronisedProtection` function.
+ * For file uploads, it moves the CSRF token from the query to the body if necessary.
  *
  * If the token is invalid, the middleware responds with a Forbidden status.
  * Otherwise, it calls the next middleware in the stack.

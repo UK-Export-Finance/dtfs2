@@ -6,8 +6,7 @@ import { generateToken } from './csrf-sync-instance';
  * Express middleware to generate and attach a CSRF token to the response.
  *
  * - Ensures that the session is initialised; throws an error if not.
- * - Generates a session-specific CSRF secret if one does not exist.
- * The call to `generateToken` will create a new token
+ * - Generates a csrf token using csrf-sync's `generateToken` function.
  *
  * @param req - Express request object, expected to have a session property.
  * @param res - Express response object, used to attach the CSRF token.
@@ -21,9 +20,9 @@ export const create = (req: Request, res: Response, next: NextFunction): void | 
   }
 
   /**
-   * Exclude SSO redirect URL from CSRF verification
+   * Exclude SSO redirect routes from CSRF token generation
    * as the request is initiated by an external identity provider
-   * This allows users to be redirected back to the application after authentication without encountering CSRF verification errors.
+   * This allows users to be redirected back to the application after authentication without encountering CSRF errors.
    */
   if (req.path === SSO_URL || req.path === SSO_URL_FORM) {
     return next();
