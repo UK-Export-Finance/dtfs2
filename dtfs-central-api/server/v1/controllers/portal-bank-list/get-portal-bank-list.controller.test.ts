@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, ApiErrorResponseBody } from '@ukef/dtfs2-common';
-import { WithId, Document, ObjectId } from 'mongodb';
+import { ApiError, ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
+import { WithId, ObjectId } from 'mongodb';
 import { getPortalBankList } from './get-portal-bank-list.controller';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
 
@@ -13,15 +13,14 @@ class TestApiError extends ApiError {
   }
 }
 
-const aPortalBankListEntry = (overrides: Partial<{ _id: ObjectId; name: string; order: number }> = {}): WithId<Document> =>
-  ({
-    _id: new ObjectId(),
-    name: 'Barclays Bank',
-    order: 1,
-    ...overrides,
-  }) as WithId<Document>;
+const aPortalBankListEntry = (overrides: Partial<WithId<PortalBankListEntry>> = {}): WithId<PortalBankListEntry> => ({
+  _id: new ObjectId(),
+  name: 'Bank 1',
+  order: 1,
+  ...overrides,
+});
 
-type MockResponse = Partial<Response<unknown[] | ApiErrorResponseBody>> & {
+type MockResponse = Partial<Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>> & {
   status: jest.Mock;
   send: jest.Mock;
 };
@@ -38,7 +37,7 @@ const getMockResponse = (): MockResponse => {
 
 const invokeController = async (res: MockResponse) => {
   const req = {} as Parameters<typeof getPortalBankList>[0];
-  await getPortalBankList(req, res as Response<unknown[] | ApiErrorResponseBody>);
+  await getPortalBankList(req, res as Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>);
 };
 
 describe('getPortalBankList', () => {
@@ -52,7 +51,7 @@ describe('getPortalBankList', () => {
   });
 
   describe('when the repository returns a list of entries', () => {
-    const entries: WithId<Document>[] = [aPortalBankListEntry({ name: 'Barclays Bank', order: 1 }), aPortalBankListEntry({ name: 'HSBC UK Bank', order: 2 })];
+    const entries: WithId<PortalBankListEntry>[] = [aPortalBankListEntry({ name: 'Bank 1', order: 1 }), aPortalBankListEntry({ name: 'Bank 2', order: 2 })];
 
     beforeEach(() => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue(entries);

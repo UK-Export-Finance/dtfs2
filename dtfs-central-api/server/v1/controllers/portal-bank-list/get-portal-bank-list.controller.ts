@@ -1,16 +1,19 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { CustomExpressRequest, ApiError, ApiErrorResponseBody } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
+import { WithId } from 'mongodb';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
 
 type GetPortalBankListRequest = CustomExpressRequest<object>;
 
+type GetPortalBankListResponseBody = WithId<PortalBankListEntry>[] | ApiErrorResponseBody;
+
 /**
- * Express handler for `GET /v1/portal-bank-list`.
+ * Express handler for `GET /v1/bank/portal-bank-list`.
  *
- * Returns every entry in the `portal-bank-list` MongoDB collection, sorted by
- * `order` ascending then `name` ascending, so the response can be rendered
- * directly on the portal homepage without further sorting.
+ * Returns every entry in the `portal-bank-list` MongoDB collection in its
+ * natural insertion order so the response can be rendered directly on the
+ * portal homepage.
  *
  * Error mapping:
  * - Any thrown `ApiError` is propagated using its own `status` and `code`, with
@@ -18,7 +21,7 @@ type GetPortalBankListRequest = CustomExpressRequest<object>;
  * - Any other error is logged and returned as a `500 Internal Server Error`
  *   with a generic message — the underlying error is not exposed to callers.
  */
-export const getPortalBankList = async (req: GetPortalBankListRequest, res: Response<unknown[] | ApiErrorResponseBody>) => {
+export const getPortalBankList = async (req: GetPortalBankListRequest, res: Response<GetPortalBankListResponseBody>) => {
   try {
     const entries = await getAllPortalBankListEntries();
     return res.status(HttpStatusCode.Ok).send(entries);

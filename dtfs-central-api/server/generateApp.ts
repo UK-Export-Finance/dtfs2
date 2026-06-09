@@ -8,10 +8,10 @@ import { ROUTES } from './constants';
 
 import healthcheck from './healthcheck';
 
-import { bankRoutes, portalBankListRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
+import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 
-const { BANK_ROUTE, PORTAL_BANK_LIST_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
+const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
 
 export const generateApp = (): Express => {
   const app = express();
@@ -48,7 +48,6 @@ export const generateApp = (): Express => {
   );
 
   app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
-  app.use(`/v1/${PORTAL_BANK_LIST_ROUTE}`, portalBankListRoutes);
   app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
   app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
   app.use(`/v1/${USER_ROUTE}`, userRoutes);
