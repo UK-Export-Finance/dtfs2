@@ -4,18 +4,20 @@ const { getIdFromNumberGenerator } = require('../external-api/api');
 module.exports = (dealId, facilities, user) => {
   console.info('createGEFFacilities::');
 
-  logIn(user).then((token) => {
-    facilities.forEach((facilityToInsert) => {
-      const ukefId = getIdFromNumberGenerator();
-      const facilityWithId = {
-        ...facilityToInsert,
-        ukefFacilityId: ukefId,
-      };
+  return logIn(user).then((token) => {
+    return Cypress.Promise.all(
+      facilities.map((facilityToInsert) => {
+        const ukefId = getIdFromNumberGenerator();
+        const facilityWithId = {
+          ...facilityToInsert,
+          ukefFacilityId: ukefId,
+        };
 
-      createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
-        const facilityId = createdFacilities.details._id;
-        updateGefFacilities(facilityId, facilityToInsert, token).then((updated) => updated);
-      });
-    });
+        return createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
+          const facilityId = createdFacilities.details._id;
+          return updateGefFacilities(facilityId, facilityToInsert, token).then(() => createdFacilities);
+        });
+      }),
+    ).then((createdFacilities) => createdFacilities[0]);
   });
 };

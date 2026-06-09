@@ -22,8 +22,8 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
     return cy
       .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
       .then((insertedDeal) => {
-        dealId = insertedDeal?._id;
-        ukefDealId = insertedDeal?.details?.ukefDealId;
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
         return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
       })
@@ -49,6 +49,10 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+      const ukefDealIdElement = caseSummary.ukefDealId();
+      ukefDealIdElement.invoke('text').then((text) => {
+        ukefDealId = text.trim();
+      });
     });
 
     describe('with an amendment in progress', () => {

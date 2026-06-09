@@ -4,7 +4,7 @@ import relative from '../../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
-import { caseSubNavigation, successBanner } from '../../../partials';
+import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
 import facilitiesPage from '../../../pages/facilitiesPage';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
@@ -20,7 +20,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     return cy
       .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
       .then((insertedDeal) => {
-        dealId = insertedDeal?._id;
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
         ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
         return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
@@ -47,6 +47,14 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseSummary
+        .ukefDealId()
+        .invoke('text')
+        .then((text) => {
+          ukefDealId = text.trim();
+        });
+
       cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
     });
 

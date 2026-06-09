@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
 import facilitiesPage from '../../../pages/facilitiesPage';
-import { caseSubNavigation, successBanner } from '../../../partials';
+import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -20,8 +20,8 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
     return cy
       .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
       .then((insertedDeal) => {
-        dealId = insertedDeal?._id;
-        ukefDealId = insertedDeal?.details?.ukefDealId;
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
         return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
       })
@@ -47,6 +47,13 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseSummary
+        .ukefDealId()
+        .invoke('text')
+        .then((text) => {
+          ukefDealId = text.trim();
+        });
     });
 
     describe('after submitting the cancellation', () => {
