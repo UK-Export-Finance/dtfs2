@@ -6,6 +6,7 @@ const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, 
 require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
+const DTFS_CENTRAL_API_TIMEOUT_MS = Number(process.env.DTFS_CENTRAL_API_TIMEOUT_MS || 10000);
 
 const headers = {
   central: {
@@ -34,6 +35,7 @@ const findOnePortalDeal = async (dealId) => {
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data.deal;
@@ -101,6 +103,7 @@ const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -261,6 +264,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
         dealUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -294,6 +298,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
         snapshotUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -321,6 +326,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
         dealId,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -561,6 +567,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
         tfmUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -1610,6 +1617,7 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;

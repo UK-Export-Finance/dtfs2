@@ -7,9 +7,39 @@ const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const CONSTANTS = require('../../constants');
 
+const SUBMISSION_STEP_TIMEOUT_MS = Number(process.env.TFM_SUBMIT_STEP_TIMEOUT_MS || 10000);
+
+/**
+ * Wraps a promise with a timeout.
+ * @param {*} promise The promise to wrap
+ * @param {*} timeoutMs The timeout in milliseconds
+ * @param {*} operation The name of the operation for logging
+ * @param {*} facilityId The facility ID for logging
+ * @returns The result of the promise or throws an error if timed out
+ */
+const withTimeout = async (promise, timeoutMs, operation, facilityId) => {
+  let timeoutId;
+
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(`${operation} timed out after ${timeoutMs}ms`)), timeoutMs);
+      }),
+    ]);
+  } catch (error) {
+    console.error('updateFacilities: %s failed for facility %s %o', operation, facilityId, error);
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
 const updateFacilities = async (deal, auditDetails) => {
-  // Create deep clone
-  // Note this has the side effect of converting dates to strings
+  /**
+   * Create deep clone
+   * Note this has the side effect of converting dates to strings
+   */
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
   const { dealType, submissionDate: dealSubmissionDate, submissionType } = modifiedDeal;
@@ -46,12 +76,22 @@ const updateFacilities = async (deal, auditDetails) => {
         } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
           const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
 
-          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails);
+          await withTimeout(
+            api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails),
+            SUBMISSION_STEP_TIMEOUT_MS,
+            'updatePortalFacilityStatus',
+            facilityId,
+          );
 
           portalFacilityUpdate.hasBeenAcknowledged = true;
 
           // updates BSS facility collection
-          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
+          const updatedPortalFacility = await withTimeout(
+            api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails),
+            SUBMISSION_STEP_TIMEOUT_MS,
+            'updatePortalFacility',
+            facilityId,
+          );
 
           facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
           facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
@@ -65,14 +105,29 @@ const updateFacilities = async (deal, auditDetails) => {
       }
 
       const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
-      const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
+      const facilityCurrencyConversion = await withTimeout(
+        convertFacilityCurrency(facility, dealSubmissionDate),
+        SUBMISSION_STEP_TIMEOUT_MS,
+        'convertFacilityCurrency',
+        facilityId,
+      );
 
       try {
-        const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
+        const facilityExposurePeriod = await withTimeout(
+          getFacilityExposurePeriod(facility),
+          SUBMISSION_STEP_TIMEOUT_MS,
+          'getFacilityExposurePeriod',
+          facilityId,
+        );
 
         // Premium Schedule is only valid for non-GEF facilities
         if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-          facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+          facilityPremiumSchedule = await withTimeout(
+            getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates),
+            SUBMISSION_STEP_TIMEOUT_MS,
+            'getFacilityPremiumSchedule',
+            facilityId,
+          );
           facilityUpdate = {
             premiumSchedule: facilityPremiumSchedule,
           };
@@ -96,11 +151,16 @@ const updateFacilities = async (deal, auditDetails) => {
           riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
         };
 
-        const updateFacilityResponse = await api.updateFacility({
+        const updateFacilityResponse = await withTimeout(
+          api.updateFacility({
+            facilityId,
+            tfmUpdate: facilityUpdate,
+            auditDetails,
+          }),
+          SUBMISSION_STEP_TIMEOUT_MS,
+          'updateFacility',
           facilityId,
-          tfmUpdate: facilityUpdate,
-          auditDetails,
-        });
+        );
 
         // add the updated tfm object to returned facility.
         // if we return updateFacilityResponse, we'll get facilitySnapshot
