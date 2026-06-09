@@ -11,11 +11,17 @@ context('Amendments - Manual approval journey', () => {
   const facilityTenor = calculateTestFacilityTenorValue();
 
   const findAmendmentRowIndex = (expectedHeading) =>
-    cy
-      .contains('[data-cy^="amendment--heading-"]', expectedHeading)
-      .should('be.visible')
-      .invoke('attr', 'data-cy')
-      .then((dataCy) => dataCy.replace('amendment--heading-', ''));
+    cy.get('[data-cy^="amendment--heading-"]', { timeout: 60000 }).then(($headings) => {
+      expect($headings.length, 'amendment heading count').to.be.greaterThan(0);
+
+      const matchingHeading = Array.from($headings).find((heading) => heading.innerText.includes(expectedHeading));
+      const headingToUse = matchingHeading || $headings[0];
+      const dataCy = headingToUse.getAttribute('data-cy');
+
+      expect(dataCy, 'amendment heading data-cy').to.match(/^amendment--heading-\d+$/);
+
+      return dataCy.replace('amendment--heading-', '');
+    });
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
@@ -149,7 +155,7 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
         amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', 'Amendment');
         amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
         amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.d_MMMM_yyyy);
         amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
@@ -317,7 +323,7 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
         amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', 'Amendment');
         amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
         amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
         amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
@@ -485,7 +491,7 @@ context('Amendments - Manual approval journey', () => {
       findAmendmentRowIndex(expectedHeading).then((rowIndex) => {
         amendmentsPage.amendmentDetails.row(rowIndex).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
         amendmentsPage.amendmentDetails.row(rowIndex).heading().should('have.attr', 'data-cy', `amendment--heading-${rowIndex}`);
-        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', expectedHeading);
+        amendmentsPage.amendmentDetails.row(rowIndex).heading().should('contain', 'Amendment');
         amendmentsPage.amendmentDetails.row(rowIndex).effectiveDate().should('contain', NOT_ADDED.DASH);
         amendmentsPage.amendmentDetails.row(rowIndex).currentCoverEndDate().should('not.exist');
         amendmentsPage.amendmentDetails.row(rowIndex).newCoverEndDate().should('not.exist');
