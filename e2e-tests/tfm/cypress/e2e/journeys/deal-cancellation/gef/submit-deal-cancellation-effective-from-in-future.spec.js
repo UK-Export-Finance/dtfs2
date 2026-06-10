@@ -4,7 +4,7 @@ import relative from '../../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
-import { caseSubNavigation, successBanner } from '../../../partials';
+import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
 import facilitiesPage from '../../../pages/facilitiesPage';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
@@ -14,20 +14,23 @@ import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 context('Deal cancellation - submit cancellation with "effectiveFrom" in future', () => {
   let dealId;
   let facility;
-  const ukefDealId = 10000001;
+  let ukefDealId;
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacility) => {
+        facility = createdFacility?.details;
 
-      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
-        facility = createdFacility.details;
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -44,11 +47,19 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseSummary
+        .ukefDealId()
+        .invoke('text')
+        .then((text) => {
+          ukefDealId = text.trim();
+        });
+
       cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
     });
 
     describe('after submitting the cancellation', () => {
-      const expectedSuccessBannerText = `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
+      const expectedSuccessBannerText = () => `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
 
       it('should redirect you to the deal summary page', () => {
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
@@ -58,11 +69,11 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         cy.reload();
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
 
       it('should not show the "Cancel Deal" button', () => {
@@ -106,19 +117,19 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
 
       it('should display the cancellation success banner on each of the other sub navigation tabs', () => {
         caseSubNavigation.tasksLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.partiesLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.documentsLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.activityLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.underwritingLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
     });
   });

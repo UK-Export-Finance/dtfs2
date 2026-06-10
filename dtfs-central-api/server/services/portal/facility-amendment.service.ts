@@ -253,6 +253,7 @@ export class PortalFacilityAmendmentService {
 
     if (!existingAmendment || existingAmendment.type === AMENDMENT_TYPES.TFM) {
       console.error('Amendment with facilityId %s and amendmentId %s is not a portal amendment', facilityId, amendmentId);
+
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
