@@ -12,7 +12,7 @@ type SubmitFacilitiesToApimGiftParams = {
 };
 
 /**
- * Submits facilities to the APIM/GIFT.
+ * Sends facilities to the APIM/GIFT.
  * If only one facility is provided, create a single payload and submits it.
  * If multiple facilities are provided, create multiple payloads and submit them sequentially.
  * The function returns the response from the APIM/GIFT integration, which could be a single facility or an array of facilities depending on the input.
@@ -23,13 +23,13 @@ type SubmitFacilitiesToApimGiftParams = {
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
  * @returns {Promise<TfmFacility | TfmFacility[] | boolean>} A promise that resolves to the response from the APIM/GIFT integration.
  */
-export const submitFacilitiesToApimGift = async ({
+export const sendFacilitiesToApimGift = async ({
   deal,
   facilities,
   isBssEwcsDeal,
   isGefDeal,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
-  console.info('Submitting facilities to APIM GIFT for deal %s ', deal?._id);
+  console.info('Sending facilities to APIM GIFT for deal %s ', deal?._id);
 
   const api = apiModule as ApiTypes;
 

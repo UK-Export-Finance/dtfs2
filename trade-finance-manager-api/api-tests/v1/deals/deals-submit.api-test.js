@@ -2,7 +2,7 @@ const { DEAL_SUBMISSION_TYPE, DEAL_TYPE, CURRENCY } = require('@ukef/dtfs2-commo
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
 const mapSubmittedDeal = require('../../../server/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../server/v1/controllers/deal-add-tfm-data');
@@ -44,20 +44,20 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
 }));
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSubmitToApimGift: jest.fn(),
-  submitFacilitiesToApimGift: jest.fn(),
+  canSendToApimGift: jest.fn(),
+  sendFacilitiesToApimGift: jest.fn(),
 }));
 
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    canSubmitToApimGift.mockClear();
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+    canSendToApimGift.mockClear();
+    canSendToApimGift.mockResolvedValue({
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
     });
 
-    submitFacilitiesToApimGift.mockClear();
+    sendFacilitiesToApimGift.mockClear();
 
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
@@ -337,33 +337,33 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('should call canSubmitToApimGift', async () => {
+    it('should call canSendToApimGift', async () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
-      expect(canSubmitToApimGift).toHaveBeenCalledWith(body);
+      expect(canSendToApimGift).toHaveBeenCalledWith(body);
     });
 
-    it('should call submitFacilitiesToApimGift', async () => {
+    it('should call sendFacilitiesToApimGift', async () => {
       const mockIssuedFacilities = [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
         (facility) => facility.hasBeenIssued,
       );
 
-      canSubmitToApimGift.mockResolvedValueOnce({
-        canSubmitFacilitiesToApimGift: true,
+      canSendToApimGift.mockResolvedValueOnce({
+        canSendFacilitiesToApimGift: true,
         issuedFacilities: mockIssuedFacilities,
       });
 
       await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
-      const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+      const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-      expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
         deal: submittedDeal,
         facilities: mockIssuedFacilities,
       });
     });
 
-    describe('submitFacilitiesToApimGift only called with facilities not already in GIFT', () => {
+    describe('sendFacilitiesToApimGift only called with facilities not already in GIFT', () => {
       const mockFacility1 = {
         ...MOCK_FACILITIES[0],
         facilitySnapshot: {
@@ -390,17 +390,17 @@ describe('/v1/deals', () => {
       };
 
       describe('when all issued facilities are not in GIFT', () => {
-        it('should call submitFacilitiesToApimGift with all issued facilities', async () => {
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+        it('should call sendFacilitiesToApimGift with all issued facilities', async () => {
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility1, mockFacility2],
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
 
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
             deal: submittedDeal,
             facilities: [mockFacility1, mockFacility2],
             isBssEwcsDeal: true,
@@ -410,31 +410,31 @@ describe('/v1/deals', () => {
       });
 
       describe('when there are no issued facilities to send to GIFT', () => {
-        it('should not call submitFacilitiesToApimGift', async () => {
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: false,
+        it('should not call sendFacilitiesToApimGift', async () => {
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: false,
             issuedFacilities: [], // no facilities to send
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
 
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
-          expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+          expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
         });
       });
 
       describe('when some issued facilities are in GIFT, some are not', () => {
-        it('should call submitFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+        it('should call sendFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility2, mockFacility3], // only facility 2 and 3 are not in GIFT
             isBssEwcsDeal: true,
             isGefDeal: false,
           });
 
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
             deal: submittedDeal,
             facilities: [mockFacility2, mockFacility3],
             isBssEwcsDeal: true,
