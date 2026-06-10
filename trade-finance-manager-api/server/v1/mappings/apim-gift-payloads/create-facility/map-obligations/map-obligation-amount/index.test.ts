@@ -84,7 +84,7 @@ describe('mapObligationAmount', () => {
     });
   });
 
-  describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
+  describe('when isBssEwcsDeal is true, isGefDeal is false and coverPercentage is provided', () => {
     it('should return facilityAmount multiplied by coverPercentage', () => {
       // Arrange
       const isBssEwcsDeal = true;
@@ -99,7 +99,28 @@ describe('mapObligationAmount', () => {
       });
 
       // Assert
-      expect(result).toEqual(facilityAmount * coverPercentage);
+      const expected = facilityAmount * coverPercentage;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when isBssEwcsDeal is true, isGefDeal is false and coverPercentage is null', () => {
+    it('should return null', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
+      // Act
+      const result = mapObligationAmount({
+        coverPercentage: null,
+        facilityAmount,
+        isBssEwcsDeal,
+        isGefDeal: false,
+        ukefExposure,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 

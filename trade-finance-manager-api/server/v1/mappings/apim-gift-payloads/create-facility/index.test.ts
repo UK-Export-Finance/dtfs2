@@ -64,7 +64,7 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+  const facilityAmount = Number(String(facilitySnapshot.value).replace('', ''));
 
   const params = {
     deal: mockDeal,
@@ -125,6 +125,7 @@ describe('createFacility', () => {
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
+        coverPercentage,
         currency: facilitySnapshot.currency.id,
         facilityType: facilitySnapshot.type,
         facilityAmount,

@@ -63,7 +63,7 @@ export const createFacility = async ({
 
   const ukefExposure = Number(tfm.ukefExposure);
 
-  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, '')); // TODO: is .replace required? check db.
+  const facilityAmount = Number(String(facilitySnapshot.value).replace('', ''));
 
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
 
@@ -134,6 +134,7 @@ export const createFacility = async ({
     }),
     obligations: mapObligations({
       bssSubtypeName,
+      coverPercentage,
       currency,
       facilityAmount,
       facilityType,
