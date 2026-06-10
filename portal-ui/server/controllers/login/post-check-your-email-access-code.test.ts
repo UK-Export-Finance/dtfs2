@@ -6,6 +6,7 @@ import { PostCheckYourEmailAccessCodePageRequest, postCheckYourEmailAccessCode }
 import * as api from '../../api';
 import generateValidationErrors from './validation';
 import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
+import { LANDING_PAGES } from '../../constants';
 
 jest.mock('../../api');
 jest.mock('./validation');
@@ -141,7 +142,9 @@ describe('postCheckYourEmailAccessCodePage', () => {
 
     it('should redirect to dashboard after successful OTP', () => {
       // Assert
-      expect(redirectMock).toHaveBeenCalledWith('/dashboard');
+      expect(renderMock).toHaveBeenCalledWith('login/post-login-redirect.njk', {
+        redirectUrl: LANDING_PAGES.DEFAULT,
+      });
     });
   });
 

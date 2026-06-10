@@ -3,15 +3,15 @@ const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_PAYMENT_REPORT_OFFICER1, BANK1_CHECKER1, ADMINNOMAKER, READ_ONLY } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const complete2faLogin = () => {
-  cy.enterUsernameAndPassword(BANK1_MAKER1);
+const complete2faLogin = (user = BANK1_MAKER1) => {
+  cy.enterUsernameAndPassword(user);
 
   cy.url().should('eq', relative('/login/check-your-email-access-code'));
 
-  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
+  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: user.username }).then(() => {
     cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
     cy.clickSubmitButton();
   });
@@ -90,6 +90,46 @@ context('2FA Journey - Successful login flow', () => {
 
       cy.url().should('not.eq', relative('/login/resend-another-access-code'));
       cy.url().should('not.eq', relative('/login'));
+    });
+  });
+
+  describe('Logging in as a payment report officer with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(BANK1_PAYMENT_REPORT_OFFICER1);
+    });
+
+    it('should redirect to the utilisation report upload page after successful login', () => {
+      cy.url().should('eq', relative('/utilisation-report-upload'));
+    });
+  });
+
+  describe('Logging in as a checker with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(BANK1_CHECKER1);
+    });
+
+    it('should redirect to the utilisation report upload page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+    });
+  });
+
+  describe('Logging in as an admin with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(ADMINNOMAKER);
+    });
+
+    it('should redirect to the default dashboard page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+    });
+  });
+
+  describe('Logging in as a read-only user with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(READ_ONLY);
+    });
+
+    it('should redirect to the default dashboard page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
 });
