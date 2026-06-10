@@ -140,7 +140,7 @@ describe('postCheckYourEmailAccessCodePage', () => {
       });
     });
 
-    it('should redirect to dashboard after successful OTP', () => {
+    it('should render the post-login redirect page after successful OTP', () => {
       // Assert
       expect(renderMock).toHaveBeenCalledWith('login/post-login-redirect.njk', {
         redirectUrl: LANDING_PAGES.DEFAULT,

@@ -108,7 +108,7 @@ context('2FA Journey - Successful login flow', () => {
       complete2faLogin(BANK1_CHECKER1);
     });
 
-    it('should redirect to the utilisation report upload page after successful login', () => {
+    it('should redirect to the default dashboard page after successful login', () => {
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
