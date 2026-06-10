@@ -3,19 +3,13 @@
 const getAllTfmDeals = require('./getAllTfmDeals');
 const deleteTfmDeal = require('./deleteTfmDeal');
 
-const deleteAllDeals = (deals) => {
-  for (const dealToDelete of deals) {
-    const { _id } = dealToDelete;
-    deleteTfmDeal(_id);
-  }
-};
-
 module.exports = () => {
   console.info('deleteTfmDeals::');
 
-  new Cypress.Promise(() => {
-    getAllTfmDeals().then((deals) => {
-      deleteAllDeals(deals);
+  return getAllTfmDeals().then((deals) => {
+    return cy.wrap(deals).each((dealToDelete) => {
+      const { _id } = dealToDelete;
+      return deleteTfmDeal(_id);
     });
   });
 };

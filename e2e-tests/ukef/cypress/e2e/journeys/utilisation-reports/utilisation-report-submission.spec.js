@@ -6,6 +6,7 @@ import { NODE_TASKS, PDC_RECONCILE, TFM_URL } from '../../../../../e2e-fixtures'
 
 import portalPages from '../../../../../portal/cypress/e2e/pages';
 import tfmPages from '../../../../../tfm/cypress/e2e/pages';
+import { SIGN_IN_TOKENS } from '../../../../../portal/cypress/fixtures/constants';
 
 import MOCK_USERS from '../../../../../e2e-fixtures/portal-users.fixture';
 import { tfmFacilityForReport } from '../../../fixtures/tfm-facility';
@@ -17,12 +18,32 @@ context('Portal to TFM utilisation report submission', () => {
   const today = new Date();
   const submissionMonthStamp = toIsoMonthStamp(today);
 
+  const loginToPortalAsPaymentReportOfficer = ({ username, password }) => {
+    if (Cypress.env('FF_PORTAL_2FA_ENABLED') === 'true') {
+      cy.loginOTP({ username, password });
+      return;
+    }
+
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
+    cy.enterUsernameAndPassword({ username, password });
+
+    cy.url().should('eq', relative('/login/check-your-email'));
+
+    const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+    cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
+    cy.getUserByUsername(username).then(({ _id }) => {
+      portalPages.signInLink.visit({ token: signInToken, userId: _id });
+    });
+  };
+
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
-    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport]);
   });
 
   beforeEach(() => {
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport]);
+
     const visibleBanks = [];
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
@@ -102,12 +123,13 @@ context('Portal to TFM utilisation report submission', () => {
     //---------------------------------------------------------------------------------
     // Portal payment report officer submits utilisation report
     //---------------------------------------------------------------------------------
-    cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+    loginToPortalAsPaymentReportOfficer(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relative('/utilisation-report-upload'));
 
     portalPages.utilisationReportUpload.utilisationReportFileInput().attachFile(fileName);
     cy.clickContinueButton();
     portalPages.confirmAndSend.confirmAndSendButton().click();
+    portalPages.confirmation.currentUrl().should('contain', '/confirmation');
 
     //---------------------------------------------------------------------------------
     // PDC_RECONCILE user can login to TFM and view the data from the submitted report
@@ -121,7 +143,11 @@ context('Portal to TFM utilisation report submission', () => {
     cy.tfmLogin(PDC_RECONCILE);
     cy.url().should('eq', `${TFM_URL}/utilisation-reports`);
 
-    tfmPages.utilisationReportsSummaryPage.reportLink(BANK1_PAYMENT_REPORT_OFFICER1.bank.id, '2023-03').click();
+    cy.contains('h2', 'Open reports reporting period end: February 2023')
+      .parent()
+      .within(() => {
+        cy.contains('a', BANK1_PAYMENT_REPORT_OFFICER1.bank.name).click();
+      });
 
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.firstReportRow);
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);
