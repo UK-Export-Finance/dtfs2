@@ -17,7 +17,7 @@ const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 
-const { submitDealAfterUkefIds } = require('./deal.submit.controller');
+const { submitDealAfterUkefIds, submitDealBeforeUkefIds } = require('./deal.submit.controller');
 
 jest.mock('../api', () => ({
   submitDeal: jest.fn(),
@@ -316,5 +316,40 @@ describe('submitDealAfterUkefIds', () => {
       // Assert
       expect(api.updateDeal).toHaveBeenCalled();
     });
+  });
+});
+
+describe('submitDealBeforeUkefIds', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    api.submitDeal.mockResolvedValue(submittedDeal);
+    api.updateDeal.mockResolvedValue(tfmDeal);
+
+    addTfmDealData.mockImplementation(async (deal) => deal);
+    addPartyUrns.mockImplementation(async (deal) => deal);
+    addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
+
+    canSubmitToACBS.mockResolvedValue(false);
+    canSendToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+
+    convertDealCurrencies.mockImplementation(async (deal) => deal);
+    createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));
+    createDealTasks.mockImplementation(async (deal) => deal);
+
+    findOneGefDeal.mockResolvedValueOnce({ _id: dealId }).mockResolvedValueOnce({ _id: dealId, status: 'Acknowledged' });
+
+    mapSubmittedDeal.mockReturnValue(mappedDeal);
+
+    sendDealSubmitEmails.mockResolvedValue({ firstTaskEmail: { to: 'test@example.com' } });
+
+    updateFacilities.mockImplementation(async (deal) => deal);
+    updatePortalDealStatus.mockResolvedValue();
+  });
+
+  it('should submit the deal to central API once', async () => {
+    await submitDealBeforeUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+    expect(api.submitDeal).toHaveBeenCalledTimes(1);
   });
 });

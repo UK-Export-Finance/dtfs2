@@ -278,12 +278,6 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) 
       return false;
     }
 
-    const response = await api.submitDeal(dealType, dealId, auditDetails);
-
-    if (!response) {
-      throw new Error(`Unable to submit deal ${dealId} to TFM`);
-    }
-
     return submitDealAfterUkefIds(dealId, dealType, checker, auditDetails);
   } catch (error) {
     console.error('❌ Unable to submit new deal %s to TFM %o', dealId, error);

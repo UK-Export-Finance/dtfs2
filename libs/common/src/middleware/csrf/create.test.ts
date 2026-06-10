@@ -1,17 +1,21 @@
 import httpMocks from 'node-mocks-http';
-import { Request } from 'express';
+import crypto from 'crypto';
 import { create } from './create';
-import { SSO_URL, SSO_URL_FORM } from '../../constants';
-import { generateToken } from './csrf-sync-instance';
 
-jest.mock('./csrf-sync-instance', () => ({
-  generateToken: jest.fn(),
-}));
-
-const mockGenerateToken = generateToken as jest.Mock<string, [Request]>;
+jest.mock('crypto');
 
 describe('create', () => {
   const next = jest.fn();
+
+  beforeEach(() => {
+    const mockHash = {
+      update: jest.fn().mockReturnThis(),
+      digest: jest.fn().mockReturnValue('ABCD'),
+    };
+
+    (crypto.randomBytes as jest.Mock).mockReturnValue('1234567890');
+    (crypto.createHmac as jest.Mock).mockReturnValue(mockHash);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -28,63 +32,45 @@ describe('create', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`should skip CSRF token generation for ${SSO_URL} URL`, () => {
+  it('should not create CSRF if already exists', () => {
     // Arrange
     const { req, res } = httpMocks.createMocks({
-      session: {},
-      path: SSO_URL,
+      session: {
+        csrf: '1234',
+      },
     });
 
     // Act
     create(req, res, next);
 
     // Assert
-    expect(mockGenerateToken).not.toHaveBeenCalled();
+    expect(req.session.csrf).toBe('1234');
+    expect(res.locals.csrfToken).toContain('ABCD:');
+
+    expect(crypto.randomBytes).not.toHaveBeenCalled();
+    expect(crypto.createHmac).toHaveBeenCalledTimes(1);
+    expect(crypto.createHmac).toHaveBeenCalledWith('SHA512', '1234');
+
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it(`should skip CSRF token generation for ${SSO_URL_FORM} URL`, () => {
+  it('should create CSRF if not already created', () => {
     // Arrange
-    const { req, res } = httpMocks.createMocks({
-      session: {},
-      path: SSO_URL_FORM,
-    });
-
-    // Act
-    create(req, res, next);
-
-    // Assert
-    expect(mockGenerateToken).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledTimes(1);
-  });
-
-  it('should generate a CSRF token', () => {
-    // Arrange
-    const mockToken = 'mock-csrf-token';
-    mockGenerateToken.mockReturnValue(mockToken);
-
     const { req, res } = httpMocks.createMocks({ session: {} });
 
     // Act
     create(req, res, next);
 
     // Assert
-    expect(mockGenerateToken).toHaveBeenCalledTimes(1);
-    expect(mockGenerateToken).toHaveBeenCalledWith(req);
-  });
+    expect(req.session.csrf).toContain('1234567890');
+    expect(res.locals.csrfToken).toContain('ABCD:');
 
-  it('should attach the CSRF token to res.locals and call next', () => {
-    // Arrange
-    const mockToken = 'mock-csrf-token';
-    mockGenerateToken.mockReturnValue(mockToken);
+    expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
+    expect(crypto.randomBytes).toHaveBeenCalledWith(128);
 
-    const { req, res } = httpMocks.createMocks({ session: {} });
+    expect(crypto.createHmac).toHaveBeenCalledTimes(1);
+    expect(crypto.createHmac).toHaveBeenCalledWith('SHA512', '1234567890');
 
-    // Act
-    create(req, res, next);
-
-    // Assert
-    expect(res.locals.csrfToken).toBe(mockToken);
     expect(next).toHaveBeenCalledTimes(1);
   });
 });
