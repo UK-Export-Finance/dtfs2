@@ -63,6 +63,10 @@ export const createFacility = async ({
 
   const ukefExposure = Number(tfm.ukefExposure);
 
+  /**
+   * GEF "value" field is a number.
+   * BSS/EWCS "value" field is a string with commas.
+   */
   const facilityAmount = Number(String(facilitySnapshot.value).replace('', ''));
 
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
