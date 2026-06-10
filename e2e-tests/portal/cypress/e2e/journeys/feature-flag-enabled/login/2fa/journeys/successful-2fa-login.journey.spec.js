@@ -22,7 +22,7 @@ context('2FA Journey - Successful login flow', () => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
   });
 
-  describe('Complete successful 2FA journey', () => {
+  describe('complete successful 2FA journey', () => {
     it('should redirect to check-your-email page after entering valid credentials', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
@@ -46,7 +46,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Accessing protected routes after successful 2FA', () => {
+  describe('accessing protected routes after successful 2FA', () => {
     beforeEach(() => {
       complete2faLogin();
     });
@@ -66,7 +66,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Redirecting away from 2FA pages after successful login', () => {
+  describe('redirecting away from 2FA pages after successful login', () => {
     beforeEach(() => {
       complete2faLogin();
     });
@@ -93,7 +93,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Logging in as a payment report officer with 2FA enabled', () => {
+  describe('logging in as a payment report officer with 2FA enabled', () => {
     beforeEach(() => {
       complete2faLogin(BANK1_PAYMENT_REPORT_OFFICER1);
     });
@@ -103,7 +103,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Logging in as a checker with 2FA enabled', () => {
+  describe('logging in as a checker with 2FA enabled', () => {
     beforeEach(() => {
       complete2faLogin(BANK1_CHECKER1);
     });
@@ -113,7 +113,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Logging in as an admin with 2FA enabled', () => {
+  describe('logging in as an admin with 2FA enabled', () => {
     beforeEach(() => {
       complete2faLogin(ADMINNOMAKER);
     });
@@ -123,7 +123,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Logging in as a read-only user with 2FA enabled', () => {
+  describe('logging in as a read-only user with 2FA enabled', () => {
     beforeEach(() => {
       complete2faLogin(READ_ONLY);
     });
