@@ -58,14 +58,24 @@ describe('mapGefObligationAmount', () => {
 
 describe('mapObligationAmount', () => {
   const ukefExposure = 1000;
+  const facilityAmount = 1200;
+  const coverPercentage = 0.8;
 
   describe('when isGefDeal is true', () => {
     it('should return the the result of mapGefObligationAmount', () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CASH;
+      const isBssEwcsDeal = false;
 
       // Act
-      const result = mapObligationAmount({ isGefDeal: true, facilityType, ukefExposure });
+      const result = mapObligationAmount({
+        coverPercentage,
+        facilityAmount,
+        isBssEwcsDeal,
+        isGefDeal: true,
+        facilityType,
+        ukefExposure,
+      });
 
       // Assert
       const expected = mapGefObligationAmount({ facilityType, ukefExposure });
@@ -74,13 +84,41 @@ describe('mapObligationAmount', () => {
     });
   });
 
-  describe('when isGefDeal is false', () => {
-    it('should return the provided ukefExposure', () => {
+  describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
+    it('should return facilityAmount multiplied by coverPercentage', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
       // Act
-      const result = mapObligationAmount({ isGefDeal: false, ukefExposure });
+      const result = mapObligationAmount({
+        coverPercentage,
+        facilityAmount,
+        isBssEwcsDeal,
+        isGefDeal: false,
+        ukefExposure,
+      });
 
       // Assert
-      expect(result).toEqual(ukefExposure);
+      expect(result).toEqual(facilityAmount * coverPercentage);
+    });
+  });
+
+  describe('when isGefDeal is false and isBssEwcsDeal is false', () => {
+    it('should return null', () => {
+      // Arrange
+      const isBssEwcsDeal = false;
+
+      // Act
+      const result = mapObligationAmount({
+        coverPercentage,
+        facilityAmount,
+        isBssEwcsDeal,
+        isGefDeal: false,
+        ukefExposure,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 });

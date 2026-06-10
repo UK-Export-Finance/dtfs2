@@ -7,6 +7,7 @@ import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categ
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { mapCoverPercentage } from './map-cover-percentage';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
@@ -57,6 +58,14 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
+  const coverPercentage = mapCoverPercentage({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
+
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+
   const params = {
     deal: mockDeal,
     facility: mockFacility,
@@ -88,11 +97,12 @@ describe('createFacility', () => {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
         bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
+        coverPercentage,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
         exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
-        facilityAmount: Number(tfm.ukefExposure),
+        facilityAmount,
         facilityType: facilitySnapshot.type,
         isGefDeal,
         productTypeCode,
@@ -116,10 +126,11 @@ describe('createFacility', () => {
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
-        isBssEwcsDeal,
         facilityType: facilitySnapshot.type,
+        facilityAmount,
+        isBssEwcsDeal,
         isGefDeal,
-        ukefExposure: Number(tfm.ukefExposure),
+        ukefExposure: Number(String(facilitySnapshot.value).replace(/,/g, '')),
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,

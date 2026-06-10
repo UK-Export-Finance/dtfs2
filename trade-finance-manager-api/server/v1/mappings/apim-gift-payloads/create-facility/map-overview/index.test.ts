@@ -1,6 +1,7 @@
 import { CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
+import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
@@ -8,6 +9,7 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 describe('mapOverview', () => {
   const baseParams = {
     bankInternalRefName: 'Mock internal reference name',
+    coverPercentage: 80,
     currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
     expiryDate: '2026-12-31',
@@ -22,7 +24,10 @@ describe('mapOverview', () => {
 
   const baseExpected = {
     ...otherParams,
-    amount: facilityAmount,
+    amount: mapFacilityAmount({
+      facilityAmount,
+      coverPercentage: baseParams.coverPercentage,
+    }),
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };

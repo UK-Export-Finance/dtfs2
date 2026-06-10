@@ -11,6 +11,7 @@ import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { mapCoverPercentage } from './map-cover-percentage';
 
 export type FacilityCreationParams = {
   deal: TfmDeal;
@@ -60,8 +61,17 @@ export const createFacility = async ({
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const facilityAmount = Number(tfm.ukefExposure);
+  const ukefExposure = Number(tfm.ukefExposure);
+
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, '')); // TODO: is .replace required? check db.
+
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  const coverPercentage = mapCoverPercentage({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
 
   /**
    * Ensure dayCountBasis is a number.
@@ -100,6 +110,7 @@ export const createFacility = async ({
     consumer,
     overview: mapOverview({
       bankInternalRefName,
+      coverPercentage,
       currency,
       effectiveDate,
       expiryDate,
@@ -124,10 +135,11 @@ export const createFacility = async ({
     obligations: mapObligations({
       bssSubtypeName,
       currency,
-      isBssEwcsDeal,
+      facilityAmount,
       facilityType,
+      isBssEwcsDeal,
       isGefDeal,
-      ukefExposure: facilityAmount,
+      ukefExposure,
     }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
