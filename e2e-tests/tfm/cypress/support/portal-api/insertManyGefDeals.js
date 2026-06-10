@@ -3,14 +3,23 @@ const { getIdFromNumberGenerator } = require('../external-api/api');
 
 module.exports = (deals, opts) => {
   console.info('createManyGefDeals::');
-  logIn(opts).then((token) => {
-    deals.forEach((dealToInsert) => {
+
+  return logIn(opts).then((token) => {
+    const persistedDeals = [];
+
+    cy.wrap(deals).each((dealToInsert) => {
       const ukefId = getIdFromNumberGenerator();
 
-      const dealWithId = dealToInsert;
-      dealWithId.ukefDealId = ukefId;
+      const dealWithId = {
+        ...dealToInsert,
+        ukefDealId: ukefId,
+      };
 
-      insertGefDeal(dealWithId, opts, token).then((insertedDeal) => insertedDeal);
+      return insertGefDeal(dealWithId, opts, token).then((insertedDeal) => {
+        persistedDeals.push(insertedDeal);
+      });
     });
+
+    return cy.then(() => persistedDeals);
   });
 };
