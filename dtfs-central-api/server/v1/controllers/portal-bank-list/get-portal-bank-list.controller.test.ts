@@ -50,14 +50,14 @@ describe('getPortalBankList', () => {
     jest.resetAllMocks();
   });
 
-  describe('when the repository returns a list of entries', () => {
+  describe('when the database returns a list of entries', () => {
     const entries: WithId<PortalBankListEntry>[] = [aPortalBankListEntry({ name: 'Bank 1', order: 1 }), aPortalBankListEntry({ name: 'Bank 2', order: 2 })];
 
     beforeEach(() => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue(entries);
     });
 
-    it('should respond with a 200 (Ok)', async () => {
+    it('should respond with a 200', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -66,7 +66,7 @@ describe('getPortalBankList', () => {
       expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
     });
 
-    it('should respond with the list of entries returned by the repository', async () => {
+    it('should respond with the list of entries returned by the database', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -76,12 +76,12 @@ describe('getPortalBankList', () => {
     });
   });
 
-  describe('when the repository returns an empty list', () => {
+  describe('when the database returns an empty list', () => {
     beforeEach(() => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue([]);
     });
 
-    it('should respond with a 200 (Ok) and an empty array', async () => {
+    it('should respond with a 200 and an empty array', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -91,7 +91,7 @@ describe('getPortalBankList', () => {
     });
   });
 
-  describe('when the repository throws an ApiError', () => {
+  describe('when the database throws an ApiError', () => {
     const apiError = new TestApiError({
       status: HttpStatusCode.BadRequest,
       message: 'Something is wrong with the request',
@@ -111,7 +111,7 @@ describe('getPortalBankList', () => {
       expect(res.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
     });
 
-    it('should respond with an error body that wraps the ApiError message and code', async () => {
+    it('should respond with an error body', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -134,14 +134,14 @@ describe('getPortalBankList', () => {
     });
   });
 
-  describe('when the repository throws a non-ApiError', () => {
+  describe('when the database throws a non-ApiError', () => {
     const unknownError = new Error('Database unreachable');
 
     beforeEach(() => {
       jest.mocked(getAllPortalBankListEntries).mockRejectedValue(unknownError);
     });
 
-    it('should respond with a 500 (Internal Server Error)', async () => {
+    it('should respond with a 500', async () => {
       const res = getMockResponse();
 
       await invokeController(res);

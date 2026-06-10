@@ -21,13 +21,15 @@ type GetPortalBankListResponseBody = WithId<PortalBankListEntry>[] | ApiErrorRes
  * - Any other error is logged and returned as a `500 Internal Server Error`
  *   with a generic message — the underlying error is not exposed to callers.
  */
-export const getPortalBankList = async (req: GetPortalBankListRequest, res: Response<GetPortalBankListResponseBody>) => {
+export const getPortalBankList = async (_req: GetPortalBankListRequest, res: Response<GetPortalBankListResponseBody>) => {
   try {
     const entries = await getAllPortalBankListEntries();
+
     return res.status(HttpStatusCode.Ok).send(entries);
   } catch (error) {
     const errorMessage = 'Failed to get the portal bank list';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
@@ -35,6 +37,7 @@ export const getPortalBankList = async (req: GetPortalBankListRequest, res: Resp
         code: error.code,
       });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: errorMessage,

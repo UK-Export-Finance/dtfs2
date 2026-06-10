@@ -4,7 +4,6 @@
  * Mirrors the order of the hardcoded bank list currently shown on the
  * portal homepage in `portal-ui/templates/_partials/before-you-start.njk`.
  *
- * After the first seed, the team maintains this list manually via MongoDB Compass
  */
 module.exports = [
   { name: 'Barclays Bank', order: 1 },
