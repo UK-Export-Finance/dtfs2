@@ -99,6 +99,16 @@ export const createFacility = async ({
     isGefDeal,
   });
 
+  /**
+   * If DTFS has created a new exporter party URN,
+   * we need to tell APIM TFS to delay sending the facility to GIFT. This is because:
+   * - During DTFS deal submission, it instantly creates a new party URN in Salesforce (via APIM).
+   * - GIFT calls ODS (via APIM) to check if the exporter party URN exists before creating a facility.
+   * - ODS does not instantly have the new party URN from Salesforce. It refreshes every X hours.
+   *
+   * Therefore, we need to flag to APIM that a new party URN has been added.
+   * Otherwise, the facility creation will fail in GIFT with a 400 error, because the exporter party URN does not exist in ODS yet.
+   */
   const delayCreation = newPartyUrnCreated;
 
   const mapped: ApimGiftFacilityCreationPayload = {
