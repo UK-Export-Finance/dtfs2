@@ -13,32 +13,35 @@ import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 
 export type FacilityCreationParams = {
+  creditRiskRatings: string[];
   deal: TfmDeal;
   facility: TfmFacility;
+  facilityCategories: FacilityCategory[];
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
-  creditRiskRatings: string[];
-  facilityCategories: FacilityCategory[];
+  newPartyUrnCreated: boolean;
 };
 
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
+ * * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
  * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
+ * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
- * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
- * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
+ * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
 export const createFacility = async ({
+  creditRiskRatings,
   deal,
   facility,
+  facilityCategories,
   isBssEwcsDeal,
   isGefDeal,
-  creditRiskRatings,
-  facilityCategories,
+  newPartyUrnCreated,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
 
@@ -96,6 +99,8 @@ export const createFacility = async ({
     isGefDeal,
   });
 
+  const delayCreation = newPartyUrnCreated;
+
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
@@ -138,6 +143,7 @@ export const createFacility = async ({
       industryCode,
       isGefDeal,
     }),
+    delayCreation,
   };
 
   return mapped;

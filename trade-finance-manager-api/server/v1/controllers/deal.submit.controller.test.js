@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../constants');
-
 const api = require('../api');
 const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneGefDeal, findOneTfmDeal } = require('./deal.controller');
@@ -16,7 +15,6 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
-
 const { submitDealAfterUkefIds, submitDealBeforeUkefIds } = require('./deal.submit.controller');
 
 jest.mock('../api', () => ({
@@ -117,7 +115,7 @@ describe('submitDealAfterUkefIds', () => {
     api.updateDeal.mockResolvedValue(tfmDeal);
 
     addTfmDealData.mockImplementation(async (deal) => deal);
-    addPartyUrns.mockImplementation(async (deal) => deal);
+    addPartyUrns.mockImplementation(async (deal) => ({ deal, newPartyUrnCreated: true }));
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
@@ -206,6 +204,7 @@ describe('submitDealAfterUkefIds', () => {
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
+          newPartyUrnCreated: true,
         });
       });
     });

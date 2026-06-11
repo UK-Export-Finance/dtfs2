@@ -60,6 +60,7 @@ export const APIM_GIFT_PAYLOADS_EXAMPLES = {
         riskStatus: 'Corporate',
         ukefIndustryCode: '0101',
       },
+      newPartyUrnCreated: true,
     },
   },
 };
