@@ -53,7 +53,7 @@ describe('addPartyUrns', () => {
   beforeEach(() => {
     console.error = jest.fn();
 
-    jest.mocked(isSalesforceCustomerCreationEnabled).mockResolvedValue(true);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
     jest.mocked(getPartyDbInfo).mockResolvedValue([]);
   });
 
@@ -197,6 +197,32 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledWith('An invalid industry code has been supplied');
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
+  });
+
+  it('should not check existing party db info when salesforce payload is incomplete', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+        selectedIndustry: {},
+      },
+    };
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties,
+      },
+    };
+
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getPartyDbInfo).not.toHaveBeenCalled();
   });
 
   it('should return empty party URN when an invalid companies house number is supplied', async () => {

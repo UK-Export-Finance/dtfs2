@@ -230,6 +230,29 @@ describe('submitDealAfterUkefIds', () => {
           newPartyUrnCreated: false,
         });
       });
+
+      it('should call sendFacilitiesToApimGift when addPartyUrns does not return a deal', async () => {
+        // Arrange
+        addPartyUrns.mockResolvedValueOnce(false);
+        canSendToApimGift.mockResolvedValue({
+          canSendFacilitiesToApimGift: true,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+          newPartyUrnCreated: undefined,
+        });
+      });
     });
 
     describe('when APIM/GIFT submission is not allowed', () => {

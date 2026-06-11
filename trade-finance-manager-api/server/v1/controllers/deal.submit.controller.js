@@ -101,11 +101,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
       const partyUrnResult = await addPartyUrns(dealWithTfmData, auditDetails);
 
-      let updatedDealWithPartyUrn;
-
-      if (partyUrnResult.deal) {
-        updatedDealWithPartyUrn = partyUrnResult.deal;
-      }
+      const updatedDealWithPartyUrn = partyUrnResult && partyUrnResult.deal ? partyUrnResult.deal : dealWithTfmData;
 
       if (partyUrnResult?.newPartyUrnCreated) {
         console.info('TFM deal %s submitDealAfterUkefIds - new party URN created for exporter', dealId);

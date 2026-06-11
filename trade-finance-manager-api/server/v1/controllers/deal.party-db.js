@@ -124,7 +124,10 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   let exporterPartyExistedBeforeCreate = false;
 
-  if (isSalesforceCustomerCreationEnabled()) {
+  const shouldCheckExistingExporterParty =
+    isSalesforceCustomerCreationEnabled() && Boolean(companyRegNo) && Boolean(companyName) && Boolean(probabilityOfDefault) && Boolean(code);
+
+  if (shouldCheckExistingExporterParty) {
     const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
     exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
