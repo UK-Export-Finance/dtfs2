@@ -11,43 +11,44 @@ import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { getMonthsOfCover } from './get-months-of-cover';
 
 export type FacilityCreationParams = {
+  creditRiskRatings: string[];
   deal: TfmDeal;
   facility: TfmFacility;
+  facilityCategories: FacilityCategory[];
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
-  creditRiskRatings: string[];
-  facilityCategories: FacilityCategory[];
+  newPartyUrnCreated: boolean;
 };
 
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
+ * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
  * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
+ * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
- * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
- * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
+ * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
 export const createFacility = async ({
+  creditRiskRatings,
   deal,
   facility,
+  facilityCategories,
   isBssEwcsDeal,
   isGefDeal,
-  creditRiskRatings,
-  facilityCategories,
+  newPartyUrnCreated,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
 
   console.info('Submitting facility %s to APIM GIFT', ukefFacilityId);
 
   const dealId = getTfmUkefDealId(deal);
-
-  const { dealSnapshot } = deal;
-  const { bankInternalRefName } = dealSnapshot;
 
   const { facilitySnapshot, tfm } = facility;
 
@@ -62,6 +63,12 @@ export const createFacility = async ({
 
   const facilityAmount = Number(tfm.ukefExposure);
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  const monthsOfCover = getMonthsOfCover({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
 
   /**
    * Ensure dayCountBasis is a number.
@@ -96,10 +103,21 @@ export const createFacility = async ({
     isGefDeal,
   });
 
+  /**
+   * If DTFS has created a new exporter party URN,
+   * we need to tell APIM TFS to delay sending the facility to GIFT. This is because:
+   * - During DTFS deal submission, it instantly creates a new party URN in Salesforce (via APIM).
+   * - GIFT calls ODS (via APIM) to check if the exporter party URN exists before creating a facility.
+   * - ODS does not instantly have the new party URN from Salesforce. It refreshes every X hours.
+   *
+   * Therefore, we need to flag to APIM that a new party URN has been added.
+   * Otherwise, the facility creation will fail in GIFT with a 400 error, because the exporter party URN does not exist in ODS yet.
+   */
+  const delayCreation = newPartyUrnCreated;
+
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
-      bankInternalRefName,
       currency,
       effectiveDate,
       expiryDate,
@@ -107,6 +125,7 @@ export const createFacility = async ({
       facilityAmount,
       facilityType,
       isGefDeal,
+      monthsOfCover,
       productTypeCode,
       ukefFacilityId,
     }),
@@ -138,6 +157,7 @@ export const createFacility = async ({
       industryCode,
       isGefDeal,
     }),
+    delayCreation,
   };
 
   return mapped;
