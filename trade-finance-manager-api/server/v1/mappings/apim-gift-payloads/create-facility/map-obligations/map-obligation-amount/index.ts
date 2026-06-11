@@ -9,8 +9,6 @@ type MapGefObligationAmountParams = {
 };
 
 type MapObligationAmountParams = MapGefObligationAmountParams & {
-  coverPercentage: number | null;
-  facilityAmount: number;
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
 };
@@ -45,28 +43,19 @@ export const mapGefObligationAmount = ({ facilityType, ukefExposure }: MapGefObl
 /**
  * Maps the obligation amount for a facility.
  * @param {MapObligationAmountParams} params - Data required to calculate the obligation amount.
- * @param {number | null} params.coverPercentage - The facility cover percentage to use for calculating the APIM GIFT obligation amount.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
- * @param {number} params.facilityAmount - The total facility amount.
  * @param {string} [params.facilityType] - The facility type (e.g. "Cash", "Contingent"). Only required for GEF deals.
  * @param {number} params.ukefExposure - The facility's UKEF exposure.
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
-export const mapObligationAmount = ({
-  coverPercentage,
-  isBssEwcsDeal,
-  isGefDeal,
-  facilityAmount,
-  facilityType,
-  ukefExposure,
-}: MapObligationAmountParams): number | null => {
+export const mapObligationAmount = ({ isBssEwcsDeal, isGefDeal, facilityType, ukefExposure }: MapObligationAmountParams): number | null => {
   if (isGefDeal) {
     return mapGefObligationAmount({ facilityType, ukefExposure });
   }
 
-  if (isBssEwcsDeal && coverPercentage) {
-    return facilityAmount * coverPercentage;
+  if (isBssEwcsDeal) {
+    return ukefExposure;
   }
 
   return null;

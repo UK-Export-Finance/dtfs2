@@ -58,8 +58,6 @@ describe('mapGefObligationAmount', () => {
 
 describe('mapObligationAmount', () => {
   const ukefExposure = 1000;
-  const facilityAmount = 1200;
-  const coverPercentage = 0.8;
 
   describe('when isGefDeal is true', () => {
     it('should return the the result of mapGefObligationAmount', () => {
@@ -69,8 +67,6 @@ describe('mapObligationAmount', () => {
 
       // Act
       const result = mapObligationAmount({
-        coverPercentage,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal: true,
         facilityType,
@@ -84,43 +80,22 @@ describe('mapObligationAmount', () => {
     });
   });
 
-  describe('when isBssEwcsDeal is true, isGefDeal is false and coverPercentage is provided', () => {
-    it('should return facilityAmount multiplied by coverPercentage', () => {
+  describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
+    it('should return ukefExposure', () => {
       // Arrange
       const isBssEwcsDeal = true;
 
       // Act
       const result = mapObligationAmount({
-        coverPercentage,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal: false,
         ukefExposure,
       });
 
       // Assert
-      const expected = facilityAmount * coverPercentage;
+      const expected = ukefExposure;
 
       expect(result).toEqual(expected);
-    });
-  });
-
-  describe('when isBssEwcsDeal is true, isGefDeal is false and coverPercentage is null', () => {
-    it('should return null', () => {
-      // Arrange
-      const isBssEwcsDeal = true;
-
-      // Act
-      const result = mapObligationAmount({
-        coverPercentage: null,
-        facilityAmount,
-        isBssEwcsDeal,
-        isGefDeal: false,
-        ukefExposure,
-      });
-
-      // Assert
-      expect(result).toBeNull();
     });
   });
 
@@ -131,8 +106,6 @@ describe('mapObligationAmount', () => {
 
       // Act
       const result = mapObligationAmount({
-        coverPercentage,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal: false,
         ukefExposure,

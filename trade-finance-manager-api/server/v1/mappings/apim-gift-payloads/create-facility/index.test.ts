@@ -125,10 +125,8 @@ describe('createFacility', () => {
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
-        coverPercentage,
         currency: facilitySnapshot.currency.id,
         facilityType: facilitySnapshot.type,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         ukefExposure: Number(String(facilitySnapshot.value).replace(/,/g, '')),

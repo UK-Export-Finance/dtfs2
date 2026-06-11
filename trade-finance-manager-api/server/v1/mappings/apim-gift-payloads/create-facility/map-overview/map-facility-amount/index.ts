@@ -12,7 +12,7 @@ type MapFacilityAmountParams = {
  */
 export const mapFacilityAmount = ({ facilityAmount, coverPercentage }: MapFacilityAmountParams): number | null => {
   if (coverPercentage) {
-    return facilityAmount * (coverPercentage / 100);
+    return facilityAmount * coverPercentage;
   }
 
   return null;

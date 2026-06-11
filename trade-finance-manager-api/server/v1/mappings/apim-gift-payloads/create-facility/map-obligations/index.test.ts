@@ -10,8 +10,6 @@ describe('mapObligations', () => {
   const currency = 'GBP';
   const facilityType = FACILITY_TYPE.CASH;
   const ukefExposure = 1500;
-  const facilityAmount = 1000;
-  const coverPercentage = 0.8;
 
   describe('when isBssEwcsDeal is true', () => {
     it('should return an array with one obligation and mapped subtypeCode', () => {
@@ -21,9 +19,7 @@ describe('mapObligations', () => {
 
       // Act
       const result = mapObligations({
-        coverPercentage,
         currency,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         bssSubtypeName,
@@ -34,8 +30,6 @@ describe('mapObligations', () => {
       const expected = [
         {
           amount: mapObligationAmount({
-            coverPercentage,
-            facilityAmount,
             isBssEwcsDeal,
             isGefDeal,
             facilityType,
@@ -59,9 +53,7 @@ describe('mapObligations', () => {
 
         // Act
         const result = mapObligations({
-          coverPercentage,
           currency,
-          facilityAmount,
           isBssEwcsDeal,
           isGefDeal,
           bssSubtypeName: unmappedBssSubtypeName,
@@ -72,8 +64,6 @@ describe('mapObligations', () => {
         const expected = [
           {
             amount: mapObligationAmount({
-              coverPercentage,
-              facilityAmount,
               isBssEwcsDeal,
               isGefDeal,
               facilityType,
@@ -98,9 +88,7 @@ describe('mapObligations', () => {
 
       // Act
       const result = mapObligations({
-        coverPercentage,
         currency,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         facilityType,
@@ -111,8 +99,6 @@ describe('mapObligations', () => {
       const expected = [
         {
           amount: mapObligationAmount({
-            coverPercentage,
-            facilityAmount,
             isBssEwcsDeal,
             isGefDeal,
             facilityType,
@@ -136,9 +122,7 @@ describe('mapObligations', () => {
 
       // Act
       const result = mapObligations({
-        coverPercentage,
         currency,
-        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         ukefExposure,
@@ -148,8 +132,6 @@ describe('mapObligations', () => {
       const expected = [
         {
           amount: mapObligationAmount({
-            coverPercentage,
-            facilityAmount,
             isBssEwcsDeal,
             isGefDeal,
             facilityType,

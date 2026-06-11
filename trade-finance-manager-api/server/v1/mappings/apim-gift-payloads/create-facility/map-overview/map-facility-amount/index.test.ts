@@ -2,12 +2,12 @@ import { mapFacilityAmount } from '.';
 
 describe('mapFacilityAmount', () => {
   describe('when coverPercentage is provided', () => {
-    describe('and is a whole number', () => {
+    describe('and is a decimal percentage', () => {
       it('should map facility amount correctly', () => {
         // Arrange & Act
         const result = mapFacilityAmount({
           facilityAmount: 12345,
-          coverPercentage: 20,
+          coverPercentage: 0.2,
         });
 
         // Assert
@@ -18,7 +18,7 @@ describe('mapFacilityAmount', () => {
     });
 
     describe('and is 0', () => {
-      it('should return 0', () => {
+      it('should return null', () => {
         // Arrange & Act
         const result = mapFacilityAmount({
           facilityAmount: 12345,
@@ -26,18 +26,18 @@ describe('mapFacilityAmount', () => {
         });
 
         // Assert
-        const expected = 0;
+        const expected = null;
 
         expect(result).toEqual(expected);
       });
     });
 
-    describe('and is a decimal', () => {
+    describe('and is a decimal percentage with fractional value', () => {
       it('should map facility amount correctly', () => {
         // Arrange & Act
         const result = mapFacilityAmount({
           facilityAmount: 1000,
-          coverPercentage: 12.5,
+          coverPercentage: 0.125,
         });
 
         // Assert
