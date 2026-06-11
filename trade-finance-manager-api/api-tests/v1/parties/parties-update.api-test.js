@@ -128,12 +128,16 @@ describe('PUT /v1/parties/:dealId', () => {
       await as({ token }).put(partiesUpdate).to(VALID_URL);
 
       // Assert
-      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-        deal: expect.any(Object),
-        facilities: issuedFacilities,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
-      });
+      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          deal: expect.any(Object),
+          facilities: issuedFacilities,
+          isBssEwcsDeal: false,
+          isGefDeal: true,
+          newPartyUrnCreated: true,
+        }),
+      );
     });
   });
 
