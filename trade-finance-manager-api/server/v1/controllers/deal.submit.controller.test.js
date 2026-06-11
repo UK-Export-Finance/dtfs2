@@ -326,7 +326,7 @@ describe('submitDealBeforeUkefIds', () => {
     api.updateDeal.mockResolvedValue(tfmDeal);
 
     addTfmDealData.mockImplementation(async (deal) => deal);
-    addPartyUrns.mockImplementation(async (deal) => deal);
+    addPartyUrns.mockImplementation(async (deal) => ({ deal, newPartyUrnCreated: true }));
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);

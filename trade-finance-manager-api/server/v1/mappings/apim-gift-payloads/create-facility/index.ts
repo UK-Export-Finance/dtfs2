@@ -25,7 +25,7 @@ export type FacilityCreationParams = {
 /**
  * Map DTFS facility data to the format expected by APIM for "GIFT facility creation".
  * @param {FacilityCreationParams} params - Data required to build the APIM "GIFT facility creation" payload.
- * * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
+ * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
  * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.

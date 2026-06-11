@@ -22,7 +22,7 @@ type SubmitFacilitiesToApimGiftParams = {
  * @param {TfmFacility[]} params.facilities - An array of TFM facilities to be submitted to APIM/GIFT.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
- * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
+ * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped. Defaults to false.
  * @returns {Promise<TfmFacility | TfmFacility[] | boolean>} A promise that resolves to the response from the APIM/GIFT integration.
  */
 export const sendFacilitiesToApimGift = async ({
@@ -30,7 +30,7 @@ export const sendFacilitiesToApimGift = async ({
   facilities,
   isBssEwcsDeal,
   isGefDeal,
-  newPartyUrnCreated,
+  newPartyUrnCreated = false,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
   console.info('Sending facilities to APIM GIFT for deal %s ', deal?._id);
 

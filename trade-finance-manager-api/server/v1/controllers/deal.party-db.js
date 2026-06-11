@@ -150,7 +150,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
-  const newPartyUrnCreated = Boolean(exporterPartyUrn);
+  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn);
 
   return {
     deal: {

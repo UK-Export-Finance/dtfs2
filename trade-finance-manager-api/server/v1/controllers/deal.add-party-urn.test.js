@@ -98,7 +98,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid company house registration number has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty companies name is supplied', async () => {
@@ -130,7 +130,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid company name has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty PoD is supplied', async () => {
@@ -162,7 +162,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid probability of default has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty industry code is supplied', async () => {
@@ -194,7 +194,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid industry code has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN when an invalid companies house number is supplied', async () => {
@@ -227,7 +227,7 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo: 'invalid', companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should identify parties are mandatory or not', async () => {
@@ -280,10 +280,10 @@ describe('addPartyUrns', () => {
     const response = await addPartyUrns(deal, auditDetails);
 
     // Assert
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
   });
 
   it('should return party urn when a complete exporter payload is supplied', async () => {
@@ -348,12 +348,12 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('00328682');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
   });
 
   it('should return party urn when a complete exporter payload is supplied and default country to United Kingdom, when no country is returned from CH API.', async () => {
@@ -424,11 +424,11 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('00328682');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
   });
 });
