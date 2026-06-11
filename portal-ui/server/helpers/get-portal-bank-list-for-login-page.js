@@ -1,0 +1,21 @@
+const api = require('../api');
+
+/**
+ * Gets the bank list for the login page and falls back to an empty list if the
+ * API request fails.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>}
+ */
+const getPortalBankListForLoginPage = async () => {
+  try {
+    return await api.getPortalBankList();
+  } catch (error) {
+    console.error('Failed to load portal bank list for login page %o', error);
+
+    return [];
+  }
+};
+
+module.exports = {
+  getPortalBankListForLoginPage,
+};

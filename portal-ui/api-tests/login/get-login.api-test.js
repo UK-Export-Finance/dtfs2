@@ -2,12 +2,15 @@ jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
+
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getPortalBankList: jest.fn().mockResolvedValue([]),
 }));
+
 const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');

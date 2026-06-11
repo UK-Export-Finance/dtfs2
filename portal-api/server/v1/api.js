@@ -528,16 +528,11 @@ const getAllBanks = async () => {
  * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} response of API call
  */
 const getPortalBankList = async () => {
-  try {
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/portal-bank-list`, {
-      headers: headers.central,
-    });
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/portal-bank-list`, {
+    headers: headers.central,
+  });
 
-    return response.data;
-  } catch (error) {
-    console.error('Failed to get portal bank list %o', error);
-    throw error;
-  }
+  return response.data;
 };
 
 /**
