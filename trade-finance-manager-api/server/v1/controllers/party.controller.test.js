@@ -173,6 +173,7 @@ describe('updateParty', () => {
         facilities: issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
+        newPartyUrnCreated: true,
       });
     });
 
