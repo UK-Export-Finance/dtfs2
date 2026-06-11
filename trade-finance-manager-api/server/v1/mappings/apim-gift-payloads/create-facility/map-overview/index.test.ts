@@ -20,14 +20,11 @@ describe('mapOverview', () => {
     ukefFacilityId: '123',
   };
 
-  const { bankInternalRefName, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { bankInternalRefName, coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
-    amount: mapFacilityAmount({
-      facilityAmount,
-      coverPercentage: baseParams.coverPercentage,
-    }),
+    amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };

@@ -46,7 +46,7 @@ describe('mapCoverPercentage', () => {
   });
 
   describe('when the deal type flags are both false', () => {
-    it('should fallback to coverPercentage', () => {
+    it('should return null', () => {
       // Arrange
       const facilitySnapshot = {
         coverPercentage: 75,
@@ -60,7 +60,7 @@ describe('mapCoverPercentage', () => {
       });
 
       // Assert
-      const expected = facilitySnapshot.coverPercentage;
+      const expected = null;
 
       expect(result).toEqual(expected);
     });
