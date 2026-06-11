@@ -3,15 +3,15 @@ const relative = require('../../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../../e2e-fixtures');
 const { PORTAL_2FA_ACCESS_CODE } = require('../../../../../../../../e2e-fixtures/portal-users.fixture');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_PAYMENT_REPORT_OFFICER1, BANK1_CHECKER1, ADMINNOMAKER, READ_ONLY } = MOCK_USERS;
 const { commonBeforeEach } = require('../access-code-form.shared-test');
 
-const complete2faLogin = () => {
-  cy.enterUsernameAndPassword(BANK1_MAKER1);
+const complete2faLogin = (user = BANK1_MAKER1) => {
+  cy.enterUsernameAndPassword(user);
 
   cy.url().should('eq', relative('/login/check-your-email-access-code'));
 
-  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: BANK1_MAKER1.username }).then(() => {
+  cy.overridePortalUserSignInOTPWithValidTokenByUsername({ username: user.username }).then(() => {
     cy.keyboardInput(checkYourEmailAccessCode.accessCodeInput(), PORTAL_2FA_ACCESS_CODE);
     cy.clickSubmitButton();
   });
@@ -22,7 +22,7 @@ context('2FA Journey - Successful login flow', () => {
     commonBeforeEach(BANK1_MAKER1, { login: false });
   });
 
-  describe('Complete successful 2FA journey', () => {
+  describe('complete successful 2FA journey', () => {
     it('should redirect to check-your-email page after entering valid credentials', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
@@ -46,7 +46,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Accessing protected routes after successful 2FA', () => {
+  describe('accessing protected routes after successful 2FA', () => {
     beforeEach(() => {
       complete2faLogin();
     });
@@ -66,7 +66,7 @@ context('2FA Journey - Successful login flow', () => {
     });
   });
 
-  describe('Redirecting away from 2FA pages after successful login', () => {
+  describe('redirecting away from 2FA pages after successful login', () => {
     beforeEach(() => {
       complete2faLogin();
     });
@@ -90,6 +90,46 @@ context('2FA Journey - Successful login flow', () => {
 
       cy.url().should('not.eq', relative('/login/resend-another-access-code'));
       cy.url().should('not.eq', relative('/login'));
+    });
+  });
+
+  describe('logging in as a payment report officer with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(BANK1_PAYMENT_REPORT_OFFICER1);
+    });
+
+    it('should redirect to the utilisation report upload page after successful login', () => {
+      cy.url().should('eq', relative('/utilisation-report-upload'));
+    });
+  });
+
+  describe('logging in as a checker with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(BANK1_CHECKER1);
+    });
+
+    it('should redirect to the default dashboard page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+    });
+  });
+
+  describe('logging in as an admin with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(ADMINNOMAKER);
+    });
+
+    it('should redirect to the default dashboard page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+    });
+  });
+
+  describe('logging in as a read-only user with 2FA enabled', () => {
+    beforeEach(() => {
+      complete2faLogin(READ_ONLY);
+    });
+
+    it('should redirect to the default dashboard page after successful login', () => {
+      cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
 });
