@@ -43,6 +43,8 @@ describe('createFacility', () => {
 
   const mockUkefIndustryCode = '1003';
 
+  const mockNewPartyUrnCreated = true;
+
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const productTypeCode = mapProductTypeCode({
@@ -58,12 +60,13 @@ describe('createFacility', () => {
   });
 
   const params = {
+    creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
     deal: mockDeal,
     facility: mockFacility,
+    facilityCategories: MOCK_FACILITY_CATEGORIES,
     isBssEwcsDeal,
     isGefDeal,
-    creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
-    facilityCategories: MOCK_FACILITY_CATEGORIES,
+    newPartyUrnCreated: mockNewPartyUrnCreated,
   };
 
   beforeEach(() => {
@@ -129,6 +132,7 @@ describe('createFacility', () => {
         industryCode: getIndustryCode(mockDeal),
         isGefDeal,
       }),
+      delayCreation: mockNewPartyUrnCreated,
     };
 
     expect(result).toEqual(expected);

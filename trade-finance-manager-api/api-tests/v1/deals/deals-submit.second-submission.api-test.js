@@ -439,12 +439,15 @@ describe('/v1/deals', () => {
           // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
     });
@@ -509,12 +512,15 @@ describe('/v1/deals', () => {
           // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -783,12 +789,15 @@ describe('/v1/deals', () => {
           // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -952,12 +961,16 @@ describe('/v1/deals', () => {
           // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: false,
-            isGefDeal: true,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: false,
+              isGefDeal: true,
+              newPartyUrnCreated: false,
+            }),
+          );
         });
       });
     });

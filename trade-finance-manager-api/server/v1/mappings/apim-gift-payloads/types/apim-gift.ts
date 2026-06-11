@@ -70,4 +70,5 @@ export type ApimGiftFacilityCreationPayload = {
   counterparties: ApimGiftCounterparty[];
   obligations: ApimGiftObligation[];
   riskDetails: ApimGiftFacilityRiskDetails;
+  delayCreation: boolean;
 };
