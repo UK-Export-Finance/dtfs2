@@ -24,7 +24,7 @@ type MapOverviewParams = {
  * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
  * @param {string} params.bankInternalRefName - The bank internal reference name for the facility's deal.
- * @param {number} [params.coverPercentage] - The facility cover percentage to use for calculating the APIM GIFT facility amount.
+ * @param {number | null} params.coverPercentage - The facility cover percentage to use for calculating the APIM GIFT facility amount.
  * @param {Currency} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.

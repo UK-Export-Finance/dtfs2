@@ -5,10 +5,10 @@ type MapFacilityAmountParams = {
 
 /**
  * Map the facility amount based on the facility amount and cover percentage.
- * If the cover percentage is provided, the facility amount is calculated as:
+ * If the cover percentage is a positive number, the facility amount is calculated as:
  * (facility amount) * (cover percentage / 100)
  * The result is rounded to 2 decimal places.
- * If the cover percentage is not provided, the function returns null.
+ * If the cover percentage is not provided (or is 0), the function returns null.
  *
  * cover percentages are stored as percent values (e.g. 80),
  * so this should divide by 100 to avoid sending amounts inflated by 100x.

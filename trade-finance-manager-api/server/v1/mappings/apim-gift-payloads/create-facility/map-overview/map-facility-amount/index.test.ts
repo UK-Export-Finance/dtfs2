@@ -2,7 +2,7 @@ import { mapFacilityAmount } from '.';
 
 describe('mapFacilityAmount', () => {
   describe('when coverPercentage is provided', () => {
-    describe('and is a percentage (0-100)', () => {
+    describe('and is a percentage (1-100)', () => {
       it('should map facility amount correctly', () => {
         // Arrange & Act
         const result = mapFacilityAmount({
