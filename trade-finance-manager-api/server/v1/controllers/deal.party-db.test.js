@@ -97,7 +97,7 @@ describe('getPartyUrn', () => {
   it('should call getPartyDbInfo and return urn', async () => {
     // Arrange
     getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
-    isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 
@@ -113,7 +113,7 @@ describe('getPartyUrn', () => {
   it('should not call getOrCreatePartyDbInfo', async () => {
     // Arrange
     getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
-    isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 
@@ -127,7 +127,7 @@ describe('getPartyUrn', () => {
   it('should return an empty string if getPartyDbInfo returns false', async () => {
     // Arrange
     getPartyDbInfo.mockResolvedValue(false);
-    isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 
@@ -160,7 +160,7 @@ describe('addPartyUrns', () => {
   describe('when a party URN is successfully retrieved', () => {
     it('should return deal with newPartyUrnCreated flag set to true', async () => {
       // Arrange
-      isSalesforceCustomerCreationEnabled.mockReturnValue(false);
+      isSalesforceCustomerCreationEnabled.mockReturnValue(true);
 
       getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN_123' }]);
 

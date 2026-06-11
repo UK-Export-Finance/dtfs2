@@ -83,6 +83,7 @@ describe('sendFacilitiesToApimGift', () => {
         facility: mockFacility,
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
