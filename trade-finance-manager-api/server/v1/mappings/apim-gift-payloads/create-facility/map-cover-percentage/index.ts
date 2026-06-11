@@ -10,7 +10,13 @@ type TfmFacilitySnapshotWithCoveredPercentage = TfmFacilitySnapshot & {
   coveredPercentage?: string | number | null;
 };
 
-const toNumber = (value: string | number | null | undefined): number | null => {
+/**
+ * Safely parse a cover percentage value to a number.
+ * Strips percentage signs and comma separators before parsing.
+ * @param {string | number | null | undefined} value - The raw cover percentage value.
+ * @returns {number | null} The parsed number, or null when value is empty or not parseable.
+ */
+export const toNumber = (value: string | number | null | undefined): number | null => {
   if (!value || value === null || value === '') {
     return null;
   }

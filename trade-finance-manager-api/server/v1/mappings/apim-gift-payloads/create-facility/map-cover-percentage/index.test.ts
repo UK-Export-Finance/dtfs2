@@ -1,5 +1,39 @@
 import { TfmFacilitySnapshot } from '@ukef/dtfs2-common';
-import { mapCoverPercentage } from '.';
+import { mapCoverPercentage, toNumber } from '.';
+
+describe('toNumber', () => {
+  it('should parse a plain numeric string', () => {
+    expect(toNumber('80')).toEqual(80);
+  });
+
+  it('should strip a percentage sign', () => {
+    expect(toNumber('80%')).toEqual(80);
+  });
+
+  it('should strip comma separators', () => {
+    expect(toNumber('1,000')).toEqual(1000);
+  });
+
+  it('should accept a number directly', () => {
+    expect(toNumber(75)).toEqual(75);
+  });
+
+  it('should return null for an empty string', () => {
+    expect(toNumber('')).toBeNull();
+  });
+
+  it('should return null for null', () => {
+    expect(toNumber(null)).toBeNull();
+  });
+
+  it('should return null for undefined', () => {
+    expect(toNumber(undefined)).toBeNull();
+  });
+
+  it('should return null for a non-numeric string', () => {
+    expect(toNumber('not-a-number')).toBeNull();
+  });
+});
 
 describe('mapCoverPercentage', () => {
   describe('when isGefDeal is true', () => {
