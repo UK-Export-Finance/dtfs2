@@ -11,7 +11,8 @@ const { INVALID_CSRF_TOKEN_ERROR_CODE, CSRF_TOKEN_BODY_PROPERTY_NAME } = CSRF;
  *
  * This function checks if the request session is initialised,
  * and ensures the CSRF token is present and valid using csrf-sync's `csrfSynchronisedProtection` function.
- * For file uploads, it moves the CSRF token from the query to the body if necessary.
+ * It reads the token from either the request body or query parameters, supporting both standard form submissions and file uploads.
+ * For file uploads, the token is in the query parameters.
  *
  * If the token is invalid, the middleware responds with a Forbidden status.
  * Otherwise, it calls the next middleware in the stack.

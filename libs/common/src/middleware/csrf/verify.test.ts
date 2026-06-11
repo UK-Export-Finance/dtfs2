@@ -164,7 +164,7 @@ describe('verify', () => {
       },
     });
 
-    const csrfError = createHttpError(403, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: CSRF.INVALID_CSRF_TOKEN_ERROR_CODE });
     mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
 
     // Act
@@ -185,7 +185,7 @@ describe('verify', () => {
       },
     });
 
-    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: CSRF.INVALID_CSRF_TOKEN_ERROR_CODE });
     mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
 
     // Act
@@ -272,7 +272,7 @@ describe('verify', () => {
       query: {},
     });
 
-    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: 'EBADCSRFTOKEN' });
+    const csrfError = createHttpError(HttpStatusCode.Forbidden, 'invalid csrf token', { code: CSRF.INVALID_CSRF_TOKEN_ERROR_CODE });
     mockCsrfSynchronisedProtection.mockImplementation((_req, _res, cb: CsrfCallback) => cb(csrfError));
 
     // Act
