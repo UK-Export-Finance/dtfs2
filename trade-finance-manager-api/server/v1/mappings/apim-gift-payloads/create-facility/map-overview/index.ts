@@ -6,7 +6,6 @@ import { mapFacilityName } from './map-facility-name';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapOverviewParams = {
-  bankInternalRefName: string;
   currency: Currency;
   effectiveDate: string;
   expiryDate: string;
@@ -14,6 +13,7 @@ type MapOverviewParams = {
   facilityAmount: number;
   facilityType?: string;
   isGefDeal: boolean;
+  monthsOfCover?: number | null;
   productTypeCode: ApimGiftProductTypeCode;
   ukefFacilityId: string;
 };
@@ -21,7 +21,6 @@ type MapOverviewParams = {
 /**
  * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
- * @param {string} params.bankInternalRefName - The bank internal reference name for the facility's deal.
  * @param {Currency} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.
@@ -29,12 +28,12 @@ type MapOverviewParams = {
  * @param {number} params.facilityAmount - The total facility amount.
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number} [params.monthsOfCover] - The length of cover in months.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
  * @returns {ApimGiftFacilityOverview} The mapped facility overview data.
  */
 export const mapOverview = ({
-  bankInternalRefName,
   currency,
   effectiveDate,
   expiryDate,
@@ -42,6 +41,7 @@ export const mapOverview = ({
   facilityAmount,
   facilityType,
   isGefDeal,
+  monthsOfCover,
   productTypeCode,
   ukefFacilityId,
 }: MapOverviewParams): ApimGiftFacilityOverview => ({
@@ -52,9 +52,9 @@ export const mapOverview = ({
   effectiveDate,
   expiryDate,
   name: mapFacilityName({
-    bankInternalRefName,
     facilityType,
     isGefDeal,
+    monthsOfCover,
     productTypeCode,
   }),
   obligorUrn: exporterPartyUrn ? String(exporterPartyUrn) : null,

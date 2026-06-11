@@ -25,7 +25,7 @@ export type ApimGiftFacilityOverview = {
   creditType: CreditTypeValue;
   currency: string;
   facilityId: string;
-  name: string;
+  name: string | null;
   effectiveDate: string;
   expiryDate: string;
   obligorUrn: string | null;
