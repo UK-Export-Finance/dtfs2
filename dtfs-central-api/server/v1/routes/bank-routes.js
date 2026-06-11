@@ -4,7 +4,7 @@ const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
 const { getBanks } = require('../controllers/bank/get-banks.controller');
-const { getPortalBankList } = require('../controllers/portal-bank-list/get-portal-bank-list.controller');
+const { getPortalBankList } = require('../controllers/bank/get-portal-bank-list.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
