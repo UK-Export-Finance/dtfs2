@@ -67,7 +67,7 @@ export const createFacility = async ({
    * GEF "value" field is a number.
    * BSS/EWCS "value" field is a string with commas.
    */
-  const facilityAmount = Number(String(facilitySnapshot.value).replace('', ''));
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
 
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
 

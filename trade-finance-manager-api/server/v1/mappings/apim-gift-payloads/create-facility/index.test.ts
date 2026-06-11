@@ -64,7 +64,7 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const facilityAmount = Number(String(facilitySnapshot.value).replace('', ''));
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
 
   const params = {
     deal: mockDeal,

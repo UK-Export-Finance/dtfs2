@@ -5,6 +5,13 @@ type MapFacilityAmountParams = {
 
 /**
  * Map the facility amount based on the facility amount and cover percentage.
+ * If the cover percentage is provided, the facility amount is calculated as:
+ * (facility amount) * (cover percentage / 100)
+ * The result is rounded to 2 decimal places.
+ * If the cover percentage is not provided, the function returns null.
+ *
+ * cover percentages are stored as percent values (e.g. 80),
+ * so this should divide by 100 to avoid sending amounts inflated by 100x.
  * @param {MapFacilityAmountParams} params - The parameters for mapping the facility amount.
  * @param {number} params.facilityAmount - The total facility amount.
  * @param {number | null} params.coverPercentage - The cover percentage for the facility.
@@ -12,7 +19,9 @@ type MapFacilityAmountParams = {
  */
 export const mapFacilityAmount = ({ facilityAmount, coverPercentage }: MapFacilityAmountParams): number | null => {
   if (coverPercentage) {
-    return facilityAmount * coverPercentage;
+    const amount = Math.round(facilityAmount * (coverPercentage / 100) * 100) / 100;
+
+    return amount;
   }
 
   return null;
