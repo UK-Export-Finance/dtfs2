@@ -99,9 +99,15 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
       // TFM properties (deal.tfm)
       const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
-      const { deal: updatedDealWithPartyUrn, newPartyUrnCreated } = await addPartyUrns(dealWithTfmData, auditDetails);
+      const partyUrnResult = await addPartyUrns(dealWithTfmData, auditDetails);
 
-      if (newPartyUrnCreated) {
+      let updatedDealWithPartyUrn;
+
+      if (partyUrnResult.deal) {
+        updatedDealWithPartyUrn = partyUrnResult.deal;
+      }
+
+      if (partyUrnResult?.newPartyUrnCreated) {
         console.info('TFM deal %s submitDealAfterUkefIds - new party URN created for exporter', dealId);
       }
 
@@ -140,7 +146,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
-          newPartyUrnCreated,
+          newPartyUrnCreated: partyUrnResult?.newPartyUrnCreated,
         });
       }
 

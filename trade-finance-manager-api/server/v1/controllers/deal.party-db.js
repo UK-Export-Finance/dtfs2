@@ -122,6 +122,13 @@ const addPartyUrns = async (deal, auditDetails) => {
   const country = registeredAddress?.country ?? UNITED_KINGDOM;
   const isUkEntity = isCountryUk(country);
 
+  let exporterPartyExistedBeforeCreate = false;
+
+  if (isSalesforceCustomerCreationEnabled()) {
+    const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+    exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
+  }
+
   const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
 
   const dealUpdate = {
@@ -150,7 +157,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
-  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn);
+  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate;
 
   return {
     deal: {
