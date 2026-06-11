@@ -99,7 +99,6 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
         coverPercentage,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),

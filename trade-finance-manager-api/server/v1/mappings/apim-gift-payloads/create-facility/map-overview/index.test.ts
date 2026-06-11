@@ -8,7 +8,6 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
   const baseParams = {
-    bankInternalRefName: 'Mock internal reference name',
     coverPercentage: 80,
     currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
@@ -17,10 +16,11 @@ describe('mapOverview', () => {
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
     isGefDeal: true,
+    monthsOfCover: 12,
     ukefFacilityId: '123',
   };
 
-  const { bankInternalRefName, coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
@@ -47,9 +47,9 @@ describe('mapOverview', () => {
         ...baseExpected,
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT003,
         name: mapFacilityName({
-          bankInternalRefName,
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,
@@ -78,9 +78,9 @@ describe('mapOverview', () => {
         ...baseExpected,
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT004,
         name: mapFacilityName({
-          bankInternalRefName,
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,

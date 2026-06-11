@@ -12,6 +12,7 @@ import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapCoverPercentage } from './map-cover-percentage';
+import { getMonthsOfCover } from './get-months-of-cover';
 
 export type FacilityCreationParams = {
   creditRiskRatings: string[];
@@ -50,9 +51,6 @@ export const createFacility = async ({
 
   const dealId = getTfmUkefDealId(deal);
 
-  const { dealSnapshot } = deal;
-  const { bankInternalRefName } = dealSnapshot;
-
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -75,6 +73,12 @@ export const createFacility = async ({
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
 
   const coverPercentage = mapCoverPercentage({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
+
+  const monthsOfCover = getMonthsOfCover({
     facilitySnapshot,
     isBssEwcsDeal,
     isGefDeal,
@@ -128,7 +132,6 @@ export const createFacility = async ({
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
-      bankInternalRefName,
       coverPercentage,
       currency,
       effectiveDate,
@@ -137,6 +140,7 @@ export const createFacility = async ({
       facilityAmount,
       facilityType,
       isGefDeal,
+      monthsOfCover,
       productTypeCode,
       ukefFacilityId,
     }),
