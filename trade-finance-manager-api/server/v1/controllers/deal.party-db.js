@@ -126,6 +126,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   if (isSalesforceCustomerCreationEnabled()) {
     const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+
     exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
   }
 

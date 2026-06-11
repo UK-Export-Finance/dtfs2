@@ -186,7 +186,7 @@ describe('submitDealAfterUkefIds', () => {
     });
 
     describe('when APIM/GIFT submission is allowed', () => {
-      it('should call sendFacilitiesToApimGift when APIM/GIFT submission is allowed', async () => {
+      it('should call sendFacilitiesToApimGift with newPartyUrnCreated true when addPartyUrns returns true', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
@@ -205,6 +205,29 @@ describe('submitDealAfterUkefIds', () => {
           isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: true,
+        });
+      });
+
+      it('should call sendFacilitiesToApimGift with newPartyUrnCreated false when addPartyUrns returns false', async () => {
+        // Arrange
+        addPartyUrns.mockImplementationOnce(async (deal) => ({ deal, newPartyUrnCreated: false }));
+        canSendToApimGift.mockResolvedValue({
+          canSendFacilitiesToApimGift: true,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+          newPartyUrnCreated: false,
         });
       });
     });

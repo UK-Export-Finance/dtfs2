@@ -27,6 +27,18 @@ const req = {
   },
 };
 
+const mockDeal = {
+  _id: 'deal-123',
+  exporter: {
+    companyName: 'Test Company',
+    companiesHouseRegistrationNumber: '12345678',
+    probabilityOfDefault: 0.5,
+    selectedIndustry: { code: '1234' },
+    registeredAddress: { country: 'GBR' },
+  },
+  tfm: {},
+};
+
 describe('getCompany returns false', () => {
   it('should return `false` on an empty URN', async () => {
     // Act
@@ -175,20 +187,8 @@ describe('addPartyUrns', () => {
         },
       });
 
-      const deal = {
-        _id: 'deal-123',
-        exporter: {
-          companyName: 'Test Company',
-          companiesHouseRegistrationNumber: '12345678',
-          probabilityOfDefault: 0.5,
-          selectedIndustry: { code: '1234' },
-          registeredAddress: { country: 'GBR' },
-        },
-        tfm: {},
-      };
-
       // Act
-      const result = await api.addPartyUrns(deal, {});
+      const result = await api.addPartyUrns(mockDeal, {});
 
       // Assert
       expect(result).toHaveProperty('deal');
@@ -215,20 +215,8 @@ describe('addPartyUrns', () => {
         },
       });
 
-      const deal = {
-        _id: 'deal-123',
-        exporter: {
-          companyName: 'Test Company',
-          companiesHouseRegistrationNumber: '12345678',
-          probabilityOfDefault: 0.5,
-          selectedIndustry: { code: '1234' },
-          registeredAddress: { country: 'GBR' },
-        },
-        tfm: {},
-      };
-
       // Act
-      const result = await api.addPartyUrns(deal, {});
+      const result = await api.addPartyUrns(mockDeal, {});
 
       // Assert
       expect(result).toHaveProperty('newPartyUrnCreated', false);
