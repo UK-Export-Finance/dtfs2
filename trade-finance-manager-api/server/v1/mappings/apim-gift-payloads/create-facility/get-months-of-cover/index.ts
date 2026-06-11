@@ -11,12 +11,14 @@ type GetMonthsOfCoverParams = {
  * @param {unknown} value - A date-like input (string, number, Date).
  * @returns {Date | null} Parsed Date when valid, otherwise null.
  */
-const parseDate = (value: unknown): Date | null => {
-  if (!value) {
+export const parseDate = (value: unknown): Date | null => {
+  if (value === null || value === undefined || value === '') {
     return null;
   }
 
-  const parsedDate = new Date(value as string | number | Date);
+  const normalisedValue = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : (value as string | number | Date);
+
+  const parsedDate = new Date(normalisedValue);
 
   if (Number.isNaN(parsedDate.getTime())) {
     return null;
@@ -33,7 +35,7 @@ const parseDate = (value: unknown): Date | null => {
  * @param {TfmFacility['facilitySnapshot']} facilitySnapshot - Facility snapshot data.
  * @returns {Date | null} Cover end date when resolvable, otherwise null.
  */
-const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Date | null => {
+export const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Date | null => {
   const coverEndDate = parseDate((facilitySnapshot as { coverEndDate?: unknown }).coverEndDate);
 
   if (coverEndDate) {
@@ -58,6 +60,38 @@ const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Dat
 };
 
 /**
+ * Resolve the requested cover start date from available snapshot fields.
+ * Supports:
+ * - `requestedCoverStartDate` (ISO/date-like value)
+ * - legacy split fields (`requestedCoverStartDate-day`, `requestedCoverStartDate-month`, `requestedCoverStartDate-year`)
+ * @param {TfmFacility['facilitySnapshot']} facilitySnapshot - Facility snapshot data.
+ * @returns {Date | null} Requested cover start date when resolvable, otherwise null.
+ */
+export const getRequestedCoverStartDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Date | null => {
+  const requestedCoverStartDate = parseDate((facilitySnapshot as { requestedCoverStartDate?: unknown }).requestedCoverStartDate);
+
+  if (requestedCoverStartDate) {
+    return requestedCoverStartDate;
+  }
+
+  const day = Number((facilitySnapshot as { 'requestedCoverStartDate-day'?: unknown })['requestedCoverStartDate-day']);
+  const month = Number((facilitySnapshot as { 'requestedCoverStartDate-month'?: unknown })['requestedCoverStartDate-month']);
+  const year = Number((facilitySnapshot as { 'requestedCoverStartDate-year'?: unknown })['requestedCoverStartDate-year']);
+
+  if (!day || !month || !year) {
+    return null;
+  }
+
+  const parsedRequestedCoverStartDate = new Date(Date.UTC(year, month - 1, day));
+
+  if (Number.isNaN(parsedRequestedCoverStartDate.getTime())) {
+    return null;
+  }
+
+  return parsedRequestedCoverStartDate;
+};
+
+/**
  * Calculate total cover months between two dates.
  * Includes a partial final month where the end day is after the start day,
  * and returns a minimum of 1 month for same-day coverage.
@@ -65,7 +99,7 @@ const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Dat
  * @param {Date} endDate - Cover end date.
  * @returns {number | null} Total months of cover, or null when end is before start.
  */
-const getTotalMonths = (startDate: Date, endDate: Date): number | null => {
+export const getTotalMonths = (startDate: Date, endDate: Date): number | null => {
   const startTime = startDate.getTime();
   const endTime = endDate.getTime();
 
@@ -93,20 +127,33 @@ const getTotalMonths = (startDate: Date, endDate: Date): number | null => {
 /**
  * Resolve facility months of cover for APIM GIFT payload mapping.
  * - GEF: read directly from `facilitySnapshot.monthsOfCover`.
- * - BSS/EWCS: derive from `requestedCoverStartDate` and cover end date fields.
+ * - BSS/EWCS: prefer `ukefGuaranteeInMonths` when present and positive.
+ * - BSS/EWCS fallback: derive from requested cover start and cover end date fields,
+ *   including support for legacy split date components.
  * @param {GetMonthsOfCoverParams} params - Input containing facility snapshot and deal type flags.
  * @returns {number | null} Months of cover or null when unavailable/unresolvable.
  */
 export const getMonthsOfCover = ({ facilitySnapshot, isBssEwcsDeal, isGefDeal }: GetMonthsOfCoverParams): number | null => {
   if (isGefDeal) {
-    return facilitySnapshot.monthsOfCover ? Number(facilitySnapshot.monthsOfCover) : null;
+    const rawMonths = facilitySnapshot.monthsOfCover;
+
+    const months = rawMonths === null || rawMonths === undefined ? null : Number(rawMonths);
+
+    return months !== null && Number.isFinite(months) ? months : null;
   }
 
   if (!isBssEwcsDeal) {
     return null;
   }
 
-  const requestedCoverStartDate = parseDate((facilitySnapshot as { requestedCoverStartDate?: unknown }).requestedCoverStartDate);
+  const ukefGuaranteeInMonths = Number((facilitySnapshot as { ukefGuaranteeInMonths?: unknown }).ukefGuaranteeInMonths);
+
+  // BSS/EWCS snapshots may already carry the canonical guarantee length.
+  if (Number.isFinite(ukefGuaranteeInMonths) && ukefGuaranteeInMonths > 0) {
+    return ukefGuaranteeInMonths;
+  }
+
+  const requestedCoverStartDate = getRequestedCoverStartDate(facilitySnapshot);
   const coverEndDate = getCoverEndDate(facilitySnapshot);
 
   if (!requestedCoverStartDate || !coverEndDate) {

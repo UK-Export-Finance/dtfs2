@@ -14,10 +14,11 @@ describe('mapOverview', () => {
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
     isGefDeal: true,
+    monthsOfCover: 12,
     ukefFacilityId: '123',
   };
 
-  const { exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { monthsOfCover, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
@@ -46,6 +47,7 @@ describe('mapOverview', () => {
         name: mapFacilityName({
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,
@@ -76,6 +78,7 @@ describe('mapOverview', () => {
         name: mapFacilityName({
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,

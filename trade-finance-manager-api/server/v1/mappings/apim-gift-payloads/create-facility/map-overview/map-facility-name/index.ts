@@ -9,7 +9,7 @@ type MapFacilityNameParams = {
 };
 
 /**
- * Map the facility name based on the product type code, facility type and bank internal reference name.
+ * Map the facility name based on the product type code, facility type and months of cover.
  * Examples:
  * - GEF => "GEF Contingent: 6 months"
  * - BSS => "BSS: 12 months"
