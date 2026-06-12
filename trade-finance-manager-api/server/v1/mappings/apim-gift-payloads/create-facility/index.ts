@@ -11,6 +11,8 @@ import { mapRiskDetails } from './map-risk-details';
 import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { mapCoverPercentage } from './map-cover-percentage';
+import { getMonthsOfCover } from './get-months-of-cover';
 
 export type FacilityCreationParams = {
   creditRiskRatings: string[];
@@ -49,9 +51,6 @@ export const createFacility = async ({
 
   const dealId = getTfmUkefDealId(deal);
 
-  const { dealSnapshot } = deal;
-  const { bankInternalRefName } = dealSnapshot;
-
   const { facilitySnapshot, tfm } = facility;
 
   const { facilityGuaranteeDates } = tfm;
@@ -63,8 +62,27 @@ export const createFacility = async ({
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const facilityAmount = Number(tfm.ukefExposure);
+  const ukefExposure = Number(tfm.ukefExposure);
+
+  /**
+   * GEF "value" field is a number.
+   * BSS/EWCS "value" field is a string with commas.
+   */
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+
   const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  const coverPercentage = mapCoverPercentage({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
+
+  const monthsOfCover = getMonthsOfCover({
+    facilitySnapshot,
+    isBssEwcsDeal,
+    isGefDeal,
+  });
 
   /**
    * Ensure dayCountBasis is a number.
@@ -114,7 +132,7 @@ export const createFacility = async ({
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
-      bankInternalRefName,
+      coverPercentage,
       currency,
       effectiveDate,
       expiryDate,
@@ -122,6 +140,7 @@ export const createFacility = async ({
       facilityAmount,
       facilityType,
       isGefDeal,
+      monthsOfCover,
       productTypeCode,
       ukefFacilityId,
     }),
@@ -139,10 +158,10 @@ export const createFacility = async ({
     obligations: mapObligations({
       bssSubtypeName,
       currency,
-      isBssEwcsDeal,
       facilityType,
+      isBssEwcsDeal,
       isGefDeal,
-      ukefExposure: facilityAmount,
+      ukefExposure,
     }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,

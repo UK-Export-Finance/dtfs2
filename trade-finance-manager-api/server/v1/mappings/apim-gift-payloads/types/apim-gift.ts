@@ -21,11 +21,11 @@ export type ApimGiftAccrualScheduleTypeCode = (typeof ACCRUAL_SCHEDULE_TYPE_CODE
 export type ApimGiftAccrualFrequencyCodeType = (typeof ACCRUAL_FREQUENCY_CODE_MAP)[keyof typeof ACCRUAL_FREQUENCY_CODE_MAP];
 
 export type ApimGiftFacilityOverview = {
-  amount: number;
+  amount: number | null;
   creditType: CreditTypeValue;
   currency: string;
   facilityId: string;
-  name: string;
+  name: string | null;
   effectiveDate: string;
   expiryDate: string;
   obligorUrn: string | null;
