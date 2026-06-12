@@ -63,9 +63,15 @@ describe('mapObligationAmount', () => {
     it('should return the the result of mapGefObligationAmount', () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CASH;
+      const isBssEwcsDeal = false;
 
       // Act
-      const result = mapObligationAmount({ isGefDeal: true, facilityType, ukefExposure });
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: true,
+        facilityType,
+        ukefExposure,
+      });
 
       // Assert
       const expected = mapGefObligationAmount({ facilityType, ukefExposure });
@@ -74,13 +80,39 @@ describe('mapObligationAmount', () => {
     });
   });
 
-  describe('when isGefDeal is false', () => {
-    it('should return the provided ukefExposure', () => {
+  describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
+    it('should return ukefExposure', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
       // Act
-      const result = mapObligationAmount({ isGefDeal: false, ukefExposure });
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: false,
+        ukefExposure,
+      });
 
       // Assert
-      expect(result).toEqual(ukefExposure);
+      const expected = ukefExposure;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when isGefDeal is false and isBssEwcsDeal is false', () => {
+    it('should return null', () => {
+      // Arrange
+      const isBssEwcsDeal = false;
+
+      // Act
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: false,
+        ukefExposure,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 });

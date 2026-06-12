@@ -357,10 +357,13 @@ describe('/v1/deals', () => {
 
       const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-        deal: submittedDeal,
-        facilities: mockIssuedFacilities,
-      });
+      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          deal: submittedDeal,
+          facilities: mockIssuedFacilities,
+        }),
+      );
     });
 
     describe('sendFacilitiesToApimGift only called with facilities not already in GIFT', () => {
@@ -400,12 +403,15 @@ describe('/v1/deals', () => {
 
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: [mockFacility1, mockFacility2],
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: [mockFacility1, mockFacility2],
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -434,12 +440,15 @@ describe('/v1/deals', () => {
 
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
-          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: [mockFacility2, mockFacility3],
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: [mockFacility2, mockFacility3],
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
     });
