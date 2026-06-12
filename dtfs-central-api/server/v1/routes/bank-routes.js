@@ -78,9 +78,9 @@ bankRouter.route('/').get(getBanks).post(createBankController.createBankPost);
  *     summary: Get the curated list of banks displayed on the portal homepage
  *     tags: [Portal Bank List]
  *     description: |
- *       Returns every entry in the `portal-bank-list` MongoDB collection in
- *       its natural insertion order. The list is maintained manually in
- *       MongoDB Compass per environment.
+ *       Returns every entry in the `portal-bank-list` MongoDB collection
+ *       sorted by the numeric `order` field. The list is maintained manually
+ *       in MongoDB Compass per environment.
  *     responses:
  *       200:
  *         description: OK

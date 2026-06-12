@@ -9,7 +9,8 @@ describe('portal-bank-list-repo', () => {
 
   describe('getAllPortalBankListEntries', () => {
     it('should call the mongo collection with the correct projection and sort order', async () => {
-      const toArrayMock = jest.fn();
+      const docs = [{ name: 'Bank 1', order: 1 }];
+      const toArrayMock = jest.fn().mockResolvedValue(docs);
       const sortMock = jest.fn(() => ({ toArray: toArrayMock }));
       const findMock = jest.fn(() => ({ sort: sortMock }));
       const getCollectionMock = jest.fn().mockResolvedValue({
@@ -18,12 +19,13 @@ describe('portal-bank-list-repo', () => {
 
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      await getAllPortalBankListEntries();
+      const returnedDocs = await getAllPortalBankListEntries();
 
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
       expect(findMock).toHaveBeenCalledWith({}, { projection: { name: 1, order: 1 } });
       expect(sortMock).toHaveBeenCalledWith({ order: 1 });
-      expect(toArrayMock).toHaveBeenCalled();
+      expect(toArrayMock).toHaveBeenCalledTimes(1);
+      expect(returnedDocs).toEqual(docs);
     });
   });
 });
