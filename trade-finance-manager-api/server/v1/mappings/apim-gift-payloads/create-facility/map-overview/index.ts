@@ -1,11 +1,13 @@
 import { Currency } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftFacilityOverview, ApimGiftProductTypeCode } from '../../types';
+import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapOverviewParams = {
+  coverPercentage: number | null;
   currency: Currency;
   effectiveDate: string;
   expiryDate: string;
@@ -21,6 +23,7 @@ type MapOverviewParams = {
 /**
  * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
+ * @param {number | null} params.coverPercentage - The facility cover percentage to use for calculating the APIM GIFT facility amount.
  * @param {Currency} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.
@@ -34,6 +37,7 @@ type MapOverviewParams = {
  * @returns {ApimGiftFacilityOverview} The mapped facility overview data.
  */
 export const mapOverview = ({
+  coverPercentage,
   currency,
   effectiveDate,
   expiryDate,
@@ -45,7 +49,7 @@ export const mapOverview = ({
   productTypeCode,
   ukefFacilityId,
 }: MapOverviewParams): ApimGiftFacilityOverview => ({
-  amount: facilityAmount,
+  amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
   creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE[productTypeCode],
   currency,
   facilityId: ukefFacilityId,
