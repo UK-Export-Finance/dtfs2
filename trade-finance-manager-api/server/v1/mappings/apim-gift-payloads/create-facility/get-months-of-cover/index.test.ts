@@ -1,10 +1,6 @@
 import { DEAL_TYPE, TfmFacility } from '@ukef/dtfs2-common';
 import { getCoverEndDate, getMonthsOfCover, getRequestedCoverStartDate, getTotalMonths, parseDate } from '.';
 
-const mockFacilitySnapshot = {
-  monthsOfCover: 12,
-} as unknown as TfmFacility['facilitySnapshot'];
-
 describe('parseDate', () => {
   it('should return a date for a valid ISO string', () => {
     // Act
@@ -154,11 +150,11 @@ describe('getTotalMonths', () => {
 
 describe('getMonthsOfCover', () => {
   describe(`when deal is ${DEAL_TYPE.GEF}`, () => {
-    it('should return monthsOfCover from the facility snapshot', () => {
+    it('should return total months using coverStartDate and coverEndDate', () => {
       // Arrange
       const facilitySnapshot = {
-        ...mockFacilitySnapshot,
-        monthsOfCover: 18,
+        coverStartDate: '2026-06-12T00:00:00.000+00:00',
+        coverEndDate: '2027-05-28T00:00:00.000+00:00',
       } as unknown as TfmFacility['facilitySnapshot'];
 
       // Act
@@ -169,14 +165,13 @@ describe('getMonthsOfCover', () => {
       });
 
       // Assert
-      expect(result).toEqual(18);
+      expect(result).toEqual(12);
     });
 
-    it('should return null when monthsOfCover is missing', () => {
+    it('should return null when coverStartDate is missing', () => {
       // Arrange
       const facilitySnapshot = {
-        ...mockFacilitySnapshot,
-        monthsOfCover: null,
+        coverEndDate: '2027-05-28T00:00:00.000+00:00',
       } as unknown as TfmFacility['facilitySnapshot'];
 
       // Act

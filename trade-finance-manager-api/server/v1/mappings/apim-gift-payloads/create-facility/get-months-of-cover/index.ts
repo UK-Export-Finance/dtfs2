@@ -36,7 +36,7 @@ export const parseDate = (value: unknown): Date | null => {
  * @returns {Date | null} Cover end date when resolvable, otherwise null.
  */
 export const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Date | null => {
-  const coverEndDate = parseDate((facilitySnapshot as { coverEndDate?: unknown }).coverEndDate);
+  const coverEndDate = parseDate(facilitySnapshot.coverEndDate);
 
   if (coverEndDate) {
     return coverEndDate;
@@ -68,7 +68,7 @@ export const getCoverEndDate = (facilitySnapshot: TfmFacility['facilitySnapshot'
  * @returns {Date | null} Requested cover start date when resolvable, otherwise null.
  */
 export const getRequestedCoverStartDate = (facilitySnapshot: TfmFacility['facilitySnapshot']): Date | null => {
-  const requestedCoverStartDate = parseDate((facilitySnapshot as { requestedCoverStartDate?: unknown }).requestedCoverStartDate);
+  const requestedCoverStartDate = parseDate(facilitySnapshot.requestedCoverStartDate);
 
   if (requestedCoverStartDate) {
     return requestedCoverStartDate;
@@ -126,7 +126,7 @@ export const getTotalMonths = (startDate: Date, endDate: Date): number | null =>
 
 /**
  * Resolve facility months of cover for APIM GIFT payload mapping.
- * - GEF: read directly from `facilitySnapshot.monthsOfCover`.
+ * - GEF: derive from `coverStartDate` and cover end date fields.
  * - BSS/EWCS: prefer `ukefGuaranteeInMonths` when present and positive.
  * - BSS/EWCS fallback: derive from requested cover start and cover end date fields,
  *   including support for legacy split date components.
@@ -135,11 +135,15 @@ export const getTotalMonths = (startDate: Date, endDate: Date): number | null =>
  */
 export const getMonthsOfCover = ({ facilitySnapshot, isBssEwcsDeal, isGefDeal }: GetMonthsOfCoverParams): number | null => {
   if (isGefDeal) {
-    const rawMonths = facilitySnapshot.monthsOfCover;
+    const coverStartDate = parseDate(facilitySnapshot.coverStartDate);
 
-    const months = rawMonths === null || rawMonths === undefined ? null : Number(rawMonths);
+    const coverEndDate = getCoverEndDate(facilitySnapshot);
 
-    return months !== null && Number.isFinite(months) ? months : null;
+    if (!coverStartDate || !coverEndDate) {
+      return null;
+    }
+
+    return getTotalMonths(coverStartDate, coverEndDate);
   }
 
   if (!isBssEwcsDeal) {
