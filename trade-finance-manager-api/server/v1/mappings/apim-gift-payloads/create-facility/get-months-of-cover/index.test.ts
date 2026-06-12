@@ -168,11 +168,62 @@ describe('getMonthsOfCover', () => {
       expect(result).toEqual(12);
     });
 
-    it('should return null when coverStartDate is missing', () => {
+    it('should return null when coverStartDate is missing and monthsOfCover is not set', () => {
       // Arrange
       const facilitySnapshot = {
         coverEndDate: '2027-05-28T00:00:00.000+00:00',
       } as unknown as TfmFacility['facilitySnapshot'];
+
+      // Act
+      const result = getMonthsOfCover({
+        facilitySnapshot,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
+
+      // Assert
+      expect(result).toBeNull();
+    });
+
+    it('should fall back to monthsOfCover when coverStartDate is missing', () => {
+      // Arrange — unissued GEF facility: cover dates not yet set
+      const facilitySnapshot = {
+        monthsOfCover: 18,
+        coverEndDate: '2027-05-28T00:00:00.000+00:00',
+      } as unknown as TfmFacility['facilitySnapshot'];
+
+      // Act
+      const result = getMonthsOfCover({
+        facilitySnapshot,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
+
+      // Assert
+      expect(result).toEqual(18);
+    });
+
+    it('should fall back to monthsOfCover when coverEndDate is missing', () => {
+      // Arrange — unissued GEF facility: cover dates not yet set
+      const facilitySnapshot = {
+        monthsOfCover: 6,
+        coverStartDate: '2026-06-12T00:00:00.000+00:00',
+      } as unknown as TfmFacility['facilitySnapshot'];
+
+      // Act
+      const result = getMonthsOfCover({
+        facilitySnapshot,
+        isBssEwcsDeal: false,
+        isGefDeal: true,
+      });
+
+      // Assert
+      expect(result).toEqual(6);
+    });
+
+    it('should return null when cover dates are missing and monthsOfCover is also missing', () => {
+      // Arrange
+      const facilitySnapshot = {} as TfmFacility['facilitySnapshot'];
 
       // Act
       const result = getMonthsOfCover({

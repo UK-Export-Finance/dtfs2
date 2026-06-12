@@ -127,6 +127,8 @@ export const getTotalMonths = (startDate: Date, endDate: Date): number | null =>
 /**
  * Resolve facility months of cover for APIM GIFT payload mapping.
  * - GEF: derive from `coverStartDate` and cover end date fields.
+ *   Falls back to `facilitySnapshot.monthsOfCover` when either date is absent
+ *   (e.g. unissued facilities where cover dates are not yet set).
  * - BSS/EWCS: prefer `ukefGuaranteeInMonths` when present and positive.
  * - BSS/EWCS fallback: derive from requested cover start and cover end date fields,
  *   including support for legacy split date components.
@@ -136,14 +138,17 @@ export const getTotalMonths = (startDate: Date, endDate: Date): number | null =>
 export const getMonthsOfCover = ({ facilitySnapshot, isBssEwcsDeal, isGefDeal }: GetMonthsOfCoverParams): number | null => {
   if (isGefDeal) {
     const coverStartDate = parseDate(facilitySnapshot.coverStartDate);
-
     const coverEndDate = getCoverEndDate(facilitySnapshot);
 
-    if (!coverStartDate || !coverEndDate) {
-      return null;
+    if (coverStartDate && coverEndDate) {
+      return getTotalMonths(coverStartDate, coverEndDate);
     }
 
-    return getTotalMonths(coverStartDate, coverEndDate);
+    // Fallback for unissued GEF facilities where cover dates are not yet populated.
+    const rawMonths = facilitySnapshot.monthsOfCover;
+    const months = rawMonths === null || rawMonths === undefined ? null : Number(rawMonths);
+
+    return months !== null && Number.isFinite(months) ? months : null;
   }
 
   if (!isBssEwcsDeal) {
