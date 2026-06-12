@@ -253,6 +253,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
 
     if (!isValidDealId) {
       console.error('updateDeal: Invalid deal id %s', dealId);
+
       return onError({ status: 400, message: 'Invalid deal id' });
     }
 

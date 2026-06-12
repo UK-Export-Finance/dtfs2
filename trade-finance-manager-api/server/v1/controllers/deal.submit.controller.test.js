@@ -361,6 +361,26 @@ describe('submitDealAfterUkefIds', () => {
       // Assert
       expect(api.updateDeal).toHaveBeenCalled();
     });
+
+    it('should pass tfm to updatedIssuedFacilities for MIA resubmission', async () => {
+      // Arrange
+      mapSubmittedDeal.mockReturnValueOnce({
+        ...resubmittedDeal,
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+      });
+
+      // Act
+      await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+      // Assert
+      expect(updatedIssuedFacilities).toHaveBeenCalledWith(
+        expect.objectContaining({
+          submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+          tfm: existingTfmDeal.tfm,
+        }),
+        auditDetails,
+      );
+    });
   });
 });
 

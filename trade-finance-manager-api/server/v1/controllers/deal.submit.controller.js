@@ -190,8 +190,13 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const { status } = updatedPortalDeal;
       mappedDeal.status = status;
 
+      const mappedDealWithTfm = {
+        ...mappedDeal,
+        tfm: tfmDeal.tfm,
+      };
+
       // Update issued facilities
-      const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
+      const dealUpdate = await updatedIssuedFacilities(mappedDealWithTfm, auditDetails);
 
       if (isUpdatingToMIN) {
         const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker, auditDetails);

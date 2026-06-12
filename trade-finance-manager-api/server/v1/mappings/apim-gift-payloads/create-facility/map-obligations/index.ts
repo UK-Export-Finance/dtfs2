@@ -54,7 +54,7 @@ export const mapObligations = ({
 
   const obligations = [
     {
-      amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+      amount: mapObligationAmount({ isBssEwcsDeal, isGefDeal, facilityType, ukefExposure }),
       currency,
       repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       subtypeCode,
