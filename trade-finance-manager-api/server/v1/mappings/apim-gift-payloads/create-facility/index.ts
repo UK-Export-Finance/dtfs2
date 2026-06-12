@@ -158,6 +158,7 @@ export const createFacility = async ({
     obligations: mapObligations({
       bssSubtypeName,
       currency,
+      facilityAmount,
       facilityType,
       isBssEwcsDeal,
       isGefDeal,
