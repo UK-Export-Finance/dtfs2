@@ -1,17 +1,12 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
+import { ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
+import { TestApiError } from '@ukef/dtfs2-common/test-helpers';
 import { WithId, ObjectId } from 'mongodb';
 import { getPortalBankList } from './get-portal-bank-list.controller';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
 
 jest.mock('../../../repositories/portal-bank-list-repo');
-
-class TestApiError extends ApiError {
-  constructor({ status, message, code }: { status: number; message: string; code?: ApiError['code'] }) {
-    super({ status, message, code });
-  }
-}
 
 const aPortalBankListEntry = (overrides: Partial<WithId<PortalBankListEntry>> = {}): WithId<PortalBankListEntry> => ({
   _id: new ObjectId(),
@@ -35,6 +30,13 @@ const getMockResponse = (): MockResponse => {
   return res;
 };
 
+/**
+ * Invokes the controller under test with a minimal request object and the
+ * supplied mock response.
+ *
+ * This keeps each test focused on arranging repository behaviour and asserting
+ * the response shape rather than repeating Express wiring.
+ */
 const invokeController = async (res: MockResponse) => {
   const req = {} as Parameters<typeof getPortalBankList>[0];
   await getPortalBankList(req, res as Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>);
@@ -57,13 +59,13 @@ describe('getPortalBankList', () => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue(entries);
     });
 
-    it('should respond with a 200', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok}`, async () => {
       const res = getMockResponse();
 
       await invokeController(res);
 
       expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Ok);
     });
 
     it('should respond with the list of entries returned by the database', async () => {

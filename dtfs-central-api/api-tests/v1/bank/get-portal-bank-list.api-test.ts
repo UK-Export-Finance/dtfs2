@@ -30,7 +30,7 @@ describe(`GET ${BASE_URL}`, () => {
   });
 
   describe('when the portal-bank-list collection is empty', () => {
-    it('should respond with a 200 and an empty array', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok} and an empty array`, async () => {
       const response = await testApi.get(BASE_URL);
 
       expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -50,16 +50,16 @@ describe(`GET ${BASE_URL}`, () => {
       await collection.insertMany(entries);
     });
 
-    it('should respond with a 200', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok}`, async () => {
       const response = await testApi.get(BASE_URL);
 
       expect(response.status).toEqual(HttpStatusCode.Ok);
     });
 
-    it('should return all entries from the collection in the order they were inserted', async () => {
+    it('should return all entries from the collection in order field order', async () => {
       const response = await testApi.get(BASE_URL);
 
-      const expected = entries.map(({ _id, name, order }) => ({ _id: _id.toString(), name, order }));
+      const expected = [entries[1], entries[0], entries[2]].map(({ _id, name, order }) => ({ _id: _id.toString(), name, order }));
 
       expect(response.body).toEqual(expected);
     });
