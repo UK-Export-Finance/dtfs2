@@ -43,7 +43,7 @@ updates:
       - '/dtfs-central-api'
       - '/reverse-proxy'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
       time: '00:00'
     labels:
       - 'chore'
@@ -58,7 +58,7 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
       time: '00:00'
     labels:
       - 'chore'
