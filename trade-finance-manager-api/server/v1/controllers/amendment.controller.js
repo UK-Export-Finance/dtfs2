@@ -287,12 +287,12 @@ const createFacilityAmendment = async (req, res) => {
 };
 
 /**
- * Updates a facility amendment with the provided details.
+ * Updates a facility amendment with the provided details and sends to ACBS and APIM GIFT if applicable.
  *
  * This function performs the following operations:
  * 1. Extracts the facility ID and amendment ID from the request parameters.
  * 2. Extracts the amendment details from the request body.
- * 3. Calls the API to update the facility amendment with the provided details.
+ * 3. Calls the API to update the facility amendment with the provided details, including ACBS and APIM GIFT integration if enabled.
  * 4. Sends a response back to the client indicating the success or failure of the operation.
  *
  * @param {object} req - The request object containing the parameters and body.
@@ -306,6 +306,9 @@ const createFacilityAmendment = async (req, res) => {
  */
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
+
+  console.info('TFM facility %s updateFacilityAmendment - amendment %s', facilityId, amendmentId);
+
   let payload = req.body;
 
   // set to true if payload contains updateTfmLastUpdated else null
@@ -409,6 +412,16 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
+        if (isTfmApimGiftIntegrationEnabled()) {
+          console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+
+          const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+
+          if (!sentToApimGift) {
+            throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+          }
+        }
+
         // Submit to ACBS
         if (canSendToAcbs({ amendment, isTaskUpdate })) {
           // Amendment email notification to PDC
@@ -502,7 +515,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
  * 2. Fetches the related deal object.
  * 3. Constructs a minimal deal object required for ACBS interaction.
  * 4. Checks if the amendment can be sent to ACBS.
- * 5. Sends an internal email notification and amends the facility in ACBS if eligible.
+ * 5. Sends an internal email notification and amends the facility in ACBS and APIM GIFT if eligible.
  * 6. Handles errors and sends appropriate HTTP responses.
  *
  * @async
@@ -514,7 +527,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
 const sendFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
 
-  console.info('Sending facility amendment %s to ACBS and/or APIM GIFT for facility %s', amendmentId, facilityId);
+  console.info('TFM facility %s sendFacilityAmendment - sending amendment %s to ACBS and/or APIM GIFT', facilityId, amendmentId);
 
   try {
     if (amendmentId && facilityId) {
