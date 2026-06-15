@@ -8,6 +8,7 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 describe('mapObligations', () => {
   const bssSubtypeName = 'Performance bond';
   const currency = 'GBP';
+  const facilityAmount = 1500;
   const facilityType = FACILITY_TYPE.CASH;
   const ukefExposure = 1500;
 
@@ -20,6 +21,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         bssSubtypeName,
@@ -32,6 +34,7 @@ describe('mapObligations', () => {
           amount: mapObligationAmount({
             isBssEwcsDeal,
             isGefDeal,
+            facilityAmount,
             facilityType,
             ukefExposure,
           }),
@@ -54,6 +57,7 @@ describe('mapObligations', () => {
         // Act
         const result = mapObligations({
           currency,
+          facilityAmount,
           isBssEwcsDeal,
           isGefDeal,
           bssSubtypeName: unmappedBssSubtypeName,
@@ -66,6 +70,7 @@ describe('mapObligations', () => {
             amount: mapObligationAmount({
               isBssEwcsDeal,
               isGefDeal,
+              facilityAmount,
               facilityType,
               ukefExposure,
             }),
@@ -89,6 +94,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         facilityType,
@@ -101,6 +107,7 @@ describe('mapObligations', () => {
           amount: mapObligationAmount({
             isBssEwcsDeal,
             isGefDeal,
+            facilityAmount,
             facilityType,
             ukefExposure,
           }),
@@ -123,6 +130,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         ukefExposure,
@@ -134,6 +142,7 @@ describe('mapObligations', () => {
           amount: mapObligationAmount({
             isBssEwcsDeal,
             isGefDeal,
+            facilityAmount,
             facilityType,
             ukefExposure,
           }),
