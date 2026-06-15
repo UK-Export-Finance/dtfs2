@@ -5,6 +5,13 @@
     },
     "pull-request-title-pattern": "chore(${scope}): release${component} ${version}",
     "extra-label": "Type: chore, Type: Docs",
+    "changelog-sections": [
+    { "type": "feat", "hidden": false, "section": "Features" },
+    { "type": "fix", "hidden": false, "section": "Bug Fixes" },
+    { "type": "chore", "hidden": false, "section": "Miscellaneous Chores" },
+    { "type": "docs", "hidden": false, "section": "Docs" },
+    { "type": "revert", "hidden": false, "section": "Reverts" }
+  ],
     "extra-files": [
         "CHANGELOG.md"
     ]
