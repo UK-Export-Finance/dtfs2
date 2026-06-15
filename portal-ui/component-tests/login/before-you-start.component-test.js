@@ -33,8 +33,12 @@ describe(page, () => {
       wrapper = render({ banks: [] });
     });
 
-    it('should render the fallback message', () => {
-      wrapper.expectText('p').toContain('We’re unable to show the bank list right now. Please try again later.');
+    it('should render the fallback message as an inset notice', () => {
+      wrapper.expectElement('[data-cy="banks-unavailable"]').toExist();
+      wrapper.expectElement('div.govuk-inset-text[data-cy="banks-unavailable"]').toExist();
+      wrapper
+        .expectText('[data-cy="banks-unavailable"]')
+        .toContain('The list of banks isn’t available right now. You can still sign in if your bank has been onboarded.');
 
       wrapper.expectElement('[data-cy="banks"]').notToExist();
     });

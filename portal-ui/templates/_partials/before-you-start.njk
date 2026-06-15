@@ -1,4 +1,6 @@
 
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
 <h2 class="govuk-heading-m" data-cy="service">If you've not used this service before</h2>
 
 <p>You can use this service to apply for a guarantee on bonds, loans and other bank facilities that support UK exporters.</p>
@@ -12,7 +14,12 @@
     {% endfor %}
   </ul>
 {% else %}
-  <p>We’re unable to show the bank list right now. Please try again later.</p>
+  {{ govukInsetText({
+    text: "The list of banks isn’t available right now. You can still sign in if your bank has been onboarded.",
+    attributes: {
+      "data-cy": "banks-unavailable"
+    }
+  }) }}
 {% endif %}
 
 <p>Guarantees are provided by UK Export Finance under the terms of the master guarantee agreement (MGA) for either the:</p>
