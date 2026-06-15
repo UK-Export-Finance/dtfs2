@@ -159,7 +159,7 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIN', () => {
         it('adds NOT add tasks to the deal', async () => {
-          // Act & Arrange
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
           // Assert
@@ -168,7 +168,7 @@ describe('/v1/deals', () => {
         });
 
         it('should NOT call externalApis.sendEmail', async () => {
-          // Act & Arrange
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
           // Assert

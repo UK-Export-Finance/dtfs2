@@ -525,7 +525,6 @@ describe('/v1/deals', () => {
       });
 
       it('should update bond status to `Acknowledged` if the facilityStage changes from `Unissued` to `Issued`', async () => {
-        // Assert
         // Arrange
         // check status before calling submit endpoint
         const initialBond = MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items[0];
