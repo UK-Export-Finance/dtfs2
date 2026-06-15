@@ -21,7 +21,7 @@ updates:
       - '/azure-functions/acbs'
       - '/dtfs-central-api'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
       time: '00:00'
     labels:
       - 'chore'
