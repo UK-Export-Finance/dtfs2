@@ -12,6 +12,7 @@
   <form method="POST" autocomplete="off" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <input type="hidden" name="formId" value="facilities-table-sorting">
+
     <table class="govuk-table facilities-table sortable" data-cy="facilities-table">
       <caption class="govuk-visually-hidden">
         Facility results table, column headers with buttons are sortable.
@@ -19,7 +20,7 @@
       <thead class="govuk-table__head">
         <tr>
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'ukefFacilityId',
             buttonText: 'Facility ID',
@@ -29,7 +30,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'dealType',
             buttonText: 'Product',
@@ -39,7 +40,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'type',
             buttonText: 'Type',
@@ -49,7 +50,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'companyName',
             buttonText: 'Exporter',
@@ -59,7 +60,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'value',
             buttonText: 'Value (export currency)',
@@ -69,7 +70,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'coverEndDate',
             buttonText: 'Cover end date',
@@ -79,7 +80,7 @@
             activeSortByField: activeSortByField
           }) }}
 
-          {{tableHeading.render({
+          {{ tableHeading.render({
             tableName: 'facilities',
             fieldName: 'facilityStage',
             buttonText: 'Facility stage',
@@ -94,21 +95,21 @@
       <tbody class="govuk-table__body">
         {% for facility in facilities %}
             {% set stage %}
-                {% if facility.hasBeenIssued %}
-                    Issued
-                {% else %}
-                    Unissued
-                {% endif %}
+              {% if facility.hasBeenIssued %}
+                Issued
+              {% else %}
+                Unissued
+              {% endif %}
             {% endset %}
 
             {% set facilityStage %}
-                {% if facility.tfmFacilityStage %}
-                    {{ facility.tfmFacilityStage }}
-                {% elif facility.hasAmendmentInProgressSubmittedFromPim === true %}
-                    {{stage}} (amendment in progress)
-                {% else %}
-                    {{stage}}
-                {% endif %}
+              {% if facility.tfmFacilityStage %}
+                {{ facility.tfmFacilityStage }}
+              {% elif facility.hasAmendmentInProgressSubmittedFromPim === true %}
+                {{stage}} (amendment in progress)
+              {% else %}
+                {{stage}}
+              {% endif %}
             {% endset %}
 
           <tr class="govuk-table__row tfm-facility-table-row" data-cy="facility-{{ facility.facilityId }}">
@@ -118,7 +119,6 @@
                 href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
                 data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link">
                 <span class="govuk-visually-hidden">View facility</span> <span data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link-text">{{ facility.ukefFacilityId }}</span> <span class="govuk-visually-hidden">details</span>
-
               </a>
             </td>
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-dealType">{{ facility.dealType | dashIfEmpty }}</td>

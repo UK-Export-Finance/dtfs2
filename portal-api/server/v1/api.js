@@ -925,10 +925,13 @@ const patchPortalFacilitySubmitAmendment = async ({
     const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
 
     if (success) {
-      // If successful, send the amendment to ACBS
+      /**
+       * If successful, send the amendment to TFM API,
+       * for APIM GIFT and ACBS integration.
+       */
       await axios({
         method: 'post',
-        url: `${TFM_API_URL}/v1/amendment/facility/${facilityId}/amendment/${amendmentId}/acbs`,
+        url: `${TFM_API_URL}/v1/amendment/facility/${facilityId}/amendment/${amendmentId}`,
         headers: headers.tfm,
       });
 
