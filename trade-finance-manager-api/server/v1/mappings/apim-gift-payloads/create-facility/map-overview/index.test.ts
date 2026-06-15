@@ -1,13 +1,14 @@
 import { CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
+import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
   const baseParams = {
-    bankInternalRefName: 'Mock internal reference name',
+    coverPercentage: 80,
     currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
     expiryDate: '2026-12-31',
@@ -15,14 +16,15 @@ describe('mapOverview', () => {
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
     isGefDeal: true,
+    monthsOfCover: 12,
     ukefFacilityId: '123',
   };
 
-  const { bankInternalRefName, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, ukefFacilityId, ...otherParams } = baseParams;
+  const { coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
-    amount: facilityAmount,
+    amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };
@@ -45,9 +47,9 @@ describe('mapOverview', () => {
         ...baseExpected,
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT003,
         name: mapFacilityName({
-          bankInternalRefName,
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,
@@ -76,9 +78,9 @@ describe('mapOverview', () => {
         ...baseExpected,
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT004,
         name: mapFacilityName({
-          bankInternalRefName,
           facilityType,
           isGefDeal,
+          monthsOfCover,
           productTypeCode,
         }),
         productTypeCode,

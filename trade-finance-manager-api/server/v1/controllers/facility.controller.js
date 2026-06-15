@@ -65,6 +65,7 @@ const getFacilities = async (req, res) => {
       let facilityCoverEndDateEpoch = '';
 
       const formatCoverEndDate = format(new Date(facility.coverEndDate), 'dd MMM yyyy'); // 11 Aug 2021
+
       if (facility.coverEndDate && REGEX.DATE.test(formatCoverEndDate)) {
         facilityCoverEndDate = formatCoverEndDate;
         facilityCoverEndDateEpoch = getUnixTime(new Date(facility.coverEndDate));
@@ -88,6 +89,7 @@ const getFacilities = async (req, res) => {
       }
 
       facility.coverEndDate = facilityCoverEndDate;
+
       // the EPOCH format is required to sort the facilities based on date
       facility.coverEndDateEpoch = facilityCoverEndDateEpoch;
       facility.currencyAndValue = facilityCurrencyAndValue;

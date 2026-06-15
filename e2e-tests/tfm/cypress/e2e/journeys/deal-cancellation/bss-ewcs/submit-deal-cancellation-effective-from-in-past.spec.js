@@ -10,21 +10,25 @@ import activitiesPage from '../../../pages/activities/activitiesPage';
 
 context('Deal cancellation - submit cancellation with "effectiveFrom" in past', () => {
   let dealId;
+  let ukefDealId;
   const dealFacilities = [];
-  const ukefDealId = 10000001;
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id;
+        ukefDealId = insertedDeal?.details?.ukefDealId;
 
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+        const { mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1);
+      })
+      .then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
-      });
 
-      cy.submitDeal(dealId, dealType, PIM_USER_1);
-    });
+        return cy.submitDeal(dealId, MOCK_DEAL_AIN.dealType, PIM_USER_1);
+      });
   });
 
   beforeEach(() => {

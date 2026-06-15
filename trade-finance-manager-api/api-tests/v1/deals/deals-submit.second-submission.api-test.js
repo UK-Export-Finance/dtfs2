@@ -4,7 +4,7 @@ const { cloneDeep } = require('lodash');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const getGuaranteeDates = require('../../../server/v1/helpers/get-guarantee-dates');
 const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
 const { generateIssuedFacilitiesListString } = require('../../../server/v1/controllers/send-issued-facilities-received-email');
@@ -32,8 +32,8 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
 jest.mock('../../../server/v1/helpers/can-submit-to-acbs');
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSubmitToApimGift: jest.fn(),
-  submitFacilitiesToApimGift: jest.fn(),
+  canSendToApimGift: jest.fn(),
+  sendFacilitiesToApimGift: jest.fn(),
 }));
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -86,8 +86,8 @@ const expectAnyPortalUserAuditDetails = { userType: AUDIT_USER_TYPES.PORTAL, id:
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    canSubmitToApimGift.mockClear();
-    submitFacilitiesToApimGift.mockClear();
+    canSendToApimGift.mockClear();
+    sendFacilitiesToApimGift.mockClear();
 
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
@@ -123,7 +123,7 @@ describe('/v1/deals', () => {
 
     canSubmitToACBS.mockClear();
 
-    canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false });
+    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false });
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -401,33 +401,33 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should call canSubmitToApimGift', async () => {
+      it('should call canSendToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should not call submitFacilitiesToApimGift', async () => {
+      it('should not call sendFacilitiesToApimGift', async () => {
         // Arrange
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -437,14 +437,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
     });
@@ -472,32 +475,32 @@ describe('/v1/deals', () => {
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body, firstSubmissionCheck: false });
       });
 
-      it('should call canSubmitToApimGift', async () => {
+      it('should call canSendToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should NOT call submitFacilitiesToApimGift', async () => {
+      it('should NOT call sendFacilitiesToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -507,14 +510,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -745,33 +751,33 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should call canSubmitToApimGift', async () => {
+      it('should call canSendToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should NOT call submitFacilitiesToApimGift', async () => {
+      it('should NOT call sendFacilitiesToApimGift', async () => {
         // Arrange
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -781,14 +787,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -935,12 +944,12 @@ describe('/v1/deals', () => {
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = (mockDeal.facilities || []).filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: false,
             isGefDeal: true,
@@ -950,14 +959,18 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(mockDeal));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: false,
-            isGefDeal: true,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: false,
+              isGefDeal: true,
+              newPartyUrnCreated: false,
+            }),
+          );
         });
       });
     });
