@@ -23,15 +23,15 @@ describe('getPortalBankList', () => {
 
   describe('when the central API returns a list of banks', () => {
     const banks = [
-      { _id: 'bank-1', name: 'Bank 1', order: 1 },
-      { _id: 'bank-2', name: 'Bank 2', order: 2 },
+      { _id: '60f7f9c2e1b4a12d34c56789', name: 'Bank 1', order: 1 },
+      { _id: '60f7f9c2e1b4a12d34c5678a', name: 'Bank 2', order: 2 },
     ];
 
     beforeEach(() => {
       jest.mocked(api.getPortalBankList).mockResolvedValue(banks);
     });
 
-    it('should respond with a 200 and the list of banks', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok} and the list of banks`, async () => {
       const res = getMockResponse();
 
       await getPortalBankList({}, res);

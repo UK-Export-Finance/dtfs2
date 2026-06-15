@@ -5,6 +5,8 @@ const api = require('../api');
  * API request fails.
  *
  * @returns {Promise<Array<{ _id: string, name: string, order: number }>>}
+ *   Returns a list of banks to display on the login page, or an empty array if
+ *   the API request fails.
  */
 const getPortalBankListForLoginPage = async () => {
   try {

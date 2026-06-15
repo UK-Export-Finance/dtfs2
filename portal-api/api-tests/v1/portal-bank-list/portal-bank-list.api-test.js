@@ -17,8 +17,8 @@ const api = require('../../../server/v1/api');
 const URL = '/v1/portal-bank-list';
 
 const banks = [
-  { _id: 'bank-1', name: 'Bank 1', order: 1 },
-  { _id: 'bank-2', name: 'Bank 2', order: 2 },
+  { _id: '60f7f9c2e1b4a12d34c56789', name: 'Bank 1', order: 1 },
+  { _id: '60f7f9c2e1b4a12d34c5678a', name: 'Bank 2', order: 2 },
 ];
 
 describe('/v1/portal-bank-list', () => {
@@ -34,7 +34,7 @@ describe('/v1/portal-bank-list', () => {
     describe('when the api key is valid', () => {
       const validHeaders = { 'x-api-key': PORTAL_API_KEY };
 
-      it('should return 200 with the list of banks from the central api', async () => {
+      it(`should return ${HttpStatusCode.Ok} with the list of banks from the central api`, async () => {
         api.getPortalBankList.mockResolvedValueOnce(banks);
 
         const { status, body } = await get(URL, { headers: validHeaders });

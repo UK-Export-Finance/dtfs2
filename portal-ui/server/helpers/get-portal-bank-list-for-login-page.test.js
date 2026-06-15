@@ -36,7 +36,10 @@ describe('getPortalBankListForLoginPage', () => {
   });
 
   describe('when the api call fails', () => {
-    const error = new Error('boom');
+    const error = Object.assign(new Error('Request failed with status code 503'), {
+      isAxiosError: true,
+      response: { status: 503 },
+    });
 
     beforeEach(() => {
       jest.mocked(api.getPortalBankList).mockRejectedValue(error);
