@@ -1,12 +1,13 @@
 import { Currency } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { ApimGiftFacilityOverview, ApimGiftProductTypeCode } from '../../types';
+import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapOverviewParams = {
-  bankInternalRefName: string;
+  coverPercentage: number | null;
   currency: Currency;
   effectiveDate: string;
   expiryDate: string;
@@ -14,6 +15,7 @@ type MapOverviewParams = {
   facilityAmount: number;
   facilityType?: string;
   isGefDeal: boolean;
+  monthsOfCover?: number | null;
   productTypeCode: ApimGiftProductTypeCode;
   ukefFacilityId: string;
 };
@@ -21,7 +23,7 @@ type MapOverviewParams = {
 /**
  * Map the facility "overview".
  * @param {MapOverviewParams} params - Data required to build the APIM GIFT "facility overview" data.
- * @param {string} params.bankInternalRefName - The bank internal reference name for the facility's deal.
+ * @param {number | null} params.coverPercentage - The facility cover percentage to use for calculating the APIM GIFT facility amount.
  * @param {Currency} params.currency - The facility currency code.
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.
@@ -29,12 +31,13 @@ type MapOverviewParams = {
  * @param {number} params.facilityAmount - The total facility amount.
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number} [params.monthsOfCover] - The length of cover in months.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
  * @returns {ApimGiftFacilityOverview} The mapped facility overview data.
  */
 export const mapOverview = ({
-  bankInternalRefName,
+  coverPercentage,
   currency,
   effectiveDate,
   expiryDate,
@@ -42,19 +45,20 @@ export const mapOverview = ({
   facilityAmount,
   facilityType,
   isGefDeal,
+  monthsOfCover,
   productTypeCode,
   ukefFacilityId,
 }: MapOverviewParams): ApimGiftFacilityOverview => ({
-  amount: facilityAmount,
+  amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
   creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE[productTypeCode],
   currency,
   facilityId: ukefFacilityId,
   effectiveDate,
   expiryDate,
   name: mapFacilityName({
-    bankInternalRefName,
     facilityType,
     isGefDeal,
+    monthsOfCover,
     productTypeCode,
   }),
   obligorUrn: exporterPartyUrn ? String(exporterPartyUrn) : null,

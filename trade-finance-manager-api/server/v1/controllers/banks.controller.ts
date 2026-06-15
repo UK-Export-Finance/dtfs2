@@ -24,11 +24,15 @@ export const getBanks = async (req: GetBanksRequest, res: Response<GetBanksRespo
     const banksResponse = await api.getBanks({
       includeReportingYears: includeReportingYears === 'true',
     });
+
     return res.status(HttpStatusCode.Ok).send(banksResponse);
   } catch (error) {
     const errorMessage = 'Failed to get banks';
+
     console.error('%s %o', errorMessage, error);
+
     const errorStatus: number = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
+
     return res.status(errorStatus).send({
       message: errorMessage,
       status: errorStatus,

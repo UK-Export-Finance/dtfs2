@@ -11,11 +11,13 @@ const deleteOneDeal = (token, dealId) => {
 module.exports = (dealId, user) => {
   console.info('deleteOneDeal::');
 
-  return logIn(user).then(
-    (token) =>
-      new Cypress.Promise((resolve) => {
-        deleteOneDeal(token, dealId);
-        resolve();
-      }),
-  );
+  return logIn(user).then((token) => {
+    const deletion = deleteOneDeal(token, dealId);
+
+    if (!deletion) {
+      return null;
+    }
+
+    return deletion;
+  });
 };

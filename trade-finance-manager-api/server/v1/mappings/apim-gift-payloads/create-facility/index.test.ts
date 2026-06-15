@@ -7,6 +7,7 @@ import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categ
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { mapCoverPercentage } from './map-cover-percentage';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
@@ -43,6 +44,8 @@ describe('createFacility', () => {
 
   const mockUkefIndustryCode = '1003';
 
+  const mockNewPartyUrnCreated = true;
+
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const productTypeCode = mapProductTypeCode({
@@ -57,13 +60,22 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const params = {
-    deal: mockDeal,
-    facility: mockFacility,
+  const coverPercentage = mapCoverPercentage({
+    facilitySnapshot,
     isBssEwcsDeal,
     isGefDeal,
+  });
+
+  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+
+  const params = {
     creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
+    deal: mockDeal,
+    facility: mockFacility,
     facilityCategories: MOCK_FACILITY_CATEGORIES,
+    isBssEwcsDeal,
+    isGefDeal,
+    newPartyUrnCreated: mockNewPartyUrnCreated,
   };
 
   beforeEach(() => {
@@ -87,12 +99,12 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
+        coverPercentage,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
         exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
-        facilityAmount: Number(tfm.ukefExposure),
+        facilityAmount,
         facilityType: facilitySnapshot.type,
         isGefDeal,
         productTypeCode,
@@ -116,8 +128,8 @@ describe('createFacility', () => {
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
-        isBssEwcsDeal,
         facilityType: facilitySnapshot.type,
+        isBssEwcsDeal,
         isGefDeal,
         ukefExposure: Number(tfm.ukefExposure),
       }),
@@ -130,6 +142,7 @@ describe('createFacility', () => {
         industryCode: getIndustryCode(mockDeal),
         isGefDeal,
       }),
+      delayCreation: mockNewPartyUrnCreated,
     };
 
     expect(result).toEqual(expected);

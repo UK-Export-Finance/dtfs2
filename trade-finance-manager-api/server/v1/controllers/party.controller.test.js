@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { createACBS } = require('./acbs.controller');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 const api = require('../api');
@@ -22,8 +22,8 @@ jest.mock('../api', () => ({
 }));
 
 jest.mock('../integrations/apim-gift', () => ({
-  canSubmitToApimGift: jest.fn(),
-  submitFacilitiesToApimGift: jest.fn(),
+  canSendToApimGift: jest.fn(),
+  sendFacilitiesToApimGift: jest.fn(),
 }));
 
 jest.mock('./acbs.controller', () => ({
@@ -93,8 +93,8 @@ describe('updateParty', () => {
 
     updateDealMock.mockResolvedValue(mockTfmDeal);
 
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+    canSendToApimGift.mockResolvedValue({
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal: false,
       isGefDeal: true,
@@ -132,8 +132,8 @@ describe('updateParty', () => {
       auditDetails: generateTfmAuditDetails(mockRequest.user._id),
     });
 
-    expect(canSubmitToApimGift).toHaveBeenCalledWith(mockTfmDeal);
-    expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+    expect(canSendToApimGift).toHaveBeenCalledWith(mockTfmDeal);
+    expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
     expect(createACBS).not.toHaveBeenCalled();
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
@@ -145,7 +145,7 @@ describe('updateParty', () => {
   });
 
   describe('when APIM/GIFT submission is allowed', () => {
-    it('should call submitFacilitiesToApimGift', async () => {
+    it('should call sendFacilitiesToApimGift', async () => {
       // Arrange
       const mockRequest = {
         params: {
@@ -157,8 +157,8 @@ describe('updateParty', () => {
         },
       };
 
-      canSubmitToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+      canSendToApimGift.mockResolvedValue({
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -168,15 +168,16 @@ describe('updateParty', () => {
       await updateParty(mockRequest, mockResponse);
 
       // Assert
-      expect(submitFacilitiesToApimGift).toHaveBeenCalledWith({
+      expect(sendFacilitiesToApimGift).toHaveBeenCalledWith({
         deal: mockTfmDeal,
         facilities: issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
+        newPartyUrnCreated: true,
       });
     });
 
-    it(`should return ${HttpStatusCode.InternalServerError} when submitFacilitiesToApimGift fails`, async () => {
+    it(`should return ${HttpStatusCode.InternalServerError} when sendFacilitiesToApimGift fails`, async () => {
       const mockRequest = {
         params: {
           dealId: '5ce819935e539c343f141ece',
@@ -188,17 +189,17 @@ describe('updateParty', () => {
       };
       const apimGiftError = new Error('APIM/GIFT failed');
 
-      canSubmitToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+      canSendToApimGift.mockResolvedValue({
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
       });
-      submitFacilitiesToApimGift.mockRejectedValueOnce(apimGiftError);
+      sendFacilitiesToApimGift.mockRejectedValueOnce(apimGiftError);
 
       await updateParty(mockRequest, mockResponse);
 
-      expect(consoleErrorMock).toHaveBeenCalledWith('TFM deal %s updateParty - submitFacilitiesToApimGift failed %o', mockRequest.params.dealId, apimGiftError);
+      expect(consoleErrorMock).toHaveBeenCalledWith('TFM deal %s updateParty - sendFacilitiesToApimGift failed %o', mockRequest.params.dealId, apimGiftError);
       expect(consoleErrorMock).toHaveBeenCalledWith('Unable to update parties for deal %s %o', mockRequest.params.dealId, apimGiftError);
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
       expect(mockResponse.send).toHaveBeenCalledWith(apimGiftError);
@@ -206,7 +207,7 @@ describe('updateParty', () => {
   });
 
   describe('when APIM/GIFT submission is not allowed', () => {
-    it('should not call submitFacilitiesToApimGift', async () => {
+    it('should not call sendFacilitiesToApimGift', async () => {
       // Arrange
       const mockRequest = {
         params: {
@@ -218,8 +219,8 @@ describe('updateParty', () => {
         },
       };
 
-      canSubmitToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: false,
+      canSendToApimGift.mockResolvedValue({
+        canSendFacilitiesToApimGift: false,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -229,7 +230,7 @@ describe('updateParty', () => {
       await updateParty(mockRequest, mockResponse);
 
       // Assert
-      expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
     });
   });
 
