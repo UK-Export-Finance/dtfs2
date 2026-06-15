@@ -6,7 +6,7 @@ const api = require('../api');
  * Proxies the curated portal homepage bank list from `dtfs-central-api` so the
  * unauthenticated login page can render it without talking to central API directly.
  */
-const getPortalBankList = async (req, res) => {
+const getPortalBankList = async (_req, res) => {
   try {
     const banks = await api.getPortalBankList();
 
