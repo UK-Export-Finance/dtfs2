@@ -39,6 +39,7 @@ const mockFacility: TfmFacility = {
 
 const mockIsBssEwcsDeal = true;
 const mockIsGefDeal = false;
+const mockNewPartyUrnCreated = true;
 
 const createFacilityPayloadSpy = APIM_GIFT_PAYLOADS.createFacility as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacility>;
 const createFacilitiesPayloadSpy = APIM_GIFT_PAYLOADS.createFacilities as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacilities>;
@@ -73,6 +74,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -81,6 +83,7 @@ describe('sendFacilitiesToApimGift', () => {
         facility: mockFacility,
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
@@ -93,6 +96,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -106,6 +110,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -119,6 +124,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -132,6 +138,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       expect(result).toEqual(mockApiResponse);
@@ -171,6 +178,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -179,6 +187,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
@@ -191,6 +200,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -207,6 +217,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -220,6 +231,7 @@ describe('sendFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       const expected = [mockApiResponse, mockApiResponse, mockApiResponse];

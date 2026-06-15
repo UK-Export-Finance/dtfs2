@@ -39,6 +39,7 @@ const updateParty = async (req, res) => {
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
+          newPartyUrnCreated: true,
         });
       } catch (error) {
         console.error('TFM deal %s updateParty - sendFacilitiesToApimGift failed %o', dealId, error);

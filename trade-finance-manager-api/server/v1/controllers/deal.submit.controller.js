@@ -99,7 +99,14 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
 
       // TFM properties (deal.tfm)
       const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
-      const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
+      const partyUrnResult = await addPartyUrns(dealWithTfmData, auditDetails);
+
+      const updatedDealWithPartyUrn = partyUrnResult && partyUrnResult.deal ? partyUrnResult.deal : dealWithTfmData;
+
+      if (partyUrnResult?.newPartyUrnCreated) {
+        console.info('TFM deal %s submitDealAfterUkefIds - new party URN created for exporter', dealId);
+      }
+
       const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
 
       // Facilities
@@ -135,6 +142,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
+          newPartyUrnCreated: partyUrnResult?.newPartyUrnCreated,
         });
       }
 
@@ -182,8 +190,13 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const { status } = updatedPortalDeal;
       mappedDeal.status = status;
 
+      const mappedDealWithTfm = {
+        ...mappedDeal,
+        tfm: tfmDeal.tfm,
+      };
+
       // Update issued facilities
-      const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
+      const dealUpdate = await updatedIssuedFacilities(mappedDealWithTfm, auditDetails);
 
       if (isUpdatingToMIN) {
         const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker, auditDetails);

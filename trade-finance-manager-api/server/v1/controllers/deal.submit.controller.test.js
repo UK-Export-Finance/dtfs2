@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../constants');
-
 const api = require('../api');
 const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneGefDeal, findOneTfmDeal } = require('./deal.controller');
@@ -16,7 +15,6 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
-
 const { submitDealAfterUkefIds, submitDealBeforeUkefIds } = require('./deal.submit.controller');
 
 jest.mock('../api', () => ({
@@ -117,7 +115,7 @@ describe('submitDealAfterUkefIds', () => {
     api.updateDeal.mockResolvedValue(tfmDeal);
 
     addTfmDealData.mockImplementation(async (deal) => deal);
-    addPartyUrns.mockImplementation(async (deal) => deal);
+    addPartyUrns.mockImplementation(async (deal) => ({ deal, newPartyUrnCreated: true }));
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
@@ -188,7 +186,7 @@ describe('submitDealAfterUkefIds', () => {
     });
 
     describe('when APIM/GIFT submission is allowed', () => {
-      it('should call sendFacilitiesToApimGift when APIM/GIFT submission is allowed', async () => {
+      it('should call sendFacilitiesToApimGift with newPartyUrnCreated true when addPartyUrns returns true', async () => {
         // Arrange
         canSendToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
@@ -206,6 +204,53 @@ describe('submitDealAfterUkefIds', () => {
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
+          newPartyUrnCreated: true,
+        });
+      });
+
+      it('should call sendFacilitiesToApimGift with newPartyUrnCreated false when addPartyUrns returns false', async () => {
+        // Arrange
+        addPartyUrns.mockImplementationOnce(async (deal) => ({ deal, newPartyUrnCreated: false }));
+        canSendToApimGift.mockResolvedValue({
+          canSendFacilitiesToApimGift: true,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+          newPartyUrnCreated: false,
+        });
+      });
+
+      it('should call sendFacilitiesToApimGift when addPartyUrns does not return a deal', async () => {
+        // Arrange
+        addPartyUrns.mockResolvedValueOnce(false);
+        canSendToApimGift.mockResolvedValue({
+          canSendFacilitiesToApimGift: true,
+          issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+        });
+
+        // Act
+        await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+        // Assert
+        expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
+          deal: tfmDeal,
+          facilities: issuedFacilities,
+          isBssEwcsDeal,
+          isGefDeal,
+          newPartyUrnCreated: undefined,
         });
       });
     });
@@ -316,6 +361,26 @@ describe('submitDealAfterUkefIds', () => {
       // Assert
       expect(api.updateDeal).toHaveBeenCalled();
     });
+
+    it('should pass tfm to updatedIssuedFacilities for MIA resubmission', async () => {
+      // Arrange
+      mapSubmittedDeal.mockReturnValueOnce({
+        ...resubmittedDeal,
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+      });
+
+      // Act
+      await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
+
+      // Assert
+      expect(updatedIssuedFacilities).toHaveBeenCalledWith(
+        expect.objectContaining({
+          submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+          tfm: existingTfmDeal.tfm,
+        }),
+        auditDetails,
+      );
+    });
   });
 });
 
@@ -327,7 +392,7 @@ describe('submitDealBeforeUkefIds', () => {
     api.updateDeal.mockResolvedValue(tfmDeal);
 
     addTfmDealData.mockImplementation(async (deal) => deal);
-    addPartyUrns.mockImplementation(async (deal) => deal);
+    addPartyUrns.mockImplementation(async (deal) => ({ deal, newPartyUrnCreated: true }));
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);

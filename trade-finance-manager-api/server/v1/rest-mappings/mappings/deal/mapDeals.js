@@ -6,9 +6,11 @@ const mapDeals = (deals, mapBssDealFunc, mapGefDealFunc) => {
       return [];
     }
 
-    return deals.map((deal) => {
-      console.info('Mapping deal %s', deal._id);
+    const dealIds = deals.map((deal) => deal._id).join(', ');
 
+    console.info('Mapping %s deals: %s', deals.length, dealIds);
+
+    return deals.map((deal) => {
       const { dealType } = deal.dealSnapshot;
 
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
