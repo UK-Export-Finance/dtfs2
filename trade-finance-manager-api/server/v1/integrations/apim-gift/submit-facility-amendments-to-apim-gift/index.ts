@@ -1,10 +1,9 @@
 import { HttpStatusCode } from 'axios';
 import apiModule from '../../../api';
-import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
-import { ApiTypes, TfmFacilityAmendmentData } from '../../../mappings/apim-gift-payloads/types';
+import { ApimGiftFacilityAmendmentPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 
 type SubmitFacilityAmendmentToApimGiftParams = {
-  amendment: TfmFacilityAmendmentData;
+  amendmentPayloads: ApimGiftFacilityAmendmentPayload[];
   ukefFacilityId: string;
 };
 
@@ -17,18 +16,12 @@ type SubmitFacilityAmendmentToApimGiftResponse = number[] | false;
  * @param {SubmitFacilityAmendmentToApimGiftParams} params - The parameters for submitting the facility amendment.
  * @param {TfmFacilityAmendmentData} params.amendment - The facility amendment data from TFM.
  * @param {string} params.ukefFacilityId - The UKEF facility ID.
- * @returns The array of responses from the APIM/GIFT system, or false if no valid payloads can be produced or any APIM/GIFT submission is not accepted.
+ * @returns {Promise<SubmitFacilityAmendmentToApimGiftResponse>} The array of responses from the APIM/GIFT system, or false if no valid payloads can be produced or any APIM/GIFT submission is not accepted.
  */
 export const submitFacilityAmendmentsToApimGift = async ({
-  amendment,
+  amendmentPayloads,
   ukefFacilityId,
 }: SubmitFacilityAmendmentToApimGiftParams): Promise<SubmitFacilityAmendmentToApimGiftResponse> => {
-  const payloads = APIM_GIFT_PAYLOADS.amendFacility(amendment);
-
-  if (!payloads.length) {
-    return false;
-  }
-
   const api = apiModule as ApiTypes;
 
   const responses: number[] = [];
@@ -40,7 +33,7 @@ export const submitFacilityAmendmentsToApimGift = async ({
    * Promise.all is not sequential.
    * If the calls are not sequential, GIFT will error with a database deadlock error.
    */
-  for (const payload of payloads) {
+  for (const payload of amendmentPayloads) {
     const response = await api.amendGiftFacility(payload, ukefFacilityId);
 
     if (response !== HttpStatusCode.Accepted) {

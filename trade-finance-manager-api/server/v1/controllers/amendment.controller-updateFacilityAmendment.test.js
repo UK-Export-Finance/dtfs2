@@ -276,43 +276,66 @@ describe('updated facility amendment API call', () => {
         expect(canSendToAcbs).toHaveBeenNthCalledWith(1, { amendment: MOCK_AMENDMENT, isTaskUpdate: false });
       });
 
-      it('should call APIM GIFT when feature flag is enabled', async () => {
-        // Arrange
+      describe('when APIM/GIFT submission is allowed', () => {
         const updateAmendmentBody = {
           status: TFM_AMENDMENT_STATUS.COMPLETED,
         };
 
-        const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+        beforeEach(() => {
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+        });
 
-        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+        it('should call APIM GIFT', async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
 
-        // Act
-        await amendmentController.updateFacilityAmendment(req, res);
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
 
-        // Assert
-        expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
-          amendment: MOCK_AMENDMENT,
-          ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              amendmentPayloads: expect.any(Array),
+              ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+            }),
+          );
+        });
+
+        it(`should return ${HttpStatusCode.BadRequest} when APIM GIFT submission fails`, async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+          submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+          expect(res._getData()).toEqual({ data: 'Unable to update amendment' });
         });
       });
 
-      it(`should return ${HttpStatusCode.BadRequest} when APIM GIFT submission fails and feature flag is enabled`, async () => {
-        // Arrange
-        const updateAmendmentBody = {
-          status: TFM_AMENDMENT_STATUS.COMPLETED,
-        };
+      describe('when APIM/GIFT submission is not allowed', () => {
+        it(`should not call APIM GIFT and should return ${HttpStatusCode.Ok}`, async () => {
+          // Arrange
+          const updateAmendmentBody = {
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
+          };
 
-        const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
 
-        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
-        submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
 
-        // Act
-        await amendmentController.updateFacilityAmendment(req, res);
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
 
-        // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-        expect(res._getData()).toEqual({ data: 'Unable to update amendment' });
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
       });
     });
   });

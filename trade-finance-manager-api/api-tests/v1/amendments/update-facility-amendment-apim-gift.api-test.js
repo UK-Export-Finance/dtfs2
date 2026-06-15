@@ -88,7 +88,7 @@ describe('PUT /v1/facilities/:facilityId/amendments/:amendmentId - APIM GIFT int
   });
 
   describe('when APIM/GIFT submission is allowed', () => {
-    it('calls APIM GIFT', async () => {
+    it('should call APIM GIFT', async () => {
       // Arrange
       isTfmApimGiftIntegrationEnabled.mockReturnValue(true);
 
@@ -110,7 +110,7 @@ describe('PUT /v1/facilities/:facilityId/amendments/:amendmentId - APIM GIFT int
   });
 
   describe('when APIM/GIFT submission is not allowed', () => {
-    it('does not call APIM GIFT', async () => {
+    it('should not call APIM GIFT', async () => {
       // Arrange
       isTfmApimGiftIntegrationEnabled.mockReturnValue(false);
 
@@ -129,7 +129,7 @@ describe('PUT /v1/facilities/:facilityId/amendments/:amendmentId - APIM GIFT int
   });
 
   describe('when APIM GIFT submission fails', () => {
-    it(`returns ${HttpStatusCode.BadRequest}`, async () => {
+    it(`should return ${HttpStatusCode.BadRequest}`, async () => {
       // Arrange
       isTfmApimGiftIntegrationEnabled.mockReturnValue(true);
       submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
