@@ -1,6 +1,6 @@
 const { when } = require('jest-when');
 const { cloneDeep } = require('lodash');
-const { PORTAL_USER_SALTS } = require('@ukef/dtfs2-common');
+const { PORTAL_USER_SIGN_IN_TOKENS, PORTAL_USER_SALTS } = require('@ukef/dtfs2-common');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -18,13 +18,13 @@ jest.mock('./controller');
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
 describe('SignInLinkService', () => {
-  const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const hash = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   const hashBytes = Buffer.from(hash, 'hex');
 
   const salt = PORTAL_USER_SALTS.VALID_FORMAT_SALT_ONE;
   const saltBytes = Buffer.from(salt, 'hex');
 
-  const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
+  const token = PORTAL_USER_SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   let service;
 
   let randomGenerator;
