@@ -9,6 +9,7 @@ type MapObligationsParams = {
   bssSubtypeName?: string;
   currency: Currency;
   isBssEwcsDeal: boolean;
+  facilityAmount: number;
   facilityType?: string;
   isGefDeal: boolean;
   ukefExposure: number;
@@ -23,6 +24,7 @@ type MapObligationsParams = {
  * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number} params.facilityAmount - The facility amount. Only required for BSS/EWCS deals.
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {number} params.ukefExposure - The facility's UKEF exposure.
  * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
@@ -32,6 +34,7 @@ export const mapObligations = ({
   currency,
   isBssEwcsDeal,
   isGefDeal,
+  facilityAmount,
   facilityType,
   ukefExposure,
 }: MapObligationsParams): ApimGiftObligation[] => {
@@ -54,7 +57,13 @@ export const mapObligations = ({
 
   const obligations = [
     {
-      amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+      amount: mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal,
+        facilityAmount,
+        facilityType,
+        ukefExposure,
+      }),
       currency,
       repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
       subtypeCode,
