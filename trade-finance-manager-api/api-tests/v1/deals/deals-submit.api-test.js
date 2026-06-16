@@ -127,7 +127,7 @@ describe('/v1/deals', () => {
       expect(tfmDataWithPartiesObject).toEqual(expected);
     });
 
-    it('should return  the requested resource if no companies house number is given', async () => {
+    it('should return the requested resource if no companies house number is given', async () => {
       // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
 
