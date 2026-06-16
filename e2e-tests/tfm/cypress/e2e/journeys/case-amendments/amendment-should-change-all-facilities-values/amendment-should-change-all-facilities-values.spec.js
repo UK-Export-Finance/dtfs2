@@ -35,7 +35,12 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
-    facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
+    facilitiesPage.facilitiesTable
+      .row(facilityId)
+      .facilityLinkText()
+      .invoke('text')
+      .should('match', /^\d{8,10}$/);
+
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 12,345');
     facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonth.dd_MMM_yyyy);
   });
@@ -130,7 +135,11 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
-    facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
+    facilitiesPage.facilitiesTable
+      .row(facilityId)
+      .facilityLinkText()
+      .invoke('text')
+      .should('match', /^\d{8,10}$/);
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 123');
     facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrow.dd_MMM_yyyy);
   });

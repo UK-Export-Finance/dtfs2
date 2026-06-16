@@ -2,12 +2,13 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { isSalesforceCustomerCreationEnabled, isCountryUk } = require('@ukef/dtfs2-common');
 const { addPartyUrns, identifyDealParties } = require('./deal.party-db');
 const { MOCK_GEF_MAPPED_DEAL } = require('../__mocks__/mock-deal');
-const { getOrCreatePartyDbInfo, updateDeal } = require('../api');
+const { getOrCreatePartyDbInfo, getPartyDbInfo, updateDeal } = require('../api');
 const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');
 
 jest.mock('../../../server/v1/api', () => ({
   ...jest.requireActual('../../../server/v1/api'),
   getOrCreatePartyDbInfo: jest.fn(),
+  getPartyDbInfo: jest.fn(),
   updateDeal: jest.fn(),
 }));
 
@@ -52,7 +53,8 @@ describe('addPartyUrns', () => {
   beforeEach(() => {
     console.error = jest.fn();
 
-    jest.mocked(isSalesforceCustomerCreationEnabled).mockResolvedValue(true);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
+    jest.mocked(getPartyDbInfo).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -98,7 +100,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid company house registration number has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty companies name is supplied', async () => {
@@ -130,7 +132,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid company name has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty PoD is supplied', async () => {
@@ -162,7 +164,7 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid probability of default has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should return empty party URN and not invoke the API call when an empty industry code is supplied', async () => {
@@ -194,7 +196,33 @@ describe('addPartyUrns', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('An invalid industry code has been supplied');
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
+  });
+
+  it('should not check existing party db info when salesforce payload is incomplete', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+        selectedIndustry: {},
+      },
+    };
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties,
+      },
+    };
+
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getPartyDbInfo).not.toHaveBeenCalled();
   });
 
   it('should return empty party URN when an invalid companies house number is supplied', async () => {
@@ -227,7 +255,7 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo: 'invalid', companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
 
   it('should identify parties are mandatory or not', async () => {
@@ -280,10 +308,10 @@ describe('addPartyUrns', () => {
     const response = await addPartyUrns(deal, auditDetails);
 
     // Assert
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
   });
 
   it('should return party urn when a complete exporter payload is supplied', async () => {
@@ -348,12 +376,74 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('00328682');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.newPartyUrnCreated).toBe(true);
+  });
+
+  it('should set newPartyUrnCreated to false when the party already exists before getOrCreate', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+      },
+    };
+
+    const isUkEntity = isCountryUk(deal.exporter.registeredAddress.country);
+
+    const { hasExporter, hasBuyer, hasIndemnifier, hasAgent } = identifyDealParties(deal);
+
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties: {
+          exporter: {
+            partyUrn,
+            partyUrnRequired: hasExporter,
+          },
+          buyer: {
+            partyUrn: '',
+            partyUrnRequired: hasBuyer,
+          },
+          indemnifier: {
+            partyUrn: '',
+            partyUrnRequired: hasIndemnifier,
+          },
+          agent: {
+            partyUrn: '',
+            partyUrnRequired: hasAgent,
+          },
+        },
+      },
+    };
+
+    jest.mocked(getPartyDbInfo).mockResolvedValueOnce([{ partyUrn }]);
+    jest.mocked(getOrCreatePartyDbInfo).mockResolvedValueOnce([
+      {
+        partyUrn,
+        name: 'Test Ltd',
+        sfId: '001S900000zcI',
+        companyRegNo: 'SC467044',
+        type: null,
+        subtype: null,
+        isLegacyRecord: false,
+      },
+    ]);
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    const response = await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+    expect(response.newPartyUrnCreated).toBe(false);
   });
 
   it('should return party urn when a complete exporter payload is supplied and default country to United Kingdom, when no country is returned from CH API.', async () => {
@@ -424,11 +514,12 @@ describe('addPartyUrns', () => {
 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
 
-    expect(response.tfm.parties.exporter.partyUrn).toBe('00328682');
+    expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
-    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
-    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
-    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.deal.tfm.parties.buyer.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
+    expect(response.deal.tfm.parties.agent.partyUrnRequired).toBe(false);
+    expect(response.newPartyUrnCreated).toBe(true);
   });
 });

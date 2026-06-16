@@ -10,21 +10,26 @@ import activitiesPage from '../../../pages/activities/activitiesPage';
 
 context('Deal cancellation - submit cancellation with "effectiveFrom" in future', () => {
   let dealId;
+  let ukefDealId;
   const dealFacilities = [];
-  const ukefDealId = 10000001;
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id;
+        ukefDealId = insertedDeal?.details?.ukefDealId;
 
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+        const { mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        return cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1);
+      })
+      .then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
-      });
 
-      cy.submitDeal(dealId, dealType, PIM_USER_1);
-    });
+        const { dealType } = MOCK_DEAL_AIN;
+        return cy.submitDeal(dealId, dealType, PIM_USER_1);
+      });
   });
 
   beforeEach(() => {
@@ -47,7 +52,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     });
 
     describe('after submitting the cancellation', () => {
-      const expectedSuccessBannerText = `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
+      const expectedSuccessBannerText = () => `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
 
       it('should redirect you to the deal summary page', () => {
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
@@ -57,11 +62,11 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         cy.reload();
         successBanner().should('exist');
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
 
       it('should not show the "Cancel Deal" button', () => {
@@ -105,19 +110,19 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
 
       it('should display the cancellation success banner on each of the other sub navigation tabs', () => {
         caseSubNavigation.tasksLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.partiesLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.documentsLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.activityLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
 
         caseSubNavigation.underwritingLink().click();
-        cy.assertText(successBanner(), expectedSuccessBannerText);
+        cy.assertText(successBanner(), expectedSuccessBannerText());
       });
     });
   });

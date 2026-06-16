@@ -5,9 +5,12 @@ module.exports = (dealId, dealType, opts) => {
   console.info('submitDeal::');
   const { username, password } = opts;
 
-  login(username, password)
+  return login(username, password)
     .then((token) => submitDeal(dealId, dealType, token))
     .then((deal) => {
-      cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);
+      return cy
+        .wrap(deal)
+        .as(ALIAS_KEY.SUBMIT_DEAL)
+        .then(() => deal);
     });
 };
