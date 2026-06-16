@@ -34,6 +34,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Supplier address
         </dt>
+
         <dd class="govuk-summary-list__value govuk-body-s">
           <p data-cy="supplier-address-line-1">{{ submissionDetails["supplier-address-line-1"]}}</p>
           <p data-cy="supplier-address-line-2">{{ submissionDetails["supplier-address-line-2"]}}</p>
@@ -50,12 +51,13 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Is the Supplier's correspondence address different from the Company's Registered Address?
         </dt>
+
         <dd data-cy="supplier-correspondence-address-is-different" class="govuk-summary-list__value govuk-body-s">
-        {% if submissionDetails["supplier-correspondence-address-is-different"]==='true' %}
-          Yes
-        {% else %}
-          No
-        {% endif %}
+          {% if submissionDetails["supplier-correspondence-address-is-different"]==='true' %}
+            Yes
+          {% else %}
+            No
+          {% endif %}
         </dd>
       </div>
     {% endif %}
@@ -79,6 +81,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Supplier correspondence address
         </dt>
+
         <dd class="govuk-summary-list__value govuk-body-s">
           <p data-cy="supplier-correspondence-address-line-1">{{ submissionDetails["supplier-correspondence-address-line-1"]}}</p>
           <p data-cy="supplier-correspondence-address-line-2">{{ submissionDetails["supplier-correspondence-address-line-2"]}}</p>
@@ -95,6 +98,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Industry sector
         </dt>
+
         <dd data-cy="industry-sector" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails["industry-sector"].name }}
         </dd>
@@ -106,6 +110,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Industry class
         </dt>
+
         <dd data-cy="industry-class" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails["industry-class"].name }}
         </dd>
@@ -117,6 +122,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           SME type
         </dt>
+
         <dd data-cy="sme-type" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails["sme-type"] }}
         </dd>
@@ -128,6 +134,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Description of supply contract
         </dt>
+
         <dd data-cy="supply-contract-description" class="govuk-summary-list__value govuk-body-s preserve-white-space">{{ submissionDetails["supply-contract-description"] }}</dd>
       </div>
     {% endif %}
@@ -137,6 +144,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
         </dt>
+
         <dd data-cy="legallyDistinct" class="govuk-summary-list__value govuk-body-s">
           {% if submissionDetails.legallyDistinct ==='true' %}
             Yes
@@ -152,6 +160,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Indemnifier's Companies House registration number, if UK registered
         </dt>
+
         <dd data-cy="indemnifier-companies-house-registration-number" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails["indemnifier-companies-house-registration-number"] }}
         </dd>
@@ -165,6 +174,7 @@
           <dt class="govuk-summary-list__key govuk-body-s">
             Indemnifier name
           </dt>
+
           <dd data-cy="indemnifier-name" class="govuk-summary-list__value govuk-body-s">
             {{ submissionDetails["indemnifier-name"] }}
           </dd>
@@ -179,6 +189,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Indemnifier address
         </dt>
+
         <dd class="govuk-summary-list__value govuk-body-s">
           <p data-cy="indemnifier-address-line-1">{{ submissionDetails["indemnifier-address-line-1"]}}</p>
           <p data-cy="indemnifier-address-line-2">{{ submissionDetails["indemnifier-address-line-2"]}}</p>
@@ -195,6 +206,7 @@
           <dt class="govuk-summary-list__key govuk-body-s">
             Is the Indemnifier's correspondence address different from the Company's Registered Address?
           </dt>
+
           <dd data-cy="indemnifierCorrespondenceAddressDifferent" class="govuk-summary-list__value govuk-body-s">
             {% if submissionDetails.indemnifierCorrespondenceAddressDifferent ==='true' %}
               Yes
@@ -215,6 +227,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Indemnifier correspondence address
         </dt>
+
         <dd class="govuk-summary-list__value govuk-body-s">
           <p data-cy="indemnifier-correspondence-address-line-1">{{ submissionDetails["indemnifier-correspondence-address-line-1"]}}</p>
           <p data-cy="indemnifier-correspondence-address-line-2">{{ submissionDetails["indemnifier-correspondence-address-line-2"]}}</p>
@@ -240,6 +253,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Buyer name
         </dt>
+
         <dd data-cy="buyer-name" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails["buyer-name"] }}
         </dd>
@@ -254,6 +268,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Buyer address
         </dt>
+
         <dd class="govuk-summary-list__value govuk-body-s">
           <p data-cy="buyer-address-line-1">{{ submissionDetails["buyer-address-line-1"]}}</p>
           <p data-cy="buyer-address-line-2">{{ submissionDetails["buyer-address-line-2"]}}</p>
@@ -269,6 +284,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Country of buyer
         </dt>
+
         <dd data-cy="buyer-address-country" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails['buyer-address-country'].name }}
         </dd>
@@ -280,6 +296,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Destination of goods and services
         </dt>
+
         <dd data-cy="destinationOfGoodsAndServices" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails.destinationOfGoodsAndServices.name }}
         </dd>
@@ -300,6 +317,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Supply Contract value (in Supply Contract currency)
         </dt>
+
         <dd data-cy="supplyContractValue" class="govuk-summary-list__value govuk-body-s" data-mask="currency">
           {{ submissionDetails.supplyContractValue }}
         </dd>
@@ -311,6 +329,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Supply Contract currency
         </dt>
+
         <dd data-cy="supplyContractCurrency" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails.supplyContractCurrency.text }}
         </dd>
@@ -324,6 +343,7 @@
           <dt class="govuk-summary-list__key govuk-body-s">
             Conversion rate from Supply Contract currency to GBP
           </dt>
+
           <dd data-cy="supplyContractConversionRateToGBP" class="govuk-summary-list__value govuk-body-s">
             {{ submissionDetails.supplyContractConversionRateToGBP }}
           </dd>
@@ -335,6 +355,7 @@
           <dt class="govuk-summary-list__key govuk-body-s">
             Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
           </dt>
+
           <dd data-cy="supplyContractConversionDate" class="govuk-summary-list__value govuk-body-s">
             {{ submissionDetails.supplyContractConversionDate }}
           </dd>

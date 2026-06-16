@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { when } = require('jest-when');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const { createACBS } = require('../../../server/v1/controllers/acbs.controller');
 const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
 const api = require('../../../server/v1/api');
@@ -16,8 +16,8 @@ jest.mock('../../../server/v1/controllers/user/user.controller', () => ({
 }));
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSubmitToApimGift: jest.fn(),
-  submitFacilitiesToApimGift: jest.fn(),
+  canSendToApimGift: jest.fn(),
+  sendFacilitiesToApimGift: jest.fn(),
 }));
 
 jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
@@ -57,15 +57,15 @@ describe('PUT /v1/parties/:dealId', () => {
   beforeEach(() => {
     api.updateDeal.mockReset();
 
-    canSubmitToApimGift.mockReset();
-    canSubmitToApimGift.mockResolvedValue({
-      canSubmitFacilitiesToApimGift: false,
+    canSendToApimGift.mockReset();
+    canSendToApimGift.mockResolvedValue({
+      canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isBssEwcsDeal: false,
       isGefDeal: true,
     });
 
-    submitFacilitiesToApimGift.mockReset();
+    sendFacilitiesToApimGift.mockReset();
 
     canSubmitToACBS.mockReset();
     canSubmitToACBS.mockResolvedValue(false);
@@ -113,12 +113,12 @@ describe('PUT /v1/parties/:dealId', () => {
   });
 
   describe('when APIM/GIFT submission is allowed', () => {
-    it('should call submitFacilitiesToApimGift', async () => {
+    it('should call sendFacilitiesToApimGift', async () => {
       // Arrange
       const issuedFacilities = [{ _id: 'facility-1' }];
 
-      canSubmitToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: true,
+      canSendToApimGift.mockResolvedValue({
+        canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -128,20 +128,24 @@ describe('PUT /v1/parties/:dealId', () => {
       await as({ token }).put(partiesUpdate).to(VALID_URL);
 
       // Assert
-      expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-        deal: expect.any(Object),
-        facilities: issuedFacilities,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
-      });
+      expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          deal: expect.any(Object),
+          facilities: issuedFacilities,
+          isBssEwcsDeal: false,
+          isGefDeal: true,
+          newPartyUrnCreated: true,
+        }),
+      );
     });
   });
 
   describe('when APIM/GIFT submission is not allowed', () => {
-    it(`should not call submitFacilitiesToApimGift when APIM/GIFT submission is not allowed`, async () => {
+    it(`should not call sendFacilitiesToApimGift when APIM/GIFT submission is not allowed`, async () => {
       // Arrange
-      canSubmitToApimGift.mockResolvedValue({
-        canSubmitFacilitiesToApimGift: false,
+      canSendToApimGift.mockResolvedValue({
+        canSendFacilitiesToApimGift: false,
         issuedFacilities: [],
         isBssEwcsDeal: false,
         isGefDeal: true,
@@ -151,7 +155,7 @@ describe('PUT /v1/parties/:dealId', () => {
       await as({ token }).put(partiesUpdate).to(VALID_URL);
 
       // Assert
-      expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+      expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
     });
   });
 

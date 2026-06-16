@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
 import facilitiesPage from '../../../pages/facilitiesPage';
-import { caseSubNavigation, successBanner } from '../../../partials';
+import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -14,20 +14,23 @@ import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 context('Deal cancellation - submit cancellation with "effectiveFrom" in past', () => {
   let dealId;
   let facility;
-  const ukefDealId = 10000001;
+  let ukefDealId;
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacility) => {
+        facility = createdFacility?.details;
 
-      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
-        facility = createdFacility.details;
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -44,6 +47,13 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseSummary
+        .ukefDealId()
+        .invoke('text')
+        .then((text) => {
+          ukefDealId = text.trim();
+        });
     });
 
     describe('after submitting the cancellation', () => {

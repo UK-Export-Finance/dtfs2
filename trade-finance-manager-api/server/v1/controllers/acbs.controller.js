@@ -110,6 +110,7 @@ const createACBS = async (dealId) => {
   }
 
   console.error('Unable to add ACBS call to the log for deal %s', acbsDeal._id);
+
   return false;
 };
 
