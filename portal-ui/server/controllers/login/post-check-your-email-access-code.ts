@@ -8,6 +8,7 @@ import generateValidationErrors from './validation';
 import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 import { isOtpExpired } from '../../helpers/is-otp-expired';
+import { getUserRedirectUrl } from '../../helpers';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 
@@ -107,7 +108,16 @@ export const postCheckYourEmailAccessCode = async (req: PostCheckYourEmailAccess
       user,
     });
 
-    return res.redirect('/dashboard');
+    /**
+     * determines the correct url to redirect user to
+     * eg payment-report-officer does not have access to the dashboard
+     * so should be redirected to the utilisation report upload page instead
+     */
+    const redirectUrl = getUserRedirectUrl(user);
+
+    return res.render('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
   } catch (error) {
     console.error('Error submitting access code %o', error);
 

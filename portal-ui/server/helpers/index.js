@@ -24,6 +24,7 @@ const { getRecordCorrectionCancelLinkHref } = require('./get-record-correction-c
 const { mapFacilityProperties } = require('./map-facility-properties');
 const { getNextAccessCodePage } = require('./getNextAccessCodePage');
 const { fixNullCurrencyOnBondAndLoans } = require('./fixNullCurrencyOnBondAndLoans');
+const { getUserRedirectUrl } = require('./get-user-login-redirect-url');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -53,4 +54,5 @@ module.exports = {
   mapFacilityProperties,
   getNextAccessCodePage,
   fixNullCurrencyOnBondAndLoans,
+  getUserRedirectUrl,
 };

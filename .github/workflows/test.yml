@@ -952,7 +952,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
         uses: actions/upload-artifact@v7
         if: failure()
         with:
@@ -1086,7 +1085,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
         uses: actions/upload-artifact@v7
         if: failure()
         with:
@@ -1174,7 +1172,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
         uses: actions/upload-artifact@v7
         if: failure()
         with:
@@ -1272,7 +1269,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
         uses: actions/upload-artifact@v7
         if: failure()
         with:

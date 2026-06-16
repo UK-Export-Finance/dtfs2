@@ -1,37 +1,35 @@
-import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES_TO_DEAL_TYPE } from '../../../constants';
+import { PRODUCT_TYPE_CODES_TO_DEAL_TYPE } from '../../../constants';
 import { ApimGiftProductTypeCode } from '../../../types';
 
-const { CONSUMER } = APIM_GIFT_INTEGRATION;
-
 type MapFacilityNameParams = {
-  bankInternalRefName: string;
   facilityType?: string;
   isGefDeal: boolean;
+  monthsOfCover?: number | null;
   productTypeCode: ApimGiftProductTypeCode;
 };
 
 /**
- * Map the facility name based on the product type code, facility type and bank internal reference name.
+ * Map the facility name based on the product type code, facility type and months of cover.
  * Examples:
- * - GEF => "DTFS Cash GEF: Nighthawk facility 1"
- * - BSS => "DTFS BSS: Nighthawk facility 1"
+ * - GEF => "GEF Contingent: 6 months"
+ * - BSS => "BSS: 12 months"
  * @param {MapFacilityNameParams} params - Data required to build the APIM GIFT "facility name" string.
- * @param {string} params.bankInternalRefName - The bank internal reference name.
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number | null} [params.monthsOfCover] - The length of cover in months.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The product type code.
- * @returns {string} The mapped facility name.
+ * @returns {string | null} The mapped facility name.
  */
-export const mapFacilityName = ({ bankInternalRefName, facilityType, isGefDeal, productTypeCode }: MapFacilityNameParams): string => {
-  const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode];
-
-  if (isGefDeal) {
-    if (facilityType) {
-      return `${CONSUMER} ${facilityType} ${productName}: ${bankInternalRefName}`;
-    }
-
-    return `${CONSUMER} ${productName}: ${bankInternalRefName}`;
+export const mapFacilityName = ({ facilityType, isGefDeal, monthsOfCover, productTypeCode }: MapFacilityNameParams): string | null => {
+  if (monthsOfCover === null || monthsOfCover === undefined) {
+    return null;
   }
 
-  return `${CONSUMER} ${productName}: ${bankInternalRefName}`;
+  const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode];
+
+  if (isGefDeal && facilityType) {
+    return `${productName} ${facilityType}: ${monthsOfCover} months`;
+  }
+
+  return `${productName}: ${monthsOfCover} months`;
 };

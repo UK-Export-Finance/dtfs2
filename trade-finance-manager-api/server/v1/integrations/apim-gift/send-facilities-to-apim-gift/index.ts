@@ -1,7 +1,7 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import apiModule from '../../../api';
-import { ApimGiftFacilityCreationPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
+import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 import { getReferenceData } from './get-reference-data';
 
 type SubmitFacilitiesToApimGiftParams = {
@@ -9,10 +9,11 @@ type SubmitFacilitiesToApimGiftParams = {
   facilities: TfmFacility[];
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
+  newPartyUrnCreated?: boolean;
 };
 
 /**
- * Submits facilities to the APIM/GIFT.
+ * Sends facilities to the APIM/GIFT.
  * If only one facility is provided, create a single payload and submits it.
  * If multiple facilities are provided, create multiple payloads and submit them sequentially.
  * The function returns the response from the APIM/GIFT integration, which could be a single facility or an array of facilities depending on the input.
@@ -21,15 +22,17 @@ type SubmitFacilitiesToApimGiftParams = {
  * @param {TfmFacility[]} params.facilities - An array of TFM facilities to be submitted to APIM/GIFT.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
+ * @param {boolean} [params.newPartyUrnCreated] - A boolean indicating whether a new party URN was created for the exporter. Sets the delayCreation flag in the APIM payload. Defaults to false.
  * @returns {Promise<TfmFacility | TfmFacility[] | boolean>} A promise that resolves to the response from the APIM/GIFT integration.
  */
-export const submitFacilitiesToApimGift = async ({
+export const sendFacilitiesToApimGift = async ({
   deal,
   facilities,
   isBssEwcsDeal,
   isGefDeal,
+  newPartyUrnCreated = false,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
-  console.info('Submitting facilities to APIM GIFT for deal %s ', deal?._id);
+  console.info('Sending facilities to APIM GIFT for deal %s ', deal?._id);
 
   const api = apiModule as ApiTypes;
 
@@ -37,12 +40,13 @@ export const submitFacilitiesToApimGift = async ({
 
   if (facilities.length === 1) {
     const payload = await APIM_GIFT_PAYLOADS.createFacility({
+      creditRiskRatings,
       deal,
       facility: facilities[0],
+      facilityCategories,
       isBssEwcsDeal,
       isGefDeal,
-      facilityCategories,
-      creditRiskRatings,
+      newPartyUrnCreated,
     });
 
     const response = await api.createGiftFacility(payload);
@@ -55,13 +59,10 @@ export const submitFacilitiesToApimGift = async ({
     facilities,
     isBssEwcsDeal,
     isGefDeal,
+    newPartyUrnCreated,
     facilityCategories,
     creditRiskRatings,
   });
-
-  const attemptedFacilityIds = payloads.map((payload: ApimGiftFacilityCreationPayload) => String(payload?.overview?.facilityId));
-
-  console.info('APIM GIFT debug - deal %s attempting to submit %s facilities. Facility IDs: %o', deal?._id, payloads.length, attemptedFacilityIds);
 
   const responses: Array<TfmFacility | false> = [];
 

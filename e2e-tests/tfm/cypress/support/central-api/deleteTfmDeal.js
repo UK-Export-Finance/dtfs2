@@ -3,7 +3,7 @@ const { deleteTfmDeal } = require('./api');
 
 module.exports = (dealId) => {
   console.info('deleteTfmDeal::');
-  deleteTfmDeal(dealId, {
+  return deleteTfmDeal(dealId, {
     userType: 'tfm',
     id: UNDERWRITER_1_WITH_MOCK_ID._id,
   });

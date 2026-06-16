@@ -13,29 +13,37 @@ context('Facility page', () => {
   const dealOneFacilities = [];
   const dealTwoFacilities = [];
 
+  const getFacilityUkefId = (facility) => facility?.ukefFacilityId || facility?.details?.ukefFacilityId || facility?.facilitySnapshot?.ukefFacilityId;
+
   before(() => {
-    cy.deleteTfmDeals();
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealOne = insertedDeal;
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+    return cy
+      .deleteAllTfmFacilitiesFromDb()
+      .insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealOne = insertedDeal;
 
-      cy.createFacilities(dealOne._id, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        dealOneFacilities.push(...createdFacilities);
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+
+        return cy
+          .createFacilities(dealOne._id, mockFacilities, BANK1_MAKER1)
+          .then((createdFacilities) => {
+            dealOneFacilities.push(...createdFacilities);
+          })
+          .then(() => cy.submitDeal(dealOne._id, dealType, T1_USER_1));
+      })
+      .then(() => cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1))
+      .then((insertedDeal) => {
+        dealTwo = insertedDeal;
+
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+
+        return cy
+          .createFacilities(dealTwo._id, mockFacilities, BANK1_MAKER1)
+          .then((createdFacilities) => {
+            dealTwoFacilities.push(...createdFacilities);
+          })
+          .then(() => cy.submitDeal(dealTwo._id, dealType, T1_USER_1));
       });
-
-      cy.submitDeal(dealOne._id, dealType, T1_USER_1);
-    });
-
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
-      dealTwo = insertedDeal;
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-      cy.createFacilities(dealTwo._id, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        dealTwoFacilities.push(...createdFacilities);
-      });
-
-      cy.submitDeal(dealTwo._id, dealType, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -43,15 +51,27 @@ context('Facility page', () => {
   });
 
   after(() => {
-    cy.deleteTfmDeals();
-    cy.deleteDeals(dealOne._id, BANK1_MAKER1);
-    cy.deleteDeals(dealTwo._id, BANK1_MAKER1);
-    dealOneFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
+    cy.wrap([...dealOneFacilities, ...dealTwoFacilities]).each((facility) => {
+      if (facility?._id) {
+        return cy.deleteFacility(facility._id, BANK1_MAKER1);
+      }
+
+      return null;
     });
-    dealTwoFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
+
+    cy.then(() => {
+      if (dealOne?._id) {
+        cy.deleteDeals(dealOne._id, BANK1_MAKER1);
+      }
     });
+
+    cy.then(() => {
+      if (dealTwo?._id) {
+        cy.deleteDeals(dealTwo._id, BANK1_MAKER1);
+      }
+    });
+
+    cy.deleteAllTfmFacilitiesFromDb();
   });
 
   it('should renders all facilities from TFM', () => {
@@ -70,11 +90,12 @@ context('Facility page', () => {
 
     // 3 mock facilities inserted per deal (AIN and MIA)
     const totalFacilities = 6;
+    const expectedFacilityIds = [...dealOneFacilities, ...dealTwoFacilities].map(getFacilityUkefId).filter(Boolean).sort();
 
     // Common properties
     for (let i = 0; i < totalFacilities; i += 1) {
       // Facility ID
-      pages.facilitiesPage.facilityIdCell(i).contains('1000000');
+      pages.facilitiesPage.facilityIdCell(i).contains(expectedFacilityIds[i]);
 
       // Product
       pages.facilitiesPage.dealTypeCell(i).contains(dealOne.dealType);
@@ -160,17 +181,20 @@ context('Facility page', () => {
     cy.assertText(caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
   });
 
-  it('should performs a search query based on Facility ID', () => {
+  it('should perform a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
-    const searchString = '1000000';
+    const [searchString] = [...dealOneFacilities, ...dealTwoFacilities].map(getFacilityUkefId).filter(Boolean).sort();
+
+    expect(searchString, 'expected at least one created facility ID').to.be.a('string');
+    expect(searchString.length, 'expected at least one created facility ID').to.be.greaterThan(0);
     cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    cy.checkFacilitiesTableRowsTotal(6);
+    cy.checkFacilitiesTableRowsTotal(1);
   });
 
-  it('should performs a search query based on AIN Export name', () => {
+  it('should perform a search query based on AIN Export name', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_AIN.exporter.companyName;

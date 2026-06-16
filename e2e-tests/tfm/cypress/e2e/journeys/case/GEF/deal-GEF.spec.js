@@ -10,20 +10,23 @@ import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-
 context('User can view a GEF MIA case deal', () => {
   let dealId;
   let dealFacilities;
+  const expectedFeeType = anUnissuedCashFacility().feeType;
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacilities) => {
+        dealFacilities = createdFacilities?.details || createdFacilities;
 
-      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities = createdFacilities.details;
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -76,7 +79,7 @@ context('User can view a GEF MIA case deal', () => {
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
 
-    it('Premium schedule contains the feeType in the How bank will pay field', () => {
+    it('premium schedule contains the feeType in the How bank will pay field', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
@@ -84,7 +87,7 @@ context('User can view a GEF MIA case deal', () => {
 
       facilityPage.facilityTabPremiumSchedule().click();
 
-      facilityPage.facilityFeeType().contains(dealFacilities.feeType);
+      facilityPage.facilityFeeType().contains(expectedFeeType);
     });
   });
 
@@ -109,20 +112,23 @@ context('User can view a GEF MIA case deal', () => {
 context('User can view a GEF AIN case deal', () => {
   let dealId;
   let dealFacilities;
+  const expectedFeeType = anUnissuedCashFacility().feeType;
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacilities) => {
+        dealFacilities = createdFacilities?.details || createdFacilities;
 
-      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities = createdFacilities.details;
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -185,7 +191,7 @@ context('User can view a GEF AIN case deal', () => {
       facilityPage.facilityCoverEndDate().contains('-');
     });
 
-    it('Premium schedule contains the feeType in the How bank will pay field', () => {
+    it('premium schedule contains the feeType in the How bank will pay field', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
@@ -193,7 +199,7 @@ context('User can view a GEF AIN case deal', () => {
 
       facilityPage.facilityTabPremiumSchedule().click();
 
-      facilityPage.facilityFeeType().contains(dealFacilities.feeType);
+      facilityPage.facilityFeeType().contains(expectedFeeType);
     });
   });
 

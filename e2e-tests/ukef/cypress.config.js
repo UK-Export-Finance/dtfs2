@@ -31,6 +31,7 @@ module.exports = defineConfig({
   numTestsKeptInMemory: 1,
   viewportWidth: 1920,
   viewportHeight: 1080,
+  redirectionLimit: 50,
   retries: {
     runMode: 2,
     openMode: 0,

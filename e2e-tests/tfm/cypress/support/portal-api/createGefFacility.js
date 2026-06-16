@@ -4,18 +4,24 @@ const { getIdFromNumberGenerator } = require('../external-api/api');
 module.exports = (dealId, facilities, user) => {
   console.info('createGEFFacilities::');
 
-  logIn(user).then((token) => {
-    facilities.forEach((facilityToInsert) => {
+  return logIn(user).then((token) => {
+    const updatedFacilities = [];
+
+    cy.wrap(facilities).each((facilityToInsert) => {
       const ukefId = getIdFromNumberGenerator();
       const facilityWithId = {
         ...facilityToInsert,
         ukefFacilityId: ukefId,
       };
 
-      createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
+      return createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
         const facilityId = createdFacilities.details._id;
-        updateGefFacilities(facilityId, facilityToInsert, token).then((updated) => updated);
+        return updateGefFacilities(facilityId, facilityToInsert, token).then((updatedFacility) => {
+          updatedFacilities.push(updatedFacility);
+        });
       });
     });
+
+    return cy.then(() => updatedFacilities[0]);
   });
 };

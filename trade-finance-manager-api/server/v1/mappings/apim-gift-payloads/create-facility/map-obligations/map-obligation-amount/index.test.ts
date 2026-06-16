@@ -1,8 +1,24 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { mapGefObligationAmount, mapObligationAmount } from '.';
+import { mapBssEwcsObligationAmount, mapGefObligationAmount, mapObligationAmount } from '.';
 import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
+
+describe('mapBssEwcsObligationAmount', () => {
+  it('should return facilityAmount multiplied by ukefExposure', () => {
+    // Arrange
+    const facilityAmount = 1000;
+    const ukefExposure = 0.8;
+
+    // Act
+    const result = mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
+
+    // Assert
+    const expected = facilityAmount * ukefExposure;
+
+    expect(result).toEqual(expected);
+  });
+});
 
 describe('mapGefObligationAmount', () => {
   describe(`when facilityType is ${FACILITY_TYPE.CASH}`, () => {
@@ -57,15 +73,23 @@ describe('mapGefObligationAmount', () => {
 });
 
 describe('mapObligationAmount', () => {
+  const facilityAmount = 1000;
   const ukefExposure = 1000;
 
   describe('when isGefDeal is true', () => {
     it('should return the the result of mapGefObligationAmount', () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CASH;
+      const isBssEwcsDeal = false;
 
       // Act
-      const result = mapObligationAmount({ isGefDeal: true, facilityType, ukefExposure });
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: true,
+        facilityAmount,
+        facilityType,
+        ukefExposure,
+      });
 
       // Assert
       const expected = mapGefObligationAmount({ facilityType, ukefExposure });
@@ -74,13 +98,41 @@ describe('mapObligationAmount', () => {
     });
   });
 
-  describe('when isGefDeal is false', () => {
-    it('should return the provided ukefExposure', () => {
+  describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
+    it('should return the result of mapBssEwcsObligationAmount', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
       // Act
-      const result = mapObligationAmount({ isGefDeal: false, ukefExposure });
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: false,
+        facilityAmount,
+        ukefExposure,
+      });
 
       // Assert
-      expect(result).toEqual(ukefExposure);
+      const expected = mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when isGefDeal is false and isBssEwcsDeal is false', () => {
+    it('should return null', () => {
+      // Arrange
+      const isBssEwcsDeal = false;
+
+      // Act
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: false,
+        facilityAmount,
+        ukefExposure,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 });

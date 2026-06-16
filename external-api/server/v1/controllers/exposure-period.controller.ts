@@ -9,6 +9,7 @@ import { isValidDate } from '../../helpers';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const APIM_MDM_TIMEOUT_MS = Number(process.env.APIM_MDM_TIMEOUT_MS || 10000);
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
@@ -97,6 +98,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
       method: 'get',
       url: `${APIM_MDM_URL}v1/exposure-period?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
       headers,
+      timeout: APIM_MDM_TIMEOUT_MS,
     });
 
     if (!response) {

@@ -20,7 +20,7 @@ describe('/v1/tfm/facilities', () => {
       describe.each([
         {
           sortByField: 'ukefFacilityId',
-          fieldValuesInAscendingOrder: ['10000001', '10000002', '10000003', '10000004'],
+          fieldValuesInAscendingOrder: ['0000000001', '0000000002', '0000000003', '0000000004'],
           generateFacilities: generateFacilitiesFromValues,
           getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
@@ -132,7 +132,7 @@ describe('/v1/tfm/facilities', () => {
 
   function newFacility(overrides) {
     return {
-      ukefFacilityId: '10000001',
+      ukefFacilityId: '0000000001',
       type: FACILITY_TYPE.CASH,
       value: '1000',
       currency: { id: CURRENCY.GBP },

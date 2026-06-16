@@ -17,7 +17,10 @@
       errorList: [
         {
           text: validationErrors.sixDigitAccessCode.text,
-          href: "#sixDigitAccessCode"
+          href: "#sixDigitAccessCode",
+          attributes: {
+            "data-cy": "error-summary-link"
+          }
         }
       ] 
       if validationErrors.sixDigitAccessCode,

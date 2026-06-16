@@ -17,6 +17,7 @@ const mockFacilityTwo = { mockFacilityTwo: true } as unknown as TfmFacility;
 
 const mockIsBssEwcsDeal = true;
 const mockIsGefDeal = false;
+const mockNewPartyUrnCreated = true;
 
 const mockPayloadOne = { mockPayloadOne: true } as unknown as ApimGiftFacilityCreationPayload;
 const mockPayloadTwo = { mockPayloadTwo: true } as unknown as ApimGiftFacilityCreationPayload;
@@ -27,6 +28,7 @@ const baseParams = {
   isGefDeal: mockIsGefDeal,
   creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
   facilityCategories: MOCK_FACILITY_CATEGORIES,
+  newPartyUrnCreated: mockNewPartyUrnCreated,
 };
 
 describe('createFacilities', () => {

@@ -53,7 +53,6 @@ const createDealSnapshot = async (deal, auditDetails) => {
     }
 
     const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
-      returnNewDocument: true,
       returnDocument: 'after',
       upsert: true,
     });
@@ -81,7 +80,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.FACILITY_TFM } : null;
 
     if (dealFacilities) {
-      const updatedFacilities = Promise.all(
+      const updatedFacilities = await Promise.all(
         dealFacilities.map(async (facility) => {
           const update = $.flatten({
             facilitySnapshot: facility,
@@ -104,11 +103,15 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
 };
 
 const submitDeal = async (deal, auditDetails) => {
+  console.info('submitDeal: Creating deal snapshot for deal %s', deal._id);
   await createDealSnapshot(deal, auditDetails);
+  console.info('submitDeal: Deal snapshot created, creating facilities snapshot for deal %s', deal._id);
 
   await createFacilitiesSnapshot(deal, auditDetails);
+  console.info('submitDeal: Facilities snapshot created, fetching updated deal %s', deal._id);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
+  console.info('submitDeal: Retrieved updated deal %s', deal._id);
 
   return updatedDeal;
 };

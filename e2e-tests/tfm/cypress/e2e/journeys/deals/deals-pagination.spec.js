@@ -14,7 +14,7 @@ context('User can navigate through a paginated table of deals using the paginati
     cy.login(T1_USER_1);
 
     cy.url().should('eq', relative('/deals/0'));
-    cy.checkDealIdCells({ firstDealId: '10000001', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000001', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -30,7 +30,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.pagination.next().click();
 
     cy.url().should('eq', relative('/deals/1'));
-    cy.checkDealIdCells({ firstDealId: '10000021', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000021', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -38,7 +38,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.pagination.last().click();
 
     cy.url().should('eq', relative('/deals/3'));
-    cy.checkDealIdCells({ firstDealId: '10000061', increment: 1, numberToCheck: 2 });
+    cy.checkDealIdCells({ firstDealId: '0000000061', increment: 1, numberToCheck: 2 });
     cy.checkDealsTableRowsTotal(2);
   });
 
@@ -47,7 +47,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.pagination.previous().click();
 
     cy.url().should('eq', relative('/deals/2'));
-    cy.checkDealIdCells({ firstDealId: '10000041', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000041', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -56,7 +56,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.pagination.first().click();
 
     cy.url().should('eq', relative('/deals/0'));
-    cy.checkDealIdCells({ firstDealId: '10000001', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000001', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -64,7 +64,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.pagination.page(2).click();
 
     cy.url().should('eq', relative('/deals/2'));
-    cy.checkDealIdCells({ firstDealId: '10000041', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000041', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -74,13 +74,13 @@ context('User can navigate through a paginated table of deals using the paginati
     // click again for `descending` order
     pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().click();
 
-    cy.checkDealIdCells({ firstDealId: '10000062', increment: -1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000062', increment: -1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
 
     pages.dealsPage.pagination.page(2).click();
 
     cy.url().should('eq', relative('/deals/2?sortfield=dealSnapshot.ukefDealId&sortorder=descending'));
-    cy.checkDealIdCells({ firstDealId: '10000022', increment: -1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000022', increment: -1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -94,14 +94,14 @@ context('User can navigate through a paginated table of deals using the paginati
 
     cy.assertText(pages.dealsPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
 
-    cy.checkDealIdCells({ firstDealId: '10000001', increment: 2, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000001', increment: 2, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
 
     pages.dealsPage.pagination.next().click();
 
     cy.assertText(pages.dealsPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
 
-    cy.checkDealIdCells({ firstDealId: '10000041', increment: 2, numberToCheck: 10 });
+    cy.checkDealIdCells({ firstDealId: '0000000041', increment: 2, numberToCheck: 10 });
     cy.checkDealsTableRowsTotal(11);
   });
 
@@ -110,7 +110,7 @@ context('User can navigate through a paginated table of deals using the paginati
     pages.dealsPage.dealsTable.headings.ukefDealIdSortButton().click();
 
     cy.url().should('eq', relative('/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=ascending'));
-    cy.checkDealIdCells({ firstDealId: '10000001', increment: 1, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000001', increment: 1, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 
@@ -121,7 +121,7 @@ context('User can navigate through a paginated table of deals using the paginati
     cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/deals/0?search=Company%201'));
-    cy.checkDealIdCells({ firstDealId: '10000001', increment: 2, numberToCheck: 20 });
+    cy.checkDealIdCells({ firstDealId: '0000000001', increment: 2, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
   });
 });

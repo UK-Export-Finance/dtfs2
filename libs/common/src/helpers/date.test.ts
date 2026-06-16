@@ -13,6 +13,7 @@ import {
   nowZeroSeconds,
   differenceInDays,
   epochSecondsToMilliseconds,
+  getFormattedUTCDateString,
 } from './date';
 
 describe('date helpers', () => {
@@ -180,6 +181,31 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getFormattedUTCDateString', () => {
+    it.each([
+      { timestampSeconds: 0, expectedDateString: '1970-01-01' },
+      { timestampSeconds: 1704067200, expectedDateString: '2024-01-01' },
+      { timestampSeconds: 1716163200, expectedDateString: '2024-05-20' },
+    ])('should return $expectedDateString for Unix timestamp $timestampSeconds', ({ timestampSeconds, expectedDateString }) => {
+      // Act
+      const result = getFormattedUTCDateString(timestampSeconds);
+
+      // Assert
+      expect(result).toEqual(expectedDateString);
+    });
+
+    it('should return the expected date for Unix timestamp in milliseconds', () => {
+      // Arrange
+      const timestampMilliseconds = 1835049600000;
+
+      // Act
+      const result = getFormattedUTCDateString(timestampMilliseconds);
+
+      // Assert
+      expect(result).toEqual('2028-02-25');
     });
   });
 

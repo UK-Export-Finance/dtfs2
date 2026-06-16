@@ -92,6 +92,8 @@ Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'))
 Cypress.Commands.add('login', require('./portal/login'));
 Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
+Cypress.Commands.add('enterJourneyAtRequestCodeClicks', require('./portal/enterJourneyAtRequestCodeClicks'));
+Cypress.Commands.add('submitValidAccessCode', require('./portal/submitValidAccessCode'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
 Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
@@ -103,6 +105,12 @@ Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./po
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 Cypress.Commands.add('overridePortalUserSignInOTPSendCount', require('./portal-api/overridePortalUserSignInOTPSendCount'));
+
+// command to progress the resend journey and land on the suspended page.
+Cypress.Commands.add('goToSuspendedPage', require('./portal/goToSuspendedPage'));
+
+// command to submit an expired access code and land on the expired page.
+Cypress.Commands.add('submitExpiredAccessCode', require('./portal/submitExpiredAccessCode'));
 
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
