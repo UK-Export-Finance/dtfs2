@@ -6,6 +6,7 @@ const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, 
 require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
+const DTFS_CENTRAL_API_TIMEOUT_MS = Number(process.env.DTFS_CENTRAL_API_TIMEOUT_MS || 10000);
 
 const headers = {
   central: {
@@ -34,6 +35,7 @@ const findOnePortalDeal = async (dealId) => {
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data.deal;
@@ -101,6 +103,7 @@ const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -250,6 +253,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
 
     if (!isValidDealId) {
       console.error('updateDeal: Invalid deal id %s', dealId);
+
       return onError({ status: 400, message: 'Invalid deal id' });
     }
 
@@ -261,6 +265,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
         dealUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -294,6 +299,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
         snapshotUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -321,6 +327,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
         dealId,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -561,6 +568,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
         tfmUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -1477,6 +1485,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       },
     }).catch((error) => {
       console.error('TFM-API Facility amend error %o', error);
+
       return null;
     });
 
@@ -1609,6 +1618,7 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -2296,6 +2306,40 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
   }
 };
 
+/**
+ * Amend a GIFT facility.
+ * @param {object} facilityAmendmentData - The amendment data for the facility.
+ * @param {string} facilityId - The GIFT facility ID to amend.
+ * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
+ */
+const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
+  try {
+    console.info('Calling external API "Amend GIFT facility" endpoint - facilityId %s', facilityId);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility/${facilityId}/amendment`,
+      headers: headers.external,
+      data: facilityAmendmentData,
+    });
+
+    return response.status;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility amendment endpoint' };
+
+    console.error(
+      'Unable to send GIFT facility amendment to external API - facilityId %s status %s responseBody %o error %o',
+      facilityId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -2387,4 +2431,5 @@ module.exports = {
   getApprovedAmendments,
   createGiftFacility,
   findGiftFacilitiesByIds,
+  amendGiftFacility,
 };
