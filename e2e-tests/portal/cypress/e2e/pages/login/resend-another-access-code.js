@@ -8,6 +8,7 @@ const resendAnotherAccessCode = {
   supportInfo: () => cy.get('[data-cy="access-code-support-info"]'),
   attemptsInfo: () => cy.get('[data-cy="access-code-attempts-info"]'),
   suspendInfo: () => cy.get('[data-cy="access-code-suspend-info"]'),
+  requestCodeLink: () => cy.get('[data-cy="request-code-link"]'),
   obscuredEmail: () => cy.get('[data-cy="obscured-sign-in-link-target-email-address"]'),
   inlineError: () => cy.get('[data-cy="six-digit-access-code-inline-error"]'),
   sixDigitAccessCodeLabel: () => cy.get('[data-cy="six-digit-access-code-label"]'),

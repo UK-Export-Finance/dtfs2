@@ -253,6 +253,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { amendments, facility, deal } = req.body;
+
     // Construct payload
     const payload = {
       facilityIdentifier: id,
@@ -267,14 +268,17 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
 
     // Change requested
     const { changeFacilityValue, changeCoverEndDate } = amendments;
-    // UW Decision
+
+    // UKEF/Underwriter Decision
     const { value, coverEndDate } = amendments.ukefDecision || false;
     const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
     const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+
     // Delete frivolous property
     if (!changeFacilityValue || valueDeclined) {
       delete payload.amount;
     }
+
     if (!changeCoverEndDate || coverEndDateDeclined) {
       delete payload.coverEndDate;
     }
@@ -282,12 +286,13 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     const response = await amendAcbsFacility(payload);
 
     if (response) {
-      // Successful
       const { status, data } = response;
+
       return res.status(status).send(data);
     }
   } catch (error) {
     console.error('Error executing ACBS Facility POST %o', error);
+
     return res.status(400).send();
   }
 

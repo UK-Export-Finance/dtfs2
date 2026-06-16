@@ -16,7 +16,7 @@ context('User can navigate through a paginated table of facilities using the pag
     cy.visit('/facilities');
 
     cy.url().should('eq', relative('/facilities/0'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000001', increment: 1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -33,7 +33,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.pagination.next().click();
 
     cy.url().should('eq', relative('/facilities/1'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000021', increment: 1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000021', increment: 1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -41,7 +41,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.pagination.last().click();
 
     cy.url().should('eq', relative('/facilities/3'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000061', increment: 1, numberToCheck: 2 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000061', increment: 1, numberToCheck: 2 });
     cy.checkFacilitiesTableRowsTotal(2);
   });
 
@@ -50,7 +50,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.pagination.previous().click();
 
     cy.url().should('eq', relative('/facilities/2'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000041', increment: 1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000041', increment: 1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -59,7 +59,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.pagination.first().click();
 
     cy.url().should('eq', relative('/facilities/0'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000001', increment: 1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -67,7 +67,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.pagination.page(2).click();
 
     cy.url().should('eq', relative('/facilities/2'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000041', increment: 1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000041', increment: 1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -75,13 +75,13 @@ context('User can navigate through a paginated table of facilities using the pag
     // default for facilities table is ukefFacilityId `ascending` so click once for `descending` order
     pages.facilitiesPage.facilitiesTable.headings.ukefFacilityIdSortButton().click();
 
-    cy.checkFacilityIdCells({ firstFacilityId: '10000062', increment: -1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000062', increment: -1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
 
     pages.facilitiesPage.pagination.page(2).click();
 
     cy.url().should('eq', relative('/facilities/2?sortfield=ukefFacilityId&sortorder=descending'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000022', increment: -1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000022', increment: -1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -94,13 +94,13 @@ context('User can navigate through a paginated table of facilities using the pag
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
 
     cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
-    cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000001', increment: 2, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
 
     pages.facilitiesPage.pagination.next().click();
 
     cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
-    cy.checkFacilityIdCells({ firstFacilityId: '10000041', increment: 2, numberToCheck: 10 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000041', increment: 2, numberToCheck: 10 });
     cy.checkFacilitiesTableRowsTotal(11);
   });
 
@@ -109,7 +109,7 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.facilitiesTable.headings.ukefFacilityIdSortButton().click();
 
     cy.url().should('eq', relative('/facilities/0?sortfield=ukefFacilityId&sortorder=descending'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000062', increment: -1, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000062', increment: -1, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 
@@ -120,7 +120,7 @@ context('User can navigate through a paginated table of facilities using the pag
     cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
-    cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });
+    cy.checkFacilityIdCells({ firstFacilityId: '0000000001', increment: 2, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
   });
 });
