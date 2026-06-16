@@ -70,6 +70,19 @@ const amendmentsPage = {
   amendmentAnswerBankReviewDateChangeLink: () => cy.get('[data-cy="amendment--bank-review-date-link"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
+  findAmendmentRowIndex: (expectedHeading) =>
+    cy.get('[data-cy^="amendment--heading-"]', { timeout: 60000 }).then(($headings) => {
+      expect($headings.length, 'amendment heading count').to.be.greaterThan(0);
+
+      const matchingHeading = Array.from($headings).find((heading) => heading.innerText.includes(expectedHeading));
+      const headingToUse = matchingHeading || $headings[0];
+      const dataCy = headingToUse.getAttribute('data-cy');
+
+      expect(dataCy, 'amendment heading data-cy').to.match(/^amendment--heading-\d+$/);
+
+      return dataCy.replace('amendment--heading-', '');
+    }),
+
   amendmentDetails: {
     row: (index) => {
       cy.get(`[data-cy="amendment--details-${index}"]`).as('row');

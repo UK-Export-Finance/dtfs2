@@ -376,12 +376,12 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
 
 /**
  * @openapi
- * /amendment/facility/{facilityId}/amendment/{amendmentId}/acbs:
+ * /amendment/facility/{facilityId}/amendment/{amendmentId}:
  *   post:
- *     summary: Submits an amendment to ACBS for a specific facility and amendment.
+ *     summary: Submits a facility amendment to ACBS and APIM GIFT for a specific facility.
  *     tags:
  *       - TFM - Amendments
- *     description: This endpoint submits the amendment to ACBS after the pre-requisites ACBS checks have passed.
+ *     description: This endpoint submits the facility amendment to APIM GIFT and, if ACBS submission pre-requisites are met, also submits the amendment to ACBS.
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -395,27 +395,15 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
  *         schema:
  *           type: string
  *         description: The ID of the amendment.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user:
- *                 type: object
- *           example:
- *             user:
- *               _id: '123'
  *     responses:
  *       '200':
- *         description: Amendment submitted to ACBS successfully
+ *         description: Facility amendment submitted to APIM GIFT successfully (and to ACBS when eligible)
  *       '400':
  *         description: Bad request
  *       '422':
- *         description: Unable to submit amendment to ACBS
+ *         description: Unable to submit facility amendment to APIM GIFT (and to ACBS when eligible)
  */
-openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId/acbs').post(amendmentController.sendAmendmentToAcbs);
+openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId').post(amendmentController.sendFacilityAmendment);
 
 /**
  * @openapi

@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.0.0...v3.1.0) (2026-06-11)
+
+
+### Features
+
+* **DTFS2-8431-8432:** amend a gift facility ([#4774](https://github.com/UK-Export-Finance/dtfs2/issues/4774)) ([0ff1de5](https://github.com/UK-Export-Finance/dtfs2/commit/0ff1de5b1bc3337a599b8f2d47a7863ccb43dd48))
+
+
+### Bug Fixes
+
+* **DTFS2-8353-8356:** create gift facility - entity dates ([#4764](https://github.com/UK-Export-Finance/dtfs2/issues/4764)) ([2229d4c](https://github.com/UK-Export-Finance/dtfs2/commit/2229d4cadc76e4985af3ea0986df0b3483c488ce))
+* **DTFS2-8436:** create gift facilities - sequential api calls ([#4750](https://github.com/UK-Export-Finance/dtfs2/issues/4750)) ([96835e6](https://github.com/UK-Export-Finance/dtfs2/commit/96835e67c0c332b897db58528ff192888f0dd309))
+* **DTFS2-8451:** get gift facilities - handle 404 response ([#4765](https://github.com/UK-Export-Finance/dtfs2/issues/4765)) ([940cc36](https://github.com/UK-Export-Finance/dtfs2/commit/940cc367f5ad8174dbcb078001df39218c7aaae4))
+* **DTFS2-8474:** fixed payment-report-officer not being redirected to the correct page on login ([#4790](https://github.com/UK-Export-Finance/dtfs2/issues/4790)) ([ff1f1b8](https://github.com/UK-Export-Finance/dtfs2/commit/ff1f1b860aef078411eb98311911a82729cf97d3))
+
+
+### Reverts
+
+* **DTFS2-8471:** revert csrf changes and SSO fix ([#4789](https://github.com/UK-Export-Finance/dtfs2/issues/4789)) ([c8dc529](https://github.com/UK-Export-Finance/dtfs2/commit/c8dc529fe9d906c11a2e00306df69f947f6979f8))
+
 ## [3.0.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.11.1...v3.0.0) (2026-05-14)
 
 

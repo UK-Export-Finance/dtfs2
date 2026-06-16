@@ -61,7 +61,7 @@ const unissuedFacility: Facility = {
   name: 'Facility two',
   coverStartDate: add(new Date(), { days: 1 }),
   monthsOfCover: null,
-  ukefFacilityId: '10000012',
+  ukefFacilityId: '0000000012',
   coverDateConfirmed: true,
 };
 
