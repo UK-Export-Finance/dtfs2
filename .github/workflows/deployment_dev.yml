@@ -2,7 +2,7 @@
 # *******************
 #
 # This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
-# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful Quality Assurance - Tests workflow
+# It is triggered on the default base branch (main) both on push and via a daily schedule at 21:00 UTC. The workflow runs after a successful Quality Assurance - Tests workflow
 # completion and includes the following key steps:
 #
 # Key Stages:
@@ -18,7 +18,7 @@
 # - Temporary deployment slots are used to minimize downtime during deployments.
 # - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
 #
-# Triggers: This workflow is triggered by a push to the `main` branch.
+# Triggers: This workflow is triggered on a daily schedule and on push to the `main` branch.
 #
 # Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
@@ -35,6 +35,7 @@ on:
   push:
     branches:
       # Manual deployment
+      # TODO DTFS2-19579: Point this at main once the workflow is promoted for mainline deployments.
       - feat/DTFS2-16188-deployment
 
 env:

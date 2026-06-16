@@ -238,7 +238,7 @@ param CHANGE_STREAM_ENABLED string
 @description('Version identifier for GEF deal functionality, used to control feature rollout and compatibility.')
 param GEF_DEAL_VERSION string
 
-@description('The URL of the TFM API, used for retrieving TFM data.')
+@description('The base URL of the TFM API used by portal-api to retrieve TFM data.')
 param TFM_API string
 
 @description('The URL of the TFM UI, used for redirecting users when access is blocked by WAF rules.')
@@ -258,7 +258,6 @@ param AUDIT_API_PASSWORD string
 param ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE string
 
 @description('Base URL for the audit API, used for recording significant actions and events within the system.')
-@secure()
 param AUDIT_API_URL string
 
 @description('Username used to authenticate with the audit API.')
@@ -306,7 +305,7 @@ param SQL_DB_PASSWORD string
 @description('The email address of the recipient for UKEF GEF reporting emails.')
 param UKEF_GEF_REPORTING_EMAIL_RECIPIENT string
 
-@description('The URL of the TFM API, used for retrieving TFM data.')
+@description('The base URL of the TFM API used by dtfs-central-api to retrieve TFM data.')
 param TFM_API_URL string
 
 @description('The URL of the Azure ACBS function, used for interacting with the ACBS service.')
