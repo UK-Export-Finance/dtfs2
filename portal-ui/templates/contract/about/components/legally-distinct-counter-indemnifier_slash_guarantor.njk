@@ -9,35 +9,33 @@
   {% set countries = opts.mappedCountries %}
   {% set validationErrors = opts.validationErrors %}
 
-  {{
-    govukRadios({
-      fieldset: {
-        legend: { text: "Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?" }
-      },
-      idPrefix: "legallyDistinct-",
-      name: "legallyDistinct",
-      classes: "govuk-radios--inline",
-      items: [
-        {
-          value: "true",
-          text: "Yes",
-          attributes: {
-            "data-cy": "legallyDistinct-true"
-          },
-          checked: deal.submissionDetails.legallyDistinct === 'true'
+  {{ govukRadios({
+    fieldset: {
+      legend: { text: "Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?" }
+    },
+    idPrefix: "legallyDistinct-",
+    name: "legallyDistinct",
+    classes: "govuk-radios--inline",
+    items: [
+      {
+        value: "true",
+        text: "Yes",
+        attributes: {
+          "data-cy": "legallyDistinct-true"
         },
-        {
-          value: "false",
-          text: "No",
-          attributes: {
-            "data-cy": "legallyDistinct-false"
-          },
-          checked: deal.submissionDetails.legallyDistinct === 'false'
-        }
-      ],
-      errorMessage: validationErrors.errorList.legallyDistinct
-    })
-  }}
+        checked: deal.submissionDetails.legallyDistinct === 'true'
+      },
+      {
+        value: "false",
+        text: "No",
+        attributes: {
+          "data-cy": "legallyDistinct-false"
+        },
+        checked: deal.submissionDetails.legallyDistinct === 'false'
+      }
+    ],
+    errorMessage: validationErrors.errorList.legallyDistinct
+  }) }}
 
   {% set renderByDefault=deal.submissionDetails.legallyDistinct %}
 
