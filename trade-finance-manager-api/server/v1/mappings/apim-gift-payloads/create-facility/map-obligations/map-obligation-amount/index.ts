@@ -3,14 +3,30 @@ import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
 
+type MapBssEwcsObligationAmountParams = {
+  facilityAmount: number;
+  ukefExposure: number;
+};
+
 type MapGefObligationAmountParams = {
   facilityType?: string;
   ukefExposure: number;
 };
 
 type MapObligationAmountParams = MapGefObligationAmountParams & {
+  isBssEwcsDeal: boolean;
   isGefDeal: boolean;
+  facilityAmount: number;
 };
+
+/**
+ * Maps the obligation amount for a BSS/EWCS facility.
+ * @param {MapBssEwcsObligationAmountParams} params - Data required to calculate the obligation amount.
+ * @param {number} params.facilityAmount - The facility amount.
+ * @param {number} params.ukefExposure - The facility's UKEF exposure.
+ * @returns {number} The calculated obligation amount.
+ */
+export const mapBssEwcsObligationAmount = ({ facilityAmount, ukefExposure }: MapBssEwcsObligationAmountParams): number => facilityAmount * ukefExposure;
 
 /**
  * Maps the obligation amount for a GEF facility.
@@ -42,15 +58,21 @@ export const mapGefObligationAmount = ({ facilityType, ukefExposure }: MapGefObl
 /**
  * Maps the obligation amount for a facility.
  * @param {MapObligationAmountParams} params - Data required to calculate the obligation amount.
+ * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number} params.facilityAmount - The facility amount. Only required for BSS/EWCS deals.
  * @param {string} [params.facilityType] - The facility type (e.g. "Cash", "Contingent"). Only required for GEF deals.
  * @param {number} params.ukefExposure - The facility's UKEF exposure.
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
-export const mapObligationAmount = ({ isGefDeal, facilityType, ukefExposure }: MapObligationAmountParams): number | null => {
+export const mapObligationAmount = ({ isBssEwcsDeal, isGefDeal, facilityAmount, facilityType, ukefExposure }: MapObligationAmountParams): number | null => {
+  if (isBssEwcsDeal) {
+    return mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
+  }
+
   if (isGefDeal) {
     return mapGefObligationAmount({ facilityType, ukefExposure });
   }
 
-  return ukefExposure;
+  return null;
 };

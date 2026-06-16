@@ -61,7 +61,7 @@
 
       {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
 
-      {% if userRoles.includes("checker") %}
+      {% if submitAmendment %}
         {% include "../../includes/submit/submit-to-ukef.njk" %}
       {% endif %}
 

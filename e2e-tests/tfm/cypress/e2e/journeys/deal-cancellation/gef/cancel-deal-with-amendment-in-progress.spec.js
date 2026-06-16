@@ -16,20 +16,23 @@ import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 context('Deal cancellation - submit cancellation with an amendment in progress', () => {
   let dealId;
   let facility;
-  const ukefDealId = 10000001;
+  let ukefDealId;
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    return cy
+      .insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1)
+      .then((insertedDeal) => {
+        dealId = insertedDeal?._id || insertedDeal?.deal?._id;
+        ukefDealId = insertedDeal?.ukefDealId || insertedDeal?.details?.ukefDealId;
 
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        return cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+      })
+      .then(() => cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1))
+      .then((createdFacility) => {
+        facility = createdFacility?.details;
 
-      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
-        facility = createdFacility.details;
+        return cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       });
-
-      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-    });
   });
 
   beforeEach(() => {
@@ -46,6 +49,10 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
+      const ukefDealIdElement = caseSummary.ukefDealId();
+      ukefDealIdElement.invoke('text').then((text) => {
+        ukefDealId = text.trim();
+      });
     });
 
     describe('with an amendment in progress', () => {

@@ -36,7 +36,7 @@ describe('deal controller', () => {
 
   describe('findOnePortalDeal', () => {
     it('should return false if the deal does not exist', async () => {
-      // Act
+      // Arrange & Act
       const deal = await findOnePortalDeal('NO_DEAL_ID');
 
       // Assert
@@ -44,7 +44,7 @@ describe('deal controller', () => {
     });
 
     it('should fetch a portal deal', async () => {
-      // Act
+      // Arrange & Act
       const deal = await findOnePortalDeal(MOCK_BSS_EWCS_DEAL._id);
 
       // Assert

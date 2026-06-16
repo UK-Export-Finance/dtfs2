@@ -18,7 +18,8 @@ export type PostSubmitAmendmentToUkefRequest = CustomExpressRequest<{
 }>;
 
 /**
- * Controller to post the Amendment to UKEF
+ * Controller to post the Amendment to TFM.
+ * When the user submits the Amendment to UKEF. This will update the Amendment with the reference number, set the status to Acknowledged and send the notification emails.
  * @param req - the request object
  * @param res - the response object
  */

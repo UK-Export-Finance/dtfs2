@@ -38,6 +38,7 @@ import { isValidCurrency, isValidDate } from '../../helpers';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const APIM_MDM_TIMEOUT_MS = Number(process.env.APIM_MDM_TIMEOUT_MS || 10000);
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
@@ -97,6 +98,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       method: 'get',
       url,
       headers,
+      timeout: APIM_MDM_TIMEOUT_MS,
     }).catch((error: any) => {
       console.error('Error calling Exchange rate API, %o', error);
       return { data: error.response.data, status: error.response.status };
