@@ -1,9 +1,7 @@
 /**
  * Initial seed for the `portal-bank-list` MongoDB collection.
  *
- * Mirrors the order of the hardcoded bank list currently shown on the
- * portal homepage in `portal-ui/templates/_partials/before-you-start.njk`.
- *
+ * Banks are sorted by the `order` field when read from MongoDB.
  */
 module.exports = [
   { name: 'Barclays Bank', order: 1 },

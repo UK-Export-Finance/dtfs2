@@ -11,9 +11,9 @@ type GetPortalBankListResponseBody = WithId<PortalBankListEntry>[] | ApiErrorRes
 /**
  * Express handler for `GET /v1/bank/portal-bank-list`.
  *
- * Returns every entry in the `portal-bank-list` MongoDB collection sorted by
- * the numeric `order` field so the response can be rendered directly on the
- * portal homepage.
+ * Returns every entry in the `portal-bank-list` MongoDB collection ordered by
+ * the numeric `order` field (ascending) so the response can be rendered directly
+ * on the portal homepage.
  *
  * Error mapping:
  * - Any thrown `ApiError` is propagated using its own `status` and `code`, with

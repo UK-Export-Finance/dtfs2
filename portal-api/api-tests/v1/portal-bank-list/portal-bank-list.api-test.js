@@ -27,6 +27,10 @@ describe('/v1/portal-bank-list', () => {
       jest.clearAllMocks();
     });
 
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
     withApiKeyAuthenticationTests({
       makeRequestWithHeaders: (headers) => get(URL, { headers }),
     });
