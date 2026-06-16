@@ -91,7 +91,7 @@ describe('/v1/deals', () => {
   const auditDetails = generatePortalAuditDetails(mockChecker._id);
 
   describe('PUT /v1/deals/:dealId/submit', () => {
-    it(`${HttpStatusCode.BadRequest}s submission for invalid checker id`, async () => {
+    it(`should return ${HttpStatusCode.BadRequest} for a submission with an invalid checker id`, async () => {
       // Arrange & Act
       const { status } = await submitDeal({ checker: { _id: '12345678910' } });
 
@@ -99,7 +99,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
-    it(`${HttpStatusCode.NotFound}s submission for unknown id`, async () => {
+    it(`should return ${HttpStatusCode.NotFound} for a submission with an unknown id`, async () => {
       // Arrange & Act
       const { status } = await submitDeal({ dealId: '12345678910', checker: mockChecker });
 
@@ -127,7 +127,7 @@ describe('/v1/deals', () => {
       expect(tfmDataWithPartiesObject).toEqual(expected);
     });
 
-    it('returns the requested resource if no companies house number is given', async () => {
+    it('should return  the requested resource if no companies house number is given', async () => {
       // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
 
@@ -151,7 +151,7 @@ describe('/v1/deals', () => {
       expect(body).toMatchObject(tfmDeal);
     });
 
-    it('returns the requested resource without partyUrn if not matched', async () => {
+    it('should return the requested resource without partyUrn if not matched', async () => {
       // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_PARTY_DB));
 
@@ -175,7 +175,7 @@ describe('/v1/deals', () => {
       expect(body).toMatchObject(tfmDeal);
     });
 
-    it('returns the requested resource with partyUrn if matched', async () => {
+    it('should return the requested resource with partyUrn if matched', async () => {
       // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
@@ -257,7 +257,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('adds dateReceived to deal.tfm', async () => {
+    it('should add dateReceived to deal.tfm', async () => {
       // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
 
