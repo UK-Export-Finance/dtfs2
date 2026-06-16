@@ -8,6 +8,7 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 describe('mapObligations', () => {
   const bssSubtypeName = 'Performance bond';
   const currency = 'GBP';
+  const facilityAmount = 1500;
   const facilityType = FACILITY_TYPE.CASH;
   const ukefExposure = 1500;
 
@@ -20,6 +21,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         bssSubtypeName,
@@ -29,7 +31,13 @@ describe('mapObligations', () => {
       // Assert
       const expected = [
         {
-          amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+          amount: mapObligationAmount({
+            isBssEwcsDeal,
+            isGefDeal,
+            facilityAmount,
+            facilityType,
+            ukefExposure,
+          }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: OBLIGATION_SUBTYPE_MAP.BSS['Performance bond'],
@@ -49,6 +57,7 @@ describe('mapObligations', () => {
         // Act
         const result = mapObligations({
           currency,
+          facilityAmount,
           isBssEwcsDeal,
           isGefDeal,
           bssSubtypeName: unmappedBssSubtypeName,
@@ -58,7 +67,13 @@ describe('mapObligations', () => {
         // Assert
         const expected = [
           {
-            amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+            amount: mapObligationAmount({
+              isBssEwcsDeal,
+              isGefDeal,
+              facilityAmount,
+              facilityType,
+              ukefExposure,
+            }),
             currency,
             repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
             subtypeCode: null,
@@ -79,6 +94,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         facilityType,
@@ -88,7 +104,13 @@ describe('mapObligations', () => {
       // Assert
       const expected = [
         {
-          amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+          amount: mapObligationAmount({
+            isBssEwcsDeal,
+            isGefDeal,
+            facilityAmount,
+            facilityType,
+            ukefExposure,
+          }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,
@@ -108,6 +130,7 @@ describe('mapObligations', () => {
       // Act
       const result = mapObligations({
         currency,
+        facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
         ukefExposure,
@@ -116,7 +139,13 @@ describe('mapObligations', () => {
       // Assert
       const expected = [
         {
-          amount: mapObligationAmount({ isGefDeal, facilityType, ukefExposure }),
+          amount: mapObligationAmount({
+            isBssEwcsDeal,
+            isGefDeal,
+            facilityAmount,
+            facilityType,
+            ukefExposure,
+          }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
           subtypeCode: null,

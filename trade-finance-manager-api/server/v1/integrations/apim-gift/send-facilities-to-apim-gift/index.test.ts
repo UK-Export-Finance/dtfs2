@@ -8,7 +8,7 @@ import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-pay
 import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import { getReferenceData } from './get-reference-data';
-import { submitFacilitiesToApimGift } from '.';
+import { sendFacilitiesToApimGift } from '.';
 
 jest.mock('./get-reference-data', () => ({
   getReferenceData: jest.fn(),
@@ -39,6 +39,7 @@ const mockFacility: TfmFacility = {
 
 const mockIsBssEwcsDeal = true;
 const mockIsGefDeal = false;
+const mockNewPartyUrnCreated = true;
 
 const createFacilityPayloadSpy = APIM_GIFT_PAYLOADS.createFacility as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacility>;
 const createFacilitiesPayloadSpy = APIM_GIFT_PAYLOADS.createFacilities as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.createFacilities>;
@@ -48,7 +49,7 @@ const getReferenceDataSpy = getReferenceData as jest.MockedFunction<typeof getRe
 const mockPayload = APIM_GIFT_PAYLOADS_EXAMPLES.CREATE_FACILITY.VALID_PAYLOAD as unknown as ApimGiftFacilityCreationPayload;
 const mockApiResponse = { mock: true };
 
-describe('submitFacilitiesToApimGift', () => {
+describe('sendFacilitiesToApimGift', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -68,11 +69,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should call APIM_GIFT_PAYLOADS.createFacility', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -81,6 +83,7 @@ describe('submitFacilitiesToApimGift', () => {
         facility: mockFacility,
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
@@ -88,11 +91,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should call getReferenceData', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -101,11 +105,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should call api.createGiftFacility', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -114,11 +119,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should NOT call APIM_GIFT_PAYLOADS.createFacilities', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -127,11 +133,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should return the response from api.createGiftFacility', async () => {
       // Act
-      const result = await submitFacilitiesToApimGift({
+      const result = await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       expect(result).toEqual(mockApiResponse);
@@ -166,11 +173,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should call APIM_GIFT_PAYLOADS.createFacilities once with all facilities', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -179,6 +187,7 @@ describe('submitFacilitiesToApimGift', () => {
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
@@ -186,11 +195,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should call api.createGiftFacility multiple times', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -202,11 +212,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should NOT call APIM_GIFT_PAYLOADS.createFacility', async () => {
       // Act
-      await submitFacilitiesToApimGift({
+      await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       // Assert
@@ -215,11 +226,12 @@ describe('submitFacilitiesToApimGift', () => {
 
     it('should return flattened responses from api.createGiftFacility', async () => {
       // Act
-      const result = await submitFacilitiesToApimGift({
+      const result = await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
+        newPartyUrnCreated: mockNewPartyUrnCreated,
       });
 
       const expected = [mockApiResponse, mockApiResponse, mockApiResponse];

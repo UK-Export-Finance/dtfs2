@@ -1,10 +1,11 @@
+const { HttpStatusCode } = require('axios');
 const { AUDIT_USER_TYPES, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
-const { canSubmitToApimGift, submitFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const getGuaranteeDates = require('../../../server/v1/helpers/get-guarantee-dates');
 const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
 const { generateIssuedFacilitiesListString } = require('../../../server/v1/controllers/send-issued-facilities-received-email');
@@ -32,8 +33,8 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
 jest.mock('../../../server/v1/helpers/can-submit-to-acbs');
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSubmitToApimGift: jest.fn(),
-  submitFacilitiesToApimGift: jest.fn(),
+  canSendToApimGift: jest.fn(),
+  sendFacilitiesToApimGift: jest.fn(),
 }));
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -86,8 +87,8 @@ const expectAnyPortalUserAuditDetails = { userType: AUDIT_USER_TYPES.PORTAL, id:
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    canSubmitToApimGift.mockClear();
-    submitFacilitiesToApimGift.mockClear();
+    canSendToApimGift.mockClear();
+    sendFacilitiesToApimGift.mockClear();
 
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
@@ -123,7 +124,7 @@ describe('/v1/deals', () => {
 
     canSubmitToACBS.mockClear();
 
-    canSubmitToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false });
+    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false });
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -140,14 +141,14 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
           expect(updatedBond.status).toEqual('Acknowledged');
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
@@ -157,11 +158,11 @@ describe('/v1/deals', () => {
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
-          // Act
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -183,7 +184,7 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -192,11 +193,11 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.premiumSchedule', async () => {
-          // Act
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -205,7 +206,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacility', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -222,7 +223,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.hasBeenAcknowledged', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -232,7 +233,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add bond.hasBeenIssuedAndAcknowledged', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -253,7 +254,7 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -261,7 +262,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -271,11 +272,11 @@ describe('/v1/deals', () => {
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {
-          // Act
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -297,7 +298,7 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -306,11 +307,11 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.premiumSchedule', async () => {
-          // Act
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          expect(status).toEqual(200);
+          expect(status).toEqual(HttpStatusCode.Ok);
 
           const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -319,7 +320,7 @@ describe('/v1/deals', () => {
         });
 
         it('should call updatePortalFacility', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -336,7 +337,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -346,7 +347,7 @@ describe('/v1/deals', () => {
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
-          // Act
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
@@ -391,7 +392,7 @@ describe('/v1/deals', () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object) });
@@ -401,33 +402,32 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should call canSubmitToApimGift', async () => {
+      it('should call canSendToApimGift', async () => {
         // Act
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should not call submitFacilitiesToApimGift', async () => {
-        // Arrange
-        // Act
+      it('should not call sendFacilitiesToApimGift', async () => {
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -437,14 +437,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
     });
@@ -462,7 +465,7 @@ describe('/v1/deals', () => {
         });
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         expect(body.submissionType).toEqual('Manual Inclusion Notice');
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
@@ -472,32 +475,32 @@ describe('/v1/deals', () => {
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body, firstSubmissionCheck: false });
       });
 
-      it('should call canSubmitToApimGift', async () => {
-        // Act
+      it('should call canSendToApimGift', async () => {
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should NOT call submitFacilitiesToApimGift', async () => {
-        // Act
+      it('should NOT call sendFacilitiesToApimGift', async () => {
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_MIA_SECOND_SUBMIT));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -507,14 +510,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -529,7 +535,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
         expect(updatedBond.status).toEqual('Acknowledged');
@@ -545,7 +551,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
         expect(updatedLoan.status).toEqual('Acknowledged');
@@ -559,7 +565,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: body });
@@ -582,7 +588,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -591,11 +597,11 @@ describe('/v1/deals', () => {
       });
 
       it('should add bond.premiumSchedule', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -617,7 +623,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -626,11 +632,11 @@ describe('/v1/deals', () => {
       });
 
       it('should add loan.premiumSchedule', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -665,7 +671,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -684,7 +690,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
@@ -706,7 +712,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -715,11 +721,11 @@ describe('/v1/deals', () => {
       });
 
       it('should add loan.premiumSchedule', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
@@ -735,7 +741,7 @@ describe('/v1/deals', () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         expect(canSubmitToACBS).toHaveBeenCalledTimes(2);
         expect(canSubmitToACBS).toHaveBeenCalledWith({ deal: expect.any(Object) });
@@ -745,33 +751,32 @@ describe('/v1/deals', () => {
         expect(acbsController.issueAcbsFacilities).toHaveBeenCalledWith(expect.any(Object));
       });
 
-      it('should call canSubmitToApimGift', async () => {
-        // Act
+      it('should call canSendToApimGift', async () => {
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(canSubmitToApimGift).toHaveBeenCalled();
+        expect(canSendToApimGift).toHaveBeenCalled();
       });
 
-      it('should NOT call submitFacilitiesToApimGift', async () => {
-        // Arrange
-        // Act
+      it('should NOT call sendFacilitiesToApimGift', async () => {
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
         // Assert
-        expect(submitFacilitiesToApimGift).not.toHaveBeenCalled();
+        expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = [
             ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.bondTransactions.items,
             ...MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items,
           ].filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: true,
             isGefDeal: false,
@@ -781,14 +786,17 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: true,
-            isGefDeal: false,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: true,
+              isGefDeal: false,
+            }),
+          );
         });
       });
 
@@ -833,17 +841,17 @@ describe('/v1/deals', () => {
       };
 
       it('does NOT call premium schedule when dealType is GEF', async () => {
-        // Act
+        // Arrange & Act
         const { status } = await submitDeal(createSubmitBody(mockDeal));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         expect(api.getPremiumSchedule).not.toHaveBeenCalled();
       });
 
       it('should call updateGefFacility', async () => {
-        // Act
+        // Arrange & Act
         await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
 
         // Assert
@@ -860,11 +868,11 @@ describe('/v1/deals', () => {
       });
 
       it('adds fee record to issued facilities', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(mockDeal));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
         expect(issuedFacility).toBeDefined();
@@ -875,11 +883,11 @@ describe('/v1/deals', () => {
       });
 
       it('does NOT add fee record to unissued facilities', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(mockDeal));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const unissuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => !facility.hasBeenIssued);
         expect(unissuedFacility).toBeDefined();
@@ -888,11 +896,11 @@ describe('/v1/deals', () => {
       });
 
       it('does NOT add fee record when deal is MIA on 1st submission', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.hasBeenIssued);
         expect(issuedFacility).toBeDefined();
@@ -901,11 +909,11 @@ describe('/v1/deals', () => {
       });
 
       it('does add fee record when deal is MIA on 2nd submission', async () => {
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const issuedFacility = [...getFacilities(body), ...getUpdatedDealFacilities()].find((facility) => facility.tfm);
         expect(issuedFacility).toBeDefined();
@@ -924,23 +932,22 @@ describe('/v1/deals', () => {
       });
 
       it('should update the application from MIA to MIN', async () => {
-        // Arrange
-        // Act
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         // Assert
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
         expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
       });
 
       describe('when APIM/GIFT submission is allowed', () => {
-        it('should call submitFacilitiesToApimGift', async () => {
+        it('should call sendFacilitiesToApimGift', async () => {
           // Arrange
           const mockIssuedFacilities = (mockDeal.facilities || []).filter((facility) => facility.hasBeenIssued);
 
-          canSubmitToApimGift.mockResolvedValueOnce({
-            canSubmitFacilitiesToApimGift: true,
+          canSendToApimGift.mockResolvedValueOnce({
+            canSendFacilitiesToApimGift: true,
             issuedFacilities: mockIssuedFacilities,
             isBssEwcsDeal: false,
             isGefDeal: true,
@@ -950,14 +957,18 @@ describe('/v1/deals', () => {
           await submitDeal(createSubmitBody(mockDeal));
 
           // Assert
-          const submittedDeal = canSubmitToApimGift.mock.calls[0][0];
+          const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
-          expect(submitFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
-            deal: submittedDeal,
-            facilities: mockIssuedFacilities,
-            isBssEwcsDeal: false,
-            isGefDeal: true,
-          });
+          expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              deal: submittedDeal,
+              facilities: mockIssuedFacilities,
+              isBssEwcsDeal: false,
+              isGefDeal: true,
+              newPartyUrnCreated: false,
+            }),
+          );
         });
       });
     });
