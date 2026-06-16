@@ -1,7 +1,10 @@
-// mock out number generator call and use 7 digit ID instead
-// reduced in size from 10 as premium schedule cannot handle large numbers
-let ukefId = 1e7;
+/**
+ * Mock out number generator call and use a zero-prefixed 10 digit UKEF ID format ("00" + 8 digits).
+ * Keep numeric values small to avoid issues in downstream test calculations.
+ */
+let ukefId = 0;
+
 module.exports.getIdFromNumberGenerator = () => {
   ukefId += 1;
-  return String(ukefId);
+  return String(ukefId).padStart(10, '0');
 };

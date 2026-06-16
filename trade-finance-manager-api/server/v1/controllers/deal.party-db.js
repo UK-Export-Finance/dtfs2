@@ -97,7 +97,7 @@ const identifyDealParties = (deal) => ({
  * @function addPartyUrns
  * @param {object} deal - The deal object to update.
  * @param {object} auditDetails - Details for auditing the update operation.
- * @returns {Promise<object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
+ * @returns {Promise<object|boolean>} Returns an object with deal and newPartyUrnCreated flag, false if the deal is not provided.
  */
 const addPartyUrns = async (deal, auditDetails) => {
   if (!deal?.exporter) {
@@ -122,12 +122,25 @@ const addPartyUrns = async (deal, auditDetails) => {
   const country = registeredAddress?.country ?? UNITED_KINGDOM;
   const isUkEntity = isCountryUk(country);
 
+  let exporterPartyExistedBeforeCreate = false;
+
+  const shouldCheckExistingExporterParty =
+    isSalesforceCustomerCreationEnabled() && Boolean(companyRegNo) && Boolean(companyName) && Boolean(probabilityOfDefault) && Boolean(code);
+
+  if (shouldCheckExistingExporterParty) {
+    const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+
+    exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
+  }
+
+  const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }),
+          partyUrn: exporterPartyUrn,
           partyUrnRequired: hasExporter,
         },
         buyer: {
@@ -148,9 +161,14 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
+  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate;
+
   return {
-    ...deal,
-    tfm: updatedDeal.tfm,
+    deal: {
+      ...deal,
+      tfm: updatedDeal.tfm,
+    },
+    newPartyUrnCreated,
   };
 };
 

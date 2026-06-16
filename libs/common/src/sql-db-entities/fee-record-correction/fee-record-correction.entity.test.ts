@@ -64,13 +64,13 @@ describe('FeeRecordEntity', () => {
         facilityUtilisation: 1000,
         feesPaidToUkefForThePeriod: null,
         feesPaidToUkefForThePeriodCurrency: null,
-        facilityId: '00000001',
+        facilityId: '0000000001',
       };
       const correctedValues = {
         facilityUtilisation: 2000,
         feesPaidToUkefForThePeriod: null,
         feesPaidToUkefForThePeriodCurrency: null,
-        facilityId: '11111111',
+        facilityId: '1111111111',
       };
 
       const bankCommentary = 'This is some commentary provided by the bank';
