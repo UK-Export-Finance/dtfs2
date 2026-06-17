@@ -7,15 +7,6 @@
 # 3. GHA
 
 version: 2
-
-jobs:
-  test:
-    if: github.actor == 'dependabot[bot]'
-    runs-on: [DTFS-Prod-Linux-02]
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-
 updates:
   # NPM
   - package-ecosystem: 'npm'
