@@ -134,6 +134,14 @@ export const getMany = async (req: Request, res: Response) => {
       const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
       const responseBody = error?.response?.data;
 
+      if (status === HttpStatusCode.NotFound) {
+        console.info('No GIFT facilities found for IDs %s', ids);
+
+        return {
+          status,
+        };
+      }
+
       console.error('Error calling APIM TFS GIFT - get facilities endpoint - ids %s status %s responseBody %o error %o', ids, status, responseBody, error);
 
       return {

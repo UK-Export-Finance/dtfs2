@@ -243,6 +243,32 @@ describe('getMany', () => {
   });
 
   describe('when APIM TFS get facilities returns an HTTP error response', () => {
+    it(`should return ${HttpStatusCode.NotFound} without logging an error`, async () => {
+      // Arrange
+      const facilityIds = ['0000000001', '0000000002'];
+      const ids = facilityIds.join(',');
+      mockRequest.query = { ids };
+
+      const mockAxiosError = {
+        response: {
+          status: HttpStatusCode.NotFound,
+          data: {
+            message: 'No facilities found',
+          },
+        },
+      };
+
+      jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+      // Act
+      await getMany(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(0);
+      expect(console.info).toHaveBeenNthCalledWith(2, 'No GIFT facilities found for IDs %s', ids);
+      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+    });
+
     it(`should forward non-${HttpStatusCode.Ok} status`, async () => {
       // Arrange
       const facilityIds = ['0000000001', '0000000002'];
