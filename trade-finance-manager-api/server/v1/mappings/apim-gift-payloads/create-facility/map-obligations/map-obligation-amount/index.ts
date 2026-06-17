@@ -3,11 +3,6 @@ import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
 
-type MapBssEwcsObligationAmountParams = {
-  facilityAmount: number;
-  ukefExposure: number;
-};
-
 type MapGefObligationAmountParams = {
   facilityType?: string;
   ukefExposure: number;
@@ -16,17 +11,8 @@ type MapGefObligationAmountParams = {
 type MapObligationAmountParams = MapGefObligationAmountParams & {
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
-  facilityAmount: number;
+  facilityAmount: number | null;
 };
-
-/**
- * Maps the obligation amount for a BSS/EWCS facility.
- * @param {MapBssEwcsObligationAmountParams} params - Data required to calculate the obligation amount.
- * @param {number} params.facilityAmount - The facility amount.
- * @param {number} params.ukefExposure - The facility's UKEF exposure.
- * @returns {number} The calculated obligation amount.
- */
-export const mapBssEwcsObligationAmount = ({ facilityAmount, ukefExposure }: MapBssEwcsObligationAmountParams): number => facilityAmount * ukefExposure;
 
 /**
  * Maps the obligation amount for a GEF facility.
@@ -67,7 +53,7 @@ export const mapGefObligationAmount = ({ facilityType, ukefExposure }: MapGefObl
  */
 export const mapObligationAmount = ({ isBssEwcsDeal, isGefDeal, facilityAmount, facilityType, ukefExposure }: MapObligationAmountParams): number | null => {
   if (isBssEwcsDeal) {
-    return mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
+    return facilityAmount;
   }
 
   if (isGefDeal) {

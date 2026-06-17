@@ -13,6 +13,7 @@ import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapCoverPercentage } from './map-cover-percentage';
 import { getMonthsOfCover } from './get-months-of-cover';
+import { mapFacilityAmount } from './map-overview/map-facility-amount';
 
 export type FacilityCreationParams = {
   creditRiskRatings: string[];
@@ -64,18 +65,23 @@ export const createFacility = async ({
 
   const ukefExposure = Number(tfm.ukefExposure);
 
-  /**
-   * GEF "value" field is a number.
-   * BSS/EWCS "value" field is a string with commas.
-   */
-  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
-
-  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
-
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
     isBssEwcsDeal,
     isGefDeal,
+  });
+
+  /**
+   * GEF "value" field is a number.
+   * BSS/EWCS "value" field is a string with commas.
+   */
+  const facilityAmountNumber = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+
+  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+
+  const facilityAmount = mapFacilityAmount({
+    facilityAmount: facilityAmountNumber,
+    coverPercentage,
   });
 
   const monthsOfCover = getMonthsOfCover({
@@ -132,7 +138,6 @@ export const createFacility = async ({
   const mapped: ApimGiftFacilityCreationPayload = {
     consumer,
     overview: mapOverview({
-      coverPercentage,
       currency,
       effectiveDate,
       expiryDate,
