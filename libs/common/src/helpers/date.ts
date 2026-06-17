@@ -60,6 +60,16 @@ export const getUnixTimestampSeconds: (date: Date) => UnixTimestampSeconds = get
  */
 export const getISO8601 = (date: Date = now()): string => date.toISOString();
 
+const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
+
+const normaliseEpochMilliseconds = (date: number): number => {
+  /**
+   * If the epoch value is less than or equal to the maximum plausible epoch timestamp in seconds,
+   * assume it's in seconds and convert to milliseconds.
+   */
+  return date <= MAX_EPOCH_SECONDS ? date * 1000 : date;
+};
+
 /**
  * Converts a Unix timestamp to a UTC date string in the format 'YYYY-MM-DD'.
  *
@@ -68,13 +78,7 @@ export const getISO8601 = (date: Date = now()): string => date.toISOString();
  * @returns {string} The UTC date string in the format 'YYYY-MM-DD'.
  */
 export const getFormattedUTCDateString = (date: number): string => {
-  const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
-
-  /**
-   * If the epoch value is less than or equal to the maximum plausible epoch timestamp in seconds,
-   * assume it's in seconds and convert to milliseconds
-   */
-  const epochMilliseconds = date <= MAX_EPOCH_SECONDS ? date * 1000 : date;
+  const epochMilliseconds = normaliseEpochMilliseconds(date);
 
   const isoString = new Date(epochMilliseconds).toISOString();
 
@@ -85,6 +89,20 @@ export const getFormattedUTCDateString = (date: number): string => {
   const formattedDate = isoString.slice(0, 10);
 
   return formattedDate;
+};
+
+/**
+ * Converts a Unix timestamp to a date string in the format 'YYYY-MM-DD' using a specific IANA time zone.
+ *
+ * Interprets values <= 9_999_999_999 as epoch seconds and values above as epoch milliseconds.
+ * @param date - The Unix timestamp (seconds or milliseconds, inferred by magnitude).
+ * @param timeZone - IANA timezone identifier (for example: 'Europe/London').
+ * @returns {string} The date string in the format 'YYYY-MM-DD' for the provided time zone.
+ */
+export const getFormattedDateStringInTimeZone = (date: number, timeZone: string): string => {
+  const epochMilliseconds = normaliseEpochMilliseconds(date);
+
+  return formatInTimeZone(epochMilliseconds, timeZone, 'yyyy-MM-dd');
 };
 
 /**

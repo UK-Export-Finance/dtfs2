@@ -14,6 +14,7 @@ import {
   differenceInDays,
   epochSecondsToMilliseconds,
   getFormattedUTCDateString,
+  getFormattedDateStringInTimeZone,
 } from './date';
 
 describe('date helpers', () => {
@@ -205,7 +206,37 @@ describe('date helpers', () => {
       const result = getFormattedUTCDateString(timestampMilliseconds);
 
       // Assert
-      expect(result).toEqual('2028-02-25');
+      const expected = '2028-02-25';
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getFormattedDateStringInTimeZone', () => {
+    it('should return the expected date for Unix timestamp in Europe/London time zone', () => {
+      // Arrange
+      const timestampMilliseconds = 1845154800000; // 2028-06-21T00:00:00+01:00
+
+      // Act
+      const result = getFormattedDateStringInTimeZone(timestampMilliseconds, 'Europe/London');
+
+      // Assert
+      const expected = '2028-06-21';
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should interpret Unix timestamp seconds values', () => {
+      // Arrange
+      const timestampSeconds = 1845154800; // 2028-06-21T00:00:00+01:00
+
+      // Act
+      const result = getFormattedDateStringInTimeZone(timestampSeconds, 'Europe/London');
+
+      // Assert
+      const expected = '2028-06-21';
+
+      expect(result).toEqual(expected);
     });
   });
 
