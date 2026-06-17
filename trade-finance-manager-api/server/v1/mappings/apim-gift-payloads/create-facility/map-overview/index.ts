@@ -25,7 +25,7 @@ type MapOverviewParams = {
  * @param {string} params.effectiveDate - The facility guarantee commencement/effective date.
  * @param {string} params.expiryDate - The facility guarantee expiry date.
  * @param {string} [params.exporterPartyUrn] - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.
- * @param {number | null} params.facilityAmount - The total facility amount.
+ * @param {number | null} params.facilityAmount - The facility amount to send to APIM GIFT (already adjusted for cover percentage).
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @param {number} [params.monthsOfCover] - The length of cover in months.
