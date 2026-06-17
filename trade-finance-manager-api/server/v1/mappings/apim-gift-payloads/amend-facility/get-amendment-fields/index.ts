@@ -1,7 +1,5 @@
-import { getFormattedDateStringInTimeZone, getFormattedUTCDateString } from '@ukef/dtfs2-common';
+import { getFormattedDateStringInTimeZone, getFormattedUTCDateString, TIMEZONE } from '@ukef/dtfs2-common';
 import { TfmFacilityAmendmentData } from '../../types';
-
-const LONDON_TIME_ZONE = 'Europe/London';
 
 type AmendmentFields = {
   newAmount: number;
@@ -21,7 +19,7 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
 
   const hasCoverEndDate = amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null;
 
-  const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(Number(amendment.tfm?.coverEndDate), LONDON_TIME_ZONE) : '';
+  const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(Number(amendment.tfm?.coverEndDate), TIMEZONE.DEFAULT) : '';
 
   const hasEffectiveDate = amendment.effectiveDate !== undefined && amendment.effectiveDate !== null;
 
