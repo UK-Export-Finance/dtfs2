@@ -67,9 +67,8 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const facilityAmountNumber = Number(String(facilitySnapshot.value).replace(/,/g, ''));
   const facilityAmount = mapFacilityAmount({
-    facilityAmount: facilityAmountNumber,
+    facilityAmount: facilitySnapshot.value,
     coverPercentage,
   });
 

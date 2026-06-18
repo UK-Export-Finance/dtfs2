@@ -114,9 +114,7 @@ describe('mapObligationAmount', () => {
       });
 
       // Assert
-      const expected = null;
-
-      expect(result).toEqual(expected);
+      expect(result).toBeNull();
     });
   });
 
