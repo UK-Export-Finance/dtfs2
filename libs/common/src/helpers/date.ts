@@ -62,7 +62,14 @@ export const getISO8601 = (date: Date = now()): string => date.toISOString();
 
 const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
 
-const normaliseEpochMilliseconds = (date: number): number => {
+/**
+ * Normalizes an epoch timestamp to milliseconds.
+ * If the input is in seconds (<= MAX_EPOCH_SECONDS), it converts it to milliseconds.
+ * If the input is already in milliseconds (> MAX_EPOCH_SECONDS), it returns the input as is.
+ * @param {number} date - The epoch timestamp in seconds or milliseconds.
+ * @returns {number} The epoch timestamp in milliseconds.
+ */
+export const normaliseEpochMilliseconds = (date: number): number => {
   /**
    * If the epoch value is less than or equal to the maximum plausible epoch timestamp in seconds,
    * assume it's in seconds and convert to milliseconds.
@@ -95,9 +102,9 @@ export const getFormattedUTCDateString = (date: number): string => {
  * Converts a Unix timestamp to a date string in the format 'YYYY-MM-DD' using a specific IANA time zone.
  *
  * Interprets values <= 9_999_999_999 as epoch seconds and values above as epoch milliseconds.
- * @param date - The Unix timestamp (seconds or milliseconds, inferred by magnitude).
- * @param timeZone - IANA timezone identifier (for example: 'Europe/London').
- * @returns {string} The date string in the format 'YYYY-MM-DD' for the provided time zone.
+ * @param {number} date - The Unix timestamp (seconds or milliseconds, inferred by magnitude).
+ * @param {string} timeZone - IANA timezone identifier (for example: 'Europe/London').
+ * @returns {string} The date string in the format 'yyyy-MM-dd' for the provided time zone.
  */
 export const getFormattedDateStringInTimeZone = (date: number, timeZone: string): string => {
   const epochMilliseconds = normaliseEpochMilliseconds(date);

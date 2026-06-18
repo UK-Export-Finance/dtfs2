@@ -19,11 +19,15 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
 
   const hasCoverEndDate = amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null;
 
-  const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(Number(amendment.tfm?.coverEndDate), TIMEZONE.DEFAULT) : '';
+  const coverEndDateValue = Number(amendment.tfm?.coverEndDate);
+
+  const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(coverEndDateValue, TIMEZONE.DEFAULT) : '';
 
   const hasEffectiveDate = amendment.effectiveDate !== undefined && amendment.effectiveDate !== null;
 
-  const effectiveDate = hasEffectiveDate ? getFormattedUTCDateString(Number(amendment.effectiveDate)) : '';
+  const effectiveDateValue = Number(amendment.effectiveDate);
+
+  const effectiveDate = hasEffectiveDate ? getFormattedUTCDateString(effectiveDateValue) : '';
 
   return {
     newAmount,

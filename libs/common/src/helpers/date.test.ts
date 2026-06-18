@@ -15,6 +15,7 @@ import {
   epochSecondsToMilliseconds,
   getFormattedUTCDateString,
   getFormattedDateStringInTimeZone,
+  normaliseEpochMilliseconds,
 } from './date';
 
 describe('date helpers', () => {
@@ -236,6 +237,24 @@ describe('date helpers', () => {
       // Assert
       const expected = '2028-06-21';
 
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('normaliseEpochMilliseconds', () => {
+    it.each([
+      { epoch: 0, expected: 0 },
+      { epoch: 1, expected: 1000 },
+      { epoch: 1704067200, expected: 1704067200000 },
+      { epoch: 9_999_999_999, expected: 9_999_999_999_000 },
+      { epoch: 10_000_000_000, expected: 10_000_000_000 },
+      { epoch: 1_704_067_200_000, expected: 1_704_067_200_000 },
+      { epoch: -1, expected: -1000 },
+    ])('should normalise epoch $epoch to milliseconds $expected', ({ epoch, expected }) => {
+      // Act
+      const result = normaliseEpochMilliseconds(epoch);
+
+      // Assert
       expect(result).toEqual(expected);
     });
   });
