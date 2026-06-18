@@ -1,6 +1,6 @@
 const express = require('express');
 const api = require('../../api');
-const { constructPayload, getApiData, requestParams, errorHref, generateErrorSummary } = require('../../helpers');
+const { constructPayload, getApiData, requestParams, errorHref, generateErrorSummary, getUserRedirectUrl } = require('../../helpers');
 const { PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
@@ -31,10 +31,18 @@ router.get('/:_id', async (req, res) => {
 
   const user = await getApiData(api.user(_id, userToken), res);
 
+  /**
+   * determines the correct url to direct user to when pressing the cancel button on the profile page
+   * eg payment-report-officer does not have access to the dashboard
+   * so should be directed to the utilisation report upload page instead
+   */
+  const redirectUrl = getUserRedirectUrl(user);
+
   return res.render('user/profile.njk', {
     _id,
     user,
     primaryNav: PRIMARY_NAV_KEY.PROFILE,
+    redirectUrl,
   });
 });
 
