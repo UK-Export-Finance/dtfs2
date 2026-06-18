@@ -139,6 +139,7 @@ export const getMany = async (req: Request, res: Response) => {
 
         return {
           status,
+          data: responseBody,
         };
       }
 

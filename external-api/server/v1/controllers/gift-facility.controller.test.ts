@@ -145,6 +145,7 @@ describe('get', () => {
       );
 
       expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(mockResponse._getData()).toEqual('Bad Gateway');
     });
   });
 });
@@ -464,6 +465,7 @@ describe('create', () => {
       );
 
       expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(mockResponse._getData()).toEqual('Bad Gateway');
     });
   });
 });
@@ -596,6 +598,7 @@ describe('amend', () => {
       );
 
       expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(mockResponse._getData()).toEqual('Bad Gateway');
     });
   });
 });

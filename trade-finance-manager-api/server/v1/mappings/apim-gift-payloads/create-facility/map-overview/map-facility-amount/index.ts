@@ -15,7 +15,7 @@ type MapFacilityAmountParams = {
  *
  * cover percentages are stored as percent values (e.g. 80),
  * so this should divide by 100 to avoid sending amounts inflated by 100x.
- * @param {MapFacilityAmountParams} params - The parameters for mapping the facility amount.
+ * @param {string | null} params - The parameters for mapping the facility amount.
  * @param {NumberGeneratorResponse} params.facilityAmount - The total facility amount.
  * @param {number | null} params.coverPercentage - The cover percentage for the facility.
  * @returns {number | null} The mapped facility amount.
