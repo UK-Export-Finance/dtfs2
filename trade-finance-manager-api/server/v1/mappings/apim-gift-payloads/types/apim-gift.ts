@@ -38,6 +38,7 @@ export type ApimAccrualSchedule = {
   accrualFrequencyCode: ApimGiftAccrualFrequencyCodeType | null;
   accrualDayBasisCode: ApimGiftDayBasisType | null;
   baseRate: number;
+  dateSnapBack: boolean;
   spreadRate: number | null;
   additionalRate: number;
 };
