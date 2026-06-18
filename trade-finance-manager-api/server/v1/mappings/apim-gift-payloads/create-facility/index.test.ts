@@ -12,6 +12,7 @@ import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
+import { mapFacilityAmount } from './map-overview/map-facility-amount';
 import { mapRiskDetails } from './map-risk-details';
 import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
@@ -66,7 +67,10 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+  const facilityAmount = mapFacilityAmount({
+    facilityAmount: facilitySnapshot.value,
+    coverPercentage,
+  });
 
   const params = {
     creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
@@ -99,7 +103,6 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        coverPercentage,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
