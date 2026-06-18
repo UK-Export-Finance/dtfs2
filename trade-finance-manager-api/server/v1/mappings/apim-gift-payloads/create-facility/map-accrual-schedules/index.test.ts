@@ -29,6 +29,7 @@ describe('mapAccrualSchedules', () => {
         accrualFrequencyCode: mapFrequencyCode(feeFrequency, feeType),
         accrualDayBasisCode: mapDayBasisCode(dayCountBasis),
         baseRate: DEFAULTS.ACCRUAL_SCHEDULE.BASE_RATE,
+        dateSnapBack: DEFAULTS.ACCRUAL_SCHEDULE.DATE_SNAP_BACK,
         spreadRate: mapSpreadRate(guaranteeFeePayableToUkef),
         additionalRate: DEFAULTS.ACCRUAL_SCHEDULE.ADDITIONAL_RATE,
       },
