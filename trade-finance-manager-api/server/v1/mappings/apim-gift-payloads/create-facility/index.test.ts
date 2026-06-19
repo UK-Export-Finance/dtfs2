@@ -33,11 +33,12 @@ describe('createFacility', () => {
     _id: new ObjectId(),
     facilitySnapshot: mockFacilitySnapshot,
     tfm: {
-      ukefExposure: 100000,
+      exposurePeriodInMonths: 12,
       facilityGuaranteeDates: {
         guaranteeCommencementDate: '2024-01-01',
         guaranteeExpiryDate: '2025-01-01',
       },
+      ukefExposure: 100000,
     },
   };
 

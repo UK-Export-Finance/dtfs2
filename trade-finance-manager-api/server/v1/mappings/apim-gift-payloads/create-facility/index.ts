@@ -77,7 +77,7 @@ export const createFacility = async ({
     coverPercentage,
   });
 
-  const monthsOfCover = tfm.exposurePeriodInMonths;
+  const monthsOfCover = Number(tfm.exposurePeriodInMonths);
 
   /**
    * Ensure dayCountBasis is a number.
