@@ -26,6 +26,15 @@ type CompletedFacilityEndDate =
     }
   | { amendmentId: string; isUsingFacilityEndDate: undefined };
 
+/**
+ * Returns all TFM amendments currently in progress across all facilities.
+ *
+ * This endpoint is used by operational views that need a global queue of
+ * in-flight amendments.
+ * @param {Request} _req - Express request (unused).
+ * @param {Response} res - Express response used to send the amendment list or an error payload.
+ * @returns {Promise<Response>} HTTP 200 with in-progress amendments, or HTTP 500 on failure.
+ */
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
     const inProgressAmendments = await TfmFacilitiesRepo.findTfmAmendmentsByStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS);
@@ -36,6 +45,15 @@ export const getAllAmendmentsInProgress = async (_req: Request, res: Response) =
   }
 };
 
+/**
+ * Maps a completed amendment to its latest monetary value shape.
+ *
+ * Throws when required fields are missing so the controller can return
+ * an internal error instead of silently returning incomplete data.
+ * @param {FacilityAmendment} amendment - Completed amendment document to map.
+ * @returns {{ amendmentId: string; value: number; currency: Currency }} Latest value projection.
+ * @throws {Error} When `value` or `currency` is missing.
+ */
 const mapAmendmentToLatestValue = (
   amendment: FacilityAmendment,
 ): {
@@ -47,12 +65,22 @@ const mapAmendmentToLatestValue = (
   if (!value) {
     throw new Error('Found amendment does not have a defined value');
   }
+
   if (!currency) {
     throw new Error('Found amendment does not have a defined currency');
   }
+
   return { amendmentId: amendmentId.toString(), value, currency };
 };
 
+/**
+ * Maps a completed amendment to its latest cover end date shape.
+ *
+ * Throws when `coverEndDate` is not defined on the amendment.
+ * @param {FacilityAmendment} amendment - Completed amendment document to map.
+ * @returns {{ amendmentId: string; coverEndDate: number }} Latest cover end date projection.
+ * @throws {Error} When `coverEndDate` is missing.
+ */
 const mapAmendmentToLatestCompletedDate = (
   amendment: FacilityAmendment,
 ): {
@@ -63,12 +91,23 @@ const mapAmendmentToLatestCompletedDate = (
   if (!coverEndDate) {
     throw new Error('Found amendment does not have a defined coverEndDate');
   }
+
   return {
     amendmentId: amendmentId.toString(),
     coverEndDate,
   };
 };
 
+/**
+ * Maps a completed amendment to facility-end-date specific values.
+ *
+ * - `isUsingFacilityEndDate: true`  => returns `facilityEndDate`
+ * - `isUsingFacilityEndDate: false` => returns `bankReviewDate`
+ * - unset/legacy                    => returns only the flag as `undefined`
+ * @param {FacilityAmendment} amendment - Completed amendment document to map.
+ * @returns {CompletedFacilityEndDate} Facility end date projection for completed amendments.
+ * @throws {Error} When the selected end-date field is missing for the chosen mode.
+ */
 const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
   if (isUsingFacilityEndDate) {
@@ -81,22 +120,42 @@ const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): Comp
       facilityEndDate,
     };
   }
+
   if (isUsingFacilityEndDate === false) {
     if (!bankReviewDate) {
       throw new Error('Found amendment does not have a defined bank review date');
     }
+
     return {
       amendmentId: amendmentId.toString(),
       isUsingFacilityEndDate,
       bankReviewDate,
     };
   }
+
   return {
     amendmentId: amendmentId.toString(),
     isUsingFacilityEndDate: undefined,
   };
 };
 
+/**
+ * Returns amendments for a facility, with support for filtered/status routes.
+ *
+ * Supported `amendmentIdOrStatus` values:
+ * - `in-progress`: single in-progress amendment (or `{}` when none exists)
+ * - `completed`: completed list, or latest projection when `type` is provided
+ * - Mongo amendment id: a specific amendment document (or `{}` when not found)
+ * - undefined: all amendments for the facility
+ *
+ * Supported `type` values when status is `completed`:
+ * - `latest-value`
+ * - `latest-cover-end-date`
+ * - `latest-facility-end-date`
+ * @param {Request} req - Express request containing `facilityId`, `amendmentIdOrStatus`, and optional `type` route params.
+ * @param {Response} res - Express response used to send amendment payloads or error details.
+ * @returns {Promise<Response>} HTTP 200 with amendment result(s), HTTP 400 for invalid amendment id, or error status on failure.
+ */
 export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
 
@@ -131,6 +190,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
         }
     }
+
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
     console.error('Error getting amendments by facility id:', error);
@@ -138,13 +198,26 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
       const { status, message } = error;
       return res.status(status).send({ status, message });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'An unknown error occurred when getting amendments by facility id',
+      message: 'getAmendmentsByFacilityId - An unknown error occurred when getting amendments by facility id',
     });
   }
 };
 
+/**
+ * Returns amendments for a deal, with support for status and latest filters.
+ *
+ * Supported `status` values:
+ * - `in-progress`: in-progress TFM amendments
+ * - `completed`: completed TFM amendments (or latest when `type=latest`)
+ * - `approved`: merged approved set across portal + TFM amendment statuses
+ * - undefined: all amendments for the deal
+ * @param {Request} req - Express request containing `dealId`, optional `status`, and optional `type` route params.
+ * @param {Response} res - Express response used to send amendment payloads or error details.
+ * @returns {Promise<Response>} HTTP 200 with amendment result(s), or error status on failure.
+ */
 export const getAmendmentsByDealId = async (req: Request, res: Response) => {
   const { dealId, status, type } = req.params;
 
@@ -177,13 +250,15 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
     console.error('Error getting amendments by deal id:', error);
+
     if (error instanceof ApiError) {
       const { status: errorStatus, message } = error;
       return res.status(errorStatus).send({ status: errorStatus, message });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'An unknown error occurred when getting amendments by facility id',
+      message: 'getAmendmentsByDealId - An unknown error occurred when getting amendments by deal id',
     });
   }
 };
