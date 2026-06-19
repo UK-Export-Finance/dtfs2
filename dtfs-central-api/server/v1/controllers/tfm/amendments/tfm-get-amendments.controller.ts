@@ -27,13 +27,10 @@ type CompletedFacilityEndDate =
   | { amendmentId: string; isUsingFacilityEndDate: undefined };
 
 /**
- * Returns all TFM amendments currently in progress across all facilities.
- *
- * This endpoint is used by operational views that need a global queue of
- * in-flight amendments.
- * @param {Request} _req - Express request (unused).
- * @param {Response} res - Express response used to send the amendment list or an error payload.
- * @returns {Promise<Response>} HTTP 200 with in-progress amendments, or HTTP 500 on failure.
+ * Gets all TFM amendments currently in progress.
+ * @param _req - Request (unused).
+ * @param res - Response.
+ * @returns HTTP 200 with in-progress amendments, or HTTP 500 on failure.
  */
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
@@ -46,13 +43,9 @@ export const getAllAmendmentsInProgress = async (_req: Request, res: Response) =
 };
 
 /**
- * Maps a completed amendment to its latest monetary value shape.
- *
- * Throws when required fields are missing so the controller can return
- * an internal error instead of silently returning incomplete data.
- * @param {FacilityAmendment} amendment - Completed amendment document to map.
- * @returns {{ amendmentId: string; value: number; currency: Currency }} Latest value projection.
- * @throws {Error} When `value` or `currency` is missing.
+ * Maps a completed amendment to latest value response shape.
+ * @param amendment - Completed amendment.
+ * @returns Object containing amendment id, value, and currency.
  */
 const mapAmendmentToLatestValue = (
   amendment: FacilityAmendment,
@@ -74,12 +67,9 @@ const mapAmendmentToLatestValue = (
 };
 
 /**
- * Maps a completed amendment to its latest cover end date shape.
- *
- * Throws when `coverEndDate` is not defined on the amendment.
- * @param {FacilityAmendment} amendment - Completed amendment document to map.
- * @returns {{ amendmentId: string; coverEndDate: number }} Latest cover end date projection.
- * @throws {Error} When `coverEndDate` is missing.
+ * Maps a completed amendment to latest cover end date response shape.
+ * @param amendment - Completed amendment.
+ * @returns Object containing amendment id and cover end date.
  */
 const mapAmendmentToLatestCompletedDate = (
   amendment: FacilityAmendment,
@@ -100,13 +90,8 @@ const mapAmendmentToLatestCompletedDate = (
 
 /**
  * Maps a completed amendment to facility-end-date specific values.
- *
- * - `isUsingFacilityEndDate: true`  => returns `facilityEndDate`
- * - `isUsingFacilityEndDate: false` => returns `bankReviewDate`
- * - unset/legacy                    => returns only the flag as `undefined`
- * @param {FacilityAmendment} amendment - Completed amendment document to map.
- * @returns {CompletedFacilityEndDate} Facility end date projection for completed amendments.
- * @throws {Error} When the selected end-date field is missing for the chosen mode.
+ * @param amendment - Completed amendment.
+ * @returns Facility end date values based on `isUsingFacilityEndDate`.
  */
 const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
@@ -141,20 +126,9 @@ const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): Comp
 
 /**
  * Returns amendments for a facility, with support for filtered/status routes.
- *
- * Supported `amendmentIdOrStatus` values:
- * - `in-progress`: single in-progress amendment (or `{}` when none exists)
- * - `completed`: completed list, or latest projection when `type` is provided
- * - Mongo amendment id: a specific amendment document (or `{}` when not found)
- * - undefined: all amendments for the facility
- *
- * Supported `type` values when status is `completed`:
- * - `latest-value`
- * - `latest-cover-end-date`
- * - `latest-facility-end-date`
- * @param {Request} req - Express request containing `facilityId`, `amendmentIdOrStatus`, and optional `type` route params.
- * @param {Response} res - Express response used to send amendment payloads or error details.
- * @returns {Promise<Response>} HTTP 200 with amendment result(s), HTTP 400 for invalid amendment id, or error status on failure.
+ * @param req - Request containing `facilityId`, `amendmentIdOrStatus`, and optional `type`.
+ * @param res - Response.
+ * @returns HTTP 200 with amendment results, HTTP 400 for invalid amendment id, or error status on failure.
  */
 export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
@@ -208,15 +182,9 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
 
 /**
  * Returns amendments for a deal, with support for status and latest filters.
- *
- * Supported `status` values:
- * - `in-progress`: in-progress TFM amendments
- * - `completed`: completed TFM amendments (or latest when `type=latest`)
- * - `approved`: merged approved set across portal + TFM amendment statuses
- * - undefined: all amendments for the deal
- * @param {Request} req - Express request containing `dealId`, optional `status`, and optional `type` route params.
- * @param {Response} res - Express response used to send amendment payloads or error details.
- * @returns {Promise<Response>} HTTP 200 with amendment result(s), or error status on failure.
+ * @param req - Request containing `dealId`, optional `status`, and optional `type`.
+ * @param res - Response.
+ * @returns HTTP 200 with amendment results, or error status on failure.
  */
 export const getAmendmentsByDealId = async (req: Request, res: Response) => {
   const { dealId, status, type } = req.params;
