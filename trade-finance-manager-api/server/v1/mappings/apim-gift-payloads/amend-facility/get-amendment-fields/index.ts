@@ -1,4 +1,4 @@
-import { getFormattedUTCDateString } from '@ukef/dtfs2-common';
+import { getFormattedDateStringInTimeZone, getFormattedUTCDateString, TIMEZONE } from '@ukef/dtfs2-common';
 import { TfmFacilityAmendmentData } from '../../types';
 
 type AmendmentFields = {
@@ -17,11 +17,17 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
   const newAmount = typeof amendment.value === 'number' ? amendment.value : Number.NaN;
   const previousAmount = typeof amendment.currentValue === 'number' ? amendment.currentValue : Number.NaN;
 
-  const coverEndDate =
-    amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null ? getFormattedUTCDateString(Number(amendment.tfm.coverEndDate)) : '';
+  const hasCoverEndDate = amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null;
 
-  const effectiveDate =
-    amendment.effectiveDate !== undefined && amendment.effectiveDate !== null ? getFormattedUTCDateString(Number(amendment.effectiveDate)) : '';
+  const coverEndDateValue = Number(amendment.tfm?.coverEndDate);
+
+  const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(coverEndDateValue, TIMEZONE.DEFAULT) : '';
+
+  const hasEffectiveDate = amendment.effectiveDate !== undefined && amendment.effectiveDate !== null;
+
+  const effectiveDateValue = Number(amendment.effectiveDate);
+
+  const effectiveDate = hasEffectiveDate ? getFormattedUTCDateString(effectiveDateValue) : '';
 
   return {
     newAmount,
