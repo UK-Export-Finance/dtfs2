@@ -102,7 +102,14 @@ describe('PUT /v1/facilities/:facilityId/amendments/:amendmentId - APIM GIFT int
       // Assert
       expect(status).toEqual(HttpStatusCode.Ok);
       expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
-        amendment,
+        amendmentPayloads: [
+          {
+            amendmentType: 'ReplaceExpiryDate',
+            amendmentData: {
+              expiryDate: '2024-04-01',
+            },
+          },
+        ],
         ukefFacilityId,
       });
       expect(amendIssuedFacility).toHaveBeenCalledTimes(1);
