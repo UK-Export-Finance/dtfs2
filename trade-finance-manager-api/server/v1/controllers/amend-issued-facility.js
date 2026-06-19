@@ -57,8 +57,8 @@ const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
         facilityTfmUpdate = {
           ...tfm,
           exposurePeriodInMonths: amendmentExposurePeriodInMonths,
-          ukefExposure: exposure.ukefExposureValue,
-          ukefExposureCalculationTimestamp: String(exposure.timestamp),
+          ukefExposure: exposure?.ukefExposureValue,
+          ukefExposureCalculationTimestamp: exposure?.timestamp ? String(exposure.timestamp) : undefined,
         };
 
         /**
@@ -71,7 +71,7 @@ const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
         if (changeFacilityValue) {
           amendedFacility = {
             ...amendedFacility,
-            ukefExposure: exposure.ukefExposureValue,
+            ukefExposure: exposure?.ukefExposureValue,
             value,
           };
         }
