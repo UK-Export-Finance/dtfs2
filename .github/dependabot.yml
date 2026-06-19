@@ -3,6 +3,12 @@
 # Automatic dependencies updates
 # for the following services:
 # 1. NPM
+#    - Uses a single root directory (/) which covers all workspace packages
+#    - Split into 6 groups (types, eslint, babel, testing, production, dev-other)
+#      to avoid Dependabot timeout caused by resolving all 2000+ packages at once
+#    - Groups 1-4 match by package name pattern (e.g. @types/*, eslint*, jest*)
+#    - "production" = packages in "dependencies" in package.json
+#    - "dev-other" = packages in "devDependencies" not matched by groups 1-4
 # 2. Docker
 # 3. GHA
 
@@ -17,9 +23,55 @@ updates:
     labels:
       - 'chore'
     groups:
-      npm-packages:
+      npm-types:
         patterns:
-          - '*'
+          - '@types/*'
+      npm-eslint:
+        patterns:
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - 'eslint-*'
+      npm-babel:
+        patterns:
+          - '@babel/*'
+          - 'babel-*'
+      npm-testing:
+        patterns:
+          - 'jest'
+          - 'jest-*'
+          - '@jest/*'
+          - 'ts-jest'
+          - 'cypress'
+          - 'supertest'
+      npm-production:
+        dependency-type: 'production'
+        exclude-patterns:
+          - '@types/*'
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - '@babel/*'
+          - 'babel-*'
+          - 'jest'
+          - 'jest-*'
+          - '@jest/*'
+          - 'ts-jest'
+          - 'cypress'
+          - 'supertest'
+      npm-dev-other:
+        dependency-type: 'development'
+        exclude-patterns:
+          - '@types/*'
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - 'eslint-*'
+          - '@babel/*'
+          - 'babel-*'
+          - 'jest'
+          - 'jest-*'
+          - '@jest/*'
+          - 'ts-jest'
+          - 'cypress'
+          - 'supertest'
 
   # Dockerfiles
   - package-ecosystem: 'docker'
