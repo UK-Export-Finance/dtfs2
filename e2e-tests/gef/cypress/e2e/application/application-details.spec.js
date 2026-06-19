@@ -110,7 +110,10 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      applicationDetails.submitHeading().should('match', 'h2');
+      applicationDetails.submitHeading().should('have.class', 'govuk-heading-l');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
@@ -191,7 +194,10 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      applicationDetails.submitHeading().should('match', 'h2');
+      applicationDetails.submitHeading().should('have.class', 'govuk-heading-l');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
@@ -258,7 +264,10 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      applicationDetails.submitHeading().should('match', 'h2');
+      applicationDetails.submitHeading().should('have.class', 'govuk-heading-l');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton();
       applicationDetails.submitValidationText().should('not.exist');
     });

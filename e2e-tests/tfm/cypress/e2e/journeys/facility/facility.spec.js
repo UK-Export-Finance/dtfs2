@@ -50,6 +50,15 @@ context('Facility page', () => {
     facilityPage.facilityMaximumUkefExposure().contains(dealFacilities[0].ukefExposure);
   });
 
+  it('should render the facility type heading as an h2', () => {
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityType().should('be.visible');
+    facilityPage.facilityType().should('match', 'h2');
+    facilityPage.facilityType().should('have.class', 'govuk-heading-l');
+  });
+
   it('user can navigate back to parties page via sub navigation', () => {
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
