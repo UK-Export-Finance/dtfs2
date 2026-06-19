@@ -12,7 +12,6 @@ import { mapObligations } from './map-obligations';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapCoverPercentage } from './map-cover-percentage';
-import { getMonthsOfCover } from './get-months-of-cover';
 import { mapFacilityAmount } from './map-overview/map-facility-amount';
 
 export type FacilityCreationParams = {
@@ -78,11 +77,7 @@ export const createFacility = async ({
     coverPercentage,
   });
 
-  const monthsOfCover = getMonthsOfCover({
-    facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
-  });
+  const monthsOfCover = tfm.exposurePeriodInMonths;
 
   /**
    * Ensure dayCountBasis is a number.

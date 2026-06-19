@@ -110,6 +110,7 @@ describe('createFacility', () => {
         facilityAmount,
         facilityType: facilitySnapshot.type,
         isGefDeal,
+        monthsOfCover: tfm.exposurePeriodInMonths,
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
