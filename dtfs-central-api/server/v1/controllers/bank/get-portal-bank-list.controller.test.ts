@@ -2,18 +2,12 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
 import { TestApiError } from '@ukef/dtfs2-common/test-helpers';
-import { WithId, ObjectId } from 'mongodb';
+import { WithId } from 'mongodb';
 import { getPortalBankList } from './get-portal-bank-list.controller';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
+import { aBank } from '../../../../test-helpers';
 
 jest.mock('../../../repositories/portal-bank-list-repo');
-
-const aPortalBankListEntry = (overrides: Partial<WithId<PortalBankListEntry>> = {}): WithId<PortalBankListEntry> => ({
-  _id: new ObjectId(),
-  name: 'Bank 1',
-  order: 1,
-  ...overrides,
-});
 
 type MockResponse = Partial<Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>> & {
   status: jest.Mock;
@@ -53,7 +47,10 @@ describe('getPortalBankList', () => {
   });
 
   describe('when the database returns a list of entries', () => {
-    const entries: WithId<PortalBankListEntry>[] = [aPortalBankListEntry({ name: 'Bank 1', order: 1 }), aPortalBankListEntry({ name: 'Bank 2', order: 2 })];
+    const entries: WithId<PortalBankListEntry>[] = [
+      { ...aBank(), name: 'Bank 1', order: 1 },
+      { ...aBank(), name: 'Bank 2', order: 2 },
+    ];
 
     beforeEach(() => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue(entries);
@@ -74,7 +71,7 @@ describe('getPortalBankList', () => {
       await invokeController(res);
 
       expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith(entries);
+      expect(res.send).toHaveBeenNthCalledWith(1, entries);
     });
   });
 
@@ -83,7 +80,7 @@ describe('getPortalBankList', () => {
       jest.mocked(getAllPortalBankListEntries).mockResolvedValue([]);
     });
 
-    it('should respond with a 200 and an empty array', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok} and an empty array`, async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -126,7 +123,7 @@ describe('getPortalBankList', () => {
       });
     });
 
-    it('should log the error to console.error', async () => {
+    it('should call console.error', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
@@ -164,7 +161,7 @@ describe('getPortalBankList', () => {
       });
     });
 
-    it('should log the error to console.error', async () => {
+    it('should call console.error', async () => {
       const res = getMockResponse();
 
       await invokeController(res);
