@@ -134,6 +134,15 @@ export const getMany = async (req: Request, res: Response) => {
       const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
       const responseBody = error?.response?.data;
 
+      if (status === HttpStatusCode.NotFound) {
+        console.info('No GIFT facilities found for IDs %s', ids);
+
+        return {
+          status,
+          data: responseBody,
+        };
+      }
+
       console.error('Error calling APIM TFS GIFT - get facilities endpoint - ids %s status %s responseBody %o error %o', ids, status, responseBody, error);
 
       return {
@@ -202,7 +211,7 @@ export const create = async (req: Request, res: Response) => {
       return res.sendStatus(status);
     }
 
-    console.info('✅ Successfully created GIFT facility %s', facilityId);
+    console.info('✅ Successfully sent GIFT facility %s creation to APIM TFS', facilityId);
 
     const responseData = 'data' in response ? response.data : undefined;
 
@@ -264,7 +273,7 @@ export const amend = async (req: Request, res: Response) => {
       return res.sendStatus(status);
     }
 
-    console.info('✅ Successfully amended GIFT facility');
+    console.info('✅ Successfully sent GIFT facility %s amendment to APIM TFS', facilityId);
 
     return res.status(status).send({
       success: true,

@@ -2284,15 +2284,16 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
     return response.data;
   } catch (error) {
     const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
-    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
 
     if (status === HttpStatusCode.NotFound) {
-      console.info('No GIFT facilities found for ids %o', facilityIdsQueryString);
+      console.info('No GIFT facilities found for IDs %o', facilityIdsQueryString);
 
       return {
         facilities: [],
       };
     }
+
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
 
     console.error(
       'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
