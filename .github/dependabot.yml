@@ -10,16 +10,7 @@ version: 2
 updates:
   # NPM
   - package-ecosystem: 'npm'
-    directories: 
-      - '/'
-      - '/external-api'
-      - '/portal-api'
-      - '/trade-finance-manager-api'
-      - '/gef-ui'
-      - '/portal'
-      - '/trade-finance-manager-ui'
-      - '/azure-functions/acbs'
-      - '/dtfs-central-api'
+    directory: '/'
     schedule:
       interval: 'weekly'
       time: '00:00'
@@ -28,7 +19,7 @@ updates:
     groups:
       npm-packages:
         patterns:
-          - '*'  
+          - '*'
 
   # Dockerfiles
   - package-ecosystem: 'docker'

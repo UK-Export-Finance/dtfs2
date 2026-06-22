@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { DEAL_SUBMISSION_TYPE, DEAL_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../server/v1/api');
@@ -90,21 +91,27 @@ describe('/v1/deals', () => {
   const auditDetails = generatePortalAuditDetails(mockChecker._id);
 
   describe('PUT /v1/deals/:dealId/submit', () => {
-    it('400s submission for invalid checker id', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} for a submission with an invalid checker id`, async () => {
+      // Arrange & Act
       const { status } = await submitDeal({ checker: { _id: '12345678910' } });
 
-      expect(status).toEqual(400);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
-    it('404s submission for unknown id', async () => {
+    it(`should return ${HttpStatusCode.NotFound} for a submission with an unknown id`, async () => {
+      // Arrange & Act
       const { status } = await submitDeal({ dealId: '12345678910', checker: mockChecker });
 
-      expect(status).toEqual(404);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.NotFound);
     });
 
     it('should add TFM deal data', async () => {
+      // Arrange & Act
       const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
 
+      // Assert
       const mappedDeal = await mapSubmittedDeal(body);
       const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalAuditDetails(mockChecker._id));
 
@@ -120,8 +127,11 @@ describe('/v1/deals', () => {
       expect(tfmDataWithPartiesObject).toEqual(expected);
     });
 
-    it('returns the requested resource if no companies house number is given', async () => {
+    it('should return the requested resource if no companies house number is given', async () => {
+      // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
+
+      // Assert
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;
 
@@ -137,12 +147,15 @@ describe('/v1/deals', () => {
         },
       };
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body).toMatchObject(tfmDeal);
     });
 
-    it('returns the requested resource without partyUrn if not matched', async () => {
+    it('should return the requested resource without partyUrn if not matched', async () => {
+      // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_PARTY_DB));
+
+      // Assert
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_PARTY_DB;
 
@@ -158,13 +171,15 @@ describe('/v1/deals', () => {
         },
       };
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body).toMatchObject(tfmDeal);
     });
 
-    it('returns the requested resource with partyUrn if matched', async () => {
+    it('should return the requested resource with partyUrn if matched', async () => {
+      // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
+      // Assert
       // Remove bonds & loans as they are returned mutated so will not match
       const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL;
 
@@ -180,14 +195,17 @@ describe('/v1/deals', () => {
         },
       };
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body).toMatchObject(tfmDeal);
     });
 
     describe(`when currency is NOT ${CURRENCY.GBP}`, () => {
       it(`should convert supplyContractValue to ${CURRENCY.GBP}`, async () => {
+        // Arrange & Act
         const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE));
-        expect(status).toEqual(200);
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const { supplyContractValue } = MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
 
@@ -203,9 +221,11 @@ describe('/v1/deals', () => {
       describe(`when deal is ${DEAL_SUBMISSION_TYPE.AIN}`, () => {
         describe('when deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
+            // Arrange & Act
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
-            expect(status).toEqual(200);
+            // Assert
+            expect(status).toEqual(HttpStatusCode.Ok);
 
             expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
           });
@@ -215,9 +235,11 @@ describe('/v1/deals', () => {
       describe(`when deal is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
         describe('when deal status is `Submitted`', () => {
           it('should add `Application` tfm stage', async () => {
+            // Arrange & Act
             const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
-            expect(status).toEqual(200);
+            // Assert
+            expect(status).toEqual(HttpStatusCode.Ok);
             expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
           });
         });
@@ -225,17 +247,22 @@ describe('/v1/deals', () => {
 
       describe(`when deal is ${DEAL_SUBMISSION_TYPE.MIN}`, () => {
         it('should add `Application` tfm stage', async () => {
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
-          expect(status).toEqual(200);
+
+          // Assert
+          expect(status).toEqual(HttpStatusCode.Ok);
           expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
         });
       });
     });
 
-    it('adds dateReceived to deal.tfm', async () => {
+    it('should add dateReceived to deal.tfm', async () => {
+      // Arrange & Act
       const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
 
-      expect(status).toEqual(200);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Ok);
 
       const expectedDateReceived = generateDateReceived().dateReceived;
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
@@ -243,14 +270,19 @@ describe('/v1/deals', () => {
     });
 
     describe(`when dealType is '${DEAL_TYPE.GEF}'`, () => {
-      it('should return 200', async () => {
+      it(`should return ${HttpStatusCode.Ok}`, async () => {
+        // Arrange & Act
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
-        expect(status).toEqual(200);
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('should call updateGefFacility', async () => {
+        // Arrange & Act
         const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
+        // Assert
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
         expect(updateGefFacilitySpy).toHaveBeenCalledWith({
@@ -266,8 +298,10 @@ describe('/v1/deals', () => {
     describe('portal status updates', () => {
       describe(`when ${DEAL_SUBMISSION_TYPE.AIN} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
+          // Assert
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_BSS_EWCS_DEAL._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
@@ -278,8 +312,10 @@ describe('/v1/deals', () => {
 
       describe(`when ${DEAL_SUBMISSION_TYPE.MIN} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIN));
 
+          // Assert
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_BSS_EWCS_DEAL_MIN._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
@@ -290,8 +326,10 @@ describe('/v1/deals', () => {
 
       describe(`when ${DEAL_SUBMISSION_TYPE.MIA} ${DEAL_TYPE.BSS} deal is submitted`, () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIA));
 
+          // Assert
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_BSS_EWCS_DEAL_MIA._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
@@ -302,8 +340,10 @@ describe('/v1/deals', () => {
 
       describe(`when ${DEAL_SUBMISSION_TYPE.AIN} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
+          // Assert
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_GEF_DEAL_AIN._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
@@ -314,8 +354,10 @@ describe('/v1/deals', () => {
 
       describe(`when ${DEAL_SUBMISSION_TYPE.MIN} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
 
+          // Assert
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_GEF_DEAL_MIN._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
@@ -326,8 +368,10 @@ describe('/v1/deals', () => {
 
       describe(`when ${DEAL_SUBMISSION_TYPE.MIA} ${DEAL_TYPE.GEF} deal is submitted`, () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
+          // Assert
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
             dealId: MOCK_GEF_DEAL_MIA._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
@@ -338,12 +382,15 @@ describe('/v1/deals', () => {
     });
 
     it('should call canSendToApimGift', async () => {
+      // Arrange & Act
       const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
+      // Assert
       expect(canSendToApimGift).toHaveBeenCalledWith(body);
     });
 
     it('should call sendFacilitiesToApimGift', async () => {
+      // Arrange
       const mockIssuedFacilities = [...MOCK_BSS_EWCS_DEAL.bondTransactions.items, ...MOCK_BSS_EWCS_DEAL.loanTransactions.items].filter(
         (facility) => facility.hasBeenIssued,
       );
@@ -353,8 +400,10 @@ describe('/v1/deals', () => {
         issuedFacilities: mockIssuedFacilities,
       });
 
+      // Act
       await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
+      // Assert
       const submittedDeal = canSendToApimGift.mock.calls[0][0];
 
       expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
@@ -394,6 +443,7 @@ describe('/v1/deals', () => {
 
       describe('when all issued facilities are not in GIFT', () => {
         it('should call sendFacilitiesToApimGift with all issued facilities', async () => {
+          // Arrange
           canSendToApimGift.mockResolvedValueOnce({
             canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility1, mockFacility2],
@@ -401,8 +451,12 @@ describe('/v1/deals', () => {
             isGefDeal: false,
           });
 
+          // Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+
+          // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
+
           expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
             1,
             expect.objectContaining({
@@ -417,6 +471,7 @@ describe('/v1/deals', () => {
 
       describe('when there are no issued facilities to send to GIFT', () => {
         it('should not call sendFacilitiesToApimGift', async () => {
+          // Arrange
           canSendToApimGift.mockResolvedValueOnce({
             canSendFacilitiesToApimGift: false,
             issuedFacilities: [], // no facilities to send
@@ -424,13 +479,17 @@ describe('/v1/deals', () => {
             isGefDeal: false,
           });
 
+          // Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+
+          // Assert
           expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
         });
       });
 
       describe('when some issued facilities are in GIFT, some are not', () => {
         it('should call sendFacilitiesToApimGift with the issued facilities that are not in GIFT', async () => {
+          // Arrange
           canSendToApimGift.mockResolvedValueOnce({
             canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility2, mockFacility3], // only facility 2 and 3 are not in GIFT
@@ -438,8 +497,12 @@ describe('/v1/deals', () => {
             isGefDeal: false,
           });
 
+          // Act
           await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
+
+          // Assert
           const submittedDeal = canSendToApimGift.mock.calls[0][0];
+
           expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(
             1,
             expect.objectContaining({
