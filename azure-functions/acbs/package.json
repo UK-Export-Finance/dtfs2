@@ -36,8 +36,8 @@
     "durable-functions": "^3.3.0"
   },
   "devDependencies": {
-    "babel-jest": "29.5.0",
-    "babel-loader": "9.1.2",
+    "babel-jest": "30.4.1",
+    "babel-loader": "10.1.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
