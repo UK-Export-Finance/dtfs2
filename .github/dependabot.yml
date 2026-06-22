@@ -33,6 +33,8 @@ updates:
         dependency-type: 'production'
         exclude-patterns:
           - '@babel/*'
+          - '@cypress/*'
+          - '@cypress-*'
           - '@jest/*'
           - '@types/*'
           - '@typescript-eslint/*'
@@ -41,6 +43,7 @@ updates:
           - 'eslint*'
           - 'jest'
           - 'jest-*'
+          - 'nock'
           - 'supertest'
           - 'ts-jest'
       npm-dev-dependencies:
@@ -49,28 +52,32 @@ updates:
         dependency-type: 'development'
         exclude-patterns:
           - '@babel/*'
+          - '@cypress/*'
+          - '@cypress-*'
           - '@jest/*'
           - '@types/*'
           - '@typescript-eslint/*'
           - 'babel-*'
           - 'cypress'
           - 'eslint*'
-          - 'eslint-*'
           - 'jest'
           - 'jest-*'
+          - 'nock'
           - 'supertest'
           - 'ts-jest'
       npm-eslint:
         patterns:
           - '@typescript-eslint/*'
           - 'eslint*'
-          - 'eslint-*'
       npm-testing:
         patterns:
+          - '@cypress/*'
+          - '@cypress-*'
           - '@jest/*'
           - 'cypress'
           - 'jest'
           - 'jest-*'
+          - 'nock'
           - 'supertest'
           - 'ts-jest'
       npm-types:
