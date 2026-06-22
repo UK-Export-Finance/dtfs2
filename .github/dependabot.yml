@@ -3,6 +3,12 @@
 # Automatic dependencies updates
 # for the following services:
 # 1. NPM
+#    - Uses a single root directory (/) which covers all workspace packages
+#    - Split into 6 groups (types, eslint, babel, testing, dependencies, dev-dependencies)
+#      to avoid Dependabot timeout caused by resolving all 2000+ packages at once
+#    - Groups 1-4 match by package name pattern (e.g. @types/*, eslint*, jest*)
+#    - "dependencies" = packages in "dependencies" not already matched by groups 1-4
+#    - "dev-dependencies" = packages in "devDependencies" not already matched by groups 1-4
 # 2. Docker
 # 3. GHA
 
@@ -17,9 +23,66 @@ updates:
     labels:
       - 'chore'
     groups:
-      npm-packages:
+      npm-babel:
+        patterns:
+          - '@babel/*'
+          - 'babel-*'
+      npm-dependencies:
         patterns:
           - '*'
+        dependency-type: 'production'
+        exclude-patterns:
+          - '@babel/*'
+          - '@cypress/*'
+          - '@cypress-*'
+          - '@jest/*'
+          - '@types/*'
+          - '@typescript-eslint/*'
+          - 'babel-*'
+          - 'cypress'
+          - 'eslint*'
+          - 'jest'
+          - 'jest-*'
+          - 'nock'
+          - 'supertest'
+          - 'ts-jest'
+      npm-dev-dependencies:
+        patterns:
+          - '*'
+        dependency-type: 'development'
+        exclude-patterns:
+          - '@babel/*'
+          - '@cypress/*'
+          - '@cypress-*'
+          - '@jest/*'
+          - '@types/*'
+          - '@typescript-eslint/*'
+          - 'babel-*'
+          - 'cypress'
+          - 'eslint*'
+          - 'jest'
+          - 'jest-*'
+          - 'nock'
+          - 'supertest'
+          - 'ts-jest'
+      npm-eslint:
+        patterns:
+          - '@typescript-eslint/*'
+          - 'eslint*'
+      npm-testing:
+        patterns:
+          - '@cypress/*'
+          - '@cypress-*'
+          - '@jest/*'
+          - 'cypress'
+          - 'jest'
+          - 'jest-*'
+          - 'nock'
+          - 'supertest'
+          - 'ts-jest'
+      npm-types:
+        patterns:
+          - '@types/*'
 
   # Dockerfiles
   - package-ecosystem: 'docker'
