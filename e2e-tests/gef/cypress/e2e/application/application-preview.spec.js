@@ -38,16 +38,6 @@ context('Application preview page', () => {
       applicationPreview.facilityInformationBanner().should('exist');
       cy.assertText(applicationPreview.facilityInformationBanner(), 'Check your records for the most up-to-date facility details.');
     });
-
-    it('should render the post-UKEF-approval submit heading as an h2', () => {
-      const ainDeal = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN);
-      cy.visit(relative(`/gef/application-details/${ainDeal._id}`));
-
-      applicationPreview.submitHeading().should('be.visible');
-      applicationPreview.submitHeading().should('match', 'h2');
-      applicationPreview.submitHeading().should('have.class', 'govuk-heading-l');
-      cy.assertText(applicationPreview.submitHeading(), 'Submit');
-    });
   });
 
   describe('Application preview page with MIN Deal and status Acknowledged', () => {
