@@ -416,12 +416,12 @@ const updateFacilityAmendment = async (req, res) => {
         if (isTfmApimGiftIntegrationEnabled()) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-          const canSendToApimGift = await canSendAmendmentsToApimGift(amendment);
+          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
 
           if (canSendToApimGift) {
             console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
-            const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads: canSendToApimGift.amendmentPayloads, ukefFacilityId });
+            const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
 
             if (!sentToApimGift) {
               console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
@@ -547,14 +547,20 @@ const sendFacilityAmendment = async (req, res) => {
       const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
       if (isTfmApimGiftIntegrationEnabled()) {
-        console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+        console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-        const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
 
-        if (!sentToApimGift) {
-          console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+        if (canSendToApimGift) {
+          console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
-          throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+          const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
+
+          if (!sentToApimGift) {
+            console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+
+            throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+          }
         }
       }
 

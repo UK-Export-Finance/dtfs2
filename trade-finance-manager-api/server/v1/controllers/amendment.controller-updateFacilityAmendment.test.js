@@ -283,6 +283,16 @@ describe('updated facility amendment API call', () => {
 
         beforeEach(() => {
           mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            currentValue: 100,
+            value: 100,
+            effectiveDate: 1704067200,
+            tfm: { ...MOCK_AMENDMENT.tfm, coverEndDate: 1706745600000 },
+          });
         });
 
         it('should call APIM GIFT', async () => {
