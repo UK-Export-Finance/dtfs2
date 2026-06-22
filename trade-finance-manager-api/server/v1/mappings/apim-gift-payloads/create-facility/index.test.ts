@@ -117,6 +117,7 @@ describe('createFacility', () => {
       }),
       accrualSchedules: mapAccrualSchedules({
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
+        expiryDate,
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef,
