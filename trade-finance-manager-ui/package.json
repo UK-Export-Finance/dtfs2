@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^3.8.4",
-    "@babel/plugin-transform-runtime": "8.0.1",
+    "@babel/plugin-transform-runtime": "7.28.5",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "3.0.2",
     "@types/connect-flash": "^0.0.40",
@@ -80,7 +80,7 @@
   "devDependencies": {
     "@azure/msal": "^1.4.5",
     "@babel/core": "8.0.1",
-    "@babel/preset-env": "8.0.2",
+    "@babel/preset-env": "7.28.5",
     "@babel/runtime": "8.0.0",
     "@types/express": "^4.17.25",
     "@types/express-serve-static-core": "^4.19.7",
