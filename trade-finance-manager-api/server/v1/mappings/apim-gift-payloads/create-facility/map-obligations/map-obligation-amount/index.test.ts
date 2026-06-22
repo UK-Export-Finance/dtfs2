@@ -1,24 +1,8 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { mapBssEwcsObligationAmount, mapGefObligationAmount, mapObligationAmount } from '.';
+import { mapGefObligationAmount, mapObligationAmount } from '.';
 import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
-
-describe('mapBssEwcsObligationAmount', () => {
-  it('should return facilityAmount multiplied by ukefExposure', () => {
-    // Arrange
-    const facilityAmount = 1000;
-    const ukefExposure = 0.8;
-
-    // Act
-    const result = mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
-
-    // Assert
-    const expected = facilityAmount * ukefExposure;
-
-    expect(result).toEqual(expected);
-  });
-});
 
 describe('mapGefObligationAmount', () => {
   describe(`when facilityType is ${FACILITY_TYPE.CASH}`, () => {
@@ -99,7 +83,7 @@ describe('mapObligationAmount', () => {
   });
 
   describe('when isBssEwcsDeal is true and isGefDeal is false', () => {
-    it('should return the result of mapBssEwcsObligationAmount', () => {
+    it('should return facilityAmount', () => {
       // Arrange
       const isBssEwcsDeal = true;
 
@@ -112,9 +96,25 @@ describe('mapObligationAmount', () => {
       });
 
       // Assert
-      const expected = mapBssEwcsObligationAmount({ facilityAmount, ukefExposure });
+      const expected = facilityAmount;
 
       expect(result).toEqual(expected);
+    });
+
+    it('should return null when facilityAmount is null', () => {
+      // Arrange
+      const isBssEwcsDeal = true;
+
+      // Act
+      const result = mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal: false,
+        facilityAmount: null,
+        ukefExposure,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 
