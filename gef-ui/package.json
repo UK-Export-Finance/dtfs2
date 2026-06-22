@@ -83,6 +83,7 @@
     "@types/supertest": "^6.0.2",
     "babel-jest": "30.4.1",
     "babel-loader": "10.1.1",
+    "babel-plugin-polyfill-corejs3": "^1.0.0",
     "cookie-signature": "^1.2.2",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "eslint": "^8.57.1",
