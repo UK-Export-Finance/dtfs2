@@ -140,6 +140,7 @@ export const createFacility = async ({
     }),
     accrualSchedules: mapAccrualSchedules({
       dayCountBasis,
+      expiryDate,
       feeFrequency,
       feeType,
       guaranteeFeePayableToUkef,
