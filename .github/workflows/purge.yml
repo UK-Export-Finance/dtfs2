@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Azure config dir 🔧
         run: echo "AZURE_CONFIG_DIR=/tmp/azure-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.acr }}" >> $GITHUB_ENV

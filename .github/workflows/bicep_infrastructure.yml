@@ -46,7 +46,7 @@ jobs:
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Environment 🧪
         run: echo "Environment set to ${{ env.ENVIRONMENT }}"
@@ -86,7 +86,7 @@ jobs:
     environment: dev
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Login 🔐
         uses: azure/login@v3
