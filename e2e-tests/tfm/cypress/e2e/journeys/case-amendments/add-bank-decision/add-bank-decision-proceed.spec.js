@@ -17,20 +17,6 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   let dealId;
   const dealFacilities = [];
 
-  const logAmendmentButtonDiagnostics = () => {
-    cy.get('body').then(($body) => {
-      const hasAddAmendmentButton = $body.find('[data-cy="amendment--add-amendment-button"]').length > 0;
-      const hasContinueAmendmentButton = $body.find('[data-cy="continue-button"]').length > 0;
-      const hasTfmInProgressBar = $body.find('[data-cy="amendment--in-progress-bar"]').length > 0;
-      const hasPortalInProgressBar = $body.find('[data-cy="portal-amendment--in-progress-bar"]').length > 0;
-      const hasFutureEffectiveDateBar = $body.find('[data-cy="amendment-future-effective-date-facility-bar"]').length > 0;
-
-      cy.log(
-        `Amendment button diagnostics | add: ${hasAddAmendmentButton}, continue: ${hasContinueAmendmentButton}, tfmInProgressBar: ${hasTfmInProgressBar}, portalInProgressBar: ${hasPortalInProgressBar}, futureEffectiveDateBar: ${hasFutureEffectiveDateBar}`,
-      );
-    });
-  };
-
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -79,7 +65,30 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    logAmendmentButtonDiagnostics();
+
+    // Diagnostic: if Add button is missing, fetch and log amendment state
+    amendmentsPage.addAmendmentButton().then(($btn) => {
+      if (!$btn.length) {
+        cy.request(`/api/v1/tfm/facilities/${facilityId}/amendments`).then((resp) => {
+          const amendments = Array.isArray(resp.body) ? resp.body : [resp.body];
+          const inProgressAmendments = amendments.filter((a) => a.status === 'In progress');
+          const futureEffectiveAmendments = amendments.filter((a) => a.status === 'Acknowledged' && a.effectiveDate);
+          throw new Error(
+            `Add amendment button not found. Amendments state: ${JSON.stringify(
+              {
+                total: amendments.length,
+                inProgress: inProgressAmendments.length,
+                futureEffective: futureEffectiveAmendments.length,
+                amendments: amendments.map((a) => ({ id: a._id, status: a.status, effectiveDate: a.effectiveDate })),
+              },
+              null,
+              2,
+            )}`,
+          );
+        });
+      }
+    });
+
     amendmentsPage.addAmendmentButton().should('exist');
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     amendmentsPage.addAmendmentButton().click();
