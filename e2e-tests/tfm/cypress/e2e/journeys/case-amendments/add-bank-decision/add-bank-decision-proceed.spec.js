@@ -15,6 +15,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   const updatedFacilityTenor = '25 months';
   const addAmendmentSelector = '[data-cy="amendment--add-amendment-button"]';
   const addBankDecisionSelector = '[data-cy="add-amendment-bank-decision-link"]';
+  const addUnderwriterManagerDecisionSelector = '[data-cy="add-amendment-underwriter-manager-decision-link"]';
 
   let dealId;
   const dealFacilities = [];
@@ -113,10 +114,10 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const diagnosticSelectors = [
       addAmendmentSelector,
       addBankDecisionSelector,
+      addUnderwriterManagerDecisionSelector,
       '[data-cy="amendment--in-progress-bar"]',
       '[data-cy="amendment-future-effective-date-facility-bar"]',
       '[data-cy="portal-amendment--in-progress-bar"]',
-      '[data-cy="add-amendment-underwriter-manager-decision-link"]',
     ];
 
     return cy.location().then((location) =>
@@ -270,10 +271,17 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
     cy.login(UNDERWRITER_MANAGER_1);
+    const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addUnderwriterManagerDecisionSelector,
+      clickButton: () => {
+        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+      },
+    });
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
@@ -284,10 +292,17 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
     cy.login(UNDERWRITER_MANAGER_1);
+    const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addUnderwriterManagerDecisionSelector,
+      clickButton: () => {
+        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+      },
+    });
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
@@ -315,10 +330,17 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
     cy.login(UNDERWRITER_MANAGER_1);
+    const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addUnderwriterManagerDecisionSelector,
+      clickButton: () => {
+        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+      },
+    });
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
