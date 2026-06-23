@@ -13,11 +13,11 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   const facilityTenor = calculateTestFacilityTenorValue();
 
   const updatedFacilityTenor = '25 months';
+  const addAmendmentSelector = '[data-cy="amendment--add-amendment-button"]';
+  const addBankDecisionSelector = '[data-cy="add-amendment-bank-decision-link"]';
 
   let dealId;
   const dealFacilities = [];
-
-  const addBankDecisionSelector = '[data-cy="add-amendment-bank-decision-link"]';
 
   const tfmApiBaseUrl = () => `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
 
@@ -40,30 +40,24 @@ context('Amendments underwriting - add banks decision - proceed', () => {
       })
       .then((response) => response.body.token);
 
-  const compactAmendmentItem = (item) => {
-    if (!item || typeof item !== 'object') {
-      return item;
+  const compactAmendment = (amendment) => {
+    if (!amendment || typeof amendment !== 'object') {
+      return amendment;
     }
 
     return {
-      _id: item._id,
-      amendmentId: item.amendmentId,
-      status: item.status,
-      tfmStatus: item.tfmStatus,
-      portalStatus: item.portalStatus,
-      effectiveDate: item.effectiveDate,
-      bankDecision: item.bankDecision,
-      changeCoverEndDate: item.changeCoverEndDate,
-      changeFacilityValue: item.changeFacilityValue,
-      hasTfm: Boolean(item.tfm),
-      tfm: item.tfm
-        ? {
-            status: item.tfm.status,
-            coverEndDate: item.tfm.coverEndDate,
-            facilityValue: item.tfm.facilityValue,
-            ukefDecision: item.tfm.ukefDecision,
-          }
-        : null,
+      _id: amendment._id,
+      amendmentId: amendment.amendmentId,
+      status: amendment.status,
+      tfmStatus: amendment.tfmStatus,
+      portalStatus: amendment.portalStatus,
+      type: amendment.type,
+      submissionType: amendment.submissionType,
+      effectiveDate: amendment.effectiveDate,
+      changeCoverEndDate: amendment.changeCoverEndDate,
+      changeFacilityValue: amendment.changeFacilityValue,
+      submittedByPim: amendment.submittedByPim,
+      bankDecision: amendment.bankDecision,
     };
   };
 
@@ -71,8 +65,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     if (Array.isArray(body)) {
       return {
         type: 'array',
-        length: body.length,
-        items: body.slice(0, 3).map(compactAmendmentItem),
+        count: body.length,
+        items: body.slice(0, 5).map(compactAmendment),
       };
     }
 
@@ -84,15 +78,15 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
       if (Array.isArray(body.amendments)) {
         summary.amendmentCount = body.amendments.length;
-        summary.amendments = body.amendments.slice(0, 3).map(compactAmendmentItem);
+        summary.amendments = body.amendments.slice(0, 5).map(compactAmendment);
       }
 
       if (body.amendment) {
-        summary.amendment = compactAmendmentItem(body.amendment);
+        summary.amendment = compactAmendment(body.amendment);
       }
 
-      if (body.inProgress !== undefined) {
-        summary.inProgress = body.inProgress;
+      if (body.data && typeof body.data === 'string') {
+        summary.data = body.data;
       }
 
       return summary;
@@ -115,12 +109,13 @@ context('Amendments underwriting - add banks decision - proceed', () => {
         body: compactApiBody(response.body),
       }));
 
-  const collectAddBankDecisionDiagnostics = ({ facilityId }) => {
+  const collectButtonDiagnostics = ({ facilityId, buttonSelector }) => {
     const diagnosticSelectors = [
+      addAmendmentSelector,
       addBankDecisionSelector,
       '[data-cy="amendment--in-progress-bar"]',
       '[data-cy="amendment-future-effective-date-facility-bar"]',
-      '[data-cy="add-amendment-request-link"]',
+      '[data-cy="portal-amendment--in-progress-bar"]',
       '[data-cy="add-amendment-underwriter-manager-decision-link"]',
     ];
 
@@ -133,6 +128,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
         return getTfmApiToken().then((token) => {
           const diagnostics = {
+            missingSelector: buttonSelector,
             url: location.href,
             pathname: location.pathname,
             selectorState,
@@ -147,9 +143,21 @@ context('Amendments underwriting - add banks decision - proceed', () => {
             .then((facilityInProgress) => {
               diagnostics.endpointState.facilityInProgress = facilityInProgress;
             })
-            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/latest`, token))
-            .then((latestFacilityAmendment) => {
-              diagnostics.endpointState.latestFacilityAmendment = latestFacilityAmendment;
+            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed`, token))
+            .then((facilityCompleted) => {
+              diagnostics.endpointState.facilityCompleted = facilityCompleted;
+            })
+            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed/latest-value`, token))
+            .then((latestValue) => {
+              diagnostics.endpointState.latestCompletedValue = latestValue;
+            })
+            .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/in-progress`, token))
+            .then((dealInProgress) => {
+              diagnostics.endpointState.dealInProgress = dealInProgress;
+            })
+            .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/completed/latest`, token))
+            .then((dealLatestCompleted) => {
+              diagnostics.endpointState.dealLatestCompleted = dealLatestCompleted;
               return diagnostics;
             });
         });
@@ -157,14 +165,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     );
   };
 
-  const clickAddBankDecisionButtonWithDiagnostics = ({ facilityId }) =>
+  const clickButtonOrThrowDiagnostics = ({ facilityId, buttonSelector, clickButton }) =>
     cy.get('body', { timeout: 10000 }).then(($body) => {
-      if ($body.find(addBankDecisionSelector).length > 0) {
-        return amendmentsPage.addBankDecisionButton().first().click({ force: true });
+      if ($body.find(buttonSelector).length > 0) {
+        return clickButton();
       }
 
-      return collectAddBankDecisionDiagnostics({ facilityId }).then((diagnostics) => {
-        throw new Error(`Missing add bank decision button. ${JSON.stringify(diagnostics, null, 2)}`);
+      return collectButtonDiagnostics({ facilityId, buttonSelector }).then((diagnostics) => {
+        throw new Error(`Missing required button. ${JSON.stringify(diagnostics, null, 2)}`);
       });
     });
 
@@ -216,33 +224,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-
-    // Diagnostic: if Add button is missing, fetch and log amendment state
-    amendmentsPage.addAmendmentButton().then(($btn) => {
-      if (!$btn.length) {
-        cy.request(`/api/v1/tfm/facilities/${facilityId}/amendments`).then((resp) => {
-          const amendments = Array.isArray(resp.body) ? resp.body : [resp.body];
-          const inProgressAmendments = amendments.filter((a) => a.status === 'In progress');
-          const futureEffectiveAmendments = amendments.filter((a) => a.status === 'Acknowledged' && a.effectiveDate);
-          throw new Error(
-            `Add amendment button not found. Amendments state: ${JSON.stringify(
-              {
-                total: amendments.length,
-                inProgress: inProgressAmendments.length,
-                futureEffective: futureEffectiveAmendments.length,
-                amendments: amendments.map((a) => ({ id: a._id, status: a.status, effectiveDate: a.effectiveDate })),
-              },
-              null,
-              2,
-            )}`,
-          );
-        });
-      }
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addAmendmentSelector,
+      clickButton: () => {
+        amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+        return amendmentsPage.addAmendmentButton().click();
+      },
     });
-
-    amendmentsPage.addAmendmentButton().should('exist');
-    amendmentsPage.addAmendmentButton().contains('Add an amendment request');
-    amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
     cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
@@ -382,10 +371,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should show add decision button if logged in as PIM user', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
 
     cy.url().should('contain', '/banks-decision');
 
@@ -394,10 +387,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should show error if no decision selected and cancel should take back to the underwriting page', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
 
@@ -411,10 +408,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to request date page if selecting proceed on bank decision choice page', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
 
     amendmentsPage.amendmentBankChoiceProceedRadio().click();
     cy.clickContinueButton();
@@ -426,10 +427,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should show an error if no date or partial date is entered', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -476,10 +481,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to effective date page if date entered correctly', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -495,10 +504,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should show an error if no date or partial date is entered', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -536,10 +549,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to check answers page if date entered correctly', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -567,10 +584,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to individual pages with fields checked or filled when pressing change link', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -639,10 +660,14 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
   it('should take you to underwriting page once submit bank decision.  Amendments page should show proceed badge for banks decision', () => {
     cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
     const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    clickAddBankDecisionButtonWithDiagnostics({ facilityId });
+    clickButtonOrThrowDiagnostics({
+      facilityId,
+      buttonSelector: addBankDecisionSelector,
+      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+    });
     cy.url().should('contain', '/banks-decision');
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
