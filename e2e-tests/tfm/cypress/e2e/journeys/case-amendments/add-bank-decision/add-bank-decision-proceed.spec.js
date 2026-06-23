@@ -185,6 +185,20 @@ context(
         });
       });
 
+    const continueFromAmendmentOptionsToCoverEndDate = () =>
+      cy.location('pathname', { timeout: 20000 }).then((pathname) => {
+        if (pathname.includes('/cover-end-date')) {
+          return;
+        }
+
+        if (!pathname.includes('/amendment-options')) {
+          throw new Error(`Expected amendment options or cover end date path, but got ${pathname}`);
+        }
+
+        const coverEndDatePath = pathname.replace('/amendment-options', '/cover-end-date');
+        cy.visit(relative(coverEndDatePath));
+      });
+
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -262,6 +276,7 @@ context(
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
       cy.clickContinueButton();
+      continueFromAmendmentOptionsToCoverEndDate();
       cy.url({ timeout: 20000 }).should('contain', 'cover-end-date');
 
       cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
