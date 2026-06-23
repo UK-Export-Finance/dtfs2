@@ -9,722 +9,731 @@ import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
-context('Amendments underwriting - add banks decision - proceed', () => {
-  const facilityTenor = calculateTestFacilityTenorValue();
+context(
+  'Amendments underwriting - add banks decision - proceed',
+  {
+    retries: {
+      runMode: 0,
+      openMode: 0,
+    },
+  },
+  () => {
+    const facilityTenor = calculateTestFacilityTenorValue();
 
-  const updatedFacilityTenor = '25 months';
-  const addAmendmentSelector = '[data-cy="amendment--add-amendment-button"]';
-  const addBankDecisionSelector = '[data-cy="add-amendment-bank-decision-link"]';
-  const addUnderwriterManagerDecisionSelector = '[data-cy="add-amendment-underwriter-manager-decision-link"]';
+    const updatedFacilityTenor = '25 months';
+    const addAmendmentSelector = '[data-cy="amendment--add-amendment-button"]';
+    const addBankDecisionSelector = '[data-cy="add-amendment-bank-decision-link"]';
+    const addUnderwriterManagerDecisionSelector = '[data-cy="add-amendment-underwriter-manager-decision-link"]';
 
-  let dealId;
-  const dealFacilities = [];
+    let dealId;
+    const dealFacilities = [];
 
-  const tfmApiBaseUrl = () => `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
+    const tfmApiBaseUrl = () => `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
 
-  const tfmApiHeaders = (token) => ({
-    'x-api-key': Cypress.config('apiKey'),
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: token } : {}),
-  });
+    const tfmApiHeaders = (token) => ({
+      'x-api-key': Cypress.config('apiKey'),
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: token } : {}),
+    });
 
-  const getTfmApiToken = () =>
-    cy
-      .request({
-        url: `${tfmApiBaseUrl()}/v1/login`,
-        method: 'POST',
-        body: {
-          username: PIM_USER_1.username,
-          password: PIM_USER_1.password,
-        },
-        headers: tfmApiHeaders(),
-      })
-      .then((response) => response.body.token);
+    const getTfmApiToken = () =>
+      cy
+        .request({
+          url: `${tfmApiBaseUrl()}/v1/login`,
+          method: 'POST',
+          body: {
+            username: PIM_USER_1.username,
+            password: PIM_USER_1.password,
+          },
+          headers: tfmApiHeaders(),
+        })
+        .then((response) => response.body.token);
 
-  const compactAmendment = (amendment) => {
-    if (!amendment || typeof amendment !== 'object') {
-      return amendment;
-    }
+    const compactAmendment = (amendment) => {
+      if (!amendment || typeof amendment !== 'object') {
+        return amendment;
+      }
 
-    return {
-      _id: amendment._id,
-      amendmentId: amendment.amendmentId,
-      status: amendment.status,
-      tfmStatus: amendment.tfmStatus,
-      portalStatus: amendment.portalStatus,
-      type: amendment.type,
-      submissionType: amendment.submissionType,
-      effectiveDate: amendment.effectiveDate,
-      changeCoverEndDate: amendment.changeCoverEndDate,
-      changeFacilityValue: amendment.changeFacilityValue,
-      submittedByPim: amendment.submittedByPim,
-      bankDecision: amendment.bankDecision,
-    };
-  };
-
-  const compactApiBody = (body) => {
-    if (Array.isArray(body)) {
       return {
-        type: 'array',
-        count: body.length,
-        items: body.slice(0, 5).map(compactAmendment),
+        _id: amendment._id,
+        amendmentId: amendment.amendmentId,
+        status: amendment.status,
+        tfmStatus: amendment.tfmStatus,
+        portalStatus: amendment.portalStatus,
+        type: amendment.type,
+        submissionType: amendment.submissionType,
+        effectiveDate: amendment.effectiveDate,
+        changeCoverEndDate: amendment.changeCoverEndDate,
+        changeFacilityValue: amendment.changeFacilityValue,
+        submittedByPim: amendment.submittedByPim,
+        bankDecision: amendment.bankDecision,
       };
-    }
+    };
 
-    if (body && typeof body === 'object') {
-      const summary = {
-        type: 'object',
-        keys: Object.keys(body),
-      };
-
-      if (Array.isArray(body.amendments)) {
-        summary.amendmentCount = body.amendments.length;
-        summary.amendments = body.amendments.slice(0, 5).map(compactAmendment);
+    const compactApiBody = (body) => {
+      if (Array.isArray(body)) {
+        return {
+          type: 'array',
+          count: body.length,
+          items: body.slice(0, 5).map(compactAmendment),
+        };
       }
 
-      if (body.amendment) {
-        summary.amendment = compactAmendment(body.amendment);
+      if (body && typeof body === 'object') {
+        const summary = {
+          type: 'object',
+          keys: Object.keys(body),
+        };
+
+        if (Array.isArray(body.amendments)) {
+          summary.amendmentCount = body.amendments.length;
+          summary.amendments = body.amendments.slice(0, 5).map(compactAmendment);
+        }
+
+        if (body.amendment) {
+          summary.amendment = compactAmendment(body.amendment);
+        }
+
+        if (body.data && typeof body.data === 'string') {
+          summary.data = body.data;
+        }
+
+        return summary;
       }
 
-      if (body.data && typeof body.data === 'string') {
-        summary.data = body.data;
-      }
+      return body;
+    };
 
-      return summary;
-    }
+    const fetchEndpointSummary = (path, token) =>
+      cy
+        .request({
+          url: `${tfmApiBaseUrl()}${path}`,
+          method: 'GET',
+          headers: tfmApiHeaders(token),
+          failOnStatusCode: false,
+        })
+        .then((response) => ({
+          path,
+          status: response.status,
+          body: compactApiBody(response.body),
+        }));
 
-    return body;
-  };
+    const collectButtonDiagnostics = ({ facilityId, buttonSelector }) => {
+      const diagnosticSelectors = [
+        addAmendmentSelector,
+        addBankDecisionSelector,
+        addUnderwriterManagerDecisionSelector,
+        '[data-cy="amendment--in-progress-bar"]',
+        '[data-cy="amendment-future-effective-date-facility-bar"]',
+        '[data-cy="portal-amendment--in-progress-bar"]',
+      ];
 
-  const fetchEndpointSummary = (path, token) =>
-    cy
-      .request({
-        url: `${tfmApiBaseUrl()}${path}`,
-        method: 'GET',
-        headers: tfmApiHeaders(token),
-        failOnStatusCode: false,
-      })
-      .then((response) => ({
-        path,
-        status: response.status,
-        body: compactApiBody(response.body),
-      }));
+      return cy.location().then((location) =>
+        cy.get('body').then(($body) => {
+          const selectorState = diagnosticSelectors.reduce((acc, selector) => {
+            const count = $body.find(selector).length;
+            return { ...acc, [selector]: count };
+          }, {});
 
-  const collectButtonDiagnostics = ({ facilityId, buttonSelector }) => {
-    const diagnosticSelectors = [
-      addAmendmentSelector,
-      addBankDecisionSelector,
-      addUnderwriterManagerDecisionSelector,
-      '[data-cy="amendment--in-progress-bar"]',
-      '[data-cy="amendment-future-effective-date-facility-bar"]',
-      '[data-cy="portal-amendment--in-progress-bar"]',
-    ];
+          return getTfmApiToken().then((token) => {
+            const diagnostics = {
+              missingSelector: buttonSelector,
+              url: location.href,
+              pathname: location.pathname,
+              selectorState,
+              endpointState: {},
+            };
 
-    return cy.location().then((location) =>
-      cy.get('body').then(($body) => {
-        const selectorState = diagnosticSelectors.reduce((acc, selector) => {
-          const count = $body.find(selector).length;
-          return { ...acc, [selector]: count };
-        }, {});
+            return fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments`, token)
+              .then((facilityAmendments) => {
+                diagnostics.endpointState.facilityAmendments = facilityAmendments;
+              })
+              .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/in-progress`, token))
+              .then((facilityInProgress) => {
+                diagnostics.endpointState.facilityInProgress = facilityInProgress;
+              })
+              .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed`, token))
+              .then((facilityCompleted) => {
+                diagnostics.endpointState.facilityCompleted = facilityCompleted;
+              })
+              .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed/latest-value`, token))
+              .then((latestValue) => {
+                diagnostics.endpointState.latestCompletedValue = latestValue;
+              })
+              .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/in-progress`, token))
+              .then((dealInProgress) => {
+                diagnostics.endpointState.dealInProgress = dealInProgress;
+              })
+              .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/completed/latest`, token))
+              .then((dealLatestCompleted) => {
+                diagnostics.endpointState.dealLatestCompleted = dealLatestCompleted;
+                return diagnostics;
+              });
+          });
+        }),
+      );
+    };
 
-        return getTfmApiToken().then((token) => {
-          const diagnostics = {
-            missingSelector: buttonSelector,
-            url: location.href,
-            pathname: location.pathname,
-            selectorState,
-            endpointState: {},
-          };
+    const clickButtonOrThrowDiagnostics = ({ facilityId, buttonSelector, clickButton }) =>
+      cy.get('body', { timeout: 10000 }).then(($body) => {
+        if ($body.find(buttonSelector).length > 0) {
+          return clickButton();
+        }
 
-          return fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments`, token)
-            .then((facilityAmendments) => {
-              diagnostics.endpointState.facilityAmendments = facilityAmendments;
-            })
-            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/in-progress`, token))
-            .then((facilityInProgress) => {
-              diagnostics.endpointState.facilityInProgress = facilityInProgress;
-            })
-            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed`, token))
-            .then((facilityCompleted) => {
-              diagnostics.endpointState.facilityCompleted = facilityCompleted;
-            })
-            .then(() => fetchEndpointSummary(`/v1/facilities/${facilityId}/amendments/completed/latest-value`, token))
-            .then((latestValue) => {
-              diagnostics.endpointState.latestCompletedValue = latestValue;
-            })
-            .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/in-progress`, token))
-            .then((dealInProgress) => {
-              diagnostics.endpointState.dealInProgress = dealInProgress;
-            })
-            .then(() => fetchEndpointSummary(`/v1/deals/${dealId}/amendments/completed/latest`, token))
-            .then((dealLatestCompleted) => {
-              diagnostics.endpointState.dealLatestCompleted = dealLatestCompleted;
-              return diagnostics;
-            });
+        return collectButtonDiagnostics({ facilityId, buttonSelector }).then((diagnostics) => {
+          throw new Error(`Missing required button. ${JSON.stringify(diagnostics, null, 2)}`);
         });
-      }),
-    );
-  };
+      });
 
-  const clickButtonOrThrowDiagnostics = ({ facilityId, buttonSelector, clickButton }) =>
-    cy.get('body', { timeout: 10000 }).then(($body) => {
-      if ($body.find(buttonSelector).length > 0) {
-        return clickButton();
-      }
+    before(() => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+        dealId = insertedDeal._id;
 
-      return collectButtonDiagnostics({ facilityId, buttonSelector }).then((diagnostics) => {
-        throw new Error(`Missing required button. ${JSON.stringify(diagnostics, null, 2)}`);
+        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+
+        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+          dealFacilities.push(...createdFacilities);
+        });
+
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 
-  before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-      dealId = insertedDeal._id;
+    after(() => {
+      cy.deleteDeals(dealId, ADMIN);
+      dealFacilities.forEach((facility) => {
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
+      });
+    });
 
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+    it('should display facility details and values on deal and facility page', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
+      cy.visit(relative(`/case/${dealId}/deal`));
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
+      facilityPage.facilityTenor().contains(facilityTenor);
+    });
+
+    it('should submit an amendment request', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+      facilityPage.facilityTabAmendments().click();
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addAmendmentSelector,
+        clickButton: () => {
+          amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+          return amendmentsPage.addAmendmentButton().click();
+        },
+      });
+      cy.url().should('contain', 'request-date');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', 'request-approval');
+      // manual approval
+      amendmentsPage.amendmentRequestApprovalYes().click();
+      cy.clickContinueButton();
+
+      cy.url().should('contain', 'amendment-options');
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
+
+      // update both the cover end date and the facility value
+      amendmentsPage.amendmentCoverEndDateCheckbox().click();
+      amendmentsPage.amendmentFacilityValueCheckbox().click();
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
+      cy.clickContinueButton();
+      cy.url().should('contain', 'cover-end-date');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', 'facility-value');
+      amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
+      cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
+
+      cy.clickContinueButton();
+      cy.url().should('contain', 'check-answers');
+      cy.clickContinueButton();
+    });
+
+    it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
+      cy.login(UNDERWRITER_MANAGER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addUnderwriterManagerDecisionSelector,
+        clickButton: () => {
+          pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+          return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+        },
       });
 
-      cy.submitDeal(dealId, dealType, PIM_USER_1);
-    });
-  });
+      cy.url().should('contain', '/cover-end-date/managers-decision');
+      amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
+      cy.clickContinueButton();
 
-  after(() => {
-    cy.deleteDeals(dealId, ADMIN);
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
-    });
-  });
-
-  it('should display facility details and values on deal and facility page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-
-    cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
-
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
-
-    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
-    facilityPage.facilityTenor().contains(facilityTenor);
-  });
-
-  it('should submit an amendment request', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-    facilityPage.facilityTabAmendments().click();
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addAmendmentSelector,
-      clickButton: () => {
-        amendmentsPage.addAmendmentButton().contains('Add an amendment request');
-        return amendmentsPage.addAmendmentButton().click();
-      },
-    });
-    cy.url().should('contain', 'request-date');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', 'request-approval');
-    // manual approval
-    amendmentsPage.amendmentRequestApprovalYes().click();
-    cy.clickContinueButton();
-
-    cy.url().should('contain', 'amendment-options');
-    amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
-    amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-
-    // update both the cover end date and the facility value
-    amendmentsPage.amendmentCoverEndDateCheckbox().click();
-    amendmentsPage.amendmentFacilityValueCheckbox().click();
-    amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
-    amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    cy.clickContinueButton();
-    cy.url().should('contain', 'cover-end-date');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', 'facility-value');
-    amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
-
-    cy.clickContinueButton();
-    cy.url().should('contain', 'check-answers');
-    cy.clickContinueButton();
-  });
-
-  it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addUnderwriterManagerDecisionSelector,
-      clickButton: () => {
-        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-      },
+      cy.url().should('contain', '/facility-value/managers-decision');
     });
 
-    cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/facility-value/managers-decision');
-  });
-
-  it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addUnderwriterManagerDecisionSelector,
-      clickButton: () => {
-        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-      },
-    });
-
-    cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/facility-value/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().click();
-    cy.clickContinueButton();
-    cy.url().should('contain', '/managers-conditions');
-
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
-
-    amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-    amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
-
-    amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
-    amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
-    amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
-
-    continueButton().should('be.visible');
-  });
-
-  it('should take you to `Add conditions, reasons and comments` summary page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addUnderwriterManagerDecisionSelector,
-      clickButton: () => {
-        pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-        return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-      },
-    });
-
-    cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/facility-value/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/managers-conditions');
-
-    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionConditions(), 'This is a list of conditions');
-    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionReasons(), 'This is the reason for declining the amendment');
-    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionComments(), 'This is a comment visible only to UKEF staff');
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/managers-conditions/summary');
-    amendmentsPage.amendmentSendToBankButton().should('be.visible');
-
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
-
-    amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-    amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
-
-    amendmentsPage.amendmentSendToBankButton().click();
-  });
-
-  it('should display facility details and values on deal and facility page as bank decision not added yet', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-
-    cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
-
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
-
-    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
-    facilityPage.facilityTenor().contains(facilityTenor);
-  });
-
-  it('should show add decision button if logged in as PIM user', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-
-    cy.url().should('contain', '/banks-decision');
-
-    amendmentsPage.amendmentBankChoiceHeading().contains("What is the bank's decision?");
-  });
-
-  it('should show error if no decision selected and cancel should take back to the underwriting page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision');
-    errorSummary().contains('Select if the bank wants to proceed or withdraw');
-    amendmentsPage.errorMessage().contains('Select if the bank wants to proceed or withdraw');
-
-    cy.clickCancelLink();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-  });
-
-  it('should take you to request date page if selecting proceed on bank decision choice page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-
-    amendmentsPage.amendmentBankChoiceProceedRadio().click();
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage.amendmentBankDecisionReceivedDateHeading().contains('What date did UKEF receive the bank’s decision?');
-    amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
-  });
-
-  it('should show an error if no date or partial date is entered', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-
-    errorSummary().contains("Enter the date UKEF received the bank's decision");
-    amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    errorSummary().contains("Enter the date UKEF received the bank's decision");
-    amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2o22' });
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 022' });
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 22' });
-
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-  });
-
-  it('should take you to effective date page if date entered correctly', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/effective-date');
-    amendmentsPage.amendmentBankDecisionEffectiveDateHeading().contains('What date will the amendment be effective from?');
-    amendmentsPage.amendmentBankDecisionEffectiveDateHint().contains('For example, 31 3 1980');
-  });
-
-  it('should show an error if no date or partial date is entered', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/effective-date');
-    errorSummary().contains('Enter the date the amendment will be effective from');
-    amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/effective-date');
-    errorSummary().contains('Enter the date the amendment will be effective from');
-    amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/effective-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: yearWithZeroLetter });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/effective-date');
-    errorSummary().contains('The year must include 4 numbers');
-    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
-  });
-
-  it('should take you to check answers page if date entered correctly', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
-
-    cy.clickContinueButton();
-
-    cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.amendmentBankDecisionCheckAnswersHeading().contains('Check your answers');
-    amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains("Bank's decision");
-    amendmentsPage.amendmentBankDecisionCheckDecisionValue().contains('Proceed');
-    amendmentsPage.amendmentBankDecisionCheckDecisionLink().contains('Change');
-
-    amendmentsPage.amendmentBankDecisionCheckReceivedHeading().contains('Date decision received');
-    amendmentsPage.amendmentBankDecisionCheckReceivedValue().contains('05 Jun 2022');
-    amendmentsPage.amendmentBankDecisionCheckReceivedLink().contains('Change');
-
-    amendmentsPage.amendmentBankDecisionCheckEffectiveHeading().contains('Date the amendment will be effective from');
-    amendmentsPage.amendmentBankDecisionCheckEffectiveValue().contains('05 Jun 2022');
-    amendmentsPage.amendmentBankDecisionCheckEffectiveLink().contains('Change');
-  });
-
-  it('should take you to individual pages with fields checked or filled when pressing change link', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
-    });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/check-answers');
-
-    amendmentsPage.amendmentBankDecisionCheckDecisionLink().click();
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.amendmentBankDecisionCheckReceivedLink().click();
-
-    cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage
-      .amendmentBankDecisionReceivedDateDay()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('05');
+    it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
+      cy.login(UNDERWRITER_MANAGER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addUnderwriterManagerDecisionSelector,
+        clickButton: () => {
+          pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+          return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+        },
       });
-    amendmentsPage
-      .amendmentBankDecisionReceivedDateMonth()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('06');
-      });
-    amendmentsPage
-      .amendmentBankDecisionReceivedDateYear()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('2022');
-      });
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.amendmentBankDecisionCheckEffectiveLink().click();
 
-    cy.url().should('contain', '/banks-decision/effective-date');
-    amendmentsPage
-      .amendmentBankDecisionEffectiveDateDay()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('05');
-      });
-    amendmentsPage
-      .amendmentBankDecisionEffectiveDateMonth()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('06');
-      });
-    amendmentsPage
-      .amendmentBankDecisionEffectiveDateYear()
-      .invoke('attr', 'value')
-      .then((value) => {
-        expect(value).to.equal('2022');
-      });
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/check-answers');
-  });
+      cy.url().should('contain', '/cover-end-date/managers-decision');
+      amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
+      cy.clickContinueButton();
 
-  it('should take you to underwriting page once submit bank decision.  Amendments page should show proceed badge for banks decision', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/underwriting`));
+      cy.url().should('contain', '/facility-value/managers-decision');
+      amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().click();
+      cy.clickContinueButton();
+      cy.url().should('contain', '/managers-conditions');
 
-    clickButtonOrThrowDiagnostics({
-      facilityId,
-      buttonSelector: addBankDecisionSelector,
-      clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+
+      amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+      amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+
+      amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
+      amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
+      amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
+
+      continueButton().should('be.visible');
     });
-    cy.url().should('contain', '/banks-decision');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/received-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/effective-date');
-    cy.clickContinueButton();
-    cy.url().should('contain', '/banks-decision/check-answers');
-    cy.clickContinueButton();
 
-    caseSubNavigation.dealLink().click();
-    caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();
-    facilityPage.facilityTabAmendments().click();
+    it('should take you to `Add conditions, reasons and comments` summary page', () => {
+      cy.login(UNDERWRITER_MANAGER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
-    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '05 June 2022');
-  });
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addUnderwriterManagerDecisionSelector,
+        clickButton: () => {
+          pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+          return pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+        },
+      });
 
-  it('should display amendment changed values on deal and facility page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
+      cy.url().should('contain', '/cover-end-date/managers-decision');
+      amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
+      cy.clickContinueButton();
 
-    cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(updatedFacilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
-    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
+      cy.url().should('contain', '/facility-value/managers-decision');
+      amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/managers-conditions');
 
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+      cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionConditions(), 'This is a list of conditions');
+      cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionReasons(), 'This is the reason for declining the amendment');
+      cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionComments(), 'This is a comment visible only to UKEF staff');
 
-    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
+      cy.clickContinueButton();
+      cy.url().should('contain', '/managers-conditions/summary');
+      amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
-    facilityPage.facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
-    facilityPage.facilityTenor().contains(updatedFacilityTenor);
-  });
-});
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+
+      amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+      amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+
+      amendmentsPage.amendmentSendToBankButton().click();
+    });
+
+    it('should display facility details and values on deal and facility page as bank decision not added yet', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+
+      cy.visit(relative(`/case/${dealId}/deal`));
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
+      facilityPage.facilityTenor().contains(facilityTenor);
+    });
+
+    it('should show add decision button if logged in as PIM user', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+
+      cy.url().should('contain', '/banks-decision');
+
+      amendmentsPage.amendmentBankChoiceHeading().contains("What is the bank's decision?");
+    });
+
+    it('should show error if no decision selected and cancel should take back to the underwriting page', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision');
+      errorSummary().contains('Select if the bank wants to proceed or withdraw');
+      amendmentsPage.errorMessage().contains('Select if the bank wants to proceed or withdraw');
+
+      cy.clickCancelLink();
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
+    });
+
+    it('should take you to request date page if selecting proceed on bank decision choice page', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+
+      amendmentsPage.amendmentBankChoiceProceedRadio().click();
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/received-date');
+      amendmentsPage.amendmentBankDecisionReceivedDateHeading().contains('What date did UKEF receive the bank’s decision?');
+      amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
+    });
+
+    it('should show an error if no date or partial date is entered', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+
+      errorSummary().contains("Enter the date UKEF received the bank's decision");
+      amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
+
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      errorSummary().contains("Enter the date UKEF received the bank's decision");
+      amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
+
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2o22' });
+
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 022' });
+
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 22' });
+
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+    });
+
+    it('should take you to effective date page if date entered correctly', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      amendmentsPage.amendmentBankDecisionEffectiveDateHeading().contains('What date will the amendment be effective from?');
+      amendmentsPage.amendmentBankDecisionEffectiveDateHint().contains('For example, 31 3 1980');
+    });
+
+    it('should show an error if no date or partial date is entered', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      errorSummary().contains('Enter the date the amendment will be effective from');
+      amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      errorSummary().contains('Enter the date the amendment will be effective from');
+      amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: yearWithZeroLetter });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      errorSummary().contains('The year must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+    });
+
+    it('should take you to check answers page if date entered correctly', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('contain', '/banks-decision/check-answers');
+      amendmentsPage.amendmentBankDecisionCheckAnswersHeading().contains('Check your answers');
+      amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains("Bank's decision");
+      amendmentsPage.amendmentBankDecisionCheckDecisionValue().contains('Proceed');
+      amendmentsPage.amendmentBankDecisionCheckDecisionLink().contains('Change');
+
+      amendmentsPage.amendmentBankDecisionCheckReceivedHeading().contains('Date decision received');
+      amendmentsPage.amendmentBankDecisionCheckReceivedValue().contains('05 Jun 2022');
+      amendmentsPage.amendmentBankDecisionCheckReceivedLink().contains('Change');
+
+      amendmentsPage.amendmentBankDecisionCheckEffectiveHeading().contains('Date the amendment will be effective from');
+      amendmentsPage.amendmentBankDecisionCheckEffectiveValue().contains('05 Jun 2022');
+      amendmentsPage.amendmentBankDecisionCheckEffectiveLink().contains('Change');
+    });
+
+    it('should take you to individual pages with fields checked or filled when pressing change link', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/check-answers');
+
+      amendmentsPage.amendmentBankDecisionCheckDecisionLink().click();
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/check-answers');
+      amendmentsPage.amendmentBankDecisionCheckReceivedLink().click();
+
+      cy.url().should('contain', '/banks-decision/received-date');
+      amendmentsPage
+        .amendmentBankDecisionReceivedDateDay()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('05');
+        });
+      amendmentsPage
+        .amendmentBankDecisionReceivedDateMonth()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('06');
+        });
+      amendmentsPage
+        .amendmentBankDecisionReceivedDateYear()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('2022');
+        });
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/check-answers');
+      amendmentsPage.amendmentBankDecisionCheckEffectiveLink().click();
+
+      cy.url().should('contain', '/banks-decision/effective-date');
+      amendmentsPage
+        .amendmentBankDecisionEffectiveDateDay()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('05');
+        });
+      amendmentsPage
+        .amendmentBankDecisionEffectiveDateMonth()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('06');
+        });
+      amendmentsPage
+        .amendmentBankDecisionEffectiveDateYear()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('2022');
+        });
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/check-answers');
+    });
+
+    it('should take you to underwriting page once submit bank decision.  Amendments page should show proceed badge for banks decision', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      clickButtonOrThrowDiagnostics({
+        facilityId,
+        buttonSelector: addBankDecisionSelector,
+        clickButton: () => amendmentsPage.addBankDecisionButton().click({ force: true }),
+      });
+      cy.url().should('contain', '/banks-decision');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/received-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/effective-date');
+      cy.clickContinueButton();
+      cy.url().should('contain', '/banks-decision/check-answers');
+      cy.clickContinueButton();
+
+      caseSubNavigation.dealLink().click();
+      caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();
+      facilityPage.facilityTabAmendments().click();
+
+      amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '05 June 2022');
+    });
+
+    it('should display amendment changed values on deal and facility page', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+
+      cy.visit(relative(`/case/${dealId}/deal`));
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(updatedFacilityTenor);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
+
+      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
+
+      facilityPage.facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
+      facilityPage.facilityTenor().contains(updatedFacilityTenor);
+    });
+  },
+);
