@@ -98,7 +98,7 @@ bankRouter.route('/').get(getBanks).post(createBankController.createBankPost);
  *                     type: string
  *                     example: Bank 1
  *                   order:
- *                     type: number
+ *                     type: integer
  *                     example: 1
  */
 bankRouter.route('/portal-bank-list').get(getPortalBankList);
