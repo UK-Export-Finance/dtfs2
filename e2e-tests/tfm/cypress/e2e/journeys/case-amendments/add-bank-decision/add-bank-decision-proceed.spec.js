@@ -257,8 +257,8 @@ context(
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
 
       // update both the cover end date and the facility value
-      amendmentsPage.amendmentCoverEndDateCheckbox().click();
-      amendmentsPage.amendmentFacilityValueCheckbox().click();
+      amendmentsPage.amendmentCoverEndDateCheckbox().check({ force: true });
+      amendmentsPage.amendmentFacilityValueCheckbox().check({ force: true });
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
       cy.clickContinueButton();
