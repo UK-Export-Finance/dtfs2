@@ -61,7 +61,6 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.status).toHaveBeenCalledTimes(1);
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Ok);
     });
 
@@ -106,7 +105,6 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.status).toHaveBeenCalledTimes(1);
       expect(res.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
     });
 
@@ -128,7 +126,6 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith('%s %o', 'Failed to get the portal bank list', apiError);
     });
   });

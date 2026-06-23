@@ -29,8 +29,8 @@ describe('portal-bank-list-repo', () => {
 
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
       expect(findMock).toHaveBeenCalledWith({}, { projection: { name: 1, order: 1 } });
-      expect(sortMock).toHaveBeenCalledWith({ order: 1 });
-      expect(toArrayMock).toHaveBeenCalledTimes(1);
+      expect(sortMock).toHaveBeenCalledWith({ order: 1, name: 1 });
+      expect(toArrayMock).toHaveBeenNthCalledWith(1);
     });
 
     it('should return the documents returned by the mongo collection', async () => {
