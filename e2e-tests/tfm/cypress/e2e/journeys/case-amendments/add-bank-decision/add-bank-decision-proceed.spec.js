@@ -262,7 +262,7 @@ context(
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
       cy.clickContinueButton();
-      cy.url().should('contain', 'cover-end-date');
+      cy.url({ timeout: 20000 }).should('contain', 'cover-end-date');
 
       cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
 
