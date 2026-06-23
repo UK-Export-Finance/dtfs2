@@ -51,5 +51,5 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
                 : TCollectionName extends 'deals'
                   ? Deal
                   : TCollectionName extends 'portal-bank-list'
-                    ? PortalBankListEntry
+                    ? WithId<PortalBankListEntry>
                     : WithId<any>;
