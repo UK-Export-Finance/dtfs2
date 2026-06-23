@@ -12,7 +12,10 @@ const getPortalBankListForLoginPage = async () => {
   try {
     return await api.getPortalBankList();
   } catch (error) {
-    console.error('Failed to load portal bank list for login page %o', error);
+    const status = typeof error?.response?.status === 'number' ? error.response.status : undefined;
+    const message = typeof error?.message === 'string' ? error.message : 'Unknown error';
+
+    console.error('Failed to load portal bank list for login page: %s (status: %s)', message, status);
 
     return [];
   }

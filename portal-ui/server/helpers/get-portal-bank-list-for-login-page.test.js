@@ -51,10 +51,10 @@ describe('getPortalBankListForLoginPage', () => {
       expect(result).toEqual([]);
     });
 
-    it('should log the error', async () => {
+    it('should log a redacted error message with status', async () => {
       await getPortalBankListForLoginPage();
 
-      expect(console.error).toHaveBeenCalledWith('Failed to load portal bank list for login page %o', error);
+      expect(console.error).toHaveBeenCalledWith('Failed to load portal bank list for login page: %s (status: %s)', 'Request failed with status code 503', 503);
     });
   });
 });
