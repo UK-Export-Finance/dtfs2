@@ -69,7 +69,6 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.send).toHaveBeenCalledTimes(1);
       expect(res.send).toHaveBeenNthCalledWith(1, entries);
     });
   });
@@ -113,8 +112,7 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith({
+      expect(res.send).toHaveBeenNthCalledWith(1, {
         status: HttpStatusCode.BadRequest,
         message: `Failed to get the portal bank list: ${apiError.message}`,
         code: apiError.code,
@@ -142,8 +140,7 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
     });
 
     it('should respond with a generic error body', async () => {
@@ -151,8 +148,7 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith({
+      expect(res.send).toHaveBeenNthCalledWith(1, {
         status: HttpStatusCode.InternalServerError,
         message: 'Failed to get the portal bank list',
       });
@@ -163,8 +159,7 @@ describe('getPortalBankList', () => {
 
       await invokeController(res);
 
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('%s %o', 'Failed to get the portal bank list', unknownError);
+      expect(console.error).toHaveBeenNthCalledWith(1, '%s %o', 'Failed to get the portal bank list', unknownError);
     });
   });
 });
