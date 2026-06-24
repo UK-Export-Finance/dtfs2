@@ -12,10 +12,12 @@ const getPortalBankList = async (_req, res) => {
 
     return res.status(HttpStatusCode.Ok).send(banks);
   } catch (error) {
-    const status = typeof error.response?.status === 'number' ? error.response.status : HttpStatusCode.InternalServerError;
+    const status = typeof error?.response?.status === 'number' ? error.response.status : HttpStatusCode.InternalServerError;
+    const errorMessage = typeof error?.message === 'string' ? error.message : 'Unknown error';
+    const errorCode = typeof error?.code === 'string' ? error.code : 'UNKNOWN';
     const message = 'Failed to get portal bank list';
 
-    console.error('%s %o', message, error);
+    console.error('%s: %s (status: %s, code: %s)', message, errorMessage, status, errorCode);
 
     return res.status(status).send({ status, message });
   }

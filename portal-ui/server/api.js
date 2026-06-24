@@ -613,7 +613,7 @@ const banks = async (token) => {
 };
 
 /**
- * Get the curated list of banks shown on the portal homepage. The list is read-only.
+ * Get the curated, read-only list of banks shown in the "before you start" section of the unauthenticated portal login page.
  * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The list of banks
  */
 const getPortalBankList = async () => {

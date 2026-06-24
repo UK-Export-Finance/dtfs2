@@ -34,6 +34,7 @@ const router = express.Router();
  */
 router.get(LANDING_PAGES.LOGIN, async (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
+  // Safe as `async` under Express 4: `getPortalBankListForLoginPage()` never rejects (returns `[]` on failure).
   const banks = await getPortalBankListForLoginPage();
 
   return res.render('login/index.njk', {

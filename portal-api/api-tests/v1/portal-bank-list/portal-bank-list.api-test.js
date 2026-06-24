@@ -25,6 +25,7 @@ describe('/v1/portal-bank-list', () => {
   describe('GET /v1/portal-bank-list', () => {
     beforeEach(() => {
       jest.clearAllMocks();
+      jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     afterEach(() => {
@@ -57,7 +58,6 @@ describe('/v1/portal-bank-list', () => {
       });
 
       it('should return 500 with an error body when the central api throws an unknown error', async () => {
-        jest.spyOn(console, 'error').mockImplementation(() => {});
         api.getPortalBankList.mockRejectedValueOnce(new Error('Network down'));
 
         const { status, body } = await get(URL, { headers: validHeaders });

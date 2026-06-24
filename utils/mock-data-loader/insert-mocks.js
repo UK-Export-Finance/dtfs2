@@ -22,6 +22,13 @@ const insertMocks = async (mockDataLoaderToken, e2e, params) => {
   console.info('Portal bank list');
   const portalBankListCollection = await db.getCollection(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
   await portalBankListCollection.deleteMany({});
+  /**
+   * Drop any existing non-`_id_` indexes so re-running the loader against a
+   * long-lived environment cannot fail with `IndexOptionsConflict` if the
+   * collection already has a differently-configured index on `{ name: 1 }`
+   * or `{ order: 1 }`.
+   */
+  await portalBankListCollection.dropIndexes();
   await portalBankListCollection.createIndex({ name: 1 }, { unique: true });
   await portalBankListCollection.createIndex({ order: 1 }, { unique: true });
   if (MOCK_PORTAL_BANK_LIST.length > 0) {

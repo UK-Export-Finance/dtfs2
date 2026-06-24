@@ -57,4 +57,18 @@ describe('getPortalBankListForLoginPage', () => {
       expect(console.error).toHaveBeenCalledWith('Failed to load portal bank list for login page: %s (status: %s)', 'Request failed with status code 503', 503);
     });
   });
+
+  describe('when the api call fails without a response status', () => {
+    const error = new Error('Network unreachable');
+
+    beforeEach(() => {
+      jest.mocked(api.getPortalBankList).mockRejectedValue(error);
+    });
+
+    it("should log the status segment as 'unknown' rather than undefined", async () => {
+      await getPortalBankListForLoginPage();
+
+      expect(console.error).toHaveBeenCalledWith('Failed to load portal bank list for login page: %s (status: %s)', 'Network unreachable', 'unknown');
+    });
+  });
 });

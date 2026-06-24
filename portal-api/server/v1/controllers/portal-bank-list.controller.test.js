@@ -36,10 +36,8 @@ describe('getPortalBankList', () => {
 
       await getPortalBankList({}, res);
 
-      expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-      expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith(banks);
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Ok);
+      expect(res.send).toHaveBeenNthCalledWith(1, banks);
     });
   });
 
@@ -62,6 +60,7 @@ describe('getPortalBankList', () => {
     const axiosError = Object.assign(new Error('Bad Gateway'), {
       isAxiosError: true,
       response: { status: HttpStatusCode.BadGateway },
+      code: 'ERR_BAD_RESPONSE',
     });
 
     beforeEach(() => {
@@ -80,12 +79,19 @@ describe('getPortalBankList', () => {
       });
     });
 
-    it('should log the error to console.error', async () => {
+    it('should log a sanitized error line with status, code and message (never the full error object)', async () => {
       const res = getMockResponse();
 
       await getPortalBankList({}, res);
 
-      expect(console.error).toHaveBeenCalledWith('%s %o', 'Failed to get portal bank list', axiosError);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        '%s: %s (status: %s, code: %s)',
+        'Failed to get portal bank list',
+        'Bad Gateway',
+        HttpStatusCode.BadGateway,
+        'ERR_BAD_RESPONSE',
+      );
     });
   });
 
@@ -103,6 +109,29 @@ describe('getPortalBankList', () => {
 
       expect(res.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenCalledWith({
+        status: HttpStatusCode.InternalServerError,
+        message: 'Failed to get portal bank list',
+      });
+    });
+  });
+
+  describe.each([
+    ['null', null],
+    ['undefined', undefined],
+    ['a string', 'something went wrong'],
+    ['a number', 500],
+  ])('when the central API throws %s (non-object error)', (_label, thrown) => {
+    beforeEach(() => {
+      jest.mocked(api.getPortalBankList).mockRejectedValue(thrown);
+    });
+
+    it(`should respond with a ${HttpStatusCode.InternalServerError} without throwing inside the catch`, async () => {
+      const res = getMockResponse();
+
+      await getPortalBankList({}, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, {
         status: HttpStatusCode.InternalServerError,
         message: 'Failed to get portal bank list',
       });
