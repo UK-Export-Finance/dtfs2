@@ -10,10 +10,10 @@ import { mongoDbClient as db } from '../drivers/db-client';
 export const getAllPortalBankListEntries = async (): Promise<WithId<PortalBankListEntry>[]> => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
 
-  const docs = await collection
+  const banks = await collection
     .find({}, { projection: { name: 1, order: 1 } })
     .sort({ order: 1, name: 1 })
     .toArray();
 
-  return docs;
+  return banks;
 };
