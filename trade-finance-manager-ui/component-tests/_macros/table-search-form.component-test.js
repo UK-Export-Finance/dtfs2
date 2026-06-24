@@ -31,8 +31,8 @@ describe(component, () => {
   });
 
   it('should programmatically associate the label with the search input via for/id', () => {
-    wrapper.expectElement('label[for="search"]').toExist();
-    wrapper.expectElement('input#search[name="search"]').toExist();
+    wrapper.expectElement('[data-cy="search-input-label"][for="search"]').toExist();
+    wrapper.expectElement('[data-cy="search-input"]#search').toExist();
   });
 
   it('should render search submit button', () => {
