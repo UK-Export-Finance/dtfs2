@@ -40,9 +40,9 @@ describe(`GET ${BASE_URL}`, () => {
 
   describe('when the portal-bank-list collection has entries', () => {
     const entries: PortalBankListSeedEntry[] = [
-      aPortalBankListSeedEntry({ name: 'Bank 2', order: 2 }),
-      aPortalBankListSeedEntry({ name: 'Bank 1', order: 1 }),
-      aPortalBankListSeedEntry({ name: 'Bank 3', order: 3 }),
+      aPortalBankListSeedEntry({ name: 'Charlie Bank', order: 2 }),
+      aPortalBankListSeedEntry({ name: 'Alpha Bank', order: 1 }),
+      aPortalBankListSeedEntry({ name: 'Bravo Bank', order: 3 }),
     ];
 
     beforeEach(async () => {
