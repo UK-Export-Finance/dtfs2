@@ -135,7 +135,7 @@ describe('getPortalBankList', () => {
       jest.mocked(getAllPortalBankListEntries).mockRejectedValue(unknownError);
     });
 
-    it('should respond with a 500', async () => {
+    it(`should respond with a ${HttpStatusCode.InternalServerError}`, async () => {
       const res = getMockResponse();
 
       await invokeController(res);
