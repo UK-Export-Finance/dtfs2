@@ -95,8 +95,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
       - name: Repository
         uses: actions/checkout@v7
+
+      - name: Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
