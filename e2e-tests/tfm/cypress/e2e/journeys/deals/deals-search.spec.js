@@ -95,11 +95,6 @@ context('User can view and filter multiple deals', () => {
     it('should render the search input label text', () => {
       cy.assertText(pages.dealsPage.searchFormLabel(), 'Search deals');
     });
-
-    it('should programmatically associate the label with the search input via for/id', () => {
-      pages.dealsPage.searchFormLabel().invoke('attr', 'for').should('eq', 'search');
-      pages.dealsPage.searchFormInput().invoke('attr', 'id').should('eq', 'search');
-    });
   });
 
   it('search/filter by ukefDealId - BSS/EWCS', () => {

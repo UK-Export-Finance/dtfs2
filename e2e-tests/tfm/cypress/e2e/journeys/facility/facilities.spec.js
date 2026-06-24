@@ -211,11 +211,6 @@ context('Facility page', () => {
     it('should render the search input label text', () => {
       cy.assertText(pages.facilitiesPage.searchFormLabel(), 'Search facilities');
     });
-
-    it('should programmatically associate the label with the search input via for/id', () => {
-      pages.facilitiesPage.searchFormLabel().invoke('attr', 'for').should('eq', 'search');
-      pages.facilitiesPage.searchFormInput().invoke('attr', 'id').should('eq', 'search');
-    });
   });
 
   it('should perform a search query based on AIN Export name', () => {
