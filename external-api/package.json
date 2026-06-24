@@ -82,7 +82,7 @@
     "ts-jest": "^29.4.6"
   },
   "engines": {
-    "node": ">=24.1.0",
+    "node": ">=24.17.0",
     "npm": ">=11.3.0"
   },
   "engineStrict": true
