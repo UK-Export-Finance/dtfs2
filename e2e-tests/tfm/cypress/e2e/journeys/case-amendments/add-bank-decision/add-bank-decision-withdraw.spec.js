@@ -20,20 +20,6 @@ context(
     let dealId;
     const dealFacilities = [];
 
-    const continueFromAmendmentOptionsToCoverEndDate = () =>
-      cy.location('pathname', { timeout: 20000 }).then((pathname) => {
-        if (pathname.includes('/cover-end-date')) {
-          return;
-        }
-
-        if (!pathname.includes('/amendment-options')) {
-          throw new Error(`Expected amendment options or cover end date path, but got ${pathname}`);
-        }
-
-        const coverEndDatePath = pathname.replace('/amendment-options', '/cover-end-date');
-        cy.visit(relative(coverEndDatePath));
-      });
-
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -84,8 +70,7 @@ context(
       amendmentsPage.amendmentFacilityValueCheckbox().check({ force: true });
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      cy.clickContinueButton();
-      continueFromAmendmentOptionsToCoverEndDate();
+      cy.get('form').submit();
       cy.url({ timeout: 20000 }).should('contain', 'cover-end-date');
 
       cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.day, month: today.monthLong, year: today.year });
@@ -334,20 +319,6 @@ context(
     let dealId;
     const dealFacilities = [];
 
-    const continueFromAmendmentOptionsToCoverEndDate = () =>
-      cy.location('pathname', { timeout: 20000 }).then((pathname) => {
-        if (pathname.includes('/cover-end-date')) {
-          return;
-        }
-
-        if (!pathname.includes('/amendment-options')) {
-          throw new Error(`Expected amendment options or cover end date path, but got ${pathname}`);
-        }
-
-        const coverEndDatePath = pathname.replace('/amendment-options', '/cover-end-date');
-        cy.visit(relative(coverEndDatePath));
-      });
-
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -398,8 +369,7 @@ context(
       amendmentsPage.amendmentFacilityValueCheckbox().check({ force: true });
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      cy.clickContinueButton();
-      continueFromAmendmentOptionsToCoverEndDate();
+      cy.get('form').submit();
       cy.url({ timeout: 20000 }).should('contain', 'cover-end-date');
 
       cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.day, month: today.monthLong, year: today.year });
