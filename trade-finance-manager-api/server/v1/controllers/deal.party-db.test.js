@@ -97,6 +97,62 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+describe('extractPartyUrn', () => {
+  it('should return the party URN from the first array item', () => {
+    // Arrange
+    const partyDbInfo = [{ partyUrn: 'ARRAY_URN' }];
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('ARRAY_URN');
+  });
+
+  it('should return the party URN from a single object', () => {
+    // Arrange
+    const partyDbInfo = { partyUrn: 'OBJECT_URN' };
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('OBJECT_URN');
+  });
+
+  it('should return the party URN from a nested data array', () => {
+    // Arrange
+    const partyDbInfo = {
+      data: [{ partyUrn: 'NESTED_URN' }],
+    };
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('NESTED_URN');
+  });
+
+  it('should return an empty string when no party URN is present', () => {
+    // Arrange
+    const partyDbInfo = { data: [{}] };
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string for null input', () => {
+    // Act
+    const result = api.extractPartyUrn(null);
+
+    // Assert
+    expect(result).toBe('');
+  });
+});
+
 describe('getPartyUrn', () => {
   it('should return an empty string if no companyRegNo is provided', async () => {
     // Act
