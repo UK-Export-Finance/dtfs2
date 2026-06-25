@@ -151,6 +151,44 @@ describe('extractPartyUrn', () => {
     // Assert
     expect(result).toBe('');
   });
+
+  it('should return an empty string for undefined input', () => {
+    // Act
+    const result = api.extractPartyUrn(undefined);
+
+    // Assert
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string for an empty array', () => {
+    // Act
+    const result = api.extractPartyUrn([]);
+
+    // Assert
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string for an empty data array', () => {
+    // Arrange
+    const partyDbInfo = { data: [] };
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string for a plain object with no relevant properties', () => {
+    // Arrange
+    const partyDbInfo = { name: 'Test Ltd' };
+
+    // Act
+    const result = api.extractPartyUrn(partyDbInfo);
+
+    // Assert
+    expect(result).toBe('');
+  });
 });
 
 describe('getPartyUrn', () => {
