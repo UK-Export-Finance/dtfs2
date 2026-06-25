@@ -1,9 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
+// const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { canSendAmendmentsToApimGift } = require('../integrations/apim-gift/can-send-amendments-to-apim-gift');
-const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
+// const { canSendAmendmentsToApimGift } = require('../integrations/apim-gift/can-send-amendments-to-apim-gift');
+// const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -413,23 +414,23 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        if (isTfmApimGiftIntegrationEnabled()) {
-          console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
+        // if (isTfmApimGiftIntegrationEnabled()) {
+        //   console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+        //   const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
 
-          if (canSendToApimGift) {
-            console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+        //   if (canSendToApimGift) {
+        //     console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
-            const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
+        //     const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
 
-            if (!sentToApimGift) {
-              console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+        //     if (!sentToApimGift) {
+        //       console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
 
-              throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
-            }
-          }
-        }
+        //       throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+        //     }
+        //   }
+        // }
 
         // Submit to ACBS
         if (canSendToAcbs({ amendment, isTaskUpdate })) {
@@ -546,23 +547,23 @@ const sendFacilityAmendment = async (req, res) => {
 
       const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
-      if (isTfmApimGiftIntegrationEnabled()) {
-        console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
+      // if (isTfmApimGiftIntegrationEnabled()) {
+      //   console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+      //   const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
 
-        if (canSendToApimGift) {
-          console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+      //   if (canSendToApimGift) {
+      //     console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
-          const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
+      //     const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
 
-          if (!sentToApimGift) {
-            console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+      //     if (!sentToApimGift) {
+      //       console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
 
-            throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
-          }
-        }
-      }
+      //       throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+      //     }
+      //   }
+      // }
 
       await submitToAcbs(amendment, facility, ukefFacilityId);
 
