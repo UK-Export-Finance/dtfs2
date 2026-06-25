@@ -67,4 +67,3 @@ export * from './errors-include-message';
 export * from './sort-amendments';
 export * from './parse-api-error-response';
 export * from './otp-login-result';
-export * from './drop-indexes-if-namespace-exists';
