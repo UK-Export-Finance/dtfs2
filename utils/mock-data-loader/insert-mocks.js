@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, dropIndexesIfNamespaceExists } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const centralApi = require('./centralApi');
 const { mongoDbClient: db } = require('../drivers/db-client');
@@ -22,7 +22,6 @@ const insertMocks = async (mockDataLoaderToken, e2e, params) => {
   console.info('Portal bank list');
   const portalBankListCollection = await db.getCollection(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
   await portalBankListCollection.deleteMany({});
-  await dropIndexesIfNamespaceExists(portalBankListCollection);
   await portalBankListCollection.createIndex({ name: 1 }, { unique: true });
   await portalBankListCollection.createIndex({ order: 1 }, { unique: true });
   if (MOCK_PORTAL_BANK_LIST.length > 0) {
