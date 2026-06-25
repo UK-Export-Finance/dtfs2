@@ -8,7 +8,7 @@ const facilityAmount = 1000;
 
 describe('mapGefObligationAmount', () => {
   describe(`when facilityType is ${FACILITY_TYPE.CASH}`, () => {
-    it(`should return the ukefExposure multiplied by the ${FACILITY_TYPE.CASH} percentage with decimals`, () => {
+    it(`should return the facilityAmount multiplied by the ${FACILITY_TYPE.CASH} percentage with decimals`, () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CASH;
 
@@ -24,8 +24,21 @@ describe('mapGefObligationAmount', () => {
     });
   });
 
+  describe('when facilityAmount is null', () => {
+    it('should return null', () => {
+      // Arrange
+      const facilityType = FACILITY_TYPE.CASH;
+
+      // Act
+      const result = mapGefObligationAmount({ facilityType, facilityAmount: null });
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+
   describe(`when facilityType is ${FACILITY_TYPE.CONTINGENT}`, () => {
-    it(`should return the ukefExposure multiplied by the ${FACILITY_TYPE.CONTINGENT} percentage with decimals`, () => {
+    it(`should return the facilityAmount multiplied by the ${FACILITY_TYPE.CONTINGENT} percentage with decimals`, () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CONTINGENT;
 

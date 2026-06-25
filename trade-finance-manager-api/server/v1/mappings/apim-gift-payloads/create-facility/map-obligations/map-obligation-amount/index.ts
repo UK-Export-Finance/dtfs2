@@ -18,7 +18,7 @@ type MapObligationAmountParams = MapGefObligationAmountParams & {
  * Maps the obligation amount for a GEF facility.
  * @param {MapGefObligationAmountParams} params - Data required to calculate the obligation amount.
  * @param {string} params.facilityType - The facility type (e.g. "Cash", "Contingent").
- * @param {number} params.facilityAmount - The facility amount
+ * @param {number | null} params.facilityAmount - The facility amount
  * @example
  * const obligationAmount = mapGefObligationAmount({ facilityType: 'Contingent', facilityAmount: 128.518888 }); => 89.96
  * const obligationAmount = mapGefObligationAmount({ facilityType: 'Cash', facilityAmount: 128.518888 }); => 109.24
@@ -26,7 +26,7 @@ type MapObligationAmountParams = MapGefObligationAmountParams & {
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
 export const mapGefObligationAmount = ({ facilityType, facilityAmount }: MapGefObligationAmountParams): number | null => {
-  if (facilityAmount) {
+  if (facilityAmount && facilityAmount !== null) {
     if (facilityType === FACILITY_TYPE.CASH) {
       const multiplier = UKEF_EXPOSURE_PERCENTAGE.CASH;
 
@@ -48,7 +48,7 @@ export const mapGefObligationAmount = ({ facilityType, facilityAmount }: MapGefO
  * @param {MapObligationAmountParams} params - Data required to calculate the obligation amount.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
- * @param {number} params.facilityAmount - The facility amount. Only required for BSS/EWCS deals.
+ * @param {number | null} params.facilityAmount - The facility amount. Only required for BSS/EWCS deals.
  * @param {string} [params.facilityType] - The facility type (e.g. "Cash", "Contingent"). Only required for GEF deals.
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
