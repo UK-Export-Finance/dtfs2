@@ -62,8 +62,6 @@ export const createFacility = async ({
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const ukefExposure = Number(tfm.ukefExposure);
-
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
     isBssEwcsDeal,
@@ -157,7 +155,6 @@ export const createFacility = async ({
       facilityType,
       isBssEwcsDeal,
       isGefDeal,
-      ukefExposure,
     }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,

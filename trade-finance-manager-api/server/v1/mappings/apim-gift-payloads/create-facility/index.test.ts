@@ -138,7 +138,6 @@ describe('createFacility', () => {
         facilityType: facilitySnapshot.type,
         isBssEwcsDeal,
         isGefDeal,
-        ukefExposure: Number(tfm.ukefExposure),
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,

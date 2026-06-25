@@ -4,18 +4,19 @@ import { OBLIGATION_AMOUNT } from '../../../constants';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
 
+const facilityAmount = 1000;
+
 describe('mapGefObligationAmount', () => {
   describe(`when facilityType is ${FACILITY_TYPE.CASH}`, () => {
     it(`should return the ukefExposure multiplied by the ${FACILITY_TYPE.CASH} percentage with decimals`, () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CASH;
-      const ukefExposure = 1000;
 
       // Act
-      const result = mapGefObligationAmount({ facilityType, ukefExposure });
+      const result = mapGefObligationAmount({ facilityType, facilityAmount });
 
       // Assert
-      const expectedRounded = ukefExposure * UKEF_EXPOSURE_PERCENTAGE.CASH;
+      const expectedRounded = facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CASH;
 
       const expected = Math.round(expectedRounded * 100) / 100;
 
@@ -27,13 +28,12 @@ describe('mapGefObligationAmount', () => {
     it(`should return the ukefExposure multiplied by the ${FACILITY_TYPE.CONTINGENT} percentage with decimals`, () => {
       // Arrange
       const facilityType = FACILITY_TYPE.CONTINGENT;
-      const ukefExposure = 1000;
 
       // Act
-      const result = mapGefObligationAmount({ facilityType, ukefExposure });
+      const result = mapGefObligationAmount({ facilityType, facilityAmount });
 
       // Assert
-      const expectedRounded = ukefExposure * UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
+      const expectedRounded = facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
 
       const expected = Math.round(expectedRounded * 100) / 100;
 
@@ -45,10 +45,9 @@ describe('mapGefObligationAmount', () => {
     it('should return null', () => {
       // Arrange
       const facilityType = FACILITY_TYPE.BOND;
-      const ukefExposure = 1000;
 
       // Act
-      const result = mapGefObligationAmount({ facilityType, ukefExposure });
+      const result = mapGefObligationAmount({ facilityType, facilityAmount });
 
       // Assert
       expect(result).toBeNull();
@@ -57,9 +56,6 @@ describe('mapGefObligationAmount', () => {
 });
 
 describe('mapObligationAmount', () => {
-  const facilityAmount = 1000;
-  const ukefExposure = 1000;
-
   describe('when isGefDeal is true', () => {
     it('should return the the result of mapGefObligationAmount', () => {
       // Arrange
@@ -72,11 +68,10 @@ describe('mapObligationAmount', () => {
         isGefDeal: true,
         facilityAmount,
         facilityType,
-        ukefExposure,
       });
 
       // Assert
-      const expected = mapGefObligationAmount({ facilityType, ukefExposure });
+      const expected = mapGefObligationAmount({ facilityType, facilityAmount });
 
       expect(result).toEqual(expected);
     });
@@ -92,7 +87,6 @@ describe('mapObligationAmount', () => {
         isBssEwcsDeal,
         isGefDeal: false,
         facilityAmount,
-        ukefExposure,
       });
 
       // Assert
@@ -110,7 +104,6 @@ describe('mapObligationAmount', () => {
         isBssEwcsDeal,
         isGefDeal: false,
         facilityAmount: null,
-        ukefExposure,
       });
 
       // Assert
@@ -128,7 +121,6 @@ describe('mapObligationAmount', () => {
         isBssEwcsDeal,
         isGefDeal: false,
         facilityAmount,
-        ukefExposure,
       });
 
       // Assert
