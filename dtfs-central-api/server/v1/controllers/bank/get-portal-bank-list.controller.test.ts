@@ -2,14 +2,13 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
 import { TestApiError } from '@ukef/dtfs2-common/test-helpers';
-import { WithId } from 'mongodb';
 import { getPortalBankList } from './get-portal-bank-list.controller';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
 import { aBank } from '../../../../test-helpers';
 
 jest.mock('../../../repositories/portal-bank-list-repo');
 
-type MockResponse = Partial<Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>> & {
+type MockResponse = Partial<Response<PortalBankListEntry[] | ApiErrorResponseBody>> & {
   status: jest.Mock;
   send: jest.Mock;
 };
@@ -33,7 +32,7 @@ const getMockResponse = (): MockResponse => {
  */
 const invokeController = async (res: MockResponse) => {
   const req = {} as Parameters<typeof getPortalBankList>[0];
-  await getPortalBankList(req, res as Response<WithId<PortalBankListEntry>[] | ApiErrorResponseBody>);
+  await getPortalBankList(req, res as Response<PortalBankListEntry[] | ApiErrorResponseBody>);
 };
 
 describe('getPortalBankList', () => {
@@ -47,7 +46,7 @@ describe('getPortalBankList', () => {
   });
 
   describe('when the database returns a list of entries', () => {
-    const entries: WithId<PortalBankListEntry>[] = [
+    const entries: PortalBankListEntry[] = [
       { ...aBank(), name: 'Bank 1', order: 1 },
       { ...aBank(), name: 'Bank 2', order: 2 },
     ];
