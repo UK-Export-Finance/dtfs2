@@ -48,7 +48,7 @@ export const mapGefObligationAmount = ({ facilityType, facilityAmount }: MapGefO
  * @param {MapObligationAmountParams} params - Data required to calculate the obligation amount.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
- * @param {number | null} params.facilityAmount - The facility amount. Only required for BSS/EWCS deals.
+ * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
  * @param {string} [params.facilityType] - The facility type (e.g. "Cash", "Contingent"). Only required for GEF deals.
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
