@@ -15,10 +15,11 @@ type GetPortalBankListResponseBody = PortalBankListEntry[] | ApiErrorResponseBod
  * portal homepage.
  *
  * Error mapping:
- * - Any thrown `ApiError` is propagated using its own `status` and `code`, with
+ * - All errors are logged via `console.error` for production observability.
+ * - A thrown `ApiError` is propagated using its own `status` and `code`, with
  *   the message prefixed by "Failed to get the portal bank list".
- * - Any other error is logged and returned as a `500 Internal Server Error`
- *   with a generic message — the underlying error is not exposed to callers.
+ * - Any other error is returned as a `500 Internal Server Error` with a
+ *   generic message — the underlying error is not exposed to callers.
  */
 export const getPortalBankList = async (_req: GetPortalBankListRequest, res: Response<GetPortalBankListResponseBody>) => {
   try {
