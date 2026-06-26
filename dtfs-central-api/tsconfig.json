@@ -31,6 +31,7 @@
     "paths": {
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
       "@ukef/dtfs2-common/mock-data-backend": ["../libs/common/src/test-helpers/mock-data-backend/index.ts"],
+      "@ukef/dtfs2-common/payload-verification": ["../libs/common/src/helpers/payload-verification/index.ts"],
       "@ukef/dtfs2-common/*": ["../libs/common/src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
