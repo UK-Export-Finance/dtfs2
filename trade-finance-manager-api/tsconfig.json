@@ -30,8 +30,10 @@
     "baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
     "paths": {
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
+      "@ukef/dtfs2-common/api-test": ["../libs/common/src/test-helpers/api-test/index.ts"],
       "@ukef/dtfs2-common/mock-data-backend": ["../libs/common/src/test-helpers/mock-data-backend/index.ts"],
       "@ukef/dtfs2-common/payload-verification": ["../libs/common/src/helpers/payload-verification/index.ts"],
+      "@ukef/dtfs2-common/test-cases-backend": ["../libs/common/src/test-helpers/test-cases-backend/index.ts"],
       "@ukef/dtfs2-common/*": ["../libs/common/src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     "rootDirs": ["./", "../libs/"] /* Allow multiple folders to be treated as one when resolving modules. */,
