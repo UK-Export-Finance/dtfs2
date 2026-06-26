@@ -135,7 +135,7 @@ describe('PUT /v1/parties/:dealId', () => {
           facilities: issuedFacilities,
           isBssEwcsDeal: false,
           isGefDeal: true,
-          newPartyUrnCreated: true,
+          newPartyUrnCreated: false,
         }),
       );
     });
