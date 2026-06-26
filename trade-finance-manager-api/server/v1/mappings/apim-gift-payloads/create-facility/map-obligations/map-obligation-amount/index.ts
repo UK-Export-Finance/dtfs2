@@ -26,7 +26,7 @@ type MapObligationAmountParams = MapGefObligationAmountParams & {
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
 export const mapGefObligationAmount = ({ facilityType, facilityAmount }: MapGefObligationAmountParams): number | null => {
-  if (facilityAmount && facilityAmount !== null) {
+  if (facilityAmount) {
     if (facilityType === FACILITY_TYPE.CASH) {
       const multiplier = UKEF_EXPOSURE_PERCENTAGE.CASH;
 
