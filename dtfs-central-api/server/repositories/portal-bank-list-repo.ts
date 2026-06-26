@@ -1,5 +1,4 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { WithId } from 'mongodb';
 import type { PortalBankListEntry } from '@ukef/dtfs2-common';
 import { mongoDbClient as db } from '../drivers/db-client';
 
@@ -7,7 +6,7 @@ import { mongoDbClient as db } from '../drivers/db-client';
  * Returns all banks in the `portal-bank-list` collection ordered by the
  * numeric `order` field so the portal renders the banks consistently.
  */
-export const getAllPortalBankListEntries = async (): Promise<WithId<PortalBankListEntry>[]> => {
+export const getAllPortalBankListEntries = async (): Promise<PortalBankListEntry[]> => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
 
   const banks = await collection

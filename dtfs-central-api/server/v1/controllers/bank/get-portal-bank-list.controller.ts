@@ -1,12 +1,11 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, ApiError, ApiErrorResponseBody, type PortalBankListEntry } from '@ukef/dtfs2-common';
-import { WithId } from 'mongodb';
 import { getAllPortalBankListEntries } from '../../../repositories/portal-bank-list-repo';
 
 type GetPortalBankListRequest = CustomExpressRequest<object>;
 
-type GetPortalBankListResponseBody = WithId<PortalBankListEntry>[] | ApiErrorResponseBody;
+type GetPortalBankListResponseBody = PortalBankListEntry[] | ApiErrorResponseBody;
 
 /**
  * Express handler for `GET /v1/bank/portal-bank-list`.
