@@ -30,10 +30,10 @@
   },
   "dependencies": {
     "@types/lodash": "^4.17.21",
-    "axios": "1.16.0",
-    "date-fns": "^2.30.0",
-    "dotenv": "^16.4.5",
-    "durable-functions": "^3.3.0"
+    "axios": "1.18.0",
+    "date-fns": "^4.4.0",
+    "dotenv": "^17.4.2",
+    "durable-functions": "^3.3.1"
   },
   "devDependencies": {
     "babel-jest": "29.5.0",
