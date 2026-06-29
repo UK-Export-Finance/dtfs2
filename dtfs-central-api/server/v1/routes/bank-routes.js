@@ -81,9 +81,6 @@ bankRouter.route('/').get(getBanks).post(createBankController.createBankPost);
  *       Returns every entry in the `portal-bank-list` MongoDB collection
  *       sorted by the numeric `order` field. The list is maintained manually
  *       in MongoDB Compass per environment.
- *
- *       Auth: protected by the global `checkApiKey` middleware mounted in
- *       `generateApp.ts` (same posture as all other `bank-routes`).
  *     responses:
  *       200:
  *         description: OK
