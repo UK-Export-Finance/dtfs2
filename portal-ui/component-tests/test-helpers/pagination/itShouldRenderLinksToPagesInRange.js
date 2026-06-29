@@ -14,8 +14,10 @@ module.exports = ({ getWrapper, firstPage, lastPage, currentPage }) => {
 
       if (i === currentPage) {
         wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
+        wrapper.expectElement(`[data-cy="Page_${i}"]`).toHaveAttribute('aria-current', 'page');
       } else {
         wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
+        wrapper.expectElement(`[data-cy="Page_${i}"]`).notToHaveAttribute('aria-current');
       }
     }
 
