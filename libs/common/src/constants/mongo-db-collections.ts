@@ -1,5 +1,6 @@
 export const MONGO_DB_COLLECTIONS = {
   BANKS: 'banks',
+  PORTAL_BANK_LIST: 'portal-bank-list',
   CRON_JOB_LOGS: 'cron-job-logs',
   DEALS: 'deals',
   DURABLE_FUNCTIONS_LOG: 'durable-functions-log',
