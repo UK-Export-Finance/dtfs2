@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
-import { HttpStatusCode, getUri } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Bank, RECONCILIATION_IN_PROGRESS, ReportPeriod } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
@@ -20,7 +20,7 @@ const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId';
 
 describe(`GET ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, feeRecordId: number | string) =>
-    getUri({
+    axios.getUri({
       url: BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString()),
     });
 
