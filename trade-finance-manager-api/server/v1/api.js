@@ -586,6 +586,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
  */
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({

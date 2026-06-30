@@ -1,7 +1,7 @@
 const { createMocks } = require('node-mocks-http');
 const { HttpStatusCode } = require('axios');
 const { cloneDeep } = require('lodash');
-const { canSendToAcbs, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, TFM_AMENDMENT_STATUS, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const amendmentController = require('./amendment.controller');
 const { MOCK_AMENDMENT, MOCK_AMENDMENT_WITH_UKEF_DECISION } = require('../__mocks__/mock-amendment');
@@ -10,6 +10,7 @@ const { updateAmendmentTasks } = require('../helpers/create-tasks-amendment.help
 const taskAmendmentHelper = require('../helpers/create-tasks-amendment.helper');
 const { mockFindUserById } = require('../__mocks__/common-api-mocks');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
+const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
 jest.mock('../api');
 jest.mock('../helpers/create-tasks-amendment.helper', () => ({
@@ -21,7 +22,14 @@ jest.mock('../helpers/create-tasks-amendment.helper', () => ({
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   canSendToAcbs: jest.fn(),
+  isTfmApimGiftIntegrationEnabled: jest.fn(() => false),
 }));
+
+jest.mock('../integrations/apim-gift/submit-facility-amendments-to-apim-gift', () => ({
+  submitFacilityAmendmentsToApimGift: jest.fn(),
+}));
+
+const mockIsTfmApimGiftIntegrationEnabled = jest.mocked(isTfmApimGiftIntegrationEnabled);
 
 const {
   MOCK_USERS_FOR_TASKS,
@@ -60,6 +68,9 @@ const deal = {
 beforeEach(() => {
   jest.resetAllMocks();
 
+  mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
+  submitFacilityAmendmentsToApimGift.mockResolvedValue([HttpStatusCode.Accepted]);
+
   mockFindUserById();
   api.findUserById.mockReset();
 
@@ -92,8 +103,8 @@ describe('updated facility amendment API call', () => {
       await amendmentController.updateFacilityAmendment(req, res);
 
       // Assert
-      expect(taskAmendmentHelper.getTasksAssignedToUserByGroup).toHaveBeenCalledTimes(1);
-      expect(taskAmendmentHelper.getTasksAssignedToUserByGroup).toHaveBeenCalledWith(
+      expect(taskAmendmentHelper.getTasksAssignedToUserByGroup).toHaveBeenNthCalledWith(
+        1,
         MOCK_AMENDMENT.tasks,
         TEAMS.UNDERWRITERS.id,
         requestBody.leadUnderwriter._id,
@@ -124,8 +135,13 @@ describe('updated facility amendment API call', () => {
       await amendmentController.updateFacilityAmendment(req, res);
 
       // Assert
-      expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { ...requestBody, tasks: TASKS_ASSIGNED_TO_UNDERWRITER }, auditDetails);
+      expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+        1,
+        facilityId,
+        amendmentId,
+        { ...requestBody, tasks: TASKS_ASSIGNED_TO_UNDERWRITER },
+        auditDetails,
+      );
     });
 
     it('should call api.updateFacilityAmendment with tasks returned by getTasksAssignedToUserByGroup for Underwriter manager', async () => {
@@ -152,8 +168,8 @@ describe('updated facility amendment API call', () => {
       await amendmentController.updateFacilityAmendment(req, res);
 
       // Assert
-      expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
+      expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+        1,
         facilityId,
         amendmentId,
         { ...requestBodyWithUnderwriterManager, tasks: TASKS_ASSIGNED_TO_UNDERWRITER_MANAGER },
@@ -178,8 +194,8 @@ describe('updated facility amendment API call', () => {
         await amendmentController.updateFacilityAmendment(mockRequest, res);
 
         // Assert
-        expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
+        expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+          1,
           facilityId,
           amendmentId,
           {
@@ -203,8 +219,7 @@ describe('updated facility amendment API call', () => {
         await amendmentController.updateFacilityAmendment(mockRequest, res);
 
         // Assert
-        expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
+        expect(canSendToAcbs).toHaveBeenNthCalledWith(1, { amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
     });
 
@@ -220,8 +235,13 @@ describe('updated facility amendment API call', () => {
         await amendmentController.updateFacilityAmendment(mockRequest, res);
 
         // Assert
-        expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { shouldNotUpdateTimestamp: true, tasks: MOCK_TASKS }, auditDetails);
+        expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+          1,
+          facilityId,
+          amendmentId,
+          { shouldNotUpdateTimestamp: true, tasks: MOCK_TASKS },
+          auditDetails,
+        );
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         expect(res._getData().ukefDecision).toEqual(MOCK_AMENDMENT_WITH_UKEF_DECISION.ukefDecision);
@@ -253,8 +273,79 @@ describe('updated facility amendment API call', () => {
         await amendmentController.updateFacilityAmendment(req, res);
 
         // Assert
-        expect(canSendToAcbs).toHaveBeenCalledTimes(1);
-        expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: false });
+        expect(canSendToAcbs).toHaveBeenNthCalledWith(1, { amendment: MOCK_AMENDMENT, isTaskUpdate: false });
+      });
+
+      describe('when APIM/GIFT submission is allowed', () => {
+        const updateAmendmentBody = {
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+        };
+
+        beforeEach(() => {
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            currentValue: 100,
+            value: 100,
+            effectiveDate: 1704067200,
+            tfm: { ...MOCK_AMENDMENT.tfm, coverEndDate: 1706745600000 },
+          });
+        });
+
+        it('should call APIM GIFT', async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+              amendmentPayloads: expect.any(Array),
+              ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+            }),
+          );
+        });
+
+        it(`should return ${HttpStatusCode.BadRequest} when APIM GIFT submission fails`, async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+          submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+          expect(res._getData()).toEqual({ data: 'Unable to update amendment' });
+        });
+      });
+
+      describe('when APIM/GIFT submission is not allowed', () => {
+        it(`should not call APIM GIFT and should return ${HttpStatusCode.Ok}`, async () => {
+          // Arrange
+          const updateAmendmentBody = {
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
+          };
+
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
       });
     });
   });

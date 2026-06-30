@@ -1,8 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
+// const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
+// const { canSendAmendmentsToApimGift } = require('../integrations/apim-gift/can-send-amendments-to-apim-gift');
+// const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -287,12 +289,12 @@ const createFacilityAmendment = async (req, res) => {
 };
 
 /**
- * Updates a facility amendment with the provided details.
+ * Updates a facility amendment with the provided details and sends to ACBS and APIM GIFT if applicable.
  *
  * This function performs the following operations:
  * 1. Extracts the facility ID and amendment ID from the request parameters.
  * 2. Extracts the amendment details from the request body.
- * 3. Calls the API to update the facility amendment with the provided details.
+ * 3. Calls the API to update the facility amendment with the provided details, including ACBS and APIM GIFT integration if enabled.
  * 4. Sends a response back to the client indicating the success or failure of the operation.
  *
  * @param {object} req - The request object containing the parameters and body.
@@ -306,6 +308,9 @@ const createFacilityAmendment = async (req, res) => {
  */
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
+
+  console.info('TFM facility %s updateFacilityAmendment - amendment %s', facilityId, amendmentId);
+
   let payload = req.body;
 
   // set to true if payload contains updateTfmLastUpdated else null
@@ -409,6 +414,24 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
+        // if (isTfmApimGiftIntegrationEnabled()) {
+        //   console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
+
+        //   const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+
+        //   if (canSendToApimGift) {
+        //     console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+
+        //     const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
+
+        //     if (!sentToApimGift) {
+        //       console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+
+        //       throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+        //     }
+        //   }
+        // }
+
         // Submit to ACBS
         if (canSendToAcbs({ amendment, isTaskUpdate })) {
           // Amendment email notification to PDC
@@ -502,7 +525,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
  * 2. Fetches the related deal object.
  * 3. Constructs a minimal deal object required for ACBS interaction.
  * 4. Checks if the amendment can be sent to ACBS.
- * 5. Sends an internal email notification and amends the facility in ACBS if eligible.
+ * 5. Sends an internal email notification and amends the facility in ACBS and APIM GIFT if eligible.
  * 6. Handles errors and sends appropriate HTTP responses.
  *
  * @async
@@ -514,7 +537,7 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
 const sendFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
 
-  console.info('Sending facility amendment %s to ACBS and/or APIM GIFT for facility %s', amendmentId, facilityId);
+  console.info('TFM facility %s sendFacilityAmendment - sending amendment %s to ACBS and/or APIM GIFT', facilityId, amendmentId);
 
   try {
     if (amendmentId && facilityId) {
@@ -524,15 +547,23 @@ const sendFacilityAmendment = async (req, res) => {
 
       const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
 
-      if (isTfmApimGiftIntegrationEnabled()) {
-        console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+      // if (isTfmApimGiftIntegrationEnabled()) {
+      //   console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-        const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendment, ukefFacilityId });
+      //   const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
 
-        if (!sentToApimGift) {
-          throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
-        }
-      }
+      //   if (canSendToApimGift) {
+      //     console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+
+      //     const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
+
+      //     if (!sentToApimGift) {
+      //       console.error('Failed to submit facility %s amendment %s to APIM GIFT', ukefFacilityId, amendmentId);
+
+      //       throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
+      //     }
+      //   }
+      // }
 
       await submitToAcbs(amendment, facility, ukefFacilityId);
 
