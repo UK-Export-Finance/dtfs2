@@ -3,10 +3,20 @@ const { sanitiseFeedbackResponse, sanitiseValue } = require('./sanitise-feedback
 describe('sanitise-feedback-response', () => {
   describe('sanitiseValue', () => {
     it('should sanitise strings', () => {
-      expect(sanitiseValue('<script>alert(1)</script><p>Hello</p>')).toEqual('<p>Hello</p>');
+      // Arrange
+      const input = '<script>alert(1)</script><p>Hello</p>';
+
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
+      const expected = '<p>Hello</p>';
+
+      expect(result).toEqual(expected);
     });
 
     it('should sanitise nested objects and arrays', () => {
+      // Arrange
       const input = {
         message: '<b>Hi</b>',
         nested: {
@@ -15,6 +25,10 @@ describe('sanitise-feedback-response', () => {
         },
       };
 
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
       const expected = {
         message: '<b>Hi</b>',
         nested: {
@@ -23,28 +37,65 @@ describe('sanitise-feedback-response', () => {
         },
       };
 
-      expect(sanitiseValue(input)).toEqual(expected);
+      expect(result).toEqual(expected);
     });
 
     it('should return numbers unchanged', () => {
-      expect(sanitiseValue(123)).toEqual(123);
+      // Arrange
+      const input = 123;
+
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
+      const expected = 123;
+
+      expect(result).toEqual(expected);
     });
 
     it('should return booleans unchanged', () => {
-      expect(sanitiseValue(true)).toEqual(true);
+      // Arrange
+      const input = true;
+
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
+      const expected = true;
+
+      expect(result).toEqual(expected);
     });
 
     it('should return null unchanged', () => {
-      expect(sanitiseValue(null)).toBeNull();
+      // Arrange
+      const input = null;
+
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
+      const expected = null;
+
+      expect(result).toEqual(expected);
     });
 
     it('should return undefined unchanged', () => {
-      expect(sanitiseValue(undefined)).toBeUndefined();
+      // Arrange
+      const input = undefined;
+
+      // Act
+      const result = sanitiseValue(input);
+
+      // Assert
+      const expected = undefined;
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('sanitiseFeedbackResponse', () => {
     it('should sanitise all top-level and nested values in a feedback response object', () => {
+      // Arrange
       const body = {
         role: '<strong>Trader</strong>',
         howCanWeImprove: '<script>alert(1)</script><p>Faster flow</p>',
@@ -63,19 +114,28 @@ describe('sanitise-feedback-response', () => {
         },
       };
 
-      expect(sanitiseFeedbackResponse(body)).toEqual(expected);
+      // Act
+      const result = sanitiseFeedbackResponse(body);
+
+      // Assert
+      expect(result).toEqual(expected);
     });
 
     it('should not mutate the original object', () => {
+      // Arrange
       const body = {
         howCanWeImprove: '<script>alert(1)</script><p>Improve docs</p>',
       };
 
+      const expected = {
+        howCanWeImprove: '<script>alert(1)</script><p>Improve docs</p>',
+      };
+
+      // Act
       sanitiseFeedbackResponse(body);
 
-      expect(body).toEqual({
-        howCanWeImprove: '<script>alert(1)</script><p>Improve docs</p>',
-      });
+      // Assert
+      expect(body).toEqual(expected);
     });
   });
 });
