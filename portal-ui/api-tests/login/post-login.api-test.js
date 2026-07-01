@@ -2,11 +2,13 @@ jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
+
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getPortalBankList: jest.fn().mockResolvedValue([]),
 }));
 
 const { AxiosError } = require('axios');

@@ -612,6 +612,20 @@ const banks = async (token) => {
   return response.data.banks;
 };
 
+/**
+ * Get the curated, read-only list of banks shown in the "before you start" section of the unauthenticated portal login page.
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The list of banks
+ */
+const getPortalBankList = async () => {
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/portal-bank-list`,
+    headers,
+  });
+
+  return response.data;
+};
+
 const getCurrencies = async (token, includeDisabled) => {
   const response = await axios({
     method: 'get',
@@ -1238,6 +1252,7 @@ module.exports = {
   allFacilities,
   getAllAmendments,
   banks,
+  getPortalBankList,
   cloneDeal,
   contractBond,
   createBond,

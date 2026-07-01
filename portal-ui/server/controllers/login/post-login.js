@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { isPortal2FAFeatureFlagEnabled } from '@ukef/dtfs2-common';
 
-import { validationErrorHandler, getNextAccessCodePage } from '../../helpers';
+import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '../../helpers';
 import api from '../../api';
 
 /**
@@ -31,8 +31,11 @@ export const postLogin = async (req, res) => {
     if (!email) loginErrors.push(emailError);
     if (!password) loginErrors.push(passwordError);
 
+    const banks = await getPortalBankListForLoginPage();
+
     return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
+      banks,
     });
   }
 
@@ -83,8 +86,11 @@ export const postLogin = async (req, res) => {
 
         loginErrors.push(emailError, passwordError);
 
+        const banks = await getPortalBankListForLoginPage();
+
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),
+          banks,
         });
       }
 
@@ -137,8 +143,11 @@ export const postLogin = async (req, res) => {
 
         loginErrors.push(emailError, passwordError);
 
+        const banks = await getPortalBankListForLoginPage();
+
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),
+          banks,
         });
       }
 
