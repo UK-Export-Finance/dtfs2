@@ -48,7 +48,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
         uses: actions/setup-node@v6

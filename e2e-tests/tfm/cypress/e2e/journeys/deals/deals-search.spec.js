@@ -83,6 +83,20 @@ context('User can view and filter multiple deals', () => {
     cy.assertText(row.dateReceived(), format(new Date(), 'd MMM yyyy'));
   });
 
+  describe('search input accessibility', () => {
+    it('should render a label for the search input', () => {
+      pages.dealsPage.searchFormLabel().should('exist');
+    });
+
+    it('should visually hide the search input label', () => {
+      pages.dealsPage.searchFormLabel().should('have.class', 'govuk-visually-hidden');
+    });
+
+    it('should render the search input label text', () => {
+      cy.assertText(pages.dealsPage.searchFormLabel(), 'Search deals');
+    });
+  });
+
   it('search/filter by ukefDealId - BSS/EWCS', () => {
     const aUkefDealId = ALL_SUBMITTED_DEALS[2].dealSnapshot.details.ukefDealId;
 

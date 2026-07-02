@@ -117,6 +117,7 @@ describe('createFacility', () => {
       }),
       accrualSchedules: mapAccrualSchedules({
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
+        expiryDate,
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef,
@@ -137,7 +138,6 @@ describe('createFacility', () => {
         facilityType: facilitySnapshot.type,
         isBssEwcsDeal,
         isGefDeal,
-        ukefExposure: Number(tfm.ukefExposure),
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
