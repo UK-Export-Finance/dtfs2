@@ -1,7 +1,11 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/services/api');
+const storage = require('./test-helpers/storage/storage');
+const { MOCK_ISSUED_FACILITY } = require('../server/utils/mocks/mock-facilities');
 
 const { get, post } = createApi(app);
 
@@ -9,12 +13,38 @@ const dealId = '123';
 const facilityId = '111';
 
 describe('facilities routes', () => {
+  beforeEach(() => {
+    api.getFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.createFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.updateFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    api.updateApplication.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('GET /application-details/:dealId/facilities', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
+    });
+
+    it('should render the facilities page (happy path)', async () => {
+      const { sessionCookie } = await storage.saveUserSession([MAKER]);
+
+      const expected = await get(
+        `/application-details/${dealId}/facilities`,
+        {},
+        {
+          Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
+        },
+      );
+
+      expect(expected.status).toEqual(HttpStatusCode.Ok);
+      expect(expected.text).toContain('Add a facility');
+      expect(expected.text).toContain('data-cy="has-been-issued-heading"');
     });
   });
 
@@ -22,8 +52,7 @@ describe('facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -31,8 +60,7 @@ describe('facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -40,8 +68,7 @@ describe('facilities routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}`),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 });
