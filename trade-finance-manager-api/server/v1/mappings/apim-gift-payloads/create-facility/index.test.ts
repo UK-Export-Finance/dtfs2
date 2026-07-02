@@ -12,6 +12,7 @@ import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
 import { mapPartyUrns } from './map-party-urns';
 import { mapOverview } from './map-overview';
+import { mapFacilityAmount } from './map-overview/map-facility-amount';
 import { mapRiskDetails } from './map-risk-details';
 import { mapAccrualSchedules } from './map-accrual-schedules';
 import { mapCounterparties } from './map-counterparties';
@@ -32,11 +33,12 @@ describe('createFacility', () => {
     _id: new ObjectId(),
     facilitySnapshot: mockFacilitySnapshot,
     tfm: {
-      ukefExposure: 100000,
+      exposurePeriodInMonths: 12,
       facilityGuaranteeDates: {
         guaranteeCommencementDate: '2024-01-01',
         guaranteeExpiryDate: '2025-01-01',
       },
+      ukefExposure: 100000,
     },
   };
 
@@ -66,7 +68,10 @@ describe('createFacility', () => {
     isGefDeal,
   });
 
-  const facilityAmount = Number(String(facilitySnapshot.value).replace(/,/g, ''));
+  const facilityAmount = mapFacilityAmount({
+    facilityAmount: facilitySnapshot.value,
+    coverPercentage,
+  });
 
   const params = {
     creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
@@ -99,7 +104,6 @@ describe('createFacility', () => {
     const expected = {
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       overview: mapOverview({
-        coverPercentage,
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
@@ -107,11 +111,13 @@ describe('createFacility', () => {
         facilityAmount,
         facilityType: facilitySnapshot.type,
         isGefDeal,
+        monthsOfCover: tfm.exposurePeriodInMonths,
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       accrualSchedules: mapAccrualSchedules({
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
+        expiryDate,
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef,
@@ -132,7 +138,6 @@ describe('createFacility', () => {
         facilityType: facilitySnapshot.type,
         isBssEwcsDeal,
         isGefDeal,
-        ukefExposure: Number(tfm.ukefExposure),
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
