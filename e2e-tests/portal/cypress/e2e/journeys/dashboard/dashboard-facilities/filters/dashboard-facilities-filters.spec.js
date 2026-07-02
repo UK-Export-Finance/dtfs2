@@ -88,6 +88,21 @@ context('Dashboard Deals filters', () => {
       filters.panel.form.applyFiltersButton().should('be.visible');
       filters.panel.form.applyFiltersButton().contains('Apply filters');
     });
+
+    it('should keep focus on the show/hide toggle button after activation', () => {
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should expose `aria-controls` pointing at the filter panel', () => {
+      filters
+        .showHideButton()
+        .invoke('attr', 'aria-controls')
+        .then((ariaControls) => {
+          expect(ariaControls).to.be.a('string').and.have.length.greaterThan(0);
+
+          filters.panel.container().should('have.attr', 'id', ariaControls);
+        });
+    });
   });
 
   describe('renders all filters empty/unchecked by default', () => {
