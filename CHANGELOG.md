@@ -1,5 +1,29 @@
 # Changelog
 
+## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-07-02)
+
+
+### Features
+
+* **DTFS2-8352-8353:** create a gift facility - overview, obligation amounts ([#4791](https://github.com/UK-Export-Finance/dtfs2/issues/4791)) ([c08b5a5](https://github.com/UK-Export-Finance/dtfs2/commit/c08b5a576dd7854dd294b1389311d6b74fac74e9))
+* **DTFS2-8352:** create a gift facility - name formatting ([#4799](https://github.com/UK-Export-Finance/dtfs2/issues/4799)) ([171e9fd](https://github.com/UK-Export-Finance/dtfs2/commit/171e9fd4fb6bb9407a7c2e1037977959cfa907fe))
+* **DTFS2-8437:** create a gift facility - conditionally delay creation ([#4795](https://github.com/UK-Export-Finance/dtfs2/issues/4795)) ([22a5d74](https://github.com/UK-Export-Finance/dtfs2/commit/22a5d744339d9a74cade1f53b6b09ff68384b396))
+
+
+### Bug Fixes
+
+* **DTFS2-8352:** send a gift facility - gef name mapping ([#4804](https://github.com/UK-Export-Finance/dtfs2/issues/4804)) ([d165239](https://github.com/UK-Export-Finance/dtfs2/commit/d165239783bdc3ad1510e2de8ce84063d9d6708c))
+* **DTFS2-8353-8354:** send a gift facility - obligation amount ([#4805](https://github.com/UK-Export-Finance/dtfs2/issues/4805)) ([fe1dfae](https://github.com/UK-Export-Finance/dtfs2/commit/fe1dfae776e9010d5bbb1ac969715d2bbd3c711f))
+* **DTFS2-8399:** improve accessibility of dac-links-and-landmarks ([#4849](https://github.com/UK-Export-Finance/dtfs2/issues/4849)) ([92f8f11](https://github.com/UK-Export-Finance/dtfs2/commit/92f8f11984367a7da61f50a1b03a267f76988fee))
+* **DTFS2-8401:** fix heading accessibility DAC_Info_and_relationships_02 ([#4819](https://github.com/UK-Export-Finance/dtfs2/issues/4819)) ([8006ec3](https://github.com/UK-Export-Finance/dtfs2/commit/8006ec3fecd246eb22e8d6aa679aa368e9b293d7))
+* **DTFS2-8402:** tfm accessibility fix dac-text-input-01 ([#4822](https://github.com/UK-Export-Finance/dtfs2/issues/4822)) ([a4053a0](https://github.com/UK-Export-Finance/dtfs2/commit/a4053a0690fdb6a9e0a239c8e7d6f998c9113e73))
+* **DTFS2-8484:** create a gift bss facility - obligation amount ([#4815](https://github.com/UK-Export-Finance/dtfs2/issues/4815)) ([17a0190](https://github.com/UK-Export-Finance/dtfs2/commit/17a019026aea620bc66caf7aa5137a2c5b98704d))
+* **DTFS2-8485:** create a gift facility - obligation amount ([#4848](https://github.com/UK-Export-Finance/dtfs2/issues/4848)) ([2b8d69b](https://github.com/UK-Export-Finance/dtfs2/commit/2b8d69beececb03c93872641a6866f10a54a3cd9))
+* **DTFS2-8486:** amend a gift facility - date conversion ([#4816](https://github.com/UK-Export-Finance/dtfs2/issues/4816)) ([9082463](https://github.com/UK-Export-Finance/dtfs2/commit/9082463b7c7c250bba896fb125687fc9fd754036))
+* **DTFS2-8494:** create a gift facility - months of cover, facility name ([#4823](https://github.com/UK-Export-Finance/dtfs2/issues/4823)) ([f26835e](https://github.com/UK-Export-Finance/dtfs2/commit/f26835ee8c2ea67bd715fc35195d2567056d4b1c))
+* **DTFS2-8495:** send a gift facility - accrual dates ([#4839](https://github.com/UK-Export-Finance/dtfs2/issues/4839)) ([b2028ac](https://github.com/UK-Export-Finance/dtfs2/commit/b2028ac0b1d07a78dc28293fa1273425efeb5ec6))
+* **DTFS2-8503:** create a gift facility - intentional delay ([#4847](https://github.com/UK-Export-Finance/dtfs2/issues/4847)) ([882883f](https://github.com/UK-Export-Finance/dtfs2/commit/882883f01ae0c36aedb2ed418aa66341a9abf3d3))
+
 ## [3.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.0.0...v3.1.0) (2026-06-11)
 
 
