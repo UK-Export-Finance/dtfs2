@@ -60,7 +60,23 @@ node bss-ewcs/migrate-deals.js
 This script will map the V1 deals to the V2 structure and add them to
 the deals collection. Facilities associated with these deals will also
 be added to the facilities collection.
-mar
+
+### Archive a BSS/EWCS Deal :file_folder:
+
+To archive a successfully migrated BSS/EWCS deal, use the following command:
+
+```shell
+node bss-ewcs/archive-deal.js <dealId>
+```
+
+Example:
+
+```shell
+node bss-ewcs/archive-deal.js 12345
+```
+
+This script will move the deal XML file and its associated folder from the
+migration directory to the archived success folder in the Azure fileshare.
 
 ## GEF Scripts :rocket:
 
