@@ -35,8 +35,7 @@ on:
   push:
     branches:
       # Manual deployment
-      # TODO DTFS2-19579: Point this at main once the workflow is promoted for mainline deployments.
-      - feat/DTFS2-16188-deployment
+      - dev1
 
 env:
   PRODUCT: dtfs
