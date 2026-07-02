@@ -1,4 +1,4 @@
-import { getFormattedUTCDateString } from '@ukef/dtfs2-common';
+import { getFormattedDateStringInTimeZone, getFormattedUTCDateString, TIMEZONE } from '@ukef/dtfs2-common';
 import { TfmFacilityAmendmentData } from '../../types';
 import { getAmendmentFields } from '.';
 
@@ -26,11 +26,29 @@ describe('getAmendmentFields', () => {
     const expected = {
       newAmount: amendment.value,
       previousAmount: amendment.currentValue,
-      coverEndDate: getFormattedUTCDateString(Number(amendment?.tfm?.coverEndDate)),
+      coverEndDate: getFormattedDateStringInTimeZone(Number(amendment?.tfm?.coverEndDate), TIMEZONE.DEFAULT),
       effectiveDate: getFormattedUTCDateString(Number(amendment.effectiveDate)),
     };
 
     expect(result).toEqual(expected);
+  });
+
+  it('should not shift coverEndDate by one day when timestamp is UK midnight during BST', () => {
+    // Arrange
+    const amendment: TfmFacilityAmendmentData = {
+      ...mockBaseAmendment,
+      tfm: {
+        coverEndDate: new Date('2028-06-21T00:00:00+01:00').getTime(),
+      },
+    };
+
+    // Act
+    const result = getAmendmentFields(amendment);
+
+    // Assert
+    const expected = '2028-06-21';
+
+    expect(result.coverEndDate).toEqual(expected);
   });
 
   describe('when tfm.coverEndDate is not provided', () => {
