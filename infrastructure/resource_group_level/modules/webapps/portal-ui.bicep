@@ -95,7 +95,7 @@ module portalUiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsCombined
-    deployApplicationInsights: false 
+    deployApplicationInsights: false
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
     product: product
