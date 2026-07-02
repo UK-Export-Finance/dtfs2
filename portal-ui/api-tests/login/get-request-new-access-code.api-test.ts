@@ -81,13 +81,13 @@ describe('GET /login/request-new-access-code', () => {
       expect(response.headers.location).toEqual('/login/new-access-code');
     });
 
-    it('should redirect to /login/temporarily-suspended-access-code when numberOfSignInOtpAttemptsRemaining is 0', async () => {
+    it('should redirect to /login/resend-another-access-code when numberOfSignInOtpAttemptsRemaining is 0', async () => {
       sessionCookie = await setupSessionWithAttempts(0);
 
       const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
 
       expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/login/temporarily-suspended-access-code');
+      expect(response.headers.location).toEqual('/login/resend-another-access-code');
     });
 
     it('should redirect to /login/temporarily-suspended-access-code when numberOfSignInOtpAttemptsRemaining is -1', async () => {
@@ -127,7 +127,8 @@ describe('GET /login/request-new-access-code', () => {
 
       const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
 
-      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
     });
 
     it('should render problem-with-service page when numberOfSignInOtpAttemptsRemaining is less than -1', async () => {
@@ -135,7 +136,7 @@ describe('GET /login/request-new-access-code', () => {
 
       const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
 
-      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Problem with the service');
     });
   });
