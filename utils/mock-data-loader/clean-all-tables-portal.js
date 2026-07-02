@@ -1,6 +1,8 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const gefApi = require('./gef/api');
 const centralApi = require('./centralApi');
+const { mongoDbClient: db } = require('../drivers/db-client');
 const { mockDataLoaderUser } = require('./user-helper');
 
 const cleanBanks = async (token) => {
@@ -12,6 +14,12 @@ const cleanBanks = async (token) => {
       await api.deleteBank(bank, token);
     }
   }
+};
+
+const cleanPortalBankList = async () => {
+  console.info('Portal bank list');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.PORTAL_BANK_LIST);
+  await collection.deleteMany({});
 };
 
 const cleanFacilities = async (token) => {
@@ -80,6 +88,7 @@ const cleanUsers = async (token) => {
 
 const cleanAllTablesPortal = async (token) => {
   await cleanBanks(token);
+  await cleanPortalBankList();
   await cleanDeals(token);
   await cleanFacilities(token);
   await cleanMandatoryCriteria(token);
