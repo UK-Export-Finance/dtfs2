@@ -53,3 +53,6 @@ export * from './cookie';
 export * from './crypto';
 export * from './request';
 export * from './access-code';
+export * from './RequestHeaders';
+export * from './SessionCookieResponse';
+export * from './ApiResponse';
