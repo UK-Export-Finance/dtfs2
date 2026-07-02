@@ -14,6 +14,13 @@
     {{ govukInput({
       id: 'search',
       name: 'search',
+      label: {
+        text: buttonText,
+        classes: 'govuk-visually-hidden',
+        attributes: {
+          'data-cy': 'search-input-label'
+        }
+      },
       attributes: {
         'data-cy': 'search-input'
       }
