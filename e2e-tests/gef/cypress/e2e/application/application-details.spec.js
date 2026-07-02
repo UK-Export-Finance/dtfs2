@@ -110,7 +110,8 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
@@ -191,7 +192,8 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
@@ -258,7 +260,8 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submit elements', () => {
-      applicationDetails.submitHeading();
+      applicationDetails.submitHeading().should('be.visible');
+      cy.assertText(applicationDetails.submitHeading(), 'Submit');
       submitButton();
       applicationDetails.submitValidationText().should('not.exist');
     });
