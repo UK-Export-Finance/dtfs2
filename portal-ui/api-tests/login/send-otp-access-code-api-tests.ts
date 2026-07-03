@@ -39,8 +39,7 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
     withRoleValidationOtpApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({ sixDigitAccessCode: '123456' }, headers).to(`/login/${endpoint}`),
       whitelistedRoles: allRoles,
-      successCode: 302,
-      successHeaders: { location: '/dashboard' },
+      successCode: 200,
       endpoint,
       attemptsLeft,
     });
@@ -48,8 +47,8 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
     withPartial2faAuthValidationApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({ sixDigitAccessCode: '123456' }, headers).to(`/login/${endpoint}`),
       validateResponseWasSuccessful: (response: ApiResponse) => {
-        expect(response.status).toEqual(302);
-        expect(response.headers.location).toEqual('/dashboard');
+        expect(response.status).toEqual(200);
+        expect(response.headers.location).toBeUndefined();
       },
       numberOfSignInOtpAttemptsRemaining: attemptsLeft,
     });
@@ -111,11 +110,11 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
       });
 
       function itRedirectsTheUserToDashboard() {
-        it('should redirect the user to /dashboard', async () => {
+        it('should render the post-login redirect page', async () => {
           const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
-          expect(status).toEqual(HttpStatusCode.Found);
-          expect(headers.location).toEqual('/dashboard');
+          expect(status).toEqual(200);
+          expect(headers.location).toBeUndefined();
         });
       }
 
