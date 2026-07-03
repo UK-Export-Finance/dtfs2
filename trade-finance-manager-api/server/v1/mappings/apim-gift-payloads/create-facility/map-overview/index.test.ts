@@ -1,14 +1,12 @@
 import { CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
-import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
   const baseParams = {
-    coverPercentage: 80,
     currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
     expiryDate: '2026-12-31',
@@ -20,11 +18,11 @@ describe('mapOverview', () => {
     ukefFacilityId: '123',
   };
 
-  const { coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
+  const { exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
-    amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
+    amount: facilityAmount,
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };

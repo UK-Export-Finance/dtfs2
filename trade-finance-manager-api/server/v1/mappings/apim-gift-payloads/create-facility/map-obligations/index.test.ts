@@ -10,7 +10,6 @@ describe('mapObligations', () => {
   const currency = 'GBP';
   const facilityAmount = 1500;
   const facilityType = FACILITY_TYPE.CASH;
-  const ukefExposure = 1500;
 
   describe('when isBssEwcsDeal is true', () => {
     it('should return an array with one obligation and mapped subtypeCode', () => {
@@ -25,7 +24,6 @@ describe('mapObligations', () => {
         isBssEwcsDeal,
         isGefDeal,
         bssSubtypeName,
-        ukefExposure,
       });
 
       // Assert
@@ -36,7 +34,6 @@ describe('mapObligations', () => {
             isGefDeal,
             facilityAmount,
             facilityType,
-            ukefExposure,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -61,7 +58,6 @@ describe('mapObligations', () => {
           isBssEwcsDeal,
           isGefDeal,
           bssSubtypeName: unmappedBssSubtypeName,
-          ukefExposure,
         });
 
         // Assert
@@ -72,7 +68,6 @@ describe('mapObligations', () => {
               isGefDeal,
               facilityAmount,
               facilityType,
-              ukefExposure,
             }),
             currency,
             repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -98,7 +93,6 @@ describe('mapObligations', () => {
         isBssEwcsDeal,
         isGefDeal,
         facilityType,
-        ukefExposure,
       });
 
       // Assert
@@ -109,7 +103,6 @@ describe('mapObligations', () => {
             isGefDeal,
             facilityAmount,
             facilityType,
-            ukefExposure,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -133,7 +126,6 @@ describe('mapObligations', () => {
         facilityAmount,
         isBssEwcsDeal,
         isGefDeal,
-        ukefExposure,
       });
 
       // Assert
@@ -144,7 +136,6 @@ describe('mapObligations', () => {
             isGefDeal,
             facilityAmount,
             facilityType,
-            ukefExposure,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,

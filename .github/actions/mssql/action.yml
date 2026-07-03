@@ -38,7 +38,7 @@ runs:
   steps:
     # Step 1: Check out the repository.
     - name: Repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         ref: ${{ inputs.branch }}
 

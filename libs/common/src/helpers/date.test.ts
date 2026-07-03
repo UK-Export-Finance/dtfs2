@@ -14,6 +14,8 @@ import {
   differenceInDays,
   epochSecondsToMilliseconds,
   getFormattedUTCDateString,
+  getFormattedDateStringInTimeZone,
+  normaliseEpochMilliseconds,
 } from './date';
 
 describe('date helpers', () => {
@@ -205,7 +207,55 @@ describe('date helpers', () => {
       const result = getFormattedUTCDateString(timestampMilliseconds);
 
       // Assert
-      expect(result).toEqual('2028-02-25');
+      const expected = '2028-02-25';
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getFormattedDateStringInTimeZone', () => {
+    it('should return the expected date for Unix timestamp in Europe/London time zone', () => {
+      // Arrange
+      const timestampMilliseconds = 1845154800000; // 2028-06-21T00:00:00+01:00
+
+      // Act
+      const result = getFormattedDateStringInTimeZone(timestampMilliseconds, 'Europe/London');
+
+      // Assert
+      const expected = '2028-06-21';
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should interpret Unix timestamp seconds values', () => {
+      // Arrange
+      const timestampSeconds = 1845154800; // 2028-06-21T00:00:00+01:00
+
+      // Act
+      const result = getFormattedDateStringInTimeZone(timestampSeconds, 'Europe/London');
+
+      // Assert
+      const expected = '2028-06-21';
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('normaliseEpochMilliseconds', () => {
+    it.each([
+      { epoch: 0, expected: 0 },
+      { epoch: 1, expected: 1000 },
+      { epoch: 1704067200, expected: 1704067200000 },
+      { epoch: 9_999_999_999, expected: 9_999_999_999_000 },
+      { epoch: 10_000_000_000, expected: 10_000_000_000 },
+      { epoch: 1_704_067_200_000, expected: 1_704_067_200_000 },
+      { epoch: -1, expected: -1000 },
+    ])('should normalise epoch $epoch to milliseconds $expected', ({ epoch, expected }) => {
+      // Act
+      const result = normaliseEpochMilliseconds(epoch);
+
+      // Assert
+      expect(result).toEqual(expected);
     });
   });
 

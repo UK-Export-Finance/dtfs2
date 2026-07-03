@@ -1,6 +1,7 @@
 const dealsPage = {
   heading: () => cy.get('[data-cy="deals-heading"]'),
   searchFormInput: () => cy.get('[data-cy="search-input"]'),
+  searchFormLabel: () => cy.get('[data-cy="search-input-label"]'),
   dealsTableRows: () => cy.get('[data-cy="deals-table"] tbody tr'),
   dealIdCell: (rowNumber) => cy.get('[data-cy="deals-table"] tbody tr').eq(rowNumber).children('td').eq(0),
   dealsTable: {

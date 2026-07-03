@@ -10,6 +10,7 @@ describe('mapAccrualSchedules', () => {
   it('should return an array with a mapped accrual schedule', () => {
     // Arrange
     const dayCountBasis = 360;
+    const expiryDate = '2026-12-31';
     const feeFrequency = 'Monthly';
     const feeType = 'At maturity';
     const guaranteeFeePayableToUkef = '7.0200%';
@@ -17,6 +18,7 @@ describe('mapAccrualSchedules', () => {
     // Act
     const result = mapAccrualSchedules({
       dayCountBasis,
+      expiryDate,
       feeFrequency,
       feeType,
       guaranteeFeePayableToUkef,
@@ -28,9 +30,10 @@ describe('mapAccrualSchedules', () => {
         accrualScheduleTypeCode: DEFAULTS.ACCRUAL_SCHEDULE.TYPE_CODE,
         accrualFrequencyCode: mapFrequencyCode(feeFrequency, feeType),
         accrualDayBasisCode: mapDayBasisCode(dayCountBasis),
-        baseRate: DEFAULTS.ACCRUAL_SCHEDULE.BASE_RATE,
-        spreadRate: mapSpreadRate(guaranteeFeePayableToUkef),
         additionalRate: DEFAULTS.ACCRUAL_SCHEDULE.ADDITIONAL_RATE,
+        baseRate: DEFAULTS.ACCRUAL_SCHEDULE.BASE_RATE,
+        firstCycleAccrualEndDate: expiryDate,
+        spreadRate: mapSpreadRate(guaranteeFeePayableToUkef),
       },
     ];
 

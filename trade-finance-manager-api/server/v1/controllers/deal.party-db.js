@@ -31,6 +31,29 @@ const getCompany = async (req, res) => {
 };
 
 /**
+ * Extracts the PartyURN from the provided party database information.
+ * @param {*} partyDbInfo - The party database information.
+ * @returns {string} The PartyURN or an empty string if not found.
+ */
+const extractPartyUrn = (partyDbInfo) => {
+  if (Array.isArray(partyDbInfo) && partyDbInfo.length) {
+    return partyDbInfo[0]?.partyUrn || '';
+  }
+
+  if (partyDbInfo && typeof partyDbInfo === 'object') {
+    if (partyDbInfo.partyUrn) {
+      return partyDbInfo.partyUrn;
+    }
+
+    if (Array.isArray(partyDbInfo.data)) {
+      return partyDbInfo.data[0]?.partyUrn || '';
+    }
+  }
+
+  return '';
+};
+
+/**
  * Gets a PartyURN
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
@@ -73,7 +96,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
     return '';
   }
 
-  const partyUrn = partyDbInfo?.[0]?.partyUrn;
+  const partyUrn = extractPartyUrn(partyDbInfo);
 
   if (partyUrn) {
     return partyUrn;
@@ -130,7 +153,7 @@ const addPartyUrns = async (deal, auditDetails) => {
   if (shouldCheckExistingExporterParty) {
     const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
-    exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
+    exporterPartyExistedBeforeCreate = Boolean(extractPartyUrn(existingPartyDbInfo));
   }
 
   const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
@@ -175,6 +198,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 module.exports = {
   getCompany,
   addPartyUrns,
+  extractPartyUrn,
   getPartyUrn,
   identifyDealParties,
 };

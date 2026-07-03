@@ -49,12 +49,13 @@ jobs:
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
+    environment: dev
     outputs:
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Environment 🧪
         run: echo "Environment set to ${{ env.ENVIRONMENT }}"
@@ -91,9 +92,10 @@ jobs:
     name: Deploy Resources 📊
     needs: setup
     runs-on: [self-hosted, linux, deployment]
+    environment: dev
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Login 🔐
         uses: azure/login@v3

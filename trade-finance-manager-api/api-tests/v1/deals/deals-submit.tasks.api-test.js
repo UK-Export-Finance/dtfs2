@@ -67,8 +67,10 @@ describe('/v1/deals', () => {
     describe('deal/case tasks', () => {
       describe('when deal is AIN', () => {
         it('adds AIN tasks to the deal with emailSent flag added to the first task', async () => {
+          // Arrange & Act
           const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_NO_COMPANIES_HOUSE));
 
+          // Assert
           expect(status).toEqual(200);
 
           const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
@@ -80,10 +82,13 @@ describe('/v1/deals', () => {
         });
 
         it('should call externalApis.sendEmail for first task email', async () => {
+          // Arrange
           const dealId = MOCK_DEAL_AIN_NO_COMPANIES_HOUSE._id;
 
+          // Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_NO_COMPANIES_HOUSE));
 
+          // Assert
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
@@ -110,8 +115,10 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIA', () => {
         it('adds MIA tasks to the deal with emailSent flag added to the first task', async () => {
+          // Arrange & Act
           const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
+          // Assert
           expect(status).toEqual(200);
 
           const taskCreation = await createDealTasks(submittedDeal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
@@ -123,8 +130,10 @@ describe('/v1/deals', () => {
         });
 
         it('should call externalApis.sendEmail for first task email', async () => {
+          // Arrange & Act
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
+          // Assert
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
@@ -150,14 +159,19 @@ describe('/v1/deals', () => {
 
       describe('when deal is MIN', () => {
         it('adds NOT add tasks to the deal', async () => {
+          // Arrange & Act
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
+          // Assert
           expect(status).toEqual(200);
           expect(body.tfm.tasks).toBeUndefined();
         });
 
         it('should NOT call externalApis.sendEmail', async () => {
+          // Arrange & Act
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
+
+          // Assert
           expect(sendEmailApiSpy).not.toHaveBeenCalled();
         });
       });

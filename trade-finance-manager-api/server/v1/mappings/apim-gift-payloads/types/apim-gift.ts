@@ -37,9 +37,10 @@ export type ApimAccrualSchedule = {
   accrualScheduleTypeCode: ApimGiftAccrualScheduleTypeCode;
   accrualFrequencyCode: ApimGiftAccrualFrequencyCodeType | null;
   accrualDayBasisCode: ApimGiftDayBasisType | null;
-  baseRate: number;
-  spreadRate: number | null;
   additionalRate: number;
+  baseRate: number;
+  firstCycleAccrualEndDate: string;
+  spreadRate: number | null;
 };
 
 export type ApimGiftCounterparty = {
