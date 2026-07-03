@@ -131,8 +131,8 @@ describe('POST /login', () => {
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
-      expect(headers).toHaveProperty('location', '/login');
+      expect(status).toEqual(200);
+      expect(headers).not.toHaveProperty('location');
     });
 
     it('should redirect to the temporarily suspended access code page if the sign in OTP returns 403', async () => {
