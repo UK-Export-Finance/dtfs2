@@ -105,6 +105,56 @@ context('Dashboard Deals filters', () => {
     });
   });
 
+  describe('keyboard Tab order across the filter panel', () => {
+    const panelFocusables = () =>
+      filters.panel.container().find('input:visible, button:visible, a:visible, select:visible, textarea:visible, [tabindex]:visible').not('[tabindex="-1"]');
+
+    before(() => {
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
+      filters.showHideButton().click();
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should move focus into the filter panel on Tab from the Hide filter button', () => {
+      cy.focused().tab();
+
+      panelFocusables().first().should('have.focus');
+    });
+
+    it('should return focus to the Hide filter button on Shift+Tab from the first filter control', () => {
+      panelFocusables().first().focus();
+      cy.focused().tab({ shift: true });
+
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should move focus out of the filter panel on Tab from the last filter control', () => {
+      panelFocusables().last().focus();
+      cy.focused().tab();
+
+      filters.showHideButton().should('not.have.focus');
+      filters.panel.container().then(($panel) => {
+        cy.focused().then(($focused) => {
+          expect($panel[0].contains($focused[0])).to.equal(false);
+        });
+      });
+    });
+
+    it('should return focus to the last filter control on Shift+Tab from the element after the toggle', () => {
+      panelFocusables().last().as('lastInPanel').focus();
+      cy.focused().tab();
+      cy.focused().tab({ shift: true });
+
+      cy.get('@lastInPanel').should('have.focus');
+    });
+  });
+
   describe('renders all filters empty/unchecked by default', () => {
     before(() => {
       cy.login(BANK1_MAKER1);

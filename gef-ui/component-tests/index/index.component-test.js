@@ -58,7 +58,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/mojFilters.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFilters.js"]')
-      .toHaveAttribute('integrity', 'sha512-yedoPjXB4VDSECpJ9v3aBxUjZqT3lqIvz0jBRGMHKWsvXw3UFIlymaPtF1PURzAKHcw7/fRKq/vvozJqQDtF1w==');
+      .toHaveAttribute('integrity', 'sha512-lSCxu3aopua3cT3X1yRGoHKBPRH4x87fEYuf88yi55UyJugwBw4IYk95wE39EJocBIs2m00rSDzzV1ng9lRbfA==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {

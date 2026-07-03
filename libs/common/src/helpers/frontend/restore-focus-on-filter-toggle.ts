@@ -4,6 +4,115 @@ export type RestoreFocusOnFilterToggleOptions = {
   filterPanelId: string;
 };
 
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
+const isVisible = (element: HTMLElement): boolean => element.offsetParent !== null;
+
+const getFocusableWithin = (root: HTMLElement): HTMLElement[] => Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(isVisible);
+
+/**
+ * Wires a keyboard router that keeps Tab / Shift+Tab order consistent between
+ * the toggle button, the filter panel and the element that follows the toggle
+ * in the DOM.
+ *
+ * The MOJ `moj-filter-layout` renders the filter panel BEFORE the toggle and
+ * results in the DOM. Without this router, pressing Tab on the expanded toggle
+ * jumps forward past the just-revealed panel and lands on the "Clear filters"
+ * link or the results table, forcing screen-reader and keyboard-only users to
+ * reverse direction with Shift+Tab to interact with the filter form. This
+ * violates WCAG 2.4.3 Focus Order.
+ *
+ * The router only acts while the panel is expanded (checked via the toggle's
+ * `aria-expanded` attribute, which MOJ maintains), so the collapsed-state Tab
+ * order is unchanged.
+ */
+const setupFilterPanelTabRouter = (toggleButton: HTMLButtonElement, filterPanel: HTMLElement): void => {
+  const isPanelExpanded = (): boolean => toggleButton.getAttribute('aria-expanded') === 'true';
+
+  const findNextFocusableAfterToggle = (): HTMLElement | null => {
+    const focusable = Array.from(document.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(isVisible);
+    const start = focusable.indexOf(toggleButton);
+
+    // If the toggle is not in the list of focusable elements, something is wrong.
+    if (start === -1) {
+      return null;
+    }
+
+    // Find the next focusable element after the toggle that is not inside the filter panel.
+    for (let i = start + 1; i < focusable.length; i += 1) {
+      const candidate = focusable[i];
+
+      if (candidate && !filterPanel.contains(candidate)) {
+        return candidate;
+      }
+    }
+
+    return null;
+  };
+
+  document.addEventListener('keydown', (event) => {
+    // Only act on Tab / Shift+Tab when the panel is expanded.
+    if (event.key !== 'Tab' || event.defaultPrevented || !isPanelExpanded()) {
+      return;
+    }
+    // Get the currently focused element, if any.
+    const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    if (!active) {
+      return;
+    }
+
+    const panelFocusables = getFocusableWithin(filterPanel);
+    const firstInPanel = panelFocusables[0];
+    const lastInPanel = panelFocusables[panelFocusables.length - 1];
+
+    // Tab from the toggle → first focusable inside the panel.
+    if (!event.shiftKey && active === toggleButton && firstInPanel) {
+      event.preventDefault();
+      firstInPanel.focus({ preventScroll: true });
+      return;
+    }
+
+    if (filterPanel.contains(active)) {
+      // Shift+Tab from the first focusable in the panel → back to the toggle.
+      if (event.shiftKey && active === firstInPanel) {
+        event.preventDefault();
+        toggleButton.focus({ preventScroll: true });
+        return;
+      }
+
+      // Tab from the last focusable in the panel → first focusable after the toggle.
+      if (!event.shiftKey && active === lastInPanel) {
+        const next = findNextFocusableAfterToggle();
+
+        if (next) {
+          event.preventDefault();
+          next.focus({ preventScroll: true });
+        }
+      }
+
+      return;
+    }
+
+    // Shift+Tab from the element that follows the toggle → last focusable in the panel.
+    if (event.shiftKey && lastInPanel) {
+      const nextAfterToggle = findNextFocusableAfterToggle();
+
+      if (nextAfterToggle && active === nextAfterToggle) {
+        event.preventDefault();
+        lastInPanel.focus({ preventScroll: true });
+      }
+    }
+  });
+};
+
 /**
  * Neutralises the MOJ `FilterToggleButton` behaviours that break the DAC
  * focus-order acceptance criterion, and links the toggle to its filter panel
@@ -71,6 +180,7 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
   if (toggleButton) {
     toggleButton.setAttribute('aria-controls', filterPanel.id);
     toggleButton.removeAttribute('aria-haspopup');
+    setupFilterPanelTabRouter(toggleButton, filterPanel);
   }
 
   const focusPing = document.createElement('div');
