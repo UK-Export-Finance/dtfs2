@@ -165,24 +165,31 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
   const toggleContainer = document.querySelector<HTMLElement>(toggleContainerSelector);
   const filterPanel = document.querySelector<HTMLElement>(filterPanelSelector);
 
+  // Bail out on pages that don't render the filter action bar (e.g. login).
   if (!toggleContainer || !filterPanel) {
     return;
   }
 
+  // Guarantee the panel has an id so `aria-controls` below always resolves.
   if (!filterPanel.id) {
     filterPanel.id = filterPanelId;
   }
 
+  // Neutralise MOJ's `tabindex="-1"` so its `.focus()` on the panel becomes a no-op.
   filterPanel.removeAttribute('tabindex');
 
   const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
 
   if (toggleButton) {
+    // Advertise the disclosure relationship to assistive tech.
     toggleButton.setAttribute('aria-controls', filterPanel.id);
+    // MOJ's default `aria-haspopup="true"` is misleading — the panel is a disclosure, not a popup.
     toggleButton.removeAttribute('aria-haspopup');
     setupFilterPanelTabRouter(toggleButton, filterPanel);
   }
 
+  // Offscreen "focus ping" used to force a real blur → focus pair on the toggle
+  // (browsers optimise away blur+re-focus on the same element).
   const focusPing = document.createElement('div');
   focusPing.setAttribute('tabindex', '-1');
   focusPing.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;outline:none;';
@@ -191,14 +198,20 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
   toggleContainer.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target.closest('button') : null;
 
+    // Ignore clicks that aren't on the toggle button itself (e.g. bubbled from children).
     if (!target || !toggleContainer.contains(target)) {
       return;
     }
 
+    // Two rAFs wait for MOJ's toggle handler + layout reflow + paint to finish
+    // before we bounce focus via the ping and restore it to the toggle. The
+    // setTimeout gives the accessibility tree a beat to register the ping.
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
         focusPing.focus({ preventScroll: true });
         window.setTimeout(() => {
+          // `preventScroll` avoids jumping the page when the toggle's new
+          // position (after the panel expands/collapses) would otherwise scroll.
           target.focus({ preventScroll: true });
         }, 50);
       });
