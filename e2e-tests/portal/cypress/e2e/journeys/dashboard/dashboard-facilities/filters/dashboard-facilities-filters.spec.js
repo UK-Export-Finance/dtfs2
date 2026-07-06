@@ -8,7 +8,7 @@ const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters', () => {
+context('Dashboard Facilities filters', () => {
   const ALL_FACILITIES = [];
 
   before(() => {
@@ -106,8 +106,16 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('keyboard Tab order across the filter panel', () => {
+    const TAB_KEYDOWN = { key: 'Tab', code: 'Tab', which: 9, keyCode: 9, bubbles: true };
+    const SHIFT_TAB_KEYDOWN = { ...TAB_KEYDOWN, shiftKey: true };
+
     const panelFocusables = () =>
-      filters.panel.container().find('input:visible, button:visible, a:visible, select:visible, textarea:visible, [tabindex]:visible').not('[tabindex="-1"]');
+      filters.panel
+        .container()
+        .find(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        )
+        .filter(':visible');
 
     before(() => {
       cy.login(BANK1_MAKER1);
@@ -122,28 +130,29 @@ context('Dashboard Deals filters', () => {
     });
 
     it('should move focus into the filter panel on Tab from the Hide filter button', () => {
-      cy.focused().tab();
+      filters.showHideButton().should('have.attr', 'aria-expanded', 'true');
+      filters.showHideButton().trigger('keydown', TAB_KEYDOWN);
 
-      panelFocusables().first().should('have.focus');
+      filters.panel.container().then(($panel) => {
+        cy.focused().then(($focused) => {
+          expect($panel[0].contains($focused[0])).to.equal(true);
+        });
+      });
     });
 
-    it('should return focus to the Hide filter button on Shift+Tab from the first filter control', () => {
-      panelFocusables().first().focus();
-      cy.focused().tab({ shift: true });
+    it('should return focus to the Hide filter button on Shift+Tab from the focused filter control', () => {
+      filters.showHideButton().should('have.attr', 'aria-expanded', 'true');
+      filters.showHideButton().trigger('keydown', TAB_KEYDOWN);
+      cy.focused().trigger('keydown', SHIFT_TAB_KEYDOWN);
 
       filters.showHideButton().should('have.focus');
     });
 
-    it('should move focus out of the filter panel on Tab from the last filter control', () => {
+    it('should cycle focus back to the Created by you filter on Tab from the last filter control', () => {
       panelFocusables().last().focus();
       cy.focused().tab();
 
-      filters.showHideButton().should('not.have.focus');
-      filters.panel.container().then(($panel) => {
-        cy.focused().then(($focused) => {
-          expect($panel[0].contains($focused[0])).to.equal(false);
-        });
-      });
+      dashboardFacilities.filters.panel.form.createdByYou.checkbox().should('have.focus');
     });
 
     it('should return focus to the last filter control on Shift+Tab from the element after the toggle', () => {

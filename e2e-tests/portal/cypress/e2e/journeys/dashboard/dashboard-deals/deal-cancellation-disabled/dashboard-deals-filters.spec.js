@@ -12,7 +12,7 @@ context('Dashboard Deals filters - Deal cancellation feature flag disabled', () 
   });
 
   describe('When deal cancellation is disabled on the dashboard deals page', () => {
-    it('does not display the deal cancellation status filter', () => {
+    it('should not display the deal cancellation status filter', () => {
       dashboardDeals.visit();
       filters.showHideButton().click();
 
