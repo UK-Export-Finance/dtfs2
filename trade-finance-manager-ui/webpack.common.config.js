@@ -27,6 +27,9 @@ module.exports = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   resolve: {
+    // Enable .ts resolution so transitive `.ts` imports from
+    // `@ukef/dtfs2-common/frontend` (e.g. the shared filter-focus helper) work.
+    extensions: ['.ts', '.js'],
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
       'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),

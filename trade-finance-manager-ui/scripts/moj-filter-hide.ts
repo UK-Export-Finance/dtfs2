@@ -2,6 +2,7 @@
 // document.querySelector returns a standard DOM Element without these methods, so we use jQuery to provide them.
 // See: https://api.jquery.com/removeClass/ and https://developer.mozilla.org/en-US/docs/Web/API/Element
 import $ from 'jquery';
+import { restoreFocusOnFilterToggle } from '@ukef/dtfs2-common/frontend';
 
 /**
  * Extends the global Window interface to include MOJFrontend property.
@@ -92,3 +93,12 @@ const setupFilterToggleButtonListener = (): void => {
 initialiseFilterToggleButton();
 
 setupFilterToggleButtonListener();
+
+// Satisfies the DAC focus-order acceptance criterion: keep focus on the toggle
+// button after activation, expose `aria-controls`, and route Tab / Shift+Tab so
+// the panel is traversed in visible order rather than DOM order.
+restoreFocusOnFilterToggle({
+  toggleContainerSelector: toggleButtonContainerSelector,
+  filterPanelSelector: filterSelector,
+  filterPanelId: 'payment-details-filters-panel',
+});

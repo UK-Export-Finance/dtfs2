@@ -64,7 +64,7 @@ describe(page, () => {
 
     wrapper
       .expectElement('script[src="/assets/js/mojFilterHide.js"]')
-      .toHaveAttribute('integrity', 'sha512-JqMzZELzDQpgLMAB3966ecgcgxruf/JIJDMoBG7rIj+L9e+Ux+CyQ4FEGLIiVA2D8qbjbHKELyrdlpneaL+BfA==');
+      .toHaveAttribute('integrity', 'sha512-uQUup4QnRJM/4Exwqet4MTrOu7zU5U4KPP24dKsUQwGEP3I8nVqlQPZ87/0wyJ7pGbZQgIT9+MQWCApzWMQFfg==');
   });
 
   it('should not add error prefix to page title when there are no errors', () => {
