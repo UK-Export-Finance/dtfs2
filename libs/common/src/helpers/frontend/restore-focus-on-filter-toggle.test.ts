@@ -5,6 +5,7 @@ import { restoreFocusOnFilterToggle } from './restore-focus-on-filter-toggle';
 
 type SetupOptions = {
   includeToggle?: boolean;
+  includeButton?: boolean;
   includePanel?: boolean;
   panelId?: string;
   panelTabindex?: string;
@@ -15,7 +16,7 @@ const TOGGLE_CONTAINER_SELECTOR = '.moj-action-bar__filter';
 const FILTER_PANEL_SELECTOR = '.moj-filter';
 const FILTER_PANEL_ID = 'test-filter-panel';
 
-const setupDom = ({ includeToggle = true, includePanel = true, panelId, panelTabindex, ariaHaspopup }: SetupOptions = {}) => {
+const setupDom = ({ includeToggle = true, includeButton = true, includePanel = true, panelId, panelTabindex, ariaHaspopup }: SetupOptions = {}) => {
   document.body.innerHTML = '';
 
   if (includePanel) {
@@ -37,15 +38,18 @@ const setupDom = ({ includeToggle = true, includePanel = true, panelId, panelTab
     const container = document.createElement('div');
     container.className = 'moj-action-bar__filter';
 
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = 'Show filter';
+    if (includeButton) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = 'Show filter';
 
-    if (ariaHaspopup) {
-      button.setAttribute('aria-haspopup', ariaHaspopup);
+      if (ariaHaspopup) {
+        button.setAttribute('aria-haspopup', ariaHaspopup);
+      }
+
+      container.appendChild(button);
     }
 
-    container.appendChild(button);
     document.body.appendChild(container);
   }
 };
@@ -110,6 +114,33 @@ describe('restoreFocusOnFilterToggle', () => {
     });
   });
 
+  describe('when the toggle container has no button', () => {
+    it('should not throw', () => {
+      setupDom({ includeButton: false });
+
+      expect(invoke).not.toThrow();
+    });
+
+    it('should not mutate the panel', () => {
+      setupDom({ includeButton: false, panelId: 'pre-existing-id', panelTabindex: '-1' });
+
+      invoke();
+
+      const panel = getPanel();
+
+      expect(panel.id).toEqual('pre-existing-id');
+      expect(panel.getAttribute('tabindex')).toEqual('-1');
+    });
+
+    it('should not append a focus ping element', () => {
+      setupDom({ includeButton: false });
+
+      invoke();
+
+      expect(getFocusPing()).toBeNull();
+    });
+  });
+
   describe('when both the toggle and panel are present', () => {
     describe('panel id handling', () => {
       it('should assign the fallback id to the panel when it has none', () => {
@@ -130,12 +161,20 @@ describe('restoreFocusOnFilterToggle', () => {
     });
 
     describe('panel DOM mutations', () => {
-      it('should remove `tabindex` from the panel', () => {
+      it('should remove `tabindex` from the panel when it is `-1`', () => {
         setupDom({ panelTabindex: '-1' });
 
         invoke();
 
         expect(getPanel().hasAttribute('tabindex')).toEqual(false);
+      });
+
+      it('should preserve a non `-1` tabindex on the panel', () => {
+        setupDom({ panelTabindex: '0' });
+
+        invoke();
+
+        expect(getPanel().getAttribute('tabindex')).toEqual('0');
       });
     });
 

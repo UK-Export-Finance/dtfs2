@@ -13,7 +13,18 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
-const isVisible = (element: HTMLElement): boolean => element.offsetParent !== null;
+const isVisible = (element: HTMLElement): boolean => {
+  // `getClientRects().length > 0` treats `position: fixed` elements as visible
+  // (unlike `offsetParent`, which returns null for them and would exclude any
+  // fixed-position focusable such as a sticky action bar).
+  if (element.getClientRects().length === 0) {
+    return false;
+  }
+
+  const { visibility } = window.getComputedStyle(element);
+
+  return visibility !== 'hidden' && visibility !== 'collapse';
+};
 
 const getFocusableWithin = (root: HTMLElement): HTMLElement[] => Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(isVisible);
 
@@ -138,8 +149,9 @@ const setupFilterPanelTabRouter = (toggleButton: HTMLButtonElement, filterPanel:
  * `aria-expanded` *and* the button label synchronously with the click.
  *
  * The helper works around all of these:
- *  - Removes `tabindex` from the panel so MOJ's `.focus()` on it is a no-op
- *    (fixes 1 and 3).
+ *  - Removes `tabindex` from the panel *only when MOJ has set it to `-1`* so
+ *    its `.focus()` on the panel becomes a no-op (fixes 1 and 3). Non-MOJ
+ *    tabindex values on the panel are preserved.
  *  - Removes `aria-haspopup` from the button (fixes 2).
  *  - On every click of the toggle container, moves focus to a hidden
  *    offscreen "focus ping" element and then back to the toggle button.
@@ -160,6 +172,9 @@ const setupFilterPanelTabRouter = (toggleButton: HTMLButtonElement, filterPanel:
  *
  * The panel's `id` is set to `filterPanelId` when absent so `aria-controls`
  * always resolves to a real element.
+ *
+ * The helper bails out with no side effects when the toggle container, the
+ * filter panel, or the toggle button inside the container is missing.
  */
 export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPanelSelector, filterPanelId }: RestoreFocusOnFilterToggleOptions): void => {
   const toggleContainer = document.querySelector<HTMLElement>(toggleContainerSelector);
@@ -170,23 +185,32 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
     return;
   }
 
+  const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
+
+  // Bail out if the toggle button is missing so the helper has no side effects
+  // (no focus-ping, no click handler, no panel mutations) unless it can fully
+  // initialise the disclosure contract.
+  if (!toggleButton) {
+    return;
+  }
+
   // Guarantee the panel has an id so `aria-controls` below always resolves.
   if (!filterPanel.id) {
     filterPanel.id = filterPanelId;
   }
 
-  // Neutralise MOJ's `tabindex="-1"` so its `.focus()` on the panel becomes a no-op.
-  filterPanel.removeAttribute('tabindex');
-
-  const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
-
-  if (toggleButton) {
-    // Advertise the disclosure relationship to assistive tech.
-    toggleButton.setAttribute('aria-controls', filterPanel.id);
-    // MOJ's default `aria-haspopup="true"` is misleading — the panel is a disclosure, not a popup.
-    toggleButton.removeAttribute('aria-haspopup');
-    setupFilterPanelTabRouter(toggleButton, filterPanel);
+  // Neutralise MOJ's `tabindex="-1"` so its `.focus()` on the panel becomes a
+  // no-op. Only remove the attribute when it matches MOJ's value so callers
+  // that intentionally set a different tabindex on the panel are respected.
+  if (filterPanel.getAttribute('tabindex') === '-1') {
+    filterPanel.removeAttribute('tabindex');
   }
+
+  // Advertise the disclosure relationship to assistive tech.
+  toggleButton.setAttribute('aria-controls', filterPanel.id);
+  // MOJ's default `aria-haspopup="true"` is misleading — the panel is a disclosure, not a popup.
+  toggleButton.removeAttribute('aria-haspopup');
+  setupFilterPanelTabRouter(toggleButton, filterPanel);
 
   // Offscreen "focus ping" used to force a real blur → focus pair on the toggle
   // (browsers optimise away blur+re-focus on the same element).
