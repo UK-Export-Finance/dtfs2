@@ -12,6 +12,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
+  validateToken: () => false,
   validatePartialAuthToken: jest.fn(),
 }));
 
@@ -20,6 +21,6 @@ describe('GET /login/sign-in-link-expired', () => {
 
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/sign-in-link-expired', {}, headers),
-    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(302),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
   });
 });

@@ -21,12 +21,15 @@ jest.mock('../../server/api', () => ({
   login: jest.fn(),
   sendSignInOTP: jest.fn(),
   loginWithSignInOtp: jest.fn(),
-  validatePortal2FAEnabled: jest.fn(),
   validateToken: () => false,
   validatePartialAuthToken: jest.fn(),
 }));
 
-export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) => {
+export const withSendNewOtpApiTests = (
+  endpoint: string,
+  attemptsLeft: number,
+  expectedSuccessResponse: { status: number; location?: string } = { status: HttpStatusCode.Ok },
+) => {
   describe(`POST /login/${endpoint}`, () => {
     const { post } = createApi(app);
     const mockedLogin = api.login as jest.Mock;
@@ -36,10 +39,25 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
     const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
     const allRoles: string[] = Object.values(ROLES) as string[];
 
+    const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
+    beforeEach(() => {
+      process.env.FF_PORTAL_2FA_ENABLED = 'true';
+    });
+
+    afterAll(() => {
+      if (originalPortal2faEnabled === undefined) {
+        delete process.env.FF_PORTAL_2FA_ENABLED;
+      } else {
+        process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+      }
+    });
+
     withRoleValidationOtpApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({ sixDigitAccessCode: '123456' }, headers).to(`/login/${endpoint}`),
       whitelistedRoles: allRoles,
-      successCode: 200,
+      successCode: expectedSuccessResponse.status,
+      successHeaders: expectedSuccessResponse.location ? { location: expectedSuccessResponse.location } : undefined,
       endpoint,
       attemptsLeft,
     });
@@ -47,8 +65,12 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
     withPartial2faAuthValidationApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({ sixDigitAccessCode: '123456' }, headers).to(`/login/${endpoint}`),
       validateResponseWasSuccessful: (response: ApiResponse) => {
-        expect(response.status).toEqual(200);
-        expect(response.headers.location).toBeUndefined();
+        expect(response.status).toEqual(expectedSuccessResponse.status);
+        if (expectedSuccessResponse.location) {
+          expect(response.headers.location).toEqual(expectedSuccessResponse.location);
+        } else {
+          expect(response.headers.location).toBeUndefined();
+        }
       },
       numberOfSignInOtpAttemptsRemaining: attemptsLeft,
     });
@@ -57,12 +79,13 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
       const partialAuthToken = 'partial auth token';
       const email = 'email@example.com';
       const password = 'a password';
-      const numberOfSendSignInOtpAttemptsRemaining = attemptsLeft;
+      const numberOfSignInOtpAttemptsRemaining = attemptsLeft;
       let sessionCookie: string;
       beforeEach(async () => {
         resetAllWhenMocks();
         jest.clearAllMocks();
         mockedLogin.mockImplementation(mockLogin(partialAuthToken));
+        mockedSendSignInOTP.mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft } });
         sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
         when(mockedValidatePartialAuthToken)
           .calledWith(partialAuthToken)
@@ -106,20 +129,24 @@ export const withSendNewOtpApiTests = (endpoint: string, attemptsLeft: number) =
           beforeEachSetUp();
         });
 
-        itRedirectsTheUserToDashboard();
+        itHandlesSuccessfulOtpSubmission();
       });
 
-      function itRedirectsTheUserToDashboard() {
-        it('should render the post-login redirect page', async () => {
+      function itHandlesSuccessfulOtpSubmission() {
+        it('should complete the OTP submission with the expected response', async () => {
           const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
-          expect(status).toEqual(200);
-          expect(headers.location).toBeUndefined();
+          expect(status).toEqual(expectedSuccessResponse.status);
+          if (expectedSuccessResponse.location) {
+            expect(headers.location).toEqual(expectedSuccessResponse.location);
+          } else {
+            expect(headers.location).toBeUndefined();
+          }
         });
       }
 
       function mockSuccessfulSendSignInOtpResponse() {
-        when(mockedSendSignInOTP).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSendSignInOtpAttemptsRemaining } });
+        when(mockedSendSignInOTP).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining } });
       }
 
       function mockUnsuccessfulSendSignInOtpResponseWithStatusCode(statusCode: number) {

@@ -52,7 +52,7 @@ describe('POST /login', () => {
     });
 
     it('should not send a sign in OTP', async () => {
-      await loginWith({ email: anEmail, password: '' });
+      await loginWith({ email: '', password: aPassword });
       expect(api.sendSignInOTP).not.toHaveBeenCalled();
     });
   });

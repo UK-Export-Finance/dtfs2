@@ -68,7 +68,7 @@ export const withRoleValidationOtpApiTests = ({
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
 
-            // Set up session with numberOfSignInOtpAttemptsRemaining = 2 by calling the sendNewSignInLink endpoint
+            // Prime session numberOfSignInOtpAttemptsRemaining by POSTing to /login/${endpoint}, which invokes sendSignInOTP
             await post({}, { Cookie: [sessionCookie] }).to(`/login/${endpoint}`);
 
             const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
@@ -97,7 +97,7 @@ export const withRoleValidationOtpApiTests = ({
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
 
-          // Set up session with numberOfSignInOtpAttemptsRemaining = 2 by calling the sendSignInOTP endpoint
+          // Prime session numberOfSignInOtpAttemptsRemaining by POSTing to /login/${endpoint}, which invokes sendSignInOTP
           await post({}, { Cookie: [sessionCookie] }).to(`/login/${endpoint}`);
 
           const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });

@@ -31,6 +31,20 @@ export const withPartial2faAuthValidationApiTests = ({
   describe('partial 2fa auth validation', () => {
     let sessionCookie: string;
 
+    const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
+    beforeAll(() => {
+      process.env.FF_PORTAL_2FA_ENABLED = 'true';
+    });
+
+    afterAll(() => {
+      if (originalPortal2faEnabled === undefined) {
+        delete process.env.FF_PORTAL_2FA_ENABLED;
+      } else {
+        process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+      }
+    });
+
     beforeEach(async () => {
       when(validatePartialAuthToken).resetWhenMocks();
       (login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
