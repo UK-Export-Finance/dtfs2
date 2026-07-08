@@ -1469,7 +1469,7 @@ jobs:
         id: project
         run: |
           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Execute
         uses: ./.github/actions/rerun
@@ -1580,7 +1580,7 @@ jobs:
         id: project
         run: |
           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Execute
         uses: ./.github/actions/rerun
@@ -1669,7 +1669,7 @@ jobs:
         id: project
         run: |
           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Execute
         uses: ./.github/actions/rerun
