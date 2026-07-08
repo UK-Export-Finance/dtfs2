@@ -46,7 +46,7 @@ describe('getPortalBankList', () => {
       jest.mocked(api.getPortalBankList).mockResolvedValue([]);
     });
 
-    it('should respond with a 200 and an empty array', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok} and an empty array`, async () => {
       const res = getMockResponse();
 
       await getPortalBankList({}, res);
@@ -102,7 +102,7 @@ describe('getPortalBankList', () => {
       jest.mocked(api.getPortalBankList).mockRejectedValue(unknownError);
     });
 
-    it('should respond with a 500 and a generic error body', async () => {
+    it(`should respond with a ${HttpStatusCode.InternalServerError} and a generic error body`, async () => {
       const res = getMockResponse();
 
       await getPortalBankList({}, res);

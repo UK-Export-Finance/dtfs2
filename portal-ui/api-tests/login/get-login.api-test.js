@@ -12,6 +12,7 @@ jest.mock('../../server/api', () => ({
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
@@ -24,6 +25,6 @@ describe('GET /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login', {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 });

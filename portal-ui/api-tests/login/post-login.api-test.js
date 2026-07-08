@@ -11,7 +11,7 @@ jest.mock('../../server/api', () => ({
   getPortalBankList: jest.fn().mockResolvedValue([]),
 }));
 
-const { AxiosError } = require('axios');
+const { AxiosError, HttpStatusCode } = require('axios');
 const { when } = require('jest-when');
 const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
@@ -37,7 +37,7 @@ describe('POST /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => post({}, headers).to('/login'),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 
   describe('when the email is empty', () => {
@@ -75,11 +75,11 @@ describe('POST /login', () => {
     });
   });
 
-  describe('when the login attempt returns a 403', () => {
+  describe(`when the login attempt returns a ${HttpStatusCode.Forbidden}`, () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockRejectedValue({ response: { status: 403 } });
+        .mockRejectedValue({ response: { status: HttpStatusCode.Forbidden } });
     });
 
     it('does not send a sign in link', async () => {
@@ -87,9 +87,9 @@ describe('POST /login', () => {
       expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
 
-    it('returns a 403', async () => {
+    it(`should return ${HttpStatusCode.Forbidden}`, async () => {
       const { status } = await loginWith({ email: anEmail, password: aPassword });
-      expect(status).toEqual(403);
+      expect(status).toEqual(HttpStatusCode.Forbidden);
     });
   });
 
@@ -112,7 +112,7 @@ describe('POST /login', () => {
     it('redirects the user to the check-your-email page if the sign in link is sent successfully', async () => {
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
+      expect(status).toEqual(HttpStatusCode.Found);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
     });
 
@@ -121,18 +121,18 @@ describe('POST /login', () => {
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
+      expect(status).toEqual(HttpStatusCode.Found);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
     });
 
-    it('returns a 403 if the sign in link returns 403', async () => {
+    it(`should return ${HttpStatusCode.Forbidden} if the sign in link returns ${HttpStatusCode.Forbidden}`, async () => {
       when(api.sendSignInLink)
         .calledWith(token)
-        .mockRejectedValueOnce({ response: { status: 403 } });
+        .mockRejectedValueOnce({ response: { status: HttpStatusCode.Forbidden } });
 
       const { status } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(403);
+      expect(status).toEqual(HttpStatusCode.Forbidden);
     });
   });
 });

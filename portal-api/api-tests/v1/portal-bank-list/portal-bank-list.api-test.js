@@ -48,7 +48,7 @@ describe('/v1/portal-bank-list', () => {
         expect(body).toEqual(banks);
       });
 
-      it('should return 200 with an empty array when the central api returns no banks', async () => {
+      it(`should return ${HttpStatusCode.Ok} with an empty array when the central api returns no banks`, async () => {
         api.getPortalBankList.mockResolvedValueOnce([]);
 
         const { status, body } = await get(URL, { headers: validHeaders });
@@ -57,12 +57,13 @@ describe('/v1/portal-bank-list', () => {
         expect(body).toEqual([]);
       });
 
-      it('should return 500 with an error body when the central api throws an unknown error', async () => {
+      it(`should return ${HttpStatusCode.InternalServerError} with an error body when the central api throws an unknown error`, async () => {
         api.getPortalBankList.mockRejectedValueOnce(new Error('Network down'));
 
         const { status, body } = await get(URL, { headers: validHeaders });
 
         expect(status).toEqual(HttpStatusCode.InternalServerError);
+
         expect(body).toEqual({
           status: HttpStatusCode.InternalServerError,
           message: 'Failed to get portal bank list',

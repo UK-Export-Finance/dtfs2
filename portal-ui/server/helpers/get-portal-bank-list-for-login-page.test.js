@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const api = require('../api');
 const { getPortalBankListForLoginPage } = require('./get-portal-bank-list-for-login-page');
 
@@ -36,9 +37,9 @@ describe('getPortalBankListForLoginPage', () => {
   });
 
   describe('when the api call fails', () => {
-    const error = Object.assign(new Error('Request failed with status code 503'), {
+    const error = Object.assign(new Error(`Request failed with status code ${HttpStatusCode.ServiceUnavailable}`), {
       isAxiosError: true,
-      response: { status: 503 },
+      response: { status: HttpStatusCode.ServiceUnavailable },
     });
 
     beforeEach(() => {
@@ -51,10 +52,14 @@ describe('getPortalBankListForLoginPage', () => {
       expect(result).toEqual([]);
     });
 
-    it('should log a redacted error message with status', async () => {
+    it(`should log a redacted error message with status ${HttpStatusCode.ServiceUnavailable}`, async () => {
       await getPortalBankListForLoginPage();
 
-      expect(console.error).toHaveBeenCalledWith('Failed to load portal bank list for login page: %s (status: %s)', 'Request failed with status code 503', 503);
+      expect(console.error).toHaveBeenCalledWith(
+        'Failed to load portal bank list for login page: %s (status: %s)',
+        `Request failed with status code ${HttpStatusCode.ServiceUnavailable}`,
+        HttpStatusCode.ServiceUnavailable,
+      );
     });
   });
 
