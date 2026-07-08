@@ -34,9 +34,20 @@ describe('GET /login/request-new-access-code', () => {
   const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
   const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
 
+  const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
   beforeEach(() => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
+
+  afterAll(() => {
+    if (originalPortal2faEnabled === undefined) {
+      delete process.env.FF_PORTAL_2FA_ENABLED;
+    } else {
+      process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+    }
+  });
+
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/request-new-access-code', {}, headers),
     validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(302),

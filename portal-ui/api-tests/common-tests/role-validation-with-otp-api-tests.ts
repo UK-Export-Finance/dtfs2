@@ -50,9 +50,20 @@ export const withRoleValidationOtpApiTests = ({
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
+    const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
     beforeEach(() => {
       process.env.FF_PORTAL_2FA_ENABLED = 'true';
     });
+
+    afterAll(() => {
+      if (originalPortal2faEnabled === undefined) {
+        delete process.env.FF_PORTAL_2FA_ENABLED;
+      } else {
+        process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+      }
+    });
+
     if (!disableHappyPath) {
       // TODO DTFS2-6654: remove and test happy paths.
       if (whitelistedRoles.length) {

@@ -29,12 +29,22 @@ describe('POST /login', () => {
   const aPassword = 'a password';
   const token = 'a token';
 
+  const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
   beforeEach(() => {
     process.env.FF_PORTAL_2FA_ENABLED = 'true';
   });
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    if (originalPortal2faEnabled === undefined) {
+      delete process.env.FF_PORTAL_2FA_ENABLED;
+    } else {
+      process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+    }
   });
 
   const loginWith = ({ email, password }: { email: string; password: string }) => post({ email, password }).to('/login');
