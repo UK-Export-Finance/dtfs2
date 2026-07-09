@@ -50,7 +50,7 @@ describe('GET /login/request-new-access-code', () => {
 
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/request-new-access-code', {}, headers),
-    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(302),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(HttpStatusCode.Found),
     numberOfSignInOtpAttemptsRemaining: 2,
   });
 

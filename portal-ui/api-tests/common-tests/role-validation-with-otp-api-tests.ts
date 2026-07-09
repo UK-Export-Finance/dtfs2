@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
@@ -92,9 +93,9 @@ export const withRoleValidationOtpApiTests = ({
 
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("should return a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+        it.each(nonWhitelistedRoles)(`should return a ${HttpStatusCode.Found} response if the user only has the '%s' role`, async (disallowedRole) => {
           mockedLogin.mockImplementation(mockLogin());
-          mockedSendSignInOTP.mockResolvedValue(mockSuccessfulSendSignInOtp());
+          mockedSendSignInOTP.mockResolvedValue(mockSuccessfulSendSignInOtp(attemptsLeft));
           mockedLoginWithSignInOtp.mockResolvedValue({
             loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
             token: 'mock 2FA validated token',
@@ -105,7 +106,7 @@ export const withRoleValidationOtpApiTests = ({
 
           const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 
-          expect(response.status).toEqual(302);
+          expect(response.status).toEqual(HttpStatusCode.Found);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';
           expect(response.headers.location).toEqual(redirectUrl);
         });

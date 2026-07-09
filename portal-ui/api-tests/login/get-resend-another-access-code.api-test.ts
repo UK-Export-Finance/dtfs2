@@ -48,7 +48,7 @@ describe('GET /login/resend-another-access-code', () => {
 
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/resend-another-access-code', {}, headers),
-    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(HttpStatusCode.Ok),
     numberOfSignInOtpAttemptsRemaining: 0,
   });
 

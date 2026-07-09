@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import type { AxiosResponse } from 'axios';
+import { HttpStatusCode, type AxiosResponse } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '@ukef/dtfs2-common';
 import * as api from '../../server/api';
@@ -62,7 +62,7 @@ export const withPartial2faAuthValidationApiTests = ({
 
     it('should redirect to /login if the user does not have a session', async () => {
       const response = await makeRequestWithHeaders();
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/login');
     });
 
@@ -71,7 +71,7 @@ export const withPartial2faAuthValidationApiTests = ({
 
       const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/login');
     });
 

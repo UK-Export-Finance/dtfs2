@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
-import { ROLES } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
 import * as api from '../../server/api';
@@ -85,6 +85,11 @@ export const withSendNewOtpApiTests = (
         jest.clearAllMocks();
         mockedLogin.mockImplementation(mockLogin(partialAuthToken));
         mockedSendSignInOTP.mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: attemptsLeft } });
+        (api.loginWithSignInOtp as jest.Mock).mockResolvedValue({
+          loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
+          token: 'mock 2FA validated token',
+          user: { roles: [ROLES.MAKER] },
+        });
         sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
         when(mockedValidatePartialAuthToken)
           .calledWith(partialAuthToken)

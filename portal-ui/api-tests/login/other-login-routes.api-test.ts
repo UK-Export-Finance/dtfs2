@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { RequestHeaders } from '@ukef/dtfs2-common';
@@ -27,7 +28,7 @@ describe('GET /logout', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/logout', {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 302,
+    successCode: HttpStatusCode.Found,
     successHeaders: { location: '/login' },
   });
 });
@@ -39,7 +40,7 @@ describe('GET /reset-password', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/reset-password', {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 });
 
@@ -50,7 +51,7 @@ describe('POST /reset-password', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to('/reset-password'),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 });
 
@@ -61,6 +62,6 @@ describe('GET /reset-password/:pwdResetToken', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get(`/reset-password/${pwdResetToken}`, {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 });

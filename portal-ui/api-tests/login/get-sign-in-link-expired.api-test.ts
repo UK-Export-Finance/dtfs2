@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { RequestHeaders } from '@ukef/dtfs2-common';
 import app from '../../server/createApp';
@@ -21,6 +22,6 @@ describe('GET /login/sign-in-link-expired', () => {
 
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/sign-in-link-expired', {}, headers),
-    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(HttpStatusCode.Ok),
   });
 });

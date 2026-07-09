@@ -1,4 +1,5 @@
 import { resetAllWhenMocks, when } from 'jest-when';
+import { HttpStatusCode } from 'axios';
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
@@ -37,14 +38,14 @@ export const withSendNewSignInLinkApiTests = (endpoint: string) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to(`/login/${endpoint}`),
       whitelistedRoles: allRoles,
-      successCode: 302,
+      successCode: HttpStatusCode.Found,
       successHeaders: { location: '/login/check-your-email' },
     });
 
     withPartial2faAuthValidationApiTests({
       makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to(`/login/${endpoint}`),
       validateResponseWasSuccessful: (response: ApiResponse) => {
-        expect(response.status).toEqual(302);
+        expect(response.status).toEqual(HttpStatusCode.Found);
         expect(response.headers.location).toEqual('/login/check-your-email');
       },
     });
@@ -80,7 +81,7 @@ export const withSendNewSignInLinkApiTests = (endpoint: string) => {
         it('should redirect the user to /login', async () => {
           const { status, headers } = await post({}).to(`/login/${endpoint}`);
 
-          expect(status).toEqual(302);
+          expect(status).toEqual(HttpStatusCode.Found);
           expect(headers.location).toEqual('/login');
         });
       });
@@ -117,7 +118,7 @@ export const withSendNewSignInLinkApiTests = (endpoint: string) => {
         it('should redirect the user to /login/check-your-email', async () => {
           const { status, headers } = await post({}, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
-          expect(status).toEqual(302);
+          expect(status).toEqual(HttpStatusCode.Found);
           expect(headers.location).toEqual('/login/check-your-email');
         });
       }
@@ -143,11 +144,11 @@ export const withSendNewSignInLinkApiTests = (endpoint: string) => {
       }
 
       function mock403SendSignInLinkResponse() {
-        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(403);
+        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(HttpStatusCode.Forbidden);
       }
 
       function mock500SendSignInLinkResponse() {
-        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(500);
+        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(HttpStatusCode.InternalServerError);
       }
     });
   });

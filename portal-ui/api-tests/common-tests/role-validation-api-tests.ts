@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { RequestHeaders, SessionCookieResponse, ApiResponse } from '@ukef/dtfs2-common';
@@ -65,7 +66,7 @@ export const withRoleValidationApiTests = ({
 
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("should return a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+        it.each(nonWhitelistedRoles)(`should return a ${HttpStatusCode.Found} response if the user only has the '%s' role`, async (disallowedRole) => {
           (login as jest.Mock).mockImplementation(mockLogin());
           (loginWithSignInLink as jest.Mock).mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 
@@ -73,7 +74,7 @@ export const withRoleValidationApiTests = ({
           await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
           const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-          expect(response.status).toEqual(302);
+          expect(response.status).toEqual(HttpStatusCode.Found);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';
           expect(response.headers.location).toEqual(redirectUrl);
         });

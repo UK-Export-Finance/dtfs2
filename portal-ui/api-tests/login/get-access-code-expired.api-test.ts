@@ -48,7 +48,7 @@ describe('GET /login/access-code-expired', () => {
 
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/access-code-expired', {}, headers),
-    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(200),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(HttpStatusCode.Ok),
     numberOfSignInOtpAttemptsRemaining: 2,
   });
 
