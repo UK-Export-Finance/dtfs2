@@ -212,7 +212,7 @@ jobs:
           sqlDbName=${{ secrets.SQL_DB_NAME }} \
           sqlDbPassword=${{ secrets.SQL_DB_PASSWORD }} \
           sqlDbPort=${{ secrets.SQL_DB_PORT }} \
-          sqlDbUsername=${{ secrets.SQL_DB_USERNAME }} \"
+          sqlDbUsername=${{ secrets.SQL_DB_USERNAME }}"
 
           echo "BICEP_PARAMETERS=$BICEP_PARAMETERS" >> $GITHUB_ENV
 
