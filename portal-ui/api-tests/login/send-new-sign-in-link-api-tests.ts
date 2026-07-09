@@ -115,7 +115,7 @@ export const withSendNewSignInLinkApiTests = (endpoint: string) => {
 
       function itRedirectsTheUserToCheckYourEmail() {
         it('should redirect the user to /login/check-your-email', async () => {
-          const { status, headers } = await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
+          const { status, headers } = await post({}, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
           expect(status).toEqual(302);
           expect(headers.location).toEqual('/login/check-your-email');

@@ -11,7 +11,6 @@ type WithRoleValidationOtpApiTestsParams = {
   whitelistedRoles: string[];
   successCode: number;
   successHeaders?: Record<string, unknown>;
-  endpoint: string;
   attemptsLeft?: number;
   disableHappyPath?: boolean;
   redirectUrlForInvalidRoles?: string;
@@ -22,7 +21,6 @@ export const withRoleValidationOtpApiTests = ({
   whitelistedRoles,
   successCode,
   successHeaders,
-  endpoint,
   attemptsLeft,
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
   redirectUrlForInvalidRoles,
@@ -79,9 +77,6 @@ export const withRoleValidationOtpApiTests = ({
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
 
-            // Prime session numberOfSignInOtpAttemptsRemaining by POSTing to /login/${endpoint}, which invokes sendSignInOTP
-            await post({}, { Cookie: [sessionCookie] }).to(`/login/${endpoint}`);
-
             const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
             expect(response.status).toEqual(successCode);
 
@@ -107,9 +102,6 @@ export const withRoleValidationOtpApiTests = ({
           });
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
-
-          // Prime session numberOfSignInOtpAttemptsRemaining by POSTing to /login/${endpoint}, which invokes sendSignInOTP
-          await post({}, { Cookie: [sessionCookie] }).to(`/login/${endpoint}`);
 
           const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 

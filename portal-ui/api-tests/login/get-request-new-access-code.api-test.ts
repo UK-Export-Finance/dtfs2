@@ -120,21 +120,10 @@ describe('GET /login/request-new-access-code', () => {
     });
 
     it('should render the problem with service page when sendSignInOTP throws an error', async () => {
-      when(api.validatePartialAuthToken).resetWhenMocks();
-      (api.login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
-
-      (api.sendSignInOTP as jest.Mock | undefined)?.mockRejectedValue?.(new Error('OTP service error'));
-
-      when(api.validatePartialAuthToken)
-        .calledWith(partialAuthToken)
-        .mockResolvedValue({ data: {} } as AxiosResponse<unknown>);
-
-      // re-setup so sendSignInOTP is rejected on the next GET
-      (api.sendSignInOTP as jest.Mock | undefined)?.mockRejectedValue?.(new Error('OTP service error'));
-
-      // session from login had 0 attempts, so manually build a cookie via a valid login first
       sessionCookie = await setupSessionWithAttempts(2);
-      (api.sendSignInOTP as jest.Mock | undefined)?.mockRejectedValue?.(new Error('OTP service error'));
+
+      // Override sendSignInOTP to reject for the GET under test (session has already been built above).
+      (api.sendSignInOTP as jest.Mock).mockRejectedValueOnce(new Error('OTP service error'));
 
       const response = await get('/login/request-new-access-code', {}, { Cookie: sessionCookie });
 

@@ -58,7 +58,6 @@ export const withSendNewOtpApiTests = (
       whitelistedRoles: allRoles,
       successCode: expectedSuccessResponse.status,
       successHeaders: expectedSuccessResponse.location ? { location: expectedSuccessResponse.location } : undefined,
-      endpoint,
       attemptsLeft,
     });
 
