@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { ROLES } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import type { RequestHeaders } from '@ukef/dtfs2-common';
@@ -16,6 +17,7 @@ jest.mock('../../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getPortalBankList: jest.fn().mockResolvedValue([]),
 }));
 
 describe('GET /login', () => {
@@ -25,6 +27,6 @@ describe('GET /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers: RequestHeaders) => get('/login', {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 });

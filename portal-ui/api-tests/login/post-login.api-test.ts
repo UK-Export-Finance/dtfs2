@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { ACCESS_CODE_PAGES, ROLES, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { createApi } from '@ukef/dtfs2-common/api-test';
@@ -19,6 +19,7 @@ jest.mock('../../server/api', () => ({
   sendSignInOTP: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getPortalBankList: jest.fn().mockResolvedValue([]),
 }));
 
 describe('POST /login', () => {
@@ -52,7 +53,7 @@ describe('POST /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to('/login'),
     whitelistedRoles: allRoles,
-    successCode: 200,
+    successCode: HttpStatusCode.Ok,
   });
 
   describe('when the email is empty', () => {
@@ -90,11 +91,11 @@ describe('POST /login', () => {
     });
   });
 
-  describe('when the login attempt returns a 403', () => {
+  describe(`when the login attempt returns a ${HttpStatusCode.Forbidden}`, () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockRejectedValue({ response: { status: 403 } });
+        .mockRejectedValue({ response: { status: HttpStatusCode.Forbidden } });
     });
 
     it('should not send a sign in OTP', async () => {
@@ -105,7 +106,7 @@ describe('POST /login', () => {
     it('should redirect to the temporarily suspended access code page', async () => {
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
+      expect(status).toEqual(HttpStatusCode.Found);
       expect(headers).toHaveProperty('location', `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`);
     });
   });
@@ -132,7 +133,7 @@ describe('POST /login', () => {
     it('should redirect the user to the check your email access code page if the sign in OTP is sent successfully', async () => {
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
+      expect(status).toEqual(HttpStatusCode.Found);
       expect(headers).toHaveProperty('location', `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`);
     });
 
@@ -141,18 +142,18 @@ describe('POST /login', () => {
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(headers).not.toHaveProperty('location');
     });
 
-    it('should redirect to the temporarily suspended access code page if the sign in OTP returns 403', async () => {
+    it(`should redirect to the temporarily suspended access code page if the sign in OTP returns ${HttpStatusCode.Forbidden}`, async () => {
       when(api.sendSignInOTP)
         .calledWith(token)
-        .mockRejectedValueOnce({ response: { status: 403 } });
+        .mockRejectedValueOnce({ response: { status: HttpStatusCode.Forbidden } });
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toEqual(302);
+      expect(status).toEqual(HttpStatusCode.Found);
       expect(headers).toHaveProperty('location', `/login/${ACCESS_CODE_PAGES.SUSPENDED_ACCOUNT}`);
     });
   });

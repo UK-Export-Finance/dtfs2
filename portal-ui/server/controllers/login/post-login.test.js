@@ -35,6 +35,8 @@ describe('postLogin', () => {
       render: jest.fn(),
       redirect: jest.fn(),
     };
+
+    jest.mocked(api.getPortalBankList).mockResolvedValue([]);
   });
 
   describe('email and password validation', () => {
@@ -66,6 +68,7 @@ describe('postLogin', () => {
 
       expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
+        banks: [],
       });
     });
 
@@ -89,6 +92,7 @@ describe('postLogin', () => {
 
       expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
+        banks: [],
       });
     });
 
@@ -112,6 +116,7 @@ describe('postLogin', () => {
 
       expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
         errors: validationErrorHandler(expectedErrors),
+        banks: [],
       });
     });
   });
@@ -264,6 +269,7 @@ describe('postLogin', () => {
 
           expect(res.render).toHaveBeenNthCalledWith(1, 'login/index.njk', {
             errors: validationErrorHandler(expectedErrors),
+            banks: [],
           });
         });
 
