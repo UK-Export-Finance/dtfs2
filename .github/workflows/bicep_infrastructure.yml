@@ -39,7 +39,7 @@ on:
 
 env:
   PRODUCT: dtfs2
-  ENVIRONMENT: dev
+  ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
   TIMEZONE: '${{ vars.TIMEZONE }}'
   # Deployment environment target i.e., `development`, `staging`, `production`
   TARGET: ${{ vars.TARGET }}
@@ -49,7 +49,7 @@ jobs:
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
-    environment: dev
+    environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
     outputs:
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
@@ -67,6 +67,23 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+
+      - name: Debug context (temporary)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "Resolved ENVIRONMENT=${{ env.ENVIRONMENT }}"
+          echo "Dispatch input environment=${{ github.event.inputs.environment }}"
+          echo "Resource group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}"
+          if [ -n "${{ secrets.AZURE_DEV_CREDENTIALS }}" ]; then
+            echo "AZURE_DEV_CREDENTIALS is available"
+          else
+            echo "AZURE_DEV_CREDENTIALS is NOT available"
+          fi
+          if [ -n "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}" ]; then
+            echo "AZURE_DEV_SUBSCRIPTION_ID is available"
+          else
+            echo "AZURE_DEV_SUBSCRIPTION_ID is NOT available"
+          fi
 
       - name: Azure defaults ✨
         uses: azure/cli@v3
@@ -92,7 +109,7 @@ jobs:
     name: Deploy Resources 📊
     needs: setup
     runs-on: [self-hosted, linux, deployment]
-    environment: dev
+    environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v7
@@ -101,6 +118,23 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+
+      - name: Debug context (temporary)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "Resolved ENVIRONMENT=${{ env.ENVIRONMENT }}"
+          echo "Dispatch input environment=${{ github.event.inputs.environment }}"
+          echo "Resource group=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}"
+          if [ -n "${{ secrets.AZURE_DEV_CREDENTIALS }}" ]; then
+            echo "AZURE_DEV_CREDENTIALS is available"
+          else
+            echo "AZURE_DEV_CREDENTIALS is NOT available"
+          fi
+          if [ -n "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}" ]; then
+            echo "AZURE_DEV_SUBSCRIPTION_ID is available"
+          else
+            echo "AZURE_DEV_SUBSCRIPTION_ID is NOT available"
+          fi
 
       - name: Set bicep properties ✨
         run: |
