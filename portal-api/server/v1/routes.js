@@ -179,19 +179,19 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
  * @openapi
  * /portal-bank-list:
  *    get:
- *      summary: Get the curated portal homepage bank list
+ *      summary: Get the bank list shown on the Portal login page
  *      tags: [Portal]
  *      description: |
- *        Returns the read-only list of banks displayed on the unauthenticated
- *        portal homepage. The list is curated manually in MongoDB Compass and
- *        proxied from `dtfs-central-api`.
+ *        Returns the read-only list of banks displayed in the "before you start"
+ *        section of the unauthenticated portal login page. The list is curated
+ *        manually in MongoDB and proxied from `dtfs-central-api`.
  *      responses:
  *        200:
  *          description: A list of banks
  *        401:
- *          description: Unauthorised
- *        500:
- *          description: Internal server error
+ *          description: Unauthorised — missing or invalid API key
+ *        default:
+ *          description: Error response (for example 5xx when DTFS Central is unavailable)
  */
 openRouter.route('/portal-bank-list').get(checkApiKey, getPortalBankList);
 

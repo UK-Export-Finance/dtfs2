@@ -1,10 +1,7 @@
 const { HttpStatusCode } = require('axios');
-const dotenv = require('dotenv');
 const app = require('../../../server/createApp');
 const { withApiKeyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { get } = require('../../api')(app);
-
-dotenv.config();
 
 const { PORTAL_API_KEY } = process.env;
 
