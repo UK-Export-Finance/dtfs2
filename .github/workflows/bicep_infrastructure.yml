@@ -93,6 +93,8 @@ jobs:
     needs: setup
     runs-on: [self-hosted, linux, deployment]
     environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
+    env:
+      BICEP_PARAMETERS: ''
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v7
@@ -104,6 +106,17 @@ jobs:
 
       - name: Set bicep properties ✨
         run: |
+          UKEF_VPN_IPS="${{ secrets.UKEF_VPN_IPS }}"
+          UKEF_VPN_IPS="${UKEF_VPN_IPS// /}"
+          AZ_PORTAL_IPS="${{ secrets.AZ_PORTAL_IPS }}"
+          AZ_PORTAL_IPS="${AZ_PORTAL_IPS// /}"
+          NSG_SOURCE_ADDRESS_PREFIX="${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}"
+          NSG_SOURCE_ADDRESS_PREFIX="${NSG_SOURCE_ADDRESS_PREFIX// /}"
+          UKEF_SOURCE_ADDRESS_PREFIX="${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}"
+          UKEF_SOURCE_ADDRESS_PREFIX="${UKEF_SOURCE_ADDRESS_PREFIX// /}"
+          TEST_SOURCE_ADDRESS_PREFIX="${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}"
+          TEST_SOURCE_ADDRESS_PREFIX="${TEST_SOURCE_ADDRESS_PREFIX// /}"
+
           BICEP_PARAMETERS="environment=${{ vars.ENVIRONMENT }} \
           product=${{ vars.PRODUCT }} \
           target=${{ vars.TARGET }} \
@@ -116,8 +129,8 @@ jobs:
           privateEndpointsCidr=${{ secrets.AZ_DEV_SNET_PRIVATE_EP_CIDR }} \
           productionSubnetCidr=${{ secrets.PROD_SUBNET_CIDR }} \
           routeTableNextHopIpAddress=${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }} \
-          onPremiseNetworkIpsString=${{ secrets.UKEF_VPN_IPS }} \
-          azurePortalIpsString=${{ secrets.AZ_PORTAL_IPS }} \
+          onPremiseNetworkIpsString=$UKEF_VPN_IPS \
+          azurePortalIpsString=$AZ_PORTAL_IPS \
           RATE_LIMIT_THRESHOLD=${{ secrets.RATE_LIMIT_THRESHOLD }} \
           APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
           APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
@@ -161,9 +174,9 @@ jobs:
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE=${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }} \
           UKEF_INTERNAL_NOTIFICATION=${{ secrets.UKEF_INTERNAL_NOTIFICATION }} \
           azureDnsServerIp=${{ secrets.AZURE_DNS_SERVER_IP }} \
-          nsgSourceAddressPrefix=${{ vars.NSG_SOURCE_ADDRESS_PREFIX }} \
-          ukefSourceAddressPrefix=${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }} \
-          testSourceAddressPrefix=${{ vars.TEST_SOURCE_ADDRESS_PREFIX }} \
+          nsgSourceAddressPrefix=$NSG_SOURCE_ADDRESS_PREFIX \
+          ukefSourceAddressPrefix=$UKEF_SOURCE_ADDRESS_PREFIX \
+          testSourceAddressPrefix=$TEST_SOURCE_ADDRESS_PREFIX \
           websiteHttploggingRetentionDays=${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }} \
           websiteDynamicCache=${{ vars.WEBSITE_DYNAMIC_CACHE }} \
           websiteNodeDefaultVersion=${{ vars.WEBSITE_NODE_DEFAULT_VERSION }} \
