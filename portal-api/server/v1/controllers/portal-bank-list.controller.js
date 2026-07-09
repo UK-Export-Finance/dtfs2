@@ -4,7 +4,7 @@ const api = require('../api');
 /**
  * Express handler for `GET /v1/portal-bank-list`.
  *
- * Proxies the curated portal homepage bank list from `dtfs-central-api` so the
+ * Proxies the curated portal login-page bank list from `dtfs-central-api` so the
  * unauthenticated login page can render it without talking to central API directly.
  *
  * On success responds with `200` and the array of banks.
