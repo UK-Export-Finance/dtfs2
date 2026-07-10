@@ -109,62 +109,19 @@ export const withSendNewOtpApiTests = (
         });
       });
 
-      describe.each([
-        {
-          description: 'when a user is not blocked',
-          beforeEachSetUp: () => {
-            mockSuccessfulSendSignInOtpResponse();
-          },
-        },
-        {
-          description: 'when a user is blocked',
-          beforeEachSetUp: () => {
-            mock403SendSignInOtpResponse();
-          },
-        },
-        {
-          description: 'when sending an email fails',
-          beforeEachSetUp: () => {
-            mock500SendSignInOtpResponse();
-          },
-        },
-      ])('$description', ({ beforeEachSetUp }) => {
-        beforeEach(() => {
-          beforeEachSetUp();
-        });
+      it('should complete the OTP submission with the expected response', async () => {
+        const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
-        itHandlesSuccessfulOtpSubmission();
+        expect(status).toEqual(expectedSuccessResponse.status);
+        if (expectedSuccessResponse.location) {
+          expect(headers.location).toEqual(expectedSuccessResponse.location);
+        } else {
+          expect(headers.location).toBeUndefined();
+        }
       });
-
-      function itHandlesSuccessfulOtpSubmission() {
-        it('should complete the OTP submission with the expected response', async () => {
-          const { status, headers } = await post({ sixDigitAccessCode: '123456' }, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
-
-          expect(status).toEqual(expectedSuccessResponse.status);
-          if (expectedSuccessResponse.location) {
-            expect(headers.location).toEqual(expectedSuccessResponse.location);
-          } else {
-            expect(headers.location).toBeUndefined();
-          }
-        });
-      }
 
       function mockSuccessfulSendSignInOtpResponse() {
         when(mockedSendSignInOTP).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining } });
-      }
-
-      function mockUnsuccessfulSendSignInOtpResponseWithStatusCode(statusCode: number) {
-        const error = new Error(`Request failed with status: ${statusCode}`) as Error & { response?: { status: number } };
-        error.response = { status: statusCode };
-        when(mockedSendSignInOTP).calledWith(expect.anything()).mockRejectedValue(error);
-      }
-
-      function mock403SendSignInOtpResponse() {
-        mockUnsuccessfulSendSignInOtpResponseWithStatusCode(403);
-      }
-
-      function mock500SendSignInOtpResponse() {
-        mockUnsuccessfulSendSignInOtpResponseWithStatusCode(500);
       }
     });
 

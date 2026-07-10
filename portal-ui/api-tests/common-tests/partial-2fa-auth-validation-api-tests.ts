@@ -46,7 +46,7 @@ export const withPartial2faAuthValidationApiTests = ({
     });
 
     beforeEach(async () => {
-      when(validatePartialAuthToken).resetWhenMocks();
+      (validatePartialAuthToken as jest.Mock).mockReset();
       (login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
 
       (api.sendSignInOTP as jest.Mock | undefined)?.mockResolvedValue?.({

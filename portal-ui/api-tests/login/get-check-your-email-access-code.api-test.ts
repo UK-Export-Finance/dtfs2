@@ -55,7 +55,7 @@ describe('GET /login/check-your-email-access-code', () => {
     let sessionCookie: string;
 
     beforeEach(async () => {
-      when(api.validatePartialAuthToken).resetWhenMocks();
+      (api.validatePartialAuthToken as jest.Mock).mockReset();
       (api.login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
 
       (api.sendSignInOTP as jest.Mock | undefined)?.mockResolvedValue?.({

@@ -57,7 +57,7 @@ describe('GET /login/request-new-access-code', () => {
     let sessionCookie: string;
 
     const setupSessionWithAttempts = async (numberOfSignInOtpAttemptsRemaining: number) => {
-      when(api.validatePartialAuthToken).resetWhenMocks();
+      (api.validatePartialAuthToken as jest.Mock).mockReset();
       (api.login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
 
       (api.sendSignInOTP as jest.Mock | undefined)?.mockResolvedValue?.({
