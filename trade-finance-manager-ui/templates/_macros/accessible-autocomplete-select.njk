@@ -1,0 +1,36 @@
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% macro render(params) %}
+
+  {% set errorMessage = params.errorMessage %}
+  {% set fieldId = params.fieldId %}
+  {% set options = params.options %}
+  {% set inputContainerClasses = params.inputContainerClasses %}
+
+  {% if errorMessage %}
+    {{ govukErrorMessage({
+      text: errorMessage,
+      attributes: {
+        "data-cy": fieldId + "-error-message"
+      }
+    }) }}
+  {% endif %}
+
+  <div class="{{ inputContainerClasses }}">
+
+    <select class="govuk-select" id="{{ fieldId }}" name="{{ fieldId }}">
+      <option value="" disabled selected></option>
+
+      {% for option in options %}
+        {% if option.selected %}
+          <option value="{{ option.value }}" selected>{{ option.text }}</option>
+        {% else %}
+          <option value="{{ option.value }}">{{ option.text }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+
+  <script src="/assets/js/accessibleAutocomplete.js" type="module" integrity="sha512-HpHhIJuWO7UgVrJ5F0TShRp7VbXsSC9rusls5dSNUddRBsd1YMZtJc/wVS/9doIpnyYbfp0aT/nd9QgO7Pc9tA==" crossorigin="anonymous"></script>
+
+{% endmacro %}

@@ -1,9 +1,10 @@
 const api = require('../../../../api');
-const { hasValue, containsNumber } = require('../../../../helpers/string');
+const { hasValue } = require('../../../../helpers/string');
 const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');
 const { userCanEditGeneral } = require('./helpers');
+const { mapOtherCreditRatings } = require('../../../../helpers/map-other-credit-ratings');
 
 const getUnderWritingPricingAndRisk = (deal, user) => ({
   userCanEditGeneral: userCanEditGeneral(user),
@@ -36,6 +37,8 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const creditRatings = mapOtherCreditRatings(deal.tfm?.exporterCreditRating);
+
   return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
@@ -43,6 +46,7 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
+    creditRatings,
   });
 };
 
@@ -63,10 +67,9 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const existingValue = deal.tfm.exporterCreditRating;
   let submittedValue;
 
-  if (hasValue(req.body.exporterCreditRatingOther) && req.body.exporterCreditRatingOther !== existingValue) {
+  if (hasValue(req.body.exporterCreditRatingOther)) {
     submittedValue = req.body.exporterCreditRatingOther;
   } else {
     submittedValue = req.body.exporterCreditRating;
@@ -74,13 +77,14 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   let validationErrors;
 
+  const creditRatings = mapOtherCreditRatings();
+
   const selectedOther = req.body.exporterCreditRating === 'Other';
   const otherValue = hasValue(req.body.exporterCreditRatingOther);
-  const otherValueHasNumericValues = containsNumber(req.body.exporterCreditRatingOther);
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 
-  const hasValidationError = (selectedOther && !otherValue) || (selectedOther && otherValueHasNumericValues) || noOptionSelected;
+  const hasValidationError = (selectedOther && !otherValue) || noOptionSelected;
 
   if (hasValidationError) {
     if (noOptionSelected) {
@@ -119,24 +123,6 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
           ],
         };
       }
-
-      if (otherValueHasNumericValues) {
-        validationErrors = {
-          count: 1,
-          errorList: {
-            exporterCreditRatingOther: {
-              text: 'Credit rating must not include numbers',
-              order: '1',
-            },
-          },
-          summary: [
-            {
-              text: 'Credit rating must not include numbers',
-              href: '#exporterCreditRatingOther',
-            },
-          ],
-        };
-      }
     }
 
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
@@ -150,6 +136,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       dealId: deal.dealSnapshot._id,
       user: req.session.user,
       validationErrors,
+      creditRatings,
     });
   }
 
