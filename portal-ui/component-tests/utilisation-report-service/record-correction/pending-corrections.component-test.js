@@ -217,5 +217,25 @@ describe(page, () => {
         .expectLink(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
         .toLinkTo(`/utilisation-reports/provide-correction/${secondCorrection.correctionId}`, secondCorrection.facilityId);
     });
+
+    it('should set an accessible name on the first correction link that starts with the visible facility id', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper
+        .expectElement(`${firstRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
+        .toHaveAttribute('aria-label', `${firstCorrection.facilityId} - Amend record`);
+    });
+
+    it('should set an accessible name on the second correction link that starts with the visible facility id', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper
+        .expectElement(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
+        .toHaveAttribute('aria-label', `${secondCorrection.facilityId} - Amend record`);
+    });
   });
 });

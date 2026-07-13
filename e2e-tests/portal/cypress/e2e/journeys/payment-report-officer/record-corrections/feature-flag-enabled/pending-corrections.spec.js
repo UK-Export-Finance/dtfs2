@@ -122,6 +122,10 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
           cy.assertText(pendingCorrections.row(1).errorSummary(), pendingCorrectionDetails.additionalInfo);
         });
 
+        it('should give each correction link an accessible name that starts with the visible facility id', () => {
+          pendingCorrections.row(1).correctionLink().should('have.attr', 'aria-label', `${pendingCorrectionDetails.facilityId} - Amend record`);
+        });
+
         it('should not display utilisation report file upload', () => {
           utilisationReportUpload.utilisationReportFileInput().should('not.exist');
         });
