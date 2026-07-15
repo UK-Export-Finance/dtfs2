@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.1.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **DTFS2-8481:** fix incorrect href for payment-report-officer on profile cancel button ([#4813](https://github.com/UK-Export-Finance/dtfs2/issues/4813)) ([8fc2693](https://github.com/UK-Export-Finance/dtfs2/commit/8fc269333501edf79b70d3cc863e11cf0a40fcf5))
+
 ## [3.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.0.0...v3.1.0) (2026-06-11)
 
 
