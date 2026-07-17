@@ -197,12 +197,7 @@ describe('sendFacilityAmendment', () => {
         },
       ];
 
-      isTfmApimGiftIntegrationEnabled.mockReturnValue(true);
-      canSendAmendmentsToApimGift.mockReturnValue({
-        canSendAmendmentsToApimGift: true,
-        amendmentPayloads: payloads,
-      });
-      submitFacilityAmendmentsToApimGift.mockResolvedValue(true);
+      submitFacilityAmendmentsToApimGift.mockResolvedValue([HttpStatusCode.Accepted]);
 
       await sendFacilityAmendment(req, res);
 

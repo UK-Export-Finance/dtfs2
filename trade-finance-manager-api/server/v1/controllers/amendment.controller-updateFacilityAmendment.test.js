@@ -259,18 +259,20 @@ describe('updated facility amendment API call', () => {
         expect(canSendToAcbs).toHaveBeenCalledWith({ amendment: MOCK_AMENDMENT, isTaskUpdate: true });
       });
 
-      it('should not call APIM GIFT when the feature flag is enabled', async () => {
-        // Arrange
-        const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
+      describe('when the update is a task update (even if the feature flag is enabled)', () => {
+        it('should not call APIM GIFT', async () => {
+          // Arrange
+          const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
 
-        mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
 
-        // Act
-        await amendmentController.updateFacilityAmendment(mockRequest, res);
+          // Act
+          await amendmentController.updateFacilityAmendment(mockRequest, res);
 
-        // Assert
-        expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
-        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
       });
     });
 
