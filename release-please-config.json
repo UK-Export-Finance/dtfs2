@@ -1,7 +1,15 @@
 {
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
     "packages": {
-        ".": {}
+        ".": {
+            "changelog-sections": [
+                { "type": "feat", "section": "Features" },
+                { "type": "fix",  "section": "Bug Fixes" },
+                { "type": "chore", "section": "Chores" },
+                { "type": "docs",  "section": "Documentation" },
+                { "type": "style", "section": "Style" }
+            ]
+        }
     },
     "pull-request-title-pattern": "chore(${scope}): release${component} ${version}",
     "extra-label": "Type: chore, Type: Docs",
