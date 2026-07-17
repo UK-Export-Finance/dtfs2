@@ -5,7 +5,7 @@ const api = require('../api');
 const { sendFacilityAmendment } = require('./amendment.controller');
 const { canSendAmendmentsToApimGift } = require('../integrations/apim-gift/can-send-amendments-to-apim-gift');
 const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
-const { APIM_GIFT_INTEGRATION } = require('../mappings/apim-gift-payloads');
+const { APIM_GIFT_INTEGRATION } = require('../mappings/apim-gift-payloads/constants');
 
 jest.mock('../api', () => ({
   getAmendmentById: jest.fn(),
@@ -126,7 +126,7 @@ describe('sendFacilityAmendment', () => {
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadGateway);
       expect(console.error).toHaveBeenNthCalledWith(
-        1,
+        2,
         'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s %o',
         amendmentId,
         facilityId,
@@ -164,7 +164,7 @@ describe('sendFacilityAmendment', () => {
       await sendFacilityAmendment(req, res);
 
       expect(canSendAmendmentsToApimGift).toHaveBeenNthCalledWith(1, amendment);
-      expect(console.info).toHaveBeennthCalledWith(1, 'TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
+      expect(console.info).toHaveBeenNthCalledWith(2, 'TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
     });
 
     it('should not submit to APIM GIFT when canSendAmendmentsToApimGift returns false', async () => {
@@ -211,7 +211,7 @@ describe('sendFacilityAmendment', () => {
         ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
       });
 
-      expect(console.info).toHaveBeenNthCalledWith(1, 'TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+      expect(console.info).toHaveBeenNthCalledWith(3, 'TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
     });
 
     it(`should return ${HttpStatusCode.BadGateway} when APIM GIFT submission fails`, async () => {
