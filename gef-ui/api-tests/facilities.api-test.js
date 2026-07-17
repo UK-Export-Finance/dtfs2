@@ -21,7 +21,10 @@ describe('facilities routes', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    api.getFacility.mockReset();
+    api.createFacility.mockReset();
+    api.updateFacility.mockReset();
+    api.updateApplication.mockReset();
   });
 
   describe('GET /application-details/:dealId/facilities', () => {
@@ -34,7 +37,7 @@ describe('facilities routes', () => {
     it('should render the facilities page (happy path)', async () => {
       const { sessionCookie } = await storage.saveUserSession([MAKER]);
 
-      const expected = await get(
+      const response = await get(
         `/application-details/${dealId}/facilities`,
         {},
         {
@@ -42,9 +45,9 @@ describe('facilities routes', () => {
         },
       );
 
-      expect(expected.status).toEqual(HttpStatusCode.Ok);
-      expect(expected.text).toContain('Add a facility');
-      expect(expected.text).toContain('data-cy="has-been-issued-heading"');
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Add a facility');
+      expect(response.text).toContain('data-cy="has-been-issued-heading"');
     });
   });
 
