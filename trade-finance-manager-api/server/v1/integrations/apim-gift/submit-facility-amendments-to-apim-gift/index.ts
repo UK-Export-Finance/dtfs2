@@ -16,9 +16,9 @@ type SubmitFacilityAmendmentToApimGiftResponse = number[] | false;
  *
  * Each payload is sent to APIM/GIFT sequentially to avoid database deadlock errors in GIFT.
  * @param {SubmitFacilityAmendmentToApimGiftParams} params - The parameters for submitting the facility amendment.
- * @param {TfmFacilityAmendmentData} params.amendment - The facility amendment data from TFM.
+ * @param {ApimGiftFacilityAmendmentPayload[]} params.amendmentPayloads - The APIM/GIFT amendment payloads to submit.
  * @param {string} params.ukefFacilityId - The UKEF facility ID.
- * @returns {Promise<SubmitFacilityAmendmentToApimGiftResponse>} The array of responses from the APIM/GIFT system, or false if no valid payloads can be produced or any APIM/GIFT submission is not accepted
+ * @returns {Promise<SubmitFacilityAmendmentToApimGiftResponse>} The array of HTTP status codes returned by APIM/GIFT, or false if any APIM/GIFT submission is not accepted.
  */
 export const submitFacilityAmendmentsToApimGift = async ({
   amendmentPayloads,

@@ -413,7 +413,7 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        if (isTfmApimGiftIntegrationEnabled()) {
+        if (isTfmApimGiftIntegrationEnabled() && !isTaskUpdate) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
           const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
