@@ -19,7 +19,10 @@ describe('application abandon routes', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    api.getApplication.mockReset();
+    api.getFacilities.mockReset();
+    api.getUserDetails.mockReset();
+    api.setApplicationStatus.mockReset();
   });
 
   describe('GET /application-details/:dealId/abandon', () => {

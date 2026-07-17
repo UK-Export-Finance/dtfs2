@@ -17,7 +17,8 @@ describe('return to maker routes', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    api.getApplication.mockReset();
+    api.setApplicationStatus.mockReset();
   });
 
   describe('GET /application-details/:dealId/return-to-maker', () => {

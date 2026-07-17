@@ -32,7 +32,7 @@ describe('about exporter routes', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    api.getApplication.mockReset();
   });
 
   describe('GET /application-details/:dealId/about-exporter', () => {
