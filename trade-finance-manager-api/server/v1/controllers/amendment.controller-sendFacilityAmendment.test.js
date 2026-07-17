@@ -104,13 +104,13 @@ describe('sendFacilityAmendment', () => {
       await sendFacilityAmendment(req, res);
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadGateway);
+      expect(canSendAmendmentsToApimGift).not.toHaveBeenCalled();
 
       expect(console.error).toHaveBeenNthCalledWith(
         1,
-        'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s %o',
+        'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - amendment not found',
         amendmentId,
         facilityId,
-        expect.any(Error),
       );
     });
 
@@ -125,12 +125,32 @@ describe('sendFacilityAmendment', () => {
       await sendFacilityAmendment(req, res);
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadGateway);
+      expect(canSendAmendmentsToApimGift).not.toHaveBeenCalled();
       expect(console.error).toHaveBeenNthCalledWith(
-        2,
-        'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s %o',
+        1,
+        'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - facility not found',
         amendmentId,
         facilityId,
-        expect.any(Error),
+      );
+    });
+
+    it(`should return ${HttpStatusCode.BadGateway} when ukefFacilityId is missing`, async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+        params: { amendmentId, facilityId },
+      });
+
+      api.findOneFacility.mockResolvedValue({ _id: facilityId, facilitySnapshot: {} });
+
+      await sendFacilityAmendment(req, res);
+
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadGateway);
+      expect(canSendAmendmentsToApimGift).not.toHaveBeenCalled();
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - ukefFacilityId not found',
+        amendmentId,
+        facilityId,
       );
     });
   });

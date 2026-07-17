@@ -542,9 +542,27 @@ const sendFacilityAmendment = async (req, res) => {
     if (amendmentId && facilityId) {
       const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
+      if (!amendment) {
+        console.error('Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - amendment not found', amendmentId, facilityId);
+
+        return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
+      }
+
       const facility = await api.findOneFacility(facilityId);
 
-      const ukefFacilityId = facility?.facilitySnapshot?.ukefFacilityId;
+      if (!facility) {
+        console.error('Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - facility not found', amendmentId, facilityId);
+
+        return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
+      }
+
+      const ukefFacilityId = facility.facilitySnapshot?.ukefFacilityId;
+
+      if (!ukefFacilityId) {
+        console.error('Unable to send facility amendment %s to ACBS and/or APIM GIFT for facility %s - ukefFacilityId not found', amendmentId, facilityId);
+
+        return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
+      }
 
       if (isTfmApimGiftIntegrationEnabled()) {
         console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
