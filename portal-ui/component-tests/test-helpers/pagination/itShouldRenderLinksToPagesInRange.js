@@ -9,13 +9,15 @@ module.exports = ({ getWrapper, firstPage, lastPage, currentPage }) => {
       wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-body');
       wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('govuk-!-margin-bottom-3');
 
-      wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, (i + 1).toString());
+      wrapper.expectLink(`[data-cy="Page_${i}"]`).toLinkTo(`/testRoute/${i}?testQuery=test`, `Page ${i + 1}`);
       wrapper.expectElement(`[data-cy="Page_${i}"]`).hasClass('govuk-link');
 
       if (i === currentPage) {
         wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).hasClass('active');
+        wrapper.expectElement(`[data-cy="Page_${i}"]`).toHaveAttribute('aria-current', 'page');
       } else {
         wrapper.expectElement(`[data-cy="Page_${i}_listItem"]`).doesNotHaveClass('active');
+        wrapper.expectElement(`[data-cy="Page_${i}"]`).notToHaveAttribute('aria-current');
       }
     }
 

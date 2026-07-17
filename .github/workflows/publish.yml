@@ -16,7 +16,11 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'release-*'
+      - '!release-*-rc'
+      - '!release-please--**'
 
 jobs:
   # 1. Setup test infrastructure
@@ -50,3 +54,4 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           release-type: node
+          target-branch: ${{ github.ref_name }}

@@ -18,6 +18,7 @@ const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
 const banks = require('./controllers/banks.controller');
+const { getPortalBankList } = require('./controllers/portal-bank-list.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
@@ -173,6 +174,26 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(checkApiKey, users
  *          description: Internal server error
  */
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
+
+/**
+ * @openapi
+ * /portal-bank-list:
+ *    get:
+ *      summary: Get the bank list shown on the Portal login page
+ *      tags: [Portal]
+ *      description: |
+ *        Returns the read-only list of banks displayed in the "before you start"
+ *        section of the unauthenticated portal login page. The list is curated
+ *        manually in MongoDB and proxied from `dtfs-central-api`.
+ *      responses:
+ *        200:
+ *          description: A list of banks
+ *        401:
+ *          description: Unauthorised — missing or invalid API key
+ *        default:
+ *          description: Error response (for example 5xx when DTFS Central is unavailable)
+ */
+openRouter.route('/portal-bank-list').get(checkApiKey, getPortalBankList);
 
 /**
  * @openapi

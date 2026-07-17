@@ -18,6 +18,8 @@ const updateParty = async (req, res) => {
   try {
     const { dealId } = req.params;
 
+    console.info('TFM deal %s updateParty - updating parties in TFM', dealId);
+
     const dealUpdate = {
       tfm: {
         parties: req.body,
@@ -39,7 +41,7 @@ const updateParty = async (req, res) => {
           facilities: issuedFacilities,
           isBssEwcsDeal,
           isGefDeal,
-          newPartyUrnCreated: true,
+          newPartyUrnCreated: false,
         });
       } catch (error) {
         console.error('TFM deal %s updateParty - sendFacilitiesToApimGift failed %o', dealId, error);

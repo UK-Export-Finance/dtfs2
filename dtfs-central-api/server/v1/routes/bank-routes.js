@@ -4,6 +4,7 @@ const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
 const { getBanks } = require('../controllers/bank/get-banks.controller');
+const { getPortalBankList } = require('../controllers/bank/get-portal-bank-list.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
@@ -69,6 +70,38 @@ const handleExpressValidatorResult = require('../validation/route-validators/exp
  *               _id: 123456abc
  */
 bankRouter.route('/').get(getBanks).post(createBankController.createBankPost);
+
+/**
+ * @openapi
+ * /bank/portal-bank-list:
+ *   get:
+ *     summary: Get the curated list of banks displayed on the portal homepage
+ *     tags: [Portal Bank List]
+ *     description: |
+ *       Returns every entry in the `portal-bank-list` MongoDB collection
+ *       sorted by the numeric `order` field. The list is maintained manually
+ *       in MongoDB Compass per environment.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 65e2f0c5f0c1c0a1b8b8b8b8
+ *                   name:
+ *                     type: string
+ *                     example: Bank 1
+ *                   order:
+ *                     type: integer
+ *                     example: 1
+ */
+bankRouter.route('/portal-bank-list').get(getPortalBankList);
 
 /**
  * @openapi
