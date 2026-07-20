@@ -24,6 +24,7 @@ const {
   createAmendmentTFMObject,
   sendFacilityAmendment,
 } = require('./amendment.controller');
+const { canSendAmendmentsToApimGift } = require('../integrations/apim-gift/can-send-amendments-to-apim-gift');
 const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
 const mockFacilityId = '66b1f2f6f4b5a8f3c7d9e011';
@@ -66,6 +67,10 @@ jest.mock('../rest-mappings/helpers/isGefFacility', () => jest.fn());
 
 jest.mock('../integrations/apim-gift/submit-facility-amendments-to-apim-gift', () => ({
   submitFacilityAmendmentsToApimGift: jest.fn(),
+}));
+
+jest.mock('../integrations/apim-gift/can-send-amendments-to-apim-gift', () => ({
+  canSendAmendmentsToApimGift: jest.fn(),
 }));
 
 jest.mock('./amend-issued-facility', () => ({
@@ -347,11 +352,16 @@ describe('amendment.controller remaining exports', () => {
     describe('when APIM/GIFT submission is allowed', () => {
       it(`should return ${HttpStatusCode.BadGateway} and not continue to ACBS submission`, async () => {
         // Arrange
+        const amendmentPayloads = [{ amendmentType: 'ReplaceExpiryDate', amendmentData: { expiryDate: '2024-04-01' } }];
         const amendment = { amendmentId: mockAmendmentId, dealId: 'deal-1' };
 
         mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
         api.getAmendmentById.mockResolvedValue(amendment);
         api.findOneFacility.mockResolvedValue({ facilitySnapshot: { ukefFacilityId: '0030537688' } });
+        canSendAmendmentsToApimGift.mockReturnValue({
+          canSendAmendmentsToApimGift: true,
+          amendmentPayloads,
+        });
         submitFacilityAmendmentsToApimGift.mockResolvedValue(false);
 
         const { req, res } = createMocks({ params: { facilityId: mockFacilityId, amendmentId: mockAmendmentId } });
@@ -361,7 +371,7 @@ describe('amendment.controller remaining exports', () => {
 
         // Assert
         expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
-          amendment,
+          amendmentPayloads,
           ukefFacilityId: '0030537688',
         });
         expect(api.findOneDeal).not.toHaveBeenCalled();
