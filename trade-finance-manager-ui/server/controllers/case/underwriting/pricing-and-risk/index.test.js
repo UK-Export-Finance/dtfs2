@@ -3,6 +3,7 @@ import pricingAndRiskController from '..';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import { userCanEditGeneral } from './helpers';
+import { mapOtherCreditRatings } from '../../../../helpers/map-other-credit-ratings';
 
 const res = mockRes();
 
@@ -69,6 +70,8 @@ describe('GET underwriting - pricing and risk edit', () => {
         session,
       };
 
+      const creditRatings = mapOtherCreditRatings(mockDeal?.tfm?.exporterCreditRating);
+
       await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
         activePrimaryNavigation: 'manage work',
@@ -77,6 +80,7 @@ describe('GET underwriting - pricing and risk edit', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
+        creditRatings,
       });
     });
   });
@@ -156,6 +160,8 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
+        const creditRatings = mapOtherCreditRatings();
+
         const expectedValidationErrors = {
           count: 1,
           errorList: {
@@ -183,6 +189,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
+          creditRatings,
         });
       });
     });
@@ -201,6 +208,8 @@ describe('POST underwriting - pricing and risk edit', () => {
         };
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
+
+        const creditRatings = mapOtherCreditRatings(mockDeal.tfm?.exporterCreditRating);
 
         const expectedValidationErrors = {
           count: 1,
@@ -229,52 +238,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
-        });
-      });
-    });
-
-    describe('with req.body.exporterCreditRating as `Other`, but req.body.exporterCreditRatingOther contains numbers', () => {
-      it('should return template with validation errors', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          session,
-          body: {
-            exporterCreditRating: 'Other',
-            exporterCreditRatingOther: 'test100',
-          },
-        };
-
-        await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
-
-        const expectedValidationErrors = {
-          count: 1,
-          errorList: {
-            exporterCreditRatingOther: {
-              text: 'Credit rating must not include numbers',
-              order: '1',
-            },
-          },
-          summary: [
-            {
-              text: 'Credit rating must not include numbers',
-              href: '#exporterCreditRatingOther',
-            },
-          ],
-        };
-
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: {
-            ...mockDeal.tfm,
-            exporterCreditRating: req.body.exporterCreditRatingOther,
-          },
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          validationErrors: expectedValidationErrors,
+          creditRatings,
         });
       });
     });

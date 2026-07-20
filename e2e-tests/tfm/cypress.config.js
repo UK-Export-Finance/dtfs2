@@ -1,10 +1,11 @@
 const { defineConfig } = require('cypress');
 const dotenv = require('dotenv');
 const path = require('path');
-const { createTasks } = require('../support/tasks');
 
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+const { createTasks } = require('../support/tasks');
 
 const { TFM_API_KEY, CONTACT_US_EMAIL_ADDRESS, TZ } = process.env;
 
