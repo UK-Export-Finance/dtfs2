@@ -31,6 +31,7 @@
     "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts",
     "./mock-data-backend": "./src/test-helpers/mock-data-backend/index.ts",
     "./frontend": "./src/helpers/frontend/index.ts",
+    "./frontend/restore-focus-on-filter-toggle": "./src/helpers/frontend/restore-focus-on-filter-toggle.ts",
     "./backend": "./src/helpers/backend/index.ts"
   },
   "main": "src/index.ts",

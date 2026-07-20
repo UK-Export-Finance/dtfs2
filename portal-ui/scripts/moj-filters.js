@@ -21,7 +21,7 @@
  * `portal-ui/templates/index.njk` and `gef-ui/templates/index.njk` (and their
  * matching component-tests/index/index.component-test.* assertions).
  */
-import { restoreFocusOnFilterToggle } from '@ukef/dtfs2-common/frontend';
+import { restoreFocusOnFilterToggle } from '@ukef/dtfs2-common/frontend/restore-focus-on-filter-toggle';
 
 if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
   new MOJFrontend.FilterToggleButton({

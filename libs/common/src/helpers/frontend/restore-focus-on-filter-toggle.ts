@@ -125,56 +125,118 @@ const setupFilterPanelTabRouter = (toggleButton: HTMLButtonElement, filterPanel:
 };
 
 /**
+ * MOJ sets `tabindex="-1"` on the filter panel and then calls
+ * `.focus()` on it when expanding, which moves keyboard focus off the toggle
+ * button and scrolls the panel into view. Removing `tabindex` makes MOJ's
+ * `.focus()` a no-op on the panel.
+ */
+const neutraliseMojPanelFocus = (filterPanel: HTMLElement): void => {
+  if (filterPanel.getAttribute('tabindex') === '-1') {
+    filterPanel.removeAttribute('tabindex');
+  }
+};
+
+/**
+ * MOJ hard-codes `aria-haspopup="true"` on the toggle, but the filter
+ * panel is a disclosure region — not a popup (menu/listbox/dialog) — so
+ * screen readers announce a misleading "has popup".
+ */
+const removeMisleadingHaspopup = (toggleButton: HTMLButtonElement): void => {
+  toggleButton.removeAttribute('aria-haspopup');
+};
+
+/**
+ * Guarantees the panel has an `id` (so `aria-controls` always resolves) and
+ * advertises the disclosure relationship to assistive tech.
+ */
+const linkToggleToPanel = (toggleButton: HTMLButtonElement, filterPanel: HTMLElement, fallbackId: string): void => {
+  if (!filterPanel.id) {
+    filterPanel.setAttribute('id', fallbackId);
+  }
+
+  toggleButton.setAttribute('aria-controls', filterPanel.id);
+};
+
+/**
+ * Creates the offscreen "focus ping" element used by
+ * {@link bounceFocusViaPingOnToggle} to force a real blur → focus pair on the
+ * toggle button. The ping is not marked `aria-hidden` because doing so would
+ * hide the focused element from assistive technology (a WAI-ARIA violation
+ * the browser flags in the console); the div has no accessible name or
+ * content, so nothing is announced in the ~50ms window it holds focus.
+ */
+const createFocusPingElement = (): HTMLElement => {
+  const focusPing = document.createElement('div');
+
+  focusPing.setAttribute('tabindex', '-1');
+  focusPing.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;outline:none;';
+  document.body.appendChild(focusPing);
+
+  return focusPing;
+};
+
+/**
+ * Solves two issues with the same "focus ping" mechanism:
+ *
+ *  - Stale `aria-expanded` announcement: because focus briefly leaves and
+ *    re-enters the toggle around MOJ's `showMenu()` call, screen readers can
+ *    announce a stale `aria-expanded` state ("collapsed" when the panel has
+ *    just been expanded).
+ *  - Stranded focus outline: MOJ's `moj-filter-layout` CSS repositions the
+ *    toggle button when the panel expands (the action bar moves adjacent to
+ *    the newly-visible filter column). The button's DOM node does not
+ *    change, but its visual bounding box does — and some browsers do not
+ *    repaint the focus outline at the new position, leaving the outline
+ *    stranded at the old location.
+ *
+ * On every click of the toggle container, focus is moved to the offscreen
+ * ping element and then back to the toggle button. Blur + re-focus on the
+ * same element is optimised away by browsers, so bouncing focus via a
+ * different element forces the browser to emit a real blur → focus pair.
+ * The ping is scheduled after two animation frames — enough for MOJ's
+ * toggle handler, the layout reflow, and paint to complete — and the return
+ * focus is scheduled after a short `setTimeout` so the accessibility tree
+ * has time to register the ping before the button is re-focused with its
+ * new bounds. `preventScroll: true` is used on both `.focus()` calls to
+ * avoid scrolling the page when the panel expansion changes the button's
+ * position.
+ */
+const bounceFocusViaPingOnToggle = (toggleContainer: HTMLElement, focusPing: HTMLElement): void => {
+  toggleContainer.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target.closest('button') : null;
+
+    // Ignore clicks that aren't on the toggle button itself (e.g. bubbled from children).
+    if (!target || !toggleContainer.contains(target)) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        focusPing.focus({ preventScroll: true });
+        window.setTimeout(() => {
+          target.focus({ preventScroll: true });
+        }, 50);
+      });
+    });
+  });
+};
+
+/**
  * Neutralises the MOJ `FilterToggleButton` behaviours that break the DAC
  * focus-order acceptance criterion, and links the toggle to its filter panel
  * via `aria-controls`.
  *
- * The MOJ component ships with three accessibility issues on the toggle:
- *  1. It sets `tabindex="-1"` on the filter panel and then calls `.focus()`
- *     on it when expanding, which moves keyboard focus off the toggle button
- *     and scrolls the panel into view.
- *  2. It hard-codes `aria-haspopup="true"` on the toggle, but the filter
- *     panel is a disclosure region — not a popup (menu/listbox/dialog) — so
- *     screen readers announce a misleading "has popup".
- *  3. Because focus briefly leaves and re-enters the toggle around MOJ's
- *     `showMenu()` call, screen readers can announce a stale `aria-expanded`
- *     state ("collapsed" when the panel has just been expanded).
- *
- * Additionally, MOJ's `moj-filter-layout` CSS repositions the toggle button
- * when the panel expands (the action bar moves adjacent to the newly-visible
- * filter column). The button's DOM node does not change, but its visual
- * bounding box does — and some browsers do not repaint the focus outline at
- * the new position, leaving the outline stranded at the old location. Screen
- * readers can also miss the `aria-expanded` state change because MOJ mutates
- * `aria-expanded` *and* the button label synchronously with the click.
- *
- * The helper works around all of these:
- *  - Removes `tabindex` from the panel *only when MOJ has set it to `-1`* so
- *    its `.focus()` on the panel becomes a no-op (fixes 1 and 3). Non-MOJ
- *    tabindex values on the panel are preserved.
- *  - Removes `aria-haspopup` from the button (fixes 2).
- *  - On every click of the toggle container, moves focus to a hidden
- *    offscreen "focus ping" element and then back to the toggle button.
- *    Blur + re-focus on the same element is optimised away by browsers,
- *    so bouncing focus via a different element forces the browser to
- *    emit a real blur → focus pair. The ping is scheduled after two
- *    animation frames — enough for MOJ's toggle handler, the layout
- *    reflow, and paint to complete — and the return focus is scheduled
- *    after a short `setTimeout` so the accessibility tree has time to
- *    register the ping before the button is re-focused with its new
- *    bounds. `preventScroll: true` is used on both `.focus()` calls to
- *    avoid scrolling the page when the panel expansion changes the
- *    button's position. The ping element is not marked `aria-hidden`
- *    because doing so would hide the focused element from assistive
- *    technology (a WAI-ARIA violation the browser flags in the console);
- *    the div has no accessible name or content, so nothing is announced
- *    in the ~50ms window it holds focus.
+ * The MOJ component ships with four accessibility issues on the toggle, each
+ * addressed by a dedicated helper:
+ *  - Panel focus theft on expand — {@link neutraliseMojPanelFocus}.
+ *  - Misleading `aria-haspopup="true"` on the toggle — {@link removeMisleadingHaspopup}.
+ *  - Stale `aria-expanded` announcement by screen readers — {@link bounceFocusViaPingOnToggle}.
+ *  - Stranded focus outline after the toggle button is repositioned by the
+ *    panel expanding — {@link bounceFocusViaPingOnToggle} (same mechanism as
+ *    the stale `aria-expanded` fix).
  *
  * The panel's `id` is set to `filterPanelId` when absent so `aria-controls`
- * always resolves to a real element.
- *
- * The helper bails out with no side effects when the toggle container, the
- * filter panel, or the toggle button inside the container is missing.
+ * always resolves to a real element ({@link linkToggleToPanel}).
  */
 export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPanelSelector, filterPanelId }: RestoreFocusOnFilterToggleOptions): void => {
   const toggleContainer = document.querySelector<HTMLElement>(toggleContainerSelector);
@@ -185,60 +247,19 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
     return;
   }
 
+  neutraliseMojPanelFocus(filterPanel);
+
   const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
 
-  // Bail out if the toggle button is missing so the helper has no side effects
-  // (no focus-ping, no click handler, no panel mutations) unless it can fully
-  // initialise the disclosure contract.
   if (!toggleButton) {
     return;
   }
 
-  // Guarantee the panel has an id so `aria-controls` below always resolves.
-  if (!filterPanel.id) {
-    filterPanel.id = filterPanelId;
-  }
-
-  // Neutralise MOJ's `tabindex="-1"` so its `.focus()` on the panel becomes a
-  // no-op. Only remove the attribute when it matches MOJ's value so callers
-  // that intentionally set a different tabindex on the panel are respected.
-  if (filterPanel.getAttribute('tabindex') === '-1') {
-    filterPanel.removeAttribute('tabindex');
-  }
-
-  // Advertise the disclosure relationship to assistive tech.
-  toggleButton.setAttribute('aria-controls', filterPanel.id);
-  // MOJ's default `aria-haspopup="true"` is misleading — the panel is a disclosure, not a popup.
-  toggleButton.removeAttribute('aria-haspopup');
+  linkToggleToPanel(toggleButton, filterPanel, filterPanelId);
+  removeMisleadingHaspopup(toggleButton);
   setupFilterPanelTabRouter(toggleButton, filterPanel);
 
-  // Offscreen "focus ping" used to force a real blur → focus pair on the toggle
-  // (browsers optimise away blur+re-focus on the same element).
-  const focusPing = document.createElement('div');
-  focusPing.setAttribute('tabindex', '-1');
-  focusPing.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;outline:none;';
-  document.body.appendChild(focusPing);
+  const focusPing = createFocusPingElement();
 
-  toggleContainer.addEventListener('click', (event) => {
-    const target = event.target instanceof Element ? event.target.closest('button') : null;
-
-    // Ignore clicks that aren't on the toggle button itself (e.g. bubbled from children).
-    if (!target || !toggleContainer.contains(target)) {
-      return;
-    }
-
-    // Two rAFs wait for MOJ's toggle handler + layout reflow + paint to finish
-    // before we bounce focus via the ping and restore it to the toggle. The
-    // setTimeout gives the accessibility tree a beat to register the ping.
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        focusPing.focus({ preventScroll: true });
-        window.setTimeout(() => {
-          // `preventScroll` avoids jumping the page when the toggle's new
-          // position (after the panel expands/collapses) would otherwise scroll.
-          target.focus({ preventScroll: true });
-        }, 50);
-      });
-    });
-  });
+  bounceFocusViaPingOnToggle(toggleContainer, focusPing);
 };
