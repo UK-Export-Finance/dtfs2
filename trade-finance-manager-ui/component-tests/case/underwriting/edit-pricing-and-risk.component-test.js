@@ -32,4 +32,39 @@ describe(page, () => {
       wrapper.expectInput('[data-cy="credit-rating-other"]').toHaveValue('Other');
     });
   });
+
+  describe('accessible autocomplete select', () => {
+    beforeEach(() => {
+      wrapper = render({
+        ...params,
+        tfm: {
+          exporterCreditRating: 'A+',
+        },
+        creditRatings: [
+          {
+            value: '',
+            text: '',
+          },
+          {
+            value: 'A+',
+            text: 'A+',
+            selected: true,
+          },
+          {
+            value: 'BBB',
+            text: 'BBB',
+          },
+        ],
+      });
+    });
+
+    it('should render `Other` accessible autocomplete select', () => {
+      wrapper.expectElement('#exporterCreditRatingOther[name="exporterCreditRatingOther"]').toExist();
+      wrapper.expectElement('#exporterCreditRatingOther option[value="A+"][selected]').toExist();
+    });
+
+    it('should render accessible autocomplete script', () => {
+      wrapper.expectElement('script[src="/assets/js/accessibleAutocomplete.js"]').toExist();
+    });
+  });
 });
