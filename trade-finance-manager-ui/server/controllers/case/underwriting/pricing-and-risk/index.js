@@ -16,6 +16,8 @@ const getUnderWritingPricingAndRisk = (deal, user) => ({
   user,
 });
 
+const label = 'Credit rating';
+
 /**
  * Controller to get pricing and risk edit page
  * @async
@@ -47,6 +49,7 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
     otherCreditRatings,
+    label,
   });
 };
 
@@ -137,6 +140,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       user: req.session.user,
       validationErrors,
       otherCreditRatings,
+      label,
     });
   }
 

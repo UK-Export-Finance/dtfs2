@@ -35,6 +35,8 @@ const mockDeal = {
   tfm: {},
 };
 
+const label = 'Credit rating';
+
 describe('GET underwriting - pricing and risk', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
@@ -81,6 +83,7 @@ describe('GET underwriting - pricing and risk edit', () => {
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
         otherCreditRatings,
+        label,
       });
     });
   });
@@ -190,6 +193,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           user: session.user,
           validationErrors: expectedValidationErrors,
           otherCreditRatings,
+          label,
         });
       });
     });
@@ -239,6 +243,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           user: session.user,
           validationErrors: expectedValidationErrors,
           otherCreditRatings,
+          label,
         });
       });
     });

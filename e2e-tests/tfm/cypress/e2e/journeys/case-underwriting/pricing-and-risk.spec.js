@@ -89,10 +89,13 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputValidationError().should('be.visible');
     });
 
-    it('selecting `Other` in edit form displays text input. After submit - displays validation errors if text input is empty', () => {
+    it('selecting `Other` in edit form displays a heading and text input. After submit - displays validation errors if text input is empty', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+
+      cy.assertText(pages.underwritingPricingAndRiskEditPage.creditRatingOtherLabel(), 'Credit rating');
+
       autoCompleteField.input().should('be.visible');
       autoCompleteField.input().should('have.value', '');
       cy.clickSubmitButton();

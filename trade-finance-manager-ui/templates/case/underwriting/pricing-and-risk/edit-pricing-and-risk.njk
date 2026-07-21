@@ -1,7 +1,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% import './_macros/pricing-and-risk-other-input.njk' as pricingAndRiskOtherInput %}
 {% import '../../../_macros/accessible-autocomplete-select.njk' as accessibleAutoCompleteSelect %}
 
 {% extends "index.njk" %}
@@ -44,7 +43,8 @@
                 value: exporterCreditRatingOtherTextInputValue,
                 fieldId: 'exporterCreditRatingOther',
                 inputContainerClasses: 'govuk-input--width-20',
-                options: otherCreditRatings
+                options: otherCreditRatings,
+                label: label
               } %}
 
               {{govukRadios({

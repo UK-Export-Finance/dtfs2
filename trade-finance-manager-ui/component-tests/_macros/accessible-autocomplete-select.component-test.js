@@ -46,6 +46,24 @@ describe(component, () => {
     wrapper.expectElement(`[data-cy="${fieldId}-placeholder-option"][value=""][disabled][selected]`).toExist();
   });
 
+  it('should render label when provided', () => {
+    const label = 'Other credit risk rating';
+    const wrapper = render(getParams({ label }));
+
+    const labelSelector = `[data-cy="${fieldId}-label"]`;
+
+    wrapper.expectElement(labelSelector).toExist();
+    wrapper.expectElement(labelSelector).toHaveAttribute('for', fieldId);
+    wrapper.expectElement(labelSelector).toHaveAttribute('class', 'govuk-label--s');
+    wrapper.expectText(labelSelector).toRead(label);
+  });
+
+  it('should not render label when not provided', () => {
+    const wrapper = render(getParams({ label: undefined }));
+
+    wrapper.expectElement(`[data-cy="${fieldId}-label"]`).notToExist();
+  });
+
   it('should render options and selected option when provided', () => {
     const wrapper = render(getParams());
 
