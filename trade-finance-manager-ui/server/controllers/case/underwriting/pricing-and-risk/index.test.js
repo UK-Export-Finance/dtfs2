@@ -70,7 +70,7 @@ describe('GET underwriting - pricing and risk edit', () => {
         session,
       };
 
-      const creditRatings = mapOtherCreditRatings(mockDeal?.tfm?.exporterCreditRating);
+      const otherCreditRatings = mapOtherCreditRatings(mockDeal?.tfm?.exporterCreditRating);
 
       await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
@@ -80,7 +80,7 @@ describe('GET underwriting - pricing and risk edit', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
-        creditRatings,
+        otherCreditRatings,
       });
     });
   });
@@ -160,7 +160,7 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-        const creditRatings = mapOtherCreditRatings();
+        const otherCreditRatings = mapOtherCreditRatings();
 
         const expectedValidationErrors = {
           count: 1,
@@ -189,7 +189,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
-          creditRatings,
+          otherCreditRatings,
         });
       });
     });
@@ -209,7 +209,7 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-        const creditRatings = mapOtherCreditRatings(mockDeal.tfm?.exporterCreditRating);
+        const otherCreditRatings = mapOtherCreditRatings(mockDeal.tfm?.exporterCreditRating);
 
         const expectedValidationErrors = {
           count: 1,
@@ -238,7 +238,7 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
-          creditRatings,
+          otherCreditRatings,
         });
       });
     });

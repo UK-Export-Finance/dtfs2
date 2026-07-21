@@ -40,7 +40,7 @@ describe(page, () => {
         tfm: {
           exporterCreditRating: 'A+',
         },
-        creditRatings: [
+        otherCreditRatings: [
           {
             value: '',
             text: '',
