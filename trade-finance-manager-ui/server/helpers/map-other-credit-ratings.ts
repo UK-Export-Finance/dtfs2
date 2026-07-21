@@ -1,4 +1,4 @@
-import { mapSelectOption, CreditRiskRating } from '@ukef/dtfs2-common';
+import { mapSelectOption, CreditRiskRating, SelectOption } from '@ukef/dtfs2-common';
 import api from '../api';
 
 /**
@@ -8,16 +8,16 @@ import api from '../api';
  * @param selectedValue The value that should be marked as selected.
  * @returns An array of select options, including a default option if no selectedValue is provided.
  */
-export const mapOtherCreditRatings = async (selectedValue?: string) => {
+export const mapOtherCreditRatings = async (selectedValue?: string): Promise<SelectOption[] | false> => {
   try {
-    const creditRatingsAPI = await api.getCreditRiskRatings();
+    const creditRatingsAPIResponse = await api.getCreditRiskRatings();
 
-    if (!creditRatingsAPI || creditRatingsAPI.length === 0) {
+    if (!Array.isArray(creditRatingsAPIResponse) || creditRatingsAPIResponse.length === 0) {
       console.error('mapOtherCreditRatings: No credit ratings found from the API.');
       return false;
     }
 
-    let creditRatings = creditRatingsAPI.map((rating: CreditRiskRating) => mapSelectOption(rating.description, rating.description, selectedValue));
+    let creditRatings = creditRatingsAPIResponse.map((rating: CreditRiskRating) => mapSelectOption(rating.description, rating.description, selectedValue));
 
     if (!selectedValue) {
       const defaultOption = {
