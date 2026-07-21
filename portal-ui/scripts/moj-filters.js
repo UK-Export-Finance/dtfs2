@@ -23,7 +23,7 @@
  */
 import { restoreFocusOnFilterToggle } from '@ukef/dtfs2-common/frontend/restore-focus-on-filter-toggle';
 
-if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
+if (typeof MOJFrontend !== 'undefined' && typeof MOJFrontend.FilterToggleButton !== 'undefined') {
   new MOJFrontend.FilterToggleButton({
     bigModeMediaQuery: '(min-width: 48.063em)',
     startHidden: true,

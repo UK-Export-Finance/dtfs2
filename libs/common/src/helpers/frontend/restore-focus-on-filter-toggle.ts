@@ -115,6 +115,11 @@ const bounceFocusViaPingOnToggle = (toggleContainer: HTMLElement, focusPing: HTM
  *
  * The panel's `id` is set to `filterPanelId` when absent so `aria-controls`
  * always resolves to a real element ({@link linkToggleToPanel}).
+ *
+ * Idempotent: a `data-dtfs-restore-focus-on-filter-toggle-initialised` flag is
+ * set on the toggle container after the first call, so repeated invocations
+ * on the same container (e.g. accidental re-initialisation) are a no-op and
+ * do not accumulate duplicate focus-ping elements or click listeners.
  */
 export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPanelSelector, filterPanelId }: RestoreFocusOnFilterToggleOptions): void => {
   const toggleContainer = document.querySelector<HTMLElement>(toggleContainerSelector);
@@ -124,6 +129,13 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
   if (!toggleContainer || !filterPanel) {
     return;
   }
+
+  // Prevent multiple initialisations (duplicate ping elements / event handlers).
+  if (toggleContainer.dataset.dtfsRestoreFocusOnFilterToggleInitialised === 'true') {
+    return;
+  }
+
+  toggleContainer.dataset.dtfsRestoreFocusOnFilterToggleInitialised = 'true';
 
   neutraliseMojPanelFocus(filterPanel);
 

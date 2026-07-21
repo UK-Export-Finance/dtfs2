@@ -60,10 +60,12 @@ const invoke = () =>
 const getToggleButton = (): HTMLButtonElement => document.querySelector<HTMLButtonElement>(`${TOGGLE_CONTAINER_SELECTOR} button`)!;
 const getPanel = (): HTMLElement => document.querySelector<HTMLElement>(FILTER_PANEL_SELECTOR)!;
 const getFocusPing = (): HTMLElement | null => document.body.querySelector<HTMLElement>('div[tabindex="-1"]');
+const getFocusPings = (): NodeListOf<HTMLElement> => document.body.querySelectorAll<HTMLElement>('div[tabindex="-1"]');
 
 describe('restoreFocusOnFilterToggle', () => {
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
     document.body.innerHTML = '';
   });
 
@@ -178,9 +180,55 @@ describe('restoreFocusOnFilterToggle', () => {
         expect(ping!.style.position).toEqual('fixed');
       });
     });
+
+    describe('repeated invocations on the same toggle container', () => {
+      it('should mark the toggle container as initialised', () => {
+        setupDom();
+
+        invoke();
+
+        const container = document.querySelector<HTMLElement>(TOGGLE_CONTAINER_SELECTOR)!;
+
+        expect(container.dataset.dtfsRestoreFocusOnFilterToggleInitialised).toEqual('true');
+      });
+
+      it('should not append a second focus ping element', () => {
+        setupDom();
+
+        invoke();
+        invoke();
+
+        expect(getFocusPings()).toHaveLength(1);
+      });
+
+      it('should not attach a second click listener', () => {
+        jest.useFakeTimers();
+        setupDom();
+
+        invoke();
+        invoke();
+
+        const button = getToggleButton();
+        const focusPing = getFocusPing()!;
+        const buttonFocusSpy = jest.spyOn(button, 'focus');
+        const pingFocusSpy = jest.spyOn(focusPing, 'focus');
+
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        jest.runAllTimers();
+
+        expect(pingFocusSpy).toHaveBeenCalledTimes(1);
+        expect(buttonFocusSpy).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
   describe('async focus restoration on click', () => {
+    // `requestAnimationFrame` is mocked onto a `setTimeout` so the fake-timer
+    // advances below are deterministic and do not depend on how the test
+    // environment (or Jest's fake timer implementation) schedules real
+    // animation frames, which can vary across environments.
+    const ANIMATION_FRAME_MS = 16;
+
     let button: HTMLButtonElement;
     let container: HTMLElement;
     let focusPing: HTMLElement;
@@ -189,6 +237,10 @@ describe('restoreFocusOnFilterToggle', () => {
 
     beforeEach(() => {
       jest.useFakeTimers();
+      jest
+        .spyOn(window, 'requestAnimationFrame')
+        .mockImplementation((callback: FrameRequestCallback) => window.setTimeout(() => callback(performance.now()), ANIMATION_FRAME_MS) as unknown as number);
+
       setupDom();
       invoke();
 
@@ -227,9 +279,10 @@ describe('restoreFocusOnFilterToggle', () => {
     it('should schedule the toggle re-focus behind a 50ms setTimeout after the ping', () => {
       button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-      // Advance past both requestAnimationFrame callbacks so the ping fires but
-      // the setTimeout(50) that re-focuses the button has not yet elapsed.
-      jest.advanceTimersByTime(32);
+      // Advance past both mocked requestAnimationFrame callbacks so the ping
+      // fires but the setTimeout(50) that re-focuses the button has not yet
+      // elapsed.
+      jest.advanceTimersByTime(ANIMATION_FRAME_MS * 2);
 
       expect(pingFocusSpy).toHaveBeenCalledTimes(1);
       expect(buttonFocusSpy).not.toHaveBeenCalled();
