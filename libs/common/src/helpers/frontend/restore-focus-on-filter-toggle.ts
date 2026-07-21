@@ -117,9 +117,12 @@ const bounceFocusViaPingOnToggle = (toggleContainer: HTMLElement, focusPing: HTM
  * always resolves to a real element ({@link linkToggleToPanel}).
  *
  * Idempotent: a `data-dtfs-restore-focus-on-filter-toggle-initialised` flag is
- * set on the toggle container after the first call, so repeated invocations
- * on the same container (e.g. accidental re-initialisation) are a no-op and
- * do not accumulate duplicate focus-ping elements or click listeners.
+ * set on the toggle container once the toggle `<button>` has been found and
+ * wired up, so repeated invocations on the same container (e.g. accidental
+ * re-initialisation) are a no-op and do not accumulate duplicate focus-ping
+ * elements or click listeners. If the button is not yet present (e.g. the UI
+ * is still rendering/rehydrating), the flag is left unset so a later call can
+ * complete initialisation once the button exists.
  */
 export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPanelSelector, filterPanelId }: RestoreFocusOnFilterToggleOptions): void => {
   const toggleContainer = document.querySelector<HTMLElement>(toggleContainerSelector);
@@ -135,16 +138,20 @@ export const restoreFocusOnFilterToggle = ({ toggleContainerSelector, filterPane
     return;
   }
 
+  const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
+
+  // If the container is present but the actual toggle button is missing, don't mark as initialised.
+  // This allows a later call (e.g. once the UI has rendered/rehydrated) to still wire up the button.
+  if (!toggleButton) {
+    return;
+  }
+
   toggleContainer.dataset.dtfsRestoreFocusOnFilterToggleInitialised = 'true';
 
   neutraliseMojPanelFocus(filterPanel);
 
-  const toggleButton = toggleContainer.querySelector<HTMLButtonElement>('button');
-
-  if (toggleButton) {
-    linkToggleToPanel(toggleButton, filterPanel, filterPanelId);
-    removeMisleadingHaspopup(toggleButton);
-  }
+  linkToggleToPanel(toggleButton, filterPanel, filterPanelId);
+  removeMisleadingHaspopup(toggleButton);
 
   const focusPing = createFocusPingElement();
 
