@@ -64,7 +64,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/mojFilters.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFilters.js"]')
-      .toHaveAttribute('integrity', 'sha512-yedoPjXB4VDSECpJ9v3aBxUjZqT3lqIvz0jBRGMHKWsvXw3UFIlymaPtF1PURzAKHcw7/fRKq/vvozJqQDtF1w==');
+      .toHaveAttribute('integrity', 'sha512-5oVnvrfst3OewRixjGHxR5WitgIyxX3uZPuaff34QXRmLUE9kb/jMIkKmqXAUYEV3Qm1I88Jy1gV6aviC4Y3RQ==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {
