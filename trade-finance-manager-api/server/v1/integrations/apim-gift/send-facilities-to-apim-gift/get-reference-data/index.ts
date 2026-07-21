@@ -1,6 +1,7 @@
+import { CreditRiskRating } from '@ukef/dtfs2-common';
 import apiModule from '../../../../api';
 import { mapApimCreditRiskRatings } from '../../../../mappings/map-apim-credit-risk-ratings';
-import type { CreditRiskRating, FacilityCategory } from '../../../../api-response-types';
+import type { FacilityCategory } from '../../../../api-response-types';
 import { ApiTypes } from '../../../../mappings/apim-gift-payloads/types';
 
 type GetReferenceDataResult = {

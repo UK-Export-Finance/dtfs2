@@ -5,7 +5,13 @@ import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { assertAutocompleteInput } from '../../common-tests/assertAutocompleteInput';
 
-const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'B+';
+const CREDIT_RISK_RATINGS = {
+  A: 'A',
+  B_PLUS: 'B+',
+  BBB_PLUS: 'BBB+',
+  BB_MINUS: 'B-',
+  INVALID: 'Z',
+};
 
 const autoCompleteField = pages.autoCompleteField('exporterCreditRatingOther');
 
@@ -161,19 +167,19 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       autoCompleteField.input().should('have.value', '');
 
-      cy.keyboardInput(autoCompleteField.input(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOption(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE).click();
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.B_PLUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.B_PLUS).click();
       cy.clickSubmitButton();
 
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.B_PLUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().should('be.checked');
       autoCompleteField.input().should('exist');
 
-      cy.assertText(autoCompleteField.results(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
-      cy.assertValue(autoCompleteField, MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(autoCompleteField.results(), CREDIT_RISK_RATINGS.B_PLUS);
+      cy.assertValue(autoCompleteField, CREDIT_RISK_RATINGS.B_PLUS);
     });
 
     it('should use last submitted other value if revisiting the edit form and clearing the other input', () => {
@@ -181,8 +187,8 @@ context('Case Underwriting - Pricing and risk', () => {
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
 
-      cy.keyboardInput(autoCompleteField.input(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOption(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE).click();
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.B_PLUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.B_PLUS).click();
       cy.clickSubmitButton();
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
@@ -191,12 +197,12 @@ context('Case Underwriting - Pricing and risk', () => {
       autoCompleteField.input().clear();
       cy.clickSubmitButton();
 
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.B_PLUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
-      cy.assertText(autoCompleteField.results(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
-      cy.assertValue(autoCompleteField, MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(autoCompleteField.results(), CREDIT_RISK_RATINGS.B_PLUS);
+      cy.assertValue(autoCompleteField, CREDIT_RISK_RATINGS.B_PLUS);
     });
 
     describe('credit rating `Other` autocomplete page tests', () => {
@@ -207,11 +213,11 @@ context('Case Underwriting - Pricing and risk', () => {
 
       assertAutocompleteInput({
         fieldId: 'exporterCreditRatingOther',
-        noResultsText: 'Z',
-        singleResultText: 'BBB+',
-        multipleResultsText: 'A',
-        entry1Text: 'B+',
-        entry2Text: 'BB-',
+        noResultsText: CREDIT_RISK_RATINGS.INVALID,
+        singleResultText: CREDIT_RISK_RATINGS.BBB_PLUS,
+        multipleResultsText: CREDIT_RISK_RATINGS.A,
+        entry1Text: CREDIT_RISK_RATINGS.B_PLUS,
+        entry2Text: CREDIT_RISK_RATINGS.BB_MINUS,
       });
     });
   });
@@ -226,7 +232,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     it('cannot add or edit a credit rating', () => {
       // double check that a credit rating already exists from previous tests
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.B_PLUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');

@@ -1,4 +1,5 @@
-import { CREDIT_RATINGS, mapSelectOption } from '@ukef/dtfs2-common';
+import { mapSelectOption, CreditRiskRating } from '@ukef/dtfs2-common';
+import api from '../api';
 
 /**
  * Maps the other credit ratings to an array of select options for the accessible autocomplete select component
@@ -7,19 +8,31 @@ import { CREDIT_RATINGS, mapSelectOption } from '@ukef/dtfs2-common';
  * @param selectedValue The value that should be marked as selected.
  * @returns An array of select options, including a default option if no selectedValue is provided.
  */
-export const mapOtherCreditRatings = (selectedValue?: string) => {
-  let creditRatings = CREDIT_RATINGS.map((rating: string) => mapSelectOption(rating, rating, selectedValue));
+export const mapOtherCreditRatings = async (selectedValue?: string) => {
+  try {
+    const creditRatingsAPI = await api.getCreditRiskRatings();
 
-  if (!selectedValue) {
-    const defaultOption = {
-      disabled: true,
-      selected: true,
-      value: '',
-      text: '',
-    };
+    if (!creditRatingsAPI || creditRatingsAPI.length === 0) {
+      console.error('mapOtherCreditRatings: No credit ratings found from the API.');
+      return false;
+    }
 
-    creditRatings = [defaultOption, ...creditRatings];
+    let creditRatings = creditRatingsAPI.map((rating: CreditRiskRating) => mapSelectOption(rating.description, rating.description, selectedValue));
+
+    if (!selectedValue) {
+      const defaultOption = {
+        disabled: true,
+        selected: true,
+        value: '',
+        text: '',
+      };
+
+      creditRatings = [defaultOption, ...creditRatings];
+    }
+
+    return creditRatings;
+  } catch (error) {
+    console.error('Error mapping other credit ratings - mapOtherCreditRatings: %o', error);
+    return false;
   }
-
-  return creditRatings;
 };

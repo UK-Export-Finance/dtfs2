@@ -8,11 +8,16 @@ const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
 require('dotenv').config();
 
-const { TFM_API_URL, TFM_API_KEY } = process.env;
+const { TFM_API_URL, TFM_API_KEY, EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const generateHeaders = () => ({
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': TFM_API_KEY,
+});
+
+const generateExternalAPIHeaders = () => ({
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+  'x-api-key': EXTERNAL_API_KEY,
 });
 
 const generateHeadersWithToken = (token) => ({
@@ -1521,6 +1526,27 @@ const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
   return response.data;
 };
 
+/**
+ * Get credit risk ratings
+ * @returns {Promise<import('@ukef/dtfs2-common').CreditRiskRating[] | false>}
+ */
+const getCreditRiskRatings = async () => {
+  try {
+    console.info('Calling external API "Get credit risk ratings" endpoint');
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
+      headers: generateExternalAPIHeaders(),
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get credit risk ratings %o', error);
+    return false;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1590,4 +1616,5 @@ module.exports = {
   deleteFeeRecordCorrectionTransientFormData,
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
+  getCreditRiskRatings,
 };

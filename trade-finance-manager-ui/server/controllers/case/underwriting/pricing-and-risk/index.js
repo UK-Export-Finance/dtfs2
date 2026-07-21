@@ -39,7 +39,12 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const otherCreditRatings = mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
+  const otherCreditRatings = await mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
+
+  if (!otherCreditRatings || otherCreditRatings.length === 0) {
+    console.error('getUnderWritingPricingAndRiskEdit - No credit ratings found from the API.');
+    return res.render('_partials/problem-with-service.njk', { user });
+  }
 
   return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
@@ -80,7 +85,12 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   let validationErrors;
 
-  const otherCreditRatings = mapOtherCreditRatings();
+  const otherCreditRatings = await mapOtherCreditRatings();
+
+  if (!otherCreditRatings || otherCreditRatings.length === 0) {
+    console.error('postUnderWritingPricingAndRisk -No credit ratings found from the API.');
+    return res.render('_partials/problem-with-service.njk', { user });
+  }
 
   const selectedOther = req.body.exporterCreditRating === 'Other';
   const otherValue = hasValue(req.body.exporterCreditRatingOther);

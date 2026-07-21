@@ -60,8 +60,8 @@ describe(page, () => {
     });
 
     it('should render a heading for the accessible autocomplete select', () => {
-      wrapper.expectElement('#exporterCreditRatingOther-label').toExist();
-      wrapper.expectElement('#exporterCreditRatingOther-label').toContainText('Credit rating');
+      wrapper.expectElement('[data-cy="exporterCreditRatingOther-label"]').toExist();
+      wrapper.expectText('[data-cy="exporterCreditRatingOther-label"]').toRead('Credit rating');
     });
 
     it('should render `Other` accessible autocomplete select', () => {

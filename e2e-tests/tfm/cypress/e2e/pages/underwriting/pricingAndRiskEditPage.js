@@ -7,11 +7,6 @@ const pricingAndRiskEditPage = {
   creditRatingRadioInputOther: () => cy.get('[data-cy="credit-rating-other"]'),
   creditRatingTextInputOther: () => cy.get('[data-cy="accessible-autocomplete-select-exporterCreditRatingOther"]'),
   creditRatingTextInputOtherValidationError: () => cy.get('[data-cy="exporterCreditRatingOther-error-message"]'),
-  creditRatingTextInputOption: (option) =>
-    cy
-      .get('[id^="exporterCreditRatingOther__option--"]')
-      .filter((_, el) => el.innerText.trim() === option)
-      .first(),
 
   closeLink: () => cy.get('[data-cy="close-link"]'),
 };
