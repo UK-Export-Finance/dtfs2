@@ -54,7 +54,7 @@ describe(component, () => {
 
     wrapper.expectElement(labelSelector).toExist();
     wrapper.expectElement(labelSelector).toHaveAttribute('for', fieldId);
-    wrapper.expectElement(labelSelector).toHaveAttribute('class', 'govuk-label--s');
+    wrapper.expectElement(labelSelector).toHaveAttribute('class', 'govuk-label govuk-label--s');
     wrapper.expectText(labelSelector).toRead(label);
   });
 
