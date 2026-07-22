@@ -12,7 +12,7 @@ export const mapOtherCreditRatings = async (selectedValue?: string): Promise<Sel
   try {
     const creditRatingsAPIResponse = await api.getCreditRiskRatings();
 
-    if (!Array.isArray(creditRatingsAPIResponse) || creditRatingsAPIResponse.length === 0) {
+    if (!Array.isArray(creditRatingsAPIResponse) || !creditRatingsAPIResponse.length) {
       console.error('mapOtherCreditRatings: No credit ratings found from the API.');
       return false;
     }

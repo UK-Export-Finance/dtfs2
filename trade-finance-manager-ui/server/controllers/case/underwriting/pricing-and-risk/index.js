@@ -41,7 +41,7 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
 
   const otherCreditRatings = await mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
 
-  if (!Array.isArray(otherCreditRatings) || otherCreditRatings?.length === 0) {
+  if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
     console.error('getUnderWritingPricingAndRiskEdit - No credit ratings returned from the API.');
     return res.render('_partials/problem-with-service.njk', { user });
   }
@@ -87,7 +87,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   const otherCreditRatings = await mapOtherCreditRatings();
 
-  if (!Array.isArray(otherCreditRatings) || otherCreditRatings?.length === 0) {
+  if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
     console.error('postUnderWritingPricingAndRisk -No credit ratings returned from the API.');
     return res.render('_partials/problem-with-service.njk', { user });
   }
