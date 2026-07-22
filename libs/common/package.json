@@ -52,7 +52,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.8.4",
+    "@azure/msal-node": "^3.8.10",
     "@types/big.js": "^6.2.2",
     "@types/connect-redis": "^0.0.23",
     "@types/express-session": "^1.18.2",
