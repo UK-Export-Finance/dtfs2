@@ -47,13 +47,11 @@ const insertUser = (overrides: Partial<PortalUser> = {}): Promise<PortalUser> =>
 
 describe(`POST ${BASE_URL}`, () => {
   beforeEach(async () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.USERS]);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
