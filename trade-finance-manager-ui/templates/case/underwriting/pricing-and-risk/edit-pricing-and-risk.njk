@@ -1,7 +1,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% import './_macros/pricing-and-risk-other-input.njk' as pricingAndRiskOtherInput %}
+{% import '../../../_macros/accessible-autocomplete-select.njk' as accessibleAutoCompleteSelect %}
 
 {% extends "index.njk" %}
 
@@ -39,8 +39,12 @@
               {% set exporterCreditRatingOtherTextInputValue = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' and tfm.exporterCreditRating %}
 
               {% set exporterCreditRatingOtherComponentData = {
-                validationError: validationErrors.errorList.exporterCreditRatingOther,
-                value: exporterCreditRatingOtherTextInputValue
+                errorMessage: validationErrors.errorList.exporterCreditRatingOther.text,
+                value: exporterCreditRatingOtherTextInputValue,
+                fieldId: 'exporterCreditRatingOther',
+                inputContainerClasses: 'govuk-input--width-20',
+                options: otherCreditRatings,
+                label: label
               } %}
 
               {{govukRadios({
@@ -77,7 +81,7 @@
                         'data-cy': 'credit-rating-other'
                       },
                       conditional: {
-                        html: pricingAndRiskOtherInput.render(exporterCreditRatingOtherComponentData)
+                        html: accessibleAutoCompleteSelect.render(exporterCreditRatingOtherComponentData)
                       }
                     }
                   ],

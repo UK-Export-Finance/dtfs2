@@ -1,4 +1,4 @@
-import { CreditRiskRating } from '../api-response-types';
+import { CreditRiskRating } from '@ukef/dtfs2-common';
 
 export const MOCK_CREDIT_RISK_RATINGS: CreditRiskRating[] = [
   {

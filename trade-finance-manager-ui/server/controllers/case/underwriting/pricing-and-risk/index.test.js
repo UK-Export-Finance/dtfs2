@@ -3,6 +3,11 @@ import pricingAndRiskController from '..';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import { userCanEditGeneral } from './helpers';
+import { mapOtherCreditRatings } from '../../../../helpers/map-other-credit-ratings';
+
+jest.mock('../../../../helpers/map-other-credit-ratings', () => ({
+  mapOtherCreditRatings: jest.fn(),
+}));
 
 const res = mockRes();
 
@@ -34,6 +39,9 @@ const mockDeal = {
   tfm: {},
 };
 
+const label = 'Credit rating';
+const otherCreditRatings = [{ value: 'A', text: 'A', selected: false }];
+
 describe('GET underwriting - pricing and risk', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
@@ -59,6 +67,7 @@ describe('GET underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      mapOtherCreditRatings.mockResolvedValue(otherCreditRatings);
     });
 
     it('should render edit pricing and risk template with data', async () => {
@@ -77,7 +86,26 @@ describe('GET underwriting - pricing and risk edit', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
+        otherCreditRatings,
+        label,
       });
+
+      expect(mapOtherCreditRatings).toHaveBeenCalledWith(mockDeal?.tfm?.exporterCreditRating);
+    });
+
+    it('should render problem-with-service when credit ratings are not available', async () => {
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+      };
+
+      mapOtherCreditRatings.mockResolvedValue(false);
+
+      await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk', { user: session.user });
     });
   });
 
@@ -124,6 +152,8 @@ describe('POST underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.updateCreditRating = jest.fn().mockResolvedValue({});
+      mapOtherCreditRatings.mockResolvedValue(otherCreditRatings);
     });
 
     it('should redirect to /pricing-and-risk', async () => {
@@ -183,7 +213,11 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
+          otherCreditRatings,
+          label,
         });
+
+        expect(mapOtherCreditRatings).toHaveBeenCalledWith();
       });
     });
 
@@ -229,53 +263,11 @@ describe('POST underwriting - pricing and risk edit', () => {
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
           validationErrors: expectedValidationErrors,
+          otherCreditRatings,
+          label,
         });
-      });
-    });
 
-    describe('with req.body.exporterCreditRating as `Other`, but req.body.exporterCreditRatingOther contains numbers', () => {
-      it('should return template with validation errors', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          session,
-          body: {
-            exporterCreditRating: 'Other',
-            exporterCreditRatingOther: 'test100',
-          },
-        };
-
-        await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
-
-        const expectedValidationErrors = {
-          count: 1,
-          errorList: {
-            exporterCreditRatingOther: {
-              text: 'Credit rating must not include numbers',
-              order: '1',
-            },
-          },
-          summary: [
-            {
-              text: 'Credit rating must not include numbers',
-              href: '#exporterCreditRatingOther',
-            },
-          ],
-        };
-
-        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: {
-            ...mockDeal.tfm,
-            exporterCreditRating: req.body.exporterCreditRatingOther,
-          },
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          validationErrors: expectedValidationErrors,
-        });
+        expect(mapOtherCreditRatings).toHaveBeenCalledWith();
       });
     });
 
@@ -296,6 +288,24 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
       });
+    });
+
+    it('should render problem-with-service when credit ratings are not available', async () => {
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+        body: {
+          exporterCreditRating: 'Good (BB-)',
+        },
+      };
+
+      mapOtherCreditRatings.mockResolvedValue(false);
+
+      await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk', { user: session.user });
     });
   });
 

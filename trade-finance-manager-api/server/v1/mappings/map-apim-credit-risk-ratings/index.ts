@@ -1,4 +1,4 @@
-import { CreditRiskRating } from '../../api-response-types';
+import { CreditRiskRating } from '@ukef/dtfs2-common';
 
 /**
  * Map the APIM MDM response for credit risk ratings to simple array of descriptions.
