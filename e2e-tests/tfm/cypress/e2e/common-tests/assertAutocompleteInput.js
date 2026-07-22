@@ -34,7 +34,7 @@ export const assertAutocompleteInput = ({ fieldId, noResultsText, singleResultTe
     assertions.rendersMultipleResults(field, multipleResultsText);
   });
 
-  it('should allow user to remove a selected country and search again', () => {
+  it('should allow user to remove a selected entry and search again', () => {
     assertions.allowsUserToRemoveEntryAndSearchAgain(fieldId, entry1Text, entry2Text, entry2Text);
   });
 };
