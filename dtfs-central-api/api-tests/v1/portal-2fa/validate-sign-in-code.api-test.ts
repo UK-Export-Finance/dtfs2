@@ -9,17 +9,19 @@ import { insertPortalUser } from '../../helpers/portal-users';
 
 const BASE_URL = '/v1/portal/users/me/validate-sign-in-code';
 
+type PortalUserResponse = Omit<PortalUser, '_id'> & { _id: string };
+
 type ValidateSignInCodeSuccessBody = {
   success: true;
-  user: PortalUser;
+  user: PortalUserResponse;
   tokenObject: { token: string; expires: string };
 };
 
 type ValidateSignInCodeBody =
   | ValidateSignInCodeSuccessBody
-  | { success: false; isInvalid: true }
-  | { success: false; isExpired: true }
-  | { success: false; notFound: true }
+  | { success: false; isInvalid: true; statusCode: number }
+  | { success: false; isExpired: true; statusCode: number }
+  | { success: false; notFound: true; statusCode: number }
   | { message: string };
 
 /**
@@ -93,7 +95,7 @@ describe(`POST ${BASE_URL}`, () => {
       });
 
       expect(status).toEqual(HttpStatusCode.Unauthorized);
-      expect(body).toMatchObject({ success: false, isInvalid: true });
+      expect(body).toMatchObject({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
     });
   });
 
@@ -110,7 +112,7 @@ describe(`POST ${BASE_URL}`, () => {
       });
 
       expect(status).toEqual(HttpStatusCode.Unauthorized);
-      expect(body).toMatchObject({ success: false, isExpired: true });
+      expect(body).toMatchObject({ success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
     });
   });
 

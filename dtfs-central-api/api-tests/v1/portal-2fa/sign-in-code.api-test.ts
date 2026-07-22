@@ -42,15 +42,8 @@ describe(`POST ${BASE_URL}`, () => {
 
   describe('when the maximum number of sign in OTPs has been exceeded', () => {
     it(`should respond with ${HttpStatusCode.Created}, a signInOTPSendCount of -1, and block the user`, async () => {
-      const user = await insertUser();
+      const user = await insertUser({ signInOTPSendCount: OTP.MAX_SIGN_IN_ATTEMPTS, signInOTPSendDate: Date.now() });
       const auditDetails = generatePortalAuditDetails(user._id);
-
-      // The sign in OTP send count is incremented server-side via a DB `$inc` (not read from the
-      // request body's user), so the same in-memory `user` object can safely be reused across these
-      // calls without re-fetching it from the DB on every iteration.
-      for (let i = 0; i < OTP.MAX_SIGN_IN_ATTEMPTS; i += 1) {
-        await testApi.post({ user, auditDetails }).to(BASE_URL);
-      }
 
       const { status, body } = (await testApi.post({ user, auditDetails }).to(BASE_URL)) as SignInCodeResponse;
 
