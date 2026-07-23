@@ -525,6 +525,23 @@ const getAllBanks = async () => {
 };
 
 /**
+ * Gets the list of banks used on the Portal login page from DTFS Central.
+ *
+ * The response is expected to be ordered by the bank `order` field in ascending
+ * order and includes only the fields needed by the UI.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The portal bank list.
+ * The returned promise rejects with the underlying Axios error if the request fails.
+ */
+const getPortalBankList = async () => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/portal-bank-list`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
+/**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
  * @returns {Promise<object>} response of API call or wrapped error response
@@ -1166,6 +1183,7 @@ module.exports = {
   getUtilisationReportById,
   getBankById,
   getAllBanks,
+  getPortalBankList,
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
