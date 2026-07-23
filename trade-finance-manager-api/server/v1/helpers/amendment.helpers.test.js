@@ -1007,7 +1007,7 @@ describe('internalAmendmentEmail()', () => {
     api.sendEmail = sendEmailApiSpy;
   });
 
-  it('should return false void UKEF Facility ID', async () => {
+  it('should return false for empty UKEF Facility ID', async () => {
     // Act
     const response = await internalAmendmentEmail('');
 
