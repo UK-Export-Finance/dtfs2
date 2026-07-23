@@ -43,7 +43,7 @@
     "@ukef/dtfs2-common": "1.0.0",
     "accessible-autocomplete": "^3.0.1",
     "ajv": "^8.20.0",
-    "axios": "1.16.0",
+    "axios": "1.18.1",
     "chance": "^1.1.13",
     "cheerio": "1.0.0-rc.12",
     "chokidar": "^3.6.0",
@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@azure/msal": "^1.4.5",
-    "@babel/core": "7.28.5",
+    "@babel/core": "7.29.7",
     "@babel/preset-env": "7.28.5",
     "@babel/runtime": "7.28.4",
     "@types/express": "^4.17.25",
