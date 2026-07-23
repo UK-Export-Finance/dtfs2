@@ -135,6 +135,6 @@ describe('utilisation-report-upload-errors', () => {
     const response = getUploadErrors(req, res);
 
     // Assert
-    expect(response).toEqual(null);
+    expect(response).toBeNull();
   });
 });

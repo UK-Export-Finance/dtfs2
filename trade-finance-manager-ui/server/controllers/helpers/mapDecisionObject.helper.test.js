@@ -29,7 +29,7 @@ describe('POST underwriting - map decision object', () => {
     describe('when value is not recognised', () => {
       it('should return null', () => {
         const result = mapDecisionValue('test');
-        expect(result).toEqual(null);
+        expect(result).toBeNull();
       });
     });
   });

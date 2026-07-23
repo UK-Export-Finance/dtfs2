@@ -24,11 +24,11 @@
     entityName: 'bond',
     entityId: bond._id,
     items: taskListItems
-  })}}
+  }) }}
 
   {% include "_partials/print-button.njk" %}
 
-  {{ bondSubmissionDetails.render({ bond: bond, user: user })}}
+  {{ bondSubmissionDetails.render({ bond: bond, user: user }) }}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="save-go-back-button">Save and go back to deal</a></p>
 

@@ -21,7 +21,7 @@ export type Deal = {
     isFinanceIncreasing: boolean;
     updatedAt: UnixTimestampMilliseconds;
   };
-  bankInternalRefName: string | null;
+  bankInternalRefName: string;
   createdAt: IsoDateTimeStamp;
   updatedAt: IsoDateTimeStamp;
   submissionCount: number;

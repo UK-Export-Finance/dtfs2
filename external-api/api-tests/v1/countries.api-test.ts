@@ -20,7 +20,7 @@ describe('/countries', () => {
   };
 
   describe('GET /countries', () => {
-    it('returns a list of countries, alphabetised but with GBR/United Kingdom at the top', async () => {
+    it('should return a list of countries, alphabetised but with GBR/United Kingdom at the top', async () => {
       const { status, body } = await get('/countries');
 
       expect(status).toEqual(200);
@@ -63,14 +63,14 @@ describe('/countries', () => {
   });
 
   describe('GET /v1/countries/:code', () => {
-    it('returns country', async () => {
+    it('should return a country', async () => {
       const { status, body } = await get('/countries/GBR');
 
       expect(status).toEqual(200);
       expect(body).toEqual(gbr);
     });
 
-    it('returns 404 when country does not exist', async () => {
+    it('should return a 404 when country does not exist', async () => {
       const { status } = await get('/countries/123');
 
       expect(status).toEqual(404);

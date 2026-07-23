@@ -8,7 +8,7 @@
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 
 {% extends "case/case.njk" %}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block pageTitle -%}
   Deal {{ deal.details.ukefDealId }} - Parties
@@ -19,6 +19,7 @@
     hasAmendmentInProgressSubmittedFromPim: hasAmendmentInProgressSubmittedFromPim,
     amendmentsInProgressSubmittedFromPim: amendmentsInProgressSubmittedFromPim
   } %}
+
   {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
   <div class="govuk-grid-row">

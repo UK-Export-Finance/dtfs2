@@ -25,7 +25,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if accrual currency is null and accrual exchange rate is not a number', () => {
@@ -118,7 +118,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns null if accrual currency is the same as base currency and accrual exchange rate is 1', () => {
@@ -147,7 +147,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if accrual currency is the same as base currency and accrual exchange rate is not 1 or null', () => {
@@ -213,7 +213,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
 
     const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if accrual currency is different to base currency and accrual exchange rate is null', () => {

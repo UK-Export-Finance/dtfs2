@@ -25,7 +25,7 @@ describe('zBooleanStrictCoerce', () => {
 
     describe('when chaining with .nullable()', () => {
       it('should return null when the provided value is null', () => {
-        expect(zBooleanStrictCoerce.nullable().parse(null)).toEqual(null);
+        expect(zBooleanStrictCoerce.nullable().parse(null)).toBeNull();
       });
     });
   });

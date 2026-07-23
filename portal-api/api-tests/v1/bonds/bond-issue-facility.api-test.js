@@ -132,7 +132,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
       expect(body.status === allBondFields.status).toEqual(false);
       expect(body.hasBeenIssued).toEqual(true);
-      expect(body.status).toEqual(null);
+      expect(body.status).toBeNull();
       expect(body.issueFacilityDetailsStarted).toEqual(true);
     });
 
@@ -150,7 +150,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
-      expect(body.status).toEqual(null);
+      expect(body.status).toBeNull();
     });
 
     it('should return 200 with updated bond, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage, previousFacilityStage and timestamps', async () => {
@@ -218,7 +218,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.requestedCoverStartDate).toEqual(null);
+          expect(body.bond.requestedCoverStartDate).toBeNull();
         });
       });
 
@@ -233,7 +233,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.issuedDate).toEqual(null);
+          expect(body.bond.issuedDate).toBeNull();
         });
       });
     });

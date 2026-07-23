@@ -30,7 +30,7 @@ describe('generatePaymentExchangeRateError', () => {
 
     const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if payment currency is null and payment exchange rate is not a number', () => {
@@ -133,7 +133,7 @@ describe('generatePaymentExchangeRateError', () => {
 
     const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns null if payment currency is the same as fees paid to ukef currency and payment exchange rate is 1', () => {
@@ -162,7 +162,7 @@ describe('generatePaymentExchangeRateError', () => {
 
     const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if payment currency is the same as fees paid to ukef currency and payment exchange rate is not 1 or null', () => {
@@ -228,7 +228,7 @@ describe('generatePaymentExchangeRateError', () => {
 
     const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
-    expect(exchangeRateError).toEqual(null);
+    expect(exchangeRateError).toBeNull();
   });
 
   it('returns an error if payment currency is different to fees paid to ukef currency and payment exchange rate is null', () => {

@@ -1,29 +1,36 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType } from '..';
+import { Bank, DealSubmissionType } from '..';
 import { PortalActivity } from '../portal';
+import { BssEwcsSubmissionDetails } from './bss-deal';
+import { GefExporter } from './gef-deal';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
+  bankInternalRefName: string;
+  additionalRefName: string | null;
   submissionType: DealSubmissionType | null;
 };
 
 export interface BssEwcsDeal extends BaseDeal {
+  bank: Bank;
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
     submissionCount: number;
   };
+  submissionDetails: BssEwcsSubmissionDetails;
 }
 
 export interface GefDeal extends BaseDeal {
+  bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
-  ukefDealId: string | null;
   eligibility: AnyObject;
-  exporter: AnyObject;
+  exporter: Partial<GefExporter>; // TODO: DTFS2-8349 - this should be updated to a complete type once all mock GEF deals use a fully populated exporter object.
   portalActivities: PortalActivity[];
   submissionCount: number;
+  ukefDealId: string | null;
 }
 
 /**

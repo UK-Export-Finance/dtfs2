@@ -48,7 +48,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       const response = await getScheduledCancellationBannerMessage({ userToken, dealSnapshot });
 
       // Assert
-      expect(response).toEqual(null);
+      expect(response).toBeNull();
     });
 
     it('returns null if deal cancellation is completed', async () => {
@@ -64,7 +64,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       const response = await getScheduledCancellationBannerMessage({ userToken, dealSnapshot });
 
       // Assert
-      expect(response).toEqual(null);
+      expect(response).toBeNull();
     });
 
     it('returns null if there is no deal cancellation', async () => {
@@ -75,7 +75,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       const response = await getScheduledCancellationBannerMessage({ userToken, dealSnapshot });
 
       // Assert
-      expect(response).toEqual(null);
+      expect(response).toBeNull();
     });
 
     it('returns correct message if deal is pending cancellation', async () => {
@@ -112,7 +112,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       const response = await getScheduledCancellationBannerMessage({ userToken, dealSnapshot });
 
       // Assert
-      expect(response).toEqual(null);
+      expect(response).toBeNull();
     });
 
     it('does not call getDealCancellation', async () => {

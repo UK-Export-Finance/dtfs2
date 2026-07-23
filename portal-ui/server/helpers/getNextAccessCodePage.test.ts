@@ -24,7 +24,7 @@ describe('getNextAccessCodePage', () => {
     const result = getNextAccessCodePage(0);
 
     // Assert
-    expect(result).toEqual(`/login/${ACCESS_CODE_PAGES.ANOTHER_ACCESS_CODE}`);
+    expect(result).toEqual(`/login/${ACCESS_CODE_PAGES.RESEND_ANOTHER_ACCESS_CODE}`);
   });
 
   it(`should return correct access code page when attemptsLeft is -1`, () => {

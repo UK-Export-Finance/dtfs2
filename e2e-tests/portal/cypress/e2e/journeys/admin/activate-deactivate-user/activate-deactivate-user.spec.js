@@ -1,12 +1,14 @@
 const {
   ROLES: { MAKER },
 } = require('@ukef/dtfs2-common');
-const { header, users, createUser, editUser } = require('../../../pages');
+const { header, users, createUser, editUser, landingPage } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 const { ADMIN } = MOCK_USERS;
+
+const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -51,9 +53,19 @@ context('Admin user updates an existing user', () => {
     editUser.Deactivate().click();
     editUser.save().click();
 
+    cy.clearSessionCookies();
+
     // prove we can't log in as user
+    landingPage.visit();
+    cy.keyboardInput(landingPage.email(), userToUpdate.username);
+    cy.keyboardInput(landingPage.password(), userToUpdate.password);
     cy.enterUsernameAndPassword(userToUpdate);
-    cy.url().should('eq', relative('/login'));
+
+    if (PORTAL_2FA_FF === 'true') {
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
+    } else {
+      cy.url().should('eq', relative('/login'));
+    }
 
     // go back to admin user and re-activate
     cy.login(ADMIN);

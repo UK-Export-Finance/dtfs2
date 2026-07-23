@@ -22,7 +22,6 @@ export const ALL_CURRENCIES = {
   EGP: 'EGP',
   EUR: 'EUR',
   GBP: 'GBP',
-  HKD: 'HKD',
   ILS: 'ILS',
   INR: 'INR',
   IQD: 'IQD',
@@ -34,7 +33,6 @@ export const ALL_CURRENCIES = {
   MWK: 'MWK',
   MXN: 'MXN',
   MYR: 'MYR',
-  NGN: 'NGN',
   NOK: 'NOK',
   NZD: 'NZD',
   OMR: 'OMR',
@@ -47,7 +45,6 @@ export const ALL_CURRENCIES = {
   THB: 'THB',
   TWD: 'TWD',
   USD: 'USD',
-  XAF: 'XAF',
   XAU: 'XAU',
   ZAR: 'ZAR',
   BHD: 'BHD',
@@ -62,11 +59,9 @@ export const ALL_CURRENCIES = {
   IDR: 'IDR',
   MUR: 'MUR',
   PEN: 'PEN',
-  RUB: 'RUB',
   KRW: 'KRW',
   TRY: 'TRY',
   UYU: 'UYU',
-  ZMK: 'ZMK',
   MAD: 'MAD',
 } as const;
 
@@ -151,11 +146,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     id: 'GBP',
   },
   {
-    currencyId: 13,
-    text: 'HKD - Hong Kong Dollars',
-    id: 'HKD',
-  },
-  {
     currencyId: 14,
     text: 'ILS - Israeli Shekels',
     id: 'ILS',
@@ -212,11 +202,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     currencyId: 24,
     text: 'MYR - Malaysian Ringgitts',
     id: 'MYR',
-  },
-  {
-    currencyId: 25,
-    text: 'NGN - Nigerian Naira',
-    id: 'NGN',
   },
   {
     currencyId: 26,
@@ -277,11 +262,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     currencyId: 37,
     text: 'USD - US Dollars',
     id: 'USD',
-  },
-  {
-    currencyId: 38,
-    text: 'XAF - CFA Francs',
-    id: 'XAF',
   },
   {
     currencyId: 39,
@@ -357,11 +337,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     id: 'PEN',
   },
   {
-    currencyId: 54,
-    text: 'RUB - Russian Ruble ',
-    id: 'RUB',
-  },
-  {
     currencyId: 55,
     text: 'KRW - South Korean Won',
     id: 'KRW',
@@ -375,11 +350,6 @@ export const CURRENCIES: CurrencyInterface[] = [
     currencyId: 57,
     text: 'UYU - Uruguayan Peso',
     id: 'UYU',
-  },
-  {
-    currencyId: 58,
-    text: 'ZMK - Zambian Kwacha',
-    id: 'ZMK',
   },
   {
     currencyId: 59,

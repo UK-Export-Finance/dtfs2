@@ -6,6 +6,7 @@ import { AnyObject } from '../any-object';
 import { Prettify } from '../types-helper';
 import { TfmActivity } from './tfm-activity';
 import { TfmDealStage } from '../tfm/deal-stage';
+import { TfmParties } from './tfm-parties';
 
 /**
  * Type of the mongo db "tfm-deals" collection
@@ -23,7 +24,7 @@ export type TfmDeal = {
     exporterCreditRating: string;
     lastUpdated: number;
     lossGivenDefault: number;
-    parties: AnyObject;
+    parties: TfmParties;
     probabilityOfDefault: number;
     product: string;
     stage: TfmDealStage;

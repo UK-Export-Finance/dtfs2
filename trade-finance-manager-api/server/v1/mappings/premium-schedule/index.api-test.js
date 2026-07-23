@@ -32,7 +32,7 @@ describe('mapPremiumScheduleFacility', () => {
 
   it('should return null if params are invalid', () => {
     const result = mapPremiumScheduleFacility({}, 0, {});
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 
   it('should return mapped object', () => {

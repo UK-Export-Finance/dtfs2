@@ -124,7 +124,7 @@ module.exports = {
   submissionDetails: {
     status: 'Incomplete',
     'supplier-type': 'Exporter',
-    'supplier-companies-house-registration-number': 'Test',
+    'supplier-companies-house-registration-number': '08989898',
     'supplier-name': 'Manual Test 2',
     'supplier-address-country': {
       name: 'Netherlands',

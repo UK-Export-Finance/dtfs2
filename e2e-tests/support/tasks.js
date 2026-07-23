@@ -2,6 +2,10 @@ const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
+  hash,
+  CRYPTO,
+  HEX_STRING_TYPE,
+  OTP,
   UtilisationReportEntity,
   FeeRecordEntity,
   PaymentEntity,
@@ -14,7 +18,7 @@ const {
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
-const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES } = require('../e2e-fixtures');
+const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES, PORTAL_2FA_ACCESS_CODE } = require('../e2e-fixtures');
 const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
@@ -48,12 +52,24 @@ module.exports = {
       return users.findOne({ username: { $eq: username } });
     };
 
+    /**
+     * Updates a portal user document by username for E2E setup/teardown.
+     *
+     * This is used by tests that need to temporarily adjust a seeded user's
+     * role or other simple fields without going through the UI.
+     */
+    const updatePortalUserByUsername = async ({ username, update }) => {
+      const users = await getUsersCollection();
+
+      return users.updateOne({ username: { $eq: username } }, { $set: update });
+    };
+
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-      const salt = crypto.randomBytes(64);
-      const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
-      const saltHex = salt.toString('hex');
-      const hashHex = hash.toString('hex');
+      const saltValue = crypto.randomBytes(64);
+      const hashValue = crypto.pbkdf2Sync(newSignInToken, saltValue, 210000, 64, 'sha512');
+      const saltHex = saltValue.toString('hex');
+      const hashHex = hashValue.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
       const userCollection = await getUsersCollection();
       return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
@@ -62,10 +78,17 @@ module.exports = {
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
-        const salt = crypto.randomBytes(64);
-        const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, 210000, 64, 'sha512');
-        const saltHex = salt.toString('hex');
-        const hashHex = hash.toString('hex');
+
+        const iterations = 210000;
+        const keyLength = 64;
+        const digest = 'sha512';
+        const stringType = 'hex';
+
+        const saltValue = crypto.randomBytes(64);
+        const hashValue = crypto.pbkdf2Sync(signInTokenFromLink, saltValue, iterations, keyLength, digest);
+        const saltHex = saltValue.toString(stringType);
+        const hashHex = hashValue.toString(stringType);
+
         return { saltHex, hashHex, expiry };
       });
 
@@ -86,6 +109,103 @@ module.exports = {
             signInLinkSendCount: '',
             blockedStatusReason: '',
             signInLikeTokens: '',
+            disabled: '',
+          },
+        },
+      );
+    };
+
+    /**
+     * Override the user's signInOTPSendCount in the DB for E2E tests.
+     *
+     * Note: the app computes attempts remaining as
+     * `MAX_SIGN_IN_ATTEMPTS - signInOTPSendCount` and increments the DB
+     * count before calculating remaining. Specs in this suite set `count`
+     * directly when calling this task. To derive a `count` that yields a
+     * desired `attemptsLeft`, use: `count = MAX_SIGN_IN_ATTEMPTS - 1 - attemptsLeft`.
+     */
+    const overridePortalUserSignInOTPSendCount = async ({ username, count }) => {
+      const users = await getUsersCollection();
+      return users.updateOne({ username: { $eq: username } }, { $set: { signInOTPSendCount: count } });
+    };
+
+    /**
+     * overrides portal user's generated OTP with a mocked valid OTP to allow tests to bypass the need to retrieve the OTP from email
+     * generates a salt and hash hex for the OTP and adds an expiry
+     * inserts the OTP details into the user's record in the database
+     */
+    const overridePortalUserSignInOTPWithValidTokenByUsername = async ({ username }) => {
+      const users = await getUsersCollection();
+
+      const thirtyMinutesInMilliseconds = OTP.DURATION_MILLISECONDS;
+      const stringType = HEX_STRING_TYPE;
+
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
+      const expiry = Date.now() + thirtyMinutesInMilliseconds;
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+            signInTokens: [{ hashHex, saltHex, expiry }],
+          },
+        },
+      );
+    };
+
+    /**
+     * Overrides portal user's generated OTP with an expired token for testing expiry flow.
+     * Sets the expiry timestamp to 31 minutes in the past (beyond the 30-minute OTP duration).
+     * This allows E2E tests to verify that the application correctly detects and handles expired OTPs.
+     */
+    const overridePortalUserSignInOTPWithExpiredToken = async ({ username }) => {
+      const users = await getUsersCollection();
+
+      const thirtyOneMinutesInMilliseconds = 31 * 60 * 1000;
+      const stringType = HEX_STRING_TYPE;
+
+      const saltBuffer = crypto.randomBytes(CRYPTO.SALT.BYTES);
+
+      const saltHex = saltBuffer.toString(stringType);
+
+      const hashHex = hash(PORTAL_2FA_ACCESS_CODE, saltHex).toString(stringType);
+
+      const expiry = Date.now() - thirtyOneMinutesInMilliseconds;
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+            signInTokens: [{ hashHex, saltHex, expiry }],
+          },
+        },
+      );
+    };
+
+    /**
+     * resets the portal user's OTP status and number of OTPs sent to ensure the user is in the correct state for testing OTP sign in flow
+     */
+    const resetPortalUserStatusAndNumberOfSignInOTPs = async (username) => {
+      const users = await getUsersCollection();
+
+      return users.updateOne(
+        { username: { $eq: username } },
+        {
+          $set: {
+            'user-status': 'active',
+          },
+          $unset: {
+            signInOTPSendDate: '',
+            signInOTPSendCount: '',
+            blockedStatusReason: '',
+            signInTokens: '',
             disabled: '',
           },
         },
@@ -220,14 +340,15 @@ module.exports = {
 
     /**
      * Generates the specified number of TFM deals and inserts them directly
-     * into the db. The UKEF deal ID of the first generated deal is 10000001;
-     * this is incremented for each subsequent deal. The deal exporter is
-     * 'Company 1' for the deals with odd numbered UKEF deal IDs and 'Company 2'
-     * for those with even numbered UKEF deal IDs. This is to allow easy testing
-     * of searching and sorting. Optionally, an array of MongoDB deal Object IDs
-     * to use can be passed as the second argument - if the number of deals to
-     * insert exceeds the length of this array (by n, say), then the last n deals
-     * will have their MongoDB Object IDs autogenerated
+     * into the db. The UKEF deal ID of the first generated deal is 0000000001;
+     * this is incremented for each subsequent deal while preserving a
+     * 10-digit format prefixed with 00. The deal exporter is 'Company 1' for
+     * the deals with odd numbered UKEF deal IDs and 'Company 2' for those with
+     * even numbered UKEF deal IDs. This is to allow easy testing of searching
+     * and sorting. Optionally, an array of MongoDB deal Object IDs to use can
+     * be passed as the second argument - if the number of deals to insert
+     * exceeds the length of this array (by n, say), then the last n deals will
+     * have their MongoDB Object IDs autogenerated
      * @param {object} numberOfDealsToInsert The number of deals to insert
      * @param {Array} dealObjectIds An array of MongoDB deal Object IDs to use
      * @returns {Promise<object>} MongoDB document representing the result of the insertion
@@ -236,7 +357,7 @@ module.exports = {
       const deals = await getTfmDealsCollection();
       const dealsToInsert = [];
       for (let i = 0; i < numberOfDealsToInsert; i += 1) {
-        const ukefDealId = (10000001 + i).toString();
+        const ukefDealId = `00${String(i + 1).padStart(8, '0')}`;
         const companyName = i % 2 === 0 ? 'Company 1' : 'Company 2';
         const dealObjectId = dealObjectIds[i];
         dealsToInsert.push(createTfmDealToInsertIntoDb(ukefDealId, companyName, dealObjectId));
@@ -262,8 +383,9 @@ module.exports = {
     /**
      * Generates the specified number of TFM facilities and inserts them directly
      * into the db. It also inserts two deals (to link the facilities to).
-     * The UKEF facility ID of the first generated facility is 10000001;
-     * this is incremented for each subsequent facility. The inserted facilities
+     * The UKEF facility ID of the first generated facility is 0000000001;
+     * this is incremented for each subsequent facility while preserving
+     * a 10-digit format prefixed with 00. The inserted facilities
      * alternate with respect to which of the two deals they are linked to. This
      * is to allow easy testing of searching and sorting
      * @param {object} numberOfFacilitiesToInsert The number of facilities to insert
@@ -277,7 +399,7 @@ module.exports = {
       const facilities = await getTfmFacilitiesCollection();
       const facilitiesToInsert = [];
       for (let i = 0; i < numberOfFacilitiesToInsert; i += 1) {
-        const ukefFacilityId = (10000001 + i).toString();
+        const ukefFacilityId = `00${String(i + 1).padStart(8, '0')}`;
         const dealObjectId = dealObjectIds[i % 2];
         facilitiesToInsert.push(createTfmFacilityToInsertIntoDb(ukefFacilityId, dealObjectId));
       }
@@ -308,9 +430,14 @@ module.exports = {
       log,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
+      updatePortalUserByUsername,
+      overridePortalUserSignInOTPSendCount,
       overridePortalUserSignInTokenWithValidTokenByUsername,
       overridePortalUserSignInTokensByUsername,
+      overridePortalUserSignInOTPWithValidTokenByUsername,
+      overridePortalUserSignInOTPWithExpiredToken,
       resetPortalUserStatusAndNumberOfSignInLinks,
+      resetPortalUserStatusAndNumberOfSignInOTPs,
       disablePortalUserByUsername,
       insertManyTfmDeals,
       deleteAllTfmDeals,

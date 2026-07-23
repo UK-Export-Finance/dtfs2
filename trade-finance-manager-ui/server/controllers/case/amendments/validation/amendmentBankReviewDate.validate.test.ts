@@ -37,7 +37,7 @@ describe('bankReviewDateValidation()', () => {
       testCoverStartDate,
     );
 
-    expect(result.error).toEqual(null);
+    expect(result.error).toBeNull();
   });
 
   it('should return an error if the bank review date is before the cover start date', () => {

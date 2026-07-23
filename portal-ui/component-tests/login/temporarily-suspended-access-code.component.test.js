@@ -19,6 +19,6 @@ describe(page, () => {
   it('should render the suspended message', () => {
     wrapper
       .expectText('[data-cy="account-temporarily-suspended-message"]')
-      .toRead('This can happen if there are too many failed attempts to login or sign in link requests.');
+      .toRead('This can happen if there are too many failed attempts to login or sign in link requests. Check your email for details on how to regain access.');
   });
 });

@@ -164,12 +164,6 @@ env:
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
-  FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
-  FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
-  FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
-  FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
-  FF_PORTAL_2FA_ENABLED: ${{ vars. FF_PORTAL_2FA_ENABLED }}
-  FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
   ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
@@ -179,6 +173,13 @@ env:
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
+  FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
+  FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
+  FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
+  FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
+  FF_PORTAL_2FA_ENABLED: ${{ vars.FF_PORTAL_2FA_ENABLED }}
+  FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
+  FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: ${{ vars.FF_TFM_APIM_GIFT_INTEGRATION_ENABLED }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -206,6 +207,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -230,7 +232,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -244,10 +246,16 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -274,7 +282,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -287,6 +295,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -326,7 +335,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -343,10 +352,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -375,7 +390,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -388,6 +403,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -434,7 +450,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -451,10 +467,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -483,7 +505,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -496,6 +518,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -520,7 +543,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -541,7 +564,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -554,6 +577,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -589,7 +613,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -608,7 +632,7 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -626,9 +650,11 @@ jobs:
       FF_TFM_SSO_ENABLED: 'true'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
       FF_PORTAL_2FA_ENABLED: 'true'
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -664,7 +690,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Dependencies
         uses: ./.github/actions/rerun
@@ -683,7 +709,7 @@ jobs:
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -696,6 +722,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -754,7 +781,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -776,10 +803,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -806,7 +839,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-portal-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -820,6 +853,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -860,7 +894,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -882,10 +916,16 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -912,8 +952,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-gef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -924,9 +963,12 @@ jobs:
   e2e-tests-tfm:
     name: E2E TFM 👷
     needs: [setup]
+    env:
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -987,7 +1029,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1008,11 +1050,17 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1039,8 +1087,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-tfm-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1054,6 +1101,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1073,7 +1121,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1092,10 +1140,16 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1120,8 +1174,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1135,6 +1188,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1161,7 +1215,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1181,11 +1235,17 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1211,8 +1271,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-ukef-mocked-calls-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1231,9 +1290,11 @@ jobs:
       FF_TFM_SSO_ENABLED: 'false'
       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
       FF_PORTAL_2FA_ENABLED: 'true'
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1253,7 +1314,6 @@ jobs:
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
             './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
-            './portal/cypress/e2e/journeys/login/**/*.spec.js',
             './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
             './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
             './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
@@ -1338,13 +1398,19 @@ jobs:
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/return-amendment-to-maker/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/all-facilities-page/*.spec.js', 
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/amendment-values/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/status/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/portal-amendments/*.spec.js',
           ]
 
     concurrency:
@@ -1358,7 +1424,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1379,11 +1445,17 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+      
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
 
       - name: Initialise
         uses: ./.github/actions/rerun
         with:
-          command: sleep 100s && npm run load
+          command: npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1416,7 +1488,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-ukef-ff-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1433,6 +1505,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1457,7 +1530,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1478,6 +1551,12 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
       - name: Project
         id: project
         run: |
@@ -1496,7 +1575,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-tests-maintenance-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
@@ -1510,6 +1589,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1530,7 +1610,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -1556,6 +1636,7 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -1575,7 +1656,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Timezone
         uses: szenius/set-timezone@v2.0

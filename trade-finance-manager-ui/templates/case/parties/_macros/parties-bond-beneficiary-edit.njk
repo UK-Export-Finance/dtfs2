@@ -20,31 +20,32 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
-        {{ govukInput({
-          label: {
-            text: "Unique reference number (URN)"
-          },
-          attributes: {
-            "data-cy": "urn-input-" + index
-          },
-          id: "partyUrn-" + index,
-          name: "bondBeneficiaryPartyUrn[]",
-          value: urn[index - 1] or bond.tfm.bondBeneficiaryPartyUrn,
-          errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
-            text: errors.fieldErrors["partyUrn-" + index].text,
+          {{ govukInput({
+            label: {
+              text: "Unique reference number (URN)"
+            },
             attributes: {
-              'data-cy': 'partyUrn--inline-error-' + index
+              "data-cy": "urn-input-" + index
+            },
+            id: "partyUrn-" + index,
+            name: "bondBeneficiaryPartyUrn[]",
+            value: urn[index - 1] or bond.tfm.bondBeneficiaryPartyUrn,
+            errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
+              text: errors.fieldErrors["partyUrn-" + index].text,
+              attributes: {
+                'data-cy': 'partyUrn--inline-error-' + index
+              }
             }
-          }
-        }) }}
+          }) }}
         </div>
       </div>
 
       {{ keyValueArrayGridRow.render({
         key: 'Address',
-        values:  [ ],
+        values:  [],
         dataCy: 'bond-beneficiary-address'
       }) }}
+
       {{ keyValueGridRow.render({
         key: 'Country',
         value: '',

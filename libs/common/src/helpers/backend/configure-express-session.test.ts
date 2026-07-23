@@ -47,7 +47,7 @@ describe('expressSession', () => {
       secret: '1234',
       store: undefined,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
     };
 
     // Act
@@ -78,7 +78,7 @@ describe('expressSession', () => {
       secret: '1234',
       store: undefined,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
     };
 
     // Act
@@ -109,7 +109,7 @@ describe('expressSession', () => {
       secret: 'ABCD',
       store: undefined,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
     };
 
     // Act

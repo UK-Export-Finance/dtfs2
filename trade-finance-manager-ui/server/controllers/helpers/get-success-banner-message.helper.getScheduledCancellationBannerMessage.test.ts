@@ -31,7 +31,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       const response = await getScheduledCancellationBannerMessage({ userToken, dealSnapshot });
 
       // Assert
-      expect(response).toEqual(null);
+      expect(response).toBeNull();
     });
 
     it('does not call getDealCancellation', async () => {

@@ -10,12 +10,10 @@
 {% block content %}
 
   {% if validationErrors.count %}
-    {{
-      govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: validationErrors.summary
-      })
-    }}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: validationErrors.summary
+    }) }}
   {% endif %}
 
   {{ taskListHeader.render({
@@ -23,7 +21,7 @@
     dealId: deal._id,
     items: taskListItems,
     entityName: 'about'
-  })}}
+  }) }}
 
   {% include "_partials/print-button.njk" %}
 

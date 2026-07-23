@@ -118,7 +118,7 @@ describe(baseUrl, () => {
         const res2 = await as(maker1).put(secondUpdate).to(`${baseUrl}/${item.body.details._id}`);
         expect(res2.status).toEqual(HttpStatusCode.Ok);
         expect(res2.body.details.shouldCoverStartOnSubmission).toEqual(true);
-        expect(res2.body.details.coverStartDate).toEqual(null);
+        expect(res2.body.details.coverStartDate).toBeNull();
         expect(res2.body.details.coverEndDate).toEqual(expect.any(String));
       });
 

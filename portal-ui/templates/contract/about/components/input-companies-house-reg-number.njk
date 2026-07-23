@@ -3,10 +3,10 @@
 
 {% macro input(opts) %}
 
-  {% set prefix=opts.prefix %}
-  {% set label=opts.label %}
-  {% set deal=opts.deal %}
-  {% set errorMessage=opts.validationErrors.errorList[prefix+'-companies-house-registration-number'] %}
+  {% set prefix = opts.prefix %}
+  {% set label = opts.label %}
+  {% set deal = opts.deal %}
+  {% set errorMessage = opts.validationErrors.errorList[prefix+'-companies-house-registration-number'] %}
 
   {{ govukInput({
     label: { text: label },
@@ -22,10 +22,10 @@
   }) }}
 
   {{ govukButton({
-    "text": "Search",
-    "attributes" : {
-      "data-cy" : "DoSearch-" + prefix+'-companies-house-registration-number',
-      "formaction" : "/contract/" + deal._id + "/about/supplier/companies-house-search/" + prefix
+    text: "Search",
+    attributes: {
+      "data-cy": "DoSearch-" + prefix+'-companies-house-registration-number',
+      "formaction": "/contract/" + deal._id + "/about/supplier/companies-house-search/" + prefix
     }
   }) }}
 

@@ -13,18 +13,18 @@
 {% block content %}
 
   {{ back.render({
-      return: "/case/" + deal._id + "/parties"
+    return: "/case/" + deal._id + "/parties"
   }) }}
 
   {% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
   {% if errors %}
     {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors.errorSummary,
-        attributes: {
-          'data-cy': 'error-summary'
-        }
-      }) }}
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
   {% endif %}
 
   <form autocomplete="off" method="POST">
@@ -37,14 +37,15 @@
 
     {% for facility in filteredFacilities %}
       <input name="facilityId[]" type="hidden" value="{{ facility._id }}"/>
+
       {{ bondBeneficiaryEdit.render({
-          bond: facility,
-          userCanEdit: userCanEdit,
-          renderEditForm: renderEditForm,
-          errors: errors,
-          urn: urn,
-          index: loop.index
-        }) }}
+        bond: facility,
+        userCanEdit: userCanEdit,
+        renderEditForm: renderEditForm,
+        errors: errors,
+        urn: urn,
+        index: loop.index
+      }) }}
     {% endfor %}
 
     <div class="govuk-grid-row">

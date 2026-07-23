@@ -127,7 +127,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
 
       const result = await sendFirstTaskEmail(mockDealWithInvalidFirstTask);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

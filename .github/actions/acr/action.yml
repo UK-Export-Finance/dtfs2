@@ -32,11 +32,11 @@ runs:
   steps:
     # Step 1: Check out the repository.
     - name: Repository 🗃️
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     # Step 2: Log in to Azure.
     - name: Azure 🔐
-      uses: azure/login@v2
+      uses: azure/login@v3
       with:
         creds: ${{ inputs.credentials }}
 

@@ -50,12 +50,67 @@ export const getMonthName = (monthNumber: OneIndexedMonth) => {
 export const getUnixTimestampSeconds: (date: Date) => UnixTimestampSeconds = getUnixTime;
 
 /**
- * Returns the current date and time in ISO 8601 format.
+ * Returns the current date and time as an ISO 8601 string.
  *
  * @param {Date} date JavaScript date object
  * @returns {string} The current date and time as an ISO 8601 string.
+ * @example
+ * getISO8601(new Date('2024-01-01T00:00:00Z')); // returns '2024-01-01T00:00:00.000Z'
+ * getISO8601(); // returns the current date and time in ISO 8601 format, e.g. '2024-06-01T12:34:56.789Z'
  */
 export const getISO8601 = (date: Date = now()): string => date.toISOString();
+
+const MAX_EPOCH_SECONDS = 9_999_999_999; // Largest plausible epoch timestamp in seconds (2286-11-20T17:46:39Z). Values above are treated as milliseconds.
+
+/**
+ * Normalizes an epoch timestamp to milliseconds.
+ * If the input is in seconds (<= MAX_EPOCH_SECONDS), it converts it to milliseconds.
+ * If the input is already in milliseconds (> MAX_EPOCH_SECONDS), it returns the input as is.
+ * @param {number} date - The epoch timestamp in seconds or milliseconds.
+ * @returns {number} The epoch timestamp in milliseconds.
+ */
+export const normaliseEpochMilliseconds = (date: number): number => {
+  /**
+   * If the epoch value is less than or equal to the maximum plausible epoch timestamp in seconds,
+   * assume it's in seconds and convert to milliseconds.
+   */
+  return date <= MAX_EPOCH_SECONDS ? date * 1000 : date;
+};
+
+/**
+ * Converts a Unix timestamp to a UTC date string in the format 'YYYY-MM-DD'.
+ *
+ * Interprets values <= 9_999_999_999 as epoch seconds and values above as epoch milliseconds.
+ * @param date - The Unix timestamp (seconds or milliseconds, inferred by magnitude).
+ * @returns {string} The UTC date string in the format 'YYYY-MM-DD'.
+ */
+export const getFormattedUTCDateString = (date: number): string => {
+  const epochMilliseconds = normaliseEpochMilliseconds(date);
+
+  const isoString = new Date(epochMilliseconds).toISOString();
+
+  /**
+   * Extract the date portion (first 10 characters) of the ISO string,
+   * which is in the format 'YYYY-MM-DD'
+   */
+  const formattedDate = isoString.slice(0, 10);
+
+  return formattedDate;
+};
+
+/**
+ * Converts a Unix timestamp to a date string in the format 'yyyy-MM-dd' using a specific IANA time zone.
+ *
+ * Interprets values <= 9_999_999_999 as epoch seconds and values above as epoch milliseconds.
+ * @param {number} date - The Unix timestamp (seconds or milliseconds, inferred by magnitude).
+ * @param {string} timeZone - IANA timezone identifier (for example: 'Europe/London').
+ * @returns {string} The date string in the format 'yyyy-MM-dd' for the provided time zone.
+ */
+export const getFormattedDateStringInTimeZone = (date: number, timeZone: string): string => {
+  const epochMilliseconds = normaliseEpochMilliseconds(date);
+
+  return formatInTimeZone(epochMilliseconds, timeZone, 'yyyy-MM-dd');
+};
 
 /**
  * Adds a specified number of years to a given date.
@@ -114,6 +169,7 @@ export const differenceInDays = (startEpoch: number, endEpoch: number): number =
    * Above is derived from 1000 ms * 60 seconds * 60 minutes * 24 hours
    */
   const differenceMs = endEpoch - startEpoch;
+
   // Only divide if EPOCH in microseconds is greater than or equal to 24 hours
   return differenceMs >= EPOCH.MS.ONE_DAY ? Math.round(differenceMs / EPOCH.MS.ONE_DAY) : differenceMs;
 };

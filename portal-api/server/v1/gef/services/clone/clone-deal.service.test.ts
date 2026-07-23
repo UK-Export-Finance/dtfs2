@@ -1,5 +1,5 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-import { Bank, Deal, DEAL_STATUS, DealNotFoundError, InvalidDealIdError, InvalidParameterError, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
+import { Bank, Deal, DEAL_STATUS, DealNotFoundError, GefDeal, InvalidDealIdError, InvalidParameterError, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneDealToLatestVersion } from './clone-deal.service';
@@ -23,7 +23,7 @@ const bankInternalRefName = 'bankInternalRefName';
 const additionalRefName = 'additionalRefName';
 const maker = aPortalSessionUser();
 
-const existingDeal: Deal = {
+const existingDeal: GefDeal = {
   _id: new ObjectId(existingDealId),
   version: 0,
   dealType: 'GEF',
@@ -40,7 +40,7 @@ const existingDeal: Deal = {
   bankInternalRefName: 'oldBankInternalRefName',
   additionalRefName: 'oldAdditionalRefName',
   maker: {},
-  bank: {},
+  bank: mockBank,
   checkerId: 'checker id',
   editedBy: ['a user id', 'another user id'],
   portalActivities: [

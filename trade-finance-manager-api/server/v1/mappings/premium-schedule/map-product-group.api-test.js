@@ -20,6 +20,6 @@ describe('mapProductGroup', () => {
   it('should return null', () => {
     const result = mapProductGroup();
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });

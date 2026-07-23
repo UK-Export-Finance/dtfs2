@@ -11,7 +11,7 @@ describe(component, () => {
       {
         dealId: '123',
         facilityId: '123',
-        ukefFacilityId: '10000001',
+        ukefFacilityId: '0000000001',
         dealType: 'BSS/EWCS',
         type: 'Bond',
         value: 1234567890,
@@ -26,7 +26,7 @@ describe(component, () => {
       {
         dealId: '456',
         facilityId: '456',
-        ukefFacilityId: '10000002',
+        ukefFacilityId: '0000000002',
         dealType: 'BSS/EWCS',
         type: 'Bond',
         value: 1234567890,

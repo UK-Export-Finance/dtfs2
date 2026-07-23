@@ -15,6 +15,6 @@ describe('mapSupplyContractValueInGBP', () => {
   it('should return null when there is no supplyContractValueInGBP', () => {
     const result = mapSupplyContractValueInGBP();
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });

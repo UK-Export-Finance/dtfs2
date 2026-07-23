@@ -31,6 +31,29 @@ const getCompany = async (req, res) => {
 };
 
 /**
+ * Extracts the PartyURN from the provided party database information.
+ * @param {*} partyDbInfo - The party database information.
+ * @returns {string} The PartyURN or an empty string if not found.
+ */
+const extractPartyUrn = (partyDbInfo) => {
+  if (Array.isArray(partyDbInfo) && partyDbInfo.length) {
+    return partyDbInfo[0]?.partyUrn || '';
+  }
+
+  if (partyDbInfo && typeof partyDbInfo === 'object') {
+    if (partyDbInfo.partyUrn) {
+      return partyDbInfo.partyUrn;
+    }
+
+    if (Array.isArray(partyDbInfo.data)) {
+      return partyDbInfo.data[0]?.partyUrn || '';
+    }
+  }
+
+  return '';
+};
+
+/**
  * Gets a PartyURN
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
@@ -73,7 +96,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
     return '';
   }
 
-  const partyUrn = partyDbInfo?.[0]?.partyUrn;
+  const partyUrn = extractPartyUrn(partyDbInfo);
 
   if (partyUrn) {
     return partyUrn;
@@ -97,11 +120,12 @@ const identifyDealParties = (deal) => ({
  * @function addPartyUrns
  * @param {object} deal - The deal object to update.
  * @param {object} auditDetails - Details for auditing the update operation.
- * @returns {Promise<object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
+ * @returns {Promise<object|boolean>} Returns an object with deal and newPartyUrnCreated flag, false if the deal is not provided.
  */
 const addPartyUrns = async (deal, auditDetails) => {
   if (!deal?.exporter) {
     console.error('Adding party URN, invalid deal supplied');
+
     return false;
   }
 
@@ -121,12 +145,25 @@ const addPartyUrns = async (deal, auditDetails) => {
   const country = registeredAddress?.country ?? UNITED_KINGDOM;
   const isUkEntity = isCountryUk(country);
 
+  let exporterPartyExistedBeforeCreate = false;
+
+  const shouldCheckExistingExporterParty =
+    isSalesforceCustomerCreationEnabled() && Boolean(companyRegNo) && Boolean(companyName) && Boolean(probabilityOfDefault) && Boolean(code);
+
+  if (shouldCheckExistingExporterParty) {
+    const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+
+    exporterPartyExistedBeforeCreate = Boolean(extractPartyUrn(existingPartyDbInfo));
+  }
+
+  const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }),
+          partyUrn: exporterPartyUrn,
           partyUrnRequired: hasExporter,
         },
         buyer: {
@@ -147,15 +184,21 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
+  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate;
+
   return {
-    ...deal,
-    tfm: updatedDeal.tfm,
+    deal: {
+      ...deal,
+      tfm: updatedDeal.tfm,
+    },
+    newPartyUrnCreated,
   };
 };
 
 module.exports = {
   getCompany,
   addPartyUrns,
+  extractPartyUrn,
   getPartyUrn,
   identifyDealParties,
 };

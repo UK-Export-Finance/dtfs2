@@ -40,10 +40,18 @@ const createSignInOTPCode = async (user, auditDetails) => {
     });
 
     return response.data;
-  } catch ({ response }) {
-    console.error('Error creating sign in OTP code: %o', response?.data || response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const errorDetails = {
+      message,
+      code: error?.code,
+      status: error?.response?.status,
+      responseData: error?.response?.data,
+    };
 
-    return response?.data;
+    console.error('Error creating sign in OTP code: %o', errorDetails);
+
+    throw error;
   }
 };
 
@@ -517,6 +525,23 @@ const getAllBanks = async () => {
 };
 
 /**
+ * Gets the list of banks used on the Portal login page from DTFS Central.
+ *
+ * The response is expected to be ordered by the bank `order` field in ascending
+ * order and includes only the fields needed by the UI.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The portal bank list.
+ * The returned promise rejects with the underlying Axios error if the request fails.
+ */
+const getPortalBankList = async () => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/portal-bank-list`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
+/**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
  * @returns {Promise<object>} response of API call or wrapped error response
@@ -917,10 +942,13 @@ const patchPortalFacilitySubmitAmendment = async ({
     const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
 
     if (success) {
-      // If successful, send the amendment to ACBS
+      /**
+       * If successful, send the amendment to TFM API,
+       * for APIM GIFT and ACBS integration.
+       */
       await axios({
         method: 'post',
-        url: `${TFM_API_URL}/v1/amendment/facility/${facilityId}/amendment/${amendmentId}/acbs`,
+        url: `${TFM_API_URL}/v1/amendment/facility/${facilityId}/amendment/${amendmentId}`,
         headers: headers.tfm,
       });
 
@@ -1155,6 +1183,7 @@ module.exports = {
   getUtilisationReportById,
   getBankById,
   getAllBanks,
+  getPortalBankList,
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,

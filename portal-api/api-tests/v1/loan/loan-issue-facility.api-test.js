@@ -150,7 +150,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       const { body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
-      expect(body.status).toEqual(null);
+      expect(body.status).toBeNull();
     });
 
     it('should return 200 with updated loan, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage, previousFacilityStage and timestamps', async () => {
@@ -207,7 +207,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.requestedCoverStartDate).toEqual(null);
+          expect(body.loan.requestedCoverStartDate).toBeNull();
         });
       });
 
@@ -222,7 +222,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.issuedDate).toEqual(null);
+          expect(body.loan.issuedDate).toBeNull();
         });
       });
     });

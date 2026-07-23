@@ -27,7 +27,7 @@ describe('mapBssEwcsFacilityType', () => {
     it('should return null', () => {
       const result = mapBssEwcsFacilityType(CONTINGENT, {} as Facility);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });
@@ -53,7 +53,7 @@ describe('mapGefFacilityType', () => {
     it('should return null', () => {
       const result = mapGefFacilityType(BOND);
 
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

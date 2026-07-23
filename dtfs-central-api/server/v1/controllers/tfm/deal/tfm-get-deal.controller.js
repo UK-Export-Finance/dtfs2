@@ -10,9 +10,11 @@ const findOneDeal = async (_id, callback) => {
   }
 
   try {
+    console.info('findOneDeal: Fetching deal %s from database', _id);
     const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
     const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
+    console.info('findOneDeal: Retrieved deal %s, processing facilities', _id);
     let returnDeal = deal;
     let facilityIds = [];
 
@@ -30,13 +32,16 @@ const findOneDeal = async (_id, callback) => {
         }
 
         if (facilityIds?.length > 0) {
+          console.info('findOneDeal: Processing %d facility IDs for deal %s', facilityIds.length, _id);
           const mappedDeal = deal.dealSnapshot;
           const mappedBonds = [];
           const mappedLoans = [];
           const facilities = await TfmFacilitiesRepo.findByIds(facilityIds);
+          console.info('findOneDeal: Retrieved %d facilities for deal %s', facilities?.length || 0, _id);
 
           facilityIds.forEach((id) => {
-            const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
+            const facility = facilities.find((f) => f._id.toHexString() === id.toHexString());
+            const facilitySnapshot = facility?.facilitySnapshot;
 
             if (facilitySnapshot) {
               const { type } = facilitySnapshot;
@@ -67,6 +72,7 @@ const findOneDeal = async (_id, callback) => {
       }
     }
 
+    console.info('findOneDeal: Returning deal %s', _id);
     if (callback) {
       callback(returnDeal);
     }

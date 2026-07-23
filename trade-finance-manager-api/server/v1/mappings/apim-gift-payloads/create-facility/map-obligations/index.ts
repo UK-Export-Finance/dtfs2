@@ -1,0 +1,70 @@
+import { Currency } from '@ukef/dtfs2-common';
+import { APIM_GIFT_INTEGRATION } from '../../constants';
+import { ApimGiftObligation } from '../../types';
+import { mapObligationAmount } from './map-obligation-amount';
+
+const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
+
+type MapObligationsParams = {
+  bssSubtypeName?: string;
+  currency: Currency;
+  isBssEwcsDeal: boolean;
+  facilityAmount: number | null;
+  facilityType?: string;
+  isGefDeal: boolean;
+};
+
+/**
+ * Maps the facility "obligations".
+ * If the deal is BSS/EWCS, we need to map the facility subtype name to an obligation subtype code.
+ * Otherwise, the obligation subtype code is not required and should be null.
+ * @param {MapObligationsParams} params - Data required to build the APIM GIFT "obligations" data.
+ * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssEwcsDeal` is true.
+ * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
+ * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
+ * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
+ * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
+ * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
+ */
+export const mapObligations = ({
+  bssSubtypeName,
+  currency,
+  isBssEwcsDeal,
+  isGefDeal,
+  facilityAmount,
+  facilityType,
+}: MapObligationsParams): ApimGiftObligation[] => {
+  let subtypeCode = null;
+
+  if (isBssEwcsDeal && bssSubtypeName) {
+    const mappedSubtypeCode = OBLIGATION_SUBTYPE_MAP.BSS[bssSubtypeName as keyof typeof OBLIGATION_SUBTYPE_MAP.BSS];
+
+    /**
+     * Handle an edge case where the facility subtype name is not mapped to an obligation subtype code.
+     * In this case, we should set the subtype code to null to avoid sending an undefined string value to APIM GIFT.
+     * This is extremely unlikely, but required for type safety, until BSS/EWCS facility subtypes are fully standardised and mapping can be removed.
+     */
+    if (typeof mappedSubtypeCode === 'undefined') {
+      subtypeCode = null;
+    } else {
+      subtypeCode = mappedSubtypeCode;
+    }
+  }
+
+  const obligations = [
+    {
+      amount: mapObligationAmount({
+        isBssEwcsDeal,
+        isGefDeal,
+        facilityAmount,
+        facilityType,
+      }),
+      currency,
+      repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
+      subtypeCode,
+    },
+  ];
+
+  return obligations;
+};

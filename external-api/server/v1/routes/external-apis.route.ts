@@ -2,21 +2,26 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 
+import * as acbs from '../controllers/acbs.controller';
+import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as companies from '../controllers/companies.controller';
 import * as countries from '../controllers/countries.controller';
+import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
 import * as currencies from '../controllers/currencies.controller';
+import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
+import * as email from '../controllers/email.controller';
+import * as eStore from '../controllers/estore/eStore.controller';
+import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as facilityCategories from '../controllers/facility-categories.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as number from '../controllers/number-generator.controller';
+import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
 import * as partyDb from '../controllers/party-db.controller';
 import * as partyUrn from '../controllers/party-urn.controller';
-import * as acbs from '../controllers/acbs.controller';
-import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
-import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companies from '../controllers/companies.controller';
-import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
-import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
-import * as email from '../controllers/email.controller';
-import * as bankHolidays from '../controllers/bank-holidays.controller';
+import * as giftFacility from '../controllers/gift-facility.controller';
+import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
 
@@ -333,6 +338,32 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi
+ * /obligation-subtypes:
+ *   get:
+ *     summary: Get obligation subtypes from MDM API.
+ *     tags: [APIM, Obligation Subtypes]
+ *     description: >-
+ *       Get obligation subtypes from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/ObligationSubtype'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/obligation-subtypes', obligationSubtypes.findAll);
+
+/**
+ * @openapi
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
@@ -520,6 +551,32 @@ apiRoutes.get('/exposure-period/:startDate/:endDate/:facilityType', exposurePeri
 
 /**
  * @openapi
+ * /facility-categories:
+ *   get:
+ *     summary: Get facility categories from MDM API.
+ *     tags: [APIM, Facility Categories]
+ *     description: >-
+ *       Get facility categories from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/FacilityCategory'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/facility-categories', facilityCategories.findAll);
+
+/**
+ * @openapi
  * /premium-schedule:
  *   get:
  *     summary: Get a repayment schedule for a facility
@@ -576,8 +633,33 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
  *       500:
  *         description: Internal server error
  */
-
 apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
+
+/**
+ * @openapi
+ * /credit-risk-ratings:
+ *   get:
+ *     summary: Get credit risk ratings from MDM API.
+ *     tags: [APIM, Credit Risk Ratings]
+ *     description: >-
+ *       Get credit risk ratings from MDM API.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/CreditRiskRating'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/credit-risk-ratings', creditRiskRatings.findAll);
 
 /**
  * @openapi
@@ -674,3 +756,170 @@ apiRoutes.post('/email', email.emailNotification);
  *               $ref: '#/definitions/BankHolidaysResponseBody'
  */
 apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);
+
+/**
+ * @openapi
+ * /gift/facilities:
+ *   get:
+ *     summary: Get multiple GIFT facilities from APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Get multiple GIFT facilities from APIM TFS's GIFT endpoint by a comma-separated list of facility IDs.
+ *       Example endpoint: /gift/facilities?ids=0000000001,0000000002
+ *     parameters:
+ *       - in: query
+ *         name: ids
+ *         schema:
+ *           type: string
+ *           example: 0000000001,0000000002
+ *         required: true
+ *         description: Comma-separated GIFT facility IDs.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilitiesBulkResponse'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.get('/gift/facilities', giftFacility.getMany);
+
+/**
+ * @openapi
+ * /gift/facility/{facilityId}:
+ *   get:
+ *     summary: Get a GIFT facility from APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Get a GIFT facility from APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *           example: 0000000001
+ *         required: true
+ *         description: The GIFT facility ID.
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       404:
+ *         description: Not found
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/GiftFacilityErrorResponse'
+ */
+apiRoutes.get('/gift/facility/:facilityId', giftFacility.get);
+
+/**
+ * @openapi
+ * /gift/facility:
+ *   post:
+ *     summary: Send a facility to APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Send a facility to APIM TFS's GIFT endpoint.
+ *     responses:
+ *       201:
+ *         description: Created
+ *       202:
+ *         description: Accepted
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.post('/gift/facility', giftFacility.create);
+
+/**
+ * @openapi
+ * /gift/facility/{facilityId}/amendment:
+ *   post:
+ *     summary: Amend a GIFT facility in APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Send a facility amendment to APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001/amendment
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *           example: 0000000001
+ *         required: true
+ *         description: The GIFT facility ID.
+ *     requestBody:
+ *       required: true
+ *       description: Amendment fields to be sent to APIM TFS's GIFT endpoint.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/GiftFacilityAmendmentRequestBody'
+ *     responses:
+ *       202:
+ *         description: Accepted
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.post('/gift/facility/:facilityId/amendment', giftFacility.amend);
+
+/**
+ * @openapi
+ * /ukef-industry-code/by-companies-house-industry-code/:industryCode:
+ *   get:
+ *     summary: Get a UKEF industry code by Companies House industry code
+ *     tags: [APIM, UKEF Industry Code]
+ *     description: >-
+ *       Get a UKEF industry code by Companies House industry code.
+ *     parameters:
+ *       - in: path
+ *         name: industryCode
+ *         schema:
+ *           type: string
+ *           example: 1406
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/UKEFIndustryCodeResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+apiRoutes.get('/ukef-industry-code/by-companies-house-industry-code/:industryCode', ukefIndustryCode.getByCompaniesHouseIndustryCode);

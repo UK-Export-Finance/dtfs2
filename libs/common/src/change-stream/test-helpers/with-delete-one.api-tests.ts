@@ -67,7 +67,7 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
           const collection = await mongoDbClient.getCollection(collectionName);
           const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
-          expect(deletedDocument).toEqual(null);
+          expect(deletedDocument).toBeNull();
         });
 
         it('should return 200', async () => {
@@ -131,7 +131,7 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         const collection = await mongoDbClient.getCollection(collectionName);
         const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
-        expect(deletedDocument).toEqual(null);
+        expect(deletedDocument).toBeNull();
       });
 
       it('should return 200', async () => {

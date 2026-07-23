@@ -8,7 +8,7 @@ describe('utilisation-report-validator', () => {
     it('returns null when a correct month is provided', () => {
       const validationError = validateMonth(1);
 
-      expect(validationError).toEqual(null);
+      expect(validationError).toBeNull();
     });
 
     it('returns an error when no month is provided', () => {
@@ -37,7 +37,7 @@ describe('utilisation-report-validator', () => {
     it('returns null when a correct year is provided', () => {
       const validationError = validateYear(2023);
 
-      expect(validationError).toEqual(null);
+      expect(validationError).toBeNull();
     });
 
     it('returns an error when no year is provided', () => {

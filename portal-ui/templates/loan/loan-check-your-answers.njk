@@ -24,13 +24,13 @@
     entityName: 'loan',
     entityId: loan._id,
     items: taskListItems
-  })}}
+  }) }}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
   {% include "_partials/print-button.njk" %}
 
-  {{ submissionDetails.render({ loan: loan, user: user })}}
+  {{ submissionDetails.render({ loan: loan, user: user }) }}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="save-go-back-button">Save and go back to deal</a></p>
 

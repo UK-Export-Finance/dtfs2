@@ -15,6 +15,10 @@ const definition: swaggerDefinition = {
       description: 'Get and create banks. This is only used in the central API.',
     },
     {
+      name: 'Portal Bank List',
+      description: 'Get the list of approved banks displayed on the portal homepage. Read-only API; the collection is maintained manually in MongoDB.',
+    },
+    {
       name: 'Portal - BSS',
       description: 'Get and update BSS deals and facilities. Consumed by Portal and TFM.',
     },
@@ -28,7 +32,7 @@ const definition: swaggerDefinition = {
     },
     {
       name: 'User',
-      description: 'Get and create Portal (BSS/GEF) users. This is only used in the central API.',
+      description: 'Get, create and authenticate Portal (BSS/GEF) users. This is only used in the central API.',
     },
     {
       name: 'Utilisation Report',

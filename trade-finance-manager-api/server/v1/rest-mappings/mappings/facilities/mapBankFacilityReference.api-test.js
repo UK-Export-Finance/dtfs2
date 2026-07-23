@@ -30,6 +30,6 @@ describe('mapBankFacilityReference', () => {
 
   it('should return null', () => {
     const result = mapBankFacilityReference({});
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 });

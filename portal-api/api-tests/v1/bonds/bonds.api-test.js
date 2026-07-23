@@ -624,10 +624,10 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond._id).toEqual(bondId);
         expect(updatedBond.value).toEqual(bondWithSameCurrencyAsContract.value);
         expect(updatedBond.currencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.currencySameAsSupplyContractCurrency);
-        expect(updatedBond.conversionRate).toEqual(null);
-        expect(updatedBond['conversionRateDate-day']).toEqual(null);
-        expect(updatedBond['conversionRateDate-month']).toEqual(null);
-        expect(updatedBond['conversionRateDate-year']).toEqual(null);
+        expect(updatedBond.conversionRate).toBeNull();
+        expect(updatedBond['conversionRateDate-day']).toBeNull();
+        expect(updatedBond['conversionRateDate-month']).toBeNull();
+        expect(updatedBond['conversionRateDate-year']).toBeNull();
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(updatedBond.currency).toEqual({

@@ -6,6 +6,7 @@ const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, 
 require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
+const DTFS_CENTRAL_API_TIMEOUT_MS = Number(process.env.DTFS_CENTRAL_API_TIMEOUT_MS || 10000);
 
 const headers = {
   central: {
@@ -18,6 +19,11 @@ const headers = {
   },
 };
 
+/**
+ * Finds a single portal deal by id.
+ * @param {string} dealId - Portal deal id.
+ * @returns {Promise<object | false | { status: number, data: string }>} Portal deal payload, false on request failure, or validation error object.
+ */
 const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -29,6 +35,7 @@ const findOnePortalDeal = async (dealId) => {
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data.deal;
@@ -37,6 +44,13 @@ const findOnePortalDeal = async (dealId) => {
   }
 };
 
+/**
+ * Updates a portal deal.
+ * @param {string} dealId - Portal deal id.
+ * @param {object} update - Partial deal update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalDeal = async (dealId, update, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -64,6 +78,14 @@ const updatePortalDeal = async (dealId, update, auditDetails) => {
   }
 };
 
+/**
+ * Updates the status of a portal BSS deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - Portal deal id.
+ * @param {string} params.status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -81,6 +103,7 @@ const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -91,6 +114,14 @@ const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 };
 
+/**
+ * Adds a comment to a portal deal.
+ * @param {string} dealId - Portal deal id.
+ * @param {string} commentType - Comment category.
+ * @param {string} comment - Comment text.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object>} API response payload.
+ */
 const addPortalDealComment = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
@@ -114,6 +145,13 @@ const addPortalDealComment = async (dealId, commentType, comment, auditDetails) 
   return response.data;
 };
 
+/**
+ * Updates the status of a portal facility.
+ * @param {string} facilityId - Portal facility id.
+ * @param {string} status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -141,6 +179,13 @@ const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   }
 };
 
+/**
+ * Updates a portal facility.
+ * @param {string} facilityId - Portal facility id.
+ * @param {object} update - Partial facility update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalFacility = async (facilityId, update, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -208,6 +253,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
 
     if (!isValidDealId) {
       console.error('updateDeal: Invalid deal id %s', dealId);
+
       return onError({ status: 400, message: 'Invalid deal id' });
     }
 
@@ -219,6 +265,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
         dealUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -228,6 +275,13 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails, onError = ({ statu
   }
 };
 
+/**
+ * Updates the snapshot object for a TFM deal.
+ * @param {string} dealId - TFM deal id.
+ * @param {object} snapshotUpdate - Partial snapshot update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -245,6 +299,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
         snapshotUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -254,6 +309,13 @@ const updateDealSnapshot = async (dealId, snapshotUpdate, auditDetails) => {
   }
 };
 
+/**
+ * Submits a deal to workflow processing.
+ * @param {string} dealType - Deal type.
+ * @param {string} dealId - Deal id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const submitDeal = async (dealType, dealId, auditDetails) => {
   try {
     const response = await axios({
@@ -265,6 +327,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
         dealId,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -395,6 +458,11 @@ const submitDealCancellation = async ({ dealId, cancellation, auditDetails }) =>
   }
 };
 
+/**
+ * Finds a single TFM facility by id.
+ * @param {string} facilityId - TFM facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Facility payload or error object.
+ */
 const findOneFacility = async (facilityId) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -427,6 +495,7 @@ const findFacilitiesByDealId = async (dealId) => {
 
     if (!isValidDealId) {
       console.error('findFacilitiesByDealId: Invalid deal id %s', dealId);
+
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -474,6 +543,14 @@ const getApprovedAmendments = async (dealId) => {
   }
 };
 
+/**
+ * Updates a TFM facility.
+ * @param {object} params - Update parameters.
+ * @param {string} params.facilityId - Facility id.
+ * @param {object} params.tfmUpdate - Partial TFM update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -491,6 +568,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
         tfmUpdate,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -500,8 +578,15 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   }
 };
 
+/**
+ * Creates a facility amendment.
+ * @param {string} facilityId - Facility id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -522,6 +607,14 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
   }
 };
 
+/**
+ * Updates a facility amendment.
+ * @param {string} facilityId - Facility id.
+ * @param {string} amendmentId - Amendment id.
+ * @param {object} payload - Amendment update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -547,6 +640,11 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDe
   }
 };
 
+/**
+ * Gets the in-progress amendment for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<{ status: number, data: object | string }>} Response wrapper containing amendment data or error details.
+ */
 const getAmendmentInProgress = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -568,6 +666,11 @@ const getAmendmentInProgress = async (facilityId) => {
   }
 };
 
+/**
+ * Gets completed amendments for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Completed amendment payload or error object.
+ */
 const getCompletedAmendment = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -589,6 +692,11 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment value for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment value payload or error object.
+ */
 const getLatestCompletedAmendmentValue = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -610,6 +718,11 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment cover end date for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment date payload or error object.
+ */
 const getLatestCompletedAmendmentDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -634,6 +747,11 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   }
 };
 
+/**
+ * Gets the latest completed facility end date amendment for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (!isValid) {
@@ -657,6 +775,12 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
   }
 };
 
+/**
+ * Gets a specific amendment by facility id and amendment id.
+ * @param {string} facilityId - Facility id.
+ * @param {string} amendmentId - Amendment id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -678,6 +802,11 @@ const getAmendmentById = async (facilityId, amendmentId) => {
   }
 };
 
+/**
+ * Gets amendments for a facility.
+ * @param {string} facilityId - Facility id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentByFacilityId = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -699,6 +828,11 @@ const getAmendmentByFacilityId = async (facilityId) => {
   }
 };
 
+/**
+ * Gets amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentsByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -720,6 +854,11 @@ const getAmendmentsByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets in-progress amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAmendmentInProgressByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -741,6 +880,11 @@ const getAmendmentInProgressByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets completed amendments for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -762,6 +906,11 @@ const getCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets the latest completed amendment for a deal.
+ * @param {string} dealId - Deal id.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -783,6 +932,10 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+/**
+ * Gets all in-progress amendments.
+ * @returns {Promise<object | { status: number, data: string }>} Amendment payload or error object.
+ */
 const getAllAmendmentsInProgress = async () => {
   const isValid = hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -804,6 +957,14 @@ const getAllAmendmentsInProgress = async () => {
   }
 };
 
+/**
+ * Updates a GEF portal facility.
+ * @param {object} params - Update parameters.
+ * @param {string} params.facilityId - Facility id.
+ * @param {object} params.facilityUpdate - Partial facility update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -827,6 +988,12 @@ const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) =
   }
 };
 
+/**
+ * Queries TFM deals using query parameters.
+ * @param {object} params - Query parameters wrapper.
+ * @param {object} params.queryParams - Query string parameters.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const queryDeals = async ({ queryParams }) => {
   try {
     const response = await axios({
@@ -845,6 +1012,12 @@ const queryDeals = async ({ queryParams }) => {
   }
 };
 
+/**
+ * Gets party information from external-api by company registration number.
+ * @param {object} params - Query parameters wrapper.
+ * @param {string} params.companyRegNo - Company registration number.
+ * @returns {Promise<object | false>} Company payload or false when the request fails.
+ */
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
@@ -917,6 +1090,96 @@ const getCompanyInfo = async (partyUrn) => {
   }
 };
 
+/**
+ * Get credit risk ratings
+ * @returns {Promise<import('./api-response-types').CreditRiskRating[] | false>}
+ */
+const getCreditRiskRatings = async () => {
+  try {
+    console.info('Calling external API "Get credit risk ratings" endpoint');
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get credit risk ratings %o', error);
+    return false;
+  }
+};
+
+/**
+ * Get facility categories
+ * @returns {Promise<import('./api-response-types').FacilityCategory[] | false>}
+ */
+const getFacilityCategories = async () => {
+  try {
+    console.info('Calling external API "Get facility categories" endpoint');
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/facility-categories`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get facility categories %o', error);
+    return false;
+  }
+};
+
+/**
+ * Get obligation subtypes
+ * @returns {Promise<import('./api-response-types').ObligationSubtype[] | false>}
+ */
+const getObligationSubtypes = async () => {
+  try {
+    console.info('Calling external API "Get obligation subtypes" endpoint');
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/obligation-subtypes`,
+      headers: headers.external,
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get obligation subtypes %o', error);
+    return false;
+  }
+};
+
+/**
+ * Get a UKEF industry code by Companies House industry code
+ * @param {string} industryCode Companies House industry code
+ * @returns {Promise<import('./api-response-types').UkefIndustryCode | false>}
+ */
+const getUkefIndustryCodeByCompaniesHouseIndustryCode = async (industryCode) => {
+  try {
+    console.info('Calling external API "Get UKEF industry code by companies house industry code" endpoint - industryCode %s', industryCode);
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/ukef-industry-code/by-companies-house-industry-code/${encodeURIComponent(industryCode)}`,
+      headers: headers.external,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get UKEF industry code by Companies House industry code %s %o', industryCode, error);
+    return false;
+  }
+};
+
+/**
+ * Find a TFM user by username
+ * @param {string} username TFM username
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findUser = async (username) => {
   try {
     const sanitizedUsername = sanitizeUsername(username);
@@ -928,11 +1191,17 @@ const findUser = async (username) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user %o', error);
+    console.error('Unable to find TFM user %s %o', username, error);
     return false;
   }
 };
 
+/**
+ * Find a TFM user by ID
+ * @param {string} userId TFM user ID
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findUserById = async (userId) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -954,6 +1223,12 @@ const findUserById = async (userId) => {
   }
 };
 
+/**
+ * Find a Portal user by ID
+ * @param {string} userId Portal user ID
+ * @returns {Promise<object>} User information
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
 const findPortalUserById = async (userId) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -975,6 +1250,12 @@ const findPortalUserById = async (userId) => {
   }
 };
 
+/**
+ * Updates task assignments for a TFM user.
+ * @param {string} userId - TFM user id.
+ * @param {object[]} updatedTasks - Updated task list.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -1030,6 +1311,11 @@ const findOneTeam = async (teamId) => {
   }
 };
 
+/**
+ * Retrieves members of a TFM team.
+ * @param {string} teamId - Team id.
+ * @returns {Promise<object | { status: number, data: string }>} Team members payload or error object.
+ */
 const findTeamMembers = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
@@ -1052,6 +1338,12 @@ const findTeamMembers = async (teamId) => {
   }
 };
 
+/**
+ * Gets a currency exchange rate.
+ * @param {string} source - Source currency code.
+ * @param {string} target - Target currency code.
+ * @returns {Promise<object | { status: number, data: string }>} Exchange rate payload or error object.
+ */
 const getCurrencyExchangeRate = async (source, target) => {
   try {
     const sourceIsValid = isValidCurrencyCode(source);
@@ -1074,6 +1366,13 @@ const getCurrencyExchangeRate = async (source, target) => {
   }
 };
 
+/**
+ * Gets exposure period details for a facility date range.
+ * @param {string} startDate - Start date.
+ * @param {string} endDate - End date.
+ * @param {string} type - Facility type.
+ * @returns {Promise<object | { status: number, data: string }>} Exposure period payload or error object.
+ */
 const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
@@ -1089,6 +1388,11 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   }
 };
 
+/**
+ * Gets a premium schedule from external-api.
+ * @param {object} premiumScheduleParameters - Premium schedule query payload.
+ * @returns {Promise<object | null>} Premium schedule payload or null when unavailable.
+ */
 const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
@@ -1108,6 +1412,12 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
   }
 };
 
+/**
+ * Creates ACBS records for a deal and bank.
+ * @param {object} deal - Deal payload.
+ * @param {object} bank - Bank payload.
+ * @returns {Promise<object | false | {}>} API response payload, false on request failure, or empty object when inputs are missing.
+ */
 const createACBS = async (deal, bank) => {
   if (!!deal && !!bank) {
     try {
@@ -1129,6 +1439,12 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
+/**
+ * Issues an ACBS facility.
+ * @param {object} facility - Facility payload including UKEF facility id.
+ * @param {object} deal - Deal payload.
+ * @returns {Promise<object | { status: number, data: string } | {}>} API response payload, error object on failure, or empty object when inputs are missing.
+ */
 const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
@@ -1170,6 +1486,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       },
     }).catch((error) => {
       console.error('TFM-API Facility amend error %o', error);
+
       return null;
     });
 
@@ -1180,6 +1497,11 @@ const amendACBSfacility = async (amendments, facility, deal) => {
   return null;
 };
 
+/**
+ * Calls the Azure functions API endpoint used by ACBS integrations.
+ * @param {string} [url] - Optional URL to rewrite to configured Azure function host.
+ * @returns {Promise<object | { status: number, data: string }>} API response payload or error object.
+ */
 const getFunctionsAPI = async (url = '') => {
   const modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, AZURE_ACBS_FUNCTION_URL) : AZURE_ACBS_FUNCTION_URL;
 
@@ -1218,6 +1540,13 @@ const createEstoreSite = async (data) => {
   }
 };
 
+/**
+ * Sends an email via external-api.
+ * @param {string} templateId - GOV.UK Notify template id.
+ * @param {string} sendToEmailAddress - Recipient email address.
+ * @param {object} emailVariables - Template variables.
+ * @returns {Promise<object | false>} API response payload or false when the request fails.
+ */
 const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
@@ -1237,6 +1566,11 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   }
 };
 
+/**
+ * Finds a single GEF portal deal by id.
+ * @param {string} dealId - GEF portal deal id.
+ * @returns {Promise<object | false | { status: number, data: string }>} Deal payload, false on request failure, or validation error object.
+ */
 const findOneGefDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1260,6 +1594,14 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
+/**
+ * Updates status for a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {string} params.status - New status value.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1277,6 +1619,7 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
         status,
         auditDetails,
       },
+      timeout: DTFS_CENTRAL_API_TIMEOUT_MS,
     });
 
     return response.data;
@@ -1287,6 +1630,14 @@ const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 };
 
+/**
+ * Updates a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {object} params.dealUpdate - Partial deal update payload.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1314,6 +1665,13 @@ const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   }
 };
 
+/**
+ * Updates MIN activity for a GEF portal deal.
+ * @param {object} params - Update parameters.
+ * @param {string} params.dealId - GEF portal deal id.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - User audit details.
+ * @returns {Promise<object | false | { status: number, data: string }>} API response payload, false on request failure, or validation error object.
+ */
 const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -1340,6 +1698,14 @@ const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   }
 };
 
+/**
+ * Adds an underwriter comment to a GEF portal deal.
+ * @param {string} dealId - GEF portal deal id.
+ * @param {string} commentType - Comment category.
+ * @param {string} comment - Comment text.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - User audit details.
+ * @returns {Promise<object>} API response payload.
+ */
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
@@ -1358,6 +1724,12 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, audi
   return response.data;
 };
 
+/**
+ * Gets all facilities with optional filters.
+ * @param {object} params - Query parameters wrapper.
+ * @param {object} params.queryParams - Query string parameters.
+ * @returns {Promise<object | { status: number, data: string }>} Facilities payload or error object.
+ */
 const getAllFacilities = async ({ queryParams }) => {
   try {
     const response = await axios({
@@ -1375,6 +1747,11 @@ const getAllFacilities = async ({ queryParams }) => {
   }
 };
 
+/**
+ * Finds a bank by numeric id.
+ * @param {string | number} bankId - Bank id.
+ * @returns {Promise<object | { status: number, data: string }>} Bank payload or error object.
+ */
 const findBankById = async (bankId) => {
   try {
     const isValidBankId = isValidNumericId(bankId);
@@ -1416,6 +1793,11 @@ const getBanks = async (queryParams = {}) => {
   return response.data;
 };
 
+/**
+ * Gets GEF mandatory criteria by version number.
+ * @param {string | number} version - Mandatory criteria version.
+ * @returns {Promise<object | { status: number, data: string }>} Mandatory criteria payload or error object.
+ */
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
@@ -1450,6 +1832,11 @@ const getBankHolidays = async () => {
   return response.data;
 };
 
+/**
+ * Gets utilisation reconciliation summary for a submission month.
+ * @param {string} submissionMonth - Submission month in expected API format.
+ * @returns {Promise<import('./api-response-types').UtilisationReportsReconciliationSummaryResponseBody>}
+ */
 const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
   const url = `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`;
   const response = await axios.get(url, {
@@ -1837,6 +2224,124 @@ const getRecordCorrectionLogDetailsById = async (correctionId) => {
   return response.data;
 };
 
+/**
+ * Create a GIFT facility.
+ * @param {import('./mappings/apim-gift-payloads/types').ApimGiftFacilityCreationPayload} facilityData - The data for the facility to be created
+ * @returns {Promise<object|boolean>} The created facility data if successful, otherwise false
+ */
+const createGiftFacility = async (facilityData) => {
+  let facilityId;
+  let dealId;
+
+  try {
+    facilityId = facilityData?.overview?.facilityId;
+    dealId = facilityData?.riskDetails?.dealId;
+
+    console.info('Calling external API "Create GIFT facility" endpoint - facilityId %s dealId %s', facilityId, dealId);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility`,
+      headers: headers.external,
+      data: facilityData,
+    });
+
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility creation endpoint' };
+
+    console.error(
+      'Unable to send GIFT facility to external API - facilityId %s dealId %s status %s responseBody %o error %o',
+      facilityId,
+      dealId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
+/**
+ * Find GIFT facilities by their IDs.
+ * NOTE: If no GIFT facilities are found, APIM returns a 404. This is a valid status.
+ * @param {string} facilityIdsQueryString - Comma-separated facility IDs to find.
+ * @returns {Promise<{ facilities: object[] }|false>} The API response payload if successful. A 404 is treated as no facilities found and returns an empty `facilities` array. Other failures return false.
+ */
+const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
+  try {
+    console.info('Calling external API "Get GIFT facilities by ID" endpoint - facilityIds %o', facilityIdsQueryString);
+
+    const queryString = new URLSearchParams({ ids: facilityIdsQueryString }).toString();
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/gift/facilities?${queryString}`,
+      headers: headers.external,
+    });
+
+    return response.data;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+
+    if (status === HttpStatusCode.NotFound) {
+      console.info('No GIFT facilities found for IDs %o', facilityIdsQueryString);
+
+      return {
+        facilities: [],
+      };
+    }
+
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facilities endpoint' };
+
+    console.error(
+      'Unable to get GIFT facilities from external API - facilityIds %o status %s responseBody %o error %o',
+      facilityIdsQueryString,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
+/**
+ * Amend a GIFT facility.
+ * @param {object} facilityAmendmentData - The amendment data for the facility.
+ * @param {string} facilityId - The GIFT facility ID to amend.
+ * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
+ */
+const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
+  try {
+    console.info('Calling external API "Amend GIFT facility" endpoint - facilityId %s', facilityId);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility/${facilityId}/amendment`,
+      headers: headers.external,
+      data: facilityAmendmentData,
+    });
+
+    return response.status;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API GIFT facility amendment endpoint' };
+
+    console.error(
+      'Unable to send GIFT facility amendment to external API - facilityId %s status %s responseBody %o error %o',
+      facilityId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1871,6 +2376,10 @@ module.exports = {
   getPartyDbInfo,
   getOrCreatePartyDbInfo,
   getCompanyInfo,
+  getCreditRiskRatings,
+  getFacilityCategories,
+  getObligationSubtypes,
+  getUkefIndustryCodeByCompaniesHouseIndustryCode,
   findUser,
   findUserById,
   updateDealCancellation,
@@ -1922,4 +2431,7 @@ module.exports = {
   createFeeRecordCorrection,
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
+  createGiftFacility,
+  findGiftFacilitiesByIds,
+  amendGiftFacility,
 };

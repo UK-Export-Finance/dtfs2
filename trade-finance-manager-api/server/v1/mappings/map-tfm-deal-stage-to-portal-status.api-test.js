@@ -26,7 +26,7 @@ describe('mapTfmDealStageToPortalStatus', () => {
   describe('when TFM status is not recognised', () => {
     it('should return null', () => {
       const result = mapTfmDealStageToPortalStatus('invalid status');
-      expect(result).toEqual(null);
+      expect(result).toBeNull();
     });
   });
 });

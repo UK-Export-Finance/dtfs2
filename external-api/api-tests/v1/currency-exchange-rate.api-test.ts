@@ -270,7 +270,7 @@ describe('/currency-exchange-rate', () => {
     ];
 
     describe('Invalid inputs', () => {
-      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
+      test.each(invalidCurrencyTestCases)('should return a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
         const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
 
         expect(status).toEqual(HttpStatusCode.BadRequest);

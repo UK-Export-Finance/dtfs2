@@ -79,8 +79,9 @@ const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToke
 
 /**
  * Logs in a user using a sign in OTP
- * @param {object} parameters token, userId and signInOTP
- * @returns {Promise<object>} loginStatus, token and user
+ *
+ * @param {object} parameters - token, userId, signInOTP and isExpired
+ * @returns {Promise<{ token?: string; loginStatus?: string; user?: import('@ukef/dtfs2-common').PortalSessionUser; isExpired?: boolean }>} - Authenticated user details. The `isExpired` flag is returned when the submitted OTP has expired (true) — callers can use this to show an "access code expired" flow.
  */
 const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }) => {
   const response = await axios({
@@ -92,11 +93,12 @@ const loginWithSignInOtp = async ({ token: requestAuthToken, userId, signInOTP }
     },
   });
 
-  const { token, loginStatus, user } = response.data;
+  const { token, loginStatus, user, isExpired } = response.data;
   return {
     loginStatus,
     token,
     user,
+    isExpired,
   };
 };
 
@@ -435,6 +437,7 @@ const updateLoan = async (dealId, loanId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -539,6 +542,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
     },
     data: formData,
   });
+
   return response.data;
 };
 
@@ -606,6 +610,27 @@ const banks = async (token) => {
   });
 
   return response.data.banks;
+};
+
+/**
+ * Get the curated, read-only list of banks shown in the "before you start" section of the unauthenticated portal login page.
+ *
+ * An explicit `timeout` is set so that a stalled or half-open upstream
+ * connection cannot hang the login page render — the caller in
+ * `get-portal-bank-list-for-login-page.js` treats a failure as a soft error
+ * and renders the fallback inset message.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The list of banks
+ */
+const getPortalBankList = async () => {
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/portal-bank-list`,
+    headers,
+    timeout: 5000,
+  });
+
+  return response.data;
 };
 
 const getCurrencies = async (token, includeDisabled) => {
@@ -1234,6 +1259,7 @@ module.exports = {
   allFacilities,
   getAllAmendments,
   banks,
+  getPortalBankList,
   cloneDeal,
   contractBond,
   createBond,

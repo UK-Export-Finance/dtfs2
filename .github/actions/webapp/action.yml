@@ -31,26 +31,39 @@ runs:
   steps:
     # Step 1: Check out the repository.
     - name: Repository 🗃️
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         ref: ${{ inputs.branch }}
 
-    # Step 2: Set up Azure CLI defaults.
+    # Step 2: Create Azure CLI directory with proper permissions
+    - name: Azure CLI Setup 🛠️
+      run: |
+        # Ensure .azure directory exists with proper permissions
+        mkdir -p $HOME/.azure
+        chmod 755 $HOME/.azure
+        # Clear any existing problematic cache files
+        rm -f $HOME/.azure/msal_token_cache.json
+        rm -f $HOME/.azure/msal_token_cache.json.lock
+        # Set proper umask for file creation
+        umask 022
+      shell: bash
+
+    # Step 3: Log in to Azure.
+    - name: Azure 🔐
+      uses: azure/login@v3
+      with:
+        creds: ${{ inputs.credentials }}
+
+    # Step 4: Set up Azure CLI defaults.
     - name: Defaults ✨
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Basic
           az configure --defaults location=${{ inputs.region }}
           az configure --defaults group=${{ inputs.group }}
 
-    # Step 3: Log in to Azure.
-    - name: Azure 🔐
-      uses: azure/login@v2
-      with:
-        creds: ${{ inputs.credentials }}
-
-    # Step 4: Set environment variables for ACR and WebApp.
+    # Step 5: Set environment variables for ACR and WebApp.
     - name: CLI 📝
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
@@ -58,7 +71,7 @@ runs:
         echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
       shell: bash
 
-    # Step 5: Log in to Azure Container Registry.
+    # Step 6: Log in to Azure Container Registry.
     - name: ACR 🔐
       uses: azure/docker-login@v2
       with:
@@ -66,7 +79,7 @@ runs:
         username: ${{ env.ACR_USER }}
         password: ${{ inputs.acr }}
 
-    # Step 6: Build and push Docker images.
+    # Step 7: Build and push Docker images.
     - name: Artefacts 🗃️
       working-directory: .
       run: |
@@ -80,9 +93,9 @@ runs:
         docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
       shell: bash
 
-    # Step 7: Create and swap deployment slot.
+    # Step 8: Create and swap deployment slot.
     - name: Slot 🔀
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Create new temporary slot
@@ -99,10 +112,10 @@ runs:
           --name ${{ env.WEBAPP }} \
           --action swap
 
-    # Step 8: Cleanup temporary slot.
+    # Step 9: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
-      uses: azure/cli@v2.1.0
+      uses: azure/cli@v3
       with:
         inlineScript: |
           # Delete temporary slot

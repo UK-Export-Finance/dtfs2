@@ -34,7 +34,7 @@
           editable: editable,
           href: '/contract/' + deal._id + '/about/supplier',
           dataCy: 'edit-about-link'
-        })}}
+        }) }}
   </h2>
 
   {% if deal.submissionDetails %}
@@ -47,7 +47,7 @@
           editable: editable,
           href: '/contract/' + deal._id + '/eligibility/criteria',
           dataCy: 'edit-eligibility-link'
-        })}}
+        }) }}
   </h3>
 
   {% if deal.mandatoryCriteria %}
@@ -70,10 +70,10 @@
               editable: editable,
               href: '/contract/' + deal._id + '/bond/' + bond._id + '/details',
               dataCy: 'edit-bond-' + bond._id + '-link'
-            })}}
+            }) }}
       </h3>
 
-      {{ bondSubmissionDetails.render({ bond: bond, user: user })}}
+      {{ bondSubmissionDetails.render({ bond: bond, user: user }) }}
     </div>
   {% endfor %}
 
@@ -85,10 +85,10 @@
               editable: editable,
               href: '/contract/' + deal._id + '/loan/' + loan._id + '/guarantee-details',
               dataCy: 'edit-loan-' + loan._id + '-link'
-            })}}
+            }) }}
       </h3>
 
-      {{ loanSubmissionDetails.render({ loan: loan, user: user })}}
+      {{ loanSubmissionDetails.render({ loan: loan, user: user }) }}
     </div>
   {% endfor %}
 

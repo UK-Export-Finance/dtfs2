@@ -37,7 +37,7 @@ export const mapCommonEmailVariables = ({ deal, facility, amendment }: { deal: D
 
   return {
     ukefDealId,
-    bankInternalRefName: bankInternalRefName!,
+    bankInternalRefName,
     exporterName,
     ukefFacilityId: ukefFacilityId!,
     dateEffectiveFrom: formattedEffectiveDate,

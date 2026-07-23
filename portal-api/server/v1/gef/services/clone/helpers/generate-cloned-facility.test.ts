@@ -36,7 +36,7 @@ const facilityDefaults = {
   submittedAsIssuedDate: '1638363717231',
   feeType: 'In advance',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
+  dayCountBasis: '365',
   canResubmitIssuedFacilities: null,
   hasBeenIssuedAndAcknowledged: null,
   issueDate: null,
@@ -48,7 +48,7 @@ const issuedFacility: Facility = {
   hasBeenIssued: false,
   name: 'Facility one',
   coverStartDate: new Date(1638403200000),
-  ukefFacilityId: '10000011',
+  ukefFacilityId: '0000000011',
   coverDateConfirmed: null,
 };
 
@@ -59,7 +59,7 @@ const unissuedFacility: Facility = {
   name: 'Facility two',
   coverStartDate: add(new Date(), { days: 1 }),
   monthsOfCover: null,
-  ukefFacilityId: '10000012',
+  ukefFacilityId: '0000000012',
   coverDateConfirmed: true,
 };
 

@@ -317,7 +317,7 @@ describe('/v1/deals/:id/loan', () => {
 
         expect(status).toEqual(200);
         expect(body.hasBeenIssued).toEqual(true);
-        expect(body.ukefGuaranteeInMonths).toEqual(null);
+        expect(body.ukefGuaranteeInMonths).toBeNull();
       });
     });
 
@@ -352,14 +352,14 @@ describe('/v1/deals/:id/loan', () => {
 
         expect(status).toEqual(200);
         expect(body.hasBeenIssued).toEqual(false);
-        expect(body.requestedCoverStartDate).toEqual(null);
-        expect(body['requestedCoverStartDate-day']).toEqual(null);
-        expect(body['requestedCoverStartDate-month']).toEqual(null);
-        expect(body['requestedCoverStartDate-year']).toEqual(null);
-        expect(body['coverEndDate-day']).toEqual(null);
-        expect(body['coverEndDate-month']).toEqual(null);
-        expect(body['coverEndDate-year']).toEqual(null);
-        expect(body.disbursementAmount).toEqual(null);
+        expect(body.requestedCoverStartDate).toBeNull();
+        expect(body['requestedCoverStartDate-day']).toBeNull();
+        expect(body['requestedCoverStartDate-month']).toBeNull();
+        expect(body['requestedCoverStartDate-year']).toBeNull();
+        expect(body['coverEndDate-day']).toBeNull();
+        expect(body['coverEndDate-month']).toBeNull();
+        expect(body['coverEndDate-year']).toBeNull();
+        expect(body.disbursementAmount).toBeNull();
       });
     });
 
@@ -420,10 +420,10 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updatedLoan);
 
         expect(status).toEqual(200);
-        expect(body.conversionRate).toEqual(null);
-        expect(body['conversionRateDate-day']).toEqual(null);
-        expect(body['conversionRateDate-month']).toEqual(null);
-        expect(body['conversionRateDate-year']).toEqual(null);
+        expect(body.conversionRate).toBeNull();
+        expect(body['conversionRateDate-day']).toBeNull();
+        expect(body['conversionRateDate-month']).toBeNull();
+        expect(body['conversionRateDate-year']).toBeNull();
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(body.currency).toEqual({

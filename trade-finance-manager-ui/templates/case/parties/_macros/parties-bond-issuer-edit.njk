@@ -19,35 +19,38 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
-        {{ govukInput({
-          label: {
-            text: "Unique reference number (URN)"
-          },
-          attributes: {
-            "data-cy": "urn-input-" + index
-          },
-          id: "partyUrn-" + index,
-          name: "bondIssuerPartyUrn[]",
-          value: urn[index - 1] or bond.tfm.bondIssuerPartyUrn,
-          errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
-            text: errors.fieldErrors["partyUrn-" + index].text,
+          {{ govukInput({
+            label: {
+              text: "Unique reference number (URN)"
+            },
             attributes: {
-              'data-cy': 'partyUrn--inline-error-' + index
+              "data-cy": "urn-input-" + index
+            },
+            id: "partyUrn-" + index,
+            name: "bondIssuerPartyUrn[]",
+            value: urn[index - 1] or bond.tfm.bondIssuerPartyUrn,
+            errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
+              text: errors.fieldErrors["partyUrn-" + index].text,
+              attributes: {
+                'data-cy': 'partyUrn--inline-error-' + index
+              }
             }
-          }
-        }) }}
+          }) }}
         </div>
       </div>
 
       {{ keyValueArrayGridRow.render({
         key: 'Address',
-        values:  [ bond.facilitySnapshot.bondIssuerAddressLine1,
-                bond.facilitySnapshot.bondIssuerAddressLine2,
-                bond.facilitySnapshot.bondIssuerAddressLine3,
-                bond.facilitySnapshot.bondIssuerAddressTown,
-                bond.facilitySnapshot.bondIssuerAddressPostcode],
+        values: [
+          bond.facilitySnapshot.bondIssuerAddressLine1,
+          bond.facilitySnapshot.bondIssuerAddressLine2,
+          bond.facilitySnapshot.bondIssuerAddressLine3,
+          bond.facilitySnapshot.bondIssuerAddressTown,
+          bond.facilitySnapshot.bondIssuerAddressPostcode
+        ],
         dataCy: 'bond-issuer-address'
       }) }}
+
       {{ keyValueGridRow.render({
         key: 'Country',
         value: bond.facilitySnapshot.agentAddressCountry,

@@ -21,7 +21,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.insertOneGefFacility(
         {
           dealId: deal._id,
-          ukefFacilityId: '00000001',
+          ukefFacilityId: '0000000001',
           type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
           name: 'abc-1-def',
           hasBeenIssued: false,
@@ -49,7 +49,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.insertOneGefFacility(
         {
           dealId: deal._id,
-          ukefFacilityId: '00000002',
+          ukefFacilityId: '0000000002',
           type: CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
           name: 'abc-1-def',
           hasBeenIssued: false,
@@ -78,7 +78,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.insertOneGefFacility(
         {
           dealId: deal._id,
-          ukefFacilityId: '0000003',
+          ukefFacilityId: '0000000003',
           type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
           name: 'abc-1-def',
           hasBeenIssued: false,
@@ -121,7 +121,7 @@ context('Dashboard: Unissued facilities report', () => {
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
       cy.get('@row1').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row1').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
-      cy.get('@row1').find('[data-cy="facility__row--facilityId"]').should('contain', '0000003');
+      cy.get('@row1').find('[data-cy="facility__row--facilityId"]').should('contain', '0000000003');
       cy.get('@row1').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 223,344');
       cy.get('@row1').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', 'days overdue');
@@ -129,7 +129,7 @@ context('Dashboard: Unissued facilities report', () => {
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
       cy.get('@row2').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row2').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
-      cy.get('@row2').find('[data-cy="facility__row--facilityId"]').should('contain', '00000002');
+      cy.get('@row2').find('[data-cy="facility__row--facilityId"]').should('contain', '0000000002');
       cy.get('@row2').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 1,234,567,890.1');
       cy.get('@row2').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', 'days left');
@@ -137,7 +137,7 @@ context('Dashboard: Unissued facilities report', () => {
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
       cy.get('@row3').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row3').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
-      cy.get('@row3').find('[data-cy="facility__row--facilityId"]').should('contain', '00000001');
+      cy.get('@row3').find('[data-cy="facility__row--facilityId"]').should('contain', '0000000001');
       cy.get('@row3').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
       cy.get('@row3').find('[data-cy="facility__row--facilityValue"]').should('contain', 'GBP 123');
       cy.get('@row3').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', '90 days left');

@@ -16,7 +16,7 @@ export const mockFacility = (facilityId: string, dealId: string) => ({
     details: null,
     createdAt: new Date().toString(),
     updatedAt: new Date().toString(),
-    ukefFacilityId: '00000001',
+    ukefFacilityId: '0000000001',
     unissuedToIssuedByMaker: undefined,
     facilityEndDate: null,
     bankReviewDate: null,

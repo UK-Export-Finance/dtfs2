@@ -61,11 +61,6 @@ const CURRENCIES = [
     id: 'GBP',
   },
   {
-    currencyId: 13,
-    text: 'HKD - Hong Kong Dollars',
-    id: 'HKD',
-  },
-  {
     currencyId: 14,
     text: 'ILS - Israeli Shekels',
     id: 'ILS',
@@ -122,11 +117,6 @@ const CURRENCIES = [
     currencyId: 24,
     text: 'MYR - Malaysian Ringgitts',
     id: 'MYR',
-  },
-  {
-    currencyId: 25,
-    text: 'NGN - Nigerian Naira',
-    id: 'NGN',
   },
   {
     currencyId: 26,
@@ -188,12 +178,6 @@ const CURRENCIES = [
     currencyId: 37,
     text: 'USD - US Dollars',
     id: 'USD',
-  },
-  {
-    currencyId: 38,
-    text: 'XAF - CFA Francs',
-    id: 'XAF',
-    disabled: true,
   },
   {
     currencyId: 39,
@@ -269,11 +253,6 @@ const CURRENCIES = [
     id: 'PEN',
   },
   {
-    currencyId: 54,
-    text: 'RUB - Russian Ruble ',
-    id: 'RUB',
-  },
-  {
     currencyId: 55,
     text: 'KRW - South Korean Won',
     id: 'KRW',
@@ -287,11 +266,6 @@ const CURRENCIES = [
     currencyId: 57,
     text: 'UYU - Uruguayan Peso',
     id: 'UYU',
-  },
-  {
-    currencyId: 58,
-    text: 'ZMK - Zambian Kwacha',
-    id: 'ZMK',
   },
   {
     currencyId: 59,

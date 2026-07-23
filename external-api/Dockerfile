@@ -11,7 +11,7 @@ ARG MICROSERVICE=external-api
 # 1. BUILD
 ###################
 
-FROM node:24.1.0-alpine3.20 AS build
+FROM node:24.17.0-alpine3.24 AS build
 
 # Shell
 SHELL ["/bin/sh", "-c"]
@@ -55,7 +55,7 @@ RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 # 2. PRODUCTION
 ###################
 
-FROM node:24.1.0-alpine3.20 AS production
+FROM node:24.17.0-alpine3.24 AS production
 
 # Shell
 SHELL ["/bin/sh", "-c"]

@@ -75,14 +75,14 @@ axiosMock
 
 describe('/geospatial/addresses/postcode', () => {
   describe('GET /geospatial/addresses/postcode', () => {
-    it('returns a list of addresses', async () => {
+    it('should return a list of addresses', async () => {
       const { status, body } = await get(`/geospatial/addresses/postcode/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.results).toBeDefined();
     });
 
-    it('returns a 500 response when MDM returns 500', async () => {
+    it('should return a 500 response when MDM returns 500', async () => {
       axiosMock
         .onGet(`${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)
         .reply(HttpStatusCode.InternalServerError, '');
@@ -97,7 +97,7 @@ describe('/geospatial/addresses/postcode', () => {
   const invalidPostcodeTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when postcode is invalid', () => {
-    test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode %s', async (postcode) => {
+    test.each(invalidPostcodeTestCases)('should return a 400 if you provide an invalid postcode %s', async (postcode) => {
       const { status, body } = await get(`/geospatial/addresses/postcode/${postcode}`);
 
       expect(status).toEqual(HttpStatusCode.BadRequest);

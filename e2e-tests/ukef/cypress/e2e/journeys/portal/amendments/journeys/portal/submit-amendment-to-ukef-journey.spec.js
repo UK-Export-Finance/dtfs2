@@ -60,7 +60,7 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
     cy.login(BANK1_CHECKER1);
   });
 
-  it('should submit the amendment to Ukef', () => {
+  it('should submit the amendment to UKEF', () => {
     const approvedByUkefUrl = `${submittedUrl}/approved-by-ukef`;
 
     cy.checkerSubmitsPortalAmendmentRequest({ submittedUrl: approvedByUkefUrl, amendmentDetailsUrl, confirmSubmissionToUkefUrl });
