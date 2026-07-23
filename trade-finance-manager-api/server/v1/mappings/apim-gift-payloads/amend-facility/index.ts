@@ -16,6 +16,7 @@ const {
  */
 export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFacilityAmendmentPayload[] => {
   const { previousAmount, newAmount, coverEndDate, effectiveDate } = getAmendmentFields(amendment);
+
   const { changeFacilityValue, changeCoverEndDate } = amendment;
 
   const amountDifference = getAmountDifference(previousAmount, newAmount);
