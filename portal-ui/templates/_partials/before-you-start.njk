@@ -1,30 +1,26 @@
 
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
 <h2 class="govuk-heading-m" data-cy="service">If you've not used this service before</h2>
 
 <p>You can use this service to apply for a guarantee on bonds, loans and other bank facilities that support UK exporters.</p>
 
 <p>Only approved staff at these banks can use this service currently:</p>
 
-<ul class="govuk-list govuk-list--bullet" data-cy="banks">
-  <li>Barclays Bank</li>
-  <li>HSBC UK Bank</li>
-  <li>Lloyds Bank</li>
-  <li>Bank of Scotland</li>
-  <li>Westminster Bank</li>
-  <li>Royal Bank of Scotland</li>
-  <li>Ulster Bank</li>
-  <li>Santander UK plc.</li>
-  <li>Newable Bank</li>
-  <li>Emirates NBD Bank (P.J.S.C)</li>
-  <li>Virgin Money</li>
-  <li>Shawbrook Bank</li>
-  <li>ICICI</li>
-  <li>ABC Bank</li>
-  <li>LDF Operations (trading as White Oak)</li>
-  <li>KBC Bank</li>
-  <li>Banco Santander</li>
-  <li>Nighthawk Partners</li>
-</ul>
+{% if banks and banks.length %}
+  <ul class="govuk-list govuk-list--bullet" data-cy="banks">
+    {% for bank in banks %}
+      <li>{{ bank.name }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  {{ govukInsetText({
+    text: "The list of banks isn’t available right now. You can still sign in if your bank has been onboarded.",
+    attributes: {
+      "data-cy": "banks-unavailable"
+    }
+  }) }}
+{% endif %}
 
 <p>Guarantees are provided by UK Export Finance under the terms of the master guarantee agreement (MGA) for either the:</p>
 <ul class="govuk-list govuk-list--bullet" data-cy="products">
