@@ -1,17 +1,22 @@
 {
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "include-component-in-tag": false,
     "packages": {
         ".": {
+            "release-type": "node",
+            "component": "",
+            "release-as": "3.2.0",
             "changelog-sections": [
                 { "type": "feat", "section": "Features", "hidden": false },
                 { "type": "fix",  "section": "Bug Fixes", "hidden": false },
                 { "type": "chore", "section": "Chores", "hidden": false },
                 { "type": "docs",  "section": "Documentation", "hidden": false },
+                { "type": "revert", "section": "Reverts", "hidden": false },
                 { "type": "style", "section": "Style", "hidden": false }
             ]
         }
     },
-    "pull-request-title-pattern": "chore(${scope}): release${component} ${version}",
+    "pull-request-title-pattern": "chore${scope}: release ${version}",
     "extra-label": "Type: chore, Type: Docs",
     "extra-files": [
         "CHANGELOG.md"
