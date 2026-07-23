@@ -17,9 +17,9 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
   const newAmount = typeof amendment.value === 'number' ? amendment.value : Number.NaN;
   const previousAmount = typeof amendment.currentValue === 'number' ? amendment.currentValue : Number.NaN;
 
-  const hasCoverEndDate = amendment?.tfm?.coverEndDate !== undefined && amendment.tfm.coverEndDate !== null;
+  const hasCoverEndDate = amendment?.coverEndDate !== undefined && amendment.coverEndDate !== null;
 
-  const coverEndDateValue = Number(amendment.tfm?.coverEndDate);
+  const coverEndDateValue = Number(amendment.coverEndDate);
 
   const coverEndDate = hasCoverEndDate ? getFormattedDateStringInTimeZone(coverEndDateValue, TIMEZONE.DEFAULT) : '';
 
