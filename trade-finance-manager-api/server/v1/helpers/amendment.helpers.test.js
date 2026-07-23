@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
@@ -988,7 +989,7 @@ describe('addLatestAmendmentValue()', () => {
  * test cases.
  */
 describe('internalAmendmentEmail()', () => {
-  it('should expect 400 on a bad request', async () => {
+  it(`should expect ${HttpStatusCode.BAD_REQUEST} on a bad request`, async () => {
     // Arrange
     const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_BAD_RESPONSE));
     api.sendEmail = sendEmailApiSpyBadResponse;
@@ -997,7 +998,7 @@ describe('internalAmendmentEmail()', () => {
     const response = await internalAmendmentEmail('1234567890');
 
     // Assert
-    expect(response.response.status).toEqual(400);
+    expect(response.response.status).toEqual(HttpStatusCode.BAD_REQUEST);
   });
 
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -1015,7 +1016,7 @@ describe('internalAmendmentEmail()', () => {
     expect(response).toEqual(false);
   });
 
-  it('should return expect object on a correct UKEF Facility ID', async () => {
+  it('should return an object for a valid UKEF Facility ID', async () => {
     // Act
     const response = await internalAmendmentEmail('1234567890');
 
