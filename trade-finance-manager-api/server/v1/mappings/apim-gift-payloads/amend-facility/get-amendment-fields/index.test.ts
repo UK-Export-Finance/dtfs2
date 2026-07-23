@@ -47,7 +47,7 @@ describe('getAmendmentFields', () => {
     expect(result.coverEndDate).toEqual(expected);
   });
 
-  describe('when tfm.coverEndDate is not provided', () => {
+  describe('when coverEndDate is not provided', () => {
     it('should return coverEndDate as an empty string', () => {
       // Arrange
       const amendment: TfmFacilityAmendmentData = mockBaseAmendment;
