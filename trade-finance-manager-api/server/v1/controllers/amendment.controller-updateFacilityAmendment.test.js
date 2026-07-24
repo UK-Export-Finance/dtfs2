@@ -365,22 +365,24 @@ describe('updated facility amendment API call', () => {
           expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         });
 
-        it(`should not call APIM GIFT when submittedByPim is not set`, async () => {
-          // Arrange - intermediate 'Continue' step, no submittedByPim
-          const updateAmendmentBody = {
-            status: TFM_AMENDMENT_STATUS.COMPLETED,
-          };
+        describe('when submittedByPim is not set', () => {
+          it(`should not call APIM GIFT`, async () => {
+            // Arrange
+            const updateAmendmentBody = {
+              status: TFM_AMENDMENT_STATUS.COMPLETED,
+            };
 
-          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+            const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
 
-          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+            mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
 
-          // Act
-          await amendmentController.updateFacilityAmendment(req, res);
+            // Act
+            await amendmentController.updateFacilityAmendment(req, res);
 
-          // Assert
-          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
-          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+            // Assert
+            expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+            expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+          });
         });
       });
     });
