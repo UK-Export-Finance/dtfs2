@@ -11,77 +11,39 @@ describe('validateOtp', () => {
 
   const mockSignInTokenStatus = signInTokenStatus as jest.Mock;
 
-  describe(`when signInTokenStatus returns ${SIGN_IN_OTP_STATUS.VALID}`, () => {
-    it(`should return success true with isValid true and statusCode ${HttpStatusCode.Ok}`, () => {
+  /**
+   * Verifies the OTP response mapping for each signInTokenStatus outcome, including the fallback case.
+   */
+  describe('when signInTokenStatus returns a known status', () => {
+    it.each([
+      {
+        status: SIGN_IN_OTP_STATUS.VALID,
+        expected: { success: true, isValid: true, statusCode: HttpStatusCode.Ok },
+      },
+      {
+        status: SIGN_IN_OTP_STATUS.EXPIRED,
+        expected: { success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized },
+      },
+      {
+        status: SIGN_IN_OTP_STATUS.INVALID,
+        expected: { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized },
+      },
+      {
+        status: SIGN_IN_OTP_STATUS.NOT_FOUND,
+        expected: { success: false, notFound: true, statusCode: HttpStatusCode.NotFound },
+      },
+      {
+        status: 'unexpectedValue',
+        expected: { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized },
+      },
+    ])('should return the expected response when signInTokenStatus returns $status', ({ status, expected }) => {
       // Arrange
-      mockSignInTokenStatus.mockReturnValue(SIGN_IN_OTP_STATUS.VALID);
+      mockSignInTokenStatus.mockReturnValue(status);
 
       // Act
       const result = validateOtp('anyOtpCode', user);
 
       // Assert
-      const expected = { success: true, isValid: true, statusCode: HttpStatusCode.Ok };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe(`when signInTokenStatus returns ${SIGN_IN_OTP_STATUS.EXPIRED}`, () => {
-    it(`should return success false with isExpired true and statusCode ${HttpStatusCode.Unauthorized}`, () => {
-      // Arrange
-      mockSignInTokenStatus.mockReturnValue(SIGN_IN_OTP_STATUS.EXPIRED);
-
-      // Act
-      const result = validateOtp('anyOtpCode', user);
-
-      // Assert
-      const expected = { success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe(`when signInTokenStatus returns ${SIGN_IN_OTP_STATUS.INVALID}`, () => {
-    it(`should return success false with isInvalid true and statusCode ${HttpStatusCode.Unauthorized}`, () => {
-      // Arrange
-      mockSignInTokenStatus.mockReturnValue(SIGN_IN_OTP_STATUS.INVALID);
-
-      // Act
-      const result = validateOtp('anyOtpCode', user);
-
-      // Assert
-      const expected = { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe(`when signInTokenStatus returns ${SIGN_IN_OTP_STATUS.NOT_FOUND}`, () => {
-    it(`should return success false with notFound true and statusCode ${HttpStatusCode.NotFound}`, () => {
-      // Arrange
-      mockSignInTokenStatus.mockReturnValue(SIGN_IN_OTP_STATUS.NOT_FOUND);
-
-      // Act
-      const result = validateOtp('anyOtpCode', user);
-
-      // Assert
-      const expected = { success: false, notFound: true, statusCode: HttpStatusCode.NotFound };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('when signInTokenStatus returns an unexpected value', () => {
-    it(`should return success false with isInvalid true and statusCode ${HttpStatusCode.Unauthorized}`, () => {
-      // Arrange
-      mockSignInTokenStatus.mockReturnValue('unexpectedValue');
-
-      // Act
-      const result = validateOtp('anyOtpCode', user);
-
-      // Assert
-      const expected = { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized };
-
       expect(result).toEqual(expected);
     });
   });

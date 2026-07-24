@@ -79,7 +79,7 @@ describe('incrementSignInOTPSendCount', () => {
       await incrementSignInOTPSendCount(variables);
 
       // Assert
-      expect(mockBlockUser).toHaveBeenCalledTimes(0);
+      expect(mockBlockUser).not.toHaveBeenCalled();
     });
   });
 
@@ -102,7 +102,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockResetSignInData).toHaveBeenCalledTimes(0);
+        expect(mockResetSignInData).not.toHaveBeenCalled();
       });
 
       it('should call PortalUsersRepo.incrementSignInOTPSendCount', async () => {
@@ -136,7 +136,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockBlockUser).toHaveBeenCalledTimes(0);
+        expect(mockBlockUser).not.toHaveBeenCalled();
       });
     });
 
@@ -158,7 +158,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockResetSignInData).toHaveBeenCalledTimes(0);
+        expect(mockResetSignInData).not.toHaveBeenCalled();
       });
 
       it('should call PortalUsersRepo.incrementSignInOTPSendCount', async () => {
@@ -175,7 +175,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockSetSignInOTPSendDate).toHaveBeenCalledTimes(0);
+        expect(mockSetSignInOTPSendDate).not.toHaveBeenCalled();
       });
 
       it('should return the correct number of remaining attempts', async () => {
@@ -191,14 +191,16 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockBlockUser).toHaveBeenCalledTimes(0);
+        expect(mockBlockUser).not.toHaveBeenCalled();
       });
     });
 
-    describe('when incrementSignInOTPSendCount returns 3', () => {
+    const remainingAttemptsCount = 3;
+
+    describe(`when incrementSignInOTPSendCount returns ${remainingAttemptsCount}`, () => {
       beforeEach(() => {
         mockResetSignInData.mockResolvedValue(null);
-        mockIncrementSignInOTPSendCount.mockResolvedValue(3);
+        mockIncrementSignInOTPSendCount.mockResolvedValue(remainingAttemptsCount);
         mockSetSignInOTPSendDate.mockResolvedValue(null);
       });
 
@@ -213,7 +215,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockResetSignInData).toHaveBeenCalledTimes(0);
+        expect(mockResetSignInData).not.toHaveBeenCalled();
       });
 
       it('should call PortalUsersRepo.incrementSignInOTPSendCount', async () => {
@@ -230,7 +232,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockSetSignInOTPSendDate).toHaveBeenCalledTimes(0);
+        expect(mockSetSignInOTPSendDate).not.toHaveBeenCalled();
       });
 
       it('should return the correct number of remaining attempts', async () => {
@@ -238,7 +240,7 @@ describe('incrementSignInOTPSendCount', () => {
         const remainingAttempts = await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(remainingAttempts).toEqual(OTP.MAX_SIGN_IN_ATTEMPTS - 3);
+        expect(remainingAttempts).toEqual(OTP.MAX_SIGN_IN_ATTEMPTS - remainingAttemptsCount);
       });
 
       it('should not call PortalUsersRepo.blockUser', async () => {
@@ -246,7 +248,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockBlockUser).toHaveBeenCalledTimes(0);
+        expect(mockBlockUser).not.toHaveBeenCalled();
       });
     });
 
@@ -280,9 +282,11 @@ describe('incrementSignInOTPSendCount', () => {
 
   describe('error handling', () => {
     describe('when PortalUsersRepo.incrementSignInOTPSendCount throws an error', () => {
+      const mockError = new Error('Database error');
+
       beforeEach(() => {
         mockResetSignInData.mockResolvedValue(null);
-        mockIncrementSignInOTPSendCount.mockRejectedValue(new Error('Database error'));
+        mockIncrementSignInOTPSendCount.mockRejectedValue(mockError);
       });
 
       const variables = {
@@ -297,11 +301,13 @@ describe('incrementSignInOTPSendCount', () => {
 
         // Assert
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, new Error('Database error'));
+        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
     describe('when PortalUsersRepo.incrementSignInOTPSendCount returns null', () => {
+      const mockError = new Error('Failed to increment sign in OTP send count');
+
       beforeEach(() => {
         mockResetSignInData.mockResolvedValue(null);
         mockIncrementSignInOTPSendCount.mockResolvedValue(null);
@@ -319,17 +325,15 @@ describe('incrementSignInOTPSendCount', () => {
 
         // Assert
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith(
-          'Error incrementing sign in OTP send count for user %s: %o',
-          variables.userId,
-          new Error('Failed to increment sign in OTP send count'),
-        );
+        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
     describe('when PortalUsersRepo.resetSignInData throws an error', () => {
+      const mockError = new Error('Database error');
+
       beforeEach(() => {
-        mockResetSignInData.mockRejectedValue(new Error('Database error'));
+        mockResetSignInData.mockRejectedValue(mockError);
       });
 
       const variables = {
@@ -344,15 +348,17 @@ describe('incrementSignInOTPSendCount', () => {
 
         // Assert
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, new Error('Database error'));
+        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
     describe('when PortalUsersRepo.setSignInOTPSendDate throws an error', () => {
+      const mockError = new Error('Database error');
+
       beforeEach(() => {
         mockResetSignInData.mockResolvedValue(null);
         mockIncrementSignInOTPSendCount.mockResolvedValue(1);
-        mockSetSignInOTPSendDate.mockRejectedValue(new Error('Database error'));
+        mockSetSignInOTPSendDate.mockRejectedValue(mockError);
       });
 
       const variables = {
@@ -367,16 +373,18 @@ describe('incrementSignInOTPSendCount', () => {
 
         // Assert
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, new Error('Database error'));
+        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
     describe('when PortalUsersRepo.blockUser throws an error', () => {
+      const mockError = new Error('Database error');
+
       beforeEach(() => {
         mockResetSignInData.mockResolvedValue(null);
         mockIncrementSignInOTPSendCount.mockResolvedValue(OTP.MAX_SIGN_IN_ATTEMPTS + 1);
         mockSetSignInOTPSendDate.mockResolvedValue(null);
-        mockBlockUser.mockRejectedValue(new Error('Database error'));
+        mockBlockUser.mockRejectedValue(mockError);
       });
 
       const variables = {
@@ -391,7 +399,7 @@ describe('incrementSignInOTPSendCount', () => {
 
         // Assert
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, new Error('Database error'));
+        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
   });

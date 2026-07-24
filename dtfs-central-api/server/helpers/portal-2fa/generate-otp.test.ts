@@ -28,10 +28,10 @@ describe('generateOtp', () => {
     it('should generate a hash of the correct length', () => {
       const generatedOtp = generateOtp();
 
-      const expectedHashLength = generatedOtp.hash.length;
-      const hashLength = hash(generatedOtp.securityCode, generatedOtp.salt).toString(HEX_STRING_TYPE).length;
+      const expected = generatedOtp.hash.length;
+      const result = hash(generatedOtp.securityCode, generatedOtp.salt).toString(HEX_STRING_TYPE).length;
 
-      expect(expectedHashLength).toEqual(hashLength);
+      expect(result).toEqual(expected);
     });
   });
 
