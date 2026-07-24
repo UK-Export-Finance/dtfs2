@@ -42,9 +42,8 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     dealId: mockDealId,
     changeFacilityValue: false,
     changeCoverEndDate: true,
-    tfm: {
-      coverEndDate: Date.parse('2024-04-01T00:00:00.000Z'),
-    },
+    coverEndDate: Date.parse('2024-04-01T00:00:00.000Z'),
+    tfm: {},
   };
 
   const expectedApimGiftAmendmentPayloads = [
