@@ -11,6 +11,8 @@ describe('signInTokenStatus', () => {
   const mockVerifyHash = verifyHash as jest.Mock;
 
   beforeEach(() => {
+    mockVerifyHash.mockReset();
+
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 

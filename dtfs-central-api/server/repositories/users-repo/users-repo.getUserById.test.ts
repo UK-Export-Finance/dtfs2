@@ -10,6 +10,9 @@ const userId = new ObjectId();
 
 describe('getUserById', () => {
   beforeEach(() => {
+    findOneMock.mockReset();
+    getCollectionMock.mockReset();
+
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     getCollectionMock.mockResolvedValue({
