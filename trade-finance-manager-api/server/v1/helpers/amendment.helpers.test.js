@@ -998,7 +998,7 @@ describe('internalAmendmentEmail()', () => {
     const response = await internalAmendmentEmail('1234567890');
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.BAD_REQUEST);
+    expect(response.response.status).toEqual(HttpStatusCode.BAD_REQUEST);
   });
 
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
