@@ -365,7 +365,7 @@ describe('updated facility amendment API call', () => {
           expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         });
 
-        describe('when submittedByPim is not set', () => {
+        describe('when submittedByPim is not set and APIM/GIFT submission is allowed', () => {
           it(`should not call APIM GIFT`, async () => {
             // Arrange
             const updateAmendmentBody = {

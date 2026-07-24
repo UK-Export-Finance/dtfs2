@@ -321,7 +321,7 @@ const updateFacilityAmendment = async (req, res) => {
    * submittedByPim as the discriminator prevents repeated APIM calls during the flow.
    * This flag is also used in the ACBS canSendToAcbs checks.
    */
-  const isSubmittedByPim = payload.submittedByPim === true;
+  const isSubmittedByPim = payload?.submittedByPim === true;
 
   // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
   let isTaskUpdate = false;
