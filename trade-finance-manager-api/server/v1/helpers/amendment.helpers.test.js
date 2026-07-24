@@ -989,7 +989,7 @@ describe('addLatestAmendmentValue()', () => {
  * test cases.
  */
 describe('internalAmendmentEmail()', () => {
-  it(`should expect ${HttpStatusCode.BAD_REQUEST} on a bad request`, async () => {
+  it(`should expect ${HttpStatusCode.BadRequest} on a bad request`, async () => {
     // Arrange
     const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_BAD_RESPONSE));
     api.sendEmail = sendEmailApiSpyBadResponse;
@@ -998,7 +998,7 @@ describe('internalAmendmentEmail()', () => {
     const response = await internalAmendmentEmail('1234567890');
 
     // Assert
-    expect(response.response.status).toEqual(HttpStatusCode.BAD_REQUEST);
+    expect(response.response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
