@@ -295,6 +295,7 @@ describe('updated facility amendment API call', () => {
       describe('when APIM/GIFT submission is allowed', () => {
         const updateAmendmentBody = {
           status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
         };
 
         beforeEach(() => {
@@ -349,11 +350,30 @@ describe('updated facility amendment API call', () => {
           // Arrange
           const updateAmendmentBody = {
             status: TFM_AMENDMENT_STATUS.COMPLETED,
+            submittedByPim: true,
           };
 
           const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
 
           mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(false);
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
+
+        it(`should not call APIM GIFT when submittedByPim is not set`, async () => {
+          // Arrange - intermediate 'Continue' step, no submittedByPim
+          const updateAmendmentBody = {
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
+          };
+
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
 
           // Act
           await amendmentController.updateFacilityAmendment(req, res);
