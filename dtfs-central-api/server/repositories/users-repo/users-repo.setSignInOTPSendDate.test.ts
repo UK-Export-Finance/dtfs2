@@ -59,7 +59,7 @@ describe('PortalUsersRepo', () => {
       // Assert
       expect(findOneAndUpdateMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
-        { $set: { signInOTPSendDate: expect.any(Number) as unknown, auditRecord: auditDetails } },
+        { $set: { signInOTPSendDate: expect.any(Number) as unknown, auditRecord: generateAuditDatabaseRecordFromAuditDetailsMock(auditDetails) } },
         { returnDocument: 'after' },
       );
     });

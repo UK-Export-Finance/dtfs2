@@ -7,13 +7,21 @@ jest.mock('@ukef/dtfs2-common/change-stream');
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
 
 jest.mock('../../repositories/users-repo');
-console.error = jest.fn();
 
 describe('incrementSignInOTPSendCount', () => {
   const mockResetSignInData = jest.fn();
   const mockIncrementSignInOTPSendCount = jest.fn();
   const mockSetSignInOTPSendDate = jest.fn();
   const mockBlockUser = jest.fn();
+
+  beforeEach(() => {
+    mockResetSignInData.mockReset();
+    mockIncrementSignInOTPSendCount.mockReset();
+    mockSetSignInOTPSendDate.mockReset();
+    mockBlockUser.mockReset();
+
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
 
   beforeEach(() => {
     PortalUsersRepo.resetSignInData = mockResetSignInData;
@@ -23,7 +31,7 @@ describe('incrementSignInOTPSendCount', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('when sign in data is stale and incrementSignInOTPSendCount returns 1', () => {

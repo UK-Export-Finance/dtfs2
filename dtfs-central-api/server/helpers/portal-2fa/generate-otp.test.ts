@@ -36,10 +36,22 @@ describe('generateOtp', () => {
   });
 
   describe('expiry', () => {
+    beforeEach(() => {
+      const now = new Date('2020-01-01T00:00:00.000Z');
+
+      jest.useFakeTimers().setSystemTime(now);
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('should set an expiry time in the future', () => {
+      const now = new Date('2020-01-01T00:00:00.000Z');
+
       const generatedOtp = generateOtp();
 
-      const expiryTime = new Date().getTime() + OTP.DURATION_MILLISECONDS;
+      const expiryTime = now.getTime() + OTP.DURATION_MILLISECONDS;
 
       expect(generatedOtp.expiry).toEqual(expiryTime);
     });

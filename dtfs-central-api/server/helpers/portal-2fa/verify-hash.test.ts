@@ -25,15 +25,13 @@ describe('verifyHash', () => {
 
   describe('when an error occurs during hash verification', () => {
     beforeEach(() => {
-      jest.mock('crypto');
-
-      crypto.timingSafeEqual = jest.fn().mockImplementation(() => {
+      jest.spyOn(crypto, 'timingSafeEqual').mockImplementation(() => {
         throw new Error('Crypto error');
       });
     });
 
     afterEach(() => {
-      jest.resetAllMocks();
+      jest.restoreAllMocks();
     });
 
     it('should throw an error', () => {

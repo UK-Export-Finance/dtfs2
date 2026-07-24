@@ -4,12 +4,19 @@ import { aPortalUser } from '../../../test-helpers';
 import { verifyHash } from './verify-hash';
 
 jest.mock('./verify-hash');
-console.error = jest.fn();
 
 describe('signInTokenStatus', () => {
   const user = aPortalUser();
 
   const mockVerifyHash = verifyHash as jest.Mock;
+
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   describe('when user has no sign in tokens', () => {
     const userWithNoTokens = {
