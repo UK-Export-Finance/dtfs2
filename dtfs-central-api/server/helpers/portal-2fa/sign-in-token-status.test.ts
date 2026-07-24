@@ -152,4 +152,39 @@ describe('signInTokenStatus', () => {
       expect(result).toEqual(SIGN_IN_OTP_STATUS.VALID);
     });
   });
+
+  describe('when the user has multiple sign in tokens', () => {
+    const oldestToken = { hashHex: 'oldestHash', saltHex: 'oldestSalt', expiry: Date.now() + 5000 };
+    const latestToken = { hashHex: 'latestHash', saltHex: 'latestSalt', expiry: Date.now() + 10000 };
+
+    const userWithTokens = {
+      ...user,
+      signInTokens: [oldestToken, latestToken],
+    };
+
+    beforeEach(() => {
+      mockVerifyHash.mockReturnValue(true);
+    });
+
+    it('should check the latest sign in token', () => {
+      // Act
+      signInTokenStatus(userWithTokens, 'anySignInCode');
+
+      // Assert
+      expect(mockVerifyHash).toHaveBeenCalledWith('anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
+    });
+
+    it('should check the latest sign in token even when the tokens are out of order', () => {
+      const userWithOutOfOrderTokens = {
+        ...user,
+        signInTokens: [latestToken, oldestToken],
+      };
+
+      // Act
+      signInTokenStatus(userWithOutOfOrderTokens, 'anySignInCode');
+
+      // Assert
+      expect(mockVerifyHash).toHaveBeenCalledWith('anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
+    });
+  });
 });

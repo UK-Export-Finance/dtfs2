@@ -1,207 +1,198 @@
-import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AuditDetails, USER_STATUS, isProduction } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { AuditDetails } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { createAndEmailSignInOTP } from './create-and-email-sign-in-otp';
-import { aPortalUser } from '../../../../../test-helpers';
+import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
 import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count';
-import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
+import { PortalUsersRepo } from '../../../../repositories/users-repo';
+import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
+import { sendAccountSuspensionEmail } from './send-account-suspension-email';
+import { aPortalUser } from '../../../../../test-helpers';
 
+jest.mock('../../../../helpers/portal-2fa/is-user-blocked-or-disabled');
 jest.mock('../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count');
-jest.mock('../../../../repositories/users-repo');
 jest.mock('../../../../helpers/portal-2fa/generate-otp');
-jest.mock('@ukef/dtfs2-common');
-jest.mock('@ukef/dtfs2-common/change-stream');
+jest.mock('../../../../repositories/users-repo');
+jest.mock('../../../../helpers/portal-2fa/send-sign-in-otp-email');
+jest.mock('./send-account-suspension-email');
 
-console.error = jest.fn();
-console.info = jest.fn();
+type MockResponse = Partial<Response> & {
+  status: jest.Mock;
+  send: jest.Mock;
+};
 
-const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
+const getMockResponse = (): MockResponse => {
+  const res: MockResponse = {
+    status: jest.fn(),
+    send: jest.fn(),
+  };
+  res.status.mockReturnValue(res);
+  res.send.mockReturnValue(res);
+  return res;
+};
 
-const auditDetails = generateSystemAuditDetails();
-
-const user = aPortalUser();
-
-const mockIncrementSignInOTPSendCount = incrementSignInOTPSendCount as jest.Mock;
-const mockGenerateOtp = generateOtp as jest.Mock;
-const mockIsProduction = isProduction as jest.Mock;
-const mockSaveSignInOTPTokenForUser = jest.fn();
-
-const securityCode = '123456';
-const salt = 'saltHex';
-const hash = 'hashHex';
-const expiry = new Date(Date.now() + 5 * 60 * 1000);
+const invokeController = async (body: Record<string, unknown>, res: MockResponse) => {
+  const req = { body } as Parameters<typeof createAndEmailSignInOTP>[0];
+  await createAndEmailSignInOTP(req, res as Response);
+};
 
 describe('createAndEmailSignInOTP', () => {
+  const user = aPortalUser();
+  const auditDetails: AuditDetails = generatePortalAuditDetails(user._id);
+  const otpExpiry = Date.now() + 1000;
+
+  let saveSignInOTPTokenForUserSpy: jest.SpyInstance;
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.spyOn(console, 'info').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    jest.spyOn(PortalUsersRepo, 'saveSignInOTPTokenForUser').mockImplementation(mockSaveSignInOTPTokenForUser);
+    jest.mocked(isUserBlockedOrDisabled).mockReturnValue(false);
+    jest.mocked(incrementSignInOTPSendCount).mockResolvedValue(2);
+    jest.mocked(generateOtp).mockReturnValue({ securityCode: '123456', salt: 'salt-hex', hash: 'hash-hex', expiry: otpExpiry });
+    jest.mocked(sendSignInOtpEmail).mockResolvedValue(undefined);
+    jest.mocked(sendAccountSuspensionEmail).mockResolvedValue(undefined);
 
-    mockIncrementSignInOTPSendCount.mockResolvedValue(1);
-    mockSaveSignInOTPTokenForUser.mockResolvedValue(undefined);
-    mockGenerateOtp.mockReturnValue({ securityCode, salt, hash, expiry });
-    mockIsProduction.mockReturnValue(false);
+    saveSignInOTPTokenForUserSpy = jest.spyOn(PortalUsersRepo, 'saveSignInOTPTokenForUser').mockResolvedValue(undefined);
   });
 
-  describe('when user is missing', () => {
-    const { req, res } = httpMocks.createMocks({
-      body: { user: null, auditDetails },
-    });
-
-    it(`should return ${HttpStatusCode.NotFound} and a message`, async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual({ message: 'User or auditDetails not found' });
-    });
-
-    it('should call console.error', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('User or auditDetails not found');
-    });
+  afterEach(() => {
+    jest.restoreAllMocks();
+    jest.resetAllMocks();
   });
 
-  describe('when user is missing properties', () => {
-    const incompleteUser = { ...user, email: undefined };
+  /**
+   * Verifies that the controller rejects requests where the user or auditDetails payload is missing required fields.
+   */
+  describe('when the user or auditDetails is missing required fields', () => {
+    it.each([
+      { description: 'user is undefined', body: { auditDetails } },
+      { description: 'auditDetails is undefined', body: { user } },
+      { description: 'user._id is missing', body: { user: { ...user, _id: undefined }, auditDetails } },
+      { description: 'user.email is missing', body: { user: { ...user, email: undefined }, auditDetails } },
+      { description: 'user.firstname is missing', body: { user: { ...user, firstname: undefined }, auditDetails } },
+      { description: 'user.surname is missing', body: { user: { ...user, surname: undefined }, auditDetails } },
+    ])(`should respond with ${HttpStatusCode.NotFound} when $description`, async ({ body }) => {
+      const res = getMockResponse();
 
-    const { req, res } = httpMocks.createMocks({
-      body: { user: incompleteUser, auditDetails },
-    });
+      await invokeController(body, res);
 
-    it(`should return ${HttpStatusCode.NotFound} and a message`, async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual({ message: 'User or auditDetails not found' });
-    });
-
-    it('should call console.error', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('User or auditDetails not found');
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
     });
   });
 
-  describe('when auditDetails is missing', () => {
-    const { req, res } = httpMocks.createMocks({
-      body: { user, auditDetails: null },
-    });
-
-    it(`should return ${HttpStatusCode.NotFound} and a message`, async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual({ message: 'User or auditDetails not found' });
-    });
-
-    it('should call console.error', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('User or auditDetails not found');
-    });
-  });
-
-  describe('when user is blocked or disabled', () => {
-    const blockedUser = { ...user, 'user-status': USER_STATUS.BLOCKED };
-
-    const { req, res } = httpMocks.createMocks({
-      body: { user: blockedUser, auditDetails },
-    });
-
-    it(`should return ${HttpStatusCode.Forbidden} and a message`, async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Forbidden);
-      expect(res._getData()).toEqual({ message: 'User is blocked or disabled' });
-    });
-
-    it('should call console.error', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('User %s is blocked or disabled', user._id);
-    });
-  });
-
-  describe('when user is valid', () => {
-    const { req, res } = httpMocks.createMocks({
-      body: { user, auditDetails },
-    });
-
-    it(`should return ${HttpStatusCode.Created} and the signInOTPSendCount`, async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
-      expect(res._getData()).toEqual({ signInOTPSendCount: 1 });
-    });
-
-    it('should call incrementSignInOTPSendCount with correct params', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledTimes(1);
-      expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledWith({
-        userId: user._id.toString(),
-        signInOTPSendDate: undefined,
-        auditDetails,
-      });
-    });
-
-    it('should call PortalUsersRepo.saveSignInOTPTokenForUser with correct params', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(mockSaveSignInOTPTokenForUser).toHaveBeenCalledTimes(1);
-
-      expect(mockSaveSignInOTPTokenForUser).toHaveBeenCalledWith({
-        userId: user._id.toString(),
-        saltHex: salt,
-        hashHex: hash,
-        expiry,
-        auditDetails,
-      });
-    });
-
-    it('should log the OTP code to the console in non-production environments', async () => {
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.info).toHaveBeenCalledWith('Sign in OTP code for user: %s is: %s', user.email, securityCode);
-    });
-
-    it('should NOT log the OTP code to the console in production environments', async () => {
-      mockIsProduction.mockReturnValue(true);
-
-      await createAndEmailSignInOTP(req, res);
-
-      expect(console.info).not.toHaveBeenCalledWith('Sign in OTP code for user: %s is: %s', user.email, securityCode);
-    });
-  });
-
-  describe('when an error is thrown', () => {
-    const errorMessage = 'Test error';
-    const { req, res } = httpMocks.createMocks({
-      body: { user, auditDetails },
-    });
-
+  describe('when the user is blocked or disabled', () => {
     beforeEach(() => {
-      mockIncrementSignInOTPSendCount.mockRejectedValue(new Error(errorMessage));
+      jest.mocked(isUserBlockedOrDisabled).mockReturnValue(true);
     });
 
-    it(`should return ${HttpStatusCode.InternalServerError} and a message`, async () => {
-      await createAndEmailSignInOTP(req, res);
+    it(`should respond with ${HttpStatusCode.Forbidden}`, async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual({ message: errorMessage });
+      await invokeController({ user, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Forbidden);
     });
 
-    it('should call console.error with the error', async () => {
-      await createAndEmailSignInOTP(req, res);
+    it('should not call incrementSignInOTPSendCount', async () => {
+      const res = getMockResponse();
 
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Failed to create and email sign in OTP for user %s: %o', user._id, new Error(errorMessage));
+      await invokeController({ user, auditDetails }, res);
+
+      expect(incrementSignInOTPSendCount).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when incrementSignInOTPSendCount resolves -1', () => {
+    beforeEach(() => {
+      jest.mocked(incrementSignInOTPSendCount).mockResolvedValue(-1);
+    });
+
+    it(`should respond with ${HttpStatusCode.Created} and signInOTPSendCount -1`, async () => {
+      const res = getMockResponse();
+
+      await invokeController({ user, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Created);
+      expect(res.send).toHaveBeenNthCalledWith(1, { signInOTPSendCount: -1 });
+    });
+
+    it('should call sendAccountSuspensionEmail', async () => {
+      const res = getMockResponse();
+
+      await invokeController({ user, auditDetails }, res);
+
+      expect(sendAccountSuspensionEmail).toHaveBeenNthCalledWith(1, user);
+    });
+
+    describe('and sendAccountSuspensionEmail throws', () => {
+      beforeEach(() => {
+        jest.mocked(sendAccountSuspensionEmail).mockRejectedValue(new Error('email failed'));
+      });
+
+      it(`should still respond with ${HttpStatusCode.Created} and signInOTPSendCount -1`, async () => {
+        const res = getMockResponse();
+
+        await invokeController({ user, auditDetails }, res);
+
+        expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Created);
+        expect(res.send).toHaveBeenNthCalledWith(1, { signInOTPSendCount: -1 });
+      });
+    });
+  });
+
+  describe('on the happy path', () => {
+    it('should call generateOtp, PortalUsersRepo.saveSignInOTPTokenForUser and sendSignInOtpEmail', async () => {
+      const res = getMockResponse();
+
+      await invokeController({ user, auditDetails }, res);
+
+      expect(generateOtp).toHaveBeenCalledTimes(1);
+      expect(saveSignInOTPTokenForUserSpy).toHaveBeenNthCalledWith(1, {
+        userId: user._id.toString(),
+        saltHex: 'salt-hex',
+        hashHex: 'hash-hex',
+        expiry: otpExpiry,
+        auditDetails,
+      });
+      expect(sendSignInOtpEmail).toHaveBeenNthCalledWith(1, user, '123456');
+    });
+
+    it(`should respond with ${HttpStatusCode.Created} and the signInOTPSendCount`, async () => {
+      const res = getMockResponse();
+
+      await invokeController({ user, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Created);
+      expect(res.send).toHaveBeenNthCalledWith(1, { signInOTPSendCount: 2 });
+    });
+  });
+
+  describe('when an unexpected error is thrown', () => {
+    beforeEach(() => {
+      jest.mocked(incrementSignInOTPSendCount).mockRejectedValue(new Error('unexpected error'));
+    });
+
+    it(`should respond with ${HttpStatusCode.InternalServerError}`, async () => {
+      const res = getMockResponse();
+
+      await invokeController({ user, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
+    });
+  });
+
+  describe('logging', () => {
+    it('should sanitise the logged userId', async () => {
+      const maliciousUser = { ...user, _id: `${user._id.toString()}!@#$%^&*()` };
+      const res = getMockResponse();
+
+      await invokeController({ user: maliciousUser, auditDetails }, res);
+
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Creating and emailing sign in OTP for user %s', user._id.toString());
     });
   });
 });

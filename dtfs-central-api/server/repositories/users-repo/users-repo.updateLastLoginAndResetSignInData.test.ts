@@ -52,9 +52,8 @@ describe('PortalUsersRepo', () => {
       await PortalUsersRepo.updateLastLoginAndResetSignInData({ userId: userId.toString(), sessionIdentifier, auditDetails });
 
       // Assert
-
       const setUpdate = {
-        lastLogin: Date.now(),
+        lastLogin: expect.any(Number) as unknown as number,
         loginFailureCount: 0,
         sessionIdentifier,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),

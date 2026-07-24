@@ -1,5 +1,6 @@
 import { salt, hash, OTP, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
 import { generateOtp } from './generate-otp';
+import { verifyHash } from './verify-hash';
 
 describe('generateOtp', () => {
   describe('security code', () => {
@@ -41,6 +42,16 @@ describe('generateOtp', () => {
       const expiryTime = new Date().getTime() + OTP.DURATION_MILLISECONDS;
 
       expect(generatedOtp.expiry).toEqual(expiryTime);
+    });
+  });
+
+  describe('cross-validation with verifyHash', () => {
+    it('should generate an OTP that verifyHash can successfully validate', () => {
+      const generatedOtp = generateOtp();
+
+      const isValid = verifyHash(generatedOtp.securityCode, generatedOtp.salt, generatedOtp.hash, 'user-id');
+
+      expect(isValid).toEqual(true);
     });
   });
 });

@@ -27,7 +27,13 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
   }
 
   const { signInTokens } = user;
-  const latestToken = signInTokens[signInTokens.length - 1];
+  const latestToken = signInTokens.reduce((latestSoFar, currentToken) => {
+    if (!latestSoFar) {
+      return currentToken;
+    }
+
+    return currentToken.expiry > latestSoFar.expiry ? currentToken : latestSoFar;
+  });
 
   // if any of the required fields are missing, return not found
   if (!latestToken?.hashHex || !latestToken?.saltHex || !latestToken?.expiry) {

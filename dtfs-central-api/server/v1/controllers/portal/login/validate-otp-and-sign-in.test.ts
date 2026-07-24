@@ -1,188 +1,194 @@
-import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AuditDetails, issueValid2FAJWT, USER_STATUS } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { ObjectId } from 'mongodb';
+import { AuditDetails, issueValid2FAJWT } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { validateOTPAndSignIn } from './validate-otp-and-sign-in';
-import { aPortalUser } from '../../../../../test-helpers';
+import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
 import { validateOtp } from '../../../../helpers/portal-2fa/validate-otp';
-import { PortalUsersRepo, getUserById } from '../../../../repositories/users-repo';
+import { getUserById, PortalUsersRepo } from '../../../../repositories/users-repo';
+import { aPortalUser } from '../../../../../test-helpers';
 
-jest.mock('../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count');
-jest.mock('../../../../repositories/users-repo');
-jest.mock('../../../../helpers/portal-2fa/generate-otp');
+jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  issueValid2FAJWT: jest.fn(),
+}));
+
+jest.mock('../../../../helpers/portal-2fa/is-user-blocked-or-disabled');
 jest.mock('../../../../helpers/portal-2fa/validate-otp');
-jest.mock('@ukef/dtfs2-common');
-jest.mock('@ukef/dtfs2-common/change-stream');
+jest.mock('../../../../repositories/users-repo');
 
-console.error = jest.fn();
+type MockResponse = Partial<Response> & {
+  status: jest.Mock;
+  send: jest.Mock;
+};
 
-const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
+const getMockResponse = (): MockResponse => {
+  const res: MockResponse = {
+    status: jest.fn(),
+    send: jest.fn(),
+  };
 
-const auditDetails = generateSystemAuditDetails();
+  res.status.mockReturnValue(res);
+  res.send.mockReturnValue(res);
 
-const user = { ...aPortalUser(), signInTokens: ['token'] };
+  return res;
+};
 
-const sessionIdentifier = 'sessionIdentifier';
-const tokenObject = { token: 'token' };
+const invokeController = async (body: Record<string, unknown>, res: MockResponse) => {
+  const req = { body } as Parameters<typeof validateOTPAndSignIn>[0];
 
-const mockUpdateLastLoginAndResetSignInData = jest.fn();
-const mockGetUserById = getUserById as jest.Mock;
-const mockValidateOtp = validateOtp as jest.Mock;
-const mockIssueValid2FAJWT = issueValid2FAJWT as jest.Mock;
-
-const { req, res } = httpMocks.createMocks({
-  body: { userId: 'userId', signInOTPCode: '123456', auditDetails },
-});
+  await validateOTPAndSignIn(req, res as Response);
+};
 
 describe('validateOTPAndSignIn', () => {
+  const userId = '507f1f77bcf86cd799439011';
+  const signInOTPCode = '123456';
+  const auditDetails: AuditDetails = generatePortalAuditDetails(userId);
+  const signedInUser = { ...aPortalUser(), _id: new ObjectId(userId), signInTokens: [{ hashHex: 'hash', saltHex: 'salt', expiry: Date.now() + 1000 }] };
+
+  let updateLastLoginAndResetSignInDataSpy: jest.SpyInstance;
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.spyOn(console, 'info').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    jest.spyOn(PortalUsersRepo, 'updateLastLoginAndResetSignInData').mockImplementation(mockUpdateLastLoginAndResetSignInData);
+    jest.mocked(getUserById).mockResolvedValue(signedInUser);
+    jest.mocked(isUserBlockedOrDisabled).mockReturnValue(false);
+    jest.mocked(validateOtp).mockReturnValue({ success: true, isValid: true, statusCode: HttpStatusCode.Ok });
+    jest.mocked(issueValid2FAJWT).mockReturnValue({ token: 'jwt-token', expires: '12h', sessionIdentifier: 'session-id' });
 
-    mockUpdateLastLoginAndResetSignInData.mockResolvedValue(undefined);
-    mockGetUserById.mockResolvedValue(user);
-    mockIssueValid2FAJWT.mockReturnValue({ sessionIdentifier, ...tokenObject });
-    mockValidateOtp.mockReturnValue({ success: true, isValid: true });
+    updateLastLoginAndResetSignInDataSpy = jest.spyOn(PortalUsersRepo, 'updateLastLoginAndResetSignInData').mockResolvedValue(undefined);
   });
 
-  describe('when user is missing', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+    jest.resetAllMocks();
+  });
+
+  describe('when getUserById rejects because the user does not exist', () => {
     beforeEach(() => {
-      mockGetUserById.mockResolvedValue(null);
+      jest.mocked(getUserById).mockRejectedValue(new Error(`Failed to find user with id ${userId}`));
     });
 
-    it(`should return ${HttpStatusCode.NotFound} and a message`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.InternalServerError} and the not found error message`, async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual({ message: 'User not found' });
-    });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
-    it('should call console.error', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to verify account sign in code - no account exists with the provided ID: %s', 'userId');
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: `Failed to find user with id ${userId}` });
     });
   });
 
-  describe('when the user is missing sign-in tokens', () => {
+  describe('when the user has no signInTokens', () => {
     beforeEach(() => {
-      mockGetUserById.mockResolvedValue({ ...user, signInTokens: [] });
+      jest.mocked(getUserById).mockResolvedValue({ ...signedInUser, signInTokens: [] });
     });
 
-    it(`should return ${HttpStatusCode.NotFound} and a message`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.NotFound}`, async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual({ message: 'User not found' });
-    });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
-    it('should call console.error', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to verify account sign in code - no account exists with the provided ID: %s', 'userId');
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
     });
   });
 
   describe('when the user is blocked or disabled', () => {
     beforeEach(() => {
-      mockGetUserById.mockResolvedValue({ ...user, 'user-status': USER_STATUS.BLOCKED, signInTokens: ['token'] });
+      jest.mocked(isUserBlockedOrDisabled).mockReturnValue(true);
     });
 
-    it(`should return ${HttpStatusCode.Forbidden} and a message`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.Forbidden}`, async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Forbidden);
-      expect(res._getData()).toEqual({ message: 'User is blocked or disabled' });
-    });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
-    it('should call console.error', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('User %s is blocked or disabled', user.email);
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Forbidden);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'User is blocked or disabled' });
     });
   });
 
-  describe('when the OTP is invalid', () => {
-    const otpResponse = { success: false, isValid: false, statusCode: HttpStatusCode.Unauthorized, message: 'Invalid OTP' };
+  describe('when validateOtp returns an unsuccessful result', () => {
+    it('should respond with Unauthorized when the OTP is expired', async () => {
+      jest.mocked(validateOtp).mockReturnValue({ success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
+      const res = getMockResponse();
 
-    beforeEach(() => {
-      mockValidateOtp.mockReturnValue(otpResponse);
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Unauthorized);
+      expect(res.send).toHaveBeenNthCalledWith(1, { success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
     });
 
-    it(`should return the status code and response from validateOtp`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it('should respond with Unauthorized when the OTP is invalid', async () => {
+      jest.mocked(validateOtp).mockReturnValue({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Unauthorized);
-      expect(res._getData()).toEqual(otpResponse);
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Unauthorized);
+      expect(res.send).toHaveBeenNthCalledWith(1, { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
     });
 
-    it('should call console.error', async () => {
-      await validateOTPAndSignIn(req, res);
+    it('should respond with NotFound when the OTP is not found', async () => {
+      jest.mocked(validateOtp).mockReturnValue({ success: false, notFound: true, statusCode: HttpStatusCode.NotFound });
+      const res = getMockResponse();
 
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to verify account sign in code for user %s', user.email);
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
+      expect(res.send).toHaveBeenNthCalledWith(1, { success: false, notFound: true, statusCode: HttpStatusCode.NotFound });
     });
   });
 
   describe('when the OTP is valid', () => {
-    it(`should return ${HttpStatusCode.Ok} with the user, token, and success flag`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it('should call issueValid2FAJWT and PortalUsersRepo.updateLastLoginAndResetSignInData', async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toEqual({ user, tokenObject, success: true });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(issueValid2FAJWT).toHaveBeenNthCalledWith(1, signedInUser);
+      expect(updateLastLoginAndResetSignInDataSpy).toHaveBeenNthCalledWith(1, { userId, sessionIdentifier: 'session-id', auditDetails });
     });
 
-    it('should call PortalUsersRepo.updateLastLoginAndResetSignInData with the correct params', async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.Ok} and the user/tokenObject/success flag`, async () => {
+      const res = getMockResponse();
 
-      expect(mockUpdateLastLoginAndResetSignInData).toHaveBeenCalledTimes(1);
-      expect(mockUpdateLastLoginAndResetSignInData).toHaveBeenCalledWith({ userId: 'userId', sessionIdentifier, auditDetails });
-    });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
-    it('should call issueValid2FAJWT with the user', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(mockIssueValid2FAJWT).toHaveBeenCalledTimes(1);
-      expect(mockIssueValid2FAJWT).toHaveBeenCalledWith(user);
-    });
-
-    it('should call validateOtp with the signInOTPCode and user', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(mockValidateOtp).toHaveBeenCalledTimes(1);
-      expect(mockValidateOtp).toHaveBeenCalledWith('123456', user);
-    });
-
-    it('should not call console.error', async () => {
-      await validateOTPAndSignIn(req, res);
-
-      expect(console.error).toHaveBeenCalledTimes(0);
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Ok);
+      expect(res.send).toHaveBeenNthCalledWith(1, { user: signedInUser, tokenObject: { token: 'jwt-token', expires: '12h' }, success: true });
     });
   });
 
-  describe('when there is an error', () => {
-    const errorMessage = 'Test error';
-    const error = new Error(errorMessage);
-
+  describe('when an unexpected Error is thrown', () => {
     beforeEach(() => {
-      mockGetUserById.mockRejectedValue(error);
+      jest.mocked(getUserById).mockRejectedValue(new Error('unexpected error'));
     });
 
-    it(`should return ${HttpStatusCode.InternalServerError} and a message`, async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.InternalServerError} and the error message`, async () => {
+      const res = getMockResponse();
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual({ message: errorMessage });
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
+    });
+  });
+
+  describe('when a non-Error is thrown', () => {
+    beforeEach(() => {
+      jest.mocked(getUserById).mockRejectedValue('not an error instance');
     });
 
-    it('should call console.error with the error', async () => {
-      await validateOTPAndSignIn(req, res);
+    it(`should respond with ${HttpStatusCode.InternalServerError} and a generic message`, async () => {
+      const res = getMockResponse();
 
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error validating OTP and signing in user %s: %o', 'userId', error);
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'An unexpected error occurred' });
     });
   });
 });

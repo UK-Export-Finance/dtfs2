@@ -1,6 +1,10 @@
 import { isSignInOtpInDate } from './is-sign-in-otp-in-date';
 
 describe('isSignInOtpInDate', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should return true if the OTP is still valid', () => {
     // Arrange
     const expiry = Date.now() + 1000; // OTP expires in 1 second
@@ -21,5 +25,17 @@ describe('isSignInOtpInDate', () => {
 
     // Assert
     expect(result).toEqual(false);
+  });
+
+  it('should return true when the expiry equals the current time (boundary)', () => {
+    // Arrange
+    const now = Date.now();
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+
+    // Act
+    const result = isSignInOtpInDate(now);
+
+    // Assert
+    expect(result).toEqual(true);
   });
 });
