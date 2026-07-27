@@ -1,5 +1,4 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
-import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import * as createFacilityModule from '../create-facility';
 import { ApimGiftFacilityCreationPayload } from '../types';
@@ -25,7 +24,6 @@ const baseParams = {
   deal: mockDeal,
   isBssEwcsDeal: mockIsBssEwcsDeal,
   isGefDeal: mockIsGefDeal,
-  creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
   facilityCategories: MOCK_FACILITY_CATEGORIES,
 };
 

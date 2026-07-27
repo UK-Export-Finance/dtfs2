@@ -38,7 +38,6 @@ describe('mapRiskDetails', () => {
 
   const params = {
     dealId: '123',
-    creditRiskRatings: ['AAA', 'AA+', 'AA'],
     facilityCategories: mockFacilityCategories,
     facilityType: '',
     exporterCreditRating: 'AAA',
@@ -83,7 +82,7 @@ describe('mapRiskDetails', () => {
         facilityType: params.facilityType,
         isGefDeal: params.isGefDeal,
       }),
-      facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
+      facilityCreditRating: mapFacilityCreditRating(params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
       ukefIndustryCode: mockUkefIndustryCode,
     };

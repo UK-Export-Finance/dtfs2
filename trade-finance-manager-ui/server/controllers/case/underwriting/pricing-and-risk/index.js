@@ -4,6 +4,7 @@ const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');
 const { userCanEditGeneral } = require('./helpers');
+const { mapSelectedCreditRating } = require('../../../../helpers/map-selected-credit-rating');
 const { mapOtherCreditRatings } = require('../../../../helpers/map-other-credit-ratings');
 
 const getUnderWritingPricingAndRisk = (deal, user) => ({
@@ -39,6 +40,8 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  // Map the selected credit rating to the appropriate variables for rendering the page
+  const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(deal?.tfm?.exporterCreditRating);
   const otherCreditRatings = await mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
 
   if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
@@ -53,7 +56,11 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
+    goodSelected,
+    acceptableSelected,
+    otherSelected,
     otherCreditRatings,
+    otherCreditRatingValue,
     label,
   });
 };
@@ -138,6 +145,9 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       }
     }
 
+    // Map the selected credit rating to the appropriate variables for rendering the page with validation errors
+    const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(submittedValue);
+
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
@@ -150,6 +160,10 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       user: req.session.user,
       validationErrors,
       otherCreditRatings,
+      goodSelected,
+      acceptableSelected,
+      otherSelected,
+      otherCreditRatingValue,
       label,
     });
   }

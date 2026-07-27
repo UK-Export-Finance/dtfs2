@@ -4,6 +4,7 @@ import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import { userCanEditGeneral } from './helpers';
 import { mapOtherCreditRatings } from '../../../../helpers/map-other-credit-ratings';
+import { mapSelectedCreditRating } from '../../../../helpers/map-selected-credit-rating';
 
 jest.mock('../../../../helpers/map-other-credit-ratings', () => ({
   mapOtherCreditRatings: jest.fn(),
@@ -79,6 +80,9 @@ describe('GET underwriting - pricing and risk edit', () => {
       };
 
       await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
+
+      const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(mockDeal?.tfm?.exporterCreditRating);
+
       expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'underwriting',
@@ -86,6 +90,10 @@ describe('GET underwriting - pricing and risk edit', () => {
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
+        goodSelected,
+        acceptableSelected,
+        otherSelected,
+        otherCreditRatingValue,
         otherCreditRatings,
         label,
       });
@@ -202,6 +210,8 @@ describe('POST underwriting - pricing and risk edit', () => {
           ],
         };
 
+        const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(req.body.exporterCreditRating);
+
         expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
@@ -214,6 +224,10 @@ describe('POST underwriting - pricing and risk edit', () => {
           user: session.user,
           validationErrors: expectedValidationErrors,
           otherCreditRatings,
+          goodSelected,
+          acceptableSelected,
+          otherSelected,
+          otherCreditRatingValue,
           label,
         });
 
@@ -252,6 +266,8 @@ describe('POST underwriting - pricing and risk edit', () => {
           ],
         };
 
+        const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(req.body.exporterCreditRating);
+
         expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
@@ -264,6 +280,10 @@ describe('POST underwriting - pricing and risk edit', () => {
           user: session.user,
           validationErrors: expectedValidationErrors,
           otherCreditRatings,
+          goodSelected,
+          acceptableSelected,
+          otherSelected,
+          otherCreditRatingValue,
           label,
         });
 

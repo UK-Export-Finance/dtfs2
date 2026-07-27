@@ -1,11 +1,8 @@
-import { CreditRiskRating } from '@ukef/dtfs2-common';
 import apiModule from '../../../../api';
-import { mapApimCreditRiskRatings } from '../../../../mappings/map-apim-credit-risk-ratings';
 import type { FacilityCategory } from '../../../../api-response-types';
 import { ApiTypes } from '../../../../mappings/apim-gift-payloads/types';
 
 type GetReferenceDataResult = {
-  creditRiskRatings: string[];
   facilityCategories: FacilityCategory[];
 };
 
@@ -28,17 +25,6 @@ type GetReferenceDataResult = {
 export const getReferenceData = async (isGefDeal: boolean): Promise<GetReferenceDataResult> => {
   const api = apiModule as ApiTypes;
 
-  let creditRiskRatingsResponse: CreditRiskRating[] = [];
-
-  try {
-    const response = await api.getCreditRiskRatings();
-
-    creditRiskRatingsResponse = Array.isArray(response) ? response : [];
-  } catch {
-    // Swallow errors and default creditRiskRatingsResponse to an empty array
-    creditRiskRatingsResponse = [];
-  }
-
   let facilityCategoriesResponse: FacilityCategory[] = [];
 
   if (isGefDeal) {
@@ -52,10 +38,7 @@ export const getReferenceData = async (isGefDeal: boolean): Promise<GetReference
     }
   }
 
-  const creditRiskRatings = mapApimCreditRiskRatings(creditRiskRatingsResponse);
-
   return {
-    creditRiskRatings,
     facilityCategories: facilityCategoriesResponse,
   };
 };
