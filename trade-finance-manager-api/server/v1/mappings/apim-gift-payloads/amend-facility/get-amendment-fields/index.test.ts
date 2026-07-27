@@ -14,9 +14,7 @@ describe('getAmendmentFields', () => {
     // Arrange
     const amendment: TfmFacilityAmendmentData = {
       ...mockBaseAmendment,
-      tfm: {
-        coverEndDate: 1706745600000,
-      },
+      coverEndDate: 1706745600000,
     };
 
     // Act
@@ -26,7 +24,7 @@ describe('getAmendmentFields', () => {
     const expected = {
       newAmount: amendment.value,
       previousAmount: amendment.currentValue,
-      coverEndDate: getFormattedDateStringInTimeZone(Number(amendment?.tfm?.coverEndDate), TIMEZONE.DEFAULT),
+      coverEndDate: getFormattedDateStringInTimeZone(Number(amendment.coverEndDate), TIMEZONE.DEFAULT),
       effectiveDate: getFormattedUTCDateString(Number(amendment.effectiveDate)),
     };
 
@@ -37,9 +35,7 @@ describe('getAmendmentFields', () => {
     // Arrange
     const amendment: TfmFacilityAmendmentData = {
       ...mockBaseAmendment,
-      tfm: {
-        coverEndDate: new Date('2028-06-21T00:00:00+01:00').getTime(),
-      },
+      coverEndDate: new Date('2028-06-21T00:00:00+01:00').getTime(),
     };
 
     // Act
@@ -51,13 +47,10 @@ describe('getAmendmentFields', () => {
     expect(result.coverEndDate).toEqual(expected);
   });
 
-  describe('when tfm.coverEndDate is not provided', () => {
+  describe('when coverEndDate is not provided', () => {
     it('should return coverEndDate as an empty string', () => {
       // Arrange
-      const amendment: TfmFacilityAmendmentData = {
-        ...mockBaseAmendment,
-        tfm: {},
-      };
+      const amendment: TfmFacilityAmendmentData = mockBaseAmendment;
 
       // Act
       const result = getAmendmentFields(amendment);
@@ -164,9 +157,7 @@ describe('getAmendmentFields', () => {
       // Arrange
       const amendment: TfmFacilityAmendmentData = {
         ...mockBaseAmendment,
-        tfm: {
-          coverEndDate: null as unknown as number,
-        },
+        coverEndDate: null,
       };
 
       // Act
