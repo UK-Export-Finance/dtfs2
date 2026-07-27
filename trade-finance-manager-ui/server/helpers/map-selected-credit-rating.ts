@@ -9,12 +9,12 @@
  * @returns an object with the corresponding radios or other credit rating value
  */
 export const mapSelectedCreditRating = (selectedValue: string) => {
-  const goodSelected = selectedValue === 'Good (BB-)' || selectedValue === 'BB-';
-  const acceptableSelected = selectedValue === 'Acceptable (B+)' || selectedValue === 'B+';
-  const otherSelected = selectedValue && !goodSelected && !acceptableSelected;
+  const goodSelected = Boolean(selectedValue === 'Good (BB-)' || selectedValue === 'BB-');
+  const acceptableSelected = Boolean(selectedValue === 'Acceptable (B+)' || selectedValue === 'B+');
+  const otherSelected = Boolean(selectedValue && !goodSelected && !acceptableSelected);
   let otherCreditRatingValue = '';
 
-  if (otherSelected) {
+  if (otherSelected && selectedValue) {
     otherCreditRatingValue = selectedValue;
   }
 

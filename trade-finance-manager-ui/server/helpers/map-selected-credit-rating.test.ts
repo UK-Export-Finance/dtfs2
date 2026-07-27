@@ -75,4 +75,19 @@ describe('mapSelectedCreditRating', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('when the selected value is null, undefined, or empty string', () => {
+    it.each([null, undefined, ''])('should return correct mapping for %s', (selectedValue) => {
+      const result = mapSelectedCreditRating(selectedValue as string);
+
+      const expected = {
+        goodSelected: false,
+        acceptableSelected: false,
+        otherSelected: false,
+        otherCreditRatingValue: '',
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
 });

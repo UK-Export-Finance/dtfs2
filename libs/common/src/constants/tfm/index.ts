@@ -8,4 +8,3 @@ export * from './comment-type';
 export * from './underwriter-manager-decisions';
 export * from './user-status';
 export * from './sso';
-export * from './credit-ratings';
