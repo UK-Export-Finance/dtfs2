@@ -1,9 +1,10 @@
+import { EXPORTER_CREDIT_RATING_FULL, EXPORTER_CREDIT_RATING_SHORT } from '@ukef/dtfs2-common';
 import { mapSelectedCreditRating } from './map-selected-credit-rating';
 
 describe('mapSelectedCreditRating', () => {
-  describe('when the selected value is Good (BB-)', () => {
+  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_FULL.BB_MINUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating('Good (BB-)');
+      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_FULL.BB_MINUS);
 
       const expected = {
         goodSelected: true,
@@ -16,9 +17,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe('when the selected value is BB-', () => {
+  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_SHORT.BB_MINUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating('BB-');
+      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_SHORT.BB_MINUS);
 
       const expected = {
         goodSelected: true,
@@ -31,9 +32,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe('when the selected value is Acceptable (B+)', () => {
+  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_FULL.B_PLUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating('Acceptable (B+)');
+      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_FULL.B_PLUS);
 
       const expected = {
         goodSelected: false,
@@ -46,9 +47,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe('when the selected value is B+', () => {
+  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_SHORT.B_PLUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating('B+');
+      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_SHORT.B_PLUS);
 
       const expected = {
         goodSelected: false,

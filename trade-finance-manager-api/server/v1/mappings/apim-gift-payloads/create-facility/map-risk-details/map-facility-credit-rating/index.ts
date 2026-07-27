@@ -1,4 +1,4 @@
-import { TFM_CREDIT_RATING_MAP } from '../../../constants';
+import { TFM_CREDIT_RATING_MAP } from '@ukef/dtfs2-common';
 
 /**
  * Map the facility credit rating based on TFM's exporter credit rating.

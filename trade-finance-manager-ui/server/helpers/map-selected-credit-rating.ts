@@ -1,3 +1,5 @@
+import { EXPORTER_CREDIT_RATING_FULL, EXPORTER_CREDIT_RATING_SHORT } from '@ukef/dtfs2-common';
+
 /**
  * maps the selected credit rating value to the corresponding radios or other credit rating value
  * some credit ratings are saved as "Good (BB-)" or "Acceptable (B+)" in TFM but newer ones are saved as "BB-" or "B+"
@@ -9,8 +11,8 @@
  * @returns an object with the corresponding radios or other credit rating value
  */
 export const mapSelectedCreditRating = (selectedValue: string) => {
-  const goodSelected = Boolean(selectedValue === 'Good (BB-)' || selectedValue === 'BB-');
-  const acceptableSelected = Boolean(selectedValue === 'Acceptable (B+)' || selectedValue === 'B+');
+  const goodSelected = Boolean(selectedValue === EXPORTER_CREDIT_RATING_FULL.BB_MINUS || selectedValue === EXPORTER_CREDIT_RATING_SHORT.BB_MINUS);
+  const acceptableSelected = Boolean(selectedValue === EXPORTER_CREDIT_RATING_FULL.B_PLUS || selectedValue === EXPORTER_CREDIT_RATING_SHORT.B_PLUS);
   const otherSelected = Boolean(selectedValue && !goodSelected && !acceptableSelected);
   let otherCreditRatingValue = '';
 
