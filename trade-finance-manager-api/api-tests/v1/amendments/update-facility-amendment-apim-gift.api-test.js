@@ -49,9 +49,8 @@ describe('PUT /v1/facilities/:facilityId/amendments/:amendmentId - APIM GIFT int
     status: TFM_AMENDMENT_STATUS.COMPLETED,
     changeFacilityValue: false,
     changeCoverEndDate: true,
-    tfm: {
-      coverEndDate: 1711929600000,
-    },
+    coverEndDate: 1711929600000,
+    tfm: {},
   };
 
   const tfmDeal = {

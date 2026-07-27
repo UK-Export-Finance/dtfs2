@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
@@ -930,17 +931,22 @@ describe('addLatestAmendmentValue()', () => {
   };
 
   it('should return empty object when no latestValue', async () => {
+    // Act
     const response = await addLatestAmendmentValue({}, {}, '1234');
 
+    // Assert
     expect(response).toEqual({});
   });
 
   it('should return object with null for exposure when no API responses', async () => {
+    // Arrange
     api.getAmendmentById = () => Promise.resolve({});
     api.findOneFacility = () => Promise.resolve({});
 
+    // Act
     const response = await addLatestAmendmentValue({}, valueResponse, '1234');
 
+    // Assert
     const expected = {
       exposure: null,
       value: {
@@ -948,15 +954,19 @@ describe('addLatestAmendmentValue()', () => {
         value: 5000,
       },
     };
+
     expect(response).toEqual(expected);
   });
 
   it('should return fully populated object with null when API responses and all correct parameters', async () => {
+    // Arrange
     api.getAmendmentById = () => Promise.resolve(mockAmendment);
     api.findOneFacility = () => Promise.resolve(mockFacility);
 
+    // Act
     const response = await addLatestAmendmentValue({}, valueResponse, '1234');
 
+    // Assert
     const expected = {
       exposure: {
         exposure: '600.00',
@@ -968,6 +978,7 @@ describe('addLatestAmendmentValue()', () => {
         value: 5000,
       },
     };
+
     expect(response).toEqual(expected);
   });
 });
@@ -978,12 +989,16 @@ describe('addLatestAmendmentValue()', () => {
  * test cases.
  */
 describe('internalAmendmentEmail()', () => {
-  it('Should expect 400 on a bad request', async () => {
+  it(`should expect ${HttpStatusCode.BadRequest} on a bad request`, async () => {
+    // Arrange
     const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_BAD_RESPONSE));
     api.sendEmail = sendEmailApiSpyBadResponse;
 
+    // Act
     const response = await internalAmendmentEmail('1234567890');
-    expect(response.response.status).toEqual(400);
+
+    // Assert
+    expect(response.response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
@@ -993,19 +1008,27 @@ describe('internalAmendmentEmail()', () => {
     api.sendEmail = sendEmailApiSpy;
   });
 
-  it('Should return false void UKEF Facility ID', async () => {
+  it('should return false for empty UKEF Facility ID', async () => {
+    // Act
     const response = await internalAmendmentEmail('');
+
+    // Assert
     expect(response).toEqual(false);
   });
 
-  it('Should return expect object on a correct UKEF Facility ID', async () => {
+  it('should return an object for a valid UKEF Facility ID', async () => {
+    // Act
     const response = await internalAmendmentEmail('1234567890');
+
+    // Assert
     expect(response).toEqual(expect.any(Object));
   });
 
-  it('Should call the expected function with expected arguments set', async () => {
+  it('should call the expected function with expected arguments set', async () => {
+    // Act
     await internalAmendmentEmail('1234567890');
 
+    // Assert
     expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION, process.env.UKEF_INTERNAL_NOTIFICATION, {
       ukefFacilityId: '1234567890',
     });
