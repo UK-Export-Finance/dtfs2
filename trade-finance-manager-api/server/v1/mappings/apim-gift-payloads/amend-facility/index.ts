@@ -10,16 +10,19 @@ const {
 
 /**
  * Builds an array of APIM/GIFT amendment payloads from TFM amendment data.
- * A single amendment can produce up to two payloads: one for an amount change and one for a cover end date change.
+ * A single amendment can produce up to two payloads: one for an "amount" change and one for a "expiry date" change.
  * @param {TfmFacilityAmendmentData} amendment - The facility amendment data from TFM.
  * @returns {ApimGiftFacilityAmendmentPayload[]} Array of APIM/GIFT payloads. Empty if no valid payload can be produced.
  */
 export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFacilityAmendmentPayload[] => {
-  const { previousAmount, newAmount, coverEndDate, effectiveDate } = getAmendmentFields(amendment);
+  const { previousAmount, newAmount, coverEndDate, effectiveDate, coveredPercentage } = getAmendmentFields(amendment);
 
   const { changeFacilityValue, changeCoverEndDate } = amendment;
 
   const amountDifference = getAmountDifference(previousAmount, newAmount);
+
+  // calculate newAmount adjusted by the covered percentage
+  const amount = coveredPercentage !== null ? amountDifference * (coveredPercentage / 100) : null;
 
   const payloads: ApimGiftFacilityAmendmentPayload[] = [];
 
@@ -33,7 +36,7 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
       const payload = {
         amendmentType: amountAmendmentType,
         amendmentData: {
-          amount: amountDifference,
+          amount,
           date: effectiveDate,
         },
       };

@@ -31,7 +31,7 @@ describe('amendFacility', () => {
       {
         amendmentType: INCREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -57,7 +57,7 @@ describe('amendFacility', () => {
       {
         amendmentType: DECREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -106,7 +106,7 @@ describe('amendFacility', () => {
       {
         amendmentType: INCREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -119,6 +119,64 @@ describe('amendFacility', () => {
     ];
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when coveredPercentage is not provided', () => {
+    it(`should adjust the amount difference`, () => {
+      // Arrange
+      const mockAmendment = {
+        ...mockAmendmentBase,
+        value: 150,
+        coveredPercentage: 80,
+        changeFacilityValue: true,
+        changeCoverEndDate: false,
+      };
+
+      // Act
+      const result = amendFacility(mockAmendment);
+
+      // Assert
+      const expected = [
+        {
+          amendmentType: INCREASE_AMOUNT,
+          amendmentData: {
+            amount: 40,
+            date: '2024-01-01',
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when coveredPercentage is null', () => {
+    it(`should return null amount`, () => {
+      // Arrange
+      const mockAmendment = {
+        ...mockAmendmentBase,
+        value: 150,
+        coveredPercentage: null,
+        changeFacilityValue: true,
+        changeCoverEndDate: false,
+      };
+
+      // Act
+      const result = amendFacility(mockAmendment);
+
+      // Assert
+      const expected = [
+        {
+          amendmentType: INCREASE_AMOUNT,
+          amendmentData: {
+            amount: null,
+            date: '2024-01-01',
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('when the amendment cannot be mapped to any valid APIM GIFT amendment type', () => {

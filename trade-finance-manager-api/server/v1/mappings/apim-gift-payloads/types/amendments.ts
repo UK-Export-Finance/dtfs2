@@ -12,6 +12,8 @@ export type TfmFacilityAmendmentData = {
   currentValue?: number | null;
   effectiveDate?: number;
   coverEndDate?: number | null;
+  coveredPercentage?: number | null;
+  previousCoveredPercentage?: number | null;
   ukefDecision?: {
     value?: string;
     coverEndDate?: string;
@@ -22,7 +24,7 @@ export type TfmFacilityAmendmentData = {
 };
 
 export type AmendmentAmountDataParams = {
-  amount: number;
+  amount: number | null;
   date: string;
 };
 
