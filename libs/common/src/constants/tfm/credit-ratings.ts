@@ -7,12 +7,12 @@ export const TFM_CREDIT_RATING_MAP = {
   'Acceptable (B+)': 'B+',
 };
 
-export const EXPORTER_CREDIT_RATING_FULL = {
+export const CREDIT_RATING_TFM = {
   B_PLUS: 'Acceptable (B+)',
   BB_MINUS: 'Good (BB-)',
 };
 
-export const EXPORTER_CREDIT_RATING_SHORT = {
+export const CREDIT_RATING = {
   B_PLUS: 'B+',
   BB_MINUS: 'BB-',
 };

@@ -42,7 +42,9 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
 
   // Map the selected credit rating to the appropriate variables for rendering the page
   const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(deal?.tfm?.exporterCreditRating);
-  const otherCreditRatings = await mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
+
+  // Only pass the saved rating to pre-select it if "Other" is actually selected; otherwise pass undefined so no option is marked selected
+  const otherCreditRatings = await mapOtherCreditRatings(otherCreditRatingValue);
 
   if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
     console.error('getUnderWritingPricingAndRiskEdit - No credit ratings returned from the API.');
@@ -82,14 +84,6 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  let submittedValue;
-
-  if (hasValue(req.body.exporterCreditRatingOther)) {
-    submittedValue = req.body.exporterCreditRatingOther;
-  } else {
-    submittedValue = req.body.exporterCreditRating;
-  }
-
   let validationErrors;
 
   const otherCreditRatings = await mapOtherCreditRatings();
@@ -101,6 +95,9 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   const selectedOther = req.body.exporterCreditRating === 'Other';
   const otherValue = hasValue(req.body.exporterCreditRatingOther);
+
+  // Only set the submitted value to the other value if the user has selected "Other" and provided a value for it
+  const submittedValue = selectedOther && otherValue ? req.body.exporterCreditRatingOther : req.body.exporterCreditRating;
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 

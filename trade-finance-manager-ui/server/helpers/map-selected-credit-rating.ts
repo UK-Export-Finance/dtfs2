@@ -1,4 +1,4 @@
-import { EXPORTER_CREDIT_RATING_FULL, EXPORTER_CREDIT_RATING_SHORT } from '@ukef/dtfs2-common';
+import { CREDIT_RATING_TFM, CREDIT_RATING } from '@ukef/dtfs2-common';
 
 /**
  * maps the selected credit rating value to the corresponding radios or other credit rating value
@@ -11,9 +11,10 @@ import { EXPORTER_CREDIT_RATING_FULL, EXPORTER_CREDIT_RATING_SHORT } from '@ukef
  * @returns an object with the corresponding radios or other credit rating value
  */
 export const mapSelectedCreditRating = (selectedValue: string) => {
-  const goodSelected = Boolean(selectedValue === EXPORTER_CREDIT_RATING_FULL.BB_MINUS || selectedValue === EXPORTER_CREDIT_RATING_SHORT.BB_MINUS);
-  const acceptableSelected = Boolean(selectedValue === EXPORTER_CREDIT_RATING_FULL.B_PLUS || selectedValue === EXPORTER_CREDIT_RATING_SHORT.B_PLUS);
+  const goodSelected = Boolean(selectedValue === CREDIT_RATING_TFM.BB_MINUS || selectedValue === CREDIT_RATING.BB_MINUS);
+  const acceptableSelected = Boolean(selectedValue === CREDIT_RATING_TFM.B_PLUS || selectedValue === CREDIT_RATING.B_PLUS);
   const otherSelected = Boolean(selectedValue && !goodSelected && !acceptableSelected);
+
   let otherCreditRatingValue = '';
 
   if (otherSelected && selectedValue) {

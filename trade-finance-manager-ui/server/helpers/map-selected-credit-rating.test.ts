@@ -1,10 +1,10 @@
-import { EXPORTER_CREDIT_RATING_FULL, EXPORTER_CREDIT_RATING_SHORT } from '@ukef/dtfs2-common';
+import { CREDIT_RATING_TFM, CREDIT_RATING } from '@ukef/dtfs2-common';
 import { mapSelectedCreditRating } from './map-selected-credit-rating';
 
 describe('mapSelectedCreditRating', () => {
-  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_FULL.BB_MINUS}`, () => {
+  describe(`when the selected value is ${CREDIT_RATING_TFM.BB_MINUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_FULL.BB_MINUS);
+      const result = mapSelectedCreditRating(CREDIT_RATING_TFM.BB_MINUS);
 
       const expected = {
         goodSelected: true,
@@ -17,9 +17,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_SHORT.BB_MINUS}`, () => {
+  describe(`when the selected value is ${CREDIT_RATING.BB_MINUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_SHORT.BB_MINUS);
+      const result = mapSelectedCreditRating(CREDIT_RATING.BB_MINUS);
 
       const expected = {
         goodSelected: true,
@@ -32,9 +32,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_FULL.B_PLUS}`, () => {
+  describe(`when the selected value is ${CREDIT_RATING_TFM.B_PLUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_FULL.B_PLUS);
+      const result = mapSelectedCreditRating(CREDIT_RATING_TFM.B_PLUS);
 
       const expected = {
         goodSelected: false,
@@ -47,9 +47,9 @@ describe('mapSelectedCreditRating', () => {
     });
   });
 
-  describe(`when the selected value is ${EXPORTER_CREDIT_RATING_SHORT.B_PLUS}`, () => {
+  describe(`when the selected value is ${CREDIT_RATING.B_PLUS}`, () => {
     it('should return correct mapping', () => {
-      const result = mapSelectedCreditRating(EXPORTER_CREDIT_RATING_SHORT.B_PLUS);
+      const result = mapSelectedCreditRating(CREDIT_RATING.B_PLUS);
 
       const expected = {
         goodSelected: false,

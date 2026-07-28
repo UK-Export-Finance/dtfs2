@@ -98,7 +98,8 @@ describe('GET underwriting - pricing and risk edit', () => {
         label,
       });
 
-      expect(mapOtherCreditRatings).toHaveBeenCalledWith(mockDeal?.tfm?.exporterCreditRating);
+      // Should pass otherCreditRatingValue (empty string if not Other, or the value if Other is selected)
+      expect(mapOtherCreditRatings).toHaveBeenCalledWith(otherCreditRatingValue);
     });
 
     it('should render problem-with-service when credit ratings are not available', async () => {
