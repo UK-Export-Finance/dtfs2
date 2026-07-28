@@ -23,6 +23,12 @@ export type TfmFacilityAmendmentData = {
   };
 };
 
+export type MapAmountParams = {
+  coveredPercentage?: number | null;
+  newAmount: number;
+  previousAmount: number;
+};
+
 export type AmendmentAmountDataParams = {
   amount: number | null;
   date: string;

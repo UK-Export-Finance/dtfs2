@@ -1,5 +1,5 @@
 import { APIM_GIFT_INTEGRATION } from '../constants';
-import { ApimGiftFacilityAmendmentPayload, TfmFacilityAmendmentData } from '../types';
+import { ApimGiftFacilityAmendmentPayload, MapAmountParams, TfmFacilityAmendmentData } from '../types';
 import { getAmountAmendmentType } from './get-amount-amendment-type';
 import { getAmendmentFields } from './get-amendment-fields';
 import { getAmountDifference } from './get-amount-difference';
@@ -7,6 +7,23 @@ import { getAmountDifference } from './get-amount-difference';
 const {
   AMENDMENT_TYPE: { REPLACE_EXPIRY_DATE },
 } = APIM_GIFT_INTEGRATION;
+
+/**
+ * Map an amendment amount to the amount adjusted by the covered percentage.
+ * @param {MapAmountParams} params - The parameters for mapping the amount.
+ * @param {number | null} params.coveredPercentage - The covered percentage to adjust the amount by.
+ * @param {number} params.newAmount - The new amount after the amendment.
+ * @param {number} params.previousAmount - The previous amount before the amendment.
+ * @returns The calculated amount adjusted by the covered percentage.
+ */
+export const mapAmount = ({ coveredPercentage, newAmount, previousAmount }: MapAmountParams) => {
+  const amountDifference = getAmountDifference(previousAmount, newAmount);
+
+  // calculate newAmount adjusted by the covered percentage
+  const amount = coveredPercentage ? amountDifference * (coveredPercentage / 100) : null;
+
+  return amount;
+};
 
 /**
  * Builds an array of APIM/GIFT amendment payloads from TFM amendment data.
@@ -19,10 +36,7 @@ export const amendFacility = (amendment: TfmFacilityAmendmentData): ApimGiftFaci
 
   const { changeFacilityValue, changeCoverEndDate } = amendment;
 
-  const amountDifference = getAmountDifference(previousAmount, newAmount);
-
-  // calculate newAmount adjusted by the covered percentage
-  const amount = coveredPercentage !== null ? amountDifference * (coveredPercentage / 100) : null;
+  const amount = mapAmount({ coveredPercentage, newAmount, previousAmount });
 
   const payloads: ApimGiftFacilityAmendmentPayload[] = [];
 
