@@ -28,7 +28,7 @@ export const submitFacilityAmendmentsToApimGift = async ({
 
   const responses: number[] = [];
 
-  console.info('Sending facility %s amendment(s) to APIM GIFT', ukefFacilityId);
+  console.info('Sending facility %s amendment(s) to APIM GIFT %o', ukefFacilityId, amendmentPayloads);
 
   /**
    * NOTE: We need to use a for loop instead of Promise.all, to ensure that the calls are sequential.
