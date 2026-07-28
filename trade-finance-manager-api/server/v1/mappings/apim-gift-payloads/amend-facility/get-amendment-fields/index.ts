@@ -15,6 +15,7 @@ type AmendmentFields = {
  */
 export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): AmendmentFields => {
   const newAmount = typeof amendment.value === 'number' ? amendment.value : Number.NaN;
+
   const previousAmount = typeof amendment.currentValue === 'number' ? amendment.currentValue : Number.NaN;
 
   const hasCoverEndDate = amendment?.coverEndDate !== undefined && amendment.coverEndDate !== null;
