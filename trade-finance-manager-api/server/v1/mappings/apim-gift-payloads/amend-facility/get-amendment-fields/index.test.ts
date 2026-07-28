@@ -140,10 +140,10 @@ describe('getAmendmentFields', () => {
   describe('when effectiveDate is null', () => {
     it('should return effectiveDate as an empty string', () => {
       // Arrange
-      const amendment: TfmFacilityAmendmentData = {
+      const amendment = {
         ...mockBaseAmendment,
-        effectiveDate: null as unknown as number,
-      };
+        effectiveDate: null,
+      } as unknown as TfmFacilityAmendmentData;
 
       // Act
       const result = getAmendmentFields(amendment);
