@@ -329,7 +329,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
     const payload = {
       status: TFM_AMENDMENT_STATUS.COMPLETED,
       submittedByPim: true,
-      effectiveDate: amendment.bankDecision.effectiveDate,
+      effectiveDate: amendment.bankDecision?.effectiveDate,
       bankDecision: {
         submitted: true,
         banksDecisionEmail: true,
