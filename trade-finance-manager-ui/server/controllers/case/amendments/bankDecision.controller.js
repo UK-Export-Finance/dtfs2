@@ -331,6 +331,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
       submittedByPim: true,
       effectiveDate: amendment.bankDecision?.effectiveDate,
       bankDecision: {
+        decision: amendment.bankDecision?.decision,
         submitted: true,
         banksDecisionEmail: true,
         submittedAt: getUnixTime(new Date()),
