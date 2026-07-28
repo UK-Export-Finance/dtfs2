@@ -328,6 +328,8 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
     // updates amendment with status to completed and submitted flag as true on bank decision
     const payload = {
       status: TFM_AMENDMENT_STATUS.COMPLETED,
+      submittedByPim: true,
+      effectiveDate: amendment.bankDecision.effectiveDate,
       bankDecision: {
         submitted: true,
         banksDecisionEmail: true,
