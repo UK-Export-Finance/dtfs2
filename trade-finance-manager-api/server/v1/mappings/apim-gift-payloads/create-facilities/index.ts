@@ -8,7 +8,6 @@ type CreateFacilitiesParams = {
   facilities: TfmFacility[];
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
-  creditRiskRatings: string[];
   facilityCategories: FacilityCategory[];
 };
 
@@ -23,7 +22,6 @@ export const createFacilities = async ({
   facilities,
   isBssEwcsDeal,
   isGefDeal,
-  creditRiskRatings,
   facilityCategories,
 }: CreateFacilitiesParams): Promise<ApimGiftFacilityCreationPayload[]> => {
   const payloads = await Promise.all(
@@ -33,7 +31,6 @@ export const createFacilities = async ({
         facility,
         isBssEwcsDeal,
         isGefDeal,
-        creditRiskRatings,
         facilityCategories,
       }),
     ),

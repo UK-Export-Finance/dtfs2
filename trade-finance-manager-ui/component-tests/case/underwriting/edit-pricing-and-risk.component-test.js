@@ -21,11 +21,11 @@ describe(page, () => {
 
   describe('radio buttons', () => {
     it('should render `Good` radio button', () => {
-      wrapper.expectInput('[data-cy="credit-rating-good"]').toHaveValue('Good (BB-)');
+      wrapper.expectInput('[data-cy="credit-rating-good"]').toHaveValue('BB-');
     });
 
     it('should render `Acceptable (B+)` radio button', () => {
-      wrapper.expectInput('[data-cy="credit-rating-acceptable"]').toHaveValue('Acceptable (B+)');
+      wrapper.expectInput('[data-cy="credit-rating-acceptable"]').toHaveValue('B+');
     });
 
     it('should render `Other` radio button', () => {

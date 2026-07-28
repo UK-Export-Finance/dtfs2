@@ -33,7 +33,7 @@ export const sendFacilitiesToApimGift = async ({
 
   const api = apiModule as ApiTypes;
 
-  const { facilityCategories, creditRiskRatings } = await getReferenceData(isGefDeal);
+  const { facilityCategories } = await getReferenceData(isGefDeal);
 
   if (facilities.length === 1) {
     const payload = await APIM_GIFT_PAYLOADS.createFacility({
@@ -42,7 +42,6 @@ export const sendFacilitiesToApimGift = async ({
       isBssEwcsDeal,
       isGefDeal,
       facilityCategories,
-      creditRiskRatings,
     });
 
     const response = await api.createGiftFacility(payload);
@@ -56,7 +55,6 @@ export const sendFacilitiesToApimGift = async ({
     isBssEwcsDeal,
     isGefDeal,
     facilityCategories,
-    creditRiskRatings,
   });
 
   const responses: Array<TfmFacility | false> = [];

@@ -17,7 +17,6 @@ export type FacilityCreationParams = {
   facility: TfmFacility;
   isBssEwcsDeal: boolean;
   isGefDeal: boolean;
-  creditRiskRatings: string[];
   facilityCategories: FacilityCategory[];
 };
 
@@ -28,7 +27,6 @@ export type FacilityCreationParams = {
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
- * @param {string[]} params.creditRiskRatings - An array of credit risk rating descriptions from APIM, required for mapping the facility credit risk rating to the format expected by APIM.
  * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
@@ -37,7 +35,6 @@ export const createFacility = async ({
   facility,
   isBssEwcsDeal,
   isGefDeal,
-  creditRiskRatings,
   facilityCategories,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
@@ -130,7 +127,6 @@ export const createFacility = async ({
       ukefExposure: facilityAmount,
     }),
     riskDetails: await mapRiskDetails({
-      creditRiskRatings,
       dealId,
       exporterCreditRating,
       facilityCategories,

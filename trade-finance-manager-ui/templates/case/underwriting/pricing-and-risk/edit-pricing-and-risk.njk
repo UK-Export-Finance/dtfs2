@@ -35,12 +35,9 @@
               <input type="hidden" name="_csrf" value="{{ csrfToken }}">
               {% set legendText = 'Add a credit rating for ' + deal.submissionDetails.supplierName %}
 
-              {% set exporterCreditRatingOtherChecked = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' %}
-              {% set exporterCreditRatingOtherTextInputValue = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' and tfm.exporterCreditRating %}
-
               {% set exporterCreditRatingOtherComponentData = {
                 errorMessage: validationErrors.errorList.exporterCreditRatingOther.text,
-                value: exporterCreditRatingOtherTextInputValue,
+                value: otherCreditRatingValue,
                 fieldId: 'exporterCreditRatingOther',
                 inputContainerClasses: 'govuk-input--width-20',
                 options: otherCreditRatings,
@@ -58,17 +55,17 @@
                   name: "exporterCreditRating",
                   items: [
                     {
-                      value: "Good (BB-)",
+                      value: "BB-",
                       text: "Good (BB-)",
-                      checked: tfm.exporterCreditRating === 'Good (BB-)',
+                      checked: goodSelected,
                       attributes: {
                         'data-cy': 'credit-rating-good'
                       }
                     },
                     {
-                      value: "Acceptable (B+)",
+                      value: "B+",
                       text: "Acceptable (B+)",
-                      checked: tfm.exporterCreditRating === 'Acceptable (B+)',
+                      checked: acceptableSelected,
                       attributes: {
                         'data-cy': 'credit-rating-acceptable'
                       }
@@ -76,7 +73,7 @@
                     {
                       value: "Other",
                       text: "Other",
-                      checked: exporterCreditRatingOtherChecked,
+                      checked: otherSelected,
                       attributes: {
                         'data-cy': 'credit-rating-other'
                       },

@@ -4,6 +4,7 @@ const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');
 const { userCanEditGeneral } = require('./helpers');
+const { mapSelectedCreditRating } = require('../../../../helpers/map-selected-credit-rating');
 const { mapOtherCreditRatings } = require('../../../../helpers/map-other-credit-ratings');
 
 const getUnderWritingPricingAndRisk = (deal, user) => ({
@@ -39,7 +40,11 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const otherCreditRatings = await mapOtherCreditRatings(deal?.tfm?.exporterCreditRating);
+  // Map the selected credit rating to the appropriate variables for rendering the page
+  const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(deal?.tfm?.exporterCreditRating);
+
+  // Only pass the saved rating to pre-select it if "Other" is actually selected; otherwise pass undefined so no option is marked selected
+  const otherCreditRatings = await mapOtherCreditRatings(otherCreditRatingValue);
 
   if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
     console.error('getUnderWritingPricingAndRiskEdit - No credit ratings returned from the API.');
@@ -53,7 +58,11 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
+    goodSelected,
+    acceptableSelected,
+    otherSelected,
     otherCreditRatings,
+    otherCreditRatingValue,
     label,
   });
 };
@@ -75,14 +84,6 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  let submittedValue;
-
-  if (hasValue(req.body.exporterCreditRatingOther)) {
-    submittedValue = req.body.exporterCreditRatingOther;
-  } else {
-    submittedValue = req.body.exporterCreditRating;
-  }
-
   let validationErrors;
 
   const otherCreditRatings = await mapOtherCreditRatings();
@@ -94,6 +95,9 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   const selectedOther = req.body.exporterCreditRating === 'Other';
   const otherValue = hasValue(req.body.exporterCreditRatingOther);
+
+  // Only set the submitted value to the other value if the user has selected "Other" and provided a value for it
+  const submittedValue = selectedOther && otherValue ? req.body.exporterCreditRatingOther : req.body.exporterCreditRating;
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 
@@ -138,6 +142,9 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       }
     }
 
+    // Map the selected credit rating to the appropriate variables for rendering the page with validation errors
+    const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(submittedValue);
+
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
@@ -150,6 +157,10 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       user: req.session.user,
       validationErrors,
       otherCreditRatings,
+      goodSelected,
+      acceptableSelected,
+      otherSelected,
+      otherCreditRatingValue,
       label,
     });
   }
