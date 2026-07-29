@@ -20,15 +20,18 @@ export const validateOTPAndSignIn = async (
   res: Response,
 ) => {
   try {
-    console.info('Validating OTP and signing in user %s', req.body.userId);
-
     const { userId, signInOTPCode, auditDetails } = req.body;
+
+    // Strip newline and punctuation characters from the logged user ID to prevent log injection.
+    const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+    console.info('Validating OTP and signing in user %s', sanitisedUserId);
 
     const user = await getUserById(userId);
 
     // If no user or no sign-in tokens are found, return 404 Not Found
     if (!user || !user?.signInTokens?.length) {
-      console.error('Unable to verify account sign in code - no account exists with the provided ID: %s', userId);
+      console.error('Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
 
       return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
     }
@@ -63,7 +66,9 @@ export const validateOTPAndSignIn = async (
     console.error('Unable to verify account sign in code for user %s', user.email);
     return res.status(otpResponse.statusCode).send(otpResponse);
   } catch (error) {
-    console.error('Error validating OTP and signing in user %s: %o', req.body.userId, error);
+    const sanitisedUserId = req.body.userId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+    console.error('Error validating OTP and signing in user %s: %o', sanitisedUserId, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({ message: error instanceof Error ? error.message : 'An unexpected error occurred' });
   }

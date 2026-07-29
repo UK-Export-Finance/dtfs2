@@ -191,4 +191,19 @@ describe('validateOTPAndSignIn', () => {
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'An unexpected error occurred' });
     });
   });
+
+  describe('logging', () => {
+    it('should sanitise the logged userId', async () => {
+      const maliciousUserId = `${userId}\n\r!@#$%^&*()`;
+      const sanitisedUserId = maliciousUserId.replace(/[^a-zA-Z0-9_-]/g, '');
+      jest.mocked(getUserById).mockResolvedValue({ ...signedInUser, signInTokens: [] });
+
+      const res = getMockResponse();
+
+      await invokeController({ userId: maliciousUserId, signInOTPCode, auditDetails }, res);
+
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP and signing in user %s', sanitisedUserId);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
+    });
+  });
 });

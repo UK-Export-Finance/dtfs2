@@ -12,8 +12,11 @@ import { hash as generateHash, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
  * @returns true or false if hashes match
  */
 export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, userId: string) => {
+  // Strip newline and punctuation characters from the logged user ID to prevent log injection.
+  const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+
   try {
-    console.info('Validating OTP hash for user %s', userId);
+    console.info('Validating OTP hash for user %s', sanitisedUserId);
 
     // generate hash from provided otp code and salt
     const generatedOTPHash = generateHash(otpCode, otpSalt);
@@ -24,7 +27,7 @@ export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, us
     // compare generated hash to stored hash
     return crypto.timingSafeEqual(new Uint8Array(storedOTPHash), new Uint8Array(generatedOTPHash));
   } catch (error) {
-    console.error('Error validating OTP hash for user %s: %o', userId, error);
+    console.error('Error validating OTP hash for user %s: %o', sanitisedUserId, error);
 
     throw new Error(`Error validating OTP hash`);
   }

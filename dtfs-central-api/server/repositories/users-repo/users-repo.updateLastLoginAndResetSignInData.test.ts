@@ -8,9 +8,7 @@ import { mongoDbClient } from '../../drivers/db-client';
 jest.mock('@ukef/dtfs2-common/change-stream');
 
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
-const generateAuditDatabaseRecordFromAuditDetailsMock = generateAuditDatabaseRecordFromAuditDetails as jest.MockedFunction<
-  typeof generateAuditDatabaseRecordFromAuditDetails
->;
+const generateAuditDatabaseRecordFromAuditDetailsMock = jest.mocked(generateAuditDatabaseRecordFromAuditDetails);
 
 const updateOneMock = jest.fn();
 const getCollectionMock = jest.fn();
@@ -19,24 +17,35 @@ const userId = new ObjectId();
 
 const auditDetails = generateSystemAuditDetails();
 
+const auditDatabaseRecord: AuditDatabaseRecord = {
+  lastUpdatedAt: '2024-01-01T00:00:00.000Z',
+  lastUpdatedByPortalUserId: null,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: true,
+  noUserLoggedIn: null,
+};
+
 const sessionIdentifier = 'randomSessionIdentifier';
 
 describe('PortalUsersRepo', () => {
   afterEach(() => {
+    jest.useRealTimers();
     jest.resetAllMocks();
   });
 
   describe('updateLastLoginAndResetSignInData', () => {
     const mockUpdateResult = { matchedCount: 1 };
+    const expectedLastLogin = new Date('2024-01-01T00:00:00.000Z').getTime();
 
     beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
       updateOneMock.mockResolvedValue(mockUpdateResult);
 
       getCollectionMock.mockResolvedValue({
         updateOne: updateOneMock,
       });
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDetails as unknown as AuditDatabaseRecord);
+      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDatabaseRecord);
     });
 
     it(`should call getCollection with ${MONGO_DB_COLLECTIONS.USERS}`, async () => {
@@ -53,14 +62,16 @@ describe('PortalUsersRepo', () => {
 
       // Assert
       const setUpdate = {
-        lastLogin: expect.any(Number) as unknown as number,
+        lastLogin: expectedLastLogin,
         loginFailureCount: 0,
         sessionIdentifier,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        auditRecord: auditDatabaseRecord,
         signInOTPSendCount: 0,
         signInOTPSendDate: 0,
         signInTokens: [],
       };
+
+      expect(generateAuditDatabaseRecordFromAuditDetailsMock).toHaveBeenCalledWith(auditDetails);
 
       expect(updateOneMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
