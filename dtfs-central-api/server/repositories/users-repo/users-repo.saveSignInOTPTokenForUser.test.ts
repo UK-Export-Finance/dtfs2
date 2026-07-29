@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AuditDetails, AuditDatabaseRecord, InvalidUserIdError, OTP } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AuditDetails, InvalidUserIdError, OTP } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 
 import { PortalUsersRepo } from '.';
@@ -8,9 +8,7 @@ import { mongoDbClient } from '../../drivers/db-client';
 jest.mock('@ukef/dtfs2-common/change-stream');
 
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
-const generateAuditDatabaseRecordFromAuditDetailsMock = generateAuditDatabaseRecordFromAuditDetails as jest.MockedFunction<
-  typeof generateAuditDatabaseRecordFromAuditDetails
->;
+const generateAuditDatabaseRecordFromAuditDetailsMock = jest.mocked(generateAuditDatabaseRecordFromAuditDetails);
 
 const updateOneMock = jest.fn();
 const getCollectionMock = jest.fn();
@@ -22,6 +20,14 @@ const hashHex = 'randomHashedHex';
 const expiry = Date.now() + 3600000; // 1 hour from now
 
 const auditDetails = generateSystemAuditDetails();
+
+const auditDatabaseRecord = {
+  lastUpdatedAt: '2024-01-01T00:00:00.000Z',
+  lastUpdatedByPortalUserId: null,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: true,
+  noUserLoggedIn: null,
+};
 
 describe('PortalUsersRepo', () => {
   afterEach(() => {
@@ -38,7 +44,7 @@ describe('PortalUsersRepo', () => {
         updateOne: updateOneMock,
       });
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDetails as unknown as AuditDatabaseRecord);
+      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDatabaseRecord);
     });
 
     it(`should call getCollection with ${MONGO_DB_COLLECTIONS.USERS}`, async () => {
@@ -54,12 +60,14 @@ describe('PortalUsersRepo', () => {
       await PortalUsersRepo.saveSignInOTPTokenForUser({ userId: userId.toString(), saltHex, hashHex, expiry, auditDetails });
 
       // Assert
+      expect(generateAuditDatabaseRecordFromAuditDetailsMock).toHaveBeenCalledWith(auditDetails);
+
       expect(updateOneMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
         {
           $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -OTP.MAX_SIGN_IN_ATTEMPTS } },
           $set: {
-            auditRecord: generateAuditDatabaseRecordFromAuditDetailsMock(auditDetails),
+            auditRecord: auditDatabaseRecord,
           },
         },
       );

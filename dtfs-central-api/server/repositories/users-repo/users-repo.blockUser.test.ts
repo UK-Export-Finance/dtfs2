@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AuditDetails, AuditDatabaseRecord, InvalidUserIdError, USER_STATUS } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AuditDetails, InvalidUserIdError, USER_STATUS } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 
 import { PortalUsersRepo } from '.';
@@ -8,9 +8,7 @@ import { mongoDbClient } from '../../drivers/db-client';
 jest.mock('@ukef/dtfs2-common/change-stream');
 
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
-const generateAuditDatabaseRecordFromAuditDetailsMock = generateAuditDatabaseRecordFromAuditDetails as jest.MockedFunction<
-  typeof generateAuditDatabaseRecordFromAuditDetails
->;
+const generateAuditDatabaseRecordFromAuditDetailsMock = jest.mocked(generateAuditDatabaseRecordFromAuditDetails);
 
 const updateOneMock = jest.fn();
 const getCollectionMock = jest.fn();
@@ -20,6 +18,14 @@ const userId = new ObjectId();
 const reason = 'block user';
 
 const auditDetails = generateSystemAuditDetails();
+
+const auditDatabaseRecord = {
+  lastUpdatedAt: '2024-01-01T00:00:00.000Z',
+  lastUpdatedByPortalUserId: null,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: true,
+  noUserLoggedIn: null,
+};
 
 describe('PortalUsersRepo', () => {
   afterEach(() => {
@@ -36,12 +42,12 @@ describe('PortalUsersRepo', () => {
         updateOne: updateOneMock,
       });
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDetails as unknown as AuditDatabaseRecord);
+      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDatabaseRecord);
     });
 
     it(`should call getCollection with ${MONGO_DB_COLLECTIONS.USERS}`, async () => {
       // Act
-      await PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails: generateSystemAuditDetails() });
+      await PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails });
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.USERS);
@@ -49,16 +55,18 @@ describe('PortalUsersRepo', () => {
 
     it('should call updateOne with the correct parameters', async () => {
       // Act
-      await PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails: generateSystemAuditDetails() });
+      await PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails });
 
       // Assert
+      expect(generateAuditDatabaseRecordFromAuditDetailsMock).toHaveBeenCalledWith(auditDetails);
+
       expect(updateOneMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
         {
           $set: {
             'user-status': USER_STATUS.BLOCKED,
             blockedStatusReason: reason,
-            auditRecord: generateAuditDatabaseRecordFromAuditDetailsMock(generateSystemAuditDetails()),
+            auditRecord: auditDatabaseRecord,
           },
         },
       );
@@ -69,7 +77,7 @@ describe('PortalUsersRepo', () => {
       const invalidUserId = 'xyz';
 
       // Assert
-      await expect(PortalUsersRepo.blockUser({ userId: invalidUserId, reason, auditDetails: generateSystemAuditDetails() })).rejects.toThrow(
+      await expect(PortalUsersRepo.blockUser({ userId: invalidUserId, reason, auditDetails })).rejects.toThrow(
         new InvalidUserIdError(invalidUserId.toString()),
       );
     });
@@ -80,7 +88,7 @@ describe('PortalUsersRepo', () => {
       updateOneMock.mockRejectedValue(new Error(errorMessage));
 
       // Act & Assert
-      await expect(PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails: generateSystemAuditDetails() })).rejects.toThrow(errorMessage);
+      await expect(PortalUsersRepo.blockUser({ userId: userId.toString(), reason, auditDetails })).rejects.toThrow(errorMessage);
     });
   });
 });

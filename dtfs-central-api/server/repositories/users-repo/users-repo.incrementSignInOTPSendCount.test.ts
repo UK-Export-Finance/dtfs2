@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AuditDetails, AuditDatabaseRecord, InvalidUserIdError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AuditDetails, InvalidUserIdError } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 
 import { PortalUsersRepo } from '.';
@@ -8,9 +8,7 @@ import { mongoDbClient } from '../../drivers/db-client';
 jest.mock('@ukef/dtfs2-common/change-stream');
 
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
-const generateAuditDatabaseRecordFromAuditDetailsMock = generateAuditDatabaseRecordFromAuditDetails as jest.MockedFunction<
-  typeof generateAuditDatabaseRecordFromAuditDetails
->;
+const generateAuditDatabaseRecordFromAuditDetailsMock = jest.mocked(generateAuditDatabaseRecordFromAuditDetails);
 
 const findOneAndUpdateMock = jest.fn();
 const findMock = jest.fn();
@@ -20,6 +18,14 @@ const getCollectionMock = jest.fn();
 const userId = new ObjectId();
 
 const auditDetails = generateSystemAuditDetails();
+
+const auditDatabaseRecord = {
+  lastUpdatedAt: '2024-01-01T00:00:00.000Z',
+  lastUpdatedByPortalUserId: null,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: true,
+  noUserLoggedIn: null,
+};
 
 describe('PortalUsersRepo', () => {
   afterEach(() => {
@@ -37,7 +43,7 @@ describe('PortalUsersRepo', () => {
         find: findMock,
       });
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDetails as unknown as AuditDatabaseRecord);
+      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDatabaseRecord);
     });
 
     afterEach(() => {
@@ -57,16 +63,18 @@ describe('PortalUsersRepo', () => {
       await PortalUsersRepo.incrementSignInOTPSendCount(userId, auditDetails);
 
       // Assert
+      expect(generateAuditDatabaseRecordFromAuditDetailsMock).toHaveBeenCalledWith(auditDetails);
+
       expect(findOneAndUpdateMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
-        { $inc: { signInOTPSendCount: 1 }, $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetailsMock(auditDetails) } },
+        { $inc: { signInOTPSendCount: 1 }, $set: { auditRecord: auditDatabaseRecord } },
         { returnDocument: 'after' },
       );
     });
 
     it('should return the number of times the OTP has been sent', async () => {
       // Arrange
-      findOneAndUpdateMock.mockResolvedValue({ value: { signInOTPSendCount: 2 } } as unknown as any[]);
+      findOneAndUpdateMock.mockResolvedValue({ value: { signInOTPSendCount: 2 } });
 
       // Act
       const result = await PortalUsersRepo.incrementSignInOTPSendCount(userId, auditDetails);

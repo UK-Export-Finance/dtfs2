@@ -66,7 +66,7 @@ export const validateOTPAndSignIn = async (
     console.error('Unable to verify account sign in code for user %s', user.email);
     return res.status(otpResponse.statusCode).send(otpResponse);
   } catch (error) {
-    const sanitisedUserId = req.body.userId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const sanitisedUserId = typeof req.body?.userId === 'string' ? req.body.userId.replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
 
     console.error('Error validating OTP and signing in user %s: %o', sanitisedUserId, error);
 

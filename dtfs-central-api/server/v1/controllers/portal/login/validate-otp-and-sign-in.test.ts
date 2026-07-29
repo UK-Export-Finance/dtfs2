@@ -175,6 +175,15 @@ describe('validateOTPAndSignIn', () => {
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
     });
+
+    it(`should respond with ${HttpStatusCode.InternalServerError} when userId is missing`, async () => {
+      const res = getMockResponse();
+
+      await invokeController({}, res);
+
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: "Cannot read properties of undefined (reading 'replace')" });
+    });
   });
 
   describe('when a non-Error is thrown', () => {
