@@ -329,7 +329,11 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
     const payload = {
       status: TFM_AMENDMENT_STATUS.COMPLETED,
       submittedByPim: true,
-      effectiveDate: amendment.bankDecision?.effectiveDate,
+      /**
+       * Only include effectiveDate when it is a valid number - for Withdraw decisions.
+       * bankDecision.effectiveDate is null which would fail Zod validation (z.number() is non-nullable)
+       */
+      ...(amendment.bankDecision?.effectiveDate && { effectiveDate: amendment.bankDecision.effectiveDate }),
       bankDecision: {
         decision: amendment.bankDecision?.decision,
         submitted: true,
