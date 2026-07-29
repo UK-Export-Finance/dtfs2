@@ -16,7 +16,7 @@ const {
  * @param {number} params.previousAmount - The previous amount before the amendment.
  * @returns The calculated amount adjusted by the covered percentage.
  */
-export const mapAmount = ({ coveredPercentage, newAmount, previousAmount }: MapAmountParams) => {
+export const mapAmount = ({ coveredPercentage, newAmount, previousAmount }: MapAmountParams): number | null => {
   const amountDifference = getAmountDifference(previousAmount, newAmount);
 
   // calculate newAmount adjusted by the covered percentage

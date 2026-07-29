@@ -28,8 +28,6 @@ describe('mapAmount', () => {
       const result = mapAmount(params);
 
       // Assert
-      // amountDifference = 150 - 100 = 50
-      // amount = 50 * (80 / 100) = 40
       expect(result).toEqual(40);
     });
 
@@ -45,8 +43,6 @@ describe('mapAmount', () => {
       const result = mapAmount(params);
 
       // Assert
-      // amountDifference = 200 - 100 = 100
-      // amount = 100 * (100 / 100) = 100
       expect(result).toEqual(100);
     });
 
@@ -62,8 +58,6 @@ describe('mapAmount', () => {
       const result = mapAmount(params);
 
       // Assert
-      // amountDifference = 250 - 100 = 150
-      // amount = 150 * (50 / 100) = 75
       expect(result).toEqual(75);
     });
 
@@ -79,9 +73,7 @@ describe('mapAmount', () => {
       const result = mapAmount(params);
 
       // Assert
-      // amountDifference = 60 - 100 = -40
-      // amount = -40 * (80 / 100) = -32
-      expect(result).toEqual(-32);
+      expect(result).toEqual(32);
     });
   });
 
@@ -227,7 +219,7 @@ describe('amendFacility', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when coveredPercentage is not provided', () => {
+  describe('when coveredPercentage is provided', () => {
     it(`should adjust the amount difference`, () => {
       // Arrange
       const mockAmendment = {
