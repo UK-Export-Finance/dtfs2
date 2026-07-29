@@ -26,6 +26,7 @@ describe('getAmendmentFields', () => {
       previousAmount: amendment.currentValue,
       coverEndDate: getFormattedDateStringInTimeZone(Number(amendment.coverEndDate), TIMEZONE.DEFAULT),
       effectiveDate: getFormattedUTCDateString(Number(amendment.effectiveDate)),
+      coveredPercentage: null,
     };
 
     expect(result).toEqual(expected);
@@ -139,10 +140,10 @@ describe('getAmendmentFields', () => {
   describe('when effectiveDate is null', () => {
     it('should return effectiveDate as an empty string', () => {
       // Arrange
-      const amendment: TfmFacilityAmendmentData = {
+      const amendment = {
         ...mockBaseAmendment,
-        effectiveDate: null as unknown as number,
-      };
+        effectiveDate: null,
+      } as unknown as TfmFacilityAmendmentData;
 
       // Act
       const result = getAmendmentFields(amendment);
@@ -165,6 +166,66 @@ describe('getAmendmentFields', () => {
 
       // Assert
       expect(result.coverEndDate).toEqual('');
+    });
+  });
+
+  describe('when coveredPercentage is provided', () => {
+    it('should return coveredPercentage as a number', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        coveredPercentage: 80,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.coveredPercentage).toEqual(80);
+    });
+  });
+
+  describe('when coveredPercentage is not a number', () => {
+    it('should return coveredPercentage as null when undefined', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        coveredPercentage: undefined,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.coveredPercentage).toBeNull();
+    });
+
+    it('should return coveredPercentage as null when null', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        coveredPercentage: null,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.coveredPercentage).toBeNull();
+    });
+
+    it('should return coveredPercentage as null when a string', () => {
+      // Arrange
+      const amendment: TfmFacilityAmendmentData = {
+        ...mockBaseAmendment,
+        coveredPercentage: '80' as unknown as number,
+      };
+
+      // Act
+      const result = getAmendmentFields(amendment);
+
+      // Assert
+      expect(result.coveredPercentage).toBeNull();
     });
   });
 });
