@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AuditDetails, AuditDatabaseRecord, InvalidUserIdError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AuditDetails, InvalidUserIdError } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 
 import { PortalUsersRepo } from '.';
@@ -21,6 +21,14 @@ const userId = new ObjectId();
 
 const auditDetails = generateSystemAuditDetails();
 
+const auditDatabaseRecord = {
+  lastUpdatedAt: '2024-01-01T00:00:00.000Z',
+  lastUpdatedByPortalUserId: null,
+  lastUpdatedByTfmUserId: null,
+  lastUpdatedByIsSystem: true,
+  noUserLoggedIn: null,
+};
+
 describe('PortalUsersRepo', () => {
   afterEach(() => {
     jest.resetAllMocks();
@@ -37,7 +45,7 @@ describe('PortalUsersRepo', () => {
         find: findMock,
       });
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDetails as unknown as AuditDatabaseRecord);
+      generateAuditDatabaseRecordFromAuditDetailsMock.mockReturnValue(auditDatabaseRecord);
     });
 
     afterEach(() => {
@@ -57,6 +65,8 @@ describe('PortalUsersRepo', () => {
       await PortalUsersRepo.resetSignInData({ userId: userId.toString(), auditDetails });
 
       // Assert
+      expect(generateAuditDatabaseRecordFromAuditDetailsMock).toHaveBeenCalledWith(auditDetails);
+
       expect(findOneAndUpdateMock).toHaveBeenCalledWith(
         { _id: { $eq: userId } },
         {
@@ -64,7 +74,7 @@ describe('PortalUsersRepo', () => {
             signInOTPSendCount: 0,
             signInOTPSendDate: 0,
             signInTokens: [],
-            auditRecord: generateAuditDatabaseRecordFromAuditDetailsMock(auditDetails),
+            auditRecord: auditDatabaseRecord,
           },
         },
       );

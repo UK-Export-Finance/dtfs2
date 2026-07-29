@@ -23,7 +23,7 @@ export const validateOTPAndSignIn = async (
     const { userId, signInOTPCode, auditDetails } = req.body;
 
     // Strip newline and punctuation characters from the logged user ID to prevent log injection.
-    const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const sanitisedUserId = typeof userId === 'string' ? userId.replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
 
     console.info('Validating OTP and signing in user %s', sanitisedUserId);
 

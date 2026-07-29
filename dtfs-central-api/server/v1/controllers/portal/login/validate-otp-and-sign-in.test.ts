@@ -182,7 +182,7 @@ describe('validateOTPAndSignIn', () => {
       await invokeController({}, res);
 
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
-      expect(res.send).toHaveBeenNthCalledWith(1, { message: "Cannot read properties of undefined (reading 'replace')" });
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
     });
   });
 
