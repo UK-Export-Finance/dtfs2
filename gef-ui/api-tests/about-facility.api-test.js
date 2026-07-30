@@ -33,11 +33,14 @@ describe('about facility routes', () => {
   describe('POST /application-details/:dealId/facilities/:facilityId/about-facility', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) =>
-        post({ facilityType: 'CASH', hasBeenIssued: 'false', monthsOfCover: '12' }, headers).to(
+        post({ facilityType: 'Cash', hasBeenIssued: 'false', monthsOfCover: '12' }, headers).to(
           `/application-details/${dealId}/facilities/${facilityId}/about-facility`,
         ),
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Found,
+      successHeaders: {
+        location: `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`,
+      },
     });
   });
 });

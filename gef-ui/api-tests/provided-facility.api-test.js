@@ -31,7 +31,8 @@ describe('provided facility routes', () => {
 
   describe('POST /application-details/:dealId/facilities/:facilityId/provided-facility', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({ details: 'Yes' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/provided-facility`),
+      makeRequestWithHeaders: (headers) =>
+        post({ details: 'Term basis' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/provided-facility`),
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: {
