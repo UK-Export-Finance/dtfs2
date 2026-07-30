@@ -137,13 +137,13 @@ describe('POST /login', () => {
       expect(headers).toHaveProperty('location', `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`);
     });
 
-    it('should redirect the user to /login if the sign in OTP is not sent successfully', async () => {
+    it('should render the problem-with-service page if the sign in OTP is not sent successfully', async () => {
       when(api.sendSignInOTP).calledWith(token).mockRejectedValueOnce(new AxiosError());
 
-      const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
+      const { status, text } = await loginWith({ email: anEmail, password: aPassword });
 
       expect(status).toEqual(HttpStatusCode.Ok);
-      expect(headers).not.toHaveProperty('location');
+      expect(text).toContain('Sorry, there is a problem with the service.');
     });
 
     it(`should redirect to the temporarily suspended access code page if the sign in OTP returns ${HttpStatusCode.Forbidden}`, async () => {
