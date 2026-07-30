@@ -1,5 +1,5 @@
 import { APIM_GIFT_INTEGRATION } from '../constants';
-import { amendFacility } from '.';
+import { amendFacility, mapAmount } from '.';
 import { TfmFacilityAmendmentData } from '../types';
 
 const {
@@ -10,10 +10,107 @@ const mockAmendmentBase: TfmFacilityAmendmentData = {
   currentValue: 100,
   value: 130,
   effectiveDate: 1704067200,
-  tfm: {
-    coverEndDate: 1706745600000,
-  },
+  coverEndDate: 1706745600000,
+  tfm: {},
 };
+
+describe('mapAmount', () => {
+  describe('when coveredPercentage is provided', () => {
+    it('should return the amount difference adjusted by 80% covered percentage', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 80,
+        newAmount: 150,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(40);
+    });
+
+    it('should return the amount difference adjusted by 100% covered percentage', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 100,
+        newAmount: 200,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(100);
+    });
+
+    it('should return the amount difference adjusted by 50% covered percentage', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 50,
+        newAmount: 250,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(75);
+    });
+
+    it('should handle decrease amount scenario with covered percentage', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 80,
+        newAmount: 60,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(32);
+    });
+  });
+
+  describe('when coveredPercentage is null', () => {
+    it('should return null', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: null,
+        newAmount: 150,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('when coveredPercentage is 0', () => {
+    it('should return null (falsy check)', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 0,
+        newAmount: 150,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+});
 
 describe('amendFacility', () => {
   it(`should return an array containing an "${INCREASE_AMOUNT}" payload`, () => {
@@ -32,7 +129,7 @@ describe('amendFacility', () => {
       {
         amendmentType: INCREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -58,7 +155,7 @@ describe('amendFacility', () => {
       {
         amendmentType: DECREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -107,7 +204,7 @@ describe('amendFacility', () => {
       {
         amendmentType: INCREASE_AMOUNT,
         amendmentData: {
-          amount: 30,
+          amount: null,
           date: '2024-01-01',
         },
       },
@@ -120,6 +217,64 @@ describe('amendFacility', () => {
     ];
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when coveredPercentage is provided', () => {
+    it(`should adjust the amount difference`, () => {
+      // Arrange
+      const mockAmendment = {
+        ...mockAmendmentBase,
+        value: 150,
+        coveredPercentage: 80,
+        changeFacilityValue: true,
+        changeCoverEndDate: false,
+      };
+
+      // Act
+      const result = amendFacility(mockAmendment);
+
+      // Assert
+      const expected = [
+        {
+          amendmentType: INCREASE_AMOUNT,
+          amendmentData: {
+            amount: 40,
+            date: '2024-01-01',
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when coveredPercentage is null', () => {
+    it(`should return null amount`, () => {
+      // Arrange
+      const mockAmendment = {
+        ...mockAmendmentBase,
+        value: 150,
+        coveredPercentage: null,
+        changeFacilityValue: true,
+        changeCoverEndDate: false,
+      };
+
+      // Act
+      const result = amendFacility(mockAmendment);
+
+      // Assert
+      const expected = [
+        {
+          amendmentType: INCREASE_AMOUNT,
+          amendmentData: {
+            amount: null,
+            date: '2024-01-01',
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('when the amendment cannot be mapped to any valid APIM GIFT amendment type', () => {
