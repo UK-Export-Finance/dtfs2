@@ -629,7 +629,7 @@ const sendFacilityAmendment = async (req, res) => {
             throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
           }
 
-          const auditDetails = req?.user?._id ? generateTfmAuditDetails(req.user._id) : undefined;
+          const auditDetails = generateTfmAuditDetails(req?.user?._id);
 
           await markFacilityAmendmentAsSentToApimGift({
             facilityId,

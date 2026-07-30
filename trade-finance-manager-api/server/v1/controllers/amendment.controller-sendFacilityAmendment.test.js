@@ -211,6 +211,7 @@ describe('sendFacilityAmendment', () => {
         method: 'POST',
         params: { amendmentId, facilityId },
       });
+      req.user = { _id: '66b1f2f6f4b5a8f3c7d9e099' };
 
       const payloads = [
         {
@@ -244,7 +245,10 @@ describe('sendFacilityAmendment', () => {
           },
           shouldNotUpdateTimestamp: true,
         },
-        undefined,
+        expect.objectContaining({
+          id: req.user._id,
+          userType: 'tfm',
+        }),
       );
 
       expect(console.info).toHaveBeenNthCalledWith(3, 'TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
