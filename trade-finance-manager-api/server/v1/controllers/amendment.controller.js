@@ -315,6 +315,14 @@ const updateFacilityAmendment = async (req, res) => {
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
 
+  /**
+   * Only send to APIM/GIFT when the user submits the final check-answers page.
+   * All intermediate 'Continue' steps also call updateFacilityAmendment, so using
+   * submittedByPim as the discriminator prevents repeated APIM calls during the flow.
+   * This flag is also used in the ACBS canSendToAcbs checks.
+   */
+  const isSubmittedByPim = payload?.submittedByPim === true;
+
   // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
   let isTaskUpdate = false;
 
@@ -323,7 +331,7 @@ const updateFacilityAmendment = async (req, res) => {
     if (amendmentId && facilityId && payload) {
       let amendment = await api.getAmendmentById(facilityId, amendmentId);
 
-      if (payload.createTasks && payload.submittedByPim) {
+      if (payload.createTasks && isSubmittedByPim) {
         const { tfm } = await api.findOneFacility(facilityId);
 
         payload.tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
@@ -413,7 +421,7 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        if (isTfmApimGiftIntegrationEnabled() && !isTaskUpdate) {
+        if (isTfmApimGiftIntegrationEnabled() && !isTaskUpdate && isSubmittedByPim) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
           const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
