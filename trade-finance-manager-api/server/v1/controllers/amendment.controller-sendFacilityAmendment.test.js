@@ -10,6 +10,7 @@ const { APIM_GIFT_INTEGRATION } = require('../mappings/apim-gift-payloads/consta
 jest.mock('../api', () => ({
   getAmendmentById: jest.fn(),
   findOneFacility: jest.fn(),
+  updateFacilityAmendment: jest.fn(),
 }));
 
 jest.mock('../integrations/apim-gift/can-send-amendments-to-apim-gift');
@@ -36,6 +37,7 @@ describe('sendFacilityAmendment', () => {
 
     api.getAmendmentById.mockResolvedValue(amendment);
     api.findOneFacility.mockResolvedValue(facility);
+    api.updateFacilityAmendment.mockResolvedValue(amendment);
 
     isTfmApimGiftIntegrationEnabled.mockReturnValue(false);
   });
@@ -232,7 +234,41 @@ describe('sendFacilityAmendment', () => {
         ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
       });
 
+      expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+        1,
+        facilityId,
+        amendmentId,
+        {
+          apimGift: {
+            facilityAmendmentSent: true,
+          },
+          shouldNotUpdateTimestamp: true,
+        },
+        undefined,
+      );
+
       expect(console.info).toHaveBeenNthCalledWith(3, 'TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
+    });
+
+    it('should skip APIM GIFT submission when amendment was already sent', async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+        params: { amendmentId, facilityId },
+      });
+
+      isTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+      api.getAmendmentById.mockResolvedValueOnce({
+        ...amendment,
+        apimGift: {
+          facilityAmendmentSent: true,
+        },
+      });
+
+      await sendFacilityAmendment(req, res);
+
+      expect(canSendAmendmentsToApimGift).not.toHaveBeenCalled();
+      expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+      expect(api.updateFacilityAmendment).not.toHaveBeenCalled();
     });
 
     it(`should return ${HttpStatusCode.BadGateway} when APIM GIFT submission fails`, async () => {

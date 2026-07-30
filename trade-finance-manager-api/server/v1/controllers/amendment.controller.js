@@ -25,6 +25,35 @@ const {
 const CONSTANTS = require('../../constants');
 
 /**
+ * Checks if a facility amendment has been sent to APIM GIFT.
+ *
+ * @param {object} amendment - The amendment object.
+ * @returns {boolean} True if the facility amendment has been sent to APIM GIFT, false otherwise.
+ */
+const hasFacilityAmendmentBeenSentToApimGift = (amendment) => amendment?.apimGift?.facilityAmendmentSent === true;
+
+/**
+ * Marks a facility amendment as sent to APIM GIFT.
+ *
+ * @param {object} param0 - The parameters object.
+ * @param {string} param0.facilityId - The facility identifier.
+ * @param {string} param0.amendmentId - The amendment identifier.
+ * @param {object} param0.amendment - The amendment object.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - Audit details for update calls.
+ */
+const markFacilityAmendmentAsSentToApimGift = async ({ facilityId, amendmentId, amendment, auditDetails }) => {
+  const payload = {
+    apimGift: {
+      ...(amendment?.apimGift || {}),
+      facilityAmendmentSent: true,
+    },
+    shouldNotUpdateTimestamp: true,
+  };
+
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
+};
+
+/**
  * Sends amendment-related notification emails when eligible.
  *
  * @param {string} amendmentId - The amendment identifier.
@@ -421,7 +450,10 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        if (isTfmApimGiftIntegrationEnabled() && !isTaskUpdate && isSubmittedByPim) {
+        const couldSendToApimGift =
+          isTfmApimGiftIntegrationEnabled() && !isTaskUpdate && isSubmittedByPim && !hasFacilityAmendmentBeenSentToApimGift(amendment);
+
+        if (couldSendToApimGift) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
           const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
@@ -436,6 +468,13 @@ const updateFacilityAmendment = async (req, res) => {
 
               throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
             }
+
+            await markFacilityAmendmentAsSentToApimGift({
+              facilityId,
+              amendmentId,
+              amendment,
+              auditDetails,
+            });
           }
         }
 
@@ -572,7 +611,9 @@ const sendFacilityAmendment = async (req, res) => {
         return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
       }
 
-      if (isTfmApimGiftIntegrationEnabled()) {
+      const couldSendToApimGift = isTfmApimGiftIntegrationEnabled() && !hasFacilityAmendmentBeenSentToApimGift(amendment);
+
+      if (couldSendToApimGift) {
         console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
         const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
@@ -587,6 +628,15 @@ const sendFacilityAmendment = async (req, res) => {
 
             throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
           }
+
+          const auditDetails = req?.user?._id ? generateTfmAuditDetails(req.user._id) : undefined;
+
+          await markFacilityAmendmentAsSentToApimGift({
+            facilityId,
+            amendmentId,
+            amendment,
+            auditDetails,
+          });
         }
       }
 
@@ -614,5 +664,7 @@ module.exports = {
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
+  hasFacilityAmendmentBeenSentToApimGift,
+  markFacilityAmendmentAsSentToApimGift,
   sendFacilityAmendment,
 };
