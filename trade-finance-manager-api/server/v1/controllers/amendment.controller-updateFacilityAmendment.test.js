@@ -329,7 +329,7 @@ describe('updated facility amendment API call', () => {
           );
 
           expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
-            1,
+            2,
             facilityId,
             amendmentId,
             expect.objectContaining({

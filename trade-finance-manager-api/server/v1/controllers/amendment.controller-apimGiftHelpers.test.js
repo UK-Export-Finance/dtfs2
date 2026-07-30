@@ -54,19 +54,15 @@ describe('markFacilityAmendmentAsSentToApimGift', () => {
     });
 
     // Assert
-    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
-      1,
-      facilityId,
-      amendmentId,
-      {
-        apimGift: {
-          existingField: 'existing-value',
-          facilityAmendmentSent: true,
-        },
-        shouldNotUpdateTimestamp: true,
+    const expectedObject = {
+      apimGift: {
+        existingField: 'existing-value',
+        facilityAmendmentSent: true,
       },
-      auditDetails,
-    );
+      shouldNotUpdateTimestamp: true,
+    };
+
+    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
   });
 
   it('should set facilityAmendmentSent to true when apimGift is missing', async () => {
@@ -79,17 +75,13 @@ describe('markFacilityAmendmentAsSentToApimGift', () => {
     });
 
     // Assert
-    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
-      1,
-      facilityId,
-      amendmentId,
-      {
-        apimGift: {
-          facilityAmendmentSent: true,
-        },
-        shouldNotUpdateTimestamp: true,
+    const expectedObject = {
+      apimGift: {
+        facilityAmendmentSent: true,
       },
-      auditDetails,
-    );
+      shouldNotUpdateTimestamp: true,
+    };
+
+    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
   });
 });
