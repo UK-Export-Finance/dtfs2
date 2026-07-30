@@ -15,6 +15,7 @@ jest.mock('../../server/api', () => ({
   login: jest.fn(),
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
+  sendSignInOTP: jest.fn(),
   validateToken: () => false,
   validatePartialAuthToken: jest.fn(),
 }));
