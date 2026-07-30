@@ -14,11 +14,6 @@ const dealId = '123';
 describe('companies house routes', () => {
   beforeEach(() => {
     api.getApplication.mockResolvedValue(cloneMock(MOCK_BASIC_DEAL));
-    api.getCompanyByRegistrationNumber.mockResolvedValue({
-      company: null,
-      errRef: 'regNumber',
-      errMsg: 'Enter a Companies House registration number',
-    });
   });
 
   afterEach(() => {
