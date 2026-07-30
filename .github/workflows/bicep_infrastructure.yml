@@ -67,6 +67,19 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          subscription-id: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+
+      - name: Verify Azure subscription 🧭
+        run: |
+          az account set --subscription "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}"
+          ACTIVE_SUBSCRIPTION=$(az account show --query id -o tsv)
+          if [ "$ACTIVE_SUBSCRIPTION" != "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}" ]; then
+            echo "Expected subscription ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}, but active subscription is $ACTIVE_SUBSCRIPTION"
+            exit 1
+          fi
+          echo "Active subscription: $ACTIVE_SUBSCRIPTION"
+          echo "Active subscription name: $(az account show --query name -o tsv)"
+          echo "Target resource group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}"
 
       - name: Azure defaults ✨
         uses: azure/cli@v3
@@ -103,6 +116,19 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          subscription-id: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+
+      - name: Verify Azure subscription 🧭
+        run: |
+          az account set --subscription "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}"
+          ACTIVE_SUBSCRIPTION=$(az account show --query id -o tsv)
+          if [ "$ACTIVE_SUBSCRIPTION" != "${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}" ]; then
+            echo "Expected subscription ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}, but active subscription is $ACTIVE_SUBSCRIPTION"
+            exit 1
+          fi
+          echo "Active subscription: $ACTIVE_SUBSCRIPTION"
+          echo "Active subscription name: $(az account show --query name -o tsv)"
+          echo "Target resource group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}"
 
       - name: Set bicep properties ✨
         run: |
