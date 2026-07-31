@@ -25,6 +25,7 @@ const { mapFacilityProperties } = require('./map-facility-properties');
 const { getNextAccessCodePage } = require('./getNextAccessCodePage');
 const { fixNullCurrencyOnBondAndLoans } = require('./fixNullCurrencyOnBondAndLoans');
 const { getUserRedirectUrl } = require('./get-user-login-redirect-url');
+const { getPortalBankListForLoginPage } = require('./get-portal-bank-list-for-login-page');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -55,4 +56,5 @@ module.exports = {
   getNextAccessCodePage,
   fixNullCurrencyOnBondAndLoans,
   getUserRedirectUrl,
+  getPortalBankListForLoginPage,
 };
