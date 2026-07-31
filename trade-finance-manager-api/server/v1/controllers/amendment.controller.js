@@ -63,13 +63,13 @@ const markFacilityAmendmentAsSentToApimGift = async ({ facilityId, amendmentId, 
  */
 const parseCoverPercentage = (value) => {
   if (typeof value === 'number') {
-    return value;
+    return Number.isFinite(value) ? value : null;
   }
 
   if (typeof value === 'string') {
     const parsedValue = Number(value.replace(/%/g, '').trim());
 
-    return parsedValue;
+    return Number.isFinite(parsedValue) ? parsedValue : null;
   }
 
   return null;
@@ -83,11 +83,12 @@ const parseCoverPercentage = (value) => {
  * @returns {object} Amendment object with normalized coveredPercentage.
  */
 const enrichAmendmentForApimGift = (amendment, facilitySnapshot) => {
-  const coverPercentageFromFacility = parseCoverPercentage(facilitySnapshot?.coverPercentage || facilitySnapshot?.coveredPercentage);
+  const amendmentCoveredPercentage = parseCoverPercentage(amendment?.coveredPercentage);
+  const coverPercentageFromFacility = parseCoverPercentage(facilitySnapshot?.coverPercentage ?? facilitySnapshot?.coveredPercentage);
 
   return {
     ...amendment,
-    coveredPercentage: parseCoverPercentage(amendment?.coveredPercentage) || coverPercentageFromFacility,
+    coveredPercentage: amendmentCoveredPercentage ?? coverPercentageFromFacility,
   };
 };
 

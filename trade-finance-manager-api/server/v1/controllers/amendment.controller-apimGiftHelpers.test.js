@@ -112,6 +112,18 @@ describe('parseCoverPercentage', () => {
     });
   });
 
+  describe('when value is a non-finite number', () => {
+    it('should return null', () => {
+      // Act
+      const nanResult = parseCoverPercentage(Number.NaN);
+      const infinityResult = parseCoverPercentage(Number.POSITIVE_INFINITY);
+
+      // Assert
+      expect(nanResult).toBeNull();
+      expect(infinityResult).toBeNull();
+    });
+  });
+
   describe('when value is a percentage string', () => {
     it('should parse and return the numeric value', () => {
       // Act
@@ -119,6 +131,16 @@ describe('parseCoverPercentage', () => {
 
       // Assert
       expect(result).toBe(75);
+    });
+  });
+
+  describe('when value is an invalid percentage string', () => {
+    it('should return null', () => {
+      // Act
+      const result = parseCoverPercentage('not-a-number%');
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 
@@ -181,6 +203,40 @@ describe('enrichAmendmentForApimGift', () => {
       expect(result).toEqual({
         ...amendment,
         coveredPercentage: 70,
+      });
+    });
+  });
+
+  describe('when amendment coveredPercentage is invalid and facility coverPercentage is present', () => {
+    it('should fallback to facility coverPercentage', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-4', coveredPercentage: 'bad-value%' };
+      const facilitySnapshot = { coverPercentage: '65%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 65,
+      });
+    });
+  });
+
+  describe('when amendment coveredPercentage is 0 and facility has a value', () => {
+    it('should keep amendment coveredPercentage', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-5', coveredPercentage: 0 };
+      const facilitySnapshot = { coverPercentage: '65%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 0,
       });
     });
   });
