@@ -327,6 +327,43 @@ describe('updated facility amendment API call', () => {
               ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
             }),
           );
+
+          expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+            2,
+            facilityId,
+            amendmentId,
+            expect.objectContaining({
+              apimGift: expect.objectContaining({
+                facilityAmendmentSent: true,
+              }),
+              shouldNotUpdateTimestamp: true,
+            }),
+            expect.any(Object),
+          );
+        });
+
+        it('should not call APIM GIFT when amendment was already sent', async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            currentValue: 100,
+            value: 100,
+            effectiveDate: 1704067200,
+            tfm: { ...MOCK_AMENDMENT.tfm, coverEndDate: 1706745600000 },
+            apimGift: {
+              facilityAmendmentSent: true,
+            },
+          });
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
         });
 
         it(`should return ${HttpStatusCode.BadRequest} when APIM GIFT submission fails`, async () => {
