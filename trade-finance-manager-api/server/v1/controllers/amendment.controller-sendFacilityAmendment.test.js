@@ -185,7 +185,13 @@ describe('sendFacilityAmendment', () => {
 
       await sendFacilityAmendment(req, res);
 
-      expect(canSendAmendmentsToApimGift).toHaveBeenNthCalledWith(1, amendment);
+      expect(canSendAmendmentsToApimGift).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          ...amendment,
+          coveredPercentage: null,
+        }),
+      );
       expect(console.info).toHaveBeenNthCalledWith(2, 'TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
     });
 
