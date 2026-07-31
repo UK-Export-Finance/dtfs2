@@ -32,8 +32,8 @@ export const toNumber = (value: string | number | null | undefined): number | nu
 
 /**
  * Get facility "cover percentage" as a number for APIM GIFT mapping.
- * - GEF deals use `coverPercentage` (number).
- * - BSS/EWCS deals use `coveredPercentage` (string number).
+ * - GEF facilities use `coverPercentage` (number).
+ * - BSS/EWCS facilities use `coveredPercentage` (string number).
  * @param {GetCoverPercentageParams} params - Inputs required to determine which source field to use.
  * @param {TfmFacilitySnapshot} params.facilitySnapshot - Facility snapshot containing cover percentage fields.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if deal is BSS/EWCS.
