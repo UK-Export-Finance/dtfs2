@@ -54,6 +54,44 @@ const markFacilityAmendmentAsSentToApimGift = async ({ facilityId, amendmentId, 
 };
 
 /**
+ * Parses cover percentage values into a usable number.
+ * - GEF facilities use `coverPercentage` (number).
+ * - BSS/EWCS facilities use `coveredPercentage` (string number).
+ *
+ * @param {unknown} value - Candidate cover percentage value.
+ * @returns {number | null} Parsed percentage value, or null when unavailable/invalid.
+ */
+const parseCoverPercentage = (value) => {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    const parsedValue = Number(value.replace(/%/g, '').trim());
+
+    return parsedValue;
+  }
+
+  return null;
+};
+
+/**
+ * Enriches an amendment with a covered percentage suitable for APIM GIFT mapping.
+ *
+ * @param {object} amendment - The amendment object.
+ * @param {object} facilitySnapshot - The related facility snapshot object.
+ * @returns {object} Amendment object with normalized coveredPercentage.
+ */
+const enrichAmendmentForApimGift = (amendment, facilitySnapshot) => {
+  const coverPercentageFromFacility = parseCoverPercentage(facilitySnapshot?.coverPercentage || facilitySnapshot?.coveredPercentage);
+
+  return {
+    ...amendment,
+    coveredPercentage: parseCoverPercentage(amendment?.coveredPercentage) || coverPercentageFromFacility,
+  };
+};
+
+/**
  * Sends amendment-related notification emails when eligible.
  *
  * @param {string} amendmentId - The amendment identifier.
@@ -456,7 +494,9 @@ const updateFacilityAmendment = async (req, res) => {
         if (couldSendToApimGift) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+          const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
+
+          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
           if (canSendToApimGift) {
             console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
@@ -616,7 +656,9 @@ const sendFacilityAmendment = async (req, res) => {
       if (couldSendToApimGift) {
         console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+        const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
+
+        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
         if (canSendToApimGift) {
           console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
@@ -660,6 +702,8 @@ module.exports = {
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
   getAllAmendments,
+  parseCoverPercentage,
+  enrichAmendmentForApimGift,
   submitToAcbs,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,

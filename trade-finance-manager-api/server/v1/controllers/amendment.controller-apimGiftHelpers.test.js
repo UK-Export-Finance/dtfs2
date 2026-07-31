@@ -1,33 +1,44 @@
 const api = require('../api');
-const { hasFacilityAmendmentBeenSentToApimGift, markFacilityAmendmentAsSentToApimGift } = require('./amendment.controller');
+const {
+  hasFacilityAmendmentBeenSentToApimGift,
+  markFacilityAmendmentAsSentToApimGift,
+  parseCoverPercentage,
+  enrichAmendmentForApimGift,
+} = require('./amendment.controller');
 
 jest.mock('../api', () => ({
   updateFacilityAmendment: jest.fn(),
 }));
 
 describe('hasFacilityAmendmentBeenSentToApimGift', () => {
-  it('should return true when amendment apimGift facilityAmendmentSent is true', () => {
-    // Act
-    const result = hasFacilityAmendmentBeenSentToApimGift({ apimGift: { facilityAmendmentSent: true } });
+  describe('when amendment apimGift facilityAmendmentSent is true', () => {
+    it('should return true', () => {
+      // Act
+      const result = hasFacilityAmendmentBeenSentToApimGift({ apimGift: { facilityAmendmentSent: true } });
 
-    // Assert
-    expect(result).toBe(true);
+      // Assert
+      expect(result).toBe(true);
+    });
   });
 
-  it('should return false when amendment does not have apimGift', () => {
-    // Act
-    const result = hasFacilityAmendmentBeenSentToApimGift({});
+  describe('when amendment does not have apimGift', () => {
+    it('should return false', () => {
+      // Act
+      const result = hasFacilityAmendmentBeenSentToApimGift({});
 
-    // Assert
-    expect(result).toBe(false);
+      // Assert
+      expect(result).toBe(false);
+    });
   });
 
-  it('should return false when amendment is undefined', () => {
-    // Act
-    const result = hasFacilityAmendmentBeenSentToApimGift(undefined);
+  describe('when amendment is undefined', () => {
+    it('should return false', () => {
+      // Act
+      const result = hasFacilityAmendmentBeenSentToApimGift(undefined);
 
-    // Assert
-    expect(result).toBe(false);
+      // Assert
+      expect(result).toBe(false);
+    });
   });
 });
 
@@ -40,48 +51,137 @@ describe('markFacilityAmendmentAsSentToApimGift', () => {
     jest.clearAllMocks();
   });
 
-  it('should set facilityAmendmentSent to true and keep existing apimGift fields', async () => {
-    // Act
-    await markFacilityAmendmentAsSentToApimGift({
-      facilityId,
-      amendmentId,
-      amendment: {
+  describe('when amendment has existing apimGift fields', () => {
+    it('should set facilityAmendmentSent to true and keep existing fields', async () => {
+      // Act
+      await markFacilityAmendmentAsSentToApimGift({
+        facilityId,
+        amendmentId,
+        amendment: {
+          apimGift: {
+            existingField: 'existing-value',
+          },
+        },
+        auditDetails,
+      });
+
+      // Assert
+      const expectedObject = {
         apimGift: {
           existingField: 'existing-value',
+          facilityAmendmentSent: true,
         },
-      },
-      auditDetails,
+        shouldNotUpdateTimestamp: true,
+      };
+
+      expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
     });
-
-    // Assert
-    const expectedObject = {
-      apimGift: {
-        existingField: 'existing-value',
-        facilityAmendmentSent: true,
-      },
-      shouldNotUpdateTimestamp: true,
-    };
-
-    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
   });
 
-  it('should set facilityAmendmentSent to true when apimGift is missing', async () => {
-    // Act
-    await markFacilityAmendmentAsSentToApimGift({
-      facilityId,
-      amendmentId,
-      amendment: {},
-      auditDetails,
+  describe('when amendment apimGift is missing', () => {
+    it('should set facilityAmendmentSent to true', async () => {
+      // Act
+      await markFacilityAmendmentAsSentToApimGift({
+        facilityId,
+        amendmentId,
+        amendment: {},
+        auditDetails,
+      });
+
+      // Assert
+      const expectedObject = {
+        apimGift: {
+          facilityAmendmentSent: true,
+        },
+        shouldNotUpdateTimestamp: true,
+      };
+
+      expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
     });
+  });
+});
 
-    // Assert
-    const expectedObject = {
-      apimGift: {
-        facilityAmendmentSent: true,
-      },
-      shouldNotUpdateTimestamp: true,
-    };
+describe('parseCoverPercentage', () => {
+  describe('when value is a number', () => {
+    it('should return the value unchanged', () => {
+      // Act
+      const result = parseCoverPercentage(80);
 
-    expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(1, facilityId, amendmentId, expectedObject, auditDetails);
+      // Assert
+      expect(result).toBe(80);
+    });
+  });
+
+  describe('when value is a percentage string', () => {
+    it('should parse and return the numeric value', () => {
+      // Act
+      const result = parseCoverPercentage(' 75% ');
+
+      // Assert
+      expect(result).toBe(75);
+    });
+  });
+
+  describe('when value type is unsupported', () => {
+    it('should return null', () => {
+      // Act
+      const result = parseCoverPercentage({ value: 80 });
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+});
+
+describe('enrichAmendmentForApimGift', () => {
+  describe('when amendment coveredPercentage can be parsed', () => {
+    it('should keep amendment coveredPercentage', () => {
+      // Arrange
+      const amendment = { coveredPercentage: '95%', amendmentId: 'amendment-1' };
+      const facilitySnapshot = { coverPercentage: '80%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 95,
+      });
+    });
+  });
+
+  describe('when amendment coveredPercentage is missing and facility coverPercentage is present', () => {
+    it('should fallback to facility coverPercentage', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-2' };
+      const facilitySnapshot = { coverPercentage: '80%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 80,
+      });
+    });
+  });
+
+  describe('when facility coverPercentage is unavailable and coveredPercentage is present', () => {
+    it('should fallback to facility coveredPercentage', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-3' };
+      const facilitySnapshot = { coveredPercentage: '70%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 70,
+      });
+    });
   });
 });
