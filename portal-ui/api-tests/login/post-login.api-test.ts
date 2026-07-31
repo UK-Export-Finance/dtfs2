@@ -137,12 +137,14 @@ describe('POST /login', () => {
       expect(headers).toHaveProperty('location', `/login/${ACCESS_CODE_PAGES.CHECK_YOUR_EMAIL}`);
     });
 
-    it('should render the problem-with-service page if the sign in OTP is not sent successfully', async () => {
+    it('should render the problem-with-service page and not redirect if the sign in OTP is not sent successfully', async () => {
       when(api.sendSignInOTP).calledWith(token).mockRejectedValueOnce(new AxiosError());
 
-      const { status, text } = await loginWith({ email: anEmail, password: aPassword });
+      const { status, headers, text } = await loginWith({ email: anEmail, password: aPassword });
 
       expect(status).toEqual(HttpStatusCode.Ok);
+      expect(headers).not.toHaveProperty('location');
+      expect(text).toContain('data-cy="problem-with-service-heading"');
       expect(text).toContain('Sorry, there is a problem with the service.');
     });
 
