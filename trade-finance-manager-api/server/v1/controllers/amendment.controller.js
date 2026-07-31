@@ -56,7 +56,7 @@ const markFacilityAmendmentAsSentToApimGift = async ({ facilityId, amendmentId, 
 /**
  * Parses cover percentage values into a usable number.
  * - GEF facilities use `coverPercentage` (number).
- * - BSS/EWCS facilities use `coveredPercentage` (string number).
+ * - BSS/EWCS facilities use `coveredPercentage` (number string).
  *
  * @param {unknown} value - Candidate cover percentage value.
  * @returns {number | null} Parsed percentage value, or null when unavailable/invalid.
