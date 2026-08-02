@@ -33,7 +33,7 @@
     "chance": "^1.1.13",
     "cypress": "^13.17.0",
     "cypress-file-upload": "^5.0.8",
-    "cypress-plugin-tab": "^1.0.5",
+    "cypress-plugin-tab": "^2.0.0",
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
     "eslint": "^8.57.1",
