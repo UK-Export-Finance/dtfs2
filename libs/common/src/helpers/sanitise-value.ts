@@ -1,4 +1,4 @@
-const sanitizeHtml = require('sanitize-html');
+import sanitizeHtml from 'sanitize-html';
 
 /**
  * Recursively sanitises a value, which can be a string, array, or object.
@@ -9,7 +9,7 @@ const sanitizeHtml = require('sanitize-html');
  * @param {unknown} value - The value to sanitise.
  * @returns {unknown} - The sanitised value.
  */
-const sanitiseValue = (value) => {
+export const sanitiseValue = (value: unknown): unknown => {
   if (typeof value === 'string') {
     return sanitizeHtml(value);
   }
@@ -23,24 +23,4 @@ const sanitiseValue = (value) => {
   }
 
   return value;
-};
-
-/**
- * Sanitises a feedback response object by recursively sanitising all values.
- * @param {Object} body - The feedback response object to sanitise.
- * @returns {Object} - The sanitised feedback response object.
- */
-const sanitiseFeedbackResponse = (body) => {
-  const obj = {};
-
-  for (const [key, value] of Object.entries(body)) {
-    obj[key] = sanitiseValue(value);
-  }
-
-  return obj;
-};
-
-module.exports = {
-  sanitiseFeedbackResponse,
-  sanitiseValue,
 };
