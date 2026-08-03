@@ -76,11 +76,14 @@ const parseCoverPercentage = (value) => {
 };
 
 /**
- * Enriches an amendment with a covered percentage suitable for APIM GIFT mapping.
+ * Enriches an amendment with fields required for APIM GIFT mapping.
+ *
+ * - Normalizes coveredPercentage, falling back to the facility snapshot percentage when needed.
+ * - Falls back effectiveDate to bankDecision.effectiveDate when top-level effectiveDate is missing.
  *
  * @param {object} amendment - The amendment object.
  * @param {object} facilitySnapshot - The related facility snapshot object.
- * @returns {object} Amendment object with normalized coveredPercentage.
+ * @returns {object} Amendment object with normalized coveredPercentage and effectiveDate.
  */
 const enrichAmendmentForApimGift = (amendment, facilitySnapshot) => {
   const amendmentCoveredPercentage = parseCoverPercentage(amendment?.coveredPercentage);
