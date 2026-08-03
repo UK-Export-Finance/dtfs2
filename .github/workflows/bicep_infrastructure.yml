@@ -236,6 +236,7 @@ jobs:
           set +a
 
           PARAMETERS_FILE="$RUNNER_TEMP/bicep-parameters.json"
+          export PARAMETERS_FILE
           node <<'NODE'
           const fs = require('fs');
           const templatePath = 'infrastructure/resource_group_level/parameters_dev.json';
