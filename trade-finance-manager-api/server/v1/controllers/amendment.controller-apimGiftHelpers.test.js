@@ -159,121 +159,164 @@ describe('enrichAmendmentForApimGift', () => {
   describe('when amendment effectiveDate is missing and bankDecision.effectiveDate is present', () => {
     it('should fallback to bankDecision.effectiveDate', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-0', bankDecision: { effectiveDate: 1704067200 } };
-      const facilitySnapshot = { coverPercentage: '80%' };
+      const mockAmendment = {
+        amendmentId: 'amendment-0',
+        bankDecision: {
+          effectiveDate: 1704067200,
+        },
+      };
+
+      const mockFacilitySnapshot = {
+        coverPercentage: '80%',
+      };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 80,
-        effectiveDate: 1704067200,
-      });
+        effectiveDate: mockAmendment.bankDecision.effectiveDate,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when amendment effectiveDate is already present', () => {
     it('should keep amendment effectiveDate', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-0a', effectiveDate: 1704153600, bankDecision: { effectiveDate: 1704067200 } };
-      const facilitySnapshot = { coverPercentage: '80%' };
+      const mockAmendment = {
+        amendmentId: 'amendment-0a',
+        effectiveDate: 1704153600,
+        bankDecision: {
+          effectiveDate: 1704067200,
+        },
+      };
+
+      const mockFacilitySnapshot = {
+        coverPercentage: '80%',
+      };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 80,
-        effectiveDate: 1704153600,
-      });
+        effectiveDate: mockAmendment.effectiveDate,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when amendment coveredPercentage can be parsed', () => {
     it('should keep amendment coveredPercentage', () => {
       // Arrange
-      const amendment = { coveredPercentage: '95%', amendmentId: 'amendment-1' };
-      const facilitySnapshot = { coverPercentage: '80%' };
+      const mockAmendment = {
+        coveredPercentage: '95%',
+        amendmentId: 'amendment-1',
+      };
+
+      const mockFacilitySnapshot = { coverPercentage: '80%' };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 95,
-      });
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when amendment coveredPercentage is missing and facility coverPercentage is present', () => {
     it('should fallback to facility coverPercentage', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-2' };
-      const facilitySnapshot = { coverPercentage: '80%' };
+      const mockAmendment = { amendmentId: 'amendment-2' };
+      const mockFacilitySnapshot = { coverPercentage: '80%' };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 80,
-      });
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when facility coverPercentage is unavailable and coveredPercentage is present', () => {
     it('should fallback to facility coveredPercentage', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-3' };
-      const facilitySnapshot = { coveredPercentage: '70%' };
+      const mockAmendment = { amendmentId: 'amendment-3' };
+      const mockFacilitySnapshot = { coveredPercentage: '70%' };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 70,
-      });
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when amendment coveredPercentage is invalid and facility coverPercentage is present', () => {
     it('should fallback to facility coverPercentage', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-4', coveredPercentage: 'bad-value%' };
-      const facilitySnapshot = { coverPercentage: '65%' };
+      const mockAmendment = {
+        amendmentId: 'amendment-4',
+        coveredPercentage: 'bad-value%',
+      };
+
+      const mockFacilitySnapshot = { coverPercentage: '65%' };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 65,
-      });
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 
   describe('when amendment coveredPercentage is 0 and facility has a value', () => {
     it('should keep amendment coveredPercentage', () => {
       // Arrange
-      const amendment = { amendmentId: 'amendment-5', coveredPercentage: 0 };
-      const facilitySnapshot = { coverPercentage: '65%' };
+      const mockAmendment = {
+        amendmentId: 'amendment-5',
+        coveredPercentage: 0,
+      };
+
+      const mockFacilitySnapshot = { coverPercentage: '65%' };
 
       // Act
-      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+      const result = enrichAmendmentForApimGift(mockAmendment, mockFacilitySnapshot);
 
       // Assert
-      expect(result).toEqual({
-        ...amendment,
+      const expected = {
+        ...mockAmendment,
         coveredPercentage: 0,
-      });
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 });
