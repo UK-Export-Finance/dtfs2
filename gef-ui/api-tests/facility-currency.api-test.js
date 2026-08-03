@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -33,7 +34,9 @@ describe('facility currency routes', () => {
   describe('POST /application-details/:dealId/facilities/:facilityId/facility-currency', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) =>
-        post({ currencyId: 'GBP', facilityType: 'Cash' }, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-currency`),
+        post({ currencyId: CURRENCY.GBP, facilityType: FACILITY_TYPE.CASH }, headers).to(
+          `/application-details/${dealId}/facilities/${facilityId}/facility-currency`,
+        ),
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Found,
       successHeaders: {
