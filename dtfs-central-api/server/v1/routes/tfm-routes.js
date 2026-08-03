@@ -476,7 +476,7 @@ tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInP
  *         description: Internal server error
  */
 tfmRouter
-  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .route('/facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}')
   .get(validation.mongoIdValidation('facilityId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByFacilityId);
 
 /**
@@ -493,7 +493,7 @@ tfmRouter
  *         description: Internal server error
  */
 tfmRouter
-  .route('/deals/:dealId/amendments/:status?/:type?')
+  .route('/deals/:dealId/amendments{/:status}{/:type}')
   .get(validation.mongoIdValidation('dealId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByDealId);
 
 /**

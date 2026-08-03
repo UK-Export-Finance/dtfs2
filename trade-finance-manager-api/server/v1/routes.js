@@ -321,7 +321,7 @@ authRouter
  *         description: Internal server error
  */
 authRouter
-  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .route('/facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}')
   .get(validation.facilityIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentByFacilityId);
 
 /**
@@ -372,7 +372,7 @@ authRouter
  *       500:
  *         description: Internal server error
  */
-authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
+authRouter.route('/amendments{/:status}').get(amendmentController.getAllAmendments);
 
 /**
  * @openapi

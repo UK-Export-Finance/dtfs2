@@ -63,7 +63,7 @@ export const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => {
+  app.get('/{*path}', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.
     // If so, the user property can be accessed on the session & passed into the template
     const userIsFullyLoggedIn = 'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
