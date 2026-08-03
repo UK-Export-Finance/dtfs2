@@ -67,7 +67,6 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
-          subscription-id: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
 
       - name: Verify Azure subscription 🧭
         run: |
@@ -116,7 +115,6 @@ jobs:
   #       uses: azure/login@v3
   #       with:
   #         creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
-  #         subscription-id: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
 
   #     - name: Verify Azure subscription 🧭
   #       run: |
