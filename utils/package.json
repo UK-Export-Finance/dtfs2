@@ -22,7 +22,7 @@
     "dependencies": {
         "@faker-js/faker": "^8.4.1",
         "@ukef/dtfs2-common": "1.0.0",
-        "axios": "1.18.1",
+        "axios": "1.19.0",
         "big.js": "^7.0.1",
         "bson": "^6.10.4",
         "chance": "^1.1.13",
