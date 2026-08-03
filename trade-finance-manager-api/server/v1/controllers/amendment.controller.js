@@ -85,9 +85,11 @@ const parseCoverPercentage = (value) => {
 const enrichAmendmentForApimGift = (amendment, facilitySnapshot) => {
   const amendmentCoveredPercentage = parseCoverPercentage(amendment?.coveredPercentage);
   const coverPercentageFromFacility = parseCoverPercentage(facilitySnapshot?.coverPercentage ?? facilitySnapshot?.coveredPercentage);
+  const effectiveDateFromBankDecision = amendment?.bankDecision?.effectiveDate;
 
   return {
     ...amendment,
+    effectiveDate: amendment?.effectiveDate ?? effectiveDateFromBankDecision,
     coveredPercentage: amendmentCoveredPercentage ?? coverPercentageFromFacility,
   };
 };

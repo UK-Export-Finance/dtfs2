@@ -156,6 +156,42 @@ describe('parseCoverPercentage', () => {
 });
 
 describe('enrichAmendmentForApimGift', () => {
+  describe('when amendment effectiveDate is missing and bankDecision.effectiveDate is present', () => {
+    it('should fallback to bankDecision.effectiveDate', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-0', bankDecision: { effectiveDate: 1704067200 } };
+      const facilitySnapshot = { coverPercentage: '80%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 80,
+        effectiveDate: 1704067200,
+      });
+    });
+  });
+
+  describe('when amendment effectiveDate is already present', () => {
+    it('should keep amendment effectiveDate', () => {
+      // Arrange
+      const amendment = { amendmentId: 'amendment-0a', effectiveDate: 1704153600, bankDecision: { effectiveDate: 1704067200 } };
+      const facilitySnapshot = { coverPercentage: '80%' };
+
+      // Act
+      const result = enrichAmendmentForApimGift(amendment, facilitySnapshot);
+
+      // Assert
+      expect(result).toEqual({
+        ...amendment,
+        coveredPercentage: 80,
+        effectiveDate: 1704153600,
+      });
+    });
+  });
+
   describe('when amendment coveredPercentage can be parsed', () => {
     it('should keep amendment coveredPercentage', () => {
       // Arrange
