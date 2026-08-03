@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -33,7 +34,7 @@ describe('about facility routes', () => {
   describe('POST /application-details/:dealId/facilities/:facilityId/about-facility', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) =>
-        post({ facilityType: 'Cash', hasBeenIssued: 'false', monthsOfCover: '12' }, headers).to(
+        post({ facilityType: FACILITY_TYPE.CASH, hasBeenIssued: 'false', monthsOfCover: '12' }, headers).to(
           `/application-details/${dealId}/facilities/${facilityId}/about-facility`,
         ),
       whitelistedRoles: [MAKER],
