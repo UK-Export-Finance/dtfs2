@@ -1,5 +1,5 @@
 import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { findACBSIndustrySector } from './industry-sectors.controller';
@@ -12,7 +12,9 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-export const lookup = async (req: Request, res: Response) => {
+type PartyDbLookupRequest = CustomExpressRequest<{ params: { partyDbCompanyRegistrationNumber: string } }>;
+
+export const lookup = async (req: PartyDbLookupRequest, res: Response) => {
   try {
     const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 

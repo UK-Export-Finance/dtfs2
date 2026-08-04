@@ -1,13 +1,15 @@
-import httpMocks, { MockResponse } from 'node-mocks-http';
+import httpMocks, { MockResponse, RequestOptions } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON, ERROR_KEY } from '@ukef/dtfs2-common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
+import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation, RecordCorrectionRequestInformationRequest } from '.';
 import api from '../../../../api';
 import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 jest.mock('../../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<RecordCorrectionRequestInformationRequest>(options);
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {
   const reportId = '123';
@@ -25,7 +27,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   });
 
   describe('getRecordCorrectionRequestInformation', () => {
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = createHttpMocks({
       session: requestSession,
       params: { reportId, feeRecordId },
     });
@@ -98,11 +100,11 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   describe('postRecordCorrectionRequestInformation', () => {
     const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
 
-    let req: Request;
+    let req: RecordCorrectionRequestInformationRequest;
     let res: MockResponse<Response>;
 
     beforeEach(() => {
-      ({ req, res } = httpMocks.createMocks({
+      ({ req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
       }));

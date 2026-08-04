@@ -101,7 +101,6 @@
   },
   "engineStrict": true,
   "overrides": {
-    "express": "^4.21.2",
     "ts-node": "^10.9.2"
   }
 }

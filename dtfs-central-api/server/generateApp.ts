@@ -15,6 +15,13 @@ const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROU
 export const generateApp = (): Express => {
   const app = express();
 
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
+
   // Register global handlers
   exceptionHandlers();
 

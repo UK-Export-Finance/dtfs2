@@ -4,7 +4,8 @@ import { EntraIdApi } from './entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdConfigMockBuilder } from '../__mocks__/builders';
 
-const mockAxios = new MockAdapter(axios);
+// Axios 1.19's ESM and CommonJS declarations use distinct unique symbols.
+const mockAxios = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 describe('EntraIdApi', () => {
   describe('getAuthorityMetadataUrl', () => {
