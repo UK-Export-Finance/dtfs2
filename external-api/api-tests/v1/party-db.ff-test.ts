@@ -41,7 +41,8 @@ jest.mock('../../server/v1/controllers/industry-sectors.controller', () => ({
 
 describe('party-db.controller feature flag', () => {
   beforeEach(() => {
-    axiosMock = new MockAdapter(axios);
+    // Axios 1.19's ESM and CommonJS declarations use distinct unique symbols.
+    axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
