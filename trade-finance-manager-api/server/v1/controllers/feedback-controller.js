@@ -1,6 +1,5 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-const sanitizeHtml = require('sanitize-html');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError, sanitiseFeedbackResponse } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
@@ -16,11 +15,12 @@ require('dotenv').config();
  * @param {import('express').Response} res - Express response object
  */
 exports.create = async (req, res) => {
-  const validationErrors = validateFeedback(req.body);
+  const feedback = sanitiseFeedbackResponse(req.body);
+  const validationErrors = validateFeedback(feedback);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: sanitizeHtml(req.body),
+      feedback,
       validationErrors,
     });
   }
@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
     submittedBy,
     // Because this is on the open router, information about the user cannot be inferred from req.user
     auditDetails,
-  } = req.body;
+  } = feedback;
 
   try {
     validateAuditDetails(auditDetails);
