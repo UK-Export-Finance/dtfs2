@@ -1,0 +1,87 @@
+import { when } from 'jest-when';
+import { HttpStatusCode, AxiosResponse } from 'axios';
+import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { SessionCookieResponse, RequestHeaders } from '@ukef/dtfs2-common';
+import * as api from '../../server/api';
+import app from '../../server/createApp';
+import extractSessionCookie from '../helpers/extractSessionCookie';
+import mockLogin from '../helpers/login';
+import { mockDtfs2CommonLoginApiModule, mockLoginApiModule } from './helpers/mock-portal-ui-login-api-modules.ts';
+import { withPartial2faAuthValidationApiTests } from './helpers/partial-2fa-auth-validation-api-tests';
+
+jest.mock('@ukef/dtfs2-common', () => mockDtfs2CommonLoginApiModule());
+
+jest.mock('../../server/api', () => mockLoginApiModule());
+
+describe('GET /login/resend-another-access-code', () => {
+  const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+  const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+  const { get, post } = createApi(app);
+  const email = 'mock email';
+  const password = 'mock password';
+  const partialAuthToken = 'partial auth token';
+
+  const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
+  beforeEach(() => {
+    process.env.FF_PORTAL_2FA_ENABLED = 'true';
+  });
+
+  afterAll(() => {
+    if (originalPortal2faEnabled === undefined) {
+      delete process.env.FF_PORTAL_2FA_ENABLED;
+    } else {
+      process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+    }
+  });
+
+  withPartial2faAuthValidationApiTests({
+    makeRequestWithHeaders: (headers?: RequestHeaders) => get('/login/resend-another-access-code', {}, headers),
+    validateResponseWasSuccessful: (response: { status: number }) => expect(response.status).toEqual(HttpStatusCode.Ok),
+    flow: 'access-code',
+    numberOfSignInOtpAttemptsRemaining: 0,
+  });
+
+  describe('page rendering', () => {
+    let sessionCookie: string;
+
+    beforeEach(async () => {
+      (api.validatePartialAuthToken as jest.Mock).mockReset();
+      (api.login as jest.Mock).mockImplementation(mockLogin(partialAuthToken));
+
+      (api.sendSignInOTP as jest.Mock | undefined)?.mockResolvedValue?.({
+        data: { numberOfSignInOtpAttemptsRemaining: 0 },
+      });
+
+      sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
+
+      when(api.validatePartialAuthToken)
+        .calledWith(partialAuthToken)
+        .mockResolvedValue({ data: {} } as AxiosResponse<unknown>);
+    });
+
+    it(`should render the resend another access code page with HTTP status ${HttpStatusCode.Ok}`, async () => {
+      const response = await get('/login/resend-another-access-code', {}, { Cookie: sessionCookie });
+
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain("We've sent you another access code");
+    });
+
+    it('should redirect to /not-found when numberOfSignInOtpAttemptsRemaining is not 0', async () => {
+      (api.sendSignInOTP as jest.Mock | undefined)?.mockResolvedValue?.({
+        data: { numberOfSignInOtpAttemptsRemaining: 2 },
+      });
+
+      const invalidSessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
+
+      when(api.validatePartialAuthToken)
+        .calledWith(partialAuthToken)
+        .mockResolvedValue({ data: {} } as AxiosResponse<unknown>);
+
+      const response = await get('/login/resend-another-access-code', {}, { Cookie: invalidSessionCookie });
+
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+});
