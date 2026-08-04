@@ -70,6 +70,7 @@
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.6.1",
     "express": "^4.22.2",
+    "express-mongo-sanitize": "^2.2.0",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
     "html-entities": "^2.6.0",

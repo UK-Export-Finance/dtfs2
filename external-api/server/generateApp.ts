@@ -2,9 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
-import mongoSanitise from 'express-mongo-sanitize';
-import type { RequestHandler } from 'express';
-import { exceptionHandlers, maintenance, SWAGGER, xss } from '@ukef/dtfs2-common';
+import { exceptionHandlers, maintenance, sanitiseMongoRequest, SWAGGER, xss } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -14,18 +12,6 @@ import { createRateLimit } from './middleware/rateLimit';
 dotenv.config();
 
 const { CORS_ORIGIN } = process.env;
-const sanitise = mongoSanitise.sanitize as (target: object, options: { allowDots: boolean }) => void;
-
-const sanitiseRequest: RequestHandler = (req, _res, next) => {
-  (['body', 'params', 'headers', 'query'] as const).forEach((key) => {
-    const value = req[key];
-    if (value && typeof value === 'object') {
-      sanitise(value, { allowDots: true });
-    }
-  });
-
-  next();
-};
 
 export const generateApp = () => {
   const app = express();
@@ -54,7 +40,7 @@ export const generateApp = () => {
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(sanitiseRequest);
+  app.use(sanitiseMongoRequest);
 
   app.use(
     cors({

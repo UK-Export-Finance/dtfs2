@@ -1,11 +1,10 @@
 const { CORS_ORIGIN } = process.env;
-const { exceptionHandlers, maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, maintenance, sanitiseMongoRequest, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
@@ -19,18 +18,6 @@ const createRateLimit = require('./v1/middleware/rateLimit');
 dotenv.config();
 
 const userService = new UserService();
-const sanitise = mongoSanitise.sanitize;
-
-const sanitiseRequest = (req, res, next) => {
-  ['body', 'params', 'headers', 'query'].forEach((key) => {
-    const value = req[key];
-    if (value && typeof value === 'object') {
-      sanitise(value, { allowDots: true });
-    }
-  });
-
-  next();
-};
 
 const generateApp = () => {
   // Setup for token authentication via Passport
@@ -64,7 +51,7 @@ const generateApp = () => {
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(sanitiseRequest);
+  app.use(sanitiseMongoRequest);
 
   app.use(
     cors({

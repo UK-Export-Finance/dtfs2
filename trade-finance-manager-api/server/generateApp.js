@@ -1,9 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const mongoSanitise = require('express-mongo-sanitize');
-const { exceptionHandlers, initialiseCronJobScheduler, xss } = require('@ukef/dtfs2-common');
-const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, initialiseCronJobScheduler, xss, sanitiseMongoRequest, maintenance, SWAGGER } = require('@ukef/dtfs2-common');
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
@@ -17,19 +15,6 @@ const createRateLimit = require('./v1/middleware/rateLimit/index');
 const { cronSchedulerJobs } = require('./cron-scheduler-jobs');
 
 initialiseCronJobScheduler(cronSchedulerJobs);
-
-const sanitise = mongoSanitise.sanitize;
-
-const sanitiseRequest = (req, res, next) => {
-  ['body', 'params', 'headers', 'query'].forEach((key) => {
-    const value = req[key];
-    if (value && typeof value === 'object') {
-      sanitise(value, { allowDots: true });
-    }
-  });
-
-  next();
-};
 
 configurePassport(passport);
 
@@ -65,7 +50,7 @@ const generateApp = () => {
   app.use('/v1', authRouter);
 
   // MongoDB sanitisation
-  app.use(sanitiseRequest);
+  app.use(sanitiseMongoRequest);
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:
