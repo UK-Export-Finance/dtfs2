@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidMongoId } from '../../helpers/validateIds';
 
-export const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
+export type ValidateMongoIdRequest = Request<{ _id: string }>;
+
+export const validateMongoId = (req: ValidateMongoIdRequest, res: Response, next: NextFunction) => {
   const { _id } = req.params;
 
   if (!isValidMongoId(_id)) {
