@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
+import type { RequestHandler } from 'express';
 import { exceptionHandlers, MAX_REQUEST_SIZE, xss, maintenance } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
@@ -12,6 +13,18 @@ import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRout
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 
 const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
+const sanitise = mongoSanitise.sanitize as (target: object, options: { allowDots: boolean }) => void;
+
+const sanitiseRequest: RequestHandler = (req, _res, next) => {
+  (['body', 'params', 'headers', 'query'] as const).forEach((key) => {
+    const value = req[key];
+    if (value && typeof value === 'object') {
+      sanitise(value, { allowDots: true });
+    }
+  });
+
+  next();
+};
 
 export const generateApp = (): Express => {
   const app = express();
@@ -41,11 +54,7 @@ export const generateApp = (): Express => {
   app.use(createRateLimit());
   app.use(xss);
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseRequest);
 
   app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
   app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);

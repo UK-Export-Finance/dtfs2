@@ -18,6 +18,19 @@ const { cronSchedulerJobs } = require('./cron-scheduler-jobs');
 
 initialiseCronJobScheduler(cronSchedulerJobs);
 
+const sanitise = mongoSanitise.sanitize;
+
+const sanitiseRequest = (req, res, next) => {
+  ['body', 'params', 'headers', 'query'].forEach((key) => {
+    const value = req[key];
+    if (value && typeof value === 'object') {
+      sanitise(value, { allowDots: true });
+    }
+  });
+
+  next();
+};
+
 configurePassport(passport);
 
 const generateApp = () => {
@@ -52,11 +65,7 @@ const generateApp = () => {
   app.use('/v1', authRouter);
 
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseRequest);
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:

@@ -19,6 +19,18 @@ const createRateLimit = require('./v1/middleware/rateLimit');
 dotenv.config();
 
 const userService = new UserService();
+const sanitise = mongoSanitise.sanitize;
+
+const sanitiseRequest = (req, res, next) => {
+  ['body', 'params', 'headers', 'query'].forEach((key) => {
+    const value = req[key];
+    if (value && typeof value === 'object') {
+      sanitise(value, { allowDots: true });
+    }
+  });
+
+  next();
+};
 
 const generateApp = () => {
   // Setup for token authentication via Passport
@@ -52,11 +64,7 @@ const generateApp = () => {
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseRequest);
 
   app.use(
     cors({
