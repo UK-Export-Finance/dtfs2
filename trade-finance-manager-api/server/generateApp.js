@@ -45,12 +45,12 @@ const generateApp = () => {
   app.use(xss);
   app.use(passport.initialize());
 
+  // MongoDB sanitisation
+  app.use(sanitiseMongoRequest);
+
   app.post('/v1/login', validateSsoFeatureFlagFalse, loginController.login);
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);
-
-  // MongoDB sanitisation
-  app.use(sanitiseMongoRequest);
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:
