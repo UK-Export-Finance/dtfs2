@@ -12,14 +12,15 @@ describe('middleware/xss', () => {
         },
         tags: ['<b>safe</b>', '<img src=x onerror=alert(1)>'],
       };
-      const originalReference = target;
 
       // Act
       sanitiseInPlace(target);
 
       // Assert
-      expect(target).toBe(originalReference);
-      expect(target).toEqual({
+      const expected = target;
+
+      expect(expected).toBe(target);
+      expect(expected).toEqual({
         name: 'Alice',
         details: {
           description: '',
@@ -31,14 +32,15 @@ describe('middleware/xss', () => {
     it('should recursively sanitise an array while preserving its reference', () => {
       // Arrange
       const target = ['<h1>Heading</h1>', '<script>alert(1)</script>', { value: '<b>bold</b>' }];
-      const originalReference = target;
 
       // Act
       sanitiseInPlace(target);
 
       // Assert
-      expect(target).toBe(originalReference);
-      expect(target).toEqual(['Heading', '', { value: 'bold' }]);
+      const expected = target;
+
+      expect(expected).toBe(target);
+      expect(expected).toEqual(['Heading', '', { value: 'bold' }]);
     });
 
     it.each([{}, []])('should leave an empty collection unchanged', (target) => {
@@ -49,8 +51,10 @@ describe('middleware/xss', () => {
       sanitiseInPlace(target);
 
       // Assert
-      expect(target).toBe(originalReference);
-      expect(target).toEqual(Array.isArray(target) ? [] : {});
+      const expected = target;
+
+      expect(expected).toBe(originalReference);
+      expect(expected).toEqual(Array.isArray(target) ? [] : {});
     });
   });
 

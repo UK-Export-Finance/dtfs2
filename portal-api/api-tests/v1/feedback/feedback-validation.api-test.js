@@ -32,7 +32,7 @@ describe('/v1/feedback', () => {
     return response;
   };
 
-  describe('POST /v1/feedback/:id', () => {
+  describe('POST /v1/feedback', () => {
     it('returns 400 with validation errors', async () => {
       const { status, body } = await postFeedback();
 
