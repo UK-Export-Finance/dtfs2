@@ -42,7 +42,7 @@ context(`users can filter payment details by facility id and payment reference a
   });
 
   describe('when filter panel toggle button is clicked', () => {
-    it('should toggle the filter panel', () => {
+    it.only('should toggle the filter panel', () => {
       const feeRecord = aFeeRecordWithId(1);
       const feeRecords = [feeRecord];
 
