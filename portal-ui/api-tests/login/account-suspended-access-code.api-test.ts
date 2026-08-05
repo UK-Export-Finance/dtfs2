@@ -1,9 +1,13 @@
 import { HttpStatusCode } from 'axios';
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import app from '../../server/createApp';
-import { mockDtfs2CommonLoginApiModule } from './helpers/mock-portal-ui-login-api-modules.ts';
 
-jest.mock('@ukef/dtfs2-common', () => mockDtfs2CommonLoginApiModule());
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
+  verify: jest.fn((_req: unknown, _res: unknown, next: () => void): void => {
+    next();
+  }),
+}));
 
 describe('GET /login/temporarily-suspended-access-code', () => {
   const { get } = createApi(app);

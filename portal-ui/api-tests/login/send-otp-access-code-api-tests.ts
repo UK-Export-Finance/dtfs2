@@ -7,13 +7,25 @@ import * as api from '../../server/api';
 import app from '../../server/createApp';
 import extractSessionCookie from '../helpers/extractSessionCookie';
 import mockLogin from '../helpers/login';
-import { mockDtfs2CommonLoginApiModule, mockLoginApiModule } from './helpers/mock-portal-ui-login-api-modules.ts';
 import { withPartial2faAuthValidationApiTests } from './helpers/partial-2fa-auth-validation-api-tests';
 import { withRoleValidationOtpApiTests } from './role-validation-with-otp-api-tests';
 
-jest.mock('@ukef/dtfs2-common', () => mockDtfs2CommonLoginApiModule());
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
+  verify: jest.fn((_req: unknown, _res: unknown, next: () => void): void => {
+    next();
+  }),
+}));
 
-jest.mock('../../server/api', () => mockLoginApiModule());
+jest.mock('../../server/api', () => ({
+  login: jest.fn(),
+  sendSignInOTP: jest.fn(),
+  loginWithSignInOtp: jest.fn(),
+  sendSignInLink: jest.fn(),
+  loginWithSignInLink: jest.fn(),
+  validateToken: () => false,
+  validatePartialAuthToken: jest.fn(),
+}));
 
 export const withSendNewOtpApiTests = (
   endpoint: string,
