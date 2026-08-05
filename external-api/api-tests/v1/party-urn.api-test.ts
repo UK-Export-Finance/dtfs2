@@ -19,7 +19,7 @@ const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 // Mock Axios
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 axiosMock.onGet(`${APIM_MDM_URL}v1/customers?partyUrn=03827491`).reply(HttpStatusCode.Ok, {});
 
 describe('/party-db/urn', () => {

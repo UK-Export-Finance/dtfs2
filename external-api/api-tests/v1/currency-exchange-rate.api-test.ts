@@ -10,7 +10,7 @@ const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
 // Mock Axios
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 // Mock responses
 const mockResponses = {

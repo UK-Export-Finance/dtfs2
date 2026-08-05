@@ -9,7 +9,7 @@ import { api } from '../api';
 const { get } = api(app);
 
 describe('/ukef-industry-code', () => {
-  const axiosMock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
   describe('GET /ukef-industry-code/by-companies-house-industry-code/:industryCode', () => {
     beforeEach(() => {

@@ -29,7 +29,7 @@ const payload: Estore = {
   riskMarket: '1',
 };
 
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mockInsertOne = jest.fn();
 const mockFindOne = jest.fn();

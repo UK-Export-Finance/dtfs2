@@ -13,7 +13,7 @@ import { BankHolidaysEvent } from '../../server/interfaces';
 const { get } = api(app);
 
 describe('/bank-holidays', () => {
-  const axiosMock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
   describe('when Bank Holiday API call returns 200 and body contains data', () => {
     axiosMock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });

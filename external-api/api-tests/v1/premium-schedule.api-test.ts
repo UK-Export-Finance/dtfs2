@@ -35,7 +35,7 @@ describe('/premium-schedule', () => {
     cumulativeAmount: 0,
   };
 
-  const axiosMock = new MockAdapter(axios);
+  const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
   jest.mock('axios', () => jest.requireActual('axios'));
 
   const mockResponse = {

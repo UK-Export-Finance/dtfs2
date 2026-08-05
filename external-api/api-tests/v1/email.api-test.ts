@@ -37,7 +37,7 @@ const mockSuccessfulResponse = {
 };
 
 // Mock Axios
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mockBody = {
   templateId: 'tmp1234-1234-5678-9012-abcd12345678',

@@ -67,7 +67,7 @@ const mockResponse = {
   },
 };
 
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 axiosMock
   .onGet(`${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)

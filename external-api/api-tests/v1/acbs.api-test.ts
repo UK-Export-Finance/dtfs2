@@ -45,7 +45,7 @@ const mockACBSFacilityErrorInput = {
 };
 
 // Mock Axios
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 describe('/acbs', () => {
   describe('POST /v1/acbs/', () => {

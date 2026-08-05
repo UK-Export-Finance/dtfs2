@@ -27,7 +27,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 }));
 
 beforeEach(() => {
-  axiosMock = new MockAdapter(axios);
+  axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});

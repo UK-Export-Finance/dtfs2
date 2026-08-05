@@ -13,7 +13,7 @@ const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_M
 
 const { get } = api(app);
 
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mdmGetCompanyResponse = {
   companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,

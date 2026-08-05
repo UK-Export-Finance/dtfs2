@@ -29,7 +29,7 @@ const mockStartDate = '2017-07-04';
 const mockEndDate = '2018-07-04';
 
 // Mock Axios
-const axiosMock = new MockAdapter(axios);
+const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 axiosMock
   .onGet(`${APIM_MDM_URL}v1/exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`)
   .reply(HttpStatusCode.Ok, mockResponse.data);
