@@ -494,8 +494,20 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
+        // Manual amendments must wait until the bank decision is submitted before APIM GIFT receives the effective date
+        /**
+         * Amendments that require UKEF approval are considered manual amendments.
+         * The bank decision must be submitted before sending to APIM GIFT to ensure the effective date is available for the amendment payload.
+         */
+        const isManualAmendment = Boolean(amendment?.requireUkefApproval);
+        const bankDecisionIsSubmitted = Boolean(amendment?.bankDecision?.submitted);
+
         const couldSendToApimGift =
-          isTfmApimGiftIntegrationEnabled() && !isTaskUpdate && isSubmittedByPim && !hasFacilityAmendmentBeenSentToApimGift(amendment);
+          isTfmApimGiftIntegrationEnabled() &&
+          !isTaskUpdate &&
+          isSubmittedByPim &&
+          !hasFacilityAmendmentBeenSentToApimGift(amendment) &&
+          (!isManualAmendment || bankDecisionIsSubmitted);
 
         if (couldSendToApimGift) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
