@@ -462,7 +462,7 @@ tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInP
 
 /**
  * @openapi
- * /tfm/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?:
+ * /tfm/facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}:
  *   get:
  *     summary: Finds amendments on a facility by ID
  *     tags: [TFM - Amendments]
@@ -481,7 +481,7 @@ tfmRouter
 
 /**
  * @openapi
- * /tfm/deals/:dealId/amendments/:status?/:type?:
+ *  /tfm/deals/:dealId/amendments{/:status}{/:type}:
  *   get:
  *     summary: Finds amendments on a deal by ID
  *     tags: [TFM - Amendments]

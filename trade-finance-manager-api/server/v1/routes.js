@@ -305,7 +305,7 @@ authRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?:
+ * /facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}:
  *   get:
  *     summary: Get amendment by facility ID, amendment ID, type or status
  *     tags: [TFM - Amendments]
@@ -357,7 +357,7 @@ authRouter
 
 /**
  * @openapi
- * /amendments/:status?:
+ * /amendments{/:status}:
  *   get:
  *     summary: Get all amendments by status
  *     tags: [TFM - Amendments]
