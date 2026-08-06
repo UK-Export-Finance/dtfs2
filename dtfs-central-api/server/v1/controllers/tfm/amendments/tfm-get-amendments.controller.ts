@@ -44,12 +44,15 @@ const mapAmendmentToLatestValue = (
   currency: Currency;
 } => {
   const { amendmentId, value, currency } = amendment;
+
   if (!value) {
     throw new Error('Found amendment does not have a defined value');
   }
+
   if (!currency) {
     throw new Error('Found amendment does not have a defined currency');
   }
+
   return { amendmentId: amendmentId.toString(), value, currency };
 };
 
@@ -63,6 +66,7 @@ const mapAmendmentToLatestCompletedDate = (
   if (!coverEndDate) {
     throw new Error('Found amendment does not have a defined coverEndDate');
   }
+
   return {
     amendmentId: amendmentId.toString(),
     coverEndDate,
@@ -75,22 +79,26 @@ const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): Comp
     if (!facilityEndDate) {
       throw new Error('Found amendment does not have a defined facility end date');
     }
+
     return {
       amendmentId: amendmentId.toString(),
       isUsingFacilityEndDate,
       facilityEndDate,
     };
   }
+
   if (isUsingFacilityEndDate === false) {
     if (!bankReviewDate) {
       throw new Error('Found amendment does not have a defined bank review date');
     }
+
     return {
       amendmentId: amendmentId.toString(),
       isUsingFacilityEndDate,
       bankReviewDate,
     };
   }
+
   return {
     amendmentId: amendmentId.toString(),
     isUsingFacilityEndDate: undefined,
@@ -138,6 +146,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
       const { status, message } = error;
       return res.status(status).send({ status, message });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: 'An unknown error occurred when getting amendments by facility id',
@@ -150,6 +159,7 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
 
   try {
     let amendment: Document | Document[] | null;
+
     switch (status) {
       case AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
         amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
@@ -179,11 +189,13 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
     console.error('Error getting amendments by deal id:', error);
     if (error instanceof ApiError) {
       const { status: errorStatus, message } = error;
+
       return res.status(errorStatus).send({ status: errorStatus, message });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'An unknown error occurred when getting amendments by facility id',
+      message: 'An unknown error occurred when getting amendments by deal id',
     });
   }
 };
