@@ -437,7 +437,10 @@ describe('updated facility amendment API call', () => {
             api.getAmendmentById = jest.fn().mockResolvedValue({
               ...MOCK_AMENDMENT,
               requireUkefApproval: true,
-              // bankDecision not yet recorded
+              changeFacilityValue: true,
+              changeCoverEndDate: false,
+              currentValue: 100,
+              value: 130,
             });
 
             // Act
@@ -474,7 +477,10 @@ describe('updated facility amendment API call', () => {
               submitted: true,
               effectiveDate: bankDecisionEffectiveDate,
             },
-            tfm: { ...MOCK_AMENDMENT.tfm, coverEndDate: 1706745600000 },
+            tfm: {
+              ...MOCK_AMENDMENT.tfm,
+              coverEndDate: 1706745600000,
+            },
           });
 
           // Act
