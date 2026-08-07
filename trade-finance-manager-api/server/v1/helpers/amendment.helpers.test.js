@@ -1080,15 +1080,15 @@ describe('formatAmendmentDates', () => {
       coverEndDate: 1761087600000,
     });
   });
+});
 
-  describe('calculateAcbsUkefExposureValue', () => {
-    it('should calculate UKEF exposure correctly', () => {
-      const value = 5000;
-      const coveredPercentage = 12;
+describe('calculateAcbsUkefExposureValue', () => {
+  it('should calculate UKEF exposure correctly', () => {
+    const value = 5000;
+    const coveredPercentage = 12;
 
-      const result = calculateAcbsUkefExposureValue(value, coveredPercentage);
+    const result = calculateAcbsUkefExposureValue(value, coveredPercentage);
 
-      expect(result).toBe(600);
-    });
+    expect(result).toBe(600);
   });
 });
