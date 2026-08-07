@@ -1,12 +1,10 @@
-const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { createApi, cloneMock } = require('@ukef/dtfs2-common/api-test');
 const { HttpStatusCode } = require('axios');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const api = require('../server/services/api');
 const { MOCK_BASIC_DEAL } = require('../server/utils/mocks/mock-applications');
-
-const cloneMock = (value) => JSON.parse(JSON.stringify(value));
 
 const dealId = MOCK_BASIC_DEAL._id;
 
