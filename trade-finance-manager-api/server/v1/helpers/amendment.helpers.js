@@ -465,12 +465,12 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 };
 
 /**
- * calculates the ukef exposure for ACBS from the provided value and coveredPercentage
- * @param {Number} value
+ * calculates the ukef exposure for ACBS from the provided newAmount and coveredPercentage
+ * @param {Number} newAmount
  * @param {Number} coveredPercentage
  * @returns {Number} calculated ukef exposure value
  */
-const calculateAcbsUkefExposureValue = (value, coveredPercentage) => value * (coveredPercentage / 100);
+const calculateAcbsUkefExposureValue = (newAmount, coveredPercentage) => newAmount * (coveredPercentage / 100);
 
 /**
  * Calculates UKEF Exposure for the defined facility
