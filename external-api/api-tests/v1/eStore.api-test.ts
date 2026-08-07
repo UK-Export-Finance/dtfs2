@@ -1,6 +1,6 @@
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { UKEF_ID } from '@ukef/dtfs2-common';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import { ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../server/constants';
@@ -28,8 +28,6 @@ const payload: Estore = {
   destinationMarket: 'UK',
   riskMarket: '1',
 };
-
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mockInsertOne = jest.fn();
 const mockFindOne = jest.fn();

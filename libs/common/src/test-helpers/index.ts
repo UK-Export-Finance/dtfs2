@@ -14,3 +14,4 @@ export * from './record-correction-form-values';
 export * from './record-correction-transient-form-data';
 export * from './types';
 export * from './e2e';
+export * from './axios-mock-adapter';

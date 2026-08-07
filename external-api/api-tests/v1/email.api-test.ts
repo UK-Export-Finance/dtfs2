@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import dotenv from 'dotenv';
-import axios, { HttpStatusCode } from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+import { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { sendEmail } from '../../server/v1/controllers/email.controller';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -35,9 +35,6 @@ const mockSuccessfulResponse = {
     uri: 'https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f',
   },
 };
-
-// Mock Axios
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mockBody = {
   templateId: 'tmp1234-1234-5678-9012-abcd12345678',

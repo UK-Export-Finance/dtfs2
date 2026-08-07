@@ -1,8 +1,7 @@
-const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers');
 const api = require('./api');
 
-const mockAxios = new MockAdapter(axios);
+const mockAxios = axiosMock;
 const localIp = '127.0.0.1';
 const urlTraversal = '../../../etc/stealpassword';
 const validId = '5ce819935e539c343f141ece';

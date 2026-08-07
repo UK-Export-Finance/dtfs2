@@ -7,8 +7,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
@@ -43,9 +43,6 @@ const mockACBSFacilityErrorInput = {
   ...mockACBSFacilityInput,
   facilityIdentifier: 'errorId',
 };
-
-// Mock Axios
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 describe('/acbs', () => {
   describe('POST /v1/acbs/', () => {

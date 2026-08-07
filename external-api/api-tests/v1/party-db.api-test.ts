@@ -1,4 +1,4 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS, axiosMock } from '@ukef/dtfs2-common/test-helpers';
 
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -12,23 +12,19 @@ import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpe
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get } = api(app);
-let axiosMock: MockAdapter;
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
 }));
 
 beforeEach(() => {
-  axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
-
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);

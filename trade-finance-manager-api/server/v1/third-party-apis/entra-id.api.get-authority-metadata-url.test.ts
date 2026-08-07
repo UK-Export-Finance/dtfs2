@@ -1,11 +1,9 @@
-import axios from 'axios';
-import MockAdapter = require('axios-mock-adapter');
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { EntraIdApi } from './entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdConfigMockBuilder } from '../__mocks__/builders';
 
-// Axios 1.19's ESM and CommonJS declarations use distinct unique symbols.
-const mockAxios = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
+const mockAxios = axiosMock;
 
 describe('EntraIdApi', () => {
   describe('getAuthorityMetadataUrl', () => {

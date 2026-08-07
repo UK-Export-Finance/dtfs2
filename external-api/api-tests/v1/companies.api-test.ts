@@ -1,6 +1,5 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS, axiosMock } from '@ukef/dtfs2-common/test-helpers';
+import { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -12,8 +11,6 @@ const { APIM_MDM_URL } = process.env;
 const getMdmUrlForRegistrationNumber = (registrationNumber: string) => `${APIM_MDM_URL}v1/companies?registrationNumber=${registrationNumber}`;
 
 const { get } = api(app);
-
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 const mdmGetCompanyResponse = {
   companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,

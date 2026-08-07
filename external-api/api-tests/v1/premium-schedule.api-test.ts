@@ -10,8 +10,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import premiumScheduleController from '../../server/v1/controllers/premium-schedule.controller';
@@ -35,7 +34,6 @@ describe('/premium-schedule', () => {
     cumulativeAmount: 0,
   };
 
-  const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
   jest.mock('axios', () => jest.requireActual('axios'));
 
   const mockResponse = {

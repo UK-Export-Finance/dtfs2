@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { ADDRESSES } from '@ukef/dtfs2-common';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
@@ -66,8 +66,6 @@ const mockResponse = {
     ],
   },
 };
-
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 
 axiosMock
   .onGet(`${APIM_MDM_URL}v1/geospatial/addresses/postcode?postcode=${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`)

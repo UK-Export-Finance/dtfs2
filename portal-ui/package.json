@@ -79,7 +79,6 @@
     "@babel/preset-env": "8.0.2",
     "@types/express": "^5.0.6",
     "@types/jest": "^29.5.14",
-    "axios-mock-adapter": "^1.22.0",
     "babel-jest": "30.4.1",
     "babel-loader": "10.1.1",
     "babel-plugin-polyfill-corejs3": "^1.0.0",

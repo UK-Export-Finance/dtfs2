@@ -10,16 +10,14 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
-// Mock Axios
-const axiosMock = new MockAdapter(axios as unknown as ConstructorParameters<typeof MockAdapter>[0]);
 axiosMock.onGet(`${APIM_MDM_URL}v1/customers?partyUrn=03827491`).reply(HttpStatusCode.Ok, {});
 
 describe('/party-db/urn', () => {
