@@ -75,6 +75,36 @@ describe('mapAmount', () => {
       // Assert
       expect(result).toEqual(32);
     });
+
+    it('should round decimal adjusted amount down to the nearest integer when below .5', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 80,
+        newAmount: 130.25,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(24);
+    });
+
+    it('should round decimal adjusted amount up to the nearest integer when .5 or above', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 80,
+        newAmount: 130.75,
+        previousAmount: 100,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(25);
+    });
   });
 
   describe('when coveredPercentage is null', () => {
