@@ -1,4 +1,4 @@
-const { axiosMock } = require('@ukef/dtfs2-common/test-helpers');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 const { MOCK_BANK_HOLIDAYS } = require('./test-mocks/mock-bank-holidays');
 const { getUkBankHolidays } = require('./api');
 

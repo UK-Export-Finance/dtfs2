@@ -3,7 +3,7 @@
 
 import { HttpStatusCode } from 'axios';
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 

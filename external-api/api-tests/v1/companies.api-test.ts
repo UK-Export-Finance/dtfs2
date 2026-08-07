@@ -1,4 +1,5 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, axiosMock } from '@ukef/dtfs2-common/test-helpers';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { app } from '../../server/createApp';

@@ -1,4 +1,4 @@
-const { axiosMock } = require('@ukef/dtfs2-common/test-helpers');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 require('dotenv').config();
 
 const api = require('./api');

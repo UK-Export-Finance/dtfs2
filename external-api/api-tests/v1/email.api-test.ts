@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
-import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { sendEmail } from '../../server/v1/controllers/email.controller';
 import { app } from '../../server/createApp';
 import { api } from '../api';

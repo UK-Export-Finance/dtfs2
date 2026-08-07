@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { HttpStatusCode } from 'axios';
-import { axiosMock } from '@ukef/dtfs2-common/test-helpers';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
