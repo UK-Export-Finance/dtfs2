@@ -91,7 +91,7 @@ describe('mapAmount', () => {
       expect(result).toEqual(24);
     });
 
-    it('should round decimal adjusted amount up to the nearest integer when .5 or above', () => {
+    it('should round decimal adjusted amount up to the nearest integer when above .5', () => {
       // Arrange
       const params = {
         coveredPercentage: 80,

@@ -20,7 +20,7 @@ export const mapAmount = ({ coveredPercentage, newAmount, previousAmount }: MapA
   const amountDifference = getAmountDifference(previousAmount, newAmount);
 
   /**
-   * Calculate newAmount adjusted by the covered percentage.
+   * Calculate the amount adjusted by the covered percentage.
    * Use Math.round to round to the nearest integer and avoid floating point precision issues.
    * For example, 232000.2 becomes 232000 and 232000.6 becomes 232001.
    */
