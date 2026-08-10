@@ -1,8 +1,7 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-const { InvalidAuditDetailsError, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { InvalidAuditDetailsError, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, sanitiseFeedbackResponse } = require('@ukef/dtfs2-common');
 const {
   generateAuditDatabaseRecordFromAuditDetails,
   validateAuditDetails,
@@ -36,11 +35,12 @@ const findOneFeedback = async (id, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const validationErrors = validateFeedback(req.body);
+  const feedback = sanitiseFeedbackResponse(req.body);
+  const validationErrors = validateFeedback(feedback);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: sanitizeHtml(req.body),
+      feedback,
       validationErrors,
     });
   }
@@ -58,7 +58,7 @@ exports.create = async (req, res) => {
     submittedBy,
     // Because this is on the open router, information about the user cannot be inferred from req.user
     auditDetails,
-  } = req.body;
+  } = feedback;
 
   try {
     validateAuditDetails(auditDetails);
