@@ -3,6 +3,7 @@ import { ApimGiftFacilityAmendmentPayload, MapAmountParams, TfmFacilityAmendment
 import { getAmountAmendmentType } from './get-amount-amendment-type';
 import { getAmendmentFields } from './get-amendment-fields';
 import { getAmountDifference } from './get-amount-difference';
+import { roundTo2Decimals } from '../helpers/round-to-2-decimals';
 
 const {
   AMENDMENT_TYPE: { REPLACE_EXPIRY_DATE },
@@ -20,7 +21,7 @@ export const mapAmount = ({ coveredPercentage, newAmount, previousAmount }: MapA
   const amountDifference = getAmountDifference(previousAmount, newAmount);
 
   // calculate newAmount adjusted by the covered percentage
-  const amount = coveredPercentage ? amountDifference * (coveredPercentage / 100) : null;
+  const amount = coveredPercentage ? roundTo2Decimals(amountDifference * (coveredPercentage / 100)) : null;
 
   return amount;
 };
