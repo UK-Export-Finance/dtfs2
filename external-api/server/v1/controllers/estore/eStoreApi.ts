@@ -1,4 +1,4 @@
-import { get, post, HttpStatusCode } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import dotenv from 'dotenv';
 import { HEADERS, customValidateStatus } from '@ukef/dtfs2-common';
 import {
@@ -56,8 +56,8 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}v1//sites?exporterName=${exporterName}`, {
-      validateStatus(status) {
+    const response: SiteExistsResponse = await axios.get(`${APIM_ESTORE_URL}v1//sites?exporterName=${exporterName}`, {
+      validateStatus(status: number) {
         return customValidateStatus(status);
       },
       headers,
@@ -123,8 +123,8 @@ const postToEstore = async (
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, {
-      validateStatus(status) {
+    const response: EstoreResponse = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, {
+      validateStatus(status: number) {
         return customValidateStatus(status);
       },
       headers,
