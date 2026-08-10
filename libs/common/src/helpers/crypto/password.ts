@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+import { salt } from './salt';
+import { hash } from './hash';
 import { PasswordHash } from '../../types';
-import { CSRF } from '../../constants';
 
 /**
  * This function generates salt and hash from a string password.
@@ -9,11 +9,19 @@ import { CSRF } from '../../constants';
  * @returns object containing both salt and hash as strings
  */
 export const generatePasswordHash = (password: string): PasswordHash => {
-  const salt = crypto.randomBytes(CSRF.SECRET.BYTES).toString('hex');
-  const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, CSRF.TOKEN.ALGORITHM).toString('hex');
+  try {
+    const generatedSalt = salt().toString('hex');
+    const generatedHash = hash(password, generatedSalt);
 
-  return {
-    salt,
-    hash,
-  };
+    return {
+      salt: generatedSalt,
+      hash: generatedHash.toString('hex'),
+    };
+  } catch (error) {
+    console.error('An error has occurred while generating password %o', error);
+    return {
+      salt: '',
+      hash: '',
+    };
+  }
 };

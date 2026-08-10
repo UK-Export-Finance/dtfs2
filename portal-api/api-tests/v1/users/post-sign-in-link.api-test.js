@@ -1,14 +1,7 @@
-jest.mock('../../../server/v1/email');
-
-jest.mock('node:crypto', () => ({
-  ...jest.requireActual('node:crypto'),
-  pbkdf2Sync: jest.fn(),
-  randomBytes: jest.fn(),
-}));
-
 const { when, resetAllWhenMocks } = require('jest-when');
-const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
+const { CRYPTO } = require('@ukef/dtfs2-common');
+const crypto = require('crypto');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../server/v1/email');
@@ -24,30 +17,39 @@ const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = requir
 const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../../fixtures/sign-in-token-constants');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
-
 const maker1 = users.testBank1Maker1;
 const maker2 = users.testBank1Maker2;
 
+const url = '/v1/users/me/sign-in-link';
+
+const hashHexOne = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_ONE;
+const hashHexTwo = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_TWO;
+const hashHexThree = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_THREE;
+
+const saltHexOne = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_ONE;
+const saltHexTwo = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_TWO;
+const saltHexThree = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_THREE;
+
+const mockSalt = Buffer.from(saltHexOne, 'hex');
+const mockHash = Buffer.from(hashHexOne, 'hex');
+
+const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
+const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+const userToCreateAsPartiallyLoggedIn = {
+  ...maker1,
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+};
+const userToCreateFullyLoggedIn = { ...maker2 };
+
+jest.mock('../../../server/v1/email');
+jest.mock('crypto', () => ({
+  ...jest.requireActual('crypto'),
+  pbkdf2Sync: jest.fn().mockReturnValue(Buffer.from([111])),
+  randomBytes: jest.fn().mockReturnValue(Buffer.from([222])),
+}));
+
 describe('POST /users/me/sign-in-link', () => {
-  const url = '/v1/users/me/sign-in-link';
-
-  const hashHexOne = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_ONE;
-  const hashHexTwo = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_TWO;
-  const hashHexThree = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_THREE;
-  const saltHexOne = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_ONE;
-  const saltHexTwo = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_TWO;
-  const saltHexThree = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_THREE;
-
-  const saltBytes = Buffer.from(saltHexOne, 'hex');
-  const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
-  const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-  const userToCreateAsPartiallyLoggedIn = {
-    ...maker1,
-    username: temporaryUsernameAndEmail,
-    email: temporaryUsernameAndEmail,
-  };
-  const userToCreateFullyLoggedIn = { ...maker2 };
-
   let userToCreateOtherUsers;
   let partiallyLoggedInUser;
   let partiallyLoggedInUserId;
@@ -238,8 +240,8 @@ describe('POST /users/me/sign-in-link', () => {
   describe('when user has remaining attempts', () => {
     describe('when creating the sign in token errors', () => {
       beforeEach(() => {
-        when(randomBytes)
-          .calledWith(32)
+        when(crypto.randomBytes)
+          .calledWith(CRYPTO.SALT.BYTES)
           .mockImplementationOnce(() => {
             throw new Error();
           });
@@ -253,13 +255,13 @@ describe('POST /users/me/sign-in-link', () => {
 
     describe('when creating the sign in token succeeds', () => {
       beforeEach(() => {
-        when(randomBytes).calledWith(32).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
+        when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
       });
 
       describe('when creating the sign in salt errors', () => {
         beforeEach(() => {
-          when(randomBytes)
-            .calledWith(64)
+          when(crypto.randomBytes)
+            .calledWith(CRYPTO.SALT.BYTES)
             .mockImplementationOnce(() => {
               throw new Error();
             });
@@ -273,13 +275,13 @@ describe('POST /users/me/sign-in-link', () => {
 
       describe('when creating the sign in salt succeeds', () => {
         beforeEach(() => {
-          when(randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
+          when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValueOnce(mockSalt);
         });
 
         describe('when creating the sign in hash errors', () => {
           beforeEach(() => {
-            when(pbkdf2Sync)
-              .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+            when(crypto.pbkdf2Sync)
+              .calledWith(signInToken, mockSalt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
               .mockImplementationOnce(() => {
                 throw new Error();
               });
@@ -300,7 +302,9 @@ describe('POST /users/me/sign-in-link', () => {
               hashHex: hashHexOne,
               expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS,
             };
-            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
+            when(crypto.pbkdf2Sync)
+              .calledWith(signInToken, mockSalt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
+              .mockReturnValueOnce(mockHash);
           });
 
           afterEach(() => {
