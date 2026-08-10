@@ -27,6 +27,32 @@ describe('roundTo2Decimals', () => {
     expect(result).toStrictEqual(12.35);
   });
 
+  it('should round 1.005 to 1.01', () => {
+    expect.assertions(1);
+
+    // Arrange
+    const value = 1.005;
+
+    // Act
+    const result = roundTo2Decimals(value);
+
+    // Assert
+    expect(result).toStrictEqual(1.01);
+  });
+
+  it('should round -1.005 to -1.01', () => {
+    expect.assertions(1);
+
+    // Arrange
+    const value = -1.005;
+
+    // Act
+    const result = roundTo2Decimals(value);
+
+    // Assert
+    expect(result).toStrictEqual(-1.01);
+  });
+
   it('should round values down at 3rd decimal place', () => {
     expect.assertions(1);
 
