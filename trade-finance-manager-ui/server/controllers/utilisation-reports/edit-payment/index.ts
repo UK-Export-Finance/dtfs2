@@ -18,7 +18,14 @@ import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-
 import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
 import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 
-type GetEditPaymentRequest = CustomExpressRequest<{
+export type GetEditPaymentRequest = CustomExpressRequest<{
+  query: {
+    redirectTab?: ReconciliationForReportTab;
+  };
+}>;
+
+export type PostEditPaymentRequest = CustomExpressRequest<{
+  reqBody: EditPaymentFormRequestBody & Partial<Record<EditPaymentsTableCheckboxId, 'on'>>;
   query: {
     redirectTab?: ReconciliationForReportTab;
   };
@@ -67,13 +74,6 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
-
-export type PostEditPaymentRequest = CustomExpressRequest<{
-  reqBody: EditPaymentFormRequestBody & Partial<Record<EditPaymentsTableCheckboxId, 'on'>>;
-  query: {
-    redirectTab?: ReconciliationForReportTab;
-  };
-}>;
 
 export const postEditPayment = async (req: PostEditPaymentRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);

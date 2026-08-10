@@ -1,10 +1,9 @@
-const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
-const mockAxios = new MockAdapter(axios);
+const mockAxios = axiosMock;
 
 console.error = jest.fn();
 

@@ -1,16 +1,21 @@
 import { MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common/test-helpers';
 import { Unknown } from '@ukef/dtfs2-common';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
 import { getReportDataErrors, validatePostUploadUtilisationReportPayload } from './validate-post-upload-utilisation-report-payload';
-import { PostUploadUtilisationReportRequestBody } from '../../../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
+import {
+  PostUploadUtilisationReportRequestBody,
+  PostUploadUtilisationReportRequest,
+} from '../../../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
 
 jest.mock('../../../../services/utilisation-report-data-validator');
 
 describe('validate-post-upload-utilisation-report-payload', () => {
+  const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostUploadUtilisationReportRequest>(options);
+
   beforeEach(() => {
     jest.mocked(validateUtilisationReportCsvData).mockResolvedValue([]);
   });
@@ -69,7 +74,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
     };
 
     const getHttpMocks = (options?: Partial<Unknown<PostUploadUtilisationReportRequestBody>>) =>
-      httpMocks.createMocks({
+      createHttpMocks({
         body: {
           ...aValidPayload,
           ...options,
