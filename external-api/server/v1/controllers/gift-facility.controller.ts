@@ -28,7 +28,7 @@ Additional aspects:
 import { Request, Response } from 'express';
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS, CustomExpressRequest } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -39,13 +39,19 @@ const headers = {
   [String(APIM_TFS_KEY)]: APIM_TFS_VALUE,
 };
 
+export type GiftFacilityRequest = CustomExpressRequest<{
+  params: {
+    facilityId: string;
+  };
+}>;
+
 /**
  * Get a GIFT facility.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
-export const get = async (req: Request, res: Response) => {
+export const get = async (req: GiftFacilityRequest, res: Response) => {
   const { facilityId } = req.params;
 
   console.info('⚡️ Invoking APIM TFS GIFT - get facility %s endpoint', facilityId);
@@ -237,7 +243,7 @@ export const create = async (req: Request, res: Response) => {
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
-export const amend = async (req: Request, res: Response) => {
+export const amend = async (req: GiftFacilityRequest, res: Response) => {
   const { facilityId } = req.params;
 
   try {

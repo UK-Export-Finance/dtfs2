@@ -1,7 +1,6 @@
 import express, { Express } from 'express';
 import compression from 'compression';
-import mongoSanitise from 'express-mongo-sanitize';
-import { exceptionHandlers, MAX_REQUEST_SIZE, xss, maintenance } from '@ukef/dtfs2-common';
+import { exceptionHandlers, MAX_REQUEST_SIZE, sanitiseMongoRequest, xss, maintenance } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -15,6 +14,13 @@ const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROU
 
 export const generateApp = (): Express => {
   const app = express();
+
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
 
   // Register global handlers
   exceptionHandlers();
@@ -41,11 +47,7 @@ export const generateApp = (): Express => {
   app.use(createRateLimit());
   app.use(xss);
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseMongoRequest);
 
   app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
   app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);

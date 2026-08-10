@@ -1,5 +1,5 @@
 import { mockRecordCorrectionDetails } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { SessionData } from 'express-session';
 import {
   CURRENCY,
@@ -9,7 +9,7 @@ import {
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { getUtilisationReportReconciliationByReportId } from '.';
+import { getUtilisationReportReconciliationByReportId, GetUtilisationReportReconciliationRequest } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aPremiumPaymentsGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord, aPaymentDetails } from '../../../../test-helpers';
@@ -38,6 +38,8 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 console.error = jest.fn();
 
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetUtilisationReportReconciliationRequest>(options);
+
 describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-report', () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -56,7 +58,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     const originalUrl = `?premiumPaymentsFacilityId=11111111&paymentDetailsFacilityId=22222222&paymentDetailsPaymentCurrency=${CURRENCY.GBP}&paymentDetailsPaymentReference=some-payment-reference`;
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
-      httpMocks.createMocks({
+      createHttpMocks({
         session: { ...session, ...sessionData },
         params: {
           reportId,
@@ -321,7 +323,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to true if the feature flag is enabled", async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session,
           params: {
             reportId,
@@ -347,7 +349,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to false", async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session,
           params: {
             reportId,
@@ -368,7 +370,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it("renders the page with 'showMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: {
           reportId,
@@ -391,7 +393,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it("renders the page with 'showMatchSuccessNotification' set to false if matchSuccess query param is not set", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: {
           reportId,
@@ -412,7 +414,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it("renders the page with 'showMatchSuccessNotification' set to false if matchSuccess query param is set to a value other than 'true'", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: {
           reportId,
@@ -489,7 +491,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should set the premium payments filter error when invalid premium payments facility ID query value used', async () => {
       // Arrange
       const premiumPaymentsFacilityIdParam = 'abc';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: {
           reportId,
@@ -523,7 +525,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should set the payment details filter error when invalid payment details facility ID query value used', async () => {
       // Arrange
       const paymentDetailsFacilityIdParam = 'abc';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: {
           reportId,
@@ -561,7 +563,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should check the selected checkboxes when selected fee record ids query param defined', async () => {
       // Arrange
       const selectedFeeRecordIdsQueryParam = '1,2,3';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session,
         params: { reportId },
         query: {

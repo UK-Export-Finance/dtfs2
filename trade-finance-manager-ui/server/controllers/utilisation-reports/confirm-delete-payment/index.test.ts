@@ -1,6 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { getConfirmDeletePayment, postConfirmDeletePayment } from '.';
+import { getConfirmDeletePayment, postConfirmDeletePayment, GetConfirmDeletePaymentRequest, PostConfirmDeletePaymentRequest } from '.';
 import api from '../../../api';
 import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
 import { aPayment, aPaymentDetailsWithoutFeeRecordsResponseBody, aTfmSessionUser } from '../../../../test-helpers';
@@ -21,8 +21,10 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
     const reportId = '1';
     const paymentId = '2';
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetConfirmDeletePaymentRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         session: requestSession,
         params: {
           reportId,
@@ -145,12 +147,14 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
       jest.resetAllMocks();
     });
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostConfirmDeletePaymentRequest>(options);
+
     describe("when 'confirmDeletePayment' is set to 'yes'", () => {
       const reportId = '5';
       const paymentId = '6';
 
       const getHttpMocks = () =>
-        httpMocks.createMocks({
+        createHttpMocks({
           session: requestSession,
           params: { reportId, paymentId },
           body: { confirmDeletePayment: 'yes' },
@@ -184,7 +188,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
       const paymentId = '6';
 
       const getHttpMocks = () =>
-        httpMocks.createMocks({
+        createHttpMocks({
           session: requestSession,
           params: { reportId, paymentId },
           body: { confirmDeletePayment: 'no' },
@@ -216,7 +220,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
 
     it('renders the problem with service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1', paymentId: '1' },
         body: { confirmDeletePayment: 'yes' },

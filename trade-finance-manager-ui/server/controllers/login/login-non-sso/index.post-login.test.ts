@@ -1,5 +1,5 @@
-import httpMocks from 'node-mocks-http';
-import { postLogin } from '.';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { postLogin, PostLoginRequest } from '.';
 
 jest.mock('../../../api', () => ({
   login: jest.fn().mockResolvedValue({
@@ -13,6 +13,8 @@ jest.mock('../../../api', () => ({
   }),
 }));
 
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostLoginRequest>(options);
+
 describe('controllers - login (sso)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -21,7 +23,7 @@ describe('controllers - login (sso)', () => {
   describe('postLogin', () => {
     it('should render login template if login unsuccessful', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: {},
         body: {},
       });
@@ -57,7 +59,7 @@ describe('controllers - login (sso)', () => {
 
     it('should redirect to /home if login successful', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: {},
         body: { email: 'T1_USER_1', password: 'AbC!2345' },
       });
