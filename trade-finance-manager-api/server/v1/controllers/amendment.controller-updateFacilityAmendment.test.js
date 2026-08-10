@@ -295,6 +295,7 @@ describe('updated facility amendment API call', () => {
       describe('when APIM/GIFT submission is allowed', () => {
         const updateAmendmentBody = {
           status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
         };
 
         beforeEach(() => {
@@ -326,6 +327,43 @@ describe('updated facility amendment API call', () => {
               ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
             }),
           );
+
+          expect(api.updateFacilityAmendment).toHaveBeenNthCalledWith(
+            2,
+            facilityId,
+            amendmentId,
+            expect.objectContaining({
+              apimGift: expect.objectContaining({
+                facilityAmendmentSent: true,
+              }),
+              shouldNotUpdateTimestamp: true,
+            }),
+            expect.any(Object),
+          );
+        });
+
+        it('should not call APIM GIFT when amendment was already sent', async () => {
+          // Arrange
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            currentValue: 100,
+            value: 100,
+            effectiveDate: 1704067200,
+            tfm: { ...MOCK_AMENDMENT.tfm, coverEndDate: 1706745600000 },
+            apimGift: {
+              facilityAmendmentSent: true,
+            },
+          });
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
         });
 
         it(`should return ${HttpStatusCode.BadRequest} when APIM GIFT submission fails`, async () => {
@@ -349,6 +387,7 @@ describe('updated facility amendment API call', () => {
           // Arrange
           const updateAmendmentBody = {
             status: TFM_AMENDMENT_STATUS.COMPLETED,
+            submittedByPim: true,
           };
 
           const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
@@ -360,6 +399,95 @@ describe('updated facility amendment API call', () => {
 
           // Assert
           expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
+
+        describe('when submittedByPim is not set and APIM/GIFT submission is allowed', () => {
+          it(`should not call APIM GIFT`, async () => {
+            // Arrange
+            const updateAmendmentBody = {
+              status: TFM_AMENDMENT_STATUS.COMPLETED,
+            };
+
+            const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+            mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+            // Act
+            await amendmentController.updateFacilityAmendment(req, res);
+
+            // Assert
+            expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+            expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+          });
+        });
+
+        describe('when the amendment is manual (requireUkefApproval) and bank decision has not yet been submitted', () => {
+          it('should not call APIM GIFT', async () => {
+            // Arrange
+            const updateAmendmentBody = {
+              status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
+              submittedByPim: true,
+            };
+
+            const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+            mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+            api.getAmendmentById = jest.fn().mockResolvedValue({
+              ...MOCK_AMENDMENT,
+              requireUkefApproval: true,
+              changeFacilityValue: true,
+              changeCoverEndDate: false,
+              currentValue: 100,
+              value: 130,
+            });
+
+            // Act
+            await amendmentController.updateFacilityAmendment(req, res);
+
+            // Assert
+            expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+            expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+          });
+        });
+      });
+
+      describe('when the amendment is manual (requireUkefApproval) and bank decision has been submitted', () => {
+        it('should call APIM GIFT with the bank decision effective date', async () => {
+          // Arrange
+          const bankDecisionEffectiveDate = 1704067200;
+          const updateAmendmentBody = {
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
+            submittedByPim: true,
+          };
+
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            requireUkefApproval: true,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            effectiveDate: bankDecisionEffectiveDate,
+            bankDecision: {
+              decision: 'Proceed',
+              submitted: true,
+              effectiveDate: bankDecisionEffectiveDate,
+            },
+            tfm: {
+              ...MOCK_AMENDMENT.tfm,
+              coverEndDate: 1706745600000,
+            },
+          });
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).toHaveBeenCalledTimes(1);
           expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         });
       });

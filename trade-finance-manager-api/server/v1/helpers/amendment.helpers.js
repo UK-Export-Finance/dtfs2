@@ -484,19 +484,19 @@ const calculateAcbsUkefExposure = (payload) => {
 /**
  * Converts non-ms epoch to ms epoch.
  * @param {object} payload Amendment payload
- * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @returns {object} Computed payload with EPOCH ms compatible `coverEndDate`.
  */
 const formatAmendmentDates = (payload) => {
-  const formatted = {
+  const formattedDates = {
     ...payload,
     effectiveDate: epochSecondsToMilliseconds(payload.effectiveDate),
   };
 
-  if (formatted?.coverEndDate) {
-    formatted.coverEndDate = epochSecondsToMilliseconds(formatted.coverEndDate);
+  if (payload?.coverEndDate) {
+    formattedDates.coverEndDate = epochSecondsToMilliseconds(payload.coverEndDate);
   }
 
-  return formatted;
+  return formattedDates;
 };
 
 module.exports = {

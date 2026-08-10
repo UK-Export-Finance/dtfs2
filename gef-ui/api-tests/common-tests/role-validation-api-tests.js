@@ -10,12 +10,17 @@ jest.mock('../../server/services/api', () => ({
   updateApplication: jest.fn(),
   getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
+  getCompanyByRegistrationNumber: jest.fn(),
+  getMandatoryCriteria: jest.fn(),
+  cloneApplication: jest.fn(),
 }));
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
 
+const { HttpStatusCode } = require('axios');
 const { ROLES } = require('../../server/constants');
 const storage = require('../test-helpers/storage/storage');
 
@@ -85,7 +90,7 @@ const withRoleValidationApiTests = ({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
           });
 
-          expect(response.status).toEqual(302);
+          expect(response.status).toEqual(HttpStatusCode.Found);
           expect(response.headers.location).toEqual(redirectUrlForInvalidRoles);
         });
       });
