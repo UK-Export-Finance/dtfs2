@@ -1,8 +1,3 @@
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  verify: jest.fn((req, res, next) => next()),
-}));
-
 const request = require('supertest');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { HttpStatusCode } = require('axios');
@@ -24,6 +19,14 @@ describe('supporting information upload routes', () => {
     api.getApplication.mockResolvedValue(cloneMock(MOCK_BASIC_DEAL));
     api.getFacilities.mockResolvedValue({ status: 'Completed', items: [] });
     api.getUserDetails.mockResolvedValue({ _id: '619bae3467cc7c002069fc21', firstname: 'Checker', surname: 'One' });
+    api.uploadFile.mockResolvedValue([
+      {
+        _id: 'mock-file-id',
+        filename: 'test.pdf',
+        originalname: 'test.pdf',
+      },
+    ]);
+    api.updateSupportingInformation.mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -36,7 +39,7 @@ describe('supporting information upload routes', () => {
         request(app)
           .post(`/application-details/${dealId}/supporting-information/document/${documentType}/upload`)
           .set(headers)
-          .attach('documents', Buffer.from('test'), 'test.exe'),
+          .attach('documents', Buffer.from('test'), 'test.pdf'),
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Ok,
     });
