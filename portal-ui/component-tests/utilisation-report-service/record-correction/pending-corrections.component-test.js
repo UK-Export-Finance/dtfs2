@@ -224,8 +224,8 @@ describe(page, () => {
 
       // Assert
       wrapper
-        .expectElement(`${firstRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
-        .toHaveAttribute('aria-label', `${firstCorrection.facilityId} - Amend record`);
+        .expectAriaLabel(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
+        .toEqual(`${secondCorrection.facilityId} - Amend record`);
     });
 
     it('should set an accessible name on the second correction link that starts with the visible facility id', () => {
@@ -234,8 +234,8 @@ describe(page, () => {
 
       // Assert
       wrapper
-        .expectElement(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
-        .toHaveAttribute('aria-label', `${secondCorrection.facilityId} - Amend record`);
+        .expectAriaLabel(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
+        .toEqual(`${secondCorrection.facilityId} - Amend record`);
     });
   });
 });
