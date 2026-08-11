@@ -34,13 +34,13 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/jsEnabled.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/jsEnabled.js"]')
-      .toHaveAttribute('integrity', 'sha512-BZmKCksPLPXsFlYmd1MUEDLllt/d7vn1jLdU6FA1Y7hpzaOK7Aj9wwS3alwFEl+tlS5Md3CmwjI98F5Ggsg92Q==');
+      .toHaveAttribute('integrity', 'sha512-O546HgQDZqMaRX/qgAEzkTWV1U7AyGwmX4hmR21EUH3JTSw/axxt+UIPhPUOVAzdmX4FUOHEpk8O48iy+vCGBQ==');
   });
 
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-Iwm3XauAflNW4AYmD2uqGEYHnqy4Id+3wd4ntbWyiPZtqlB5o2qzkrslmiGHWa+bJ06vum4zZCXYJsJa01htPw==');
+      .toHaveAttribute('integrity', 'sha512-7aDW3so/vpgcvlLxvxADPiYrXwx/eligfGwZLQD16Jlkgmp+3g0G8drBjhZ+TC2vyv5ZBh/xq1L1MZFUAz+4pQ==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
@@ -58,7 +58,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/mojFilters.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFilters.js"]')
-      .toHaveAttribute('integrity', 'sha512-5oVnvrfst3OewRixjGHxR5WitgIyxX3uZPuaff34QXRmLUE9kb/jMIkKmqXAUYEV3Qm1I88Jy1gV6aviC4Y3RQ==');
+      .toHaveAttribute('integrity', 'sha512-FIrMtAeQm0Bpti8237dYxBHBjSQeJFItMWiCNwq6PdDRBcIa5m5Y31W60bAWgBYWZ+ZCON2eS2hJBUynr5K/oA==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {
