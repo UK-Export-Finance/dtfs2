@@ -9,14 +9,32 @@ describe(component, () => {
 
   describe('with params.user', () => {
     describe('when sso is enabled', () => {
+      const ssoProfileUrl = 'https://myaccount.microsoft.com/';
+
       beforeEach(() => {
-        params = getParams({ isSsoEnabled: true });
+        params = getParams({ isSsoEnabled: true, ssoProfileUrl });
       });
 
       it('should not display the profile link', () => {
         wrapper = render(params);
 
         wrapper.expectElement('[data-cy="header-user-link"]').notToExist();
+      });
+
+      it('should render the user name as a link to the MS SSO profile that opens in a new tab', () => {
+        wrapper = render(params);
+
+        wrapper.expectElement('a[data-cy="header-user-name"]').toExist();
+        wrapper.expectElement('span[data-cy="header-user-name"]').notToExist();
+        wrapper.expectLink('[data-cy="header-user-name"]').toLinkTo(ssoProfileUrl, 'Test Testing (opens in new tab)');
+        wrapper.expectElement('[data-cy="header-user-name"]').toHaveAttribute('target', '_blank');
+        wrapper.expectElement('[data-cy="header-user-name"]').toHaveAttribute('rel', 'noopener noreferrer');
+      });
+
+      it('should include visually hidden text so screen reader users are informed the link opens in a new tab', () => {
+        wrapper = render(params);
+
+        wrapper.expectText('[data-cy="header-user-name"] .govuk-visually-hidden').toRead('(opens in new tab)');
       });
     });
 
@@ -29,6 +47,13 @@ describe(component, () => {
         wrapper = render(params);
 
         wrapper.expectText('[data-cy="header-user-link"]').toRead('Profile');
+      });
+
+      it('should render the user name as a span rather than a link', () => {
+        wrapper = render(params);
+
+        wrapper.expectElement('span[data-cy="header-user-name"]').toExist();
+        wrapper.expectElement('a[data-cy="header-user-name"]').notToExist();
       });
     });
 
@@ -64,6 +89,7 @@ function getParams(customConfig = {}) {
       lastName: 'Testing',
     },
     isSsoEnabled: false,
+    ssoProfileUrl: 'https://myaccount.microsoft.com/',
   };
 
   return { ...defaultConfig, ...customConfig };

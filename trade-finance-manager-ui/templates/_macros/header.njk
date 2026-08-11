@@ -15,7 +15,20 @@
             <nav class="moj-header__navigation" aria-label="Account navigation">
               <ul class="moj-header__navigation-list">
                 <li class="moj-header__navigation-item">
-                  <span data-cy="header-user-name">{{ params.user.firstName + ' ' + params.user.lastName }}</span>
+                  {% set displayName = params.user.firstName ~ ' ' ~ params.user.lastName %}
+                  {% if params.isSsoEnabled %}
+                    <a
+                      class="moj-header__navigation-link"
+                      href="{{ params.ssoProfileUrl }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cy="header-user-name"
+                    >
+                      {{ displayName }}<span class="govuk-visually-hidden"> (opens in new tab)</span>
+                    </a>
+                  {% else %}
+                    <span data-cy="header-user-name">{{ displayName }}</span>
+                  {% endif %}
                 </li>
                 {% if not params.isSsoEnabled %}
                   <li class="moj-header__navigation-item">
