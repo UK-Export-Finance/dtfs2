@@ -5,7 +5,7 @@ const { validateToken } = require('../middleware');
 
 const router = express.Router();
 
-router.use('/user/*', [validateToken]);
+router.use('/user/{*path}', [validateToken]);
 router.use('/user/', userProfileRoutes);
 
 module.exports = router;

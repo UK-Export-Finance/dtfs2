@@ -3,12 +3,14 @@ import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { validationErrorHandler } from '../../../helpers/validationErrorHandler.helper';
 
+export type PostLoginRequest = CustomExpressRequest<{ reqBody: { email?: string; password?: string } }>;
+
 export const getLogin = (req: Request, res: Response) =>
   res.render('login.njk', {
     user: req.session.user,
   });
 
-export const postLogin = async (req: CustomExpressRequest<{ reqBody: { email?: string; password?: string } }>, res: Response) => {
+export const postLogin = async (req: PostLoginRequest, res: Response) => {
   const { email, password } = req.body;
   const loginErrors = [];
 

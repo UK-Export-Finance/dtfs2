@@ -1,6 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const MockAdapter = require('axios-mock-adapter');
-const axios = require('axios');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 const deal = require('../fixtures/deal-fully-completed');
 const api = require('../../server/v1/api');
 const { ADMIN } = require('../../server/v1/roles/roles');
@@ -14,7 +13,7 @@ const { DTFS_CENTRAL_API_URL } = process.env;
 const [facility] = deal.mockFacilities;
 
 describe('api', () => {
-  const mock = new MockAdapter(axios);
+  const mock = axiosMock;
 
   const invalidId = '../../../etc/passwd';
   const validId = '620a1aa095a618b12da38c7b';

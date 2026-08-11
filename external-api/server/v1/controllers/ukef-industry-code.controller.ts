@@ -25,10 +25,10 @@ Additional aspects:
   2. The function logs information and errors to the console for debugging purposes
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS, CustomExpressRequest } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -38,13 +38,19 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
+export type UkefIndustryCodeRequest = CustomExpressRequest<{
+  params: {
+    industryCode: string;
+  };
+}>;
+
 /**
  * Get a UKEF industry code by Companies House industry code.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
-export const getByCompaniesHouseIndustryCode = async (req: Request, res: Response) => {
+export const getByCompaniesHouseIndustryCode = async (req: UkefIndustryCodeRequest, res: Response) => {
   try {
     const { industryCode } = req.params;
 

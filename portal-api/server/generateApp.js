@@ -1,11 +1,10 @@
 const { CORS_ORIGIN } = process.env;
-const { exceptionHandlers, maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, maintenance, sanitiseMongoRequest, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
@@ -26,6 +25,13 @@ const generateApp = () => {
   loginCompleteAuth(passport, userService);
 
   const app = express();
+
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
 
   // Register global handlers
   exceptionHandlers();
@@ -52,11 +58,7 @@ const generateApp = () => {
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseMongoRequest);
 
   app.use(
     cors({
