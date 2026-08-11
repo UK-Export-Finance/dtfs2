@@ -72,6 +72,114 @@ context(`users can filter payment details by facility id and payment reference a
       filters.panelToggleButton().click();
       filters.panel().should('be.visible');
     });
+
+    it('should keep focus on the show/hide toggle button after activation', () => {
+      const feeRecord = aFeeRecordWithId(2);
+      const payment = aPaymentWithFeeRecords([feeRecord]);
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      tabs.paymentDetails().click();
+
+      filters.panelToggleButton().click();
+
+      filters.panelToggleButton().should('have.focus');
+    });
+
+    it('should expose `aria-controls` on the toggle pointing at the filter panel', () => {
+      const feeRecord = aFeeRecordWithId(3);
+      const payment = aPaymentWithFeeRecords([feeRecord]);
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      tabs.paymentDetails().click();
+
+      filters
+        .panelToggleButton()
+        .invoke('attr', 'aria-controls')
+        .then((ariaControls) => {
+          expect(ariaControls).to.be.a('string').and.have.length.greaterThan(0);
+
+          filters.panel().should('have.attr', 'id', ariaControls);
+        });
+    });
+  });
+
+  describe('keyboard Tab order across the payment-details filter panel', () => {
+    const panelFocusables = () =>
+      filters.panel().find('input:visible, button:visible, a:visible, select:visible, textarea:visible, [tabindex]:visible').not('[tabindex="-1"]');
+
+    beforeEach(() => {
+      const feeRecord = aFeeRecordWithId(4);
+      const payment = aPaymentWithFeeRecords([feeRecord]);
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      tabs.paymentDetails().click();
+
+      // Ensure the panel is expanded (session storage may persist `HIDDEN` from a prior test).
+      filters.panel().then(($panel) => {
+        if (!$panel.is(':visible')) {
+          filters.panelToggleButton().click();
+        }
+      });
+
+      filters.panelToggleButton().focus();
+    });
+
+    it('should move focus into the filter panel on Tab from the Hide filters button', () => {
+      cy.focused().tab();
+
+      panelFocusables().first().should('have.focus');
+    });
+
+    it('should return focus to the Hide filters button on Shift+Tab from the first filter control', () => {
+      panelFocusables().first().focus();
+      cy.focused().tab({ shift: true });
+
+      filters.panelToggleButton().should('have.focus');
+    });
+
+    it('should move focus out of the filter panel on Tab from the last filter control', () => {
+      panelFocusables().last().focus();
+      cy.focused().tab();
+
+      filters.panelToggleButton().should('not.have.focus');
+      filters.panel().then(($panel) => {
+        cy.focused().then(($focused) => {
+          expect($panel[0].contains($focused[0])).to.equal(false);
+        });
+      });
+    });
+
+    it('should return focus to the last filter control on Shift+Tab from the element after the toggle', () => {
+      panelFocusables().last().as('lastInPanel').focus();
+      cy.focused().tab();
+      cy.focused().tab({ shift: true });
+
+      cy.get('@lastInPanel').should('have.focus');
+    });
   });
 
   describe('when no filters are applied', () => {
