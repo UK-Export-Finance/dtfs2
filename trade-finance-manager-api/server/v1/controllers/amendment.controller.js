@@ -25,6 +25,79 @@ const {
 const CONSTANTS = require('../../constants');
 
 /**
+ * Checks if a facility amendment has been sent to APIM GIFT.
+ *
+ * @param {object} amendment - The amendment object.
+ * @returns {boolean} True if the facility amendment has been sent to APIM GIFT, false otherwise.
+ */
+const hasFacilityAmendmentBeenSentToApimGift = (amendment) => amendment?.apimGift?.facilityAmendmentSent === true;
+
+/**
+ * Marks a facility amendment as sent to APIM GIFT.
+ *
+ * @param {object} param0 - The parameters object.
+ * @param {string} param0.facilityId - The facility identifier.
+ * @param {string} param0.amendmentId - The amendment identifier.
+ * @param {object} param0.amendment - The amendment object.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - Audit details for update calls.
+ */
+const markFacilityAmendmentAsSentToApimGift = async ({ facilityId, amendmentId, amendment, auditDetails }) => {
+  const payload = {
+    apimGift: {
+      ...(amendment?.apimGift || {}),
+      facilityAmendmentSent: true,
+    },
+    shouldNotUpdateTimestamp: true,
+  };
+
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
+};
+
+/**
+ * Parses cover percentage values into a usable number.
+ * - GEF facilities use `coverPercentage` (number).
+ * - BSS/EWCS facilities use `coveredPercentage` (number string).
+ *
+ * @param {unknown} value - Candidate cover percentage value.
+ * @returns {number | null} Parsed percentage value, or null when unavailable/invalid.
+ */
+const parseCoverPercentage = (value) => {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : null;
+  }
+
+  if (typeof value === 'string') {
+    const parsedValue = Number(value.replace(/%/g, '').trim());
+
+    return Number.isFinite(parsedValue) ? parsedValue : null;
+  }
+
+  return null;
+};
+
+/**
+ * Enriches an amendment with fields required for APIM GIFT mapping.
+ *
+ * - Normalizes coveredPercentage, falling back to the facility snapshot percentage when needed.
+ * - Falls back effectiveDate to bankDecision.effectiveDate when top-level effectiveDate is missing.
+ *
+ * @param {object} amendment - The amendment object.
+ * @param {object} facilitySnapshot - The related facility snapshot object.
+ * @returns {object} Amendment object with normalized coveredPercentage and effectiveDate.
+ */
+const enrichAmendmentForApimGift = (amendment, facilitySnapshot) => {
+  const amendmentCoveredPercentage = parseCoverPercentage(amendment?.coveredPercentage);
+  const coverPercentageFromFacility = parseCoverPercentage(facilitySnapshot?.coverPercentage ?? facilitySnapshot?.coveredPercentage);
+  const effectiveDateFromBankDecision = amendment?.bankDecision?.effectiveDate;
+
+  return {
+    ...amendment,
+    effectiveDate: amendment?.effectiveDate ?? effectiveDateFromBankDecision,
+    coveredPercentage: amendmentCoveredPercentage ?? coverPercentageFromFacility,
+  };
+};
+
+/**
  * Sends amendment-related notification emails when eligible.
  *
  * @param {string} amendmentId - The amendment identifier.
@@ -315,6 +388,14 @@ const updateFacilityAmendment = async (req, res) => {
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
 
+  /**
+   * Only send to APIM/GIFT when the user submits the final check-answers page.
+   * All intermediate 'Continue' steps also call updateFacilityAmendment, so using
+   * submittedByPim as the discriminator prevents repeated APIM calls during the flow.
+   * This flag is also used in the ACBS canSendToAcbs checks.
+   */
+  const isSubmittedByPim = payload?.submittedByPim === true;
+
   // default isTaskUpdate to false, set to true if payload contains taskUpdate.updateTask
   let isTaskUpdate = false;
 
@@ -323,7 +404,7 @@ const updateFacilityAmendment = async (req, res) => {
     if (amendmentId && facilityId && payload) {
       let amendment = await api.getAmendmentById(facilityId, amendmentId);
 
-      if (payload.createTasks && payload.submittedByPim) {
+      if (payload.createTasks && isSubmittedByPim) {
         const { tfm } = await api.findOneFacility(facilityId);
 
         payload.tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
@@ -413,10 +494,27 @@ const updateFacilityAmendment = async (req, res) => {
         // Amend facility TFM properties
         await amendIssuedFacility(amendment, facility, tfmDeal, generateTfmAuditDetails(req.user._id));
 
-        if (isTfmApimGiftIntegrationEnabled() && !isTaskUpdate) {
+        // Manual amendments must wait until the bank decision is submitted before APIM GIFT receives the effective date
+        /**
+         * Amendments that require UKEF approval are considered manual amendments.
+         * The bank decision must be submitted before sending to APIM GIFT to ensure the effective date is available for the amendment payload.
+         */
+        const isManualAmendment = Boolean(amendment?.requireUkefApproval);
+        const bankDecisionIsSubmitted = Boolean(amendment?.bankDecision?.submitted);
+
+        const couldSendToApimGift =
+          isTfmApimGiftIntegrationEnabled() &&
+          !isTaskUpdate &&
+          isSubmittedByPim &&
+          !hasFacilityAmendmentBeenSentToApimGift(amendment) &&
+          (!isManualAmendment || bankDecisionIsSubmitted);
+
+        if (couldSendToApimGift) {
           console.info('TFM facility %s updateFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+          const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
+
+          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
           if (canSendToApimGift) {
             console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
@@ -428,6 +526,13 @@ const updateFacilityAmendment = async (req, res) => {
 
               throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
             }
+
+            await markFacilityAmendmentAsSentToApimGift({
+              facilityId,
+              amendmentId,
+              amendment,
+              auditDetails,
+            });
           }
         }
 
@@ -564,10 +669,14 @@ const sendFacilityAmendment = async (req, res) => {
         return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send facility amendment to ACBS and/or APIM GIFT' });
       }
 
-      if (isTfmApimGiftIntegrationEnabled()) {
+      const couldSendToApimGift = isTfmApimGiftIntegrationEnabled() && !hasFacilityAmendmentBeenSentToApimGift(amendment);
+
+      if (couldSendToApimGift) {
         console.info('TFM facility %s sendFacilityAmendment - calling canSendAmendmentsToApimGift', facilityId);
 
-        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendment);
+        const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
+
+        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
         if (canSendToApimGift) {
           console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
@@ -579,6 +688,15 @@ const sendFacilityAmendment = async (req, res) => {
 
             throw new Error(`Failed to submit facility ${ukefFacilityId} amendment ${amendmentId} to APIM GIFT`);
           }
+
+          const auditDetails = generateTfmAuditDetails(req?.user?._id);
+
+          await markFacilityAmendmentAsSentToApimGift({
+            facilityId,
+            amendmentId,
+            amendment,
+            auditDetails,
+          });
         }
       }
 
@@ -602,9 +720,13 @@ module.exports = {
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
   getAllAmendments,
+  parseCoverPercentage,
+  enrichAmendmentForApimGift,
   submitToAcbs,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
+  hasFacilityAmendmentBeenSentToApimGift,
+  markFacilityAmendmentAsSentToApimGift,
   sendFacilityAmendment,
 };

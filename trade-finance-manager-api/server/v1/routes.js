@@ -305,7 +305,7 @@ authRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?:
+ * /facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}:
  *   get:
  *     summary: Get amendment by facility ID, amendment ID, type or status
  *     tags: [TFM - Amendments]
@@ -321,7 +321,7 @@ authRouter
  *         description: Internal server error
  */
 authRouter
-  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .route('/facilities/:facilityId/amendments{/:amendmentIdOrStatus}{/:type}')
   .get(validation.facilityIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentByFacilityId);
 
 /**
@@ -357,7 +357,7 @@ authRouter
 
 /**
  * @openapi
- * /amendments/:status?:
+ * /amendments{/:status}:
  *   get:
  *     summary: Get all amendments by status
  *     tags: [TFM - Amendments]
@@ -372,7 +372,7 @@ authRouter
  *       500:
  *         description: Internal server error
  */
-authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
+authRouter.route('/amendments{/:status}').get(amendmentController.getAllAmendments);
 
 /**
  * @openapi
