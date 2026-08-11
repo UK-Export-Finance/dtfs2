@@ -75,6 +75,21 @@ describe('mapAmount', () => {
       // Assert
       expect(result).toEqual(32);
     });
+
+    it('should round to 2 decimal places to avoid floating-point precision issues', () => {
+      // Arrange
+      const params = {
+        coveredPercentage: 80,
+        newAmount: 149999.55,
+        previousAmount: 0,
+      };
+
+      // Act
+      const result = mapAmount(params);
+
+      // Assert
+      expect(result).toEqual(119999.64);
+    });
   });
 
   describe('when coveredPercentage is null', () => {
