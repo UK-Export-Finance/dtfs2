@@ -1,11 +1,13 @@
-import { Request, Response } from 'express';
-import { getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { FeeRecordToKey } from '../../../api-response-types';
 import { asUserSession } from '../../../helpers/express-session';
 import api from '../../../api';
 import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
 import { getFeeRecordDisplayStatus, getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
 import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
+
+export type PostCheckKeyingDataRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 
 const getFeeRecordsToKeyViewModel = (feeRecords: FeeRecordToKey[]): FeeRecordToKeyViewModelItem[] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(feeRecords.map(({ reportedFees }, index) => ({ ...reportedFees, key: index })));
@@ -39,7 +41,7 @@ const getFeeRecordsToKeyViewModel = (feeRecords: FeeRecordToKey[]): FeeRecordToK
  * @param  res - The Express response object.
  * @returns
  */
-export const postCheckKeyingData = async (req: Request, res: Response) => {
+export const postCheckKeyingData = async (req: PostCheckKeyingDataRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
 

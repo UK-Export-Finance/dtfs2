@@ -16,9 +16,7 @@ describe('mapGefObligationAmount', () => {
       const result = mapGefObligationAmount({ facilityType, facilityAmount });
 
       // Assert
-      const expectedRounded = facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CASH;
-
-      const expected = Math.round(expectedRounded * 100) / 100;
+      const expected = Number((facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CASH).toFixed(2));
 
       expect(result).toEqual(expected);
     });
@@ -46,9 +44,7 @@ describe('mapGefObligationAmount', () => {
       const result = mapGefObligationAmount({ facilityType, facilityAmount });
 
       // Assert
-      const expectedRounded = facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
-
-      const expected = Math.round(expectedRounded * 100) / 100;
+      const expected = Number((facilityAmount * UKEF_EXPOSURE_PERCENTAGE.CONTINGENT).toFixed(2));
 
       expect(result).toEqual(expected);
     });

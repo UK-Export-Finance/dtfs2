@@ -1,5 +1,5 @@
-import httpMocks from 'node-mocks-http';
-import { validatePostRemoveFeesFromPaymentRequestBody } from '.';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { validatePostRemoveFeesFromPaymentRequestBody, PostRemoveFeesFromPaymentRequest } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
@@ -7,6 +7,8 @@ import { EditPaymentFormValues } from '../../types/edit-payment-form-values';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../constants/reconciliation-for-report-tabs';
 
 console.error = jest.fn();
+
+const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<PostRemoveFeesFromPaymentRequest>(options);
 
 describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
   const REPORT_ID = 1;
@@ -16,7 +18,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
   const REDIRECT_URL = `/utilisation-reports/${REPORT_ID}/edit-payment/${PAYMENT_ID}?redirectTab=${REDIRECT_TAB}`;
 
   const getHttpMocks = () =>
-    httpMocks.createMocks({
+    createHttpMocks({
       session: {
         user: MOCK_TFM_SESSION_USER,
         userToken: 'user-token',
