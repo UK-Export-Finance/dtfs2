@@ -1,11 +1,12 @@
-import httpMocks from 'node-mocks-http';
-import { Request } from 'express';
-import { validateMongoId } from '.';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { validateMongoId, ValidateMongoIdRequest } from '.';
 
 describe('validateMongoId', () => {
+  const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<ValidateMongoIdRequest>(options);
+
   it(`redirects to '/not-found' if an invalid MongoDB ID is provided`, () => {
     // Arrange
-    const { res: mockRes, req: mockReq } = httpMocks.createMocks<Request<{ _id: string }>>({
+    const { res: mockRes, req: mockReq } = createHttpMocks({
       params: { _id: 'invalid-mongo-id' },
     });
 
@@ -21,7 +22,7 @@ describe('validateMongoId', () => {
 
   it('calls the next middleware function when a valid MongoDB ID is provided', () => {
     // Arrange
-    const { res: mockRes, req: mockReq } = httpMocks.createMocks({
+    const { res: mockRes, req: mockReq } = createHttpMocks({
       params: { _id: '5099803df3f4948bd2f98391' },
     });
 

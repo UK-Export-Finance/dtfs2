@@ -1,10 +1,12 @@
 import escapeStringRegexp from 'escape-string-regexp';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { FACILITIES } from '../../../../constants';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-export const getFacilitiesByDealId = async (req: Request, res: Response) => {
+type GetFacilitiesByDealIdRequest = CustomExpressRequest<{ params: { id: string } }>;
+
+export const getFacilitiesByDealId = async (req: GetFacilitiesByDealIdRequest, res: Response) => {
   const { id: dealId } = req.params;
 
   // NOTE: only GEF facilities have dealId.

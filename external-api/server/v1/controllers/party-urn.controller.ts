@@ -4,8 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { Request, Response } from 'express';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
 import { isValidPartyUrn } from '../../helpers';
 
 dotenv.config();
@@ -16,13 +16,15 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
+type PartyUrnLookupRequest = CustomExpressRequest<{ params: { urn: string } }>;
+
 /**
  * Fetches company information from party URN
  * @param {Express.Request} req
  * @param {Express.Response} res
  * @returns {object} Express response with `status` and `data`.
  */
-export const lookup = async (req: Request, res: Response) => {
+export const lookup = async (req: PartyUrnLookupRequest, res: Response) => {
   try {
     const { urn } = req.params;
 

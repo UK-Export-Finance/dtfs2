@@ -37,7 +37,7 @@ const { default: amendments } = require('./facilities/amendments/index');
 
 const router = express.Router();
 
-router.use('*', sessionUserToLocals);
+router.use('/{*path}', sessionUserToLocals);
 
 router.use(mandatoryCriteriaRoutes);
 router.use(nameApplicationRoutes);

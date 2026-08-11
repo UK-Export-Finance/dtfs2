@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { addToAnExistingPayment } from '.';
+import { addToAnExistingPayment, AddToAnExistingPaymentRequest } from '.';
 import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 import { aTfmSessionUser } from '../../../../test-helpers';
@@ -12,6 +12,8 @@ jest.mock('../../../api');
 jest.mock('../helpers/get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<AddToAnExistingPaymentRequest>(options);
 
 describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
   const reportId = '123';
@@ -28,7 +30,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should render the add to an existing payment page', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -44,7 +46,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it("should render the 'problem-with-service' page when available payment groups is undefined", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -64,7 +66,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it("should render the 'problem-with-service' page when there are no available payment groups", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -84,7 +86,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should fetch and map selected fee record details', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -142,7 +144,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should fetch and map available payment groups', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -203,7 +205,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should set the report id', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -219,7 +221,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should set the back link href', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: {
@@ -249,7 +251,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should set the selected fee record checkbox ids', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: {
@@ -271,7 +273,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -327,7 +329,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it('should set data sort values for reported payments column to order by currency alphabetically then value', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
@@ -383,7 +385,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
 
     it("should render the 'problem-with-service' page on error", async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,

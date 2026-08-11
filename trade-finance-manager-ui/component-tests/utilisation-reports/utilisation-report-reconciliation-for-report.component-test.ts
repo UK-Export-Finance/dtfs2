@@ -56,7 +56,7 @@ describe(page, () => {
 
     wrapper
       .expectElement('script[src="/assets/js/enableSelectAllTableCheckbox.js"]')
-      .toHaveAttribute('integrity', 'sha512-TIBIAXrIjjb/BgkLCMNJ3r2PgSoHWDmVWm5Ekefb1dLPI88KDbC+VxWl286sKbQNAdxzkG1y13Ks7tpg3rIC2A==');
+      .toHaveAttribute('integrity', 'sha512-4hG1zoiZ7XoMsBfyoplKOnyW/uffNf2Tm+hxjio7i1ruYp4qh6Iwm+y+iXQf6ATVdtP73XGGOPlG4z7W5HvbNQ==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFilterHide.js"', () => {
@@ -64,7 +64,7 @@ describe(page, () => {
 
     wrapper
       .expectElement('script[src="/assets/js/mojFilterHide.js"]')
-      .toHaveAttribute('integrity', 'sha512-JqMzZELzDQpgLMAB3966ecgcgxruf/JIJDMoBG7rIj+L9e+Ux+CyQ4FEGLIiVA2D8qbjbHKELyrdlpneaL+BfA==');
+      .toHaveAttribute('integrity', 'sha512-69fIeJhGCx1gJj5LS49zFGq50w7mqCOZmUjZo+1DYOU28S6HosQKNM9Sv5qHmZCr2D6mPLW1W+F/27fko8alfA==');
   });
 
   it('should not add error prefix to page title when there are no errors', () => {
