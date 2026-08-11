@@ -1,5 +1,6 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { OBLIGATION_AMOUNT } from '../../../constants';
+import { roundTo2Decimals } from '../../../helpers/round-to-2-decimals';
 
 const { UKEF_EXPOSURE_PERCENTAGE } = OBLIGATION_AMOUNT;
 
@@ -30,13 +31,13 @@ export const mapGefObligationAmount = ({ facilityType, facilityAmount }: MapGefO
     if (facilityType === FACILITY_TYPE.CASH) {
       const multiplier = UKEF_EXPOSURE_PERCENTAGE.CASH;
 
-      return Math.round(facilityAmount * multiplier * 100) / 100;
+      return roundTo2Decimals(facilityAmount * multiplier);
     }
 
     if (facilityType === FACILITY_TYPE.CONTINGENT) {
       const multiplier = UKEF_EXPOSURE_PERCENTAGE.CONTINGENT;
 
-      return Math.round(facilityAmount * multiplier * 100) / 100;
+      return roundTo2Decimals(facilityAmount * multiplier);
     }
   }
 

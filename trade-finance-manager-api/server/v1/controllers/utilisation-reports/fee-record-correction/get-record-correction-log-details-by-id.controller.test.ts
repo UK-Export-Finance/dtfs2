@@ -1,9 +1,8 @@
 import { recordCorrectionLogDetailsMock } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { Request } from 'express';
 import { GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
-import { getRecordCorrectionLogDetailsById } from './get-record-correction-log-details-by-id.controller';
+import { getRecordCorrectionLogDetailsById, GetRecordCorrectionLogDetailsByIdRequest } from './get-record-correction-log-details-by-id.controller';
 import api from '../../../api';
 
 console.error = jest.fn();
@@ -13,8 +12,10 @@ jest.mock('../../../api');
 describe('get-record-correction-log-details-by-id.contoller', () => {
   const correctionId = '1';
 
+  const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetRecordCorrectionLogDetailsByIdRequest>(options);
+
   const getHttpMocks = () =>
-    httpMocks.createMocks<Request>({
+    createHttpMocks({
       params: { correctionId },
     });
 
