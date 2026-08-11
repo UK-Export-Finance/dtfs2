@@ -1,11 +1,13 @@
-import httpMocks from 'node-mocks-http';
-import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo } from '.';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo, PostKeyingDataRequest } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
 
 console.error = jest.fn();
 
 jest.mock('../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostKeyingDataRequest>(options);
 
 describe('controllers/utilisation-reports/keying-data', () => {
   describe('postKeyingData', () => {
@@ -27,7 +29,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it('generates the keying data for the report', async () => {
       // Arrange
       const reportId = '15';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
       });
@@ -42,7 +44,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it("redirects to '/utilisation-reports/:reportId#keying-sheet'", async () => {
       // Arrange
       const reportId = '12';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
       });
@@ -57,7 +59,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
     it('renders the problem-with-service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1' },
       });
@@ -88,7 +90,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it('marks selected fee record ids for rows with status TO_DO as done and redirects to keying sheet', async () => {
       // Arrange
       const reportId = '15';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: {
@@ -110,7 +112,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it('does not mark any fees as done and redirects to keying sheet when none of the selected checkboxes are for rows with status TO_DO', async () => {
       // Arrange
       const reportId = '15';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: { 'feeRecordId-789-status-DONE': 'on' },
@@ -127,7 +129,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
     it('renders the problem-with-service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1' },
         body: { 'feeRecordId-123-status-TO_DO': 'on' },
@@ -159,7 +161,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it('marks selected fee record ids for rows with status DONE as to do and redirects to keying sheet', async () => {
       // Arrange
       const reportId = '15';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: {
@@ -181,7 +183,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
     it('does not mark any fees as to do and redirects to keying sheet when none of the selected checkboxes are for rows with status DONE', async () => {
       // Arrange
       const reportId = '15';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId },
         body: { 'feeRecordId-789-status-TO_DO': 'on' },
@@ -198,7 +200,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
     it('renders the problem-with-service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1' },
         body: { 'feeRecordId-123-status-DONE': 'on' },

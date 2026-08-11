@@ -1,8 +1,8 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import * as dotenv from 'dotenv';
 
-import { HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -12,6 +12,8 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
+type GetCompanyByRegistrationNumberRequest = CustomExpressRequest<{ params: { registrationNumber: string } }>;
+
 /**
  * Get company details for the company matching the Companies House registration number provided.
  * @param {Request} req Express request with `registrationNumber` as a URL parameter.
@@ -19,7 +21,7 @@ const headers = {
  * @returns {Promise<Response>} Express response with `status` and `data`. `Data` contains the company details,
  * or error data if the request was unsuccessful.
  */
-export const getCompanyByRegistrationNumber = async (req: Request, res: Response): Promise<Response> => {
+export const getCompanyByRegistrationNumber = async (req: GetCompanyByRegistrationNumberRequest, res: Response): Promise<Response> => {
   let response: { status: number | undefined; data: unknown };
 
   const { registrationNumber } = req.params;
