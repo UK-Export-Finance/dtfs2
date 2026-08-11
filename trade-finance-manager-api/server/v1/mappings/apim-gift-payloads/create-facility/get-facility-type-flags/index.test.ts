@@ -13,9 +13,9 @@ describe('getFacilityTypeFlags', () => {
       // Assert
       const expected = {
         isBssFacility: true,
+        isCashFacility: false,
+        isContingentFacility: false,
         isEwcsFacility: false,
-        isGefFacility: false,
-        facilityType: mockFacilityType,
       };
 
       expect(result).toEqual(expected);
@@ -33,9 +33,9 @@ describe('getFacilityTypeFlags', () => {
       // Assert
       const expected = {
         isBssFacility: false,
+        isCashFacility: false,
+        isContingentFacility: false,
         isEwcsFacility: true,
-        isGefFacility: false,
-        facilityType: mockFacilityType,
       };
 
       expect(result).toEqual(expected);
@@ -43,7 +43,7 @@ describe('getFacilityTypeFlags', () => {
   });
 
   describe(`when facilityType is ${FACILITY_TYPE.CASH}`, () => {
-    it('should return an object with isGefFacility as true', () => {
+    it('should return an object with isCashFacility as true', () => {
       // Arrange
       const mockFacilityType = FACILITY_TYPE.CASH;
 
@@ -53,9 +53,9 @@ describe('getFacilityTypeFlags', () => {
       // Assert
       const expected = {
         isBssFacility: false,
+        isCashFacility: true,
+        isContingentFacility: false,
         isEwcsFacility: false,
-        isGefFacility: true,
-        facilityType: mockFacilityType,
       };
 
       expect(result).toEqual(expected);
@@ -63,7 +63,7 @@ describe('getFacilityTypeFlags', () => {
   });
 
   describe(`when facilityType is ${FACILITY_TYPE.CONTINGENT}`, () => {
-    it('should return an object with isGefFacility as true', () => {
+    it('should return an object with isContingentFacility as true', () => {
       // Arrange
       const mockFacilityType = FACILITY_TYPE.CONTINGENT;
 
@@ -73,9 +73,9 @@ describe('getFacilityTypeFlags', () => {
       // Assert
       const expected = {
         isBssFacility: false,
+        isCashFacility: false,
+        isContingentFacility: true,
         isEwcsFacility: false,
-        isGefFacility: true,
-        facilityType: mockFacilityType,
       };
 
       expect(result).toEqual(expected);

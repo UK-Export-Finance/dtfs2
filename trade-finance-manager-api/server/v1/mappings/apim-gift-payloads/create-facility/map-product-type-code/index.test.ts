@@ -31,4 +31,19 @@ describe('mapProductTypeCode', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('when isBssFacility and isGefDeal are false', () => {
+    it(`should return ${PRODUCT_TYPE_CODES.UNKNOWN}`, () => {
+      // Arrange & Act
+      const result = mapProductTypeCode({
+        isBssFacility: false,
+        isGefDeal: false,
+      });
+
+      // Assert
+      const expected = PRODUCT_TYPE_CODES.UNKNOWN;
+
+      expect(result).toEqual(expected);
+    });
+  });
 });

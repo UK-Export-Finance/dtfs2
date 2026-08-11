@@ -63,7 +63,9 @@ export const createFacility = async ({
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
-  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility, facilityType } = getFacilityTypeFlags(facilitySnapshot.type);
+  const { type: facilityType } = facilitySnapshot;
+
+  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility } = getFacilityTypeFlags(facilityType);
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,

@@ -11,9 +11,9 @@ type MapCounterpartiesParams = {
 };
 
 /**
- * Maps the counterparties for a given deal type and party URNs.
- * BSS/EWCS - If available, create a "Bond giver" counterparty (from the bank party URN) and a "Bond beneficiary" counterparty (from the buyer party URN).
- * GEF - If available, create an "Issuing bank" counterparty (from the bank party URN).
+ * Maps the counterparties depending on the type of facility and party URNs.
+ * BSS - If available, create a "Bond giver" counterparty (from the bank party URN) and a "Bond beneficiary" counterparty (from the buyer party URN).
+ * Cash, Contingent - If available, create an "Issuing bank" counterparty (from the bank party URN).
  * @param {MapCounterpartiesParams} params - Data required to build the APIM GIFT "counterparties" data.
  * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
  * @param {boolean} params.isCashFacility - If the facility is a Cash facility.

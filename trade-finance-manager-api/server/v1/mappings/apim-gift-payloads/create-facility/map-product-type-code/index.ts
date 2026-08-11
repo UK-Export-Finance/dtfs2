@@ -13,7 +13,7 @@ type MapProductTypeCodeParams = {
  * GEF deal type "GEF" => GIFT product type code "GEF"
  * NOTE: V1 integration only supports BSS Bond facilities and GEF facilities.
  * @param {MapProductTypeCodeParams} params - Object containing flags indicating the deal
- * @param {boolean} params.isBssFacility - The facility category code (e.g. "Bond", "Cash", "Contingent", "Loan").
+ * @param {boolean} params.isBssFacility - Flag indicating if the facility is a BSS (Bond) facility.
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
  * @returns {ApimGiftProductTypeCode} The APIM/GIFT product type code for the facility.
  */

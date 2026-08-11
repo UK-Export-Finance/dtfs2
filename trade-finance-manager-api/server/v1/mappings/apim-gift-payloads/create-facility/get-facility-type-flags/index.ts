@@ -5,13 +5,12 @@ type GetFacilityTypeFlagsReturnShape = {
   isCashFacility: boolean;
   isContingentFacility: boolean;
   isEwcsFacility: boolean;
-  facilityType: string;
 };
 
 /**
  * Return an object with BSS/EWCS/GEF facility flags.
  * Avoids doing the same checks in other functions.
- * @param {FacilityType} facilityType - The deal type
+ * @param {FacilityType} facilityType - The facility type
  * @returns {GetFacilityTypeFlagsReturnShape} BSS/EWCS/GEF facility booleans
  */
 export const getFacilityTypeFlags = (facilityType: FacilityType): GetFacilityTypeFlagsReturnShape => ({
@@ -19,5 +18,4 @@ export const getFacilityTypeFlags = (facilityType: FacilityType): GetFacilityTyp
   isCashFacility: facilityType === FACILITY_TYPE.CASH,
   isContingentFacility: facilityType === FACILITY_TYPE.CONTINGENT,
   isEwcsFacility: facilityType === FACILITY_TYPE.LOAN,
-  facilityType,
 });

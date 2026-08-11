@@ -13,7 +13,6 @@ type MapObligationsParams = {
   isContingentFacility: boolean;
   isEwcsFacility: boolean;
   facilityAmount: number | null;
-  facilityType?: string;
 };
 
 /**
@@ -23,9 +22,10 @@ type MapObligationsParams = {
  * @param {MapObligationsParams} params - Data required to build the APIM GIFT "obligations" data.
  * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssEwcsDeal` is true.
  * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
- * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
+ * @param {boolean} params.isBssFacility - Flag indicating if the facility is a BSS facility.
  * @param {boolean} params.isCashFacility - Flag indicating if the facility is a cash facility.
  * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a contingent facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
  * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
  * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
  */
