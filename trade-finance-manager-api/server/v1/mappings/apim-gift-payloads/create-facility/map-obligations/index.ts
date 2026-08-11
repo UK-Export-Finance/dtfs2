@@ -8,10 +8,12 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 type MapObligationsParams = {
   bssSubtypeName?: string;
   currency: Currency;
-  isBssEwcsDeal: boolean;
+  isBssFacility: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
+  isEwcsFacility: boolean;
   facilityAmount: number | null;
   facilityType?: string;
-  isGefDeal: boolean;
 };
 
 /**
@@ -22,22 +24,23 @@ type MapObligationsParams = {
  * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssEwcsDeal` is true.
  * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
  * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {boolean} params.isCashFacility - Flag indicating if the facility is a cash facility.
+ * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a contingent facility.
  * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
- * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
  */
 export const mapObligations = ({
   bssSubtypeName,
   currency,
-  isBssEwcsDeal,
-  isGefDeal,
+  isBssFacility,
+  isCashFacility,
+  isContingentFacility,
+  isEwcsFacility,
   facilityAmount,
-  facilityType,
 }: MapObligationsParams): ApimGiftObligation[] => {
   let subtypeCode = null;
 
-  if (isBssEwcsDeal && bssSubtypeName) {
+  if (isBssFacility && bssSubtypeName) {
     const mappedSubtypeCode = OBLIGATION_SUBTYPE_MAP.BSS[bssSubtypeName as keyof typeof OBLIGATION_SUBTYPE_MAP.BSS];
 
     /**
@@ -55,10 +58,11 @@ export const mapObligations = ({
   const obligations = [
     {
       amount: mapObligationAmount({
-        isBssEwcsDeal,
-        isGefDeal,
         facilityAmount,
-        facilityType,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       currency,
       repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,

@@ -1,11 +1,9 @@
-import { BSS_EWCS_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { PRODUCT_TYPE_CODES } from '../../constants';
 import { ApimGiftProductTypeCode } from '../../types';
 
 type MapProductTypeCodeParams = {
-  isBssEwcsDeal: boolean;
+  isBssFacility: boolean;
   isGefDeal: boolean;
-  facilityCategoryCode: string;
 };
 
 /**
@@ -14,14 +12,13 @@ type MapProductTypeCodeParams = {
  * BSS/EWCS deal type "BSS/EWCS" => GIFT product type code "BSS"
  * GEF deal type "GEF" => GIFT product type code "GEF"
  * NOTE: V1 integration only supports BSS Bond facilities and GEF facilities.
- * @param {MapProductTypeCodeParams} params - Object containing flags indicating the deal type.
- * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
+ * @param {MapProductTypeCodeParams} params - Object containing flags indicating the deal
+ * @param {boolean} params.isBssFacility - The facility category code (e.g. "Bond", "Cash", "Contingent", "Loan").
  * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
- * @param {string} params.facilityCategoryCode - The facility category code (e.g. "Bond", "Cash", "Contingent", "Loan").
  * @returns {ApimGiftProductTypeCode} The APIM/GIFT product type code for the facility.
  */
-export const mapProductTypeCode = ({ isBssEwcsDeal, isGefDeal, facilityCategoryCode }: MapProductTypeCodeParams): ApimGiftProductTypeCode => {
-  if (isBssEwcsDeal && facilityCategoryCode === BSS_EWCS_FACILITY_TYPE.BOND) {
+export const mapProductTypeCode = ({ isBssFacility, isGefDeal }: MapProductTypeCodeParams): ApimGiftProductTypeCode => {
+  if (isBssFacility) {
     return PRODUCT_TYPE_CODES.BSS;
   }
 
