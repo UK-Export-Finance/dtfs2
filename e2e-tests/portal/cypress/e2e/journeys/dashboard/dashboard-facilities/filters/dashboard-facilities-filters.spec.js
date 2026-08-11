@@ -8,7 +8,7 @@ const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters', () => {
+context('Dashboard Facilities filters', () => {
   const ALL_FACILITIES = [];
 
   before(() => {
@@ -87,6 +87,80 @@ context('Dashboard Deals filters', () => {
     it('should render `apply filters` button', () => {
       filters.panel.form.applyFiltersButton().should('be.visible');
       filters.panel.form.applyFiltersButton().contains('Apply filters');
+    });
+
+    it('should keep focus on the show/hide toggle button after activation', () => {
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should expose `aria-controls` pointing at the filter panel', () => {
+      filters
+        .showHideButton()
+        .invoke('attr', 'aria-controls')
+        .then((ariaControls) => {
+          expect(ariaControls).to.be.a('string').and.have.length.greaterThan(0);
+
+          filters.panel.container().should('have.attr', 'id', ariaControls);
+        });
+    });
+  });
+
+  describe('keyboard Tab order across the filter panel', () => {
+    const TAB_KEYDOWN = { key: 'Tab', code: 'Tab', which: 9, keyCode: 9, bubbles: true };
+    const SHIFT_TAB_KEYDOWN = { ...TAB_KEYDOWN, shiftKey: true };
+
+    const panelFocusables = () =>
+      filters.panel
+        .container()
+        .find(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        )
+        .filter(':visible');
+
+    before(() => {
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
+      filters.showHideButton().click();
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should move focus into the filter panel on Tab from the Hide filter button', () => {
+      filters.showHideButton().should('have.attr', 'aria-expanded', 'true');
+      filters.showHideButton().trigger('keydown', TAB_KEYDOWN);
+
+      filters.panel.container().then(($panel) => {
+        cy.focused().then(($focused) => {
+          expect($panel[0].contains($focused[0])).to.equal(true);
+        });
+      });
+    });
+
+    it('should return focus to the Hide filter button on Shift+Tab from the focused filter control', () => {
+      filters.showHideButton().should('have.attr', 'aria-expanded', 'true');
+      filters.showHideButton().trigger('keydown', TAB_KEYDOWN);
+      cy.focused().trigger('keydown', SHIFT_TAB_KEYDOWN);
+
+      filters.showHideButton().should('have.focus');
+    });
+
+    it('should cycle focus back to the Created by you filter on Tab from the last filter control', () => {
+      panelFocusables().last().focus();
+      cy.focused().tab();
+
+      dashboardFacilities.filters.panel.form.createdByYou.checkbox().should('have.focus');
+    });
+
+    it('should return focus to the last filter control on Shift+Tab from the element after the toggle', () => {
+      panelFocusables().last().as('lastInPanel').focus();
+      cy.focused().tab();
+      cy.focused().tab({ shift: true });
+
+      cy.get('@lastInPanel').should('have.focus');
     });
   });
 

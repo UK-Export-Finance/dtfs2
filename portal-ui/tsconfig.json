@@ -30,6 +30,8 @@
     "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "paths": {
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
+      "@ukef/dtfs2-common/frontend": ["../libs/common/src/helpers/frontend/index.ts"],
+      "@ukef/dtfs2-common/frontend/*": ["../libs/common/src/helpers/frontend/*"],
       "@ukef/dtfs2-common/api-test": ["../libs/common/src/test-helpers/api-test/index.ts"],
       "@ukef/dtfs2-common/backend": ["../libs/common/src/helpers/backend/index.ts"],
       "@ukef/dtfs2-common/mock-data-backend": ["../libs/common/src/test-helpers/mock-data-backend/index.ts"],

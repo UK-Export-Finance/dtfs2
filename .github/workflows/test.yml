@@ -734,7 +734,6 @@ jobs:
             'homepage/**/*.spec.js',
             'admin/**/*.spec.js',
             'checker/**/*.spec.js',
-            'dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
             'dashboard/dashboard-deals/filter-by/*.spec.js',
             'dashboard/dashboard-deals/filters/*.spec.js',
             'dashboard/dashboard-deals/sort/*.spec.js',
@@ -1472,7 +1471,7 @@ jobs:
         id: project
         run: |
           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Execute
         uses: ./.github/actions/rerun
@@ -1495,7 +1494,118 @@ jobs:
           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
           retention-days: 1
 
-  #9. E2E - Maintenance
+  #9. E2E - FF disabled
+  e2e-tests-ff-disabled:
+    name: E2E feature flag disabled 👷
+    needs: [setup]
+    env:
+      # Feature flags — deal cancellation forced OFF to exercise the disabled branch.
+      # All other flags mirror the FF-enabled job so only the deal-cancellation flag differs.
+      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
+      FF_TFM_DEAL_CANCELLATION_ENABLED: 'false'
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+      FF_TFM_SSO_ENABLED: 'false'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
+      FF_PORTAL_2FA_ENABLED: 'true'
+      FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec:
+          [
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
+          ]
+
+    concurrency:
+      group: e2e-tests-ff-disabled-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v7
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Docker
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+      - name: Microservices health check
+        uses: ./.github/actions/healthchecks
+        with:
+          timeout: 480000 # 8 minutes
+          interval: 10000 # 10 seconds
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Project
+        id: project
+        run: |
+          directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+            TZ=${{ vars.TIMEZONE_LONDON }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: e2e-tests-ff-disabled-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+          path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
+          retention-days: 1
+
+  #10. E2E - Maintenance
   e2e-tests-maintenance:
     name: E2E maintenance 👷
     needs: [setup]
@@ -1561,7 +1671,7 @@ jobs:
         id: project
         run: |
           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Execute
         uses: ./.github/actions/rerun
@@ -1582,7 +1692,7 @@ jobs:
           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
           retention-days: 1
 
-  #10. Docker build
+  #11. Docker build
   build:
     name: Build 🛠️
     needs: [setup]
