@@ -10,10 +10,11 @@ import {
   FacilityAmendment,
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_QUERY_STATUSES,
+  CustomExpressRequest,
 } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-type CompletedFacilityEndDate =
+export type CompletedFacilityEndDate =
   | {
       amendmentId: string;
       isUsingFacilityEndDate: true;
@@ -25,6 +26,22 @@ type CompletedFacilityEndDate =
       bankReviewDate: Date;
     }
   | { amendmentId: string; isUsingFacilityEndDate: undefined };
+
+export type GetAmendmentsByFacilityIdRequest = CustomExpressRequest<{
+  params: {
+    facilityId: string;
+    amendmentIdOrStatus?: string;
+    type?: string;
+  };
+}>;
+
+export type GetAmendmentsByDealIdRequest = CustomExpressRequest<{
+  params: {
+    dealId: string;
+    status?: string;
+    type?: string;
+  };
+}>;
 
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
@@ -105,7 +122,7 @@ const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): Comp
   };
 };
 
-export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
+export const getAmendmentsByFacilityId = async (req: GetAmendmentsByFacilityIdRequest, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
 
   try {
@@ -154,7 +171,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
   }
 };
 
-export const getAmendmentsByDealId = async (req: Request, res: Response) => {
+export const getAmendmentsByDealId = async (req: GetAmendmentsByDealIdRequest, res: Response) => {
   const { dealId, status, type } = req.params;
 
   try {
