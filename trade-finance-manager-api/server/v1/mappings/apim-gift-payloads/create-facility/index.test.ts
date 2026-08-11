@@ -45,13 +45,15 @@ describe('createFacility', () => {
 
   const { facilitySnapshot, tfm } = mockFacility;
 
+  const { type: facilityType } = facilitySnapshot;
+
   const mockUkefIndustryCode = '1003';
 
   const mockNewPartyUrnCreated = true;
 
   const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
-  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility, facilityType } = getFacilityTypeFlags(mockFacility.facilitySnapshot.type);
+  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility } = getFacilityTypeFlags(facilityType);
 
   const productTypeCode = mapProductTypeCode({ isBssFacility, isGefDeal });
 
@@ -135,7 +137,6 @@ describe('createFacility', () => {
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
         facilityAmount,
-        facilityType,
         isBssFacility,
         isCashFacility,
         isContingentFacility,
