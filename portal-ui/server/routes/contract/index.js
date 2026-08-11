@@ -30,7 +30,7 @@ const { PRODUCT } = require('../../constants');
 
 const router = express.Router();
 
-router.use('/contract/*', validateToken);
+router.use('/contract/{*path}', validateToken);
 
 /**
  * @openapi

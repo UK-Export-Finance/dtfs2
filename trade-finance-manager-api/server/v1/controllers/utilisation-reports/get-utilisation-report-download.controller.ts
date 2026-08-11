@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import stream from 'stream';
 import { AxiosError } from 'axios';
 import api from '../../api';
@@ -10,6 +11,8 @@ type FileMetadata = {
   filename: string;
   mimetype: string;
 };
+
+export type GetUtilisationReportDownloadRequest = CustomExpressRequest<{ params: { id: string } }>;
 
 /**
  * Fetches file metadata for utilisation report with specified id.
@@ -40,7 +43,7 @@ const getUtilisationReportFileMetadata = async (id: string): Promise<FileMetadat
  * @param {import('express').Request<{ id: string }>} req - Express request object
  * @param {import('express').Response} res - Express response object
  */
-export const getUtilisationReportDownload = async (req: Request, res: Response) => {
+export const getUtilisationReportDownload = async (req: GetUtilisationReportDownloadRequest, res: Response) => {
   const { id } = req.params;
 
   try {
