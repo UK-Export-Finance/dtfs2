@@ -1,9 +1,9 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { CURRENCY, RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
-import { patchPayment } from '.';
+import { patchPayment, PatchPaymentRequest } from '.';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -20,8 +20,10 @@ describe('patch-payment.controller', () => {
     const reportId = 12;
     const paymentId = 31;
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PatchPaymentRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId: reportId.toString(), paymentId: paymentId.toString() },
         body: aPatchPaymentRequestBody(),
       });

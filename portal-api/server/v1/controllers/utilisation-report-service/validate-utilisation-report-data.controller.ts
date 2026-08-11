@@ -7,7 +7,7 @@ export type ValidateUtilisationReportDataRequestBody = {
   reportData: Record<string, UtilisationReportCsvCellData>[];
 };
 
-type ValidateUtilisationReportDataRequest = CustomExpressRequest<{
+export type ValidateUtilisationReportDataRequest = CustomExpressRequest<{
   reqBody: ValidateUtilisationReportDataRequestBody;
 }>;
 
