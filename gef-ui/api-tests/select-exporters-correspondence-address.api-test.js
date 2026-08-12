@@ -14,6 +14,8 @@ const dealId = '123';
 
 const mockAddresses = JSON.stringify([{ organisationName: 'TEST', addressLine1: '1 Test Street', postalCode: 'AA1 1AA', country: 'United Kingdom' }]);
 
+const mockPostcode = 'AA1 1AA';
+
 describe('select exporters correspondence address routes', () => {
   beforeEach(() => {
     api.getApplication.mockResolvedValue(cloneMock(MOCK_BASIC_DEAL));
@@ -28,7 +30,7 @@ describe('select exporters correspondence address routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/select-exporters-correspondence-address`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Ok,
-      extraSessionData: { addresses: mockAddresses, postcode: 'AA1 1AA' },
+      extraSessionData: { addresses: mockAddresses, postcode: mockPostcode },
     });
   });
 
@@ -37,7 +39,7 @@ describe('select exporters correspondence address routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/select-exporters-correspondence-address`),
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Ok,
-      extraSessionData: { addresses: mockAddresses, postcode: 'AA1 1AA' },
+      extraSessionData: { addresses: mockAddresses, postcode: mockPostcode },
     });
   });
 });
