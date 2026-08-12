@@ -34,17 +34,14 @@ permissions:
   contents: read
 
 on:
-  workflow_run:
-    workflows: ['Quality Assurance - Tests']
-    types:
-      - completed
+ push:
     branches:
-      - release-*
-      - '!release-please*'
+      - chore/staging-revert-deploy
+      # - '!release-please*'
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  ENVIRONMENT: chore/staging-revert-deploy
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
   # Base artifact
   FROM: latest
@@ -53,7 +50,6 @@ jobs:
   # 1. Base actions configrations
   setup:
     name: Setup 🔧
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -66,7 +62,7 @@ jobs:
         run: |
           if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
             echo "environment=prod" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+          elif [[ "${{ env.ENVIRONMENT }}" == "chore/staging-revert-deploy" ]]; then
             echo "environment=staging" >> "$GITHUB_OUTPUT"
           else
             echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
@@ -78,7 +74,6 @@ jobs:
   # 2. Database schema migration
   database:
     name: MSSQL 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -104,7 +99,6 @@ jobs:
   # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -140,7 +134,6 @@ jobs:
   # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, database, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]

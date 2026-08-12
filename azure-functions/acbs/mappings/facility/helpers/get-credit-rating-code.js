@@ -15,9 +15,54 @@ const getCreditRatingCode = (deal) => {
   if (deal.dealSnapshot.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
     return CONSTANTS.FACILITY.CREDIT_RATING.B_PLUS;
   }
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', deal.tfm.exporterCreditRating);
 
   // `MIN` = TFM value
   if (deal.tfm) {
+    switch (deal.tfm.exporterCreditRating) {
+      // BB- (13) for Good (BB-) or BB-
+      case EXPORTER_CREDIT_RATING.BB_MINUS:
+        console.log('test switch BB-');
+        break;
+      case CREDIT_RATING.BB_MINUS:
+        console.log('test switch BB- 2');
+        break;
+
+      // B+ (14) for Acceptable (B+) or B+
+      case EXPORTER_CREDIT_RATING.B_PLUS:
+        console.log('test switch B+');
+        break;
+      case CREDIT_RATING.B_PLUS:
+        console.log('test switch B+ 2');
+        break;
+
+      // Not know (98)
+      default:
+        console.log('test switch default');
+        break;
+    }
+
+    console.log('switch 2');
+
+    switch (deal.tfm.exporterCreditRating) {
+      // BB- (13) for Good (BB-) or BB-
+      case EXPORTER_CREDIT_RATING.BB_MINUS:
+      case CREDIT_RATING.BB_MINUS:
+        console.log('test switch2 BB-');
+        break;
+
+      // B+ (14) for Acceptable (B+) or B+
+      case EXPORTER_CREDIT_RATING.B_PLUS:
+      case CREDIT_RATING.B_PLUS:
+        console.log('test switch 22222 B+');
+        break;
+
+      // Not know (98)
+      default:
+        console.log('test switch  2 default');
+        break;
+    }
+
     switch (deal.tfm.exporterCreditRating) {
       // BB- (13) for Good (BB-) or BB-
       case EXPORTER_CREDIT_RATING.BB_MINUS:
