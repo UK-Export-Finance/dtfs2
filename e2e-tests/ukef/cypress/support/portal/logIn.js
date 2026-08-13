@@ -3,7 +3,7 @@ const { signInLink } = require('../../../../portal/cypress/e2e/pages');
 const { SIGN_IN_TOKENS } = require('../../../../portal/cypress/fixtures/constants');
 const relative = require('../../e2e/relativeURL');
 
-const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
+const PORTAL_2FA_FF = Cypress.expose('FF_PORTAL_2FA_ENABLED');
 
 module.exports = (opts) => {
   const { username, password, roles } = opts;

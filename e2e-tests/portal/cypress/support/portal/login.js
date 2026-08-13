@@ -2,7 +2,7 @@ const { signInLink } = require('../../e2e/pages');
 const relative = require('../../e2e/relativeURL');
 const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
 
-const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
+const PORTAL_2FA_FF = Cypress.expose('FF_PORTAL_2FA_ENABLED');
 
 module.exports = ({ username, password }) => {
   if (PORTAL_2FA_FF === 'true') {
