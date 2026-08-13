@@ -4,9 +4,10 @@ import { mapCounterparties } from '.';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapCounterparties', () => {
-  describe('when isBssEwcsDeal is true', () => {
-    const isBssEwcsDeal = true;
-    const isGefDeal = false;
+  describe('when isBssFacility is true', () => {
+    const isBssFacility = true;
+    const isCashFacility = false;
+    const isContingentFacility = false;
 
     describe(`when partyUrns.bondGiver exists`, () => {
       it('should return an array with a "BOND_GIVER" counterparty', () => {
@@ -17,8 +18,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -43,8 +45,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -70,8 +73,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -98,8 +102,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -109,9 +114,10 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when isGefDeal is true', () => {
-    const isGefDeal = true;
-    const isBssEwcsDeal = false;
+  describe('when isCashFacility is true', () => {
+    const isBssFacility = false;
+    const isCashFacility = true;
+    const isContingentFacility = false;
 
     describe(`when partyUrns.issuingBank exists`, () => {
       it('should return an array with an "ISSUING_BANK" counterparty', () => {
@@ -122,8 +128,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -146,8 +153,9 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -157,15 +165,68 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
-    const isGefDeal = false;
-    const isBssEwcsDeal = false;
+  describe('when isContingentFacility is true', () => {
+    const isBssFacility = false;
+    const isCashFacility = false;
+    const isContingentFacility = true;
+
+    describe(`when partyUrns.issuingBank exists`, () => {
+      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+        // Arrange
+        const mockPartyUrns = {
+          issuingBank: '00318345',
+        };
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        const expected = [
+          {
+            counterpartyUrn: mockPartyUrns.issuingBank,
+            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe(`when partyUrns.issuingBank does NOT exist`, () => {
+      it('should return an empty array', () => {
+        // Arrange
+        const mockPartyUrns = {};
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('when all flags are false', () => {
+    const isCashFacility = false;
+    const isBssFacility = false;
+    const isContingentFacility = false;
 
     it('should return an empty array', () => {
       // Act
       const result = mapCounterparties({
-        isBssEwcsDeal,
-        isGefDeal,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
         partyUrns: {},
       });
 
