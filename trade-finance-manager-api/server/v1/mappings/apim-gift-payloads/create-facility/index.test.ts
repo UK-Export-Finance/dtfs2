@@ -22,7 +22,7 @@ import api from '../../../api';
 import { createFacility } from '.';
 
 const mockDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
-const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
+const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 
 jest.mock('../../../api');
 

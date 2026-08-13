@@ -33,7 +33,9 @@ type MapFacilityCategoryCodeParams = {
  * ```
  */
 export const mapEwcsFacilityCategoryCode = (supplierType: string | null): string => {
-  if (supplierType && supplierType in FACILITY_CATEGORY_CODES) {
+  const canMap = supplierType && Object.prototype.hasOwnProperty.call(FACILITY_CATEGORY_CODES, supplierType);
+
+  if (canMap) {
     const categoryCode = FACILITY_CATEGORY_CODES[supplierType as keyof typeof FACILITY_CATEGORY_CODES];
 
     return categoryCode;
