@@ -4,25 +4,28 @@ import { ApimGiftCounterparty, PartyUrns } from '../../types';
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapCounterpartiesParams = {
-  isBssEwcsDeal: boolean;
-  isGefDeal: boolean;
+  isBssFacility: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
   partyUrns: PartyUrns;
 };
 
 /**
- * Maps the counterparties for a given deal type and party URNs.
- * BSS/EWCS - If available, create a "Bond giver" counterparty (from the bank party URN) and a "Bond beneficiary" counterparty (from the buyer party URN).
- * GEF - If available, create an "Issuing bank" counterparty (from the bank party URN).
+ * Maps the counterparties depending on the type of facility and party URNs.
+ * BSS - If available, create a "Bond giver" counterparty (from the bank party URN) and a "Bond beneficiary" counterparty (from the buyer party URN).
+ * Cash, Contingent - If available, create an "Issuing bank" counterparty (from the bank party URN).
  * @param {MapCounterpartiesParams} params - Data required to build the APIM GIFT "counterparties" data.
- * @param {boolean} params.isBssEwcsDeal - If the deal is a BSS/EWCS deal.
- * @param {boolean} params.isGefDeal - If the deal is a GEF deal.
+ * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
+ * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
  * @param {PartyUrns} params.partyUrns - The party URNs.
  * @returns {ApimGiftCounterparty[]} Mapped counterparties array for the APIM GIFT payload.
  */
-export const mapCounterparties = ({ isBssEwcsDeal, isGefDeal, partyUrns }: MapCounterpartiesParams): ApimGiftCounterparty[] => {
+
+export const mapCounterparties = ({ isBssFacility, isCashFacility, isContingentFacility, partyUrns }: MapCounterpartiesParams): ApimGiftCounterparty[] => {
   const counterparties: ApimGiftCounterparty[] = [];
 
-  if (isBssEwcsDeal) {
+  if (isBssFacility) {
     if (partyUrns.bondGiver) {
       counterparties.push({
         counterpartyUrn: partyUrns.bondGiver,
@@ -40,7 +43,7 @@ export const mapCounterparties = ({ isBssEwcsDeal, isGefDeal, partyUrns }: MapCo
     return counterparties;
   }
 
-  if (isGefDeal && partyUrns.issuingBank) {
+  if ((isCashFacility || isContingentFacility) && partyUrns.issuingBank) {
     counterparties.push({
       counterpartyUrn: partyUrns.issuingBank,
       roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
