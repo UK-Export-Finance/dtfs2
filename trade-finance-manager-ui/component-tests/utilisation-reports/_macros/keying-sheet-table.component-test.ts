@@ -39,7 +39,7 @@ describe(component, () => {
 
   const tableHeaderSelector = (text: string) => `thead th:contains("${text}")`;
 
-  it('renders the status, facility id, exporter, date, fee payment and base currency table headings', () => {
+  it('should render the status, facility id, exporter, date, fee payment and base currency table headings', () => {
     const wrapper = getWrapper(aKeyingSheetTableViewModel());
 
     wrapper.expectElement(tableHeaderSelector('Status')).toExist();
@@ -59,17 +59,40 @@ describe(component, () => {
   describe('when userCanEdit is set to true', () => {
     const userCanEdit = true;
 
-    it('renders the select all checkbox table header', () => {
+    it('should render the select all checkbox table header', () => {
       const wrapper = getWrapper({ ...aKeyingSheetTableViewModel(), userCanEdit });
 
       wrapper.expectElement('thead input#select-all-checkbox').toExist();
+    });
+
+    it('should render a unique accessible label for each fee record checkbox', () => {
+      const firstKeyingSheetRow = aKeyingSheetTableViewModel().keyingSheet[0];
+      const keyingSheet: KeyingSheetViewModel = [
+        firstKeyingSheetRow,
+        {
+          ...firstKeyingSheetRow,
+          facilityId: '87654321',
+          feeRecordId: 13,
+          exporter: 'Another exporter',
+          checkboxId: 'feeRecordId-2-status-TO_DO',
+        },
+      ];
+      const wrapper = getWrapper({ ...aKeyingSheetTableViewModel(), keyingSheet, userCanEdit });
+
+      wrapper.expectElement('tbody tr').toHaveCount(2);
+      wrapper
+        .expectElement('tbody input#feeRecordId-1-status-TO_DO')
+        .toHaveAttribute('aria-label', 'Select 12345678 with exporter Test exporter to mark as done or to mark as to do');
+      wrapper
+        .expectElement('tbody input#feeRecordId-2-status-TO_DO')
+        .toHaveAttribute('aria-label', 'Select 87654321 with exporter Another exporter to mark as done or to mark as to do');
     });
   });
 
   describe('when userCanEdit is set to false', () => {
     const userCanEdit = false;
 
-    it('does not render the select all checkbox table header', () => {
+    it('should not render the select all checkbox table header', () => {
       const wrapper = getWrapper({ ...aKeyingSheetTableViewModel(), userCanEdit });
 
       wrapper.expectElement('thead input#select-all-checkbox').notToExist();

@@ -510,7 +510,9 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
+      expect(viewModel[0].checkboxAriaLabel).toEqual(
+        `Select ${feeRecords[0].facilityId} ${feeRecords[1].facilityId} with exporter ${feeRecords[0].exporter} ${feeRecords[1].exporter} to add a payment, generate keying data or create a record correction request`,
+      );
     });
   });
 
