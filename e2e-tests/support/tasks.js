@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+require('./register-common-typescript');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
