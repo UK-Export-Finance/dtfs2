@@ -1,4 +1,4 @@
-import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { BssEwcsDeal, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
@@ -145,11 +145,14 @@ describe('createFacility', () => {
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         dealId: getTfmUkefDealId(mockDeal),
+        ewcsSupplierType: String((mockDeal.dealSnapshot as BssEwcsDeal).submissionDetails['supplier-type']),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityType,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
         industryCode: getIndustryCode(mockDeal),
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       delayCreation: mockNewPartyUrnCreated,
     };
