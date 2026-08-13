@@ -118,7 +118,7 @@ describe('date', () => {
     it.each(['2023-11-01', '2023-13', '202-11', 'invalid', '', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])(
       'throws when provided non-ISO month string value %p',
       (value) => {
-        expect(() => assertValidIsoMonth(value)).toThrow('Invalid ISO mont');
+        expect(() => assertValidIsoMonth(value)).toThrow('Invalid ISO month');
       },
     );
 
