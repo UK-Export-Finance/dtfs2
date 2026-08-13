@@ -148,6 +148,7 @@ export const createFacility = async ({
       isBssFacility,
       isCashFacility,
       isContingentFacility,
+      isEwcsFacility,
       partyUrns,
     }),
     obligations: mapObligations({
