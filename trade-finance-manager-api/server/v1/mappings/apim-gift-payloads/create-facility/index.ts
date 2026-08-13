@@ -2,6 +2,7 @@ import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
+import { getFacilityTypeFlags } from './get-facility-type-flags';
 import { mapPartyUrns } from './map-party-urns';
 import { getIndustryCode } from '../get-industry-code';
 import { mapOverview } from './map-overview';
@@ -62,13 +63,17 @@ export const createFacility = async ({
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
 
+  const { type: facilityType } = facilitySnapshot;
+
+  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility } = getFacilityTypeFlags(facilityType);
+
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
     isBssEwcsDeal,
     isGefDeal,
   });
 
-  const { feeFrequency, feeType, type: facilityType } = facilitySnapshot;
+  const { feeFrequency, feeType } = facilitySnapshot;
 
   const facilityAmount = mapFacilityAmount({
     facilityAmount: facilitySnapshot.value,
@@ -84,11 +89,7 @@ export const createFacility = async ({
    */
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
-  const productTypeCode = mapProductTypeCode({
-    isBssEwcsDeal,
-    isGefDeal,
-    facilityCategoryCode: facilityType,
-  });
+  const productTypeCode = mapProductTypeCode({ isBssFacility, isGefDeal });
 
   const { exporterCreditRating } = deal.tfm;
 
@@ -144,17 +145,19 @@ export const createFacility = async ({
       guaranteeFeePayableToUkef,
     }),
     counterparties: mapCounterparties({
-      isBssEwcsDeal,
-      isGefDeal,
+      isBssFacility,
+      isCashFacility,
+      isContingentFacility,
       partyUrns,
     }),
     obligations: mapObligations({
       bssSubtypeName,
       currency,
       facilityAmount,
-      facilityType,
-      isBssEwcsDeal,
-      isGefDeal,
+      isBssFacility,
+      isCashFacility,
+      isContingentFacility,
+      isEwcsFacility,
     }),
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
