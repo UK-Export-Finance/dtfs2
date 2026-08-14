@@ -12,6 +12,8 @@ jest.mock('../../server/services/api', () => ({
   setApplicationStatus: jest.fn(),
   updateFacility: jest.fn(),
   updateApplication: jest.fn(),
+  getTfmDeal: jest.fn(),
+  downloadFile: jest.fn(),
   getCompanyByRegistrationNumber: jest.fn(),
   getMandatoryCriteria: jest.fn(),
   cloneApplication: jest.fn(),
