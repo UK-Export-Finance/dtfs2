@@ -25,7 +25,7 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.4.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

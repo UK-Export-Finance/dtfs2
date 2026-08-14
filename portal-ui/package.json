@@ -48,7 +48,7 @@
     "csv-parser": "^3.2.1",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
-    "dotenv": "16.6.1",
+    "dotenv": "^17.4.2",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "express-rate-limit": "^6.11.2",
