@@ -86,7 +86,6 @@ COPY --chown=node:node --from=build ${ROOT}/package-lock.json .
 COPY --chown=node:node --from=build ${ROOT}/node_modules ./node_modules
 
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/package.json ./package.json
-COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/node_modules ./node_modules
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/tsconfig.json ./tsconfig.json
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/api.js ./api.js
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/apim-mdm.js ./apim-mdm.js
