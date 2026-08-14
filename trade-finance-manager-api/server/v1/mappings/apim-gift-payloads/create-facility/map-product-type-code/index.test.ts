@@ -1,15 +1,13 @@
-import { BSS_EWCS_FACILITY_TYPE, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { mapProductTypeCode } from '.';
 import { PRODUCT_TYPE_CODES } from '../../constants';
+import { mapProductTypeCode } from '.';
 
 describe('mapProductTypeCode', () => {
-  describe(`when isBssEwcsDeal is true and facilityCategoryCode is ${BSS_EWCS_FACILITY_TYPE.BOND}`, () => {
+  describe('when isBssFacility is true', () => {
     it('should return the correct product type code', () => {
       // Arrange & Act
       const result = mapProductTypeCode({
-        isBssEwcsDeal: true,
+        isBssFacility: true,
         isGefDeal: false,
-        facilityCategoryCode: BSS_EWCS_FACILITY_TYPE.BOND,
       });
 
       // Assert
@@ -19,33 +17,31 @@ describe('mapProductTypeCode', () => {
     });
   });
 
-  describe(`when isBssEwcsDeal is true and facilityCategoryCode is NOT ${BSS_EWCS_FACILITY_TYPE.BOND}`, () => {
+  describe('when isGefDeal is true', () => {
     it('should return the correct product type code', () => {
       // Arrange & Act
       const result = mapProductTypeCode({
-        isBssEwcsDeal: true,
-        isGefDeal: false,
-        facilityCategoryCode: BSS_EWCS_FACILITY_TYPE.LOAN,
+        isBssFacility: false,
+        isGefDeal: true,
       });
 
       // Assert
-      const expected = PRODUCT_TYPE_CODES.UNKNOWN;
+      const expected = PRODUCT_TYPE_CODES.GEF;
 
       expect(result).toEqual(expected);
     });
   });
 
-  describe('when isGefDeal is true', () => {
-    it('should return the correct product type code', () => {
+  describe('when isBssFacility and isGefDeal are false', () => {
+    it(`should return ${PRODUCT_TYPE_CODES.UNKNOWN}`, () => {
       // Arrange & Act
       const result = mapProductTypeCode({
-        isBssEwcsDeal: false,
-        isGefDeal: true,
-        facilityCategoryCode: GEF_FACILITY_TYPE.CASH,
+        isBssFacility: false,
+        isGefDeal: false,
       });
 
       // Assert
-      const expected = PRODUCT_TYPE_CODES.GEF;
+      const expected = PRODUCT_TYPE_CODES.UNKNOWN;
 
       expect(result).toEqual(expected);
     });
