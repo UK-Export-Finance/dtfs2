@@ -42,7 +42,7 @@
     "compression": "^1.8.1",
     "cors": "^2.8.6",
     "cron": "^3.5.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^6.11.2",

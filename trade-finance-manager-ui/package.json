@@ -34,7 +34,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.8.10",
+    "@azure/msal-node": "^5.5.0",
     "@babel/plugin-transform-runtime": "8.0.1",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "3.0.2",
@@ -50,8 +50,8 @@
     "connect-flash": "0.1.1",
     "cookie-parser": "^1.4.7",
     "core-js": "^3.49.0",
-    "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.1",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^6.11.2",
@@ -69,7 +69,7 @@
     "node-fetch": "^2.7.0",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
-    "sanitize-html": "^2.17.5",
+    "sanitize-html": "^2.17.6",
     "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
