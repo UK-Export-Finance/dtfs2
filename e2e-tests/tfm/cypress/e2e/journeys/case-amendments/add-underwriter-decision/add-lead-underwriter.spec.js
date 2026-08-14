@@ -12,6 +12,17 @@ context('Amendments underwriting - add lead underwriter', () => {
   describe('Amendments add lead underwriter', () => {
     let dealId;
     const dealFacilities = [];
+    const assertLeadUnderwriterIsReadOnly = () => {
+      cy.request(relative(`/case/${dealId}/underwriting`)).then(({ body, status }) => {
+        const page = Cypress.$(body);
+
+        expect(status).to.equal(200);
+        expect(page.find('[data-cy="amendment--lead-underwriter-fullname"]').text()).to.contain(
+          `${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`,
+        );
+        expect(page.find('[data-cy="amendment--change-lead-underwriter-link"]')).to.have.length(0);
+      });
+    };
 
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -143,18 +154,12 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should not show change link when logged in as PIM user', () => {
       cy.loginWithSession(PIM_USER_1);
-      cy.visit(relative(`/case/${dealId}/underwriting`));
-
-      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
-      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
+      assertLeadUnderwriterIsReadOnly();
     });
 
     it('should not show change link when logged in as T1_USER', () => {
       cy.loginWithSession(T1_USER_1);
-      cy.visit(relative(`/case/${dealId}/underwriting`));
-
-      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
-      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
+      assertLeadUnderwriterIsReadOnly();
     });
 
     it('should allow changing lead underwriter', () => {
