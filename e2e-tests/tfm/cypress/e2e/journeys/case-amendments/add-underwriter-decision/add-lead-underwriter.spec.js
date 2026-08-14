@@ -34,6 +34,10 @@ context('Amendments underwriting - add lead underwriter', () => {
       });
     });
 
+    beforeEach(() => {
+      cy.saveSession();
+    });
+
     it('should submit an amendment request', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
