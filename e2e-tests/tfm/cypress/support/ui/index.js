@@ -5,3 +5,4 @@ import './click-events';
 import './utilisation-report';
 
 Cypress.Commands.add('login', require('./logIn'));
+Cypress.Commands.add('loginWithSession', require('./logInWithSession'));
