@@ -1,6 +1,7 @@
 import { AnyObject } from '@ukef/dtfs2-common';
 import request from 'supertest';
 import dotenv from 'dotenv';
+import { Express } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { TestUser } from './types/test-user';
 import { TestApi } from './types/test-api';
@@ -32,7 +33,7 @@ const getHeaders = (token?: string): IncomingHttpHeaders => {
  * @param app - The express app
  * @returns supertest request mocks
  */
-export const createApi = (app: unknown): TestApi => ({
+export const createApi = (app: Express): TestApi => ({
   as: (user: TestUser) => {
     const token = user?.token ? user.token : '';
 
