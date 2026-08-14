@@ -54,7 +54,7 @@ describe('getMandatoryCriteria()', () => {
   it('throws an error if there is an api error', async () => {
     portalApi.get.mockReturnValue(Promise.reject());
     const response = api.getMandatoryCriteria({ userToken });
-    await expect(response).rejects.toThrowError();
+    await expect(response).rejects.toThrow();
   });
 });
 
@@ -68,7 +68,7 @@ describe('createApplication()', () => {
   it('throws an error if there is an api error', async () => {
     portalApi.post.mockReturnValue(Promise.reject());
     const response = api.createApplication({ payload: {}, userToken });
-    await expect(response).rejects.toThrowError();
+    await expect(response).rejects.toThrow();
   });
 });
 
@@ -82,7 +82,7 @@ describe('cloneApplication()', () => {
   it('throws an error if there is an api error', async () => {
     portalApi.post.mockReturnValue(Promise.reject());
     const response = api.cloneApplication({ payload: {}, userToken });
-    await expect(response).rejects.toThrowError();
+    await expect(response).rejects.toThrow();
   });
 });
 
@@ -95,7 +95,7 @@ describe('getApplication()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.get.mockReturnValue(Promise.reject());
-    await expect(api.getApplication({ dealId: validMongoId, userToken })).rejects.toThrowError();
+    await expect(api.getApplication({ dealId: validMongoId, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
@@ -113,7 +113,7 @@ describe('updateApplication()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.put.mockReturnValue(Promise.reject());
-    await expect(api.updateApplication({ dealId: validMongoId, application: {}, userToken })).rejects.toThrowError();
+    await expect(api.updateApplication({ dealId: validMongoId, application: {}, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
@@ -131,7 +131,7 @@ describe('updateSupportingInformation()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.put.mockReturnValue(Promise.reject());
-    await expect(api.updateSupportingInformation({ dealId: validMongoId, userToken })).rejects.toThrowError();
+    await expect(api.updateSupportingInformation({ dealId: validMongoId, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
@@ -153,7 +153,7 @@ describe('setApplicationStatus()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.put.mockReturnValue(Promise.reject());
-    await expect(api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken })).rejects.toThrowError();
+    await expect(api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
@@ -181,7 +181,7 @@ describe('getFacilities()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacilities({ dealId: validMongoId, userToken })).rejects.toThrowError();
+    await expect(api.getFacilities({ dealId: validMongoId, userToken })).rejects.toThrow();
   });
 });
 
@@ -194,7 +194,7 @@ describe('getFacility()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
+    await expect(api.getFacility({ facilityId: validMongoId, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
@@ -212,7 +212,7 @@ describe('createFacility()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.post.mockReturnValue(Promise.reject());
-    await expect(api.createFacility({ payload: {}, userToken })).rejects.toThrowError();
+    await expect(api.createFacility({ payload: {}, userToken })).rejects.toThrow();
   });
 });
 
@@ -225,7 +225,7 @@ describe('updateFacility()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.put.mockReturnValue(Promise.reject());
-    await expect(api.updateFacility({ facilityId: validMongoId, payload: {}, userToken })).rejects.toThrowError();
+    await expect(api.updateFacility({ facilityId: validMongoId, payload: {}, userToken })).rejects.toThrow();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
@@ -243,7 +243,7 @@ describe('deleteFacility()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.delete.mockReturnValue(Promise.reject());
-    await expect(api.deleteFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
+    await expect(api.deleteFacility({ facilityId: validMongoId, userToken })).rejects.toThrow();
   });
 
   it.each(invalidMongoIdTestCases)('should return false when given an invalid facilityId', async (invalidMongoId) => {
@@ -370,11 +370,11 @@ describe('getAddressesByPostcode()', () => {
 
   it('throws an error if there is an api error', async () => {
     portalApi.get.mockReturnValue(Promise.reject());
-    await expect(api.getAddressesByPostcode({ postcode, userToken })).rejects.toThrowError();
+    await expect(api.getAddressesByPostcode({ postcode, userToken })).rejects.toThrow();
   });
 
   it('throws an appropriate error when given an invalid postcode', async () => {
-    await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrowError('Invalid postcode');
+    await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrow('Invalid postcode');
   });
 });
 
