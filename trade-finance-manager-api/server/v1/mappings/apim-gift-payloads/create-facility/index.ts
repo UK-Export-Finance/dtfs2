@@ -140,11 +140,13 @@ export const createFacility = async ({
       ukefFacilityId,
     }),
     accrualSchedules: mapAccrualSchedules({
+      currency,
       dayCountBasis,
       expiryDate,
       feeFrequency,
       feeType,
       guaranteeFeePayableToUkef,
+      isEwcsFacility,
     }),
     counterparties: mapCounterparties({
       isBssFacility,

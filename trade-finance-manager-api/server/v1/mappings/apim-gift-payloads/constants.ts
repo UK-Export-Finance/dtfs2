@@ -118,6 +118,34 @@ export const ACCRUAL_FREQUENCY_CODE_MAP = {
   EVERY_BUSINESS_DAY: 'FREQEBD',
 } as const;
 
+/**
+ * APIM/GIFT index rate codes for EWCS facilities.
+ * These are required to map the facility's currency and accrual frequency code to the expected index rate code in APIM/GIFT when mapping the facility "accrual schedules" data for the APIM GIFT payload.
+ * If the currency is not recognized, the index rate code will default to "UNKNOWN_INDEX_RATE_CODE".
+ * If the frequency code is not quarterly, the index rate code will default to the "OTHER" index rate code for the given currency.
+ * This is required to ensure that the integration can handle unexpected currency and frequency code values without breaking, and to provide a fallback value for unrecognized values.
+ * If the "UNKNOWN_INDEX_RATE_CODE" is sent to APIM/GIFT, this will trigger an alert in APIM for the unexpected index rate code value, which can be investigated by the team.
+ */
+export const ACCRUAL_SCHEDULE_INDEX_RATE_CODES = {
+  GBP: {
+    QUARTERLY: 'GBP003',
+    OTHER: 'GBP004',
+  },
+  EUR: {
+    QUARTERLY: 'EUR003',
+    OTHER: 'EUR004',
+  },
+  USD: {
+    QUARTERLY: 'USD003',
+    OTHER: 'USD004',
+  },
+  JPY: {
+    QUARTERLY: 'JPY003',
+    OTHER: 'JPY004',
+  },
+  UNKNOWN: 'UNKNOWN_INDEX_RATE_CODE',
+} as const;
+
 export const ACCRUAL_SCHEDULE_TYPE_CODES = {
   PREMIUM: 'PAC01',
 } as const;
