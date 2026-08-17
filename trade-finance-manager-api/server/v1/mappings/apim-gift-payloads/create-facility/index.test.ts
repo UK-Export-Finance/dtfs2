@@ -1,6 +1,6 @@
 import { BssEwcsDeal, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
@@ -21,7 +21,7 @@ import { mapObligations } from './map-obligations';
 import api from '../../../api';
 import { createFacility } from '.';
 
-const mockDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
+const mockDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
 const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 
 jest.mock('../../../api');
