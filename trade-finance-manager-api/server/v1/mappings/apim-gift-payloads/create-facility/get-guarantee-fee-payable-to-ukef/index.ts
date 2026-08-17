@@ -3,8 +3,10 @@ import mapGuaranteeFeePayableToUkef from '../../../../rest-mappings/mappings/fac
 
 type GetGuaranteeFeePayableToUkefParams = {
   facilitySnapshot: TfmFacilitySnapshot;
-  isBssEwcsDeal: boolean;
-  isGefDeal: boolean;
+  isBssFacility: boolean;
+  isEwcsFacility: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
 };
 
 /**
@@ -13,16 +15,25 @@ type GetGuaranteeFeePayableToUkefParams = {
  * - For GEF deals, this is mapped from "guarantee fee" value in the facility snapshot.
  * @param {GetGuaranteeFeePayableToUkefParams} params - The parameters required to determine the "guarantee fee payable to UKEF" value, including:
  * @param {TfmFacilitySnapshot} params.facilitySnapshot - The TFM facility snapshot containing the relevant fee values.
- * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {TfmDeal} params.deal - The TFM deal to get the party URNs from.
+ * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
+ * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
+ * @param {boolean} params.isEwcsFacility - If the facility is an EWCS facility.
  * @returns {string | null} The "guarantee fee payable to UKEF" value for the APIM GIFT payload.
  */
-export const getGuaranteeFeePayableToUkef = ({ facilitySnapshot, isBssEwcsDeal, isGefDeal }: GetGuaranteeFeePayableToUkefParams) => {
-  if (isBssEwcsDeal && facilitySnapshot.guaranteeFeePayableByBank) {
+export const getGuaranteeFeePayableToUkef = ({
+  facilitySnapshot,
+  isBssFacility,
+  isCashFacility,
+  isContingentFacility,
+  isEwcsFacility,
+}: GetGuaranteeFeePayableToUkefParams) => {
+  if ((isBssFacility || isEwcsFacility) && facilitySnapshot.guaranteeFeePayableByBank) {
     return mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFeePayableByBank);
   }
 
-  if (isGefDeal && facilitySnapshot.guaranteeFee) {
+  if ((isCashFacility || isContingentFacility) && facilitySnapshot.guaranteeFee) {
     return mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee);
   }
 

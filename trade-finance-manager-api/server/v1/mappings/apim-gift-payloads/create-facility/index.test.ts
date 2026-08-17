@@ -59,14 +59,18 @@ describe('createFacility', () => {
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const facilityAmount = mapFacilityAmount({
@@ -111,7 +115,8 @@ describe('createFacility', () => {
         exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
         facilityAmount,
         facilityType,
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
         monthsOfCover: tfm.exposurePeriodInMonths,
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
@@ -152,7 +157,8 @@ describe('createFacility', () => {
         facilityType,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
         industryCode: getIndustryCode(mockDeal),
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
       }),
       delayCreation: mockNewPartyUrnCreated,
     };

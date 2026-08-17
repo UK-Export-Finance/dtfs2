@@ -26,7 +26,12 @@ const mockFacilityCategories = [
 ];
 
 describe('mapFacilityCategoryCode', () => {
-  describe('when isGefDeal is true', () => {
+  const baseParams = {
+    isCashFacility: false,
+    isContingentFacility: false,
+  };
+
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true', ({ flag }) => {
     describe('when a facilityType is provided', () => {
       it('should return a facility category code from the provided APIM categories', () => {
         // Arrange
@@ -36,7 +41,8 @@ describe('mapFacilityCategoryCode', () => {
         const result = mapFacilityCategoryCode({
           facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
-          isGefDeal: true,
+          ...baseParams,
+          [flag]: true,
         });
 
         // Assert
@@ -55,7 +61,8 @@ describe('mapFacilityCategoryCode', () => {
         const result = mapFacilityCategoryCode({
           facilityType: mockFacilityCategoryCode,
           facilityCategories: mockFacilityCategories,
-          isGefDeal: true,
+          ...baseParams,
+          [flag]: true,
         });
 
         // Assert
@@ -69,7 +76,8 @@ describe('mapFacilityCategoryCode', () => {
         const result = mapFacilityCategoryCode({
           facilityType: '',
           facilityCategories: mockFacilityCategories,
-          isGefDeal: true,
+          ...baseParams,
+          [flag]: true,
         });
 
         // Assert
@@ -83,7 +91,8 @@ describe('mapFacilityCategoryCode', () => {
         const result = mapFacilityCategoryCode({
           facilityType: undefined,
           facilityCategories: mockFacilityCategories,
-          isGefDeal: true,
+          ...baseParams,
+          [flag]: true,
         });
 
         // Assert
@@ -92,7 +101,7 @@ describe('mapFacilityCategoryCode', () => {
     });
   });
 
-  describe('when isGefDeal is false', () => {
+  describe('when both isCashFacility and isContingentFacility are false', () => {
     it('should return null', () => {
       // Arrange
       const mockFacilityCategoryCode = 'Mock facility category code';
@@ -101,7 +110,7 @@ describe('mapFacilityCategoryCode', () => {
       const result = mapFacilityCategoryCode({
         facilityType: mockFacilityCategoryCode,
         facilityCategories: mockFacilityCategories,
-        isGefDeal: false,
+        ...baseParams,
       });
 
       // Assert

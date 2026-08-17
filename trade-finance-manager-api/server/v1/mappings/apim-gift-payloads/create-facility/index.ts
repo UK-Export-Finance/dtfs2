@@ -69,8 +69,10 @@ export const createFacility = async ({
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const { feeFrequency, feeType } = facilitySnapshot;
@@ -109,8 +111,10 @@ export const createFacility = async ({
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   /**
@@ -134,7 +138,8 @@ export const createFacility = async ({
       exporterPartyUrn,
       facilityAmount,
       facilityType,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
       monthsOfCover,
       productTypeCode,
       ukefFacilityId,
@@ -169,7 +174,8 @@ export const createFacility = async ({
       facilityCategories,
       facilityType,
       industryCode,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
     }),
     delayCreation,
   };

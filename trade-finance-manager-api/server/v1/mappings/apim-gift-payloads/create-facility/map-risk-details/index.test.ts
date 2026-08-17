@@ -43,7 +43,8 @@ describe('mapRiskDetails', () => {
     facilityType: '',
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
-    isGefDeal: true,
+    isCashFacility: true,
+    isContingentFacility: false,
   };
 
   beforeEach(() => {
@@ -81,7 +82,8 @@ describe('mapRiskDetails', () => {
       facilityCategoryCode: mapFacilityCategoryCode({
         facilityCategories: params.facilityCategories,
         facilityType: params.facilityType,
-        isGefDeal: params.isGefDeal,
+        isCashFacility: params.isCashFacility,
+        isContingentFacility: params.isContingentFacility,
       }),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,

@@ -14,7 +14,8 @@ type MapRiskDetailsParams = {
   facilityType?: string;
   facilityCategories: FacilityCategory[];
   industryCode: string;
-  isGefDeal: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
 };
 
 /**
@@ -25,7 +26,8 @@ type MapRiskDetailsParams = {
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
  * @param {string} [params.facilityType] - Optional facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = async ({
@@ -35,7 +37,8 @@ export const mapRiskDetails = async ({
   facilityType,
   facilityCategories,
   industryCode,
-  isGefDeal,
+  isCashFacility,
+  isContingentFacility,
 }: MapRiskDetailsParams): Promise<ApimGiftFacilityRiskDetails> => {
   /**
    * Get a UKEF industry code by Companies House industry code.
@@ -65,7 +68,8 @@ export const mapRiskDetails = async ({
     facilityCategoryCode: mapFacilityCategoryCode({
       facilityCategories,
       facilityType,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
     }),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
