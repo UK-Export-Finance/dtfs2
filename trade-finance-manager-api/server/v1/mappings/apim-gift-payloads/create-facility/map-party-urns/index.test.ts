@@ -3,67 +3,62 @@ import { mapPartyUrns } from '.';
 
 describe('mapPartyUrns', () => {
   const mockBankPartyUrn = '00112233';
+  const mockBuyerPartyUrn = '00445566';
   const mockExporterPartyUrn = '00778899';
 
-  describe('when isBssEwcsDeal is true', () => {
-    const isBssEwcsDeal = true;
-    const isGefDeal = false;
-    const mockBuyerPartyUrn = '00445566';
-
-    it('should return an object with bondBeneficiary and bondGiver party URNs', () => {
-      // Arrange
-      const mockDeal = {
-        dealSnapshot: {
-          bank: {
-            partyUrn: mockBankPartyUrn,
-          },
+  const mockDealBase = {
+    dealSnapshot: {
+      bank: {
+        partyUrn: mockBankPartyUrn,
+      },
+    },
+    tfm: {
+      parties: {
+        buyer: {
+          partyUrn: mockBuyerPartyUrn,
         },
-        tfm: {
-          parties: {
-            buyer: {
-              partyUrn: mockBuyerPartyUrn,
-            },
-            exporter: {
-              partyUrn: mockExporterPartyUrn,
-            },
-          },
+        exporter: {
+          partyUrn: mockExporterPartyUrn,
         },
-      } as TfmDeal;
+      },
+    },
+  } as TfmDeal;
 
-      // Act
+  const facilityFlagsAllFalse = {
+    isBssFacility: false,
+    isCashFacility: false,
+    isContingentFacility: false,
+    isEwcsFacility: false,
+  };
+
+  describe('when isBssFacility is true', () => {
+    const isBssFacility = true;
+
+    it('should return bondGiver, bondBeneficiary, and exporterPartyUrn', () => {
+      // Arrange & Act
       const result = mapPartyUrns({
-        deal: mockDeal,
-        isBssEwcsDeal,
-        isGefDeal,
+        deal: mockDealBase,
+        ...facilityFlagsAllFalse,
+        isBssFacility,
       });
 
       // Assert
-      const expected = {
+      expect(result).toEqual({
         bondBeneficiary: mockBuyerPartyUrn,
         bondGiver: mockBankPartyUrn,
         exporterPartyUrn: mockExporterPartyUrn,
-      };
-
-      expect(result).toEqual(expected);
+      });
     });
 
     describe('when deal.tfm.parties.buyer.partyUrn is null', () => {
       it('should return an object without bondBeneficiary', () => {
         // Arrange
         const mockDeal = {
-          dealSnapshot: {
-            bank: {
-              partyUrn: mockBankPartyUrn,
-            },
-          },
+          ...mockDealBase,
           tfm: {
             parties: {
-              buyer: {
-                partyUrn: null,
-              },
-              exporter: {
-                partyUrn: mockExporterPartyUrn,
-              },
+              buyer: { partyUrn: null },
+              exporter: { partyUrn: mockExporterPartyUrn },
             },
           },
         } as unknown as TfmDeal;
@@ -71,17 +66,15 @@ describe('mapPartyUrns', () => {
         // Act
         const result = mapPartyUrns({
           deal: mockDeal,
-          isBssEwcsDeal,
-          isGefDeal,
+          ...facilityFlagsAllFalse,
+          isBssFacility,
         });
 
         // Assert
-        const expected = {
+        expect(result).toEqual({
           bondGiver: mockBankPartyUrn,
           exporterPartyUrn: mockExporterPartyUrn,
-        };
-
-        expect(result).toEqual(expected);
+        });
       });
     });
 
@@ -89,19 +82,11 @@ describe('mapPartyUrns', () => {
       it('should return an object without bondBeneficiary', () => {
         // Arrange
         const mockDeal = {
-          dealSnapshot: {
-            bank: {
-              partyUrn: mockBankPartyUrn,
-            },
-          },
+          ...mockDealBase,
           tfm: {
             parties: {
-              buyer: {
-                partyUrn: undefined,
-              },
-              exporter: {
-                partyUrn: mockExporterPartyUrn,
-              },
+              buyer: { partyUrn: undefined },
+              exporter: { partyUrn: mockExporterPartyUrn },
             },
           },
         } as unknown as TfmDeal;
@@ -109,91 +94,82 @@ describe('mapPartyUrns', () => {
         // Act
         const result = mapPartyUrns({
           deal: mockDeal,
-          isBssEwcsDeal,
-          isGefDeal,
+          ...facilityFlagsAllFalse,
+          isBssFacility,
         });
 
         // Assert
-        const expected = {
+        expect(result).toEqual({
           bondGiver: mockBankPartyUrn,
           exporterPartyUrn: mockExporterPartyUrn,
-        };
-
-        expect(result).toEqual(expected);
+        });
       });
     });
   });
 
-  describe('when isGefDeal is true', () => {
-    it('should return an object with issuingBank party URN', () => {
-      // Arrange
-      const isBssEwcsDeal = false;
-      const isGefDeal = true;
-
-      const mockDeal = {
-        dealSnapshot: {
-          bank: {
-            partyUrn: mockBankPartyUrn,
-          },
-        },
-        tfm: {
-          parties: {
-            exporter: {
-              partyUrn: mockExporterPartyUrn,
-            },
-          },
-        },
-      } as TfmDeal;
-
-      // Act
+  describe('when isEwcsFacility is true', () => {
+    it('should return buyer and issuingBank party URNs', () => {
+      // Arrange & Act
       const result = mapPartyUrns({
-        deal: mockDeal,
-        isBssEwcsDeal,
-        isGefDeal,
+        deal: mockDealBase,
+        ...facilityFlagsAllFalse,
+        isEwcsFacility: true,
       });
 
       // Assert
-      const expected = {
+      expect(result).toEqual({
+        buyer: mockBuyerPartyUrn,
+        issuingBank: mockBankPartyUrn,
+      });
+    });
+  });
+
+  describe('when isCashFacility is true', () => {
+    it('should return issuingBank and exporterPartyUrn', () => {
+      // Arrange & Act
+      const result = mapPartyUrns({
+        deal: mockDealBase,
+        ...facilityFlagsAllFalse,
+        isCashFacility: true,
+      });
+
+      // Assert
+      expect(result).toEqual({
         issuingBank: mockBankPartyUrn,
         exporterPartyUrn: mockExporterPartyUrn,
-      };
-
-      expect(result).toEqual(expected);
+      });
     });
   });
 
-  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
-    it('should return an object with exporterPartyUrn', () => {
-      // Arrange
-      const isBssEwcsDeal = false;
-      const isGefDeal = false;
-
-      const mockDeal = {
-        dealSnapshot: {
-          bank: {},
-        },
-        tfm: {
-          parties: {
-            exporter: {
-              partyUrn: mockExporterPartyUrn,
-            },
-          },
-        },
-      } as unknown as TfmDeal;
-
-      // Act
+  describe('when isContingentFacility is true', () => {
+    it('should return issuingBank and exporterPartyUrn', () => {
+      // Arrange & Act
       const result = mapPartyUrns({
-        deal: mockDeal,
-        isBssEwcsDeal,
-        isGefDeal,
+        deal: mockDealBase,
+        ...facilityFlagsAllFalse,
+        isContingentFacility: true,
       });
 
       // Assert
-      const expected = {
+      expect(result).toEqual({
+        issuingBank: mockBankPartyUrn,
         exporterPartyUrn: mockExporterPartyUrn,
-      };
+      });
+    });
+  });
 
-      expect(result).toEqual(expected);
+  describe('when all facility flags are false', () => {
+    it('should return only exporterPartyUrn', () => {
+      // Arrange & Act
+      const result = mapPartyUrns({
+        deal: mockDealBase,
+        ...facilityFlagsAllFalse,
+      });
+
+      // Assert
+      expect(result).toEqual({
+        exporterPartyUrn: mockExporterPartyUrn,
+      });
     });
   });
 });

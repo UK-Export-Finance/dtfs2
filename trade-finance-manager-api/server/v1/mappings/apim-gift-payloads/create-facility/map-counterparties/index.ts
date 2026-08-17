@@ -7,6 +7,7 @@ type MapCounterpartiesParams = {
   isBssFacility: boolean;
   isCashFacility: boolean;
   isContingentFacility: boolean;
+  isEwcsFacility: boolean;
   partyUrns: PartyUrns;
 };
 
@@ -18,11 +19,17 @@ type MapCounterpartiesParams = {
  * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
  * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
+ * @param {boolean} params.isEwcsFacility - If the facility is an EWCS facility.
  * @param {PartyUrns} params.partyUrns - The party URNs.
  * @returns {ApimGiftCounterparty[]} Mapped counterparties array for the APIM GIFT payload.
  */
-
-export const mapCounterparties = ({ isBssFacility, isCashFacility, isContingentFacility, partyUrns }: MapCounterpartiesParams): ApimGiftCounterparty[] => {
+export const mapCounterparties = ({
+  isBssFacility,
+  isCashFacility,
+  isContingentFacility,
+  isEwcsFacility,
+  partyUrns,
+}: MapCounterpartiesParams): ApimGiftCounterparty[] => {
   const counterparties: ApimGiftCounterparty[] = [];
 
   if (isBssFacility) {
@@ -43,14 +50,19 @@ export const mapCounterparties = ({ isBssFacility, isCashFacility, isContingentF
     return counterparties;
   }
 
-  if ((isCashFacility || isContingentFacility) && partyUrns.issuingBank) {
+  if ((isCashFacility || isContingentFacility || isEwcsFacility) && partyUrns.issuingBank) {
     counterparties.push({
       counterpartyUrn: partyUrns.issuingBank,
-      roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
+      roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
     });
-
-    return counterparties;
   }
 
-  return [];
+  if (isEwcsFacility && partyUrns.buyer) {
+    counterparties.push({
+      counterpartyUrn: partyUrns.buyer,
+      roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
+    });
+  }
+
+  return counterparties;
 };

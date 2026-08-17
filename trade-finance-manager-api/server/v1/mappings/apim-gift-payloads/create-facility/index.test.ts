@@ -127,10 +127,13 @@ describe('createFacility', () => {
         isBssFacility,
         isCashFacility,
         isContingentFacility,
+        isEwcsFacility,
         partyUrns: mapPartyUrns({
           deal: mockDeal,
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
         }),
       }),
       obligations: mapObligations({
