@@ -25,16 +25,16 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.10.4",
     "chance": "^1.1.13",
-    "cypress": "^13.17.0",
+    "cypress": "^15.20.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
-    "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
     "eslint": "^8.57.1",
     "eslint-plugin-cypress": "^2.15.2",
