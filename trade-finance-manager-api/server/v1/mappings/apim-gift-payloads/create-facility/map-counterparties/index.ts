@@ -55,8 +55,6 @@ export const mapCounterparties = ({
       counterpartyUrn: partyUrns.issuingBank,
       roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
     });
-
-    return counterparties;
   }
 
   if (isEwcsFacility && partyUrns.buyer) {
@@ -64,9 +62,7 @@ export const mapCounterparties = ({
       counterpartyUrn: partyUrns.buyer,
       roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
     });
-
-    return counterparties;
   }
 
-  return [];
+  return counterparties;
 };
