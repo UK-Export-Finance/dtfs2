@@ -74,7 +74,7 @@
     "eslint-plugin-import": "^2.32.0",
     "jest": "^30.4.2",
     "jest-when": "^4.0.3",
-    "node-mocks-http": "^1.17.2",
+    "node-mocks-http": "^1.18.1",
     "prettier": "^3.8.4",
     "supertest": "7.2.2",
     "ts-jest": "^29.4.12",
