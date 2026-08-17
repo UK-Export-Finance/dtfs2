@@ -96,6 +96,14 @@ describe('createFacility', () => {
     // Arrange
     params.deal = mockDeal;
 
+    const partyUrns = mapPartyUrns({
+      deal: mockDeal,
+      isBssFacility,
+      isCashFacility,
+      isContingentFacility,
+      isEwcsFacility,
+    });
+
     // Act
     const result = await createFacility(params);
 
@@ -108,7 +116,7 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
-        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
+        exporterPartyUrn: partyUrns.exporterPartyUrn,
         facilityAmount,
         facilityType,
         isGefDeal,
@@ -128,13 +136,7 @@ describe('createFacility', () => {
         isCashFacility,
         isContingentFacility,
         isEwcsFacility,
-        partyUrns: mapPartyUrns({
-          deal: mockDeal,
-          isBssFacility,
-          isCashFacility,
-          isContingentFacility,
-          isEwcsFacility,
-        }),
+        partyUrns,
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
