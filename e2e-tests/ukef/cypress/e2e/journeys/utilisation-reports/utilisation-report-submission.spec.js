@@ -19,7 +19,7 @@ context('Portal to TFM utilisation report submission', () => {
   const submissionMonthStamp = toIsoMonthStamp(today);
 
   const loginToPortalAsPaymentReportOfficer = ({ username, password }) => {
-    if (Cypress.env('FF_PORTAL_2FA_ENABLED') === 'true') {
+    if (Cypress.expose('FF_PORTAL_2FA_ENABLED') === 'true') {
       cy.loginOTP({ username, password });
       return;
     }

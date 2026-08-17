@@ -9,8 +9,11 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const { CONTACT_US_EMAIL_ADDRESS, PORTAL_API_KEY, FF_PORTAL_2FA_ENABLED, TZ } = process.env;
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
   env: {
     TZ,
+  },
+  expose: {
     CONTACT_US_EMAIL_ADDRESS,
     FF_PORTAL_2FA_ENABLED,
   },

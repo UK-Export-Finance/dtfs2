@@ -1,5 +1,5 @@
 import { Column } from 'typeorm';
-import { OneIndexedMonth } from '../../types';
+import type { OneIndexedMonth } from '../../types';
 
 export class MonthAndYearPartialEntity {
   /**
