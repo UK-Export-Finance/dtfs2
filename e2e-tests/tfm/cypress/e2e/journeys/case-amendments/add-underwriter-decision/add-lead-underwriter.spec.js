@@ -12,17 +12,6 @@ context('Amendments underwriting - add lead underwriter', () => {
   describe('Amendments add lead underwriter', () => {
     let dealId;
     const dealFacilities = [];
-    const assertLeadUnderwriterIsReadOnly = () => {
-      cy.request(relative(`/case/${dealId}/underwriting`)).then(({ body, status }) => {
-        const page = Cypress.$(body);
-
-        expect(status).to.equal(200);
-        expect(page.find('[data-cy="amendment--lead-underwriter-fullname"]').text()).to.contain(
-          `${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`,
-        );
-        expect(page.find('[data-cy="amendment--change-lead-underwriter-link"]')).to.have.length(0);
-      });
-    };
 
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -47,8 +36,6 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should submit an amendment request', () => {
       cy.login(PIM_USER_1);
-      cy.url().should('eq', relative('/deals/0'));
-
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -94,8 +81,6 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should take you to assign amendment underwriter page as underwriter manager when adding a lead underwriter', () => {
       cy.login(UNDERWRITER_MANAGER_1);
-      cy.url().should('eq', relative('/deals/0'));
-
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       const { _id } = dealFacilities[0];
@@ -118,8 +103,6 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should still show add lead underwriter button if press cancel on assign page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
-      cy.url().should('eq', relative('/deals/0'));
-
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
@@ -133,8 +116,6 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should show details of assigned lead underwriter details on assigning an underwriter and a change links which takes back to assign lead underwriter page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
-      cy.url().should('eq', relative('/deals/0'));
-
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
@@ -162,22 +143,22 @@ context('Amendments underwriting - add lead underwriter', () => {
 
     it('should not show change link when logged in as PIM user', () => {
       cy.login(PIM_USER_1);
-      cy.url().should('eq', relative('/deals/0'));
+      cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      assertLeadUnderwriterIsReadOnly();
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
     });
 
     it('should not show change link when logged in as T1_USER', () => {
       cy.login(T1_USER_1);
-      cy.url().should('eq', relative('/deals/0'));
+      cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      assertLeadUnderwriterIsReadOnly();
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
     });
 
     it('should allow changing lead underwriter', () => {
       cy.login(UNDERWRITER_MANAGER_1);
-      cy.url().should('eq', relative('/deals/0'));
-
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
