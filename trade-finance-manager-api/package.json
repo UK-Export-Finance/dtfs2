@@ -67,7 +67,7 @@
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.24",
+    "@types/lodash": "^4.17.25",
     "@types/mongodb": "^4.0.7",
     "@types/supertest": "^7.2.1",
     "eslint": "^8.57.1",

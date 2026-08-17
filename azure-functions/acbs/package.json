@@ -29,7 +29,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.21",
+    "@types/lodash": "^4.17.25",
     "axios": "1.19.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
