@@ -64,6 +64,8 @@ export const mapCounterparties = ({
       counterpartyUrn: partyUrns.buyer,
       roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
     });
+
+    return counterparties;
   }
 
   return [];

@@ -1,7 +1,9 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { mapCounterparties } from '.';
 
-const { DEFAULTS } = APIM_GIFT_INTEGRATION;
+const {
+  DEFAULTS: { COUNTERPARTY_ROLE_CODE },
+} = APIM_GIFT_INTEGRATION;
 
 describe('mapCounterparties', () => {
   describe('when isBssFacility is true', () => {
@@ -11,7 +13,7 @@ describe('mapCounterparties', () => {
     const isEwcsFacility = false;
 
     describe(`when partyUrns.bondGiver exists`, () => {
-      it('should return an array with a "BOND_GIVER" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondGiver: '00300130',
@@ -30,7 +32,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
         ];
 
@@ -39,7 +41,7 @@ describe('mapCounterparties', () => {
     });
 
     describe(`when partyUrns.bondBeneficiary exists`, () => {
-      it('should return an array with a "BOND_BENEFICIARY" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondBeneficiary: '00318345',
@@ -58,7 +60,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
 
@@ -67,7 +69,7 @@ describe('mapCounterparties', () => {
     });
 
     describe(`when both partyUrns.bondGiver and partyUrns.bondBeneficiary exist`, () => {
-      it('should return an array with a "BOND_GIVER" counterparty and "BOND_BENEFICIARY" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER}" counterparty and "${COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondGiver: '00300130',
@@ -87,11 +89,11 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
 
@@ -126,7 +128,7 @@ describe('mapCounterparties', () => {
     const isEwcsFacility = false;
 
     describe(`when partyUrns.issuingBank exists`, () => {
-      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           issuingBank: '00318345',
@@ -145,7 +147,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.issuingBank,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
           },
         ];
 
@@ -180,7 +182,7 @@ describe('mapCounterparties', () => {
     const isEwcsFacility = false;
 
     describe(`when partyUrns.issuingBank exists`, () => {
-      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           issuingBank: '00318345',
@@ -199,7 +201,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.issuingBank,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
           },
         ];
 
@@ -234,7 +236,7 @@ describe('mapCounterparties', () => {
     const isEwcsFacility = true;
 
     describe('when partyUrns.issuingBank exists', () => {
-      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           issuingBank: '00318345',
@@ -253,7 +255,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.issuingBank,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
           },
         ];
 
@@ -262,7 +264,7 @@ describe('mapCounterparties', () => {
     });
 
     describe('when partyUrns.issuingBank does NOT exist but partyUrns.buyer exists', () => {
-      it('should return an array with a "BUYER" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.EWCS.BUYER}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           buyer: '00445566',
@@ -281,7 +283,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.buyer,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
+            roleCode: COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
           },
         ];
 
