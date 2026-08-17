@@ -95,8 +95,10 @@ export const createFacility = async ({
 
   const partyUrns = mapPartyUrns({
     deal,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const { exporterPartyUrn } = partyUrns;
@@ -156,6 +158,7 @@ export const createFacility = async ({
       isBssFacility,
       isCashFacility,
       isContingentFacility,
+      isEwcsFacility,
       partyUrns,
     }),
     obligations: mapObligations({
