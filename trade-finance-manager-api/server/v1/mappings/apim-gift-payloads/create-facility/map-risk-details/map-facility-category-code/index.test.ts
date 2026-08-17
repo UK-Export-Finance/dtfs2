@@ -75,8 +75,6 @@ describe('mapFacilityCategoryCode', () => {
   describe('when isCashFacility is true', () => {
     describe('when a matching APIM category exists', () => {
       it('should return the matching facility category code', () => {
-        expect.assertions(1);
-
         // Arrange & Act
         const result = mapFacilityCategoryCode({
           ...facilityFlagsAllFalse,
@@ -93,8 +91,7 @@ describe('mapFacilityCategoryCode', () => {
 
     describe('when no APIM category matches the facilityType', () => {
       it('should return null', () => {
-        expect.assertions(1);
-
+        // Arrange & Act
         const result = mapFacilityCategoryCode({
           ...facilityFlagsAllFalse,
           isCashFacility: true,
@@ -103,14 +100,14 @@ describe('mapFacilityCategoryCode', () => {
           facilityCategories: mockFacilityCategories,
         });
 
+        // Assert
         expect(result).toBeNull();
       });
     });
 
     describe('when facilityType is an empty string', () => {
       it('should return null', () => {
-        expect.assertions(1);
-
+        // Arrange & Act
         const result = mapFacilityCategoryCode({
           ...facilityFlagsAllFalse,
           isCashFacility: true,
@@ -119,14 +116,14 @@ describe('mapFacilityCategoryCode', () => {
           facilityCategories: mockFacilityCategories,
         });
 
+        // Assert
         expect(result).toBeNull();
       });
     });
 
     describe('when facilityType is undefined', () => {
       it('should return null', () => {
-        expect.assertions(1);
-
+        // Arrange & Act
         const result = mapFacilityCategoryCode({
           ...facilityFlagsAllFalse,
           isCashFacility: true,
@@ -135,6 +132,7 @@ describe('mapFacilityCategoryCode', () => {
           facilityCategories: mockFacilityCategories,
         });
 
+        // Assert
         expect(result).toBeNull();
       });
     });
@@ -143,8 +141,7 @@ describe('mapFacilityCategoryCode', () => {
   describe('when isContingentFacility is true', () => {
     describe('when a matching APIM category exists', () => {
       it('should return the matching facility category code', () => {
-        expect.assertions(1);
-
+        // Arrange & Act
         const result = mapFacilityCategoryCode({
           ...facilityFlagsAllFalse,
           isContingentFacility: true,
@@ -153,6 +150,7 @@ describe('mapFacilityCategoryCode', () => {
           facilityCategories: mockFacilityCategories,
         });
 
+        // Assert
         const expected = mockFacilityCategories[1].code; // the only category with "GEF" and "Contingent"
 
         expect(result).toStrictEqual(expected);
@@ -162,8 +160,7 @@ describe('mapFacilityCategoryCode', () => {
 
   describe('when isEwcsFacility is true', () => {
     it('should return the EWCS facility category code for a recognised supplierType', () => {
-      expect.assertions(1);
-
+      // Arrange & Act
       const result = mapFacilityCategoryCode({
         ...facilityFlagsAllFalse,
         isEwcsFacility: true,
@@ -171,12 +168,12 @@ describe('mapFacilityCategoryCode', () => {
         facilityCategories: mockFacilityCategories,
       });
 
+      // Assert
       expect(result).toStrictEqual(FACILITY_CATEGORY_CODES.Exporter);
     });
 
     it('should return the UNKNOWN category code when supplierType is null', () => {
-      expect.assertions(1);
-
+      // Arrange & Act
       const result = mapFacilityCategoryCode({
         ...facilityFlagsAllFalse,
         isEwcsFacility: true,
@@ -184,14 +181,14 @@ describe('mapFacilityCategoryCode', () => {
         facilityCategories: mockFacilityCategories,
       });
 
+      // Assert
       expect(result).toStrictEqual(FACILITY_CATEGORY_CODES.UNKNOWN);
     });
   });
 
   describe('when all facility flags are false', () => {
     it('should return null', () => {
-      expect.assertions(1);
-
+      // Arrange & Act
       const result = mapFacilityCategoryCode({
         ...facilityFlagsAllFalse,
         ewcsSupplierType: null,
@@ -199,6 +196,7 @@ describe('mapFacilityCategoryCode', () => {
         facilityCategories: mockFacilityCategories,
       });
 
+      // Assert
       expect(result).toBeNull();
     });
   });
