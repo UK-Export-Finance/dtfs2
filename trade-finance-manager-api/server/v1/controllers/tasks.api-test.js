@@ -385,7 +385,7 @@ describe('tasks controller', () => {
             taskUpdate: updatableTaskUpdateToDo,
             auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
           }),
-        ).rejects.toThrowError(`Deal not found ${updatableTaskDealId}`);
+        ).rejects.toThrow(`Deal not found ${updatableTaskDealId}`);
       });
     });
 
@@ -401,7 +401,7 @@ describe('tasks controller', () => {
             taskUpdate: updatableTaskUpdateToDo,
             auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
           }),
-        ).rejects.toThrowError(`Group not found ${nonExistantGroupId}`);
+        ).rejects.toThrow(`Group not found ${nonExistantGroupId}`);
       });
     });
 
@@ -417,7 +417,7 @@ describe('tasks controller', () => {
             taskUpdate: updatableTaskUpdateToDo,
             auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
           }),
-        ).rejects.toThrowError(`Task not found ${nonExistantTaskId}`);
+        ).rejects.toThrow(`Task not found ${nonExistantTaskId}`);
       });
     });
 
