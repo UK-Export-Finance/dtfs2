@@ -125,11 +125,13 @@ describe('createFacility', () => {
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       accrualSchedules: mapAccrualSchedules({
+        currency: facilitySnapshot.currency.id,
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         expiryDate,
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef,
+        isEwcsFacility,
       }),
       counterparties: mapCounterparties({
         isBssFacility,
