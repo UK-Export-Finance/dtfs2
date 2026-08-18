@@ -5,7 +5,7 @@ import { HEADERS } from '@ukef/dtfs2-common';
 const { when } = require('jest-when');
 const { getCompanyByRegistrationNumber } = require('./companies-api');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { PORTAL_API_URL } = process.env;
 

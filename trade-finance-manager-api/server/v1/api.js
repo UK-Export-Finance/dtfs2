@@ -3,7 +3,7 @@ const { HttpStatusCode } = require('axios');
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
 const DTFS_CENTRAL_API_TIMEOUT_MS = Number(process.env.DTFS_CENTRAL_API_TIMEOUT_MS || 10000);

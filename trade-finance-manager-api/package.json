@@ -33,6 +33,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
+    "@azure/msal-node": "^5.5.0",
     "@azure/storage-file-share": "12.32.0",
     "@babel/plugin-transform-runtime": "8.0.1",
     "@babel/preset-env": "8.0.2",

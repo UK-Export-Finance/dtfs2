@@ -30,7 +30,7 @@ import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS, CustomExpressRequest } from '@ukef/dtfs2-common';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_TFS_VALUE, APIM_TFS_KEY, APIM_TFS_URL } = process.env;
 

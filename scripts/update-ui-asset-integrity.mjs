@@ -86,7 +86,9 @@ const calculateIntegrity = (assetPath) => `sha512-${crypto.createHash('sha512').
 
 /**
  * Maps a public URL used by a template to its generated file on disk.
- * Both `/assets/...` and GEF's `/gef/assets/...` prefix map to `<ui>/public`.
+ * GEF's shared `/assets/...` files are built and served by portal-ui; its
+ * `/gef/assets/...` files belong to the GEF build itself. Other UIs map their
+ * `/assets/...` files to their own `public` directory.
  * Query strings and fragments are excluded because they are not part of the
  * filesystem path or the bytes protected by SRI.
  *
@@ -95,13 +97,14 @@ const calculateIntegrity = (assetPath) => `sha512-${crypto.createHash('sha512').
  * @returns {string | null} Absolute generated asset path, or null if unsupported.
  */
 const getPublicAssetPath = (uiDirectory, assetUrl) => {
-  const assetPathMatch = assetUrl.match(/^\/(?:gef\/)?assets\/(.+?)(?:[?#].*)?$/);
+  const assetPathMatch = assetUrl.match(/^\/(gef\/)?assets\/(.+?)(?:[?#].*)?$/);
 
   if (!assetPathMatch) {
     return null;
   }
 
-  return path.join(repositoryRoot, uiDirectory, 'public', assetPathMatch[1]);
+  const assetOwner = uiDirectory === 'gef-ui' && !assetPathMatch[1] ? 'portal-ui' : uiDirectory;
+  return path.join(repositoryRoot, assetOwner, 'public', assetPathMatch[2]);
 };
 
 /**

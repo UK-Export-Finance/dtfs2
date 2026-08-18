@@ -12,7 +12,7 @@ import {
   eStoreDocumentsCreationJob,
 } from '../cron';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { ESTORE_CRON_MANAGER_SCHEDULE, TZ } = process.env;
 const jobs = new Map();
