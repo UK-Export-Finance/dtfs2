@@ -16,15 +16,16 @@ export const APIM_GIFT_PAYLOADS_EXAMPLES = {
       },
       accrualSchedules: [
         {
-          accrualScheduleTypeCode: 'PAC01',
-          accrualEffectiveDate: '2025-01-13',
-          accrualMaturityDate: '2025-01-15',
-          accrualFrequencyCode: 'FREQ12MON',
-          firstCycleAccrualEndDate: '2025-01-15',
           accrualDayBasisCode: 'ACTUAL_365',
-          baseRate: 0,
-          spreadRate: 0,
+          accrualEffectiveDate: '2025-01-13',
+          accrualFrequencyCode: 'FREQ12MON',
+          accrualMaturityDate: '2025-01-15',
+          accrualScheduleTypeCode: 'PAC01',
           additionalRate: 0,
+          baseRate: 0,
+          firstCycleAccrualEndDate: '2025-01-15',
+          indexRateCode: 'USD003',
+          spreadRate: 0,
         },
       ],
       counterparties: [
@@ -37,10 +38,10 @@ export const APIM_GIFT_PAYLOADS_EXAMPLES = {
       ],
       fixedFees: [
         {
-          feeTypeCode: 'PLA',
-          effectiveDate: '2025-01-15',
-          currency: 'USD',
           amount: 5000,
+          currency: 'USD',
+          effectiveDate: '2025-01-15',
+          feeTypeCode: 'PLA',
         },
       ],
       obligations: [
@@ -54,8 +55,8 @@ export const APIM_GIFT_PAYLOADS_EXAMPLES = {
         },
       ],
       riskDetails: {
-        dealId: '0030000123',
         account: '2',
+        dealId: '0030000123',
         facilityCreditRating: 'AA',
         riskStatus: 'Corporate',
         ukefIndustryCode: '0101',
