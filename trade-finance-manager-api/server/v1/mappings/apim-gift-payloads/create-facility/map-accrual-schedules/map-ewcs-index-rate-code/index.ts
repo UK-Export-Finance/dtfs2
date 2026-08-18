@@ -3,6 +3,7 @@ import { CURRENCY } from '@ukef/dtfs2-common';
 import { ACCRUAL_FREQUENCY_CODE_MAP, ACCRUAL_SCHEDULE_INDEX_RATE_CODES } from '../../../constants';
 
 const { QUARTERLY } = ACCRUAL_FREQUENCY_CODE_MAP;
+
 const { EUR, GBP, JPY, USD, UNKNOWN } = ACCRUAL_SCHEDULE_INDEX_RATE_CODES;
 
 type MapEwcsIndexRateCodeParams = {

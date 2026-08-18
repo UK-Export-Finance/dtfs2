@@ -49,7 +49,7 @@ describe('mapAccrualSchedules', () => {
   });
 
   describe('when isEwcsFacility is true', () => {
-    it('should return an array with a accrual schedule containing indexRateCode', () => {
+    it('should return an array with an accrual schedule containing indexRateCode', () => {
       // Arrange
       const isEwcsFacility = true;
 
