@@ -1,6 +1,6 @@
-import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { BssEwcsDeal, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
@@ -21,8 +21,8 @@ import { mapObligations } from './map-obligations';
 import api from '../../../api';
 import { createFacility } from '.';
 
-const mockDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
-const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
+const mockDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
+const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 
 jest.mock('../../../api');
 
@@ -96,6 +96,14 @@ describe('createFacility', () => {
     // Arrange
     params.deal = mockDeal;
 
+    const partyUrns = mapPartyUrns({
+      deal: mockDeal,
+      isBssFacility,
+      isCashFacility,
+      isContingentFacility,
+      isEwcsFacility,
+    });
+
     // Act
     const result = await createFacility(params);
 
@@ -108,7 +116,7 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
-        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
+        exporterPartyUrn: partyUrns.exporterPartyUrn,
         facilityAmount,
         facilityType,
         isGefDeal,
@@ -128,13 +136,7 @@ describe('createFacility', () => {
         isCashFacility,
         isContingentFacility,
         isEwcsFacility,
-        partyUrns: mapPartyUrns({
-          deal: mockDeal,
-          isBssFacility,
-          isCashFacility,
-          isContingentFacility,
-          isEwcsFacility,
-        }),
+        partyUrns,
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
@@ -148,11 +150,14 @@ describe('createFacility', () => {
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         dealId: getTfmUkefDealId(mockDeal),
+        ewcsSupplierType: String((mockDeal.dealSnapshot as BssEwcsDeal).submissionDetails['supplier-type']),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
         facilityType,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
         industryCode: getIndustryCode(mockDeal),
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       delayCreation: mockNewPartyUrnCreated,
     };
