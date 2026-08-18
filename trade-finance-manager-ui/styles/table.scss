@@ -71,20 +71,31 @@ table.sortable {
   // Sass style extending doesn't work for complex selectors.
   // Sort indicators are added to span element that is hidden for screen readers.
 
+  [aria-sort] button {
+    padding-right: 14px;
+    position: relative;
+  }
+
+  [aria-sort] button span {
+    position: static;
+  }
+
   [aria-sort] button span:before {
     content: " \25bc";
-    position: absolute;
-    right: -1px;
-    top: 9px;
     font-size: 0.5em;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 9px;
   }
 
   [aria-sort] button span:after {
     content: " \25b2";
-    position: absolute;
-    right: -1px;
-    top: 1px;
     font-size: 0.5em;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 1px;
   }
 
   [aria-sort="ascending"] button span:before,
@@ -93,18 +104,16 @@ table.sortable {
   }
 
   [aria-sort="ascending"] button span:after {
-    content: " \25b2";
-    font-size: .8em;
-    position: absolute;
-    right: -5px;
+    content: "\25b2";
+    font-size: 0.8em;
+    line-height: 1;
     top: 2px;
   }
 
   [aria-sort="descending"] button span:after {
-    content: " \25bc";
-    font-size: .8em;
-    position: absolute;
-    right: -5px;
+    content: "\25bc";
+    font-size: 0.8em;
+    line-height: 1;
     top: 2px;
   }
 }

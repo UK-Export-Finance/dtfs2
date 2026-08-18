@@ -57,11 +57,11 @@
   font-weight: normal;
   font-size: 27px;
   line-height: 25px;
-  color: govuk-colour("dark-grey", $legacy: "grey-1");
+  color: govuk-colour("black", $variant: "tint-25");
 }
 
 .ukef-hint-grey {
-  color: govuk-colour("dark-grey", $legacy: "grey-1");
+  color: govuk-colour("black", $variant: "tint-25");
 }
 
 .header-label {
@@ -94,7 +94,7 @@
   font-weight: normal;
   font-size: 19px;
   line-height: 25px;
-  color: govuk-colour("dark-grey", $legacy: "grey-1");
+  color: govuk-colour("black", $variant: "tint-25");
 }
 
 .ukef-preserve-white-space {

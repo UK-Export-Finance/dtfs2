@@ -16,9 +16,9 @@ const configureNunjucks = (opts) => {
   const { CONTACT_US_EMAIL_ADDRESS, FF_FEE_RECORD_CORRECTION_ENABLED } = process.env;
 
   const appViews = [
-    path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
-    path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
-    path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend/filters/all'),
+    path.resolve(__dirname, '../../node_modules/govuk-frontend/dist'),
+    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend'),
+    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend/moj/filters/all'),
     path.resolve(__dirname, '../../templates'),
   ];
 
