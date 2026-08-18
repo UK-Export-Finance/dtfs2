@@ -69,8 +69,10 @@ export const createFacility = async ({
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const { feeFrequency, feeType } = facilitySnapshot;
@@ -109,8 +111,10 @@ export const createFacility = async ({
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   let ewcsSupplierType = null;
@@ -142,7 +146,8 @@ export const createFacility = async ({
       exporterPartyUrn,
       facilityAmount,
       facilityType,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
       monthsOfCover,
       productTypeCode,
       ukefFacilityId,

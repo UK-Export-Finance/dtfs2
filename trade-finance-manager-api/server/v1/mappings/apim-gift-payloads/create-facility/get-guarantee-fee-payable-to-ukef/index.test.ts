@@ -3,24 +3,33 @@ import mapGuaranteeFeePayableToUkef from '../../../../rest-mappings/mappings/fac
 import { getGuaranteeFeePayableToUkef } from '.';
 
 describe('getGuaranteeFeePayableToUkef', () => {
-  describe('when isBssEwcsDeal is true', () => {
-    it('should return the "guaranteeFeePayableByBank" value', () => {
-      // Arrange
-      const facilitySnapshot = {
-        guaranteeFeePayableByBank: '1.23',
-      } as TfmFacilitySnapshot;
+  // Arrange
+  const baseParams = {
+    isBssFacility: false,
+    isCashFacility: false,
+    isContingentFacility: false,
+    isEwcsFacility: false,
+  };
 
+  const populatedFacilitySnapshot = {
+    guaranteeFeePayableByBank: '1.23',
+    guaranteeFee: '4.56',
+  } as unknown as TfmFacilitySnapshot;
+
+  describe.each([{ flag: 'isBssFacility' }, { flag: 'isEwcsFacility' }])('when $flag is true', ({ flag }) => {
+    it('should return the guaranteeFeePayableByBank value', () => {
+      // Arrange
       const params = {
-        facilitySnapshot,
-        isBssEwcsDeal: true,
-        isGefDeal: false,
+        ...baseParams,
+        facilitySnapshot: populatedFacilitySnapshot,
+        [flag]: true,
       };
 
       // Act
       const result = getGuaranteeFeePayableToUkef(params);
 
       // Assert
-      const expected = mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFeePayableByBank);
+      const expected = mapGuaranteeFeePayableToUkef(params.facilitySnapshot.guaranteeFeePayableByBank);
 
       expect(result).toEqual(expected);
     });
@@ -28,12 +37,10 @@ describe('getGuaranteeFeePayableToUkef', () => {
     describe('when guaranteeFeePayableByBank is not provided', () => {
       it('should return null', () => {
         // Arrange
-        const facilitySnapshot = {} as TfmFacilitySnapshot;
-
         const params = {
-          facilitySnapshot,
-          isBssEwcsDeal: true,
-          isGefDeal: false,
+          ...baseParams,
+          facilitySnapshot: {} as TfmFacilitySnapshot,
+          [flag]: true,
         };
 
         // Act
@@ -45,24 +52,20 @@ describe('getGuaranteeFeePayableToUkef', () => {
     });
   });
 
-  describe('when isGefDeal is true', () => {
-    it('should return the "guaranteeFee" value', () => {
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true', ({ flag }) => {
+    it('should return the guaranteeFee value', () => {
       // Arrange
-      const facilitySnapshot = {
-        guaranteeFee: 2.34,
-      } as TfmFacilitySnapshot;
-
       const params = {
-        facilitySnapshot,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
+        ...baseParams,
+        facilitySnapshot: populatedFacilitySnapshot,
+        [flag]: true,
       };
 
       // Act
       const result = getGuaranteeFeePayableToUkef(params);
 
       // Assert
-      const expected = mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee);
+      const expected = mapGuaranteeFeePayableToUkef(params.facilitySnapshot.guaranteeFee);
 
       expect(result).toEqual(expected);
     });
@@ -70,12 +73,10 @@ describe('getGuaranteeFeePayableToUkef', () => {
     describe('when guaranteeFee is not provided', () => {
       it('should return null', () => {
         // Arrange
-        const facilitySnapshot = {} as TfmFacilitySnapshot;
-
         const params = {
-          facilitySnapshot,
-          isBssEwcsDeal: false,
-          isGefDeal: true,
+          ...baseParams,
+          facilitySnapshot: {} as TfmFacilitySnapshot,
+          [flag]: true,
         };
 
         // Act
@@ -87,13 +88,12 @@ describe('getGuaranteeFeePayableToUkef', () => {
     });
   });
 
-  describe('when isBssEwcsDeal and isGefDeal are false', () => {
+  describe('when all flags are false', () => {
     it('should return null', () => {
       // Arrange
       const params = {
+        ...baseParams,
         facilitySnapshot: {} as TfmFacilitySnapshot,
-        isBssEwcsDeal: false,
-        isGefDeal: false,
       };
 
       // Act

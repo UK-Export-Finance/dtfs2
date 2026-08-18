@@ -9,7 +9,7 @@ type MapProductTypeCodeParams = {
 /**
  * Depending on the deal type (e.g. BSS/EWCS or GEF), return the correct APIM GIFT product type code for the facility.
  * Examples:
- * BSS/EWCS deal type "BSS/EWCS" => GIFT product type code "BSS"
+ * BSS/EWCS (Bond/Loan) facilities => GIFT product type code "BSS"
  * GEF deal type "GEF" => GIFT product type code "GEF"
  * NOTE: V1 integration only supports BSS Bond facilities and GEF facilities.
  * @param {MapProductTypeCodeParams} params - Object containing flags indicating the deal
