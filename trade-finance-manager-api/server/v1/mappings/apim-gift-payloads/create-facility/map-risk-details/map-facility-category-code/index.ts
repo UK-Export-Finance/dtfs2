@@ -26,7 +26,8 @@ type MapFacilityCategoryCodeParams = {
  * const facilityCategoryCode = mapFacilityCategoryCode({
  *   facilityType: 'Cash',
  *   facilityCategories: [...],
- *   isCashFacility: true
+ *   isCashFacility: true,
+ *   isContingentFacility: false
  * });
  * //=> 'FCT007'
  * ```
