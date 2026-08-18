@@ -7,7 +7,7 @@ import { sendEmail } from '../../server/v1/controllers/email.controller';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_URL, EXTERNAL_API_URL, MOCK_E2E_GOV_NOTIFY_API_KEY } = process.env;
 

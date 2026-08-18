@@ -1,4 +1,4 @@
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import { caseSummary, caseSubNavigation } from '../../../partials';

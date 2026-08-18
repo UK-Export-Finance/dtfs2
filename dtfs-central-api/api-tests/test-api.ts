@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import { createApp } from '../server/createApp';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { DTFS_CENTRAL_API_KEY } = process.env;
 

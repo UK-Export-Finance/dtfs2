@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const dateFns = require('date-fns');
 const { MongoClient } = require('mongodb');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const dbName = process.env.MONGO_INITDB_DATABASE;
 const url = process.env.MONGODB_URI;

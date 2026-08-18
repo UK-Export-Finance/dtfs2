@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { z } from 'zod';
 import { zBooleanStrictCoerce } from './schema';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const featureFlagOptions = zBooleanStrictCoerce.optional().default(false);
 

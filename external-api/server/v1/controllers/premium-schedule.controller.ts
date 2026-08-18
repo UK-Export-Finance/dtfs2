@@ -14,7 +14,7 @@ import { HEADERS, UKEF_ID } from '@ukef/dtfs2-common';
 import { PremiumSchedule } from '../../interfaces';
 import { validUkefId, objectIsEmpty } from '../../helpers';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const APIM_MDM_TIMEOUT_MS = Number(process.env.APIM_MDM_TIMEOUT_MS || 10000);
