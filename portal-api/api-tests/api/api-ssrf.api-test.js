@@ -6,7 +6,7 @@ const { ADMIN } = require('../../server/v1/roles/roles');
 const testUserCache = require('../api-test-users');
 const app = require('../../server/createApp');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL } = process.env;
 

@@ -9,7 +9,7 @@ import { APIM_GIFT_PAYLOADS_EXAMPLES } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_TFS_URL } = process.env;
 

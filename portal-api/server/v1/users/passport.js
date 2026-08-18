@@ -5,7 +5,7 @@ const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { findByUsername } = require('./controller');
 const { PASSPORT_VALIDATION_RESULTS } = require('../../constants');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const PUB_KEY = Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 
