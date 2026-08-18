@@ -13,16 +13,16 @@ type MapPartyUrnsParams = {
  * Map Party URNs for a given facility/deal, based on the facility type.
  * @param {MapPartyUrnsParams} params - Parameters used to determine the party URNs.
  * @param {TfmDeal} params.deal - The TFM deal to get the party URNs from.
- * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
+ * @param {boolean} params.isBssFacility - If the facility is a BSS (Bond) facility.
  * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
- * @param {boolean} params.isEwcsFacility - If the facility is an EWCS facility.
+ * @param {boolean} params.isEwcsFacility - If the facility is an EWCS (Loan) facility.
  * @returns {PartyUrns} Party URNs for a facility/deal.
  * @remarks
- * For a BSS facility:
+ * For a BSS (Bond) facility:
  * - GIFT's "bond beneficiary" is the "buyer party URN" from TFM parties (if it exists).
  * - GIFT's "bond giver" is the "bank party URN" from the deal snapshot.
- * For an EWCS facility:
+ * For an EWCS (Loan) facility:
  * - GIFT's "buyer" is the "buyer party URN" from TFM parties (if it exists).
  * - GIFT's "issuing bank" is the "bank party URN" from the deal snapshot.
  * For a Cash or Contingent facility:

@@ -11,14 +11,14 @@ type GetGuaranteeFeePayableToUkefParams = {
 
 /**
  * Get the "guarantee fee payable to UKEF" value for the APIM GIFT payload, based on the facility type.
- * - For BSS/EWCS facilities, this is mapped from the "guarantee fee payable by bank" value in the facility snapshot.
- * - For Cash/Contingent facilities, this is mapped from the "guarantee fee" value in the facility snapshot.
+ * - For BSS/EWCS (Bond/Loan) facilities, this is mapped from the "guarantee fee payable by bank" value in the facility snapshot.
+ * - For GEF (Cash/Contingent) facilities, this is mapped from the "guarantee fee" value in the facility snapshot.
  * @param {GetGuaranteeFeePayableToUkefParams} params - The parameters required to determine the "guarantee fee payable to UKEF" value, including:
  * @param {TfmFacilitySnapshot} params.facilitySnapshot - The TFM facility snapshot containing the relevant fee values.
- * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
+ * @param {boolean} params.isBssFacility - If the facility is a BSS (Bond) facility.
  * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
- * @param {boolean} params.isEwcsFacility - If the facility is an EWCS facility.
+ * @param {boolean} params.isEwcsFacility - If the facility is an EWCS (Loan) facility.
  * @returns {string | null} The "guarantee fee payable to UKEF" value for the APIM GIFT payload.
  */
 export const getGuaranteeFeePayableToUkef = ({

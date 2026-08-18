@@ -18,8 +18,8 @@ type MapObligationAmountParams = MapGefObligationAmountParams & {
  * Maps the obligation amount for a GEF facility.
  * @param {MapGefObligationAmountParams} params - Data required to calculate the obligation amount.
  * @param {number | null} params.facilityAmount - The facility amount
- * @param {boolean} params.isCashFacility - Flag indicating if the facility is a cash facility.
- * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a contingent facility.
+ * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
  * @example
  * const obligationAmount = mapGefObligationAmount({ isContingentFacility: true, facilityAmount: 128.518888 }); => 89.96
  * const obligationAmount = mapGefObligationAmount({ isCashFacility: true, facilityAmount: 128.518888 }); => 109.24
@@ -48,10 +48,10 @@ export const mapGefObligationAmount = ({ facilityAmount, isCashFacility, isConti
  * Maps the obligation amount for a facility.
  * @param {MapObligationAmountParams} params - Data required to calculate the obligation amount.
  * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
- * @param {boolean} params.isBssFacility - Flag indicating if the facility is a BSS facility.
- * @param {boolean} params.isCashFacility - Flag indicating if the facility is a cash facility.
- * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a contingent facility.
- * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
+ * @param {boolean} params.isBssFacility - Flag indicating if the facility is a BSS (Bond) facility.
+ * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS (Loan) facility.
  * @returns {number | null} The calculated obligation amount, or null if the facility type is not recognized for a GEF deal.
  */
 export const mapObligationAmount = ({
