@@ -10,12 +10,14 @@ const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 type MapRiskDetailsParams = {
   creditRiskRatings: string[];
   dealId: string | null;
+  ewcsSupplierType: string | null;
   exporterCreditRating: string;
   facilityType?: string;
   facilityCategories: FacilityCategory[];
   industryCode: string;
   isCashFacility: boolean;
   isContingentFacility: boolean;
+  isEwcsFacility: boolean;
 };
 
 /**
@@ -23,22 +25,27 @@ type MapRiskDetailsParams = {
  * @param {MapRiskDetailsParams} params - Data required to build the APIM GIFT "facility risk details" data.
  * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
  * @param {string | null} params.dealId - The TFM deal ID.
+ * @param {string | null} params.ewcsSupplierType - The EWCS supplier type for the facility. Required to map the facility category code to the APIM expected value for an EWCS facility.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
  * @param {string} [params.facilityType] - Optional facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @param {FacilityCategory[]} params.facilityCategories - The list of facility categories from APIM MDM. Required to map the facility category code to the APIM expected value.
- * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
- * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
+ * @param {string} params.industryCode - The Companies House industry code for the exporter. Required to get the UKEF industry code from APIM.
+ * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = async ({
   creditRiskRatings,
   dealId,
+  ewcsSupplierType,
   exporterCreditRating,
   facilityType,
   facilityCategories,
   industryCode,
   isCashFacility,
   isContingentFacility,
+  isEwcsFacility,
 }: MapRiskDetailsParams): Promise<ApimGiftFacilityRiskDetails> => {
   /**
    * Get a UKEF industry code by Companies House industry code.
@@ -66,10 +73,12 @@ export const mapRiskDetails = async ({
     account: DEFAULTS.RISK_DETAILS.ACCOUNT,
     dealId,
     facilityCategoryCode: mapFacilityCategoryCode({
+      ewcsSupplierType,
       facilityCategories,
       facilityType,
       isCashFacility,
       isContingentFacility,
+      isEwcsFacility,
     }),
     facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,

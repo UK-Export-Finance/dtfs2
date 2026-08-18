@@ -27,8 +27,11 @@ const mockFacilityCategories = [
 
 describe('mapFacilityCategoryCode', () => {
   const baseParams = {
+    ewcsSupplierType: 'Mock supplier type',
+    facilityCategories: mockFacilityCategories,
     isCashFacility: false,
     isContingentFacility: false,
+    isEwcsFacility: false,
   };
 
   describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true', ({ flag }) => {
@@ -39,9 +42,8 @@ describe('mapFacilityCategoryCode', () => {
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: mockFacilityCategoryCode,
-          facilityCategories: mockFacilityCategories,
           ...baseParams,
+          facilityType: mockFacilityCategoryCode,
           [flag]: true,
         });
 
@@ -59,9 +61,8 @@ describe('mapFacilityCategoryCode', () => {
 
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: mockFacilityCategoryCode,
-          facilityCategories: mockFacilityCategories,
           ...baseParams,
+          facilityType: mockFacilityCategoryCode,
           [flag]: true,
         });
 
@@ -74,9 +75,8 @@ describe('mapFacilityCategoryCode', () => {
       it('should return null', () => {
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: '',
-          facilityCategories: mockFacilityCategories,
           ...baseParams,
+          facilityType: '',
           [flag]: true,
         });
 
@@ -89,9 +89,8 @@ describe('mapFacilityCategoryCode', () => {
       it('should return null', () => {
         // Act
         const result = mapFacilityCategoryCode({
-          facilityType: undefined,
-          facilityCategories: mockFacilityCategories,
           ...baseParams,
+          facilityType: undefined,
           [flag]: true,
         });
 
@@ -108,9 +107,8 @@ describe('mapFacilityCategoryCode', () => {
 
       // Act
       const result = mapFacilityCategoryCode({
-        facilityType: mockFacilityCategoryCode,
-        facilityCategories: mockFacilityCategories,
         ...baseParams,
+        facilityType: mockFacilityCategoryCode,
       });
 
       // Assert

@@ -1,4 +1,4 @@
-import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
+import { BssEwcsDeal, TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
@@ -117,6 +117,14 @@ export const createFacility = async ({
     isEwcsFacility,
   });
 
+  let ewcsSupplierType = null;
+
+  if (isEwcsFacility) {
+    const ewcsDeal = deal.dealSnapshot as BssEwcsDeal;
+
+    ewcsSupplierType = String(ewcsDeal.submissionDetails['supplier-type']);
+  }
+
   /**
    * If DTFS has created a new exporter party URN,
    * we need to tell APIM TFS to delay sending the facility to GIFT. This is because:
@@ -170,12 +178,14 @@ export const createFacility = async ({
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
       dealId,
+      ewcsSupplierType,
       exporterCreditRating,
       facilityCategories,
       facilityType,
       industryCode,
       isCashFacility,
       isContingentFacility,
+      isEwcsFacility,
     }),
     delayCreation,
   };
