@@ -181,11 +181,13 @@ const CONSUMER = 'DTFS' as const;
 
 /**
  * PRT003 (BSS) = default credit type to "Term".
+ * PRT005 (EWCS) = default credit type to "TODO".
  * PRT004 (GEF) = default credit type to "Revolver".
  * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
   PRT003: 'Term',
+  PRT005: 'Revolver',
   PRT004: 'Revolver',
   UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
 } as const;
