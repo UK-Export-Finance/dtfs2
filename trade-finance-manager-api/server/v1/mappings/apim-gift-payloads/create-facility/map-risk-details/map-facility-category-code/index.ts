@@ -54,14 +54,15 @@ export const mapEwcsFacilityCategoryCode = (supplierType: string | null): string
  * @param {string} [params.facilityType] - Facility type (e.g. "Cash", "Contingent").
  * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
- * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS (Loan) facility.
  * @returns {string | null}
  * @example
  * ```
  * const facilityCategoryCode = mapFacilityCategoryCode({
  *   facilityType: 'Cash',
  *   facilityCategories: [...],
- *   isCashFacility: true
+ *   isCashFacility: true,
+ *   isContingentFacility: false
  * });
  * //=> 'FCT007'
  * ```

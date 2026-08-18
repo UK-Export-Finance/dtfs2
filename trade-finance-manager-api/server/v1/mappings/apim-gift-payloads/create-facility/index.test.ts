@@ -59,14 +59,18 @@ describe('createFacility', () => {
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const facilityAmount = mapFacilityAmount({
@@ -119,7 +123,8 @@ describe('createFacility', () => {
         exporterPartyUrn: partyUrns.exporterPartyUrn,
         facilityAmount,
         facilityType,
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
         monthsOfCover: tfm.exposurePeriodInMonths,
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),

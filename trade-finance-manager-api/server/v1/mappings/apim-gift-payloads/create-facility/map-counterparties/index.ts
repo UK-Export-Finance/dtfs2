@@ -16,10 +16,10 @@ type MapCounterpartiesParams = {
  * BSS - If available, create a "Bond giver" counterparty (from the bank party URN) and a "Bond beneficiary" counterparty (from the buyer party URN).
  * Cash, Contingent - If available, create an "Issuing bank" counterparty (from the bank party URN).
  * @param {MapCounterpartiesParams} params - Data required to build the APIM GIFT "counterparties" data.
- * @param {boolean} params.isBssFacility - If the facility is a BSS facility.
+ * @param {boolean} params.isBssFacility - If the facility is a BSS (Bond) facility.
  * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
- * @param {boolean} params.isEwcsFacility - If the facility is an EWCS facility.
+ * @param {boolean} params.isEwcsFacility - If the facility is an EWCS (Loan) facility.
  * @param {PartyUrns} params.partyUrns - The party URNs.
  * @returns {ApimGiftCounterparty[]} Mapped counterparties array for the APIM GIFT payload.
  */

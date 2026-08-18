@@ -32,7 +32,7 @@ type MapRiskDetailsParams = {
  * @param {string} params.industryCode - The Companies House industry code for the exporter. Required to get the UKEF industry code from APIM.
  * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
  * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
- * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS (Loan) facility.
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = async ({
