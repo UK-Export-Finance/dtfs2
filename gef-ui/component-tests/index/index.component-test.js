@@ -34,19 +34,19 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/jsEnabled.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/jsEnabled.js"]')
-      .toHaveAttribute('integrity', 'sha512-O546HgQDZqMaRX/qgAEzkTWV1U7AyGwmX4hmR21EUH3JTSw/axxt+UIPhPUOVAzdmX4FUOHEpk8O48iy+vCGBQ==');
+      .toHaveAttribute('integrity', 'sha512-ievJl1B6sPB+e1Tsg2P5KpbOinKIoN0XbB1G0CZidrtBa/S9uUtmXiOCwxP6Fr3MlydEVxM4eMU5qaOrG2iLBg==');
   });
 
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-7aDW3so/vpgcvlLxvxADPiYrXwx/eligfGwZLQD16Jlkgmp+3g0G8drBjhZ+TC2vyv5ZBh/xq1L1MZFUAz+4pQ==');
+      .toHaveAttribute('integrity', 'sha512-+1GWbIJyOjXuih6CAfwX1VVE95ElDmgMfSZ1uuvM9H9lzODE3XJdOeZYfupJE4Y1NSiFNCkCMbfkL+EAPd3Iaw==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-o0KaKF4ummQGvu8rUZRscbd8CI0brZMQdjHrVNLD12TOUywTk1hiFRE89iyttfCGm9Ar44BqToAZBJHjKB2zGQ==');
+      .toHaveAttribute('integrity', 'sha512-Qf5d86Fxyz7znQZhAoxZcoXyLktF0xmKThOztXbmWTcm16psDcx8iAQ/DI5qcRFjxJ3zriwonm5zdTpIspc8yA==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
@@ -64,6 +64,6 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/disableFormSubmitOnSubmission.js"]')
-      .toHaveAttribute('integrity', 'sha512-mf1ibQA5lxNaMb/56mmj17voBUxRrxo3kx1vtkPz9+vGGookm+vqn8a/5l1fuu2exmAOaz1pLxxoMVZJAlYrFw==');
+      .toHaveAttribute('integrity', 'sha512-uEuYbUapUpwP0obQ48mkUuy6XIqbkwZR/k/QkjNkQzwFe4/zhlaMRRzdfgoJpLmJxWElPw/BjvNCXTo0Y69aLw==');
   });
 });
