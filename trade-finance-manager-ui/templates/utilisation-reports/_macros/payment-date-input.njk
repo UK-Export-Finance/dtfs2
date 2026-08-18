@@ -19,6 +19,7 @@
       },
       items: [
         {
+          error: paymentDateError.dayError,
           classes: (paymentDateError.dayError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
           name: "day",
           value: paymentDate.day,
@@ -27,6 +28,7 @@
           }
         },
         {
+          error: paymentDateError.monthError,
           classes: (paymentDateError.monthError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
           name: "month",
           value: paymentDate.month,
@@ -35,6 +37,7 @@
           }
         },
         {
+          error: paymentDateError.yearError,
           classes: (paymentDateError.yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
           name: "year",
           value: paymentDate.year,
