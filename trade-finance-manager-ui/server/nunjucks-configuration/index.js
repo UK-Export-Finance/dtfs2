@@ -21,6 +21,9 @@ const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
 dotenv.config({ quiet: true });
 
+const govukFrontendRoot = path.dirname(require.resolve('govuk-frontend/package.json'));
+const mojFrontendRoot = path.dirname(require.resolve('@ministryofjustice/frontend/package.json'));
+
 /**
  *
  * @param {nunjucks.ConfigureOptions} opts - The configuration options
@@ -29,12 +32,7 @@ dotenv.config({ quiet: true });
 const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 
-  const appViews = [
-    path.resolve(__dirname, '../../node_modules/govuk-frontend/dist'),
-    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend'),
-    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend/moj/filters/all'),
-    path.resolve(__dirname, '../../templates'),
-  ];
+  const appViews = [path.join(govukFrontendRoot, 'dist'), mojFrontendRoot, path.resolve(__dirname, '../../templates')];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 

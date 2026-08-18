@@ -12,15 +12,13 @@ const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 
 dotenv.config({ quiet: true });
 
+const govukFrontendRoot = path.dirname(require.resolve('govuk-frontend/package.json'));
+const mojFrontendRoot = path.dirname(require.resolve('@ministryofjustice/frontend/package.json'));
+
 const configureNunjucks = (opts) => {
   const { CONTACT_US_EMAIL_ADDRESS, FF_FEE_RECORD_CORRECTION_ENABLED } = process.env;
 
-  const appViews = [
-    path.resolve(__dirname, '../../node_modules/govuk-frontend/dist'),
-    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend'),
-    path.resolve(__dirname, '../../node_modules/@ministryofjustice/frontend/moj/filters/all'),
-    path.resolve(__dirname, '../../templates'),
-  ];
+  const appViews = [path.join(govukFrontendRoot, 'dist'), mojFrontendRoot, path.resolve(__dirname, '../../templates')];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
