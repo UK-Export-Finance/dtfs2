@@ -24,6 +24,17 @@ export const PRODUCT_TYPE_CODES = {
 } as const;
 
 /**
+ * APIM/GIFT facility category codes, mapped by supplier type.
+ * This is currently only used for EWCS facilities
+ * This is required to map the facility category code from TFM to the expected facility category code in APIM/GIFT when mapping the facility "risk details" data for the APIM GIFT payload.
+ */
+export const FACILITY_CATEGORY_CODES = {
+  Exporter: 'FCT004',
+  'UK Supplier': 'FCT005',
+  UNKNOWN: 'UNKNOWN_FACILITY_CATEGORY_CODE',
+};
+
+/**
  * Mapping of APIM/GIFT product type codes to deal types.
  */
 export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
