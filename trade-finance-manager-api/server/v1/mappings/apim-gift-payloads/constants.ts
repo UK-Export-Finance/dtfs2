@@ -19,6 +19,7 @@ export const DEAL_TYPE = {
  */
 export const PRODUCT_TYPE_CODES = {
   BSS: 'PRT003',
+  EWCS: 'PRT005',
   GEF: 'PRT004',
   UNKNOWN: 'UNKNOWN_PRODUCT_TYPE_CODE',
 } as const;
@@ -39,6 +40,7 @@ export const FACILITY_CATEGORY_CODES = {
  */
 export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
   [PRODUCT_TYPE_CODES.BSS]: DEAL_TYPE.BSS,
+  [PRODUCT_TYPE_CODES.EWCS]: DEAL_TYPE.EWCS,
   [PRODUCT_TYPE_CODES.GEF]: DEAL_TYPE.GEF,
   [PRODUCT_TYPE_CODES.UNKNOWN]: 'UNKNOWN',
 } as const satisfies Record<ProductTypeCode, string>;
@@ -179,11 +181,13 @@ const CONSUMER = 'DTFS' as const;
 
 /**
  * PRT003 (BSS) = default credit type to "Term".
+ * PRT005 (EWCS) = default credit type to "TODO".
  * PRT004 (GEF) = default credit type to "Revolver".
  * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
   PRT003: 'Term',
+  PRT005: 'Revolver',
   PRT004: 'Revolver',
   UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
 } as const;

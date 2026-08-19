@@ -21,7 +21,6 @@ export type FacilityCreationParams = {
   facility: TfmFacility;
   facilityCategories: FacilityCategory[];
   isBssEwcsDeal: boolean;
-  isGefDeal: boolean;
   newPartyUrnCreated: boolean;
 };
 
@@ -33,7 +32,6 @@ export type FacilityCreationParams = {
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
- * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
  * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
@@ -43,7 +41,6 @@ export const createFacility = async ({
   facility,
   facilityCategories,
   isBssEwcsDeal,
-  isGefDeal,
   newPartyUrnCreated,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
@@ -91,7 +88,12 @@ export const createFacility = async ({
    */
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
-  const productTypeCode = mapProductTypeCode({ isBssFacility, isGefDeal });
+  const productTypeCode = mapProductTypeCode({
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
+  });
 
   const { exporterCreditRating } = deal.tfm;
 
