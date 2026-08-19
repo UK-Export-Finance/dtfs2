@@ -117,7 +117,7 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
   );
 
   // Only start if job is not already running
-  if (!cronJob.running) {
+  if (!cronJob.isActive) {
     jobs.set(id, cronJob);
     cronJob.start();
   }
