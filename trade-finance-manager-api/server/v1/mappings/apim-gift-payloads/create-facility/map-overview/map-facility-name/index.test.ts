@@ -80,7 +80,7 @@ describe('mapFacilityName', () => {
     });
   });
 
-  describe('when both isCashFacility and isContingentFacility are false', () => {
+  describe(`when both isCashFacility and isContingentFacility are false - ${PRODUCT_TYPE_CODES.BSS}`, () => {
     it('should return the facility name with product type code and months of cover', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
@@ -97,6 +97,28 @@ describe('mapFacilityName', () => {
 
       // Assert
       const expected = `${DEAL_TYPE.BSS}: ${mockMonthsOfCover} months`;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe(`when both isCashFacility and isContingentFacility are false - ${PRODUCT_TYPE_CODES.EWCS}`, () => {
+    it('should return the facility name with product type code and months of cover', () => {
+      // Arrange
+      const mockProductTypeCode = PRODUCT_TYPE_CODES.EWCS;
+      const mockMonthsOfCover = 24;
+
+      const params = {
+        monthsOfCover: mockMonthsOfCover,
+        productTypeCode: mockProductTypeCode,
+        ...baseParams,
+      };
+
+      // Act
+      const result = mapFacilityName(params);
+
+      // Assert
+      const expected = `${DEAL_TYPE.EWCS}: ${mockMonthsOfCover} months`;
 
       expect(result).toEqual(expected);
     });

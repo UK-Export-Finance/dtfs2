@@ -51,11 +51,16 @@ describe('createFacility', () => {
 
   const mockNewPartyUrnCreated = true;
 
-  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+  const { isBssEwcsDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
 
   const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility } = getFacilityTypeFlags(facilityType);
 
-  const productTypeCode = mapProductTypeCode({ isBssFacility, isGefDeal });
+  const productTypeCode = mapProductTypeCode({
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
+  });
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
@@ -84,7 +89,6 @@ describe('createFacility', () => {
     facility: mockFacility,
     facilityCategories: MOCK_FACILITY_CATEGORIES,
     isBssEwcsDeal,
-    isGefDeal,
     newPartyUrnCreated: mockNewPartyUrnCreated,
   };
 
