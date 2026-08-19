@@ -22,16 +22,17 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
 
   // if no tokens found then return not found
   if (!user?.signInTokens || !userHasSignInTokens) {
-    console.info('No sign in tokens found for user %s', userId);
+    console.error('No sign in tokens found for user %s', userId);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
   const { signInTokens } = user;
-  const latestToken = signInTokens[signInTokens.length - 1];
+
+  const latestToken = signInTokens.reduce((latestSoFar, currentToken) => (currentToken.expiry > latestSoFar.expiry ? currentToken : latestSoFar));
 
   // if any of the required fields are missing, return not found
   if (!latestToken?.hashHex || !latestToken?.saltHex || !latestToken?.expiry) {
-    console.info('Latest sign in token is missing required fields for user %s', userId);
+    console.error('Latest sign in token is missing required fields for user %s', userId);
     return SIGN_IN_OTP_STATUS.NOT_FOUND;
   }
 
@@ -39,7 +40,7 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
   const isOtpCorrect = verifyHash(signInCode, latestToken.saltHex, latestToken.hashHex, userId.toString());
 
   if (!isOtpCorrect) {
-    console.info('Sign in OTP is invalid for user %s', userId);
+    console.error('Sign in OTP is invalid for user %s', userId);
     return SIGN_IN_OTP_STATUS.INVALID;
   }
 
@@ -47,7 +48,7 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
   const signInTokenInDate = isSignInOtpInDate(latestToken.expiry);
 
   if (!signInTokenInDate) {
-    console.info('Sign in OTP is expired for user %s', userId);
+    console.error('Sign in OTP is expired for user %s', userId);
     return SIGN_IN_OTP_STATUS.EXPIRED;
   }
 
