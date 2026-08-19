@@ -8,7 +8,6 @@ type CreateFacilitiesParams = {
   deal: TfmDeal;
   facilities: TfmFacility[];
   facilityCategories: FacilityCategory[];
-  isBssEwcsDeal: boolean;
   newPartyUrnCreated: boolean;
 };
 
@@ -18,7 +17,6 @@ type CreateFacilitiesParams = {
  * @param {TfmDeal} params.deal - The TFM deal associated with the facilities being created.
  * @param {TfmFacility[]} params.facilities - An array of TFM facilities for which to create APIM/GIFT payloads.
  * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
- * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
  * @returns {ApimGiftFacilityCreationPayload[]} An array of APIM/GIFT facility creation payloads.
  */
@@ -27,7 +25,6 @@ export const createFacilities = async ({
   deal,
   facilities,
   facilityCategories,
-  isBssEwcsDeal,
   newPartyUrnCreated,
 }: CreateFacilitiesParams): Promise<ApimGiftFacilityCreationPayload[]> => {
   const payloads = await Promise.all(
@@ -35,7 +32,6 @@ export const createFacilities = async ({
       createFacility({
         deal,
         facility,
-        isBssEwcsDeal,
         creditRiskRatings,
         facilityCategories,
         newPartyUrnCreated,

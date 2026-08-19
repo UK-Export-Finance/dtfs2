@@ -37,7 +37,6 @@ const mockFacility: TfmFacility = {
   tfm: {},
 };
 
-const mockIsBssEwcsDeal = true;
 const mockIsGefDeal = false;
 const mockNewPartyUrnCreated = true;
 
@@ -72,7 +71,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -81,7 +79,6 @@ describe('sendFacilitiesToApimGift', () => {
       expect(createFacilityPayloadSpy).toHaveBeenNthCalledWith(1, {
         deal: mockDeal,
         facility: mockFacility,
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
@@ -93,7 +90,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -107,7 +103,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -121,7 +116,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -135,7 +129,6 @@ describe('sendFacilitiesToApimGift', () => {
       const result = await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -175,7 +168,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -184,7 +176,6 @@ describe('sendFacilitiesToApimGift', () => {
       expect(createFacilitiesPayloadSpy).toHaveBeenNthCalledWith(1, {
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
@@ -196,7 +187,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -213,7 +203,6 @@ describe('sendFacilitiesToApimGift', () => {
       await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
@@ -227,7 +216,6 @@ describe('sendFacilitiesToApimGift', () => {
       const result = await sendFacilitiesToApimGift({
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
-        isBssEwcsDeal: mockIsBssEwcsDeal,
         isGefDeal: mockIsGefDeal,
         newPartyUrnCreated: mockNewPartyUrnCreated,
       });
