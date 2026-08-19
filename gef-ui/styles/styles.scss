@@ -9,7 +9,7 @@ $govuk-new-link-styles: true;
 .govuk-section-break {
   &--bold {
     border: 0;
-    border-bottom: 3px solid $govuk-text-colour;
+    border-bottom: 3px solid govuk-functional-colour(text);
   }
 }
 
@@ -115,8 +115,8 @@ $govuk-new-link-styles: true;
   }
 }
 
-.colour-light-grey {
-  color: govuk-colour("dark-grey");
+.colour-dark-grey {
+  color: govuk-colour('black', $variant: 'tint-25');
 }
 
 #application-details-comments-submit,

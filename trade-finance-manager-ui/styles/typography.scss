@@ -17,7 +17,7 @@
 }
 
 .ukef-heading-grey {
-  color: govuk-colour('dark-grey');
+  color: govuk-colour('black', $variant: 'tint-25');
   font-weight: normal;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .ukef-grey-bg-row-column-left-text {
-  background: govuk-colour('light-grey');
+  background: govuk-colour('black', $variant: 'tint-95');
   padding: 10px;
   margin-left: -10px;
   display: flex;
@@ -83,7 +83,7 @@
 }
 
 .ukef-grey-bg-row-column-right-text {
-  background: govuk-colour('light-grey');
+  background: govuk-colour('black', $variant: 'tint-95');
   display: inline-block;
   padding: 10px;
 }
