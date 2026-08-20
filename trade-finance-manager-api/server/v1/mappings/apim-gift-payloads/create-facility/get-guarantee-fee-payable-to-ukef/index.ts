@@ -27,7 +27,7 @@ export const getGuaranteeFeePayableToUkef = ({
   isCashFacility,
   isContingentFacility,
   isEwcsFacility,
-}: GetGuaranteeFeePayableToUkefParams) => {
+}: GetGuaranteeFeePayableToUkefParams): string | null => {
   if ((isBssFacility || isEwcsFacility) && facilitySnapshot.guaranteeFeePayableByBank) {
     return mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFeePayableByBank);
   }
