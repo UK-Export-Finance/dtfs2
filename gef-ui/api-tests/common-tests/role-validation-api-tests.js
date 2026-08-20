@@ -14,6 +14,9 @@ jest.mock('../../server/services/api', () => ({
   updateApplication: jest.fn(),
   getTfmDeal: jest.fn(),
   downloadFile: jest.fn(),
+  uploadFile: jest.fn(),
+  updateSupportingInformation: jest.fn(),
+  deleteFile: jest.fn(),
   getCompanyByRegistrationNumber: jest.fn(),
   getMandatoryCriteria: jest.fn(),
   cloneApplication: jest.fn(),
@@ -40,6 +43,7 @@ const allRoles = Object.values(ROLES);
  * @param {object} [params.successHeaders] - Headers to validate in the success response.
  * @param {boolean} [params.disableHappyPath=false] - Flag to disable happy path tests.
  * @param {string} [params.redirectUrlForInvalidRoles='/'] - URL to redirect to for non-whitelisted roles.
+ * @param {object} [params.extraSessionData={}] - Additional session data merged into the saved user session before making the request.
  */
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
@@ -48,6 +52,7 @@ const withRoleValidationApiTests = ({
   successHeaders,
   disableHappyPath = false, // TODO DTFS2-6697: remove and test happy paths.
   redirectUrlForInvalidRoles = '/',
+  extraSessionData = {},
 }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
@@ -68,7 +73,7 @@ const withRoleValidationApiTests = ({
     if (includeWhitelistedRolesTests) {
       describe('whitelisted roles', () => {
         it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([allowedRole]);
+          const { sessionCookie } = await storage.saveUserSession([allowedRole], extraSessionData);
 
           const response = await makeRequestWithHeaders({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
@@ -88,7 +93,7 @@ const withRoleValidationApiTests = ({
     if (includeNonWhitelistedRolesTests) {
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
+          const { sessionCookie } = await storage.saveUserSession([disallowedRole], extraSessionData);
 
           const response = await makeRequestWithHeaders({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
