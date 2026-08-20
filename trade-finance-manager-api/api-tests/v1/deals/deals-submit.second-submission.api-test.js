@@ -445,7 +445,6 @@ describe('/v1/deals', () => {
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
               isGefDeal: false,
-              newPartyUrnCreated: false,
             }),
           );
         });
@@ -518,7 +517,6 @@ describe('/v1/deals', () => {
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
               isGefDeal: false,
-              newPartyUrnCreated: false,
             }),
           );
         });
@@ -794,7 +792,6 @@ describe('/v1/deals', () => {
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
               isGefDeal: false,
-              newPartyUrnCreated: false,
             }),
           );
         });
