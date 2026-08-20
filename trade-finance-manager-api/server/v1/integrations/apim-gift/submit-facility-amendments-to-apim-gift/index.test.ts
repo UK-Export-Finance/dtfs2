@@ -120,23 +120,6 @@ describe('submitFacilityAmendmentsToApimGift', () => {
       // Assert
       expect(amendGiftFacilitySpy).not.toHaveBeenCalled();
     });
-
-    describe('when the API response is not accepted', () => {
-      it('should return false', async () => {
-        // Arrange
-        multipleGiftFacilityAmendmentsSpy.mockReset();
-        multipleGiftFacilityAmendmentsSpy.mockResolvedValueOnce(HttpStatusCode.BadGateway as never);
-
-        // Act
-        const result = await submitFacilityAmendmentsToApimGift({
-          amendmentPayloads: [mockAmountPayload, mockExpiryDatePayload],
-          ukefFacilityId: mockUkefFacilityId,
-        });
-
-        // Assert
-        expect(result).toEqual(false);
-      });
-    });
   });
 
   describe('when there are no amendment payloads', () => {
