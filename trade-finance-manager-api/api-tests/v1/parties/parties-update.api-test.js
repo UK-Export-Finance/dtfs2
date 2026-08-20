@@ -61,7 +61,6 @@ describe('PUT /v1/parties/:dealId', () => {
     canSendToApimGift.mockResolvedValue({
       canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
-      isBssEwcsDeal: false,
       isGefDeal: true,
     });
 
@@ -133,7 +132,6 @@ describe('PUT /v1/parties/:dealId', () => {
         expect.objectContaining({
           deal: expect.any(Object),
           facilities: issuedFacilities,
-          isBssEwcsDeal: false,
           isGefDeal: true,
           newPartyUrnCreated: false,
         }),

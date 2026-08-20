@@ -444,7 +444,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
-              isBssEwcsDeal: true,
               isGefDeal: false,
             }),
           );
@@ -517,7 +516,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
-              isBssEwcsDeal: true,
               isGefDeal: false,
             }),
           );
@@ -793,7 +791,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
-              isBssEwcsDeal: true,
               isGefDeal: false,
             }),
           );
@@ -964,7 +961,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: mockIssuedFacilities,
-              isBssEwcsDeal: false,
               isGefDeal: true,
               newPartyUrnCreated: false,
             }),
