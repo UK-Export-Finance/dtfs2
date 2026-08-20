@@ -15,7 +15,7 @@ const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const createRateLimit = require('./v1/middleware/rateLimit');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const userService = new UserService();
 

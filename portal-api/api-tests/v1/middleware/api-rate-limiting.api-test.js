@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const { generateApp } = require('../../../server/generateApp');
 const createApi = require('../../api');
 

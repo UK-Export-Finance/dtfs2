@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { asString } from '@ukef/dtfs2-common';
 import { Express } from 'express';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_KEY } = process.env;
 

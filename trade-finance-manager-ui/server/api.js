@@ -6,7 +6,7 @@ const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidB
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { TFM_API_URL, TFM_API_KEY } = process.env;
 
