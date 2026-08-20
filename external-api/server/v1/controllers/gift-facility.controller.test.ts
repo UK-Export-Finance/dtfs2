@@ -609,9 +609,14 @@ describe('multipleAmendments', () => {
     // Arrange
     const requestBody = {
       amendmentType: 'ReplaceExpiryDate',
-      amendmentData: {
-        expiryDate: '2026-12-20',
-      },
+      amendments: [
+        {
+          amendmentType: 'ReplaceExpiryDate',
+          amendmentData: {
+            expiryDate: '2026-12-20',
+          },
+        },
+      ],
     };
 
     const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });

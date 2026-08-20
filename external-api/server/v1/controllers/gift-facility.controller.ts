@@ -238,7 +238,7 @@ export const create = async (req: Request, res: Response) => {
 };
 
 /**
- * Amend a GIFT facility.
+ * Send a single amendment to APIM TFS for a GIFT facility.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
@@ -300,7 +300,7 @@ export const amend = async (req: GiftFacilityRequest, res: Response) => {
 };
 
 /**
- * Amend a GIFT facility.
+ * Send multiple amendments to APIM TFS for a GIFT facility.
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`

@@ -2309,7 +2309,7 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
 };
 
 /**
- * Make a single amendment to aGIFT facility.
+ * Make a single amendment to a GIFT facility.
  * @param {object} facilityAmendmentData - The amendment data for the facility.
  * @param {string} facilityId - The GIFT facility ID to amend.
  * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
