@@ -24,7 +24,7 @@ describe('salt', () => {
     expect(Buffer.isBuffer(response)).toBeTruthy();
   });
 
-  it('should call crypto.randomBytes with 128 bytes', () => {
+  it('should call crypto.randomBytes with 64 bytes', () => {
     // Act
     const response = salt();
 
