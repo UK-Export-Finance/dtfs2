@@ -71,9 +71,13 @@ export const postLogin = async (req, res) => {
       return res.redirect(nextAccessCodePage);
     } catch (error) {
       const status = error.response?.status;
+      const errorMessage = error?.message ?? 'Unknown error';
+      const errorCode = error?.code ?? 'UNKNOWN';
+      const message = 'Failed to login';
+      const specificError = error.response?.data ?? 'Unknown error';
 
       if (!loginApiOtpSucceeded) {
-        console.error('Failed to login %o', error);
+        console.error('%s: %s (status: %s, code: %s) %o', message, errorMessage, status, errorCode, specificError);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user %s', email);
@@ -95,7 +99,8 @@ export const postLogin = async (req, res) => {
         return res.redirect('/login/temporarily-suspended-access-code');
       }
 
-      console.error('Failed to send sign in OTP, rendering problem with service page. The error was %o', error);
+      const generalErrorMessage = 'Failed to send sign in OTP, rendering problem with service page. The error was ';
+      console.error('%s %s: %s (status: %s, code: %s)', generalErrorMessage, message, errorMessage, status, errorCode);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -126,9 +131,13 @@ export const postLogin = async (req, res) => {
       return res.redirect('/login/check-your-email');
     } catch (error) {
       const status = error.response?.status;
+      const errorMessage = error?.message ?? 'Unknown error';
+      const errorCode = error?.code ?? 'UNKNOWN';
+      const message = 'Failed to login';
+      const specificError = error.response?.data ?? 'Unknown error';
 
       if (!loginApiLinkSucceeded) {
-        console.error('Failed to login %o', error);
+        console.error('%s: %s (status: %s, code: %s) %o', message, errorMessage, status, errorCode, specificError);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user');
@@ -148,8 +157,8 @@ export const postLogin = async (req, res) => {
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
-      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was ';
-      console.error('%s %o', message, error);
+      const generalErrorMessage = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was ';
+      console.error('%s %s: %s (status: %s, code: %s)', generalErrorMessage, message, errorMessage, status, errorCode);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');
