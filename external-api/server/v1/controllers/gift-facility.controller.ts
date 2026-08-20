@@ -330,9 +330,7 @@ export const multipleAmendments = async (req: GiftFacilityRequest, res: Response
         error,
       );
 
-      return {
-        status,
-      };
+      return { status };
     });
 
     const { status } = response;
