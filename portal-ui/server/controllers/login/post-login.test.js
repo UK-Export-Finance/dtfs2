@@ -212,12 +212,12 @@ describe('postLogin', () => {
 
           expect(console.error).toHaveBeenNthCalledWith(
             1,
-            '%s %s: %s (status: %s, code: %s)',
-            'Failed to send sign in OTP, rendering problem with service page. The error was ',
-            'Failed to login',
+            '%s: %s (status: %s, code: %s) %o',
+            'Failed to send sign in OTP, rendering problem with service page',
             'OTP sending failed',
             undefined,
             'UNKNOWN',
+            'Unknown error',
           );
 
           expect(res.render).toHaveBeenNthCalledWith(1, '_partials/problem-with-service.njk');

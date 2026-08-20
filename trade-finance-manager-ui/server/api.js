@@ -1,7 +1,7 @@
 const { HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const axios = require('axios');
-const { HttpStatusCode, logUserAuthError } = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
+const { HEADERS, logUserAuthError } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
