@@ -4,8 +4,20 @@ const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
-const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
+const axios = require('axios');
+const {
+  exceptionHandlers,
+  SWAGGER,
+  xss,
+  create: createCsrf,
+  verify: verifyCsrf,
+  maintenance,
+  notFound,
+  errors,
+  removePasswordFromError,
+} = require('@ukef/dtfs2-common');
 const { expressSession, configure } = require('@ukef/dtfs2-common/backend');
+
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
@@ -15,6 +27,13 @@ const healthcheck = require('./healthcheck');
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
 const createRateLimit = require('./middleware/rateLimit/index');
+
+/**
+ * Middleware to remove password from any error
+ * Outside generateApp to ensure it is run once only,
+ * and not multiple times if generateApp is called multiple times (e.g. in tests).
+ */
+removePasswordFromError(axios);
 
 const generateApp = () => {
   const app = express();

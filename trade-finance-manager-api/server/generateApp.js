@@ -2,8 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const { exceptionHandlers, initialiseCronJobScheduler, xss } = require('@ukef/dtfs2-common');
+const axios = require('axios');
+const { exceptionHandlers, initialiseCronJobScheduler, xss, removePasswordFromError } = require('@ukef/dtfs2-common');
 const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
+
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
@@ -19,6 +21,13 @@ const { cronSchedulerJobs } = require('./cron-scheduler-jobs');
 initialiseCronJobScheduler(cronSchedulerJobs);
 
 configurePassport(passport);
+
+/**
+ * Middleware to remove password from any error
+ * Outside generateApp to ensure it is run once only,
+ * and not multiple times if generateApp is called multiple times (e.g. in tests).
+ */
+removePasswordFromError(axios);
 
 const generateApp = () => {
   const app = express();

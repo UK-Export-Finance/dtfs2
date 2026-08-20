@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { exceptionHandlers, maintenance, SWAGGER, xss } from '@ukef/dtfs2-common';
+import axios from 'axios';
+import { exceptionHandlers, maintenance, SWAGGER, xss, removePasswordFromError } from '@ukef/dtfs2-common';
+
 import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -13,6 +15,13 @@ import { createRateLimit } from './middleware/rateLimit';
 dotenv.config();
 
 const { CORS_ORIGIN } = process.env;
+
+/**
+ * Middleware to remove password from any error
+ * Outside generateApp to ensure it is run once only,
+ * and not multiple times if generateApp is called multiple times (e.g. in tests).
+ */
+removePasswordFromError(axios);
 
 export const generateApp = () => {
   const app = express();

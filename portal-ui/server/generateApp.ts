@@ -3,15 +3,32 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import { exceptionHandlers, SWAGGER, xss, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
+import {
+  exceptionHandlers,
+  SWAGGER,
+  xss,
+  create as createCsrf,
+  verify as verifyCsrf,
+  maintenance,
+  notFound,
+  errors,
+  removePasswordFromError,
+} from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
-import { HttpStatusCode } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import { seo, security, createRateLimit } from './routes/middleware';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
+
+/**
+ * Middleware to remove password from any error
+ * Outside generateApp to ensure it is run once only,
+ * and not multiple times if generateApp is called multiple times (e.g. in tests).
+ */
+removePasswordFromError(axios);
 
 export const generateApp = () => {
   const app = express();

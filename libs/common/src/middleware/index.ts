@@ -7,3 +7,4 @@ export * from './validate-mongoId';
 export * from './maintainance';
 export * from './not-found';
 export * from './errors';
+export * from './remove-password-from-error';
