@@ -1,6 +1,8 @@
 import express, { Express } from 'express';
 import compression from 'compression';
-import { exceptionHandlers, MAX_REQUEST_SIZE, sanitiseMongoRequest, xss, maintenance } from '@ukef/dtfs2-common';
+import axios from 'axios';
+import { exceptionHandlers, MAX_REQUEST_SIZE, sanitiseMongoRequest, xss, maintenance, removePasswordFromError } from '@ukef/dtfs2-common';
+
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -11,6 +13,13 @@ import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRout
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 
 const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
+
+/**
+ * Middleware to remove password from any error
+ * Outside generateApp to ensure it is run once only,
+ * and not multiple times if generateApp is called multiple times (e.g. in tests).
+ */
+removePasswordFromError(axios);
 
 export const generateApp = (): Express => {
   const app = express();
