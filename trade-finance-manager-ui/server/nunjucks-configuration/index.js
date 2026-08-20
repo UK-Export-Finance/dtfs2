@@ -18,6 +18,7 @@ const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
 const formatAsDecimal = require('./filter-formatAsDecimal');
 const sentenceCase = require('./filter-sentenceCase');
 const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
+const { validateSsoProfileUrl } = require('../helpers/validateSsoProfileUrl');
 
 dotenv.config({ quiet: true });
 
@@ -27,7 +28,9 @@ dotenv.config({ quiet: true });
  * @returns {nunjucks.Environment}
  */
 const configureNunjucks = (opts) => {
-  const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
+  const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS, MS_SSO_PROFILE_URL } = process.env;
+
+  const safeMsSsoProfileUrl = validateSsoProfileUrl(MS_SSO_PROFILE_URL);
 
   const appViews = [
     path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
@@ -43,6 +46,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
   nunjucksEnvironment.addGlobal('IS_SSO_ENABLED', isTfmSsoFeatureFlagEnabled());
+  nunjucksEnvironment.addGlobal('MS_SSO_PROFILE_URL', safeMsSsoProfileUrl);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
