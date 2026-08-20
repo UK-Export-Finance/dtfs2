@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { isPortal2FAFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 
 import { validationErrorHandler, getNextAccessCodePage } from '../../helpers';
 import api from '../../api';
@@ -71,13 +71,10 @@ export const postLogin = async (req, res) => {
       return res.redirect(nextAccessCodePage);
     } catch (error) {
       const status = error.response?.status;
-      const errorMessage = error?.message ?? 'Unknown error';
-      const errorCode = error?.code ?? 'UNKNOWN';
-      const message = 'Failed to login';
-      const specificError = error.response?.data ?? 'Unknown error';
 
       if (!loginApiOtpSucceeded) {
-        console.error('%s: %s (status: %s, code: %s) %o', message, errorMessage, status, errorCode, specificError);
+        const message = 'Failed to login';
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user %s', email);
@@ -100,7 +97,7 @@ export const postLogin = async (req, res) => {
       }
 
       const generalErrorMessage = 'Failed to send sign in OTP, rendering problem with service page. The error was ';
-      console.error('%s %s: %s (status: %s, code: %s)', generalErrorMessage, message, errorMessage, status, errorCode);
+      logUserAuthError(error, generalErrorMessage);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -131,13 +128,10 @@ export const postLogin = async (req, res) => {
       return res.redirect('/login/check-your-email');
     } catch (error) {
       const status = error.response?.status;
-      const errorMessage = error?.message ?? 'Unknown error';
-      const errorCode = error?.code ?? 'UNKNOWN';
-      const message = 'Failed to login';
-      const specificError = error.response?.data ?? 'Unknown error';
 
       if (!loginApiLinkSucceeded) {
-        console.error('%s: %s (status: %s, code: %s) %o', message, errorMessage, status, errorCode, specificError);
+        const message = 'Failed to login';
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user');
@@ -158,7 +152,7 @@ export const postLogin = async (req, res) => {
       }
 
       const generalErrorMessage = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was ';
-      console.error('%s %s: %s (status: %s, code: %s)', generalErrorMessage, message, errorMessage, status, errorCode);
+      logUserAuthError(error, generalErrorMessage);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');
