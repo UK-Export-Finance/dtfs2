@@ -484,7 +484,14 @@ const updateUserPassword = async (userId, update, token) => {
       headers: generateHeadersWithToken(token),
       data: update,
     }).catch((error) => {
-      console.error('Unable to update user details in axios request %o', error);
+      const status = error.response?.status;
+      const errorMessage = error?.message ?? 'Unknown error';
+      const errorCode = error?.code ?? 'UNKNOWN';
+      const message = 'Unable to update user details in axios request';
+      const specificError = error.response?.data ?? 'Unknown error';
+
+      console.error('%s: %s (status: %s, code: %s) %o', message, errorMessage, status, errorCode, specificError);
+
       return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 

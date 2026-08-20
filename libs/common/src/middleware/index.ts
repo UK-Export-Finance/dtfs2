@@ -8,4 +8,3 @@ export * from './maintainance';
 export * from './not-found';
 export * from './errors';
 export * from './sanitise-mongo-request';
-export * from './remove-password-from-error';

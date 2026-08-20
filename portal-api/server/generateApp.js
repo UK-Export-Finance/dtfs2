@@ -1,7 +1,6 @@
 const { CORS_ORIGIN } = process.env;
 
-const axios = require('axios');
-const { exceptionHandlers, maintenance, sanitiseMongoRequest, xss, MAX_REQUEST_SIZE, SWAGGER, removePasswordFromError } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, maintenance, sanitiseMongoRequest, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -21,13 +20,6 @@ const createRateLimit = require('./v1/middleware/rateLimit');
 dotenv.config({ quiet: true });
 
 const userService = new UserService();
-
-/**
- * Middleware to remove password from any error
- * Outside generateApp to ensure it is run once only,
- * and not multiple times if generateApp is called multiple times (e.g. in tests).
- */
-removePasswordFromError(axios);
 
 const generateApp = () => {
   // Setup for token authentication via Passport

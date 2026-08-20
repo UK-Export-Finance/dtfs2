@@ -5,18 +5,7 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const axios = require('axios');
-const {
-  exceptionHandlers,
-  SWAGGER,
-  xss,
-  create: createCsrf,
-  verify: verifyCsrf,
-  maintenance,
-  notFound,
-  errors,
-  removePasswordFromError,
-} = require('@ukef/dtfs2-common');
+const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
@@ -26,13 +15,6 @@ const configureNunjucks = require('./nunjucks-configuration');
 const { security, seo, createRateLimit } = require('./middleware');
 
 dotenv.config({ quiet: true });
-
-/**
- * Middleware to remove password from any error
- * Outside generateApp to ensure it is run once only,
- * and not multiple times if generateApp is called multiple times (e.g. in tests).
- */
-removePasswordFromError(axios);
 
 const generateApp = () => {
   const app = express();
