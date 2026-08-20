@@ -40,6 +40,7 @@ export type ApimAccrualSchedule = {
   additionalRate: number;
   baseRate: number;
   firstCycleAccrualEndDate: string;
+  indexRateCode?: string;
   spreadRate: number | null;
 };
 

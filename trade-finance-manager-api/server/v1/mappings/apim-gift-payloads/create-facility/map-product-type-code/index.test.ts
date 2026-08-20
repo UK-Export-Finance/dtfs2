@@ -2,43 +2,56 @@ import { PRODUCT_TYPE_CODES } from '../../constants';
 import { mapProductTypeCode } from '.';
 
 describe('mapProductTypeCode', () => {
+  const baseParams = {
+    isBssFacility: false,
+    isCashFacility: false,
+    isContingentFacility: false,
+    isEwcsFacility: false,
+  };
+
   describe('when isBssFacility is true', () => {
     it('should return the correct product type code', () => {
       // Arrange & Act
       const result = mapProductTypeCode({
+        ...baseParams,
         isBssFacility: true,
-        isGefDeal: false,
       });
 
       // Assert
-      const expected = PRODUCT_TYPE_CODES.BSS;
-
-      expect(result).toEqual(expected);
+      expect(result).toEqual(PRODUCT_TYPE_CODES.BSS);
     });
   });
 
-  describe('when isGefDeal is true', () => {
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true', ({ flag }) => {
     it('should return the correct product type code', () => {
       // Arrange & Act
       const result = mapProductTypeCode({
-        isBssFacility: false,
-        isGefDeal: true,
+        ...baseParams,
+        [flag]: true,
       });
 
       // Assert
-      const expected = PRODUCT_TYPE_CODES.GEF;
-
-      expect(result).toEqual(expected);
+      expect(result).toEqual(PRODUCT_TYPE_CODES.GEF);
     });
   });
 
-  describe('when isBssFacility and isGefDeal are false', () => {
-    it(`should return ${PRODUCT_TYPE_CODES.UNKNOWN}`, () => {
+  describe('when isEwcsFacility is true', () => {
+    it('should return the correct product type code', () => {
       // Arrange & Act
       const result = mapProductTypeCode({
-        isBssFacility: false,
-        isGefDeal: false,
+        ...baseParams,
+        isEwcsFacility: true,
       });
+
+      // Assert
+      expect(result).toEqual(PRODUCT_TYPE_CODES.EWCS);
+    });
+  });
+
+  describe('when all flags are false', () => {
+    it(`should return ${PRODUCT_TYPE_CODES.UNKNOWN}`, () => {
+      // Arrange & Act
+      const result = mapProductTypeCode(baseParams);
 
       // Assert
       const expected = PRODUCT_TYPE_CODES.UNKNOWN;

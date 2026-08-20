@@ -24,13 +24,13 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-6LHYtB3N14JvsgpSmL6+C1ua5pFCAdLk5UbwqbnUCfufAfGLwqWl2j6nfLFghIAbUDGtGrnQXDDDOHl+SPAYGw==');
+      .toHaveAttribute('integrity', 'sha512-Jo5n9dVyo+snWOLYlSDpWMIplUMVsxABZPED7Pd3qUlaH4zvT6Xd53pHX0mhOTQBKRfd61IU+W2CMBuCTd1Wdw==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-mc0AEQnun5FfrCSQPJsQfYarvqgzmdeODHcYB0kCF0TG0PpDYvr33Q+WhknzXjlMofCqPzS8QYEUc6G4/HDKbQ==');
+      .toHaveAttribute('integrity', 'sha512-zAySI6n1QEqSuEpmks1sraEzamO7H4SsvUIl0w9k3nSepnjSGJp5PNG+mG91oi9Vi6otzVEpvNiAVfEsZ7Ge3A==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {

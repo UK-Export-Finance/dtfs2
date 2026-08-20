@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse, RequestOptions } from 'node-mocks-http';
 import { amend, create, get, getMany, GiftFacilityRequest } from './gift-facility.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_TFS_VALUE, APIM_TFS_KEY, APIM_TFS_URL } = process.env;
 const headers = {

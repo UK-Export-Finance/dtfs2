@@ -9,7 +9,7 @@ import { security } from './middleware/headers/security';
 import { checkApiKey } from './middleware/check-api-key';
 import { createRateLimit } from './middleware/rateLimit';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { CORS_ORIGIN } = process.env;
 
