@@ -88,7 +88,7 @@ describe(component, () => {
 
     it('should render `type` table heading, but without sorting', () => {
       wrapper.expectText('[data-cy="deals-table-heading-type"]').toRead('Type');
-      wrapper.expectAriaSort('[data-cy="deals-table-heading-type"]').toEqual(undefined);
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-type"]').toBeUndefined();
       wrapper.expectElement('[data-cy="deals-table-heading-type-button"]').notToExist();
     });
 
