@@ -498,7 +498,9 @@ const updateUserPassword = async (userId, update, token) => {
 
     return response;
   } catch (error) {
-    console.error('Unable to update user details %o', error);
+    const message = 'Unable to update user password';
+    logUserAuthError(error, message);
+
     return { status: error?.response?.status || 500, data: 'Failed to update user password' };
   }
 };
