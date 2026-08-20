@@ -298,3 +298,65 @@ export const amend = async (req: GiftFacilityRequest, res: Response) => {
       .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during APIM TFS GIFT - amend facility endpoint call' });
   }
 };
+
+/**
+ * Amend a GIFT facility.
+ * @param req request object
+ * @param res response object
+ * @returns response with HTTP status `code` and `data`
+ */
+export const multipleAmendments = async (req: GiftFacilityRequest, res: Response) => {
+  const { facilityId } = req.params;
+
+  try {
+    console.info('⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', facilityId);
+
+    const url = `${APIM_TFS_URL}v2/gift/facility/${facilityId}/multiple-amendments`;
+
+    const response = await axios({
+      method: 'POST',
+      url,
+      headers,
+      data: req.body,
+    }).catch((error: any) => {
+      const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+      const responseBody = error?.response?.data ?? { message: 'No response received from APIM TFS GIFT - multiple amendments endpoint' };
+
+      console.error(
+        'Error calling APIM TFS GIFT - multiple amendments endpoint - facilityId %s status %s responseBody %o error %o',
+        facilityId,
+        status,
+        responseBody,
+        error,
+      );
+
+      return {
+        status,
+      };
+    });
+
+    const { status } = response;
+
+    if (status !== HttpStatusCode.Accepted) {
+      return res.sendStatus(status);
+    }
+
+    console.info('✅ Successfully sent GIFT facility %s multiple amendments to APIM TFS', facilityId);
+
+    return res.status(status).send({
+      success: true,
+    });
+  } catch (error: any) {
+    console.error('Error calling APIM TFS GIFT - multiple amendments endpoint for facility %s %o', facilityId, error);
+
+    if (error?.response?.status) {
+      return res.sendStatus(error.response.status);
+    }
+
+    console.error('🚩 Error occurred during APIM TFS GIFT - multiple amendments endpoint call for facility %s %o', facilityId, error);
+
+    return res
+      .status(HttpStatusCode.InternalServerError)
+      .send({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during APIM TFS GIFT - multiple amendments endpoint call' });
+  }
+};
