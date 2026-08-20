@@ -194,7 +194,9 @@ describe('cron', () => {
     for (const scenario of scenarios) {
       cron(buildCronPayload(scenario.dealId, scenario.category));
 
-      const onTick = mockedCronJob.mock.calls[mockedCronJob.mock.calls.length - 1][1] as () => Promise<void>;
+      const cronJobCalls = mockedCronJob.mock.calls as Array<[string, () => Promise<void>, () => void]>;
+      const latestCall = cronJobCalls[cronJobCalls.length - 1];
+      const onTick = latestCall[1];
 
       await onTick();
 
@@ -212,7 +214,8 @@ describe('cron', () => {
     const dealId = 'deal-complete';
     cron(buildCronPayload(dealId));
 
-    const onComplete = mockedCronJob.mock.calls[0][2] as () => void;
+    const cronJobCalls = mockedCronJob.mock.calls as Array<[string, () => Promise<void>, () => void]>;
+    const onComplete = cronJobCalls[0][2];
 
     onComplete();
 
