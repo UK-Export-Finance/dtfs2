@@ -48,7 +48,6 @@ describe('getFieldValues', () => {
       bssSubtypeName: getBssSubtypeName({
         facilitySnapshot: mockFacilitySnapshot,
         isBssFacility: facilityFlags.isBssFacility,
-        isEwcsFacility: facilityFlags.isEwcsFacility,
       }),
       consumer: APIM_GIFT_INTEGRATION.CONSUMER,
       currency: mockFacilitySnapshot.currency.id,
