@@ -29,10 +29,10 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.21",
-    "axios": "1.16.0",
-    "date-fns": "^2.30.0",
-    "dotenv": "^16.4.5",
+    "@types/lodash": "^4.17.25",
+    "axios": "1.19.0",
+    "date-fns": "^4.4.0",
+    "dotenv": "^17.4.2",
     "durable-functions": "^3.3.0"
   },
   "devDependencies": {
@@ -44,7 +44,7 @@
     "jest": "^30.4.2"
   },
   "engines": {
-    "node": ">=24.1.0",
+    "node": ">=24.17.0",
     "npm": ">=11.3.0"
   },
   "engineStrict": true

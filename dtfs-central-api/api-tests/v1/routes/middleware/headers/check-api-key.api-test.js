@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const checkApiKey = require('../../../../../server/v1/routes/middleware/headers/check-api-key');
 const { mockReq, mockRes, mockNext } = require('../../../mocks');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { DTFS_CENTRAL_API_KEY } = process.env;
 

@@ -33,7 +33,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.8.10",
+    "@azure/msal-node": "^5.5.0",
     "@azure/storage-file-share": "12.32.0",
     "@babel/plugin-transform-runtime": "8.0.1",
     "@babel/preset-env": "8.0.2",
@@ -44,8 +44,8 @@
     "compression": "^1.8.1",
     "cors": "2.8.6",
     "crypto": "^1.0.1",
-    "date-fns": "^2.30.0",
-    "dotenv": "16.6.1",
+    "date-fns": "^4.4.0",
+    "dotenv": "^17.4.2",
     "escape-string-regexp": "^4.0.0",
     "express": "^5.2.1",
     "express-rate-limit": "^6.11.2",
@@ -67,7 +67,7 @@
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.24",
+    "@types/lodash": "^4.17.25",
     "@types/mongodb": "^4.0.7",
     "@types/supertest": "^7.2.1",
     "eslint": "^8.57.1",
@@ -76,7 +76,7 @@
     "eslint-plugin-import": "^2.32.0",
     "jest": "30.4.2",
     "jest-when": "^4.0.3",
-    "node-mocks-http": "^1.17.2",
+    "node-mocks-http": "^1.18.1",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
     "typescript": "^5.9.3"

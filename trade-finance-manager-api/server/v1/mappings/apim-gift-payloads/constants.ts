@@ -19,15 +19,28 @@ export const DEAL_TYPE = {
  */
 export const PRODUCT_TYPE_CODES = {
   BSS: 'PRT003',
+  EWCS: 'PRT005',
   GEF: 'PRT004',
   UNKNOWN: 'UNKNOWN_PRODUCT_TYPE_CODE',
 } as const;
+
+/**
+ * APIM/GIFT facility category codes, mapped by supplier type.
+ * This is currently only used for EWCS facilities
+ * This is required to map the facility category code from TFM to the expected facility category code in APIM/GIFT when mapping the facility "risk details" data for the APIM GIFT payload.
+ */
+export const FACILITY_CATEGORY_CODES = {
+  Exporter: 'FCT004',
+  'UK Supplier': 'FCT005',
+  UNKNOWN: 'UNKNOWN_FACILITY_CATEGORY_CODE',
+};
 
 /**
  * Mapping of APIM/GIFT product type codes to deal types.
  */
 export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
   [PRODUCT_TYPE_CODES.BSS]: DEAL_TYPE.BSS,
+  [PRODUCT_TYPE_CODES.EWCS]: DEAL_TYPE.EWCS,
   [PRODUCT_TYPE_CODES.GEF]: DEAL_TYPE.GEF,
   [PRODUCT_TYPE_CODES.UNKNOWN]: 'UNKNOWN',
 } as const satisfies Record<ProductTypeCode, string>;
@@ -118,6 +131,34 @@ export const ACCRUAL_FREQUENCY_CODE_MAP = {
   EVERY_BUSINESS_DAY: 'FREQEBD',
 } as const;
 
+/**
+ * APIM/GIFT index rate codes for EWCS facilities.
+ * These are required to map the facility's currency and accrual frequency code to the expected index rate code in APIM/GIFT when mapping the facility "accrual schedules" data for the APIM GIFT payload.
+ * If the currency is not recognized, the index rate code will default to "UNKNOWN_INDEX_RATE_CODE".
+ * If the frequency code is not quarterly, the index rate code will default to the "OTHER" index rate code for the given currency.
+ * This is required to ensure that the integration can handle unexpected currency and frequency code values without breaking, and to provide a fallback value for unrecognized values.
+ * If the "UNKNOWN_INDEX_RATE_CODE" is sent to APIM/GIFT, this will trigger an alert in APIM for the unexpected index rate code value, which can be investigated by the team.
+ */
+export const ACCRUAL_SCHEDULE_INDEX_RATE_CODES = {
+  GBP: {
+    QUARTERLY: 'GBP003',
+    OTHER: 'GBP004',
+  },
+  EUR: {
+    QUARTERLY: 'EUR003',
+    OTHER: 'EUR004',
+  },
+  USD: {
+    QUARTERLY: 'USD003',
+    OTHER: 'USD004',
+  },
+  JPY: {
+    QUARTERLY: 'JPY003',
+    OTHER: 'JPY004',
+  },
+  UNKNOWN: 'UNKNOWN_INDEX_RATE_CODE',
+} as const;
+
 export const ACCRUAL_SCHEDULE_TYPE_CODES = {
   PREMIUM: 'PAC01',
 } as const;
@@ -140,11 +181,13 @@ const CONSUMER = 'DTFS' as const;
 
 /**
  * PRT003 (BSS) = default credit type to "Term".
+ * PRT005 (EWCS) = default credit type to "TODO".
  * PRT004 (GEF) = default credit type to "Revolver".
  * UNKNOWN_PRODUCT_TYPE_CODE = default credit type to "Unknown", which is a fallback value for unrecognized deal types.
  */
 const CREDIT_TYPE = {
   PRT003: 'Term',
+  PRT005: 'Revolver',
   PRT004: 'Revolver',
   UNKNOWN_PRODUCT_TYPE_CODE: 'UNKNOWN_CREDIT_TYPE',
 } as const;
@@ -156,6 +199,7 @@ const CREDIT_TYPE = {
 export const COUNTERPARTY_ROLE_CODE = {
   BOND_BENEFICIARY: 'CRT004',
   BOND_GIVER: 'CRT005',
+  BUYER: 'CRT006',
   ISSUING_BANK: 'CRT043',
 } as const;
 
@@ -209,9 +253,10 @@ export const APIM_GIFT_INTEGRATION = {
         BOND_BENEFICIARY: COUNTERPARTY_ROLE_CODE.BOND_BENEFICIARY,
         BOND_GIVER: COUNTERPARTY_ROLE_CODE.BOND_GIVER,
       },
-      GEF: {
-        ISSUING_BANK: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+      EWCS: {
+        BUYER: COUNTERPARTY_ROLE_CODE.BUYER,
       },
+      ISSUING_BANK: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
     },
     OVERVIEW: {
       CREDIT_TYPE,

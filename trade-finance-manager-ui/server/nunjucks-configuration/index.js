@@ -20,7 +20,7 @@ const sentenceCase = require('./filter-sentenceCase');
 const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 const { validateSsoProfileUrl } = require('../helpers/validateSsoProfileUrl');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  *

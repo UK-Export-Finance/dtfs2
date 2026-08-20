@@ -10,7 +10,7 @@ const formatAsCurrency = require('./formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const configureNunjucks = (opts) => {
   const { CONTACT_US_EMAIL_ADDRESS, FF_FEE_RECORD_CORRECTION_ENABLED } = process.env;

@@ -7,6 +7,10 @@ import { format, isValid, parse } from 'date-fns';
  * @returns date formatted as toFormat or 'Invalid date' if can't parse dateStr
  */
 export const formatDateString = (dateStr: string, fromFormat: string, toFormat: string = 'd MMM yyyy') => {
+  if (!dateStr) {
+    return 'Invalid date';
+  }
+
   const date = parse(dateStr, fromFormat, new Date());
   return isValid(date) ? format(date, toFormat) : 'Invalid date';
 };

@@ -1,4 +1,4 @@
-import { TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
+import { BssEwcsDeal, TfmDeal, TfmFacility, getTfmUkefDealId } from '@ukef/dtfs2-common';
 import { FacilityCategory } from '../../../api-response-types';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { ApimGiftFacilityCreationPayload } from '../types';
@@ -21,7 +21,6 @@ export type FacilityCreationParams = {
   facility: TfmFacility;
   facilityCategories: FacilityCategory[];
   isBssEwcsDeal: boolean;
-  isGefDeal: boolean;
   newPartyUrnCreated: boolean;
 };
 
@@ -33,7 +32,6 @@ export type FacilityCreationParams = {
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @param {FacilityCategory[]} params.facilityCategories - An array of facility categories from APIM, required for mapping the facility category to the format expected by APIM.
  * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
- * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
  * @param {boolean} params.newPartyUrnCreated - A boolean indicating whether a new party URN was created for the exporter, which determines how certain facility values are mapped.
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
@@ -43,7 +41,6 @@ export const createFacility = async ({
   facility,
   facilityCategories,
   isBssEwcsDeal,
-  isGefDeal,
   newPartyUrnCreated,
 }: FacilityCreationParams): Promise<ApimGiftFacilityCreationPayload> => {
   const ukefFacilityId = String(facility?.facilitySnapshot?.ukefFacilityId);
@@ -69,8 +66,10 @@ export const createFacility = async ({
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const { feeFrequency, feeType } = facilitySnapshot;
@@ -89,14 +88,21 @@ export const createFacility = async ({
    */
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis);
 
-  const productTypeCode = mapProductTypeCode({ isBssFacility, isGefDeal });
+  const productTypeCode = mapProductTypeCode({
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
+  });
 
   const { exporterCreditRating } = deal.tfm;
 
   const partyUrns = mapPartyUrns({
     deal,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const { exporterPartyUrn } = partyUrns;
@@ -107,9 +113,19 @@ export const createFacility = async ({
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
+
+  let ewcsSupplierType = null;
+
+  if (isEwcsFacility) {
+    const ewcsDeal = deal.dealSnapshot as BssEwcsDeal;
+
+    ewcsSupplierType = String(ewcsDeal.submissionDetails['supplier-type']);
+  }
 
   /**
    * If DTFS has created a new exporter party URN,
@@ -132,22 +148,26 @@ export const createFacility = async ({
       exporterPartyUrn,
       facilityAmount,
       facilityType,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
       monthsOfCover,
       productTypeCode,
       ukefFacilityId,
     }),
     accrualSchedules: mapAccrualSchedules({
+      currency,
       dayCountBasis,
       expiryDate,
       feeFrequency,
       feeType,
       guaranteeFeePayableToUkef,
+      isEwcsFacility,
     }),
     counterparties: mapCounterparties({
       isBssFacility,
       isCashFacility,
       isContingentFacility,
+      isEwcsFacility,
       partyUrns,
     }),
     obligations: mapObligations({
@@ -162,11 +182,14 @@ export const createFacility = async ({
     riskDetails: await mapRiskDetails({
       creditRiskRatings,
       dealId,
+      ewcsSupplierType,
       exporterCreditRating,
       facilityCategories,
       facilityType,
       industryCode,
-      isGefDeal,
+      isCashFacility,
+      isContingentFacility,
+      isEwcsFacility,
     }),
     delayCreation,
   };

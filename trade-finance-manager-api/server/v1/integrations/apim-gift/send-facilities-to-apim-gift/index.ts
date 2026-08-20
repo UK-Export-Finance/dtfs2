@@ -45,7 +45,6 @@ export const sendFacilitiesToApimGift = async ({
       facility: facilities[0],
       facilityCategories,
       isBssEwcsDeal,
-      isGefDeal,
       newPartyUrnCreated,
     });
 
@@ -58,7 +57,6 @@ export const sendFacilitiesToApimGift = async ({
     deal,
     facilities,
     isBssEwcsDeal,
-    isGefDeal,
     newPartyUrnCreated,
     facilityCategories,
     creditRiskRatings,
