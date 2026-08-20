@@ -6,7 +6,7 @@ const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 const { InvalidDatabaseQueryError } = require('./errors/invalid-database-query.error');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
 

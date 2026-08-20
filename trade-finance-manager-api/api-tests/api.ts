@@ -8,7 +8,7 @@ import { TestApi } from './types/test-api';
 import { File } from './types/file';
 import { MultipartForm } from './types/multipart-form';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { TFM_API_KEY } = process.env;
 
