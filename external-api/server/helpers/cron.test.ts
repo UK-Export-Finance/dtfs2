@@ -33,6 +33,13 @@ const mockedDealCreationJob = eStoreDealDirectoryCreationJob as jest.Mock;
 const mockedFacilityCreationJob = eStoreFacilityDirectoryCreationJob as jest.Mock;
 const mockedDocumentsCreationJob = eStoreDocumentsCreationJob as jest.Mock;
 
+/**
+ * Builds the payload for a test cron job.
+ * @param dealId The ID of the deal.
+ * @param category The category of the cron job.
+ * @param kill Whether to kill the job.
+ * @returns The payload for the cron job.
+ */
 const buildCronPayload = (dealId: string, category: Category = ENDPOINT.SITE, kill = false): EstoreCronJob => ({
   data: {
     dealId,
@@ -67,6 +74,7 @@ describe('cron', () => {
   });
 
   it('should create and start a job when one does not exist and is inactive', () => {
+    // Arrange
     const start = jest.fn();
 
     mockedCronJob.mockImplementation(() => ({
@@ -75,23 +83,28 @@ describe('cron', () => {
       isActive: false,
     }));
 
+    // Act
     const result = cron(buildCronPayload('deal-create-success'));
 
+    // Assert
     expect(result).toBe(false);
     expect(mockedCronJob).toHaveBeenCalledTimes(1);
     expect(start).toHaveBeenCalledTimes(1);
   });
 
   it('should return false when a job already exists for the same deal and category', () => {
+    // Arrange
     mockedCronJob.mockImplementation(() => ({
       start: jest.fn(),
       stop: jest.fn(),
       isActive: false,
     }));
 
+    // Act
     cron(buildCronPayload('deal-duplicate'));
     const result = cron(buildCronPayload('deal-duplicate'));
 
+    // Assert
     expect(result).toBe(false);
     expect(mockedCronJob).toHaveBeenCalledTimes(1);
     expect(console.info).toHaveBeenCalledWith(
@@ -103,6 +116,7 @@ describe('cron', () => {
   });
 
   it('should stop an existing job and return true when kill is requested', () => {
+    // Arrange
     const stop = jest.fn().mockReturnValue(undefined);
     const start = jest.fn();
 
@@ -112,14 +126,17 @@ describe('cron', () => {
       isActive: false,
     }));
 
+    // Act
     cron(buildCronPayload('deal-stop-success'));
     const result = cron(buildCronPayload('deal-stop-success', ENDPOINT.SITE, true));
 
+    // Assert
     expect(result).toBe(true);
     expect(stop).toHaveBeenCalledTimes(1);
   });
 
   it('should remove a stopped job so it can be re-created', () => {
+    // Arrange
     const firstStop = jest.fn().mockReturnValue(undefined);
     const firstStart = jest.fn();
     const secondStart = jest.fn();
@@ -136,10 +153,12 @@ describe('cron', () => {
         isActive: false,
       }));
 
+    // Act
     cron(buildCronPayload('deal-recreate'));
     cron(buildCronPayload('deal-recreate', ENDPOINT.SITE, true));
     const recreateResult = cron(buildCronPayload('deal-recreate'));
 
+    // Assert
     expect(recreateResult).toBe(false);
     expect(firstStop).toHaveBeenCalledTimes(1);
     expect(secondStart).toHaveBeenCalledTimes(1);
@@ -147,6 +166,7 @@ describe('cron', () => {
   });
 
   it('should handle a rejected async stop without throwing and should log an error', async () => {
+    // Arrange
     const stopError = new Error('stop failed');
     const stop = jest.fn().mockReturnValue(Promise.reject(stopError));
     const start = jest.fn();
@@ -158,10 +178,12 @@ describe('cron', () => {
     }));
 
     const dealId = 'deal-stop-reject';
-    cron(buildCronPayload(dealId));
 
+    // Act
+    cron(buildCronPayload(dealId));
     const result = cron(buildCronPayload(dealId, ENDPOINT.SITE, true));
 
+    // Assert
     await Promise.resolve();
 
     expect(result).toBe(true);
@@ -176,6 +198,7 @@ describe('cron', () => {
   });
 
   it('should route onTick to the correct category handler functions', async () => {
+    // Arrange
     mockedCronJob.mockImplementation(() => ({
       start: jest.fn(),
       stop: jest.fn(),
@@ -192,6 +215,7 @@ describe('cron', () => {
     ];
 
     for (const scenario of scenarios) {
+      // Act
       cron(buildCronPayload(scenario.dealId, scenario.category));
 
       const cronJobCalls = mockedCronJob.mock.calls as Array<[string, () => Promise<void>, () => void]>;
@@ -200,11 +224,13 @@ describe('cron', () => {
 
       await onTick();
 
+      // Assert
       expect(scenario.handler).toHaveBeenCalledWith(expect.objectContaining({ dealId: scenario.dealId }));
     }
   });
 
   it('should log successful completion via onComplete callback', () => {
+    // Arrange
     mockedCronJob.mockImplementation(() => ({
       start: jest.fn(),
       stop: jest.fn(),
@@ -212,6 +238,8 @@ describe('cron', () => {
     }));
 
     const dealId = 'deal-complete';
+
+    // Act
     cron(buildCronPayload(dealId));
 
     const cronJobCalls = mockedCronJob.mock.calls as Array<[string, () => Promise<void>, () => void]>;
@@ -219,6 +247,7 @@ describe('cron', () => {
 
     onComplete();
 
-    expect(console.info).toHaveBeenCalledWith('✅ eStore %s CRON has been completed successfully for deal %s', ENDPOINT.SITE, dealId);
+    // Assert
+    expect(console.info).toHaveBeenNthCalledWith(1, '✅ eStore %s CRON has been completed successfully for deal %s', ENDPOINT.SITE, dealId);
   });
 });
