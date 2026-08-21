@@ -75,7 +75,7 @@ const utilisationReportPage = {
           cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="facility-id"]`),
       },
       filters: {
-        panel: () => cy.get('[data-cy="payment-details--filters-panel"]'),
+        panel: () => cy.get('[data-cy="payment-details--filters-container"]'),
         panelToggleButton: () => cy.get('[data-cy="payment-details--filters-action-bar"] button'),
         submitButton: () => cy.get('[data-cy="payment-details--filters-submit-button"]'),
         facilityIdInput: () => cy.get('[data-cy="payment-details--filter-facility-id-input"]'),

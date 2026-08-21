@@ -1,6 +1,6 @@
 $govuk-new-link-styles: true;
 
-@import "node_modules/govuk-frontend/dist/govuk/all";
+@import "node_modules/govuk-frontend/dist/govuk/index";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 
 // custom styles
@@ -20,7 +20,6 @@ $govuk-new-link-styles: true;
 @import "./list.scss";
 @import "./components/separator.scss";
 
-@import "./activity-feed.scss";
 @import "./case-summary.scss";
 
 @import "./header.scss";

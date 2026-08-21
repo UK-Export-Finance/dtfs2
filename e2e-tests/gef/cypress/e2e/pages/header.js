@@ -1,6 +1,6 @@
 const page = {
   // Header
-  header: () => cy.get('[data-cy="header"]').find('.govuk-header__link--homepage'),
+  header: () => cy.get('[data-cy="header"]').find('.govuk-header__homepage-link'),
   crown: () => cy.get('.govuk-header__logo'),
 
   // Service navigation

@@ -7,7 +7,7 @@
 .form-group-disabled--input {
   opacity: .7;
   background: none;
-  color: $govuk-text-colour;
+  color: govuk-functional-colour(text);
 }
 
 .form-group--input-container {
