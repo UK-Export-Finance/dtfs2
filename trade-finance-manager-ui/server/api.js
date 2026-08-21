@@ -1,7 +1,7 @@
 const { HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const axios = require('axios');
 const { HttpStatusCode } = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, logUserAuthError } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
@@ -489,13 +489,18 @@ const updateUserPassword = async (userId, update, token) => {
       headers: generateHeadersWithToken(token),
       data: update,
     }).catch((error) => {
-      console.error('Unable to update user details in axios request %o', error);
+      const message = 'Unable to update user password in axios request';
+
+      logUserAuthError(error, message);
+
       return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 
     return response;
   } catch (error) {
-    console.error('Unable to update user details %o', error);
+    const message = 'Unable to update user password';
+    logUserAuthError(error, message);
+
     return { status: error?.response?.status || 500, data: 'Failed to update user password' };
   }
 };
