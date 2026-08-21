@@ -60,7 +60,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.numberOfSendSignInLinkAttemptsRemaining).toEqual(undefined);
+    expect(session.numberOfSendSignInLinkAttemptsRemaining).toBeUndefined();
   });
 
   it('deletes the userEmail from the session', async () => {
@@ -68,7 +68,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.userEmail).toEqual(undefined);
+    expect(session.userEmail).toBeUndefined();
   });
 
   it.each`

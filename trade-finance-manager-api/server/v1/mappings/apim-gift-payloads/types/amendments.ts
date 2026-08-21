@@ -57,6 +57,10 @@ export type AmendmentPayloadReplaceExpiryDate = {
 
 export type ApimGiftFacilityAmendmentPayload = AmendmentPayloadIncreaseAmount | AmendmentPayloadDecreaseAmount | AmendmentPayloadReplaceExpiryDate;
 
+export type MultipleAmendmentsPayload = {
+  amendments: ApimGiftFacilityAmendmentPayload[];
+};
+
 export type ApimGiftAmendmentType = (typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE)[keyof typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE];
 
 export type ApimGiftAmountAmendmentType =
