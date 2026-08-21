@@ -36,7 +36,7 @@ describe('getBssSubtypeName', () => {
       const result = getBssSubtypeName(params);
 
       // Assert
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
   });
 });

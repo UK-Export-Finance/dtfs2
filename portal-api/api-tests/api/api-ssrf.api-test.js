@@ -89,7 +89,7 @@ describe('api', () => {
     it('should return false when a non-existent dealId is provided', async () => {
       const response = await api.deleteDeal(validNonExistentId, mockPortalAuditDetails);
 
-      expect(response.status).toEqual(undefined);
+      expect(response.status).toBeUndefined();
     });
   });
 

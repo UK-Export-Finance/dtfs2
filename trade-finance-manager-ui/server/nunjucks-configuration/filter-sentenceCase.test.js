@@ -9,7 +9,7 @@ describe('Nunjucks filter - sentenceCase', () => {
 
     it('Should return `undefined`', () => {
       const result = sentenceCase(undefined);
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
 
     it('Should return ``', () => {

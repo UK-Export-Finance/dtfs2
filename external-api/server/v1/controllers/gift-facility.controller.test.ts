@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse, RequestOptions } from 'node-mocks-http';
-import { amend, create, get, getMany, GiftFacilityRequest } from './gift-facility.controller';
+import { amend, create, get, getMany, GiftFacilityRequest, multipleAmendments } from './gift-facility.controller';
 
 dotenv.config({ quiet: true });
 
@@ -581,6 +581,149 @@ describe('amend', () => {
       expect(console.error).toHaveBeenNthCalledWith(
         1,
         'Error calling APIM TFS GIFT - amend facility endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        mockAxiosError.response.status,
+        mockAxiosError.response.data,
+        mockAxiosError,
+      );
+
+      expect(res._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(res._getData()).toEqual('Bad Gateway');
+    });
+  });
+});
+
+describe('multipleAmendments', () => {
+  const mockFacilityId = 'mock-facility-id';
+
+  beforeEach(() => {
+    console.info = jest.fn();
+    console.error = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it(`should return ${HttpStatusCode.Accepted} with response data`, async () => {
+    // Arrange
+    const requestBody = {
+      amendmentType: 'ReplaceExpiryDate',
+      amendments: [
+        {
+          amendmentType: 'ReplaceExpiryDate',
+          amendmentData: {
+            expiryDate: '2026-12-20',
+          },
+        },
+      ],
+    };
+
+    const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+    req.body = requestBody;
+
+    jest.mocked(axios).mockResolvedValueOnce({
+      status: HttpStatusCode.Accepted,
+    });
+
+    // Act
+    await multipleAmendments(req, res);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ Successfully sent GIFT facility %s multiple amendments to APIM TFS', mockFacilityId);
+
+    expect(axios).toHaveBeenNthCalledWith(1, {
+      method: 'POST',
+      url: `${APIM_TFS_URL}v2/gift/facility/${mockFacilityId}/multiple-amendments`,
+      headers,
+      data: requestBody,
+    });
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Accepted);
+    expect(res._getData()).toEqual({ success: true });
+  });
+
+  describe('when axios throws without an HTTP response', () => {
+    it(`should fallback to ${HttpStatusCode.InternalServerError}`, async () => {
+      // Arrange
+      const mockError = new Error('Mock network error');
+      const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - multiple amendments endpoint' };
+
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
+      jest.mocked(axios).mockRejectedValueOnce(mockError);
+
+      // Act
+      req.body = {
+        amendmentType: 'ReplaceExpiryDate',
+        amendmentData: {
+          expiryDate: '2026-12-20',
+        },
+      };
+
+      await multipleAmendments(req, res);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - multiple amendments endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        HttpStatusCode.InternalServerError,
+        expectedResponseBody,
+        mockError,
+      );
+
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    });
+  });
+
+  describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
+    it(`should forward non-${HttpStatusCode.Accepted} status`, async () => {
+      // Arrange
+      const mockAxiosError = {
+        response: {
+          status: HttpStatusCode.BadGateway,
+          data: {
+            status: HttpStatusCode.BadGateway,
+            message: 'Mock upstream error',
+            errors: [{ code: 'UPSTREAM_FAILURE' }],
+          },
+        },
+      };
+
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
+      jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+      // Act
+      req.body = {
+        amendments: [
+          {
+            amendmentType: 'ReplaceExpiryDate',
+            amendmentData: {
+              expiryDate: '2026-12-20',
+            },
+          },
+          {
+            amendmentType: 'IncreaseAmount',
+            amendmentData: {
+              amount: 1000,
+              effectiveDate: '2026-12-20',
+            },
+          },
+        ],
+      };
+
+      await multipleAmendments(req, res);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - multiple amendments endpoint - facilityId %s status %s responseBody %o error %o',
         mockFacilityId,
         mockAxiosError.response.status,
         mockAxiosError.response.data,
