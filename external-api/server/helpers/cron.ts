@@ -93,17 +93,12 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
       return false;
     }
 
-    console.info('❌ eStore %s CRON %s has been stopped for deal %s.', category, id, data.dealIdentifier);
+    job.stop()?.catch((error) => {
+      console.error('Failed to stop eStore %s CRON %s for deal %s. Error: %o', category, id, data.dealIdentifier, error);
+    });
 
     jobs.delete(id);
-
-    const stopPromise = job.stop();
-
-    if (stopPromise) {
-      stopPromise.catch((error) => {
-        console.error('Failed to stop eStore %s CRON %s for deal %s.', category, id, data.dealIdentifier, error);
-      });
-    }
+    console.info('❌ eStore %s CRON %s has been stopped for deal %s.', category, id, data.dealIdentifier);
 
     return true;
   }

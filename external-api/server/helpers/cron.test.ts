@@ -167,7 +167,7 @@ describe('cron', () => {
     expect(result).toBe(true);
     expect(stop).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
-      'Failed to stop eStore %s CRON %s for deal %s.',
+      'Failed to stop eStore %s CRON %s for deal %s. Error: %o',
       ENDPOINT.SITE,
       `estore_cron_${ENDPOINT.SITE}_${dealId}`,
       'D-001',
