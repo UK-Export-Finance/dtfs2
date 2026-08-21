@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-08-21)
+
+
+### Features
+
+* **DTFS2-8370:** add accessible autocomplete component for other credit risk rating ([#4884](https://github.com/UK-Export-Finance/dtfs2/issues/4884)) ([91f0f74](https://github.com/UK-Export-Finance/dtfs2/commit/91f0f74207b2c0e5c0d696ada7a35431b788ef56))
+
+
+### Bug Fixes
+
+* **DTFS2-8481:** fix incorrect href for payment-report-officer on profile cancel button ([#4813](https://github.com/UK-Export-Finance/dtfs2/issues/4813)) ([8fc2693](https://github.com/UK-Export-Finance/dtfs2/commit/8fc269333501edf79b70d3cc863e11cf0a40fcf5))
+* **DTFS2-8561:** fixed portal amendments sending amount in GBP to ACBS when foreign currency ([#4929](https://github.com/UK-Export-Finance/dtfs2/issues/4929)) ([9ea3793](https://github.com/UK-Export-Finance/dtfs2/commit/9ea37930eaedc2a0bee4f6250e45489a6a3376df))
+* **DTFS2-8570:** fix passwords showing in error messages ([#4961](https://github.com/UK-Export-Finance/dtfs2/issues/4961)) ([5586889](https://github.com/UK-Export-Finance/dtfs2/commit/5586889e1cf44b0fd4785b9739a9a23a1ac3b3f4))
+* **DTFS2-8576:** reset otp send count when user reactivated ([#4962](https://github.com/UK-Export-Finance/dtfs2/issues/4962)) ([3adfa1c](https://github.com/UK-Export-Finance/dtfs2/commit/3adfa1cb6213386316216a8a39a33df9b6082098))
+
+
+### Chores
+
+* **DTFS2-8365:** handle new credit rating format for ACBS mapping ([#4908](https://github.com/UK-Export-Finance/dtfs2/issues/4908)) ([b046be1](https://github.com/UK-Export-Finance/dtfs2/commit/b046be18a4ab140b2ecf5ddc3090214bf19ec90a))
+* **DTFS2-8365:** remove risk rating api call from APIM mapping and save credit risk as rating only ([#4899](https://github.com/UK-Export-Finance/dtfs2/issues/4899)) ([7f13bb8](https://github.com/UK-Export-Finance/dtfs2/commit/7f13bb811878f6069a391d195e9843bcf0d44ce3))
+* **DTFS2-8501:** add new countries to BSS dropdown ([#4887](https://github.com/UK-Export-Finance/dtfs2/issues/4887)) ([405c857](https://github.com/UK-Export-Finance/dtfs2/commit/405c857d3db2bebf54f64346bf1afa5a216c910f))
+* **DTFS2-8519:** add config and manifest file to publish.yml ([#4890](https://github.com/UK-Export-Finance/dtfs2/issues/4890)) ([7d96f35](https://github.com/UK-Export-Finance/dtfs2/commit/7d96f35268044f58f49ff297e5b397caf037ada0))
+* **DTFS2-8519:** add hidden false to release-please config ([#4889](https://github.com/UK-Export-Finance/dtfs2/issues/4889)) ([2e9ad4f](https://github.com/UK-Export-Finance/dtfs2/commit/2e9ad4fd5beb82ea92fe39b05fabfb710f9139a5))
+* **DTFS2-8519:** fix issues with release-please-config file ([#4891](https://github.com/UK-Export-Finance/dtfs2/issues/4891)) ([6286101](https://github.com/UK-Export-Finance/dtfs2/commit/62861016fa631c883e92d26e1192baa0f0f1f50b))
+* **DTFS2-8519:** release-please track release branches ([#4869](https://github.com/UK-Export-Finance/dtfs2/issues/4869)) ([5425ac9](https://github.com/UK-Export-Finance/dtfs2/commit/5425ac962341c0c648d2c0dfbc39ec84ed6f3543))
+* **DTFS2-8519:** remove release-as and fix labels in release-please config ([#4893](https://github.com/UK-Export-Finance/dtfs2/issues/4893)) ([c34be71](https://github.com/UK-Export-Finance/dtfs2/commit/c34be71b822eb53e2e5dff3c790d24bd23c04463))
+* **DTFS2-8519:** stop tracking chores on release-please ([#4904](https://github.com/UK-Export-Finance/dtfs2/issues/4904)) ([ce7e762](https://github.com/UK-Export-Finance/dtfs2/commit/ce7e762137a40b651046db3bbd438844724d0014))
+* **DTFS2-8526:** patch vulnerabilities ([#4888](https://github.com/UK-Export-Finance/dtfs2/issues/4888)) ([99889c2](https://github.com/UK-Export-Finance/dtfs2/commit/99889c2b9ae67198c122be468f9e6d0712fe854d))
+* **DTFS2-8535:** change release deployments to be max-parallel 1 to stop failures ([#4902](https://github.com/UK-Export-Finance/dtfs2/issues/4902)) ([d331668](https://github.com/UK-Export-Finance/dtfs2/commit/d331668680bbc74d3802a1d848265eca9981a3ed))
+
+
+### Reverts
+
+* **DTFS2-8519:** revert removing tracking chore changes ([#4906](https://github.com/UK-Export-Finance/dtfs2/issues/4906)) ([6365868](https://github.com/UK-Export-Finance/dtfs2/commit/6365868e002a72b9a697fa1f206421ad01d85092))
+
 ## [3.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.0.0...v3.1.0) (2026-06-11)
 
 
