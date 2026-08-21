@@ -190,6 +190,13 @@ exports.update = async (_id, update, auditDetails, callback) => {
       // User is being re-activated.
       userSetUpdate.loginFailureCount = 0;
 
+      /**
+       * if 2FA is enabled,
+       * reset the signInOTPSendCount and signInOTPSendDate to 0
+       * if 2FA is not enabled,
+       * reset the signInLinkSendCount and signInLinkSendDate to ''
+       * reset the blockedStatusReason to ''
+       */
       if (isPortal2FAFeatureFlagEnabled()) {
         userUnsetUpdate = {
           signInOTPSendDate: 0,

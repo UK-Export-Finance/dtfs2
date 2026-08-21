@@ -10,12 +10,12 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
+const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { updateSessionIdentifier, createPasswordToken, create, update } = require('./controller');
-const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { TEST_USER, TEST_DATABASE_USER, TEST_USER_SANITISED_FOR_FRONTEND } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { STATUS } = require('../../constants/user');
 const { InvalidUserIdError } = require('../errors');
@@ -144,7 +144,12 @@ describe('user controller', () => {
     }
 
     describe('when reactivating a blocked user', () => {
-      const BLOCKED_DATABASE_USER = { ...TEST_DATABASE_USER, 'user-status': STATUS.BLOCKED, blockedStatusReason: 'Too many invalid password entries', loginFailureCount: 3 };
+      const BLOCKED_DATABASE_USER = {
+        ...TEST_DATABASE_USER,
+        'user-status': STATUS.BLOCKED,
+        blockedStatusReason: 'Too many invalid password entries',
+        loginFailureCount: 3,
+      };
       const reactivationUpdate = { 'user-status': STATUS.ACTIVE };
       let mockFindOneAndUpdate;
 
@@ -165,7 +170,9 @@ describe('user controller', () => {
         isVerifiedPayload.mockReturnValue(true);
 
         // Act
-        await new Promise((resolve) => update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve));
+        await new Promise((resolve) => {
+          update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+        });
 
         // Assert
         expect(sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, BLOCKED_DATABASE_USER.email, {});
@@ -176,7 +183,9 @@ describe('user controller', () => {
         isVerifiedPayload.mockReturnValue(true);
 
         // Act
-        await new Promise((resolve) => update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve));
+        await new Promise((resolve) => {
+          update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+        });
 
         // Assert
         expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
@@ -196,10 +205,13 @@ describe('user controller', () => {
           isVerifiedPayload.mockReturnValue(true);
 
           // Act
-          await new Promise((resolve) => update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve));
-          
+          await new Promise((resolve) => {
+            update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+          });
+
           // Assert
-          const expected = [expect.anything(),
+          const expected = [
+            expect.anything(),
             expect.objectContaining({
               $unset: {
                 signInLinkSendDate: '',
@@ -207,7 +219,8 @@ describe('user controller', () => {
                 blockedStatusReason: '',
               },
             }),
-            expect.anything(),]
+            expect.anything(),
+          ];
 
           expect(mockFindOneAndUpdate).toHaveBeenCalledWith(...expected);
         });
@@ -223,10 +236,13 @@ describe('user controller', () => {
           isVerifiedPayload.mockReturnValue(true);
 
           // Act
-          await new Promise((resolve) => update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve));
+          await new Promise((resolve) => {
+            update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+          });
 
           // Assert
-          const expected = [expect.anything(),
+          const expected = [
+            expect.anything(),
             expect.objectContaining({
               $unset: {
                 signInOTPSendDate: 0,
@@ -234,7 +250,8 @@ describe('user controller', () => {
                 blockedStatusReason: '',
               },
             }),
-            expect.anything(),];
+            expect.anything(),
+          ];
 
           expect(mockFindOneAndUpdate).toHaveBeenCalledWith(...expected);
         });

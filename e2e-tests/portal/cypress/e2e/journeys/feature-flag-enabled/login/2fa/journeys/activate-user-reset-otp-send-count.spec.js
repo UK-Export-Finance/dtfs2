@@ -25,6 +25,8 @@ context('Admin re-activating a user should reset the sign-in OTP send count', ()
     editUser.Activate().click();
     editUser.save().click();
 
+    cy.clearSessionCookies();
+
     // log back in as the user
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     cy.url().should('eq', relative('/login/check-your-email-access-code'));
