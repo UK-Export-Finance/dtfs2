@@ -96,8 +96,8 @@ export const postLogin = async (req, res) => {
         return res.redirect('/login/temporarily-suspended-access-code');
       }
 
-      const generalErrorMessage = 'Failed to send sign in OTP, rendering problem with service page. The error was';
-      logUserAuthError(error, generalErrorMessage);
+      const message = 'Failed to send sign in OTP, rendering problem with service page. The error was';
+      logUserAuthError(error, message);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -151,8 +151,8 @@ export const postLogin = async (req, res) => {
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
-      const generalErrorMessage = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
-      logUserAuthError(error, generalErrorMessage);
+      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
+      logUserAuthError(error, message);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');
