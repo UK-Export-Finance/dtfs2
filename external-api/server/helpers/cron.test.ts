@@ -248,6 +248,7 @@ describe('cron', () => {
     onComplete();
 
     // Assert
-    expect(console.info).toHaveBeenNthCalledWith(1, '✅ eStore %s CRON has been completed successfully for deal %s', ENDPOINT.SITE, dealId);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡ eStore %s CRON has been initiated for deal %s.', ENDPOINT.SITE, 'D-001');
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ eStore %s CRON has been completed successfully for deal %s', ENDPOINT.SITE, dealId);
   });
 });
