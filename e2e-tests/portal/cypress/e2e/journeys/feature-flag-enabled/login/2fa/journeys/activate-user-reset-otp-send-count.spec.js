@@ -10,7 +10,7 @@ context('Admin re-activating a user should reset the sign-in OTP send count', ()
   beforeEach(() => {
     cy.task('updatePortalUserByUsername', {
       username: BANK1_MAKER1.username,
-      update: { 'user-status': 'blocked', signInOTPSendCount: 3 },
+      update: { 'user-status': 'active', signInOTPSendCount: 3 },
     });
 
     cy.enterUsernameAndPassword(BANK1_MAKER1);

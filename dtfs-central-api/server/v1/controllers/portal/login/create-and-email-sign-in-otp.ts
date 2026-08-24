@@ -47,8 +47,8 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     /**
      * If the user has exceeded the maximum sign in OTP send attempts,
-     * then their signInOTPSendCount will be -1 or lower
-     * send an account suspension email and return a response indicating that the account is suspended.
+     * then the remaining attempts returned here will be -1 or lower.
+     * Send an account suspension email and return a response indicating that the account is suspended.
      */
     if (signInOTPSendCount <= -1) {
       console.info('User %s account suspended due to excessive OTP requests, sending suspension email', sanitisedUserId);
