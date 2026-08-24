@@ -50,9 +50,9 @@ export const incrementSignInOTPSendCount = async ({ userId, signInOTPSendDate, a
     /*
      * If the user is past their last attempt, block the user
      * This is because the signInOTPSendCount is greater than the max allowed attempts
-     * and hence the remaining attempts will be -1
+     * and hence the remaining attempts will be -1 or lower
      */
-    if (remainingAttempts === -1) {
+    if (remainingAttempts <= -1) {
       console.info('User %s has exceeded maximum sign in OTP send attempts, blocking user', userId);
       await PortalUsersRepo.blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_OTPS, auditDetails });
     }

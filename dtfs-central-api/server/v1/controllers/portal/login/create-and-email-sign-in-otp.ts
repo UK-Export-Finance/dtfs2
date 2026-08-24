@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest, AuditDetails, PortalUser, isProduction } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
-import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count';
+import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-otp-sent-count';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
@@ -45,7 +45,12 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
 
-    if (signInOTPSendCount === -1) {
+    /**
+     * If the user has exceeded the maximum sign in OTP send attempts,
+     * then their signInOTPSendCount will be -1 or lower
+     * send an account suspension email and return a response indicating that the account is suspended.
+     */
+    if (signInOTPSendCount <= -1) {
       console.info('User %s account suspended due to excessive OTP requests, sending suspension email', sanitisedUserId);
       try {
         await sendAccountSuspensionEmail(user);
