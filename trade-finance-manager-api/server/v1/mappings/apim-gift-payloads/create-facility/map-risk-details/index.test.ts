@@ -33,17 +33,21 @@ const mockFacilityCategories = [
 ];
 
 describe('mapRiskDetails', () => {
+  const mockEwcsSupplierType = 'Mock supplier type';
   const mockIndustryCode = '1406';
   const mockUkefIndustryCode = '1003';
 
   const params = {
     dealId: '123',
     creditRiskRatings: ['AAA', 'AA+', 'AA'],
+    ewcsSupplierType: mockEwcsSupplierType,
     facilityCategories: mockFacilityCategories,
     facilityType: '',
     exporterCreditRating: 'AAA',
     industryCode: mockIndustryCode,
-    isGefDeal: true,
+    isCashFacility: true,
+    isContingentFacility: false,
+    isEwcsFacility: false,
   };
 
   beforeEach(() => {
@@ -79,9 +83,12 @@ describe('mapRiskDetails', () => {
       account: DEFAULTS.RISK_DETAILS.ACCOUNT,
       dealId: params.dealId,
       facilityCategoryCode: mapFacilityCategoryCode({
+        ewcsSupplierType: params.ewcsSupplierType,
         facilityCategories: params.facilityCategories,
         facilityType: params.facilityType,
-        isGefDeal: params.isGefDeal,
+        isCashFacility: params.isCashFacility,
+        isContingentFacility: params.isContingentFacility,
+        isEwcsFacility: params.isEwcsFacility,
       }),
       facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
@@ -138,8 +145,10 @@ describe('mapRiskDetails', () => {
       // Act
       const result = await mapRiskDetails(params);
 
-      // Assert
-      // No need to assert specifics, that is asserted in the previous test - just assert that a result is returned with the expected shape
+      /**
+       * No need to assert specifics, that is asserted in the previous test.
+       * Just assert that a result is returned with the expected shape
+       */
       expect(result).toBeDefined();
       expect(result).toHaveProperty('account');
       expect(result).toHaveProperty('dealId');

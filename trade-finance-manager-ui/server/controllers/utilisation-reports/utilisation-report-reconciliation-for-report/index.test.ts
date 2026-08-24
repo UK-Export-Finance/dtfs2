@@ -194,7 +194,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           isSelectable: false,
           checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-MATCH',
           isChecked: false,
-          checkboxAriaLabel: 'Select 12345678',
+          checkboxAriaLabel: `Select ${utilisationDetails[0].facilityId} with exporter ${utilisationDetails[0].exporter} to add a payment, generate keying data or create a record correction request`,
         },
       ];
 

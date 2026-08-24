@@ -447,7 +447,6 @@ describe('/v1/deals', () => {
           canSendToApimGift.mockResolvedValueOnce({
             canSendFacilitiesToApimGift: true,
             issuedFacilities: [mockFacility1, mockFacility2],
-            isBssEwcsDeal: true,
             isGefDeal: false,
           });
 
@@ -462,7 +461,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: [mockFacility1, mockFacility2],
-              isBssEwcsDeal: true,
               isGefDeal: false,
             }),
           );
@@ -508,7 +506,6 @@ describe('/v1/deals', () => {
             expect.objectContaining({
               deal: submittedDeal,
               facilities: [mockFacility2, mockFacility3],
-              isBssEwcsDeal: true,
               isGefDeal: false,
             }),
           );

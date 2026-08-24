@@ -6,7 +6,7 @@ const { ADMIN } = require('../../server/v1/roles/roles');
 const testUserCache = require('../api-test-users');
 const app = require('../../server/createApp');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL } = process.env;
 
@@ -89,7 +89,7 @@ describe('api', () => {
     it('should return false when a non-existent dealId is provided', async () => {
       const response = await api.deleteDeal(validNonExistentId, mockPortalAuditDetails);
 
-      expect(response.status).toEqual(undefined);
+      expect(response.status).toBeUndefined();
     });
   });
 

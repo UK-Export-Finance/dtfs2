@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 import { checkApiKey } from '.';
 import { mockReq, mockRes, mockNext } from '../../test-mocks';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_KEY } = process.env;
 

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { TIMEZONE } from '../constants/timezone';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { TZ } = process.env;
 

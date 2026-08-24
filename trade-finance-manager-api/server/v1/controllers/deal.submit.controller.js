@@ -132,7 +132,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Send facilities to APIM/GIFT
-      const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendToApimGift(tfmDeal);
 
       if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling sendFacilitiesToApimGift', dealId);
@@ -140,7 +140,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
         await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: partyUrnResult?.newPartyUrnCreated,
         });
@@ -229,7 +228,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendToApimGift(tfmDeal);
 
       if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling sendFacilitiesToApimGift', dealId);
@@ -237,7 +236,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
         await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
         });
       }

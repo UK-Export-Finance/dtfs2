@@ -30,7 +30,7 @@ const updateParty = async (req, res) => {
     const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     // Send facilities to APIM/GIFT
-    const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+    const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendToApimGift(tfmDeal);
 
     if (canSendFacilitiesToApimGift) {
       console.info('TFM deal %s updateParty - calling sendFacilitiesToApimGift', dealId);
@@ -39,7 +39,6 @@ const updateParty = async (req, res) => {
         await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: false,
         });

@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { DTFS_CENTRAL_API_KEY } = process.env;
 

@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 
