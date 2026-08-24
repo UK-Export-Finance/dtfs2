@@ -8,6 +8,21 @@ import { asUserSession } from '../../../helpers/express-session';
 import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 import { getReconciliationForReportHref } from '../helpers';
 
+export type GetConfirmDeletePaymentRequest = CustomExpressRequest<{
+  query: {
+    redirectTab?: ReconciliationForReportTab;
+  };
+}>;
+
+export type PostConfirmDeletePaymentRequest = CustomExpressRequest<{
+  reqBody: {
+    confirmDeletePayment?: 'yes' | 'no';
+  };
+  query: {
+    redirectTab?: ReconciliationForReportTab;
+  };
+}>;
+
 const getPaymentSummaryListRows = (paymentResponse: GetPaymentDetailsWithoutFeeRecordsResponseBody) => {
   const formattedDateReceived = format(new Date(paymentResponse.payment.dateReceived), 'd MMM yyyy');
   return [
@@ -25,12 +40,6 @@ const getPaymentSummaryListRows = (paymentResponse: GetPaymentDetailsWithoutFeeR
     },
   ];
 };
-
-type GetConfirmDeletePaymentRequest = CustomExpressRequest<{
-  query: {
-    redirectTab?: ReconciliationForReportTab;
-  };
-}>;
 
 /**
  * Controller to get confirm delete payment page
@@ -58,15 +67,6 @@ export const getConfirmDeletePayment = async (req: GetConfirmDeletePaymentReques
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
-
-type PostConfirmDeletePaymentRequest = CustomExpressRequest<{
-  reqBody: {
-    confirmDeletePayment?: 'yes' | 'no';
-  };
-  query: {
-    redirectTab?: ReconciliationForReportTab;
-  };
-}>;
 
 /**
  * Controller to confirm delete payment

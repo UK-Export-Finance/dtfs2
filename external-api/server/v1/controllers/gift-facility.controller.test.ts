@@ -2,10 +2,10 @@ import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
-import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { amend, create, get, getMany } from './gift-facility.controller';
+import httpMocks, { MockRequest, MockResponse, RequestOptions } from 'node-mocks-http';
+import { amend, create, get, getMany, GiftFacilityRequest, multipleAmendments } from './gift-facility.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_TFS_VALUE, APIM_TFS_KEY, APIM_TFS_URL } = process.env;
 const headers = {
@@ -16,6 +16,8 @@ const headers = {
 let mockRequest: MockRequest<Request>;
 let mockResponse: MockResponse<Response>;
 
+const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GiftFacilityRequest>(options);
+
 jest.mock('axios');
 
 describe('get', () => {
@@ -23,8 +25,6 @@ describe('get', () => {
   const mockFacilityId = 'mock-facility-id';
 
   beforeEach(() => {
-    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks());
-
     console.info = jest.fn();
     console.error = jest.fn();
   });
@@ -37,12 +37,12 @@ describe('get', () => {
     it(`should return ${HttpStatusCode.Ok} with response data`, async () => {
       // Arrange
       const responseData = { facilityId: mockFacilityId, status: 'active' };
-      mockRequest.params = { facilityId: mockFacilityId };
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
 
       jest.mocked(axios).mockResolvedValueOnce({ status: HttpStatusCode.Ok, data: responseData });
 
       // Act
-      await get(mockRequest, mockResponse);
+      await get(req, res);
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(0);
@@ -53,8 +53,8 @@ describe('get', () => {
         headers,
       });
 
-      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Ok);
-      expect(mockResponse._getData()).toEqual(responseData);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(responseData);
     });
   });
 
@@ -62,16 +62,16 @@ describe('get', () => {
     it(`should return ${HttpStatusCode.NotFound} with response data`, async () => {
       // Arrange
       const responseData = { message: `Facility ${mockFacilityId} not found` };
-      mockRequest.params = { facilityId: mockFacilityId };
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
 
       jest.mocked(axios).mockResolvedValueOnce({ status: HttpStatusCode.NotFound, data: responseData });
 
       // Act
-      await get(mockRequest, mockResponse);
+      await get(req, res);
 
       // Assert
-      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-      expect(mockResponse._getData()).toEqual(responseData);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      expect(res._getData()).toEqual(responseData);
     });
   });
 
@@ -88,14 +88,12 @@ describe('get', () => {
         },
       };
 
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
       jest.mocked(axios).mockRejectedValueOnce(mockError);
 
       // Act
-      mockRequest.params = {
-        facilityId: mockFacilityId,
-      };
-
-      await get(mockRequest, mockResponse);
+      await get(req, res);
 
       // Assert
       expect(console.error).toHaveBeenNthCalledWith(
@@ -107,7 +105,7 @@ describe('get', () => {
         mockError,
       );
 
-      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
   });
 
@@ -125,14 +123,12 @@ describe('get', () => {
         },
       };
 
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
       jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
 
       // Act
-      mockRequest.params = {
-        facilityId: mockFacilityId,
-      };
-
-      await get(mockRequest, mockResponse);
+      await get(req, res);
 
       // Assert
       expect(console.error).toHaveBeenNthCalledWith(
@@ -144,8 +140,8 @@ describe('get', () => {
         mockAxiosError,
       );
 
-      expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
-      expect(mockResponse._getData()).toEqual('Bad Gateway');
+      expect(res._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(res._getData()).toEqual('Bad Gateway');
     });
   });
 });
@@ -474,8 +470,6 @@ describe('amend', () => {
   const mockFacilityId = 'mock-facility-id';
 
   beforeEach(() => {
-    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks());
-
     console.info = jest.fn();
     console.error = jest.fn();
   });
@@ -493,15 +487,15 @@ describe('amend', () => {
       },
     };
 
-    mockRequest.params = { facilityId: mockFacilityId };
-    mockRequest.body = requestBody;
+    const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+    req.body = requestBody;
 
     jest.mocked(axios).mockResolvedValueOnce({
       status: HttpStatusCode.Accepted,
     });
 
     // Act
-    await amend(mockRequest, mockResponse);
+    await amend(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -515,8 +509,8 @@ describe('amend', () => {
       data: requestBody,
     });
 
-    expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.Accepted);
-    expect(mockResponse._getData()).toEqual({ success: true });
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Accepted);
+    expect(res._getData()).toEqual({ success: true });
   });
 
   describe('when axios throws without an HTTP response', () => {
@@ -525,21 +519,19 @@ describe('amend', () => {
       const mockError = new Error('Mock network error');
       const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - amend facility endpoint' };
 
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
       jest.mocked(axios).mockRejectedValueOnce(mockError);
 
       // Act
-      mockRequest.params = {
-        facilityId: mockFacilityId,
-      };
-
-      mockRequest.body = {
+      req.body = {
         amendmentType: 'ReplaceExpiryDate',
         amendmentData: {
           expiryDate: '2026-12-20',
         },
       };
 
-      await amend(mockRequest, mockResponse);
+      await amend(req, res);
 
       // Assert
       expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
@@ -552,7 +544,7 @@ describe('amend', () => {
         mockError,
       );
 
-      expect(mockResponse._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
   });
 
@@ -570,21 +562,19 @@ describe('amend', () => {
         },
       };
 
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
       jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
 
       // Act
-      mockRequest.params = {
-        facilityId: mockFacilityId,
-      };
-
-      mockRequest.body = {
+      req.body = {
         amendmentType: 'ReplaceExpiryDate',
         amendmentData: {
           expiryDate: '2026-12-20',
         },
       };
 
-      await amend(mockRequest, mockResponse);
+      await amend(req, res);
 
       // Assert
       expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - amend facility endpoint %s', mockFacilityId);
@@ -597,8 +587,151 @@ describe('amend', () => {
         mockAxiosError,
       );
 
-      expect(mockResponse._getStatusCode()).toEqual(mockAxiosError.response.status);
-      expect(mockResponse._getData()).toEqual('Bad Gateway');
+      expect(res._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(res._getData()).toEqual('Bad Gateway');
+    });
+  });
+});
+
+describe('multipleAmendments', () => {
+  const mockFacilityId = 'mock-facility-id';
+
+  beforeEach(() => {
+    console.info = jest.fn();
+    console.error = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it(`should return ${HttpStatusCode.Accepted} with response data`, async () => {
+    // Arrange
+    const requestBody = {
+      amendmentType: 'ReplaceExpiryDate',
+      amendments: [
+        {
+          amendmentType: 'ReplaceExpiryDate',
+          amendmentData: {
+            expiryDate: '2026-12-20',
+          },
+        },
+      ],
+    };
+
+    const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+    req.body = requestBody;
+
+    jest.mocked(axios).mockResolvedValueOnce({
+      status: HttpStatusCode.Accepted,
+    });
+
+    // Act
+    await multipleAmendments(req, res);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+    expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+    expect(console.info).toHaveBeenNthCalledWith(2, '✅ Successfully sent GIFT facility %s multiple amendments to APIM TFS', mockFacilityId);
+
+    expect(axios).toHaveBeenNthCalledWith(1, {
+      method: 'POST',
+      url: `${APIM_TFS_URL}v2/gift/facility/${mockFacilityId}/multiple-amendments`,
+      headers,
+      data: requestBody,
+    });
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Accepted);
+    expect(res._getData()).toEqual({ success: true });
+  });
+
+  describe('when axios throws without an HTTP response', () => {
+    it(`should fallback to ${HttpStatusCode.InternalServerError}`, async () => {
+      // Arrange
+      const mockError = new Error('Mock network error');
+      const expectedResponseBody = { message: 'No response received from APIM TFS GIFT - multiple amendments endpoint' };
+
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
+      jest.mocked(axios).mockRejectedValueOnce(mockError);
+
+      // Act
+      req.body = {
+        amendmentType: 'ReplaceExpiryDate',
+        amendmentData: {
+          expiryDate: '2026-12-20',
+        },
+      };
+
+      await multipleAmendments(req, res);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - multiple amendments endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        HttpStatusCode.InternalServerError,
+        expectedResponseBody,
+        mockError,
+      );
+
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    });
+  });
+
+  describe('when APIM TFS GIFT facility returns an HTTP error response', () => {
+    it(`should forward non-${HttpStatusCode.Accepted} status`, async () => {
+      // Arrange
+      const mockAxiosError = {
+        response: {
+          status: HttpStatusCode.BadGateway,
+          data: {
+            status: HttpStatusCode.BadGateway,
+            message: 'Mock upstream error',
+            errors: [{ code: 'UPSTREAM_FAILURE' }],
+          },
+        },
+      };
+
+      const { req, res } = createHttpMocks({ params: { facilityId: mockFacilityId } });
+
+      jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
+
+      // Act
+      req.body = {
+        amendments: [
+          {
+            amendmentType: 'ReplaceExpiryDate',
+            amendmentData: {
+              expiryDate: '2026-12-20',
+            },
+          },
+          {
+            amendmentType: 'IncreaseAmount',
+            amendmentData: {
+              amount: 1000,
+              effectiveDate: '2026-12-20',
+            },
+          },
+        ],
+      };
+
+      await multipleAmendments(req, res);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(1, '⚡️ Invoking APIM TFS GIFT - multiple amendments endpoint %s', mockFacilityId);
+      expect(console.error).toHaveBeenNthCalledWith(
+        1,
+        'Error calling APIM TFS GIFT - multiple amendments endpoint - facilityId %s status %s responseBody %o error %o',
+        mockFacilityId,
+        mockAxiosError.response.status,
+        mockAxiosError.response.data,
+        mockAxiosError,
+      );
+
+      expect(res._getStatusCode()).toEqual(mockAxiosError.response.status);
+      expect(res._getData()).toEqual('Bad Gateway');
     });
   });
 });

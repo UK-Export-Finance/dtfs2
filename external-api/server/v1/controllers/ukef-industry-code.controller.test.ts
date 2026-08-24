@@ -1,11 +1,11 @@
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS } from '@ukef/dtfs2-common';
-import { Request, Response } from 'express';
-import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { getByCompaniesHouseIndustryCode } from './ukef-industry-code.controller';
+import { Response } from 'express';
+import httpMocks, { MockRequest, MockResponse, RequestOptions } from 'node-mocks-http';
+import { getByCompaniesHouseIndustryCode, UkefIndustryCodeRequest } from './ukef-industry-code.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
@@ -19,14 +19,16 @@ const mockMdmResponse = {
   ukefIndustryCode: '1003',
 };
 
-let mockRequest: MockRequest<Request>;
-let mockResponse: MockResponse<Response>;
+let req: MockRequest<UkefIndustryCodeRequest>;
+let res: MockResponse<Response>;
+
+const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<UkefIndustryCodeRequest>(options);
 
 jest.mock('axios');
 
 describe('getByCompaniesHouseIndustryCode', () => {
   beforeEach(() => {
-    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks({
+    ({ req, res } = createHttpMocks({
       params: { industryCode: mockCompaniesHouseIndustryCode },
     }));
 
@@ -45,7 +47,7 @@ describe('getByCompaniesHouseIndustryCode', () => {
     jest.mocked(axios).mockRejectedValueOnce(mockError);
 
     // Act
-    await getByCompaniesHouseIndustryCode(mockRequest, mockResponse);
+    await getByCompaniesHouseIndustryCode(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(2);
@@ -58,8 +60,8 @@ describe('getByCompaniesHouseIndustryCode', () => {
       expect.objectContaining({ message: 'void response received' }),
     );
 
-    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during UKEF industry code endpoint call' });
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(res._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Error occurred during UKEF industry code endpoint call' });
   });
 
   it(`should forward non-${HttpStatusCode.Ok} status and body when APIM MDM returns an HTTP error response`, async () => {
@@ -78,14 +80,14 @@ describe('getByCompaniesHouseIndustryCode', () => {
     jest.mocked(axios).mockRejectedValueOnce(mockAxiosError);
 
     // Act
-    await getByCompaniesHouseIndustryCode(mockRequest, mockResponse);
+    await getByCompaniesHouseIndustryCode(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error calling UKEF Industry Code API, %o', mockAxiosError);
 
-    expect(mockResponse._getStatusCode()).toBe(mockAxiosError.response.status);
-    expect(mockResponse._getData()).toEqual(mockAxiosError.response.data);
+    expect(res._getStatusCode()).toBe(mockAxiosError.response.status);
+    expect(res._getData()).toEqual(mockAxiosError.response.data);
   });
 
   it(`should return ${HttpStatusCode.Ok}`, async () => {
@@ -96,7 +98,7 @@ describe('getByCompaniesHouseIndustryCode', () => {
     });
 
     // Act
-    await getByCompaniesHouseIndustryCode(mockRequest, mockResponse);
+    await getByCompaniesHouseIndustryCode(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -108,7 +110,7 @@ describe('getByCompaniesHouseIndustryCode', () => {
       headers,
     });
 
-    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Ok);
-    expect(mockResponse._getData()).toEqual(mockMdmResponse);
+    expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+    expect(res._getData()).toEqual(mockMdmResponse);
   });
 });

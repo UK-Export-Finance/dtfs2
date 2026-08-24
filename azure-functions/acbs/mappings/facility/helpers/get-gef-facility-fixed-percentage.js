@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const { FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } = require('../../../constants/facility');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { CASH, CONTINGENT } = FACILITY_TYPE;
 const { CASH_UTILISATION_PERCENTAGE, CONTINGENT_UTILISATION_PERCENTAGE } = process.env;

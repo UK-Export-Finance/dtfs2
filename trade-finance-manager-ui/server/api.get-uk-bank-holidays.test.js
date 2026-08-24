@@ -1,9 +1,8 @@
-const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 const { MOCK_BANK_HOLIDAYS } = require('./test-mocks/mock-bank-holidays');
 const { getUkBankHolidays } = require('./api');
 
-const mockAxios = new MockAdapter(axios);
+const mockAxios = axiosMock;
 
 console.error = jest.fn();
 
@@ -29,6 +28,6 @@ describe('getUkBankHolidays', () => {
     mockAxios.onGet().reply(404);
 
     // Act / Assert
-    await expect(getUkBankHolidays('user-token')).rejects.toThrowError('Request failed with status code 404');
+    await expect(getUkBankHolidays('user-token')).rejects.toThrow('Request failed with status code 404');
   });
 });

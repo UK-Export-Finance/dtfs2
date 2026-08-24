@@ -1,8 +1,8 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { getFeeRecord, GetFeeRecordResponseBody } from '.';
+import { getFeeRecord, GetFeeRecordResponseBody, GetFeeRecordRequest } from '.';
 import { mapFeeRecordEntityToResponse } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { aReportPeriod, aSessionBank } from '../../../../../test-helpers';
@@ -10,6 +10,8 @@ import { aReportPeriod, aSessionBank } from '../../../../../test-helpers';
 console.error = jest.fn();
 
 jest.mock('./helpers');
+
+const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetFeeRecordRequest>(options);
 
 describe('get-fee-record.controller', () => {
   describe('getFeeRecord', () => {
@@ -25,7 +27,7 @@ describe('get-fee-record.controller', () => {
     });
 
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId: reportId.toString(), feeRecordId: feeRecordId.toString() },
       });
 

@@ -112,7 +112,7 @@ exports.delete = async (req, res) => {
 
 // validate the user's bank against the deal
 exports.validateBank = async (req, res) => {
-  const { dealId, bankId } = req.body;
+  const { dealId, bankId } = req.body ?? {};
 
   // check if the `dealId` is a valid ObjectId
   if (hasValidObjectId(dealId) && typeof bankId === 'string') {
@@ -126,5 +126,6 @@ exports.validateBank = async (req, res) => {
     }
     return res.status(404).send({ status: 404, isValid: false });
   }
+
   return res.status(400).send({ status: 400, isValid: false });
 };

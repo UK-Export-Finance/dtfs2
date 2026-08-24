@@ -1,11 +1,12 @@
-import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { BssEwcsDeal, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
+import { getFacilityTypeFlags } from './get-facility-type-flags';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
 import { mapCoverPercentage } from './map-cover-percentage';
 import { mapProductTypeCode } from './map-product-type-code';
@@ -20,8 +21,8 @@ import { mapObligations } from './map-obligations';
 import api from '../../../api';
 import { createFacility } from '.';
 
-const mockDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
-const mockFacilitySnapshot = MOCK_FACILITIES[0] as unknown as Facility;
+const mockDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
+const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 
 jest.mock('../../../api');
 
@@ -44,28 +45,37 @@ describe('createFacility', () => {
 
   const { facilitySnapshot, tfm } = mockFacility;
 
+  const { type: facilityType } = facilitySnapshot;
+
   const mockUkefIndustryCode = '1003';
 
   const mockNewPartyUrnCreated = true;
 
-  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+  const { isBssEwcsDeal } = getDealTypeFlags(mockDeal.dealSnapshot.dealType);
+
+  const { isBssFacility, isCashFacility, isContingentFacility, isEwcsFacility } = getFacilityTypeFlags(facilityType);
 
   const productTypeCode = mapProductTypeCode({
-    isBssEwcsDeal,
-    isGefDeal,
-    facilityCategoryCode: facilitySnapshot.type,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const coverPercentage = mapCoverPercentage({
     facilitySnapshot,
-    isBssEwcsDeal,
-    isGefDeal,
+    isBssFacility,
+    isCashFacility,
+    isContingentFacility,
+    isEwcsFacility,
   });
 
   const facilityAmount = mapFacilityAmount({
@@ -79,7 +89,6 @@ describe('createFacility', () => {
     facility: mockFacility,
     facilityCategories: MOCK_FACILITY_CATEGORIES,
     isBssEwcsDeal,
-    isGefDeal,
     newPartyUrnCreated: mockNewPartyUrnCreated,
   };
 
@@ -95,6 +104,14 @@ describe('createFacility', () => {
     // Arrange
     params.deal = mockDeal;
 
+    const partyUrns = mapPartyUrns({
+      deal: mockDeal,
+      isBssFacility,
+      isCashFacility,
+      isContingentFacility,
+      isEwcsFacility,
+    });
+
     // Act
     const result = await createFacility(params);
 
@@ -107,46 +124,51 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         effectiveDate: String(tfm.facilityGuaranteeDates?.guaranteeCommencementDate),
         expiryDate,
-        exporterPartyUrn: mockDeal.tfm.parties.exporter.partyUrn,
+        exporterPartyUrn: partyUrns.exporterPartyUrn,
         facilityAmount,
-        facilityType: facilitySnapshot.type,
-        isGefDeal,
+        facilityType,
+        isCashFacility,
+        isContingentFacility,
         monthsOfCover: tfm.exposurePeriodInMonths,
         productTypeCode,
         ukefFacilityId: String(facilitySnapshot.ukefFacilityId),
       }),
       accrualSchedules: mapAccrualSchedules({
+        currency: facilitySnapshot.currency.id,
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         expiryDate,
         feeFrequency: facilitySnapshot.feeFrequency,
         feeType: facilitySnapshot.feeType,
         guaranteeFeePayableToUkef,
+        isEwcsFacility,
       }),
       counterparties: mapCounterparties({
-        isBssEwcsDeal,
-        isGefDeal,
-        partyUrns: mapPartyUrns({
-          deal: mockDeal,
-          isBssEwcsDeal,
-          isGefDeal,
-        }),
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
+        partyUrns,
       }),
       obligations: mapObligations({
         bssSubtypeName: isBssEwcsDeal ? String(facilitySnapshot.bondType) : undefined,
         currency: facilitySnapshot.currency.id,
         facilityAmount,
-        facilityType: facilitySnapshot.type,
-        isBssEwcsDeal,
-        isGefDeal,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       riskDetails: await mapRiskDetails({
         creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         dealId: getTfmUkefDealId(mockDeal),
+        ewcsSupplierType: String((mockDeal.dealSnapshot as BssEwcsDeal).submissionDetails['supplier-type']),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,
-        facilityType: facilitySnapshot.type,
+        facilityType,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
         industryCode: getIndustryCode(mockDeal),
-        isGefDeal,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       delayCreation: mockNewPartyUrnCreated,
     };

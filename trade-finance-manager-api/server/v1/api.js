@@ -3,7 +3,7 @@ const { HttpStatusCode } = require('axios');
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
 const DTFS_CENTRAL_API_TIMEOUT_MS = Number(process.env.DTFS_CENTRAL_API_TIMEOUT_MS || 10000);
@@ -2309,7 +2309,7 @@ const findGiftFacilitiesByIds = async (facilityIdsQueryString) => {
 };
 
 /**
- * Amend a GIFT facility.
+ * Make a single amendment to a GIFT facility.
  * @param {object} facilityAmendmentData - The amendment data for the facility.
  * @param {string} facilityId - The GIFT facility ID to amend.
  * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
@@ -2332,6 +2332,40 @@ const amendGiftFacility = async (facilityAmendmentData, facilityId) => {
 
     console.error(
       'Unable to send GIFT facility amendment to external API - facilityId %s status %s responseBody %o error %o',
+      facilityId,
+      status,
+      responseBody,
+      error,
+    );
+
+    return false;
+  }
+};
+
+/**
+ * Make multiple amendments to a GIFT facility.
+ * @param {object} facilityAmendmentsData - The amendments data for the facility.
+ * @param {string} facilityId - The GIFT facility ID to amend.
+ * @returns {Promise<number|boolean>} HTTP status code on success, otherwise false.
+ */
+const multipleGiftFacilityAmendments = async (facilityAmendmentsData, facilityId) => {
+  try {
+    console.info('Calling external API "Multiple amendments to GIFT facility" endpoint - facilityId %s', facilityId);
+
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/gift/facility/${facilityId}/multiple-amendments`,
+      headers: headers.external,
+      data: facilityAmendmentsData,
+    });
+
+    return response.status;
+  } catch (error) {
+    const status = error?.response?.status ?? HttpStatusCode.InternalServerError;
+    const responseBody = error?.response?.data ?? { message: 'No response received from external API multiple GIFT facility amendments endpoint' };
+
+    console.error(
+      'Unable to send multiple GIFT facility amendments to external API - facilityId %s status %s responseBody %o error %o',
       facilityId,
       status,
       responseBody,
@@ -2434,4 +2468,5 @@ module.exports = {
   createGiftFacility,
   findGiftFacilitiesByIds,
   amendGiftFacility,
+  multipleGiftFacilityAmendments,
 };

@@ -7,7 +7,7 @@ const sendTfmEmail = require('../services/send-tfm-email');
 
 const CONSTANTS = require('../../constants');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 /**
  * Generates feedback
