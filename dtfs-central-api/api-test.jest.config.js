@@ -6,5 +6,9 @@ module.exports = {
   testMatch: ['**/*.api-test.{js,ts}'],
   testTimeout: 80000,
   workerIdleMemoryLimit: '512MB',
+  transform: {
+    '^.+\\.[tj]sx?$': 'ts-jest',
+  },
+  transformIgnorePatterns: ['/node_modules/(?!(otplib|@otplib|@scure|@noble)/)'],
   ...commonSettings,
 };

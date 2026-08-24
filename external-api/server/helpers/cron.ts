@@ -93,10 +93,12 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
       return false;
     }
 
-    console.info('❌ eStore %s CRON %s has been stopped for deal %s.', category, id, data.dealIdentifier);
+    job.stop()?.catch((error) => {
+      console.error('Failed to stop eStore %s CRON %s for deal %s. Error: %o', category, id, data.dealIdentifier, error);
+    });
 
     jobs.delete(id);
-    job.stop();
+    console.info('❌ eStore %s CRON %s has been stopped for deal %s.', category, id, data.dealIdentifier);
 
     return true;
   }
@@ -117,7 +119,7 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
   );
 
   // Only start if job is not already running
-  if (!cronJob.running) {
+  if (!cronJob.isActive) {
     jobs.set(id, cronJob);
     cronJob.start();
   }
