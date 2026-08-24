@@ -510,7 +510,9 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
+      expect(viewModel[0].checkboxAriaLabel).toEqual(
+        `Select ${feeRecords[0].facilityId} ${feeRecords[1].facilityId} with exporter ${feeRecords[0].exporter} ${feeRecords[1].exporter} to add a payment, generate keying data or create a record correction request`,
+      );
     });
   });
 
@@ -594,7 +596,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feePayments[2].formattedCurrencyAndAmount).toEqual('GBP 0.01');
       expect(result[0].feePayments[2].formattedDateReceived).toEqual('1 May 2024');
       expect(result[0].feePayments[3].formattedCurrencyAndAmount).toEqual('JPY 0.00');
-      expect(result[0].feePayments[3].formattedDateReceived).toEqual(undefined);
+      expect(result[0].feePayments[3].formattedDateReceived).toBeUndefined();
     });
 
     it('should set the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {

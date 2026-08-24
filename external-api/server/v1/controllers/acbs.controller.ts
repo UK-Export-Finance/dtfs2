@@ -16,7 +16,7 @@ import { Amendment } from '../../interfaces';
 import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const apimUrl = process.env.APIM_TFS_URL;
 const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;

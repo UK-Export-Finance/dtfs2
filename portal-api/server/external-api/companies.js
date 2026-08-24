@@ -5,7 +5,7 @@ const { HEADERS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = axios;
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {

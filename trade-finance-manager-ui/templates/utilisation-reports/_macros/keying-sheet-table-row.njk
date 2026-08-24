@@ -38,7 +38,8 @@
         <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">
           {{ tableCellCheckbox.render({
             checkboxId: checkboxId,
-            checked: isChecked
+            checked: isChecked,
+            ariaLabel: "Select " + facilityId + " with exporter " + exporter + " to mark as done or to mark as to do"
           }) if isFirstLineOfRow }}
         </td>
       {% endif %}

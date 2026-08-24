@@ -4,7 +4,7 @@ import { mapCommonEmailVariables } from './map-common-email-variables';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * maps emailVariables to an email on amendment submission to ukef

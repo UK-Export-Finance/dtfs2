@@ -16,7 +16,7 @@ import { ENTITY_TYPE, UKEF_ID, USER } from '@ukef/dtfs2-common';
 import { generateApp } from '../../../server/generateApp';
 import { api } from '../../api';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { RATE_LIMIT_THRESHOLD } = process.env;
 
