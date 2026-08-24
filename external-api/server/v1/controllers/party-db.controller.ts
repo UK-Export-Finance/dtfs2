@@ -41,7 +41,7 @@ export const lookup = async (req: PartyDbLookupRequest, res: Response) => {
 };
 
 /**
- * Handles the creation or retrieval of a party (customer) in the Party DB.
+ * Handles the creation or retrieval of a party (customer) in Salesforce, via APIM MDM.
  *
  * Validates the provided company registration number and company name.
  * If valid, sends a POST request to the Party DB API to create or retrieve the party.
