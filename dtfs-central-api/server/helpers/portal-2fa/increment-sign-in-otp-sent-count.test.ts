@@ -52,8 +52,7 @@ describe('incrementSignInOTPSendCount', () => {
       await incrementSignInOTPSendCount(variables);
 
       // Assert
-      expect(mockResetSignInData).toHaveBeenCalledTimes(1);
-      expect(mockResetSignInData).toHaveBeenCalledWith(variables);
+      expect(mockResetSignInData).toHaveBeenNthCalledWith(1, variables);
     });
 
     it('should call PortalUsersRepo.incrementSignInOTPSendCount', async () => {
@@ -61,8 +60,7 @@ describe('incrementSignInOTPSendCount', () => {
       await incrementSignInOTPSendCount(variables);
 
       // Assert
-      expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledTimes(1);
-      expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledWith(variables.userId, variables.auditDetails);
+      expect(mockIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, variables.userId, variables.auditDetails);
     });
 
     it('should call PortalUsersRepo.setSignInOTPSendDate', async () => {
@@ -70,8 +68,7 @@ describe('incrementSignInOTPSendCount', () => {
       await incrementSignInOTPSendCount(variables);
 
       // Assert
-      expect(mockSetSignInOTPSendDate).toHaveBeenCalledTimes(1);
-      expect(mockSetSignInOTPSendDate).toHaveBeenCalledWith({ userId: variables.userId, auditDetails: variables.auditDetails });
+      expect(mockSetSignInOTPSendDate).toHaveBeenNthCalledWith(1, { userId: variables.userId, auditDetails: variables.auditDetails });
     });
 
     it('should return the correct number of remaining attempts', async () => {
@@ -118,8 +115,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledTimes(1);
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledWith(variables.userId, variables.auditDetails);
+        expect(mockIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, variables.userId, variables.auditDetails);
       });
 
       it('should call PortalUsersRepo.setSignInOTPSendDate', async () => {
@@ -127,8 +123,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockSetSignInOTPSendDate).toHaveBeenCalledTimes(1);
-        expect(mockSetSignInOTPSendDate).toHaveBeenCalledWith({ userId: variables.userId, auditDetails: variables.auditDetails });
+        expect(mockSetSignInOTPSendDate).toHaveBeenNthCalledWith(1, { userId: variables.userId, auditDetails: variables.auditDetails });
       });
 
       it('should return the correct number of remaining attempts', async () => {
@@ -174,8 +169,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledTimes(1);
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledWith(variables.userId, variables.auditDetails);
+        expect(mockIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, variables.userId, variables.auditDetails);
       });
 
       it('should not call PortalUsersRepo.setSignInOTPSendDate', async () => {
@@ -231,8 +225,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledTimes(1);
-        expect(mockIncrementSignInOTPSendCount).toHaveBeenCalledWith(variables.userId, variables.auditDetails);
+        expect(mockIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, variables.userId, variables.auditDetails);
       });
 
       it('should not call PortalUsersRepo.setSignInOTPSendDate', async () => {
@@ -278,8 +271,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockBlockUser).toHaveBeenCalledTimes(1);
-        expect(mockBlockUser).toHaveBeenCalledWith({
+        expect(mockBlockUser).toHaveBeenNthCalledWith(1, {
           userId: variables.userId,
           reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_OTPS,
           auditDetails: variables.auditDetails,
@@ -305,8 +297,7 @@ describe('incrementSignInOTPSendCount', () => {
         await incrementSignInOTPSendCount(variables);
 
         // Assert
-        expect(mockBlockUser).toHaveBeenCalledTimes(1);
-        expect(mockBlockUser).toHaveBeenCalledWith({
+        expect(mockBlockUser).toHaveBeenNthCalledWith(1, {
           userId: variables.userId,
           reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_OTPS,
           auditDetails: variables.auditDetails,
@@ -335,8 +326,7 @@ describe('incrementSignInOTPSendCount', () => {
         await expect(incrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
 
         // Assert
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
+        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
@@ -359,8 +349,7 @@ describe('incrementSignInOTPSendCount', () => {
         await expect(incrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
 
         // Assert
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
+        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
@@ -382,8 +371,7 @@ describe('incrementSignInOTPSendCount', () => {
         await expect(incrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
 
         // Assert
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
+        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
@@ -407,8 +395,7 @@ describe('incrementSignInOTPSendCount', () => {
         await expect(incrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
 
         // Assert
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
+        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
 
@@ -433,8 +420,7 @@ describe('incrementSignInOTPSendCount', () => {
         await expect(incrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
 
         // Assert
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith('Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
+        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.userId, mockError);
       });
     });
   });
