@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import { INDUSTRY_SECTORS } from '../../external-api';
 import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,

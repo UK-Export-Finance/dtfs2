@@ -1,7 +1,7 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { ApimGiftFacilityCreationPayload } from './apim-gift';
 import { CreditRiskRating, FacilityCategory } from '../../../api-response-types';
-import { ApimGiftFacilityAmendmentPayload } from './amendments';
+import { ApimGiftFacilityAmendmentPayload, MultipleAmendmentsPayload } from './amendments';
 
 type FindFacilitiesByDealIdErrorResponse = {
   status: number;
@@ -17,6 +17,7 @@ type GiftAmendFacilityResponse = number;
 export type ApiTypes = {
   createGiftFacility: (facility: ApimGiftFacilityCreationPayload) => Promise<TfmFacility> | false;
   amendGiftFacility: (facilityAmendmentData: ApimGiftFacilityAmendmentPayload, facilityId: string) => Promise<GiftAmendFacilityResponse | false>;
+  multipleGiftFacilityAmendments: (facilityAmendmentsData: MultipleAmendmentsPayload, facilityId: string) => Promise<GiftAmendFacilityResponse | false>;
   findFacilitiesByDealId: (dealId: string) => Promise<TfmFacility[] | FindFacilitiesByDealIdErrorResponse>;
   findGiftFacilitiesByIds: (facilityIdsQueryString: string) => Promise<FindGiftFacilitiesByIdSuccessResponse | false>;
   getCreditRiskRatings: () => Promise<CreditRiskRating[]> | false;

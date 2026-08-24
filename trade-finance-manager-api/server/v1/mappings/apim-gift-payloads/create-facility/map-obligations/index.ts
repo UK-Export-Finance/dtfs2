@@ -8,36 +8,39 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 type MapObligationsParams = {
   bssSubtypeName?: string;
   currency: Currency;
-  isBssEwcsDeal: boolean;
+  isBssFacility: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
+  isEwcsFacility: boolean;
   facilityAmount: number | null;
-  facilityType?: string;
-  isGefDeal: boolean;
 };
 
 /**
  * Maps the facility "obligations".
- * If the deal is BSS/EWCS, we need to map the facility subtype name to an obligation subtype code.
+ * If the facility is BSS/EWCS (Bond/Loan), we need to map the facility subtype name to an obligation subtype code.
  * Otherwise, the obligation subtype code is not required and should be null.
  * @param {MapObligationsParams} params - Data required to build the APIM GIFT "obligations" data.
- * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssEwcsDeal` is true.
+ * @param {string} [params.bssSubtypeName] - The BSS facility's subtype name. Only used when `isBssFacility` is true.
  * @param {Currency} params.currency - The facility currency code to use for the obligation amount.
- * @param {boolean} params.isBssEwcsDeal - Flag indicating if the deal is a BSS/EWCS deal.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {boolean} params.isBssFacility - Flag indicating if the facility is a BSS (Bond) facility.
+ * @param {boolean} params.isCashFacility - Flag indicating if the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - Flag indicating if the facility is a Contingent facility.
+ * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS (Loan) facility.
  * @param {number | null} params.facilityAmount - The facility amount (required for BSS/EWCS; used for GEF obligation calculation).
- * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
  * @returns {ApimGiftObligation[]} Mapped obligations array for the APIM GIFT payload.
  */
 export const mapObligations = ({
   bssSubtypeName,
   currency,
-  isBssEwcsDeal,
-  isGefDeal,
+  isBssFacility,
+  isCashFacility,
+  isContingentFacility,
+  isEwcsFacility,
   facilityAmount,
-  facilityType,
 }: MapObligationsParams): ApimGiftObligation[] => {
   let subtypeCode = null;
 
-  if (isBssEwcsDeal && bssSubtypeName) {
+  if (isBssFacility && bssSubtypeName) {
     const mappedSubtypeCode = OBLIGATION_SUBTYPE_MAP.BSS[bssSubtypeName as keyof typeof OBLIGATION_SUBTYPE_MAP.BSS];
 
     /**
@@ -55,10 +58,11 @@ export const mapObligations = ({
   const obligations = [
     {
       amount: mapObligationAmount({
-        isBssEwcsDeal,
-        isGefDeal,
         facilityAmount,
-        facilityType,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       }),
       currency,
       repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,

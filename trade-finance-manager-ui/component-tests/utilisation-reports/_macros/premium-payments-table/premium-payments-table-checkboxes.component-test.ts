@@ -149,18 +149,40 @@ describe(component, () => {
     checkboxElement.notToHaveAttribute('checked');
   });
 
-  it('should set aria-labels for checkboxes', () => {
-    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
+  it('should render a descriptive aria-label for each fee record checkbox', () => {
+    const firstCheckboxId = 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO';
+    const secondCheckboxId = 'feeRecordIds-2-reportedPaymentsCurrency-GBP-status-TO_DO';
+
+    const firstCheckboxAriaLabel = 'Select 12345678 with exporter First exporter to add a payment, generate keying data or create a record correction request';
+    const secondCheckboxAriaLabel =
+      'Select 87654321 with exporter Second exporter to add a payment, generate keying data or create a record correction request';
+
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
       {
         ...aPremiumPaymentsViewModelItem(),
         status: FEE_RECORD_STATUS.TO_DO,
-        checkboxAriaLabel: 'select me!',
-        checkboxId,
+        feeRecords: [{ ...aFeeRecordViewModelItem(), id: 1, facilityId: '12345678', exporter: 'First exporter' }],
+        checkboxAriaLabel: firstCheckboxAriaLabel,
+        checkboxId: firstCheckboxId,
+      },
+      {
+        ...aPremiumPaymentsViewModelItem(),
+        status: FEE_RECORD_STATUS.TO_DO,
+        feeRecords: [{ ...aFeeRecordViewModelItem(), id: 2, facilityId: '87654321', exporter: 'Second exporter' }],
+        checkboxAriaLabel: secondCheckboxAriaLabel,
+        checkboxId: secondCheckboxId,
       },
     ];
     const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
 
-    wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`).toHaveAttribute('aria-label', 'select me!');
+    wrapper.expectElement('tbody tr').toHaveCount(2);
+
+    wrapper
+      .expectElement(`[data-cy*="premium-payments-table-row--feeRecordId-1"] input[id="${firstCheckboxId}"][type="checkbox"]`)
+      .toHaveAttribute('aria-label', firstCheckboxAriaLabel);
+
+    wrapper
+      .expectElement(`[data-cy*="premium-payments-table-row--feeRecordId-2"] input[id="${secondCheckboxId}"][type="checkbox"]`)
+      .toHaveAttribute('aria-label', secondCheckboxAriaLabel);
   });
 });

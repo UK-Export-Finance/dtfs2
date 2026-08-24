@@ -4,7 +4,7 @@ import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { findACBSIndustrySector } from './industry-sectors.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
@@ -41,7 +41,7 @@ export const lookup = async (req: PartyDbLookupRequest, res: Response) => {
 };
 
 /**
- * Handles the creation or retrieval of a party (customer) in the Party DB.
+ * Handles the creation or retrieval of a party (customer) in Salesforce, via APIM MDM.
  *
  * Validates the provided company registration number and company name.
  * If valid, sends a POST request to the Party DB API to create or retrieve the party.

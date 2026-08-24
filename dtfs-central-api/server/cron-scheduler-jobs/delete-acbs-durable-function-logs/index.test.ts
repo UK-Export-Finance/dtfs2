@@ -63,7 +63,7 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
       const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
 
       // Assert
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
   });
 });

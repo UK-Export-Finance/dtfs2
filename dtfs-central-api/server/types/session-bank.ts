@@ -1,1 +1,1 @@
-export { SessionBank } from '@ukef/dtfs2-common';
+export type { SessionBank } from '@ukef/dtfs2-common';
