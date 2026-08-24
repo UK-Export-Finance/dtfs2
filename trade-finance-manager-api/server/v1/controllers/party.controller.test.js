@@ -96,7 +96,6 @@ describe('updateParty', () => {
     canSendToApimGift.mockResolvedValue({
       canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
-      isBssEwcsDeal: false,
       isGefDeal: true,
     });
 
@@ -171,7 +170,6 @@ describe('updateParty', () => {
       expect(sendFacilitiesToApimGift).toHaveBeenCalledWith({
         deal: mockTfmDeal,
         facilities: issuedFacilities,
-        isBssEwcsDeal: false,
         isGefDeal: true,
         newPartyUrnCreated: false,
       });
