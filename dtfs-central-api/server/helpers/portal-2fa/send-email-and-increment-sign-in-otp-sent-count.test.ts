@@ -30,10 +30,7 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
     mockBlockUser.mockReset();
     mockSendSignInOtpEmail.mockReset();
 
-    mockSendSignInOtpEmail.mockResolvedValue({
-      status: Number(HttpStatusCode.Created),
-      data: {} as never,
-    });
+    mockSendSignInOtpEmail.mockResolvedValue();
 
     PortalUsersRepo.incrementSignInOTPSendCount = mockIncrementSignInOTPSendCount;
     PortalUsersRepo.setSignInOTPSendDate = mockSetSignInOTPSendDate;
@@ -133,10 +130,7 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
     // Arrange
     const variables = makeVariables();
 
-    mockSendSignInOtpEmail.mockResolvedValue({
-      status: Number(HttpStatusCode.InternalServerError),
-      data: {} as never,
-    });
+    mockSendSignInOtpEmail.mockRejectedValue(new Error('Failed to send email'));
 
     // Act
     await expect(sendEmailAndIncrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');

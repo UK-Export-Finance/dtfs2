@@ -52,6 +52,8 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
     }
 
+    const userForSignInOtp = signInDataIsStale ? { ...user, signInOTPSendCount: 0 } : user;
+
     /**
      * Generate a new OTP, save it to the database.
      */
@@ -60,7 +62,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
-    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, securityCode, auditDetails });
+    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user: userForSignInOtp, securityCode, auditDetails });
 
     /**
      * If the user has exceeded the maximum sign in OTP send attempts,

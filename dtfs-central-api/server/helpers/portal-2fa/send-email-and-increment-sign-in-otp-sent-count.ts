@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios';
 import { AuditDetails, OTP, STATUS_BLOCKED_REASON, PortalUser } from '@ukef/dtfs2-common';
 import { PortalUsersRepo } from '../../repositories/users-repo';
 import { sendSignInOtpEmail } from './send-sign-in-otp-email';
@@ -24,7 +23,6 @@ export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCo
   try {
     const userId = user._id.toString();
     // flag to track if the email was sent successfully
-    let emailSentSuccessfully = true;
 
     console.info('Incrementing sign in OTP count for user %s', userId);
 
@@ -33,23 +31,12 @@ export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCo
 
     /**
      * If the user has not exceeded the maximum sign in OTP send attempts,
-     * then send the sign in OTP email to the user and check if it was sent successfully
-     * if the response code from the email service is not 201 Created, then set the emailSentSuccessfully flag to false
+     * then send the sign in OTP email to the user
+     * if the email sending fails, it will fall into the catch block
+     * and will not increment the sign in OTP send count
      */
     if (initialSignInOTPSendCount < maxSignInOTPSendCount) {
-      const response = await sendSignInOtpEmail(user, securityCode);
-
-      if (response?.status !== Number(HttpStatusCode.Created)) {
-        emailSentSuccessfully = false;
-      }
-    }
-
-    /**
-     * if the email was not sent successfully, then log an error and throw an error
-     */
-    if (!emailSentSuccessfully) {
-      console.error('Failed to send sign in OTP email to user %s', userId);
-      throw new Error('Failed to send sign in OTP email');
+      await sendSignInOtpEmail(user, securityCode);
     }
 
     // increment the sign in OTP send count

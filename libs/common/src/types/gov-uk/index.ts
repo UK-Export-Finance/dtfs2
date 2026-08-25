@@ -5,4 +5,3 @@
  * specific component props, however in certain cases (e.g. complicated object to array mappings) this is not possible.
  */
 export * from './summary-list';
-export * from './notify';

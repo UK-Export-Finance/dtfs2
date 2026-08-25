@@ -1,6 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { HEADERS, AnyObject, GovNotifyEmailResponse } from '@ukef/dtfs2-common';
+import { HEADERS, AnyObject } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -13,9 +13,9 @@ const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
  * @param emailVariables - variables to be used in the email template
  * @returns response from external API
  */
-export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: AnyObject): Promise<GovNotifyEmailResponse> => {
+export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: AnyObject) => {
   try {
-    const response = await axios<GovNotifyEmailResponse>({
+    await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/email`,
       headers: {
@@ -28,8 +28,6 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
         emailVariables,
       },
     });
-
-    return response?.data;
   } catch (error) {
     console.error('Error sending email to %s %o', sendToEmailAddress, error);
 

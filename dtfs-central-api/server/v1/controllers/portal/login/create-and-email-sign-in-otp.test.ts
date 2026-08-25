@@ -218,6 +218,11 @@ describe('createAndEmailSignInOTP', () => {
         signInOTPSendDate: staleSignInDate,
         auditDetails,
       });
+      expect(sendEmailAndIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, {
+        user: { ...userWithStaleData, signInOTPSendCount: 0 },
+        securityCode: '123456',
+        auditDetails,
+      });
     });
   });
 
