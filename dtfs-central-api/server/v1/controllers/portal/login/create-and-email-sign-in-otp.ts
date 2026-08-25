@@ -6,6 +6,7 @@ import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/por
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { sendAccountSuspensionEmail } from './send-account-suspension-email';
+import { isSignInDataStale } from '../../../../helpers/portal-2fa/is-sign-in-data-stale';
 
 /**
  * Creates and emails a sign-in OTP to the user.
@@ -40,6 +41,16 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
+    const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
+
+    // if sign in data is stale, reset sign in data first
+    const signInDataIsStale = isSignInDataStale(signInOTPSendDate);
+
+    if (signInDataIsStale) {
+      console.info('Sign in data is stale for user %s, resetting sign in data', userId);
+      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
+    }
+
     /**
      * Generate a new OTP, save it to the database.
      */
@@ -48,9 +59,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
-    const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
-
-    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, signInOTPSendDate, securityCode, auditDetails });
+    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, securityCode, auditDetails });
 
     /**
      * If the user has exceeded the maximum sign in OTP send attempts,

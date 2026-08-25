@@ -8,11 +8,13 @@ import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/por
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
 import { sendAccountSuspensionEmail } from './send-account-suspension-email';
+import { isSignInDataStale } from '../../../../helpers/portal-2fa/is-sign-in-data-stale';
 import { aPortalUser } from '../../../../../test-helpers';
 
 jest.mock('../../../../helpers/portal-2fa/is-user-blocked-or-disabled');
 jest.mock('../../../../helpers/portal-2fa/send-email-and-increment-sign-in-otp-sent-count');
 jest.mock('../../../../helpers/portal-2fa/generate-otp');
+jest.mock('../../../../helpers/portal-2fa/is-sign-in-data-stale');
 jest.mock('../../../../repositories/users-repo');
 jest.mock('./send-account-suspension-email');
 
@@ -41,6 +43,7 @@ describe('createAndEmailSignInOTP', () => {
   const auditDetails: AuditDetails = generatePortalAuditDetails(user._id);
   const otpExpiry = Date.now() + 1000;
 
+  let resetSignInDataSpy: jest.SpyInstance;
   let saveSignInOTPTokenForUserSpy: jest.SpyInstance;
 
   beforeEach(() => {
@@ -48,10 +51,12 @@ describe('createAndEmailSignInOTP', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     jest.mocked(isUserBlockedOrDisabled).mockReturnValue(false);
+    jest.mocked(isSignInDataStale).mockReturnValue(false);
     jest.mocked(sendEmailAndIncrementSignInOTPSendCount).mockResolvedValue(2);
     jest.mocked(generateOtp).mockReturnValue({ securityCode: '123456', salt: 'salt-hex', hash: 'hash-hex', expiry: otpExpiry });
     jest.mocked(sendAccountSuspensionEmail).mockResolvedValue(undefined);
 
+    resetSignInDataSpy = jest.spyOn(PortalUsersRepo, 'resetSignInData').mockResolvedValue(undefined);
     saveSignInOTPTokenForUserSpy = jest.spyOn(PortalUsersRepo, 'saveSignInOTPTokenForUser').mockResolvedValue(undefined);
   });
 
@@ -170,7 +175,6 @@ describe('createAndEmailSignInOTP', () => {
       expect(generateOtp).toHaveBeenCalledTimes(1);
       expect(sendEmailAndIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, {
         user,
-        signInOTPSendDate: undefined,
         securityCode: '123456',
         auditDetails,
       });
@@ -193,6 +197,42 @@ describe('createAndEmailSignInOTP', () => {
       // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Created);
       expect(res.send).toHaveBeenNthCalledWith(1, { signInOTPSendCount: 2 });
+    });
+  });
+
+  describe('when sign in data is stale', () => {
+    it('should call PortalUsersRepo.resetSignInData before creating OTP', async () => {
+      // Arrange
+      const staleSignInDate = new Date('2024-01-01T00:00:00.000Z');
+      const userWithStaleData = { ...user, signInOTPSendDate: staleSignInDate };
+      const res = getMockResponse();
+
+      jest.mocked(isSignInDataStale).mockReturnValue(true);
+
+      // Act
+      await invokeController({ user: userWithStaleData, auditDetails }, res);
+
+      // Assert
+      expect(resetSignInDataSpy).toHaveBeenNthCalledWith(1, {
+        userId: user._id.toString(),
+        signInOTPSendDate: staleSignInDate,
+        auditDetails,
+      });
+    });
+  });
+
+  describe('when sign in data is not stale', () => {
+    it('should not call PortalUsersRepo.resetSignInData', async () => {
+      // Arrange
+      const res = getMockResponse();
+
+      jest.mocked(isSignInDataStale).mockReturnValue(false);
+
+      // Act
+      await invokeController({ user, auditDetails }, res);
+
+      // Assert
+      expect(resetSignInDataSpy).not.toHaveBeenCalled();
     });
   });
 

@@ -12,7 +12,6 @@ jest.mock('./send-sign-in-otp-email');
 const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
 
 describe('sendEmailAndIncrementSignInOTPSendCount', () => {
-  const mockResetSignInData = jest.fn();
   const mockIncrementSignInOTPSendCount = jest.fn();
   const mockSetSignInOTPSendDate = jest.fn();
   const mockBlockUser = jest.fn();
@@ -20,14 +19,12 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
 
   const makeVariables = (overrides?: Partial<Parameters<typeof sendEmailAndIncrementSignInOTPSendCount>[0]>) => ({
     user: { ...aPortalUser(), signInOTPSendCount: 0 },
-    signInOTPSendDate: new Date(),
     securityCode: '123456',
     auditDetails: generateSystemAuditDetails(),
     ...overrides,
   });
 
   beforeEach(() => {
-    mockResetSignInData.mockReset();
     mockIncrementSignInOTPSendCount.mockReset();
     mockSetSignInOTPSendDate.mockReset();
     mockBlockUser.mockReset();
@@ -38,7 +35,6 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
       data: {} as never,
     });
 
-    PortalUsersRepo.resetSignInData = mockResetSignInData;
     PortalUsersRepo.incrementSignInOTPSendCount = mockIncrementSignInOTPSendCount;
     PortalUsersRepo.setSignInOTPSendDate = mockSetSignInOTPSendDate;
     PortalUsersRepo.blockUser = mockBlockUser;
@@ -50,86 +46,13 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
     jest.restoreAllMocks();
   });
 
-  describe('when sign in data is stale and increment returns first attempt', () => {
-    const variables = makeVariables({
-      signInOTPSendDate: new Date(Date.now() - OTP.TIME_TO_RESET_SIGN_IN_OTP_SEND_COUNT_IN_MILLISECONDS - 1000),
-    });
-    const userId = variables.user._id.toString();
-
-    beforeEach(() => {
-      mockResetSignInData.mockResolvedValue(null);
-      mockIncrementSignInOTPSendCount.mockResolvedValue(1);
-      mockSetSignInOTPSendDate.mockResolvedValue(null);
-    });
-
-    it('should call PortalUsersRepo.resetSignInData', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockResetSignInData).toHaveBeenNthCalledWith(1, {
-        userId,
-        signInOTPSendDate: variables.signInOTPSendDate,
-        auditDetails: variables.auditDetails,
-      });
-    });
-
-    it('should call sendSignInOtpEmail', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockSendSignInOtpEmail).toHaveBeenNthCalledWith(1, variables.user, variables.securityCode);
-    });
-
-    it('should call PortalUsersRepo.incrementSignInOTPSendCount', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockIncrementSignInOTPSendCount).toHaveBeenNthCalledWith(1, userId, variables.auditDetails);
-    });
-
-    it('should call PortalUsersRepo.setSignInOTPSendDate', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockSetSignInOTPSendDate).toHaveBeenNthCalledWith(1, { userId, auditDetails: variables.auditDetails });
-    });
-
-    it('should not call PortalUsersRepo.blockUser', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockBlockUser).not.toHaveBeenCalled();
-    });
-
-    it('should return the correct number of remaining attempts', async () => {
-      // Act
-      const remainingAttempts = await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(remainingAttempts).toEqual(OTP.MAX_SIGN_IN_ATTEMPTS - 1);
-    });
-  });
-
-  describe('when sign in data is not stale and increment returns first attempt', () => {
-    const variables = makeVariables({ signInOTPSendDate: new Date() });
+  describe('when increment returns first attempt', () => {
+    const variables = makeVariables();
     const userId = variables.user._id.toString();
 
     beforeEach(() => {
       mockIncrementSignInOTPSendCount.mockResolvedValue(1);
       mockSetSignInOTPSendDate.mockResolvedValue(null);
-    });
-
-    it('should not call PortalUsersRepo.resetSignInData', async () => {
-      // Act
-      await sendEmailAndIncrementSignInOTPSendCount(variables);
-
-      // Assert
-      expect(mockResetSignInData).not.toHaveBeenCalled();
     });
 
     it('should call sendSignInOtpEmail', async () => {
@@ -233,28 +156,9 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
   });
 
   describe('error handling', () => {
-    describe('when PortalUsersRepo.resetSignInData throws an error', () => {
-      const mockError = new Error('Database error');
-      const variables = makeVariables({
-        signInOTPSendDate: new Date(Date.now() - OTP.TIME_TO_RESET_SIGN_IN_OTP_SEND_COUNT_IN_MILLISECONDS - 1000),
-      });
-
-      beforeEach(() => {
-        mockResetSignInData.mockRejectedValue(mockError);
-      });
-
-      it('should log the error and throw a new error', async () => {
-        // Act
-        await expect(sendEmailAndIncrementSignInOTPSendCount(variables)).rejects.toThrow('Error incrementing sign in OTP send count');
-
-        // Assert
-        expect(console.error).toHaveBeenNthCalledWith(1, 'Error incrementing sign in OTP send count for user %s: %o', variables.user._id.toString(), mockError);
-      });
-    });
-
     describe('when PortalUsersRepo.setSignInOTPSendDate throws an error', () => {
       const mockError = new Error('Database error');
-      const variables = makeVariables({ signInOTPSendDate: new Date() });
+      const variables = makeVariables();
 
       beforeEach(() => {
         mockIncrementSignInOTPSendCount.mockResolvedValue(1);
@@ -272,7 +176,7 @@ describe('sendEmailAndIncrementSignInOTPSendCount', () => {
 
     describe('when PortalUsersRepo.blockUser throws an error', () => {
       const mockError = new Error('Database error');
-      const variables = makeVariables({ signInOTPSendDate: new Date() });
+      const variables = makeVariables();
 
       beforeEach(() => {
         mockIncrementSignInOTPSendCount.mockResolvedValue(OTP.MAX_SIGN_IN_ATTEMPTS + 1);

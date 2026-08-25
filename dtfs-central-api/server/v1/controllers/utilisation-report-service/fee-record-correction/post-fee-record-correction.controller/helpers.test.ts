@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { formatReasonsAsBulletedListForEmail, generateFeeRecordCorrectionRequestEmailParameters, sendFeeRecordCorrectionRequestEmails } from './helpers';
 import { aReportPeriod } from '../../../../../../test-helpers';
@@ -108,7 +109,10 @@ describe('post-fee-record-correction.controller helpers', () => {
 
     it('should log and rethrow error if sending an email fails', async () => {
       const error = new Error('Failed to send second email');
-      jest.mocked(externalApi.sendEmail).mockResolvedValueOnce().mockRejectedValueOnce(error);
+      jest
+        .mocked(externalApi.sendEmail)
+        .mockResolvedValueOnce({ status: HttpStatusCode.InternalServerError, data: {} as never })
+        .mockRejectedValueOnce(error);
 
       // Act + Assert
       await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', 'test2@test.com', teamName, teamEmails)).rejects.toThrow(error);

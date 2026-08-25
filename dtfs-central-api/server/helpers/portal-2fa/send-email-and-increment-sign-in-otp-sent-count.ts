@@ -1,12 +1,10 @@
 import { HttpStatusCode } from 'axios';
 import { AuditDetails, OTP, STATUS_BLOCKED_REASON, PortalUser } from '@ukef/dtfs2-common';
 import { PortalUsersRepo } from '../../repositories/users-repo';
-import { isSignInDataStale } from './is-sign-in-data-stale';
 import { sendSignInOtpEmail } from './send-sign-in-otp-email';
 
 type variables = {
   user: PortalUser;
-  signInOTPSendDate?: Date;
   securityCode: string;
   auditDetails: AuditDetails;
 };
@@ -23,7 +21,7 @@ type variables = {
  * @param auditDetails - the users audit details
  * @returns number of remaining attempts to send sign in OTP
  */
-export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, signInOTPSendDate, securityCode, auditDetails }: variables) => {
+export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCode, auditDetails }: variables) => {
   try {
     const userId = user._id.toString();
     // flag to track if the email was sent successfully
@@ -33,14 +31,6 @@ export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, signInOTPS
 
     const maxSignInOTPSendCount = OTP.MAX_SIGN_IN_ATTEMPTS;
     const initialSignInOTPSendCount = user.signInOTPSendCount ?? 0;
-
-    // if sign in data is stale, reset sign in data first
-    const signInDataIsStale = isSignInDataStale(signInOTPSendDate);
-
-    if (signInDataIsStale) {
-      console.info('Sign in data is stale for user %s, resetting sign in data', userId);
-      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
-    }
 
     /**
      * If the user has not exceeded the maximum sign in OTP send attempts,
