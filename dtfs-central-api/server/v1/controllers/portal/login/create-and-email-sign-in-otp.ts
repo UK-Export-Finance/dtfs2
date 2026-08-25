@@ -49,7 +49,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     if (signInDataIsStale) {
       console.info('Sign in data is stale for user %s, resetting sign in data', sanitisedUserId);
-      await PortalUsersRepo.resetSignInData({ userId: sanitisedUserId, signInOTPSendDate, auditDetails });
+      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
     }
 
     /**
@@ -58,7 +58,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
 
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
-    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId: sanitisedUserId, saltHex, hashHex, expiry, auditDetails });
+    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, securityCode, auditDetails });
 
