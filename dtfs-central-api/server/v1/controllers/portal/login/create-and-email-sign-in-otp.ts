@@ -2,10 +2,9 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest, AuditDetails, PortalUser, isProduction } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
-import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-otp-sent-count';
+import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/send-email-and-increment-sign-in-otp-sent-count';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
-import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
 import { sendAccountSuspensionEmail } from './send-account-suspension-email';
 
 /**
@@ -41,9 +40,11 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
+    const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
+
     const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
-    const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
+    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, signInOTPSendDate, securityCode, auditDetails });
 
     /**
      * If the user has exceeded the maximum sign in OTP send attempts,
@@ -61,16 +62,12 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.Created).send({ signInOTPSendCount: -1 });
     }
 
-    const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
-
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
       console.info('🔑 Sign in OTP code for user: %s is: %s', user.email, securityCode);
     }
-
-    await sendSignInOtpEmail(user, securityCode);
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {
