@@ -1,12 +1,12 @@
 export type GovNotifyEmailResponse = {
   status: number;
   data: {
-    content: object;
+    content: Record<string, unknown>;
     id: string;
     reference: string;
-    sanitised_content: object;
+    sanitised_content: Record<string, unknown>;
     scheduled_for: string | null;
-    template: object;
+    template: Record<string, unknown>;
     uri: string;
   };
 };

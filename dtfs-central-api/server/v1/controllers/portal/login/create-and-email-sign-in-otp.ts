@@ -40,7 +40,13 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.Forbidden).send({ message: 'User is blocked or disabled' });
     }
 
+    /**
+     * Generate a new OTP, save it to the database.
+     */
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
+
+    console.info('Saving sign in OTP for user %s', sanitisedUserId);
+    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
@@ -61,9 +67,6 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       }
       return res.status(HttpStatusCode.Created).send({ signInOTPSendCount: -1 });
     }
-
-    console.info('Saving sign in OTP for user %s', sanitisedUserId);
-    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
 
     if (!isProduction()) {
       console.info('🔑 Sign in OTP code for user: %s is: %s', user.email, securityCode);

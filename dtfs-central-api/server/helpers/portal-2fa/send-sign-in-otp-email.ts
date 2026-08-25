@@ -30,7 +30,7 @@ export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)
   };
 
   try {
-    const response = await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, email, emailVariables);
+    const response: GovNotifyEmailResponse = await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, email, emailVariables);
 
     return response;
   } catch (error) {
