@@ -11,6 +11,7 @@ import { isSignInDataStale } from '../../../../helpers/portal-2fa/is-sign-in-dat
 /**
  * Creates and emails a sign-in OTP to the user.
  * Checks if the user exists and is not blocked or disabled.
+ * Checks if the sign-in data is stale and resets it if necessary.
  * Increments the sign-in OTP send count and resets sign-in data if stale.
  * Generates a new OTP, saves it to the database, and logs it to the console.
  * @param req request object containing user and audit details
@@ -47,8 +48,8 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     const signInDataIsStale = isSignInDataStale(signInOTPSendDate);
 
     if (signInDataIsStale) {
-      console.info('Sign in data is stale for user %s, resetting sign in data', userId);
-      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
+      console.info('Sign in data is stale for user %s, resetting sign in data', sanitisedUserId);
+      await PortalUsersRepo.resetSignInData({ userId: sanitisedUserId, signInOTPSendDate, auditDetails });
     }
 
     /**
@@ -57,7 +58,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
 
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
-    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
+    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId: sanitisedUserId, saltHex, hashHex, expiry, auditDetails });
 
     const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user, securityCode, auditDetails });
 
