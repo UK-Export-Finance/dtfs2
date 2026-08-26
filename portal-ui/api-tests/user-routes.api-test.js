@@ -8,6 +8,7 @@ jest.mock('../server/api', () => ({
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
   user: jest.fn(),
+  updateUser: jest.fn(),
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
@@ -26,6 +27,7 @@ const _id = '64f736071f0fd6ecf617db8a';
 describe('user routes', () => {
   beforeEach(() => {
     api.user.mockResolvedValue(MOCK_PORTAL_SESSION_USER);
+    api.updateUser.mockResolvedValue({ status: 200, data: {} });
   });
 
   describe('GET /user/:_id', () => {
@@ -46,9 +48,11 @@ describe('user routes', () => {
 
   describe('POST /user/:_id/change-password', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/user/${_id}/change-password`),
+      makeRequestWithHeaders: (headers) =>
+        post({ currentPassword: 'CurrentPassword1!', password: 'NewPassword1!', passwordConfirm: 'NewPassword1!' }, headers).to(`/user/${_id}/change-password`),
       whitelistedRoles: allRoles,
-      successCode: 200,
+      successCode: 302,
+      successHeaders: { location: `/user/${_id}` },
     });
   });
 });

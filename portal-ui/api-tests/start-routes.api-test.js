@@ -27,7 +27,7 @@ const allRoles = Object.values(ROLES);
 describe('start routes', () => {
   beforeEach(() => {
     api.getLatestMandatoryCriteria.mockResolvedValue({ criteria: [] });
-    api.createDeal.mockResolvedValue({});
+    api.createDeal.mockResolvedValue({ _id: '123456789abcdef01234567' });
   });
 
   describe('GET /before-you-start', () => {
@@ -60,7 +60,7 @@ describe('start routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start/bank-deal'),
       whitelistedRoles: [MAKER],
       successCode: 302,
-      successHeaders: { location: '/contract/undefined' },
+      successHeaders: { location: '/contract/123456789abcdef01234567' },
     });
   });
 
