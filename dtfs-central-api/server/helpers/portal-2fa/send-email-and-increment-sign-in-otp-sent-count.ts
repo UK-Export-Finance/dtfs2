@@ -20,11 +20,10 @@ type variables = {
  * @returns number of remaining attempts to send sign in OTP
  */
 export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCode, auditDetails }: variables) => {
-  try {
-    const userId = user._id.toString();
-    // flag to track if the email was sent successfully
+  const userId = user._id.toString();
 
-    console.info('Incrementing sign in OTP count for user %s', userId);
+  try {
+    console.info('Sending email and incrementing sign in OTP count for user %s', userId);
 
     const maxSignInOTPSendCount = OTP.MAX_SIGN_IN_ATTEMPTS;
     const initialSignInOTPSendCount = user.signInOTPSendCount ?? 0;
@@ -65,7 +64,7 @@ export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCo
 
     return remainingAttempts;
   } catch (error) {
-    console.error('Error incrementing sign in OTP send count for user %s: %o', user._id.toString(), error);
+    console.error('Error incrementing sign in OTP send count for user %s: %o', userId, error);
 
     throw new Error('Error incrementing sign in OTP send count');
   }
