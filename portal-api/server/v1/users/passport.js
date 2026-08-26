@@ -92,6 +92,8 @@ const loginInProgressAuth = (passport) => {
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,
     signInLinkSendCount: user.signInLinkSendCount,
+    signInOTPSendDate: user.signInOTPSendDate,
+    signInOTPSendCount: user.signInOTPSendCount,
   });
   baseAuthenticationConfiguration({
     name: 'login-in-progress',
