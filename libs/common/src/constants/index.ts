@@ -57,5 +57,6 @@ export * from './csrf';
 export * from './crypto';
 export * from './access-code-pages';
 export * from './countries';
+export * from './utilisation-report-routes';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { ObjectId } = require('mongodb');
 
-const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
+const { TIMEOUT, HEADERS, REPORT_DATA_VALIDATION_ROUTE } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 const { InvalidDatabaseQueryError } = require('./errors/invalid-database-query.error');
@@ -377,7 +377,7 @@ const validateUtilisationReportData = async (reportData) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/report-data-validation`,
+      url: `${DTFS_CENTRAL_API_URL}/v1${REPORT_DATA_VALIDATION_ROUTE}`,
       headers: headers.central,
       data: {
         reportData,
