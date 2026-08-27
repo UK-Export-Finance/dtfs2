@@ -15,7 +15,7 @@ describe('submitting payloads with different file sizes', () => {
       feedbackPage.easyToUseSelection().click();
       feedbackPage.clearlyExplainedSelection().click();
       feedbackPage.satisfiedSelection().click();
-      feedbackPage.howCanWeImprove().invoke('val', 'X'.repeat(150000)).trigger('input');
+      feedbackPage.howCanWeImprove().invoke('val', 'X'.repeat(600000)).trigger('input');
       feedbackPage.emailAddress().clear();
 
       cy.clickSubmitButton();

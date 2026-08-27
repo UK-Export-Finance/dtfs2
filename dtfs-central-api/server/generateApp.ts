@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { exceptionHandlers, MAX_REQUEST_SIZE, MAX_UTILISATION_REPORT_REQUEST_SIZE, xss, maintenance } from '@ukef/dtfs2-common';
+import { exceptionHandlers, MAX_REQUEST_SIZE, MAX_UTILISATION_REPORT_REQUEST_SIZE, xss, maintenance, REPORT_DATA_VALIDATION_ROUTE } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -35,13 +35,15 @@ export const generateApp = (): Express => {
 
   app.use(checkApiKey);
 
-  // Set the limit for express.json to larger size for the utilisation report upload endpoint as some reports are larger than MAX_REQUEST_SIZE.
-  app.use('/v1/utilisation-reports/report-data-validation', express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
+  app.use(createRateLimit());
+
+  // Set the limit for express.json to larger size for the utilisation report validation endpoint as some reports are larger than MAX_REQUEST_SIZE.
+  app.use(`/v1${REPORT_DATA_VALIDATION_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
 
   app.use(compression());
   app.use(removeCsrfToken);
-  app.use(createRateLimit());
+
   app.use(xss);
   // MongoDB sanitisation
   app.use(
