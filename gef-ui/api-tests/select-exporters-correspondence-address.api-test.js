@@ -13,7 +13,7 @@ const { get, post } = createApi(app);
 const dealId = '123';
 const mockPostcode = 'AA1 1AA';
 
-const mockAddresses = JSON.stringify([{ organisationName: 'TEST', addressLine1: '1 Test Street', postalCode: 'AA1 1AA', country: 'United Kingdom' }]);
+const mockAddresses = JSON.stringify([{ organisationName: 'TEST', addressLine1: '1 Test Street', postalCode: mockPostcode, country: 'United Kingdom' }]);
 
 describe('select exporters correspondence address routes', () => {
   beforeEach(() => {
