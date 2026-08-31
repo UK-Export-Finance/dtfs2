@@ -161,6 +161,15 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
   });
 
+  it('should give each keying sheet row checkbox a descriptive accessible label', () => {
+    keyingSheetContent
+      .keyingSheetTableRowCheckbox(FEE_RECORD_ID_ONE)
+      .should('have.attr', 'aria-label', `Select ${FACILITY_ID_ONE} with exporter Exporter 1 to mark as done or to mark as to do`);
+    keyingSheetContent
+      .keyingSheetTableRowCheckbox(FEE_RECORD_ID_TWO)
+      .should('have.attr', 'aria-label', `Select ${FACILITY_ID_TWO} with exporter Exporter 2 to mark as done or to mark as to do`);
+  });
+
   it('updates report status when all fee records are reconciled and when some are unreconciled', () => {
     keyingSheetContent.selectAllCheckbox().click();
     keyingSheetContent.markAsDoneButton().click();

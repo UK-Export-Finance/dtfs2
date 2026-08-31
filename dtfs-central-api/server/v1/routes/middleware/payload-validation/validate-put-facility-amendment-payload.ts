@@ -37,6 +37,9 @@ const PutFacilityAmendmentSchema = z.object({
       firstTaskEmailSent: z.boolean(),
       effectiveDate: z.number(),
       automaticApprovalEmail: z.boolean(),
+      apimGift: z.object({
+        facilityAmendmentSent: z.boolean(),
+      }),
       referenceNumber: z.string().optional(),
       shouldNotUpdateTimestamp: z.boolean().optional(),
       ukefDecision: z

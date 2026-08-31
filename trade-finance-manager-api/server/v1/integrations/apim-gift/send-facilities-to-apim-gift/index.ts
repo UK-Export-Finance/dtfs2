@@ -7,7 +7,6 @@ import { getReferenceData } from './get-reference-data';
 type SubmitFacilitiesToApimGiftParams = {
   deal: TfmDeal;
   facilities: TfmFacility[];
-  isBssEwcsDeal: boolean;
   isGefDeal: boolean;
   newPartyUrnCreated?: boolean;
 };
@@ -20,7 +19,6 @@ type SubmitFacilitiesToApimGiftParams = {
  * @param {SubmitFacilitiesToApimGiftParams} params - An object containing the deal and facilities to be submitted.
  * @param {TfmDeal} params.deal - The TFM deal associated with the facilities being submitted.
  * @param {TfmFacility[]} params.facilities - An array of TFM facilities to be submitted to APIM/GIFT.
- * @param {boolean} params.isBssEwcsDeal - A boolean indicating whether the deal is a BSS/EWCS deal, which determines how certain facility values are mapped.
  * @param {boolean} params.isGefDeal - A boolean indicating whether the deal is a GEF deal, which determines how certain facility values are mapped.
  * @param {boolean} [params.newPartyUrnCreated] - A boolean indicating whether a new party URN was created for the exporter. Sets the delayCreation flag in the APIM payload. Defaults to false.
  * @returns {Promise<TfmFacility | TfmFacility[] | boolean>} A promise that resolves to the response from the APIM/GIFT integration.
@@ -28,7 +26,6 @@ type SubmitFacilitiesToApimGiftParams = {
 export const sendFacilitiesToApimGift = async ({
   deal,
   facilities,
-  isBssEwcsDeal,
   isGefDeal,
   newPartyUrnCreated = false,
 }: SubmitFacilitiesToApimGiftParams): Promise<TfmFacility | TfmFacility[] | boolean> => {
@@ -44,8 +41,6 @@ export const sendFacilitiesToApimGift = async ({
       deal,
       facility: facilities[0],
       facilityCategories,
-      isBssEwcsDeal,
-      isGefDeal,
       newPartyUrnCreated,
     });
 
@@ -57,8 +52,6 @@ export const sendFacilitiesToApimGift = async ({
   const payloads = await APIM_GIFT_PAYLOADS.createFacilities({
     deal,
     facilities,
-    isBssEwcsDeal,
-    isGefDeal,
     newPartyUrnCreated,
     facilityCategories,
     creditRiskRatings,

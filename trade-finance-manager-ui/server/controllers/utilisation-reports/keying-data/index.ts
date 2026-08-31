@@ -1,9 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { getFeeRecordIdsForKeyingSheetRowsWithStatusFromObjectKeys } from './keying-sheet-checkbox-id-helpers';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
+
+export type PostKeyingDataRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 
 /**
  * Controller to post keying data
@@ -13,7 +15,7 @@ import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
  * @param  res - The Express response object.
  * @returns
  */
-export const postKeyingData = async (req: Request, res: Response) => {
+export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { reportId } = req.params;
 
@@ -28,6 +30,7 @@ export const postKeyingData = async (req: Request, res: Response) => {
 };
 
 export type PostKeyingDataMarkAsRequest = CustomExpressRequest<{
+  params: { reportId: string };
   reqBody: Record<KeyingSheetCheckboxId, 'on'>;
 }>;
 

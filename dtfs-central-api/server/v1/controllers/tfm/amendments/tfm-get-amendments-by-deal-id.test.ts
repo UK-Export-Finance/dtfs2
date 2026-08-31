@@ -1,9 +1,9 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { AMENDMENT_QUERIES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, AMENDMENT_QUERY_STATUSES } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../../../test-helpers';
-import { getAmendmentsByDealId } from './tfm-get-amendments.controller';
+import { getAmendmentsByDealId, GetAmendmentsByDealIdRequest } from './tfm-get-amendments.controller';
 
 const mockFindTfmAmendmentsByDealIdAndStatus = jest.fn();
 const mockFindLatestCompletedAmendmentByDealId = jest.fn();
@@ -14,6 +14,9 @@ const dealId = new ObjectId().toString();
 
 const aTfmAmendment = aTfmFacilityAmendment();
 const aCompletedTfmAmendment = { ...aCompletedTfmFacilityAmendment(), value: 1000000, currency: 'GBP' };
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetAmendmentsByDealIdRequest>(options);
+
+const getHttpMocks = (options: RequestOptions) => createHttpMocks(options);
 
 describe('getAmendmentsByDealId', () => {
   beforeAll(() => {
@@ -33,7 +36,7 @@ describe('getAmendmentsByDealId', () => {
   });
 
   it(`should call findTfmAmendmentsByDealIdAndStatus when status is ${AMENDMENT_QUERY_STATUSES.IN_PROGRESS}`, async () => {
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = getHttpMocks({
       params: { dealId, status: AMENDMENT_QUERY_STATUSES.IN_PROGRESS },
     });
 
@@ -45,7 +48,7 @@ describe('getAmendmentsByDealId', () => {
   });
 
   it(`should call findLatestCompletedAmendmentByDealId when status is ${AMENDMENT_QUERY_STATUSES.COMPLETED} and type is ${AMENDMENT_QUERIES.LATEST}`, async () => {
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = getHttpMocks({
       params: { dealId, status: AMENDMENT_QUERY_STATUSES.COMPLETED, type: AMENDMENT_QUERIES.LATEST },
     });
 
@@ -62,7 +65,7 @@ describe('getAmendmentsByDealId', () => {
 
   it(`should call findAllTypeAmendmentsByDealIdAndStatus when status is ${AMENDMENT_QUERY_STATUSES.APPROVED}`, async () => {
     const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = getHttpMocks({
       params: { dealId, status: AMENDMENT_QUERY_STATUSES.APPROVED },
     });
 
@@ -74,7 +77,7 @@ describe('getAmendmentsByDealId', () => {
   });
 
   it('should call findAmendmentsByDealId when no status and type are provided', async () => {
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = getHttpMocks({
       params: { dealId },
     });
 

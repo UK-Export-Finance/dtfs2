@@ -85,7 +85,7 @@ describe('SignInLinkService', () => {
         const blockedUser = { ...user, 'user-status': STATUS.BLOCKED };
 
         it('throws a UserBlockedError', async () => {
-          await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrowError(UserBlockedError);
+          await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrow(UserBlockedError);
         });
       });
 
@@ -93,7 +93,7 @@ describe('SignInLinkService', () => {
         const disabledUser = { ...user, disabled: true };
 
         it('throws a UserBlockedError', async () => {
-          await expect(service.createAndEmailSignInLink(disabledUser)).rejects.toThrowError(UserBlockedError);
+          await expect(service.createAndEmailSignInLink(disabledUser)).rejects.toThrow(UserBlockedError);
         });
       });
 
@@ -336,7 +336,7 @@ describe('SignInLinkService', () => {
                     });
 
                     it('blocks the user', async () => {
-                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrowError(UserBlockedError);
+                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrow(UserBlockedError);
 
                       expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
                       expect(userRepository.blockUser).toHaveBeenCalledWith({

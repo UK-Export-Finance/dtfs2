@@ -6,7 +6,7 @@ const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 const { InvalidDatabaseQueryError } = require('./errors/invalid-database-query.error');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
 
@@ -522,6 +522,23 @@ const getAllBanks = async () => {
     console.error('Failed to get all banks', error);
     throw error;
   }
+};
+
+/**
+ * Gets the list of banks used on the Portal login page from DTFS Central.
+ *
+ * The response is expected to be ordered by the bank `order` field in ascending
+ * order and includes only the fields needed by the UI.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The portal bank list.
+ * The returned promise rejects with the underlying Axios error if the request fails.
+ */
+const getPortalBankList = async () => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/portal-bank-list`, {
+    headers: headers.central,
+  });
+
+  return response.data;
 };
 
 /**
@@ -1166,6 +1183,7 @@ module.exports = {
   getUtilisationReportById,
   getBankById,
   getAllBanks,
+  getPortalBankList,
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,

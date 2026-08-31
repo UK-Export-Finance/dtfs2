@@ -13,6 +13,6 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/multiFileUpload.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/multiFileUpload.js"]')
-      .toHaveAttribute('integrity', 'sha512-ekWMPm/25Rov8i1Ph0RQnMDwR+0NeNIof2J8Ysb+44fE6zj/LGNnDvFwM56fYZ84L1Npm9twIIfhB9UBClMgaQ==');
+      .toHaveAttribute('integrity', 'sha512-bPTyeoR4xlLkjM947l89cxD/ed/CKBx2Hh2bcpE7udjebeaAX0C7biH1BsM1aZbtVxsUIFTC9WzYj9JqIpZL7w==');
   });
 });
