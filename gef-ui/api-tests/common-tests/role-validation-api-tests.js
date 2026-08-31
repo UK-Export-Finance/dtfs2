@@ -54,8 +54,8 @@ const withRoleValidationApiTests = ({
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
-    const includeWhitelistedRolesTests = whitelistedRoles.length;
-    const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length;
+    const includeWhitelistedRolesTests = whitelistedRoles.length > 0;
+    const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length > 0;
 
     if (includeWhitelistedRolesTests || includeNonWhitelistedRolesTests) {
       beforeEach(async () => {
