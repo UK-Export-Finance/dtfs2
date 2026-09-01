@@ -14,6 +14,7 @@ jest.mock('../../server/services/api', () => ({
   updateApplication: jest.fn(),
   updateSupportingInformation: jest.fn(),
   deleteFile: jest.fn(),
+  deleteFacility: jest.fn(),
   createFacility: jest.fn(),
   setApplicationStatus: jest.fn(),
   getCompanyByRegistrationNumber: jest.fn(),
