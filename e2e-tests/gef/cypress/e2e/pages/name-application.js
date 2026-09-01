@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const nameApplication = {
   internalRef: () => cy.get('[data-cy="internal-ref"]'),
   additionalRef: () => cy.get('[data-cy="additional-ref"]'),

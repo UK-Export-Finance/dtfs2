@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const enterExportersCorAddress = {
   addressLine1: () => cy.get('[data-cy="address-line-1"]'),
   addressLine2: () => cy.get('[data-cy="address-line-2"]'),
