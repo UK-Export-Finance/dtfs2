@@ -23,6 +23,7 @@ describe('application submission routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/submit`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
+      extraSessionData: { bank: { id: '9' } },
     });
   });
 
@@ -31,6 +32,7 @@ describe('application submission routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/submit`),
       whitelistedRoles: [MAKER],
       successCode: 200,
+      extraSessionData: { bank: { id: '9' } },
     });
   });
 });
