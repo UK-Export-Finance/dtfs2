@@ -596,7 +596,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feePayments[2].formattedCurrencyAndAmount).toEqual('GBP 0.01');
       expect(result[0].feePayments[2].formattedDateReceived).toEqual('1 May 2024');
       expect(result[0].feePayments[3].formattedCurrencyAndAmount).toEqual('JPY 0.00');
-      expect(result[0].feePayments[3].formattedDateReceived).toEqual(undefined);
+      expect(result[0].feePayments[3].formattedDateReceived).toBeUndefined();
     });
 
     it('should set the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {

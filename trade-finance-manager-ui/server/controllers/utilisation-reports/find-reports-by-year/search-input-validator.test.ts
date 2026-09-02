@@ -48,8 +48,8 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
 
       // Assert
       expect(errorSummary).toEqual([]);
-      expect(bankError).toEqual(undefined);
-      expect(yearError).toEqual(undefined);
+      expect(bankError).toBeUndefined();
+      expect(yearError).toBeUndefined();
       expect(bankIdAsString).toEqual(bankIdQuery);
       expect(yearAsString).toEqual(yearQuery);
     });
@@ -71,7 +71,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
       expect(bankError).toEqual(expectedBankError);
-      expect(yearError).toEqual(undefined);
+      expect(yearError).toBeUndefined();
       expect(bankIdAsString).toEqual(expectedBankIdAsString);
       expect(yearAsString).toEqual(yearQuery);
     });
@@ -92,7 +92,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
 
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
-      expect(bankError).toEqual(undefined);
+      expect(bankError).toBeUndefined();
       expect(yearError).toEqual(expectedYearError);
       expect(bankIdAsString).toEqual(bankIdQuery);
       expect(yearAsString).toEqual(expectedYearAsString);
@@ -115,7 +115,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
 
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
-      expect(bankError).toEqual(undefined);
+      expect(bankError).toBeUndefined();
       expect(yearError).toEqual(expectedYearError);
       expect(bankIdAsString).toEqual(bankIdQuery);
       expect(yearAsString).toEqual(expectedYearAsString);
@@ -138,7 +138,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
 
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
-      expect(bankError).toEqual(undefined);
+      expect(bankError).toBeUndefined();
       expect(yearError).toEqual(expectedYearError);
       expect(bankIdAsString).toEqual(bankIdQuery);
       expect(yearAsString).toEqual(expectedYearAsString);
@@ -163,7 +163,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
 
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
-      expect(bankError).toEqual(undefined);
+      expect(bankError).toBeUndefined();
       expect(yearError).toEqual(expectedYearError);
       expect(bankIdAsString).toEqual(bankIdQuery);
       expect(yearAsString).toEqual(expectedYearAsString);
@@ -186,7 +186,7 @@ describe('controllers/utilisation-reports/find-reports-by-year/search-input-vali
       // Assert
       expect(errorSummary).toEqual(expectedErrorSummary);
       expect(bankError).toEqual(expectedBankError);
-      expect(yearError).toEqual(undefined);
+      expect(yearError).toBeUndefined();
       expect(bankIdAsString).toEqual(expectedBankIdAsString);
       expect(yearAsString).toEqual(yearQuery);
     });

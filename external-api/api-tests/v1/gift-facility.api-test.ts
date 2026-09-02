@@ -4,7 +4,6 @@
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';
-import { addDays, addYears, format, formatISO } from 'date-fns';
 import { APIM_GIFT_PAYLOADS_EXAMPLES } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -14,6 +13,10 @@ dotenv.config({ quiet: true });
 const { APIM_TFS_URL } = process.env;
 
 const { post, get } = api(app);
+
+const facilityId = '12345';
+const expiryDate = '2027-08-20';
+const amendedAt = '2026-08-21T00:00:00.000Z';
 
 describe('/gift', () => {
   const baseUrl = String(APIM_TFS_URL);
@@ -172,10 +175,7 @@ describe('/gift', () => {
   });
 
   describe('POST /facility/:facilityId/amendment', () => {
-    const facilityId = '12345';
     const url = `/v2/gift/facility/${facilityId}/amendment`;
-    const expiryDate = format(addYears(new Date(), 1), 'yyyy-MM-dd');
-    const amendedAt = formatISO(addDays(new Date(), 1));
     const mockBody = {
       amendmentType: 'ReplaceExpiryDate',
       amendmentData: {
@@ -213,6 +213,64 @@ describe('/gift', () => {
 
       // Act
       const response = await post(mockBody).to(`/gift/facility/${facilityId}/amendment`);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Accepted);
+      expect(response.body).toEqual({ success: true });
+    });
+  });
+
+  describe('POST /facility/:facilityId/multiple-amendments', () => {
+    const url = `/v2/gift/facility/${facilityId}/multiple-amendments`;
+
+    const mockBody = {
+      amendments: [
+        {
+          amendmentType: 'IncreaseAmount',
+          amendmentData: {
+            amount: 13800,
+            date: '2026-12-20',
+          },
+        },
+        {
+          amendmentType: 'ReplaceExpiryDate',
+          amendmentData: {
+            expiryDate,
+          },
+        },
+      ],
+    };
+
+    it(`should return ${HttpStatusCode.Accepted} with a success body`, async () => {
+      // Arrange
+      nock.abortPendingRequests();
+      nock.cleanAll();
+
+      const apimResponseBody = {
+        success: true,
+        facilityId,
+        amendedAt,
+      };
+
+      nock(baseUrl).post(url).reply(HttpStatusCode.Accepted, apimResponseBody);
+
+      // Act
+      const response = await post(mockBody).to(`/gift/facility/${facilityId}/multiple-amendments`);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Accepted);
+      expect(response.body).toEqual({ success: true });
+    });
+
+    it(`should return ${HttpStatusCode.Accepted} with an empty body when APIM returns no data`, async () => {
+      // Arrange
+      nock.abortPendingRequests();
+      nock.cleanAll();
+
+      nock(baseUrl).post(url).reply(HttpStatusCode.Accepted);
+
+      // Act
+      const response = await post(mockBody).to(`/gift/facility/${facilityId}/multiple-amendments`);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Accepted);

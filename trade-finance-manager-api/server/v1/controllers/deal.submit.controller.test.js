@@ -202,7 +202,6 @@ describe('submitDealAfterUkefIds', () => {
         expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: true,
         });
@@ -225,7 +224,6 @@ describe('submitDealAfterUkefIds', () => {
         expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: false,
         });
@@ -248,7 +246,6 @@ describe('submitDealAfterUkefIds', () => {
         expect(sendFacilitiesToApimGift).toHaveBeenNthCalledWith(1, {
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
           newPartyUrnCreated: undefined,
         });
@@ -330,7 +327,6 @@ describe('submitDealAfterUkefIds', () => {
         expect(sendFacilitiesToApimGift).toHaveBeenCalledWith({
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
         });
       });

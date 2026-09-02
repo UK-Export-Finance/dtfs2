@@ -18,6 +18,6 @@ export const CRYPTO = {
   },
   SALT: {
     // Salt random bytes
-    BYTES: 128,
+    BYTES: 64,
   },
 };
