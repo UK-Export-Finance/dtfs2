@@ -465,5 +465,5 @@ describe('addPartyUrns', () => {
       // Assert - For BSS/EWCS, existing URN doesn't affect the flag
       expect(result).toHaveProperty('newPartyUrnCreated', true);
     });
-  });;
+  });
 });
