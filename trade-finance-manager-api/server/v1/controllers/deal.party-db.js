@@ -160,7 +160,8 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const dealUpdate = {
     tfm: {
-      ...deal.tfm, parties: {
+      ...deal.tfm,
+      parties: {
         exporter: {
           partyUrn: exporterPartyUrn,
           partyUrnRequired: hasExporter,
