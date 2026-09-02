@@ -7,18 +7,28 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  createFeedback: jest.fn(),
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
 const allRoles = Object.values(ROLES);
 
 describe('feedback routes', () => {
+  beforeEach(() => {
+    api.createFeedback.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('GET /feedback', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/feedback', {}, headers),
@@ -31,8 +41,8 @@ describe('feedback routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/feedback'),
       whitelistedRoles: allRoles,
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 302,
+      successHeaders: { location: '/thank-you-feedback' },
     });
   });
 
