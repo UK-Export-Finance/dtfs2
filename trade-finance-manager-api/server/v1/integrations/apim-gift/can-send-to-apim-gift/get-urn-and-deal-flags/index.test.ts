@@ -2,6 +2,42 @@ import { DEAL_SUBMISSION_TYPE, DEAL_TYPE, TfmDeal } from '@ukef/dtfs2-common';
 import { getUrnAndDealFlags } from '.';
 import { mockTfmDeal } from '../../test-mocks';
 
+type DealTypeValue = (typeof DEAL_TYPE)[keyof typeof DEAL_TYPE];
+type SubmissionTypeValue = (typeof DEAL_SUBMISSION_TYPE)[keyof typeof DEAL_SUBMISSION_TYPE];
+
+const createMockDeal = (overrides?: {
+  dealType?: DealTypeValue | null;
+  submissionType?: SubmissionTypeValue | null;
+  bankUrn?: string;
+  exporterCreditRating?: string | null | undefined;
+  buyerUrn?: string;
+  exporterUrn?: string;
+}): TfmDeal =>
+  ({
+    ...mockTfmDeal,
+    dealSnapshot: {
+      ...mockTfmDeal.dealSnapshot,
+      dealType: overrides?.dealType ?? mockTfmDeal.dealSnapshot.dealType,
+      submissionType: overrides?.submissionType ?? mockTfmDeal.dealSnapshot.submissionType,
+      bank: {
+        ...mockTfmDeal.dealSnapshot.bank,
+        partyUrn: overrides?.bankUrn ?? mockTfmDeal.dealSnapshot.bank.partyUrn,
+      },
+    },
+    tfm: {
+      ...mockTfmDeal.tfm,
+      exporterCreditRating: overrides?.exporterCreditRating ?? 'Acceptable (B+)',
+      parties: {
+        buyer: {
+          partyUrn: overrides?.buyerUrn ?? 'Mock buyer URN',
+        },
+        exporter: {
+          partyUrn: overrides?.exporterUrn ?? 'Mock exporter URN',
+        },
+      },
+    },
+  }) as TfmDeal;
+
 describe('getUrnAndDealFlags', () => {
   describe.each([
     {
@@ -32,29 +68,12 @@ describe('getUrnAndDealFlags', () => {
     describe('when all URNs are present and exporter credit rating is present', () => {
       it('should return correct flags', () => {
         // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType,
-            submissionType,
-            bank: {
-              partyUrn: 'bank-urn',
-            },
-          },
-          tfm: {
-            ...mockTfmDeal.tfm,
-            exporterCreditRating: 'Acceptable (B+)',
-            parties: {
-              buyer: {
-                partyUrn: isBssEwcsDeal ? 'buyer-urn' : '',
-              },
-              exporter: {
-                partyUrn: isGefDeal ? 'exporter-urn' : '',
-              },
-            },
-          },
-        } as TfmDeal;
+        const mockDeal = createMockDeal({
+          dealType,
+          submissionType,
+          buyerUrn: isBssEwcsDeal ? 'Mock buyer URN' : '',
+          exporterUrn: isGefDeal ? 'Mock exporter URN' : '',
+        });
 
         // Act
         const result = getUrnAndDealFlags(mockDeal);
@@ -77,29 +96,13 @@ describe('getUrnAndDealFlags', () => {
     describe('when no URNs are present', () => {
       it('should return isValidBssEwcsDeal and isValidGefDeal as false', () => {
         // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType,
-            submissionType,
-            bank: {
-              partyUrn: '',
-            },
-          },
-          tfm: {
-            ...mockTfmDeal.tfm,
-            exporterCreditRating: 'Acceptable (B+)',
-            parties: {
-              buyer: {
-                partyUrn: '',
-              },
-              exporter: {
-                partyUrn: '',
-              },
-            },
-          },
-        } as TfmDeal;
+        const mockDeal = createMockDeal({
+          dealType,
+          submissionType,
+          bankUrn: '',
+          buyerUrn: '',
+          exporterUrn: '',
+        });
 
         // Act
         const result = getUrnAndDealFlags(mockDeal);
@@ -123,29 +126,10 @@ describe('getUrnAndDealFlags', () => {
   ])('when the deal is $dealType, submission type is $submissionType (invalid submission type)', ({ dealType, submissionType }) => {
     it('should return validSubmissionType as false', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType,
-          submissionType,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType,
+        submissionType,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -160,29 +144,11 @@ describe('getUrnAndDealFlags', () => {
     ({ exporterCreditRating }: { exporterCreditRating: string | null | undefined }) => {
       it('should return hasExporterCreditRating as false', () => {
         // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-            bank: {
-              partyUrn: 'bank-urn',
-            },
-          },
-          tfm: {
-            ...mockTfmDeal.tfm,
-            exporterCreditRating,
-            parties: {
-              buyer: {
-                partyUrn: 'buyer-urn',
-              },
-              exporter: {
-                partyUrn: 'exporter-urn',
-              },
-            },
-          },
-        } as TfmDeal;
+        const mockDeal = createMockDeal({
+          dealType: DEAL_TYPE.BSS_EWCS,
+          submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          exporterCreditRating,
+        });
 
         // Act
         const result = getUrnAndDealFlags(mockDeal);
@@ -196,29 +162,10 @@ describe('getUrnAndDealFlags', () => {
   describe('when exporter credit rating is present', () => {
     it('should return hasExporterCreditRating as true', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.GEF,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.GEF,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -231,29 +178,10 @@ describe('getUrnAndDealFlags', () => {
   describe(`when deal type is not ${DEAL_TYPE.BSS_EWCS} or ${DEAL_TYPE.GEF}`, () => {
     it('should return validDealType as false', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: null,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as unknown as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: null,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -268,29 +196,11 @@ describe('getUrnAndDealFlags', () => {
   describe(`when deal type is ${DEAL_TYPE.BSS_EWCS} but buyer URN is missing`, () => {
     it('should return isValidBssEwcsDeal as false', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.BSS_EWCS,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: '',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.BSS_EWCS,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+        buyerUrn: '',
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -303,29 +213,11 @@ describe('getUrnAndDealFlags', () => {
   describe(`when deal type is ${DEAL_TYPE.GEF} but exporter URN is missing`, () => {
     it('should return isValidGefDeal as false', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.GEF,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: '',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.GEF,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+        exporterUrn: '',
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -338,29 +230,10 @@ describe('getUrnAndDealFlags', () => {
   describe('when both buyer and exporter URNs are present', () => {
     it(`should return isValidBssEwcsDeal as true for ${DEAL_TYPE.BSS_EWCS} deal`, () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.BSS_EWCS,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.BSS_EWCS,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -372,29 +245,10 @@ describe('getUrnAndDealFlags', () => {
 
     it(`should return isValidGefDeal as true for ${DEAL_TYPE.GEF} deal`, () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.GEF,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.GEF,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -408,29 +262,10 @@ describe('getUrnAndDealFlags', () => {
   describe('return shape consistency', () => {
     it('should always return all required properties', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.BSS_EWCS,
-          submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.BSS_EWCS,
+        submissionType: DEAL_SUBMISSION_TYPE.AIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
@@ -447,29 +282,10 @@ describe('getUrnAndDealFlags', () => {
 
     it('should return boolean values for all properties', () => {
       // Arrange
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType: DEAL_TYPE.GEF,
-          submissionType: DEAL_SUBMISSION_TYPE.MIN,
-          bank: {
-            partyUrn: 'bank-urn',
-          },
-        },
-        tfm: {
-          ...mockTfmDeal.tfm,
-          exporterCreditRating: 'Acceptable (B+)',
-          parties: {
-            buyer: {
-              partyUrn: 'buyer-urn',
-            },
-            exporter: {
-              partyUrn: 'exporter-urn',
-            },
-          },
-        },
-      } as TfmDeal;
+      const mockDeal = createMockDeal({
+        dealType: DEAL_TYPE.GEF,
+        submissionType: DEAL_SUBMISSION_TYPE.MIN,
+      });
 
       // Act
       const result = getUrnAndDealFlags(mockDeal);
