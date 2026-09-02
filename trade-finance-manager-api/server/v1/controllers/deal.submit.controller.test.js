@@ -392,7 +392,7 @@ describe('submitDealBeforeUkefIds', () => {
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
-    canSendDealFacilitiesToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+    canSendDealFacilitiesToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
 
     convertDealCurrencies.mockImplementation(async (deal) => deal);
     createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));
