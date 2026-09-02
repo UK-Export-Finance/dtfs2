@@ -1,4 +1,4 @@
-const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, DEAL_TYPE } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo, updateDeal } = require('../api.js');
 
 const api = require('./deal.party-db');
@@ -29,6 +29,9 @@ const req = {
 
 const mockDeal = {
   _id: 'deal-123',
+  dealSnapshot: {
+    dealType: DEAL_TYPE.GEF,
+  },
   exporter: {
     companyName: 'Test Company',
     companiesHouseRegistrationNumber: '12345678',
@@ -263,17 +266,17 @@ describe('addPartyUrns', () => {
     expect(result).toBe(false);
   });
 
-  describe('when a party URN is successfully retrieved', () => {
-    it('should return deal with newPartyUrnCreated flag set to true', async () => {
+  describe('when a party URN is successfully retrieved for a GEF deal', () => {
+    it('should return deal with newPartyUrnCreated flag set to true when exporter party did not exist before', async () => {
       // Arrange
       isSalesforceCustomerCreationEnabled.mockReturnValue(true);
-
-      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN_123' }]);
+      getPartyDbInfo.mockResolvedValue(null); // Party did not exist before
+      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]);
 
       updateDeal.mockResolvedValue({
         tfm: {
           parties: {
-            exporter: { partyUrn: 'TEST_URN_123', partyUrnRequired: true },
+            exporter: { partyUrn: 'Mock URN', partyUrnRequired: true },
             buyer: { partyUrn: '', partyUrnRequired: false },
             indemnifier: { partyUrn: '', partyUrnRequired: false },
             agent: { partyUrn: '', partyUrnRequired: false },
@@ -281,13 +284,149 @@ describe('addPartyUrns', () => {
         },
       });
 
+      const gefDeal = {
+        ...mockDeal,
+        dealSnapshot: { dealType: DEAL_TYPE.GEF },
+        tfm: {}, // No existing exporter URN
+      };
+
       // Act
-      const result = await api.addPartyUrns(mockDeal, {});
+      const result = await api.addPartyUrns(gefDeal, {});
 
       // Assert
       expect(result).toHaveProperty('deal');
       expect(result).toHaveProperty('newPartyUrnCreated', true);
       expect(result.deal._id).toBe('deal-123');
+    });
+
+    it('should return deal with newPartyUrnCreated flag set to false when GEF deal already has exporter party URN', async () => {
+      // Arrange
+      isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+      getPartyDbInfo.mockResolvedValue(null); // Party did not exist before
+      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]);
+
+      updateDeal.mockResolvedValue({
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN', partyUrnRequired: true },
+            buyer: { partyUrn: '', partyUrnRequired: false },
+            indemnifier: { partyUrn: '', partyUrnRequired: false },
+            agent: { partyUrn: '', partyUrnRequired: false },
+          },
+        },
+      });
+
+      const gefDeal = {
+        ...mockDeal,
+        dealSnapshot: { dealType: DEAL_TYPE.GEF },
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN' }, // Deal already has exporter URN
+          },
+        },
+      };
+
+      // Act
+      const result = await api.addPartyUrns(gefDeal, {});
+
+      // Assert
+      expect(result).toHaveProperty('newPartyUrnCreated', false);
+    });
+
+    it('should return deal with newPartyUrnCreated flag set to false when exporter party existed before', async () => {
+      // Arrange
+      isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+      getPartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]); // Party existed before
+      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]);
+
+      updateDeal.mockResolvedValue({
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN', partyUrnRequired: true },
+            buyer: { partyUrn: '', partyUrnRequired: false },
+            indemnifier: { partyUrn: '', partyUrnRequired: false },
+            agent: { partyUrn: '', partyUrnRequired: false },
+          },
+        },
+      });
+
+      const gefDeal = {
+        ...mockDeal,
+        dealSnapshot: { dealType: DEAL_TYPE.GEF },
+        tfm: {},
+      };
+
+      // Act
+      const result = await api.addPartyUrns(gefDeal, {});
+
+      // Assert
+      expect(result).toHaveProperty('newPartyUrnCreated', false);
+    });
+  });
+
+  describe(`when a party URN is successfully retrieved for a ${DEAL_TYPE.BSS_EWCS} deal`, () => {
+    it('should return deal with newPartyUrnCreated flag set to true when exporter party did not exist before', async () => {
+      // Arrange
+      isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+      getPartyDbInfo.mockResolvedValue(null); // Party did not exist before
+      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]);
+
+      updateDeal.mockResolvedValue({
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN', partyUrnRequired: true },
+            buyer: { partyUrn: '', partyUrnRequired: false },
+            indemnifier: { partyUrn: '', partyUrnRequired: false },
+            agent: { partyUrn: '', partyUrnRequired: false },
+          },
+        },
+      });
+
+      const bssEwcsDeal = {
+        ...mockDeal,
+        dealSnapshot: { dealType: DEAL_TYPE.BSS_EWCS },
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN' }, // BSS/EWCS may have existing URN, but should still be true
+          },
+        },
+      };
+
+      // Act
+      const result = await api.addPartyUrns(bssEwcsDeal, {});
+
+      // Assert
+      expect(result).toHaveProperty('newPartyUrnCreated', true);
+    });
+
+    it('should return deal with newPartyUrnCreated flag set to false when exporter party existed before', async () => {
+      // Arrange
+      isSalesforceCustomerCreationEnabled.mockReturnValue(true);
+      getPartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]); // Party existed before
+      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'Mock URN' }]);
+
+      updateDeal.mockResolvedValue({
+        tfm: {
+          parties: {
+            exporter: { partyUrn: 'Mock URN', partyUrnRequired: true },
+            buyer: { partyUrn: '', partyUrnRequired: false },
+            indemnifier: { partyUrn: '', partyUrnRequired: false },
+            agent: { partyUrn: '', partyUrnRequired: false },
+          },
+        },
+      });
+
+      const bssEwcsDeal = {
+        ...mockDeal,
+        dealSnapshot: { dealType: DEAL_TYPE.BSS_EWCS },
+        tfm: {},
+      };
+
+      // Act
+      const result = await api.addPartyUrns(bssEwcsDeal, {});
+
+      // Assert
+      expect(result).toHaveProperty('newPartyUrnCreated', false);
     });
   });
 
