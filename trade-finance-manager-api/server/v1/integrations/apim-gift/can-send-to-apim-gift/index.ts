@@ -1,11 +1,9 @@
-import { DEAL_SUBMISSION_TYPE, isTfmApimGiftIntegrationEnabled, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { isTfmApimGiftIntegrationEnabled, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
-import { getDealTypeFlags } from '../../../mappings/apim-gift-payloads/create-facility/get-deal-type-flags';
 import { mapFacilitiesToSendToGift } from '../map-facilities-to-send-to-gift';
 import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 import { generateIssuedFacilitiesQueryString } from '../generate-issued-facilities-query-string';
-
-const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
+import { getUrnAndDealFlags } from './get-urn-and-deal-flags';
 
 type CanSubmitFacilitiesToApimGiftReturnShape = {
   canSendFacilitiesToApimGift: boolean;
@@ -38,22 +36,8 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
 
   const api = apiModule as ApiTypes;
 
-  const { dealType, submissionType } = deal.dealSnapshot;
-
-  const { isBssEwcsDeal, isGefDeal } = getDealTypeFlags(dealType);
-
-  const validDealType = isBssEwcsDeal || isGefDeal;
-  const validSubmissionType = submissionType === AIN || submissionType === MIN;
-
-  /**
-   * NOTE: During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
-   * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
-   *
-   * BSS/EWCS/GEF should only send facilities to APIM/GIFT if the buyer party URN is populated.
-   *
-   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSendFacilitiesToApimGift as false.
-   */
-  const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());
+  const { hasExporterCreditRating, isBssEwcsDeal, isGefDeal, isValidBssEwcsDeal, isValidGefDeal, validDealType, validSubmissionType } =
+    getUrnAndDealFlags(deal);
 
   if (!validDealType || !validSubmissionType || !hasExporterCreditRating) {
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - invalid deal type, submission type, or missing exporter credit rating', dealId);
@@ -63,22 +47,7 @@ export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilit
     };
   }
 
-  /**
-   * NOTE: During first BSS/EWCS deal submission, tfm.parties.buyer?.partyUrn will always be an empty string.
-   *
-   * The buyer party URN is populated in TFM - after the first deal submission.
-   * BSS/EWCS should only send facilities to APIM/GIFT if the buyer party URN is populated.
-   *
-   * Therefore, for the first submission of a BSS/EWCS deal, we should return canSendFacilitiesToApimGift as false.
-   * For GEF deals, there is no requirement for a buyer party URN to be populated to submit facilities to APIM/GIFT, so GEF deals can submit facilities on the first submission.
-   * This is an edge case but this is future proofed, and is important to prevent attempts to submit facilities to APIM/GIFT when the buyer party URN is not populated as this will cause errors in the APIM/GIFT integration.
-   * Once the buyer party URN is populated after the first submission, BSS/EWCS deals can submit facilities to APIM/GIFT on subsequent submissions as normal.
-   */
-  const hasBuyerPartyUrn = Boolean(deal.tfm.parties.buyer?.partyUrn);
-
-  const isValidBssEwcsDeal = isBssEwcsDeal && hasBuyerPartyUrn;
-
-  if (!isValidBssEwcsDeal && !isGefDeal) {
+  if (!isValidBssEwcsDeal && !isValidGefDeal) {
     console.info('Issued facilities for deal %s cannot be sent to APIM GIFT - invalid BSS/EWCS or GEF deal', dealId);
 
     return {

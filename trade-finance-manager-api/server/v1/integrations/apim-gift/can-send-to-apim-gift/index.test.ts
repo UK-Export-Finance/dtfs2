@@ -1,8 +1,9 @@
-import { DEAL_SUBMISSION_TYPE, DEAL_TYPE, TfmDeal, TfmFacility, isTfmApimGiftIntegrationEnabled } from '@ukef/dtfs2-common';
+import { TfmFacility, isTfmApimGiftIntegrationEnabled } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
 import { canSendToApimGift } from '.';
 import * as generateIssuedFacilitiesQueryStringModule from '../generate-issued-facilities-query-string';
 import * as mapFacilitiesToSendToGiftModule from '../map-facilities-to-send-to-gift';
+import * as getUrnAndDealFlagsModule from './get-urn-and-deal-flags';
 import { ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 import { mockGiftFacility, mockTfmDeal, mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility } from '../test-mocks';
 
@@ -33,11 +34,17 @@ jest.mock('../map-facilities-to-send-to-gift', () => ({
   mapFacilitiesToSendToGift: jest.fn(),
 }));
 
+jest.mock('./get-urn-and-deal-flags', () => ({
+  __esModule: true,
+  getUrnAndDealFlags: jest.fn(),
+}));
+
 const mockFeatureFlag = jest.mocked(isTfmApimGiftIntegrationEnabled);
 const mockApi = jest.mocked(apiModule) as jest.Mocked<ApiTypes>;
 const mockFindGiftFacilitiesByIds = mockApi.findGiftFacilitiesByIds as jest.MockedFunction<ApiTypes['findGiftFacilitiesByIds']>;
 const mockGenerateIssuedFacilitiesQueryString = jest.mocked(generateIssuedFacilitiesQueryStringModule.generateIssuedFacilitiesQueryString);
 const mockMapFacilitiesToSendToGift = jest.mocked(mapFacilitiesToSendToGiftModule.mapFacilitiesToSendToGift);
+const mockGetUrnAndDealFlags = jest.mocked(getUrnAndDealFlagsModule.getUrnAndDealFlags);
 
 describe('canSendToApimGift', () => {
   beforeEach(() => {
@@ -54,19 +61,15 @@ describe('canSendToApimGift', () => {
       const result = await canSendToApimGift(mockTfmDeal);
 
       // Assert
-      const expected = {
-        canSendFacilitiesToApimGift: false,
-      };
-
-      expect(result).toEqual(expected);
+      expect(result.canSendFacilitiesToApimGift).toBe(false);
     });
 
-    it('should NOT call findFacilitiesByDealId', async () => {
+    it('should NOT call getUrnAndDealFlags', async () => {
       // Act
       await canSendToApimGift(mockTfmDeal);
 
       // Assert
-      expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
+      expect(mockGetUrnAndDealFlags).not.toHaveBeenCalled();
     });
   });
 
@@ -75,117 +78,154 @@ describe('canSendToApimGift', () => {
       mockFeatureFlag.mockReturnValue(true);
     });
 
-    describe.each([
-      {
-        dealType: DEAL_TYPE.BSS_EWCS,
-        submissionType: DEAL_SUBMISSION_TYPE.AIN,
-        isBssEwcsDeal: true,
-        isGefDeal: false,
-      },
-      {
-        dealType: DEAL_TYPE.BSS_EWCS,
-        submissionType: DEAL_SUBMISSION_TYPE.MIN,
-        isBssEwcsDeal: true,
-        isGefDeal: false,
-      },
-      {
-        dealType: DEAL_TYPE.GEF,
-        submissionType: DEAL_SUBMISSION_TYPE.AIN,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
-      },
-      {
-        dealType: DEAL_TYPE.GEF,
-        submissionType: DEAL_SUBMISSION_TYPE.MIN,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
-      },
-    ])('when the deal is $dealType, submission type is $submissionType', ({ dealType, submissionType, isBssEwcsDeal, isGefDeal }) => {
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType,
-          submissionType,
-        },
-        tfm: mockTfmDeal.tfm,
-      } as TfmDeal;
-
-      it('should call findFacilitiesByDealId', async () => {
+    describe('when deal flags validation fails', () => {
+      it('should return canSendFacilitiesToApimGift as false when validDealType is false', async () => {
         // Arrange
-        const mockIssuedFacility = mockTfmIssuedFacility1;
-
-        mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility]);
-        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(String(mockIssuedFacility.facilitySnapshot.ukefFacilityId));
-        mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
-        mockMapFacilitiesToSendToGift.mockReturnValueOnce({
-          facilitiesToSendToApimGift: [mockIssuedFacility],
+        mockGetUrnAndDealFlags.mockReturnValue({
+          hasExporterCreditRating: true,
+          isBssEwcsDeal: false,
+          isGefDeal: false,
+          isValidBssEwcsDeal: false,
+          isValidGefDeal: false,
+          validDealType: false,
+          validSubmissionType: true,
         });
 
         // Act
-        await canSendToApimGift(mockDeal);
+        const result = await canSendToApimGift(mockTfmDeal);
 
         // Assert
-        expect(mockApi.findFacilitiesByDealId).toHaveBeenNthCalledWith(1, mockDeal._id);
+        expect(result.canSendFacilitiesToApimGift).toBe(false);
+        expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
       });
 
-      it('should call api.findGiftFacilitiesByIds with the expected query string', async () => {
+      it('should return canSendFacilitiesToApimGift as false when validSubmissionType is false', async () => {
         // Arrange
-        const expectedQueryString = [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId].join(',');
-
-        mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1]);
-        mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(expectedQueryString);
-        mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
-        mockMapFacilitiesToSendToGift.mockReturnValueOnce({ facilitiesToSendToApimGift: [mockTfmIssuedFacility1] });
+        mockGetUrnAndDealFlags.mockReturnValue({
+          hasExporterCreditRating: true,
+          isBssEwcsDeal: true,
+          isGefDeal: false,
+          isValidBssEwcsDeal: true,
+          isValidGefDeal: false,
+          validDealType: true,
+          validSubmissionType: false,
+        });
 
         // Act
-        await canSendToApimGift(mockDeal);
+        const result = await canSendToApimGift(mockTfmDeal);
 
         // Assert
-        expect(mockApi.findGiftFacilitiesByIds).toHaveBeenNthCalledWith(1, expectedQueryString);
+        expect(result.canSendFacilitiesToApimGift).toBe(false);
+        expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
       });
 
-      describe('when issued facilities are not in GIFT', () => {
+      it('should return canSendFacilitiesToApimGift as false when hasExporterCreditRating is false', async () => {
+        // Arrange
+        mockGetUrnAndDealFlags.mockReturnValue({
+          hasExporterCreditRating: false,
+          isBssEwcsDeal: true,
+          isGefDeal: false,
+          isValidBssEwcsDeal: true,
+          isValidGefDeal: false,
+          validDealType: true,
+          validSubmissionType: true,
+        });
+
+        // Act
+        const result = await canSendToApimGift(mockTfmDeal);
+
+        // Assert
+        expect(result.canSendFacilitiesToApimGift).toBe(false);
+        expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
+      });
+
+      it('should return canSendFacilitiesToApimGift as false when both isValidBssEwcsDeal and isValidGefDeal are false', async () => {
+        // Arrange
+        mockGetUrnAndDealFlags.mockReturnValue({
+          hasExporterCreditRating: true,
+          isBssEwcsDeal: true,
+          isGefDeal: false,
+          isValidBssEwcsDeal: false,
+          isValidGefDeal: false,
+          validDealType: true,
+          validSubmissionType: true,
+        });
+
+        // Act
+        const result = await canSendToApimGift(mockTfmDeal);
+
+        // Assert
+        expect(result.canSendFacilitiesToApimGift).toBe(false);
+        expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when deal flags validation passes', () => {
+      beforeEach(() => {
+        mockGetUrnAndDealFlags.mockReturnValue({
+          hasExporterCreditRating: true,
+          isBssEwcsDeal: true,
+          isGefDeal: false,
+          isValidBssEwcsDeal: true,
+          isValidGefDeal: false,
+          validDealType: true,
+          validSubmissionType: true,
+        });
+      });
+
+      describe('when no issued facilities exist', () => {
+        it('should return canSendFacilitiesToApimGift as false', async () => {
+          // Arrange
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
+
+          // Act
+          const result = await canSendToApimGift(mockTfmDeal);
+
+          // Assert
+          expect(result.canSendFacilitiesToApimGift).toBe(false);
+          expect(result.issuedFacilities).toEqual([]);
+        });
+
+        it('should NOT call generateIssuedFacilitiesQueryString', async () => {
+          // Arrange
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
+
+          // Act
+          await canSendToApimGift(mockTfmDeal);
+
+          // Assert
+          expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when issued facilities exist and are not in GIFT', () => {
         it('should return canSendFacilitiesToApimGift as true', async () => {
           // Arrange
-          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
-            [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
-          );
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('0000000001,0000000002');
           mockFindGiftFacilitiesByIds.mockResolvedValueOnce({ facilities: [] });
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
             facilitiesToSendToApimGift: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
           });
 
           // Act
-          const result = await canSendToApimGift(mockDeal);
+          const result = await canSendToApimGift(mockTfmDeal);
 
           // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: true,
-            issuedFacilities: [mockTfmIssuedFacility1, mockTfmIssuedFacility2],
-            isBssEwcsDeal,
-            isGefDeal,
-          };
-
-          expect(result).toEqual(expected);
+          expect(result.canSendFacilitiesToApimGift).toBe(true);
+          expect(result.issuedFacilities).toEqual([mockTfmIssuedFacility1, mockTfmIssuedFacility2]);
         });
       });
 
-      describe('when issued facilities already exist in GIFT', () => {
+      describe('when issued facilities exist and are already in GIFT', () => {
         it('should return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
-          const mockIssuedFacility1 = mockTfmIssuedFacility1;
-          const mockIssuedFacility2 = mockTfmIssuedFacility2;
-
-          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockIssuedFacility1, mockIssuedFacility2]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
-            [mockIssuedFacility1.facilitySnapshot.ukefFacilityId, mockIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
-          );
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('0000000001,0000000002');
           mockFindGiftFacilitiesByIds.mockResolvedValueOnce({
             facilities: [
-              { ...mockGiftFacility, facilityId: String(mockIssuedFacility1.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
-              { ...mockGiftFacility, facilityId: String(mockIssuedFacility2.facilitySnapshot.ukefFacilityId) } as unknown as TfmFacility,
+              { ...mockGiftFacility, facilityId: '0000000001' } as unknown as TfmFacility,
+              { ...mockGiftFacility, facilityId: '0000000002' } as unknown as TfmFacility,
             ],
           });
           mockMapFacilitiesToSendToGift.mockReturnValueOnce({
@@ -193,357 +233,43 @@ describe('canSendToApimGift', () => {
           });
 
           // Act
-          const result = await canSendToApimGift(mockDeal);
+          const result = await canSendToApimGift(mockTfmDeal);
 
           // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: false,
-            issuedFacilities: [],
-            isBssEwcsDeal,
-            isGefDeal,
-          };
-
-          expect(result).toEqual(expected);
+          expect(result.canSendFacilitiesToApimGift).toBe(false);
+          expect(result.issuedFacilities).toEqual([]);
         });
       });
 
-      describe('when the lookup of existing GIFT facilities fails', () => {
+      describe('when looking up GIFT facilities fails', () => {
         it('should return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
-          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1, mockTfmIssuedFacility2, mockUnissuedFacility]);
-          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce(
-            [mockTfmIssuedFacility1.facilitySnapshot.ukefFacilityId, mockTfmIssuedFacility2.facilitySnapshot.ukefFacilityId].join(','),
-          );
+          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockTfmIssuedFacility1]);
+          mockGenerateIssuedFacilitiesQueryString.mockReturnValueOnce('0000000001');
           mockFindGiftFacilitiesByIds.mockResolvedValueOnce(false);
 
           // Act
-          const result = await canSendToApimGift(mockDeal);
+          const result = await canSendToApimGift(mockTfmDeal);
 
           // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: false,
-            issuedFacilities: [],
-            isBssEwcsDeal,
-            isGefDeal,
-          };
-
-          expect(result).toEqual(expected);
+          expect(result.canSendFacilitiesToApimGift).toBe(false);
           expect(mockMapFacilitiesToSendToGift).not.toHaveBeenCalled();
         });
       });
 
-      describe('when no facilities are issued', () => {
-        it('should return canSendFacilitiesToApimGift as false', async () => {
+      describe('when looking up TFM facilities fails', () => {
+        it('should swallow the error and return canSendFacilitiesToApimGift as false', async () => {
           // Arrange
-          mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
+          const mockError = new Error('API error');
+          mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
 
           // Act
-          const result = await canSendToApimGift(mockDeal);
+          const result = await canSendToApimGift(mockTfmDeal);
 
           // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: false,
-            issuedFacilities: [],
-            isBssEwcsDeal,
-            isGefDeal,
-          };
-
-          expect(result).toEqual(expected);
+          expect(result.canSendFacilitiesToApimGift).toBe(false);
+          expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
         });
-      });
-    });
-
-    describe.each([
-      {
-        dealType: DEAL_TYPE.BSS_EWCS,
-        submissionType: DEAL_SUBMISSION_TYPE.MIA,
-      },
-      {
-        dealType: DEAL_TYPE.GEF,
-        submissionType: DEAL_SUBMISSION_TYPE.MIA,
-      },
-    ])('when the deal is $dealType, submission type is $submissionType', ({ dealType, submissionType }) => {
-      const mockDeal = {
-        ...mockTfmDeal,
-        dealSnapshot: {
-          ...mockTfmDeal.dealSnapshot,
-          dealType,
-          submissionType,
-        },
-        tfm: mockTfmDeal.tfm,
-      } as TfmDeal;
-
-      it('should return canSendFacilitiesToApimGift as false', async () => {
-        // Act
-        const result = await canSendToApimGift(mockDeal);
-
-        // Assert
-        const expected = {
-          canSendFacilitiesToApimGift: false,
-        };
-
-        expect(result).toEqual(expected);
-      });
-
-      it('should NOT call findFacilitiesByDealId', async () => {
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when the deal does not have any issued facilities', () => {
-      it('should return canSendFacilitiesToApimGift as false', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        mockApi.findFacilitiesByDealId.mockResolvedValue([mockUnissuedFacility]);
-
-        // Act
-        const result = await canSendToApimGift(mockDeal);
-
-        // Assert
-        const expected = {
-          canSendFacilitiesToApimGift: false,
-          issuedFacilities: [],
-          isBssEwcsDeal: true,
-          isGefDeal: false,
-        };
-
-        expect(result).toEqual(expected);
-      });
-
-      it('should NOT call generateIssuedFacilitiesQueryString', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        mockApi.findFacilitiesByDealId.mockResolvedValue([mockUnissuedFacility]);
-
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
-      });
-
-      it('should NOT call findGiftFacilitiesByIds', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        mockApi.findFacilitiesByDealId.mockResolvedValue([mockUnissuedFacility]);
-
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(mockApi.findGiftFacilitiesByIds).not.toHaveBeenCalled();
-      });
-
-      it('should NOT call mapFacilitiesToSendToGift', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        mockApi.findFacilitiesByDealId.mockResolvedValue([mockUnissuedFacility]);
-
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(mockMapFacilitiesToSendToGift).not.toHaveBeenCalled();
-      });
-    });
-
-    describe.each([{ partyUrn: undefined }, { partyUrn: null }, { partyUrn: '' }])(
-      `when the deal is ${DEAL_TYPE.BSS_EWCS}, but buyer party URN is $partyUrn`,
-      ({ partyUrn }) => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: {
-            ...mockTfmDeal.tfm,
-            parties: {
-              ...mockTfmDeal.tfm.parties,
-              buyer: {
-                partyUrn,
-              },
-            },
-          },
-        } as TfmDeal;
-
-        it('should return canSendFacilitiesToApimGift as false', async () => {
-          mockApi.findFacilitiesByDealId.mockResolvedValue([]);
-
-          // Act
-          const result = await canSendToApimGift(mockDeal);
-
-          // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: false,
-          };
-
-          expect(result).toEqual(expected);
-        });
-
-        it('should NOT call findFacilitiesByDealId', async () => {
-          // Act
-          await canSendToApimGift(mockDeal);
-
-          // Assert
-          expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
-        });
-      },
-    );
-
-    describe.each([{ exporterCreditRating: undefined }, { exporterCreditRating: null }, { exporterCreditRating: '' }, { exporterCreditRating: ' ' }])(
-      'when deal does not have an exporterCreditRating (exporterCreditRating: $exporterCreditRating)',
-      ({ exporterCreditRating }) => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.GEF,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: {
-            ...mockTfmDeal.tfm,
-            exporterCreditRating,
-          },
-        } as TfmDeal;
-
-        it('should return canSendFacilitiesToApimGift as false', async () => {
-          // Act
-          const result = await canSendToApimGift(mockDeal);
-
-          // Assert
-          const expected = {
-            canSendFacilitiesToApimGift: false,
-          };
-
-          expect(result).toEqual(expected);
-        });
-
-        it('should NOT call findFacilitiesByDealId', async () => {
-          // Act
-          await canSendToApimGift(mockDeal);
-
-          // Assert
-          expect(mockApi.findFacilitiesByDealId).not.toHaveBeenCalled();
-        });
-      },
-    );
-
-    describe('when api.findFacilitiesByDealId throws an error', () => {
-      it('should swallow the error and return canSendFacilitiesToApimGift as false', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        const mockError = new Error('Mock API error');
-
-        mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
-
-        // Act
-        const result = await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(result.canSendFacilitiesToApimGift).toEqual(false);
-      });
-
-      it('should NOT call generateIssuedFacilitiesQueryString', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        const mockError = new Error('Mock API error');
-
-        mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
-
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
-      });
-
-      it('should log that facilities could not be retrieved from TFM', async () => {
-        // Arrange
-        const mockDeal = {
-          ...mockTfmDeal,
-          dealSnapshot: {
-            ...mockTfmDeal.dealSnapshot,
-            dealType: DEAL_TYPE.BSS_EWCS,
-            submissionType: DEAL_SUBMISSION_TYPE.AIN,
-          },
-          tfm: mockTfmDeal.tfm,
-        } as TfmDeal;
-
-        const mockError = new Error('Mock API error');
-
-        mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
-        const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => undefined);
-
-        // Act
-        await canSendToApimGift(mockDeal);
-
-        // Assert
-        expect(consoleInfoSpy).toHaveBeenCalledWith(
-          'Issued facilities for deal %s cannot be sent to APIM GIFT - failed to retrieve facilities from TFM',
-          String(mockDeal._id),
-        );
       });
     });
   });
