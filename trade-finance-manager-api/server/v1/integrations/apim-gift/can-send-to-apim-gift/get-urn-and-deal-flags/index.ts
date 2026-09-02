@@ -48,7 +48,6 @@ export const getUrnAndDealFlags = (deal: TfmDeal): GetUrnAndDealFlagsReturnShape
    * NOTE: During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
    * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
    *
-   *
    * Therefore, for the first submission of a BSS/EWCS deal, isValidBssEwcsDeal will be returned as false.
    */
   const hasExporterCreditRating = Boolean(deal.tfm?.exporterCreditRating?.trim());

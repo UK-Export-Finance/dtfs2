@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 const api = require('../api');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneGefDeal, findOneTfmDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -24,7 +24,7 @@ jest.mock('../api', () => ({
 }));
 
 jest.mock('../integrations/apim-gift', () => ({
-  canSendToApimGift: jest.fn(),
+  canSendDealFacilitiesToApimGift: jest.fn(),
   sendFacilitiesToApimGift: jest.fn(),
 }));
 
@@ -119,7 +119,7 @@ describe('submitDealAfterUkefIds', () => {
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
-    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
+    canSendDealFacilitiesToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
 
     convertDealCurrencies.mockImplementation(async (deal) => deal);
     createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));
@@ -169,9 +169,9 @@ describe('submitDealAfterUkefIds', () => {
       expect(result).toEqual(tfmDeal);
     });
 
-    it('should call canSendToApimGift', async () => {
+    it('should call canSendDealFacilitiesToApimGift', async () => {
       // Arrange
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal,
@@ -182,13 +182,13 @@ describe('submitDealAfterUkefIds', () => {
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
       // Assert
-      expect(canSendToApimGift).toHaveBeenCalledWith(tfmDeal);
+      expect(canSendDealFacilitiesToApimGift).toHaveBeenCalledWith(tfmDeal);
     });
 
     describe('when APIM/GIFT submission is allowed', () => {
       it('should call sendFacilitiesToApimGift with newPartyUrnCreated true when addPartyUrns returns true', async () => {
         // Arrange
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
@@ -210,7 +210,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should call sendFacilitiesToApimGift with newPartyUrnCreated false when addPartyUrns returns false', async () => {
         // Arrange
         addPartyUrns.mockImplementationOnce(async (deal) => ({ deal, newPartyUrnCreated: false }));
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
@@ -232,7 +232,7 @@ describe('submitDealAfterUkefIds', () => {
       it('should call sendFacilitiesToApimGift when addPartyUrns does not return a deal', async () => {
         // Arrange
         addPartyUrns.mockResolvedValueOnce(false);
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
@@ -255,7 +255,7 @@ describe('submitDealAfterUkefIds', () => {
     describe('when APIM/GIFT submission is not allowed', () => {
       it('should NOT call sendFacilitiesToApimGift', async () => {
         // Arrange
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: false,
           issuedFacilities,
           isBssEwcsDeal,
@@ -291,12 +291,12 @@ describe('submitDealAfterUkefIds', () => {
       updatePortalDealStatus.mockResolvedValue();
 
       canSubmitToACBS.mockResolvedValue(false);
-      canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
+      canSendDealFacilitiesToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
     });
 
-    it('should call canSendToApimGift with the updated tfmDeal', async () => {
+    it('should call canSendDealFacilitiesToApimGift with the updated tfmDeal', async () => {
       // Arrange
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal,
@@ -307,13 +307,13 @@ describe('submitDealAfterUkefIds', () => {
       await submitDealAfterUkefIds(dealId, CONSTANTS.DEALS.DEAL_TYPE.GEF, checker, auditDetails);
 
       // Assert
-      expect(canSendToApimGift).toHaveBeenCalledWith(tfmDeal);
+      expect(canSendDealFacilitiesToApimGift).toHaveBeenCalledWith(tfmDeal);
     });
 
     describe('when APIM/GIFT submission is allowed', () => {
       it('should call sendFacilitiesToApimGift with correct parameters', async () => {
         // Arrange
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: true,
           issuedFacilities,
           isBssEwcsDeal,
@@ -335,7 +335,7 @@ describe('submitDealAfterUkefIds', () => {
     describe('when APIM/GIFT submission is not allowed', () => {
       it('should NOT call sendFacilitiesToApimGift', async () => {
         // Arrange
-        canSendToApimGift.mockResolvedValue({
+        canSendDealFacilitiesToApimGift.mockResolvedValue({
           canSendFacilitiesToApimGift: false,
           issuedFacilities: [],
           isBssEwcsDeal,
@@ -392,7 +392,7 @@ describe('submitDealBeforeUkefIds', () => {
     addFirstTaskEmailSentFlag.mockReturnValue([{ emailSent: true }]);
 
     canSubmitToACBS.mockResolvedValue(false);
-    canSendToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
+    canSendDealFacilitiesToApimGift.mockResolvedValue({ canSubmitFacilitiesToApimGift: false, issuedFacilities: [] });
 
     convertDealCurrencies.mockImplementation(async (deal) => deal);
     createEstoreSite.mockImplementation(async (deal) => ({ ...deal, tfm: { tasks: [] } }));

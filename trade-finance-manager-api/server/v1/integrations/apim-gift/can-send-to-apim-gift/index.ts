@@ -13,7 +13,7 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
 };
 
 /**
- * Determines if a deal can be sent to APIM/GIFT based on its type, submission type, and issued facilities.
+ * Determines if a deal's issued facilities can be sent to APIM/GIFT based on its type, submission type, and issued facilities.
  * If the deal is BSS/EWCS, a buyer party URN must be populated.
  * Checks if the APIM/GIFT integration is enabled, then evaluates the deal's type and submission type.
  * If the deal is of a valid type and submission type, it retrieves the facilities associated with the deal,
@@ -21,7 +21,7 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
  * @param {TfmDeal} deal - The TFM deal object to evaluate.
  * @returns {CanSubmitFacilitiesToApimGiftReturnShape} An object indicating whether the deal can be sent and relevant details.
  */
-export const canSendToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilitiesToApimGiftReturnShape> => {
+export const canSendDealFacilitiesToApimGift = async (deal: TfmDeal): Promise<CanSubmitFacilitiesToApimGiftReturnShape> => {
   const dealId = String(deal?._id);
 
   console.info('Checking if issued facilities for deal %s can be sent to APIM GIFT', dealId);

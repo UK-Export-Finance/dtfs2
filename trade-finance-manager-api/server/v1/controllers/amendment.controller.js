@@ -514,9 +514,9 @@ const updateFacilityAmendment = async (req, res) => {
 
           const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
 
-          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
+          const { canSendAmendmentsToApimGift: canSendDealFacilitiesToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
-          if (canSendToApimGift) {
+          if (canSendDealFacilitiesToApimGift) {
             console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
             const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
@@ -676,9 +676,9 @@ const sendFacilityAmendment = async (req, res) => {
 
         const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
 
-        const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
+        const { canSendAmendmentsToApimGift: canSendDealFacilitiesToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
-        if (canSendToApimGift) {
+        if (canSendDealFacilitiesToApimGift) {
           console.info('TFM facility %s sendFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
           const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });

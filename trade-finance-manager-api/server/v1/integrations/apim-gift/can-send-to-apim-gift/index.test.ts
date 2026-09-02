@@ -1,6 +1,6 @@
 import { TfmFacility, isTfmApimGiftIntegrationEnabled } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
-import { canSendToApimGift } from '.';
+import { canSendDealFacilitiesToApimGift } from '.';
 import * as generateIssuedFacilitiesQueryStringModule from '../generate-issued-facilities-query-string';
 import * as mapFacilitiesToSendToGiftModule from '../map-facilities-to-send-to-gift';
 import * as getUrnAndDealFlagsModule from './get-urn-and-deal-flags';
@@ -46,7 +46,7 @@ const mockGenerateIssuedFacilitiesQueryString = jest.mocked(generateIssuedFacili
 const mockMapFacilitiesToSendToGift = jest.mocked(mapFacilitiesToSendToGiftModule.mapFacilitiesToSendToGift);
 const mockGetUrnAndDealFlags = jest.mocked(getUrnAndDealFlagsModule.getUrnAndDealFlags);
 
-describe('canSendToApimGift', () => {
+describe('canSendDealFacilitiesToApimGift', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -58,7 +58,7 @@ describe('canSendToApimGift', () => {
 
     it('should return canSendFacilitiesToApimGift as false', async () => {
       // Act
-      const result = await canSendToApimGift(mockTfmDeal);
+      const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
       // Assert
       expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -66,7 +66,7 @@ describe('canSendToApimGift', () => {
 
     it('should NOT call getUrnAndDealFlags', async () => {
       // Act
-      await canSendToApimGift(mockTfmDeal);
+      await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
       // Assert
       expect(mockGetUrnAndDealFlags).not.toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe('canSendToApimGift', () => {
         });
 
         // Act
-        const result = await canSendToApimGift(mockTfmDeal);
+        const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
         // Assert
         expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -112,7 +112,7 @@ describe('canSendToApimGift', () => {
         });
 
         // Act
-        const result = await canSendToApimGift(mockTfmDeal);
+        const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
         // Assert
         expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -132,7 +132,7 @@ describe('canSendToApimGift', () => {
         });
 
         // Act
-        const result = await canSendToApimGift(mockTfmDeal);
+        const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
         // Assert
         expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -152,7 +152,7 @@ describe('canSendToApimGift', () => {
         });
 
         // Act
-        const result = await canSendToApimGift(mockTfmDeal);
+        const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
         // Assert
         expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -179,7 +179,7 @@ describe('canSendToApimGift', () => {
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
 
           // Act
-          const result = await canSendToApimGift(mockTfmDeal);
+          const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -191,7 +191,7 @@ describe('canSendToApimGift', () => {
           mockApi.findFacilitiesByDealId.mockResolvedValueOnce([mockUnissuedFacility]);
 
           // Act
-          await canSendToApimGift(mockTfmDeal);
+          await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(mockGenerateIssuedFacilitiesQueryString).not.toHaveBeenCalled();
@@ -209,7 +209,7 @@ describe('canSendToApimGift', () => {
           });
 
           // Act
-          const result = await canSendToApimGift(mockTfmDeal);
+          const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(result.canSendFacilitiesToApimGift).toBe(true);
@@ -233,7 +233,7 @@ describe('canSendToApimGift', () => {
           });
 
           // Act
-          const result = await canSendToApimGift(mockTfmDeal);
+          const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -249,7 +249,7 @@ describe('canSendToApimGift', () => {
           mockFindGiftFacilitiesByIds.mockResolvedValueOnce(false);
 
           // Act
-          const result = await canSendToApimGift(mockTfmDeal);
+          const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(result.canSendFacilitiesToApimGift).toBe(false);
@@ -264,7 +264,7 @@ describe('canSendToApimGift', () => {
           mockApi.findFacilitiesByDealId.mockRejectedValueOnce(mockError);
 
           // Act
-          const result = await canSendToApimGift(mockTfmDeal);
+          const result = await canSendDealFacilitiesToApimGift(mockTfmDeal);
 
           // Assert
           expect(result.canSendFacilitiesToApimGift).toBe(false);
