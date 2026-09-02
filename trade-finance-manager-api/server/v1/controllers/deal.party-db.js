@@ -184,13 +184,15 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
-  const isGefDeal = deal.dealSnapshot?.dealType === DEAL_TYPE.GEF;
+  const dealType = deal.dealType ?? deal.dealSnapshot?.dealType;
+
+  const isGefDeal = dealType === DEAL_TYPE.GEF;
+
+  const existingExporterPartyUrn = deal.tfm?.parties?.exporter?.partyUrn;
+  const hasExistingExporterPartyUrn = existingExporterPartyUrn && existingExporterPartyUrn.trim().length > 0;
 
   const newPartyUrnCreated =
-    isSalesforceCustomerCreationEnabled() &&
-    Boolean(exporterPartyUrn) &&
-    !exporterPartyExistedBeforeCreate &&
-    (!isGefDeal || !deal.tfm?.parties?.exporter?.partyUrn);
+    isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate && (!isGefDeal || !hasExistingExporterPartyUrn);
 
   return {
     deal: {
