@@ -117,6 +117,24 @@ describe('getUrnFlags', () => {
     });
   });
 
+  describe('when all URNs are strings with a space', () => {
+    it('should return both hasBssEwcsUrns and hasGefUrns as false', () => {
+      // Arrange
+      const mockDeal = createMockDeal({
+        bankUrn: ' ',
+        buyerUrn: ' ',
+        exporterUrn: ' ',
+      });
+
+      // Act
+      const result = getUrnFlags(mockDeal);
+
+      // Assert
+      expect(result.hasBssEwcsUrns).toBeFalsy();
+      expect(result.hasGefUrns).toBeFalsy();
+    });
+  });
+
   describe('return shape consistency', () => {
     it('should always return both properties', () => {
       // Arrange

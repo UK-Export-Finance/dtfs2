@@ -514,9 +514,9 @@ const updateFacilityAmendment = async (req, res) => {
 
           const amendmentForApimGift = enrichAmendmentForApimGift(amendment, facility.facilitySnapshot);
 
-          const { canSendAmendmentsToApimGift: canSednToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
+          const { canSendAmendmentsToApimGift: canSendToApimGift, amendmentPayloads } = canSendAmendmentsToApimGift(amendmentForApimGift);
 
-          if (canSednToApimGift) {
+          if (canSendToApimGift) {
             console.info('TFM facility %s updateFacilityAmendment - calling submitFacilityAmendmentsToApimGift', facilityId);
 
             const sentToApimGift = await submitFacilityAmendmentsToApimGift({ amendmentPayloads, ukefFacilityId });
