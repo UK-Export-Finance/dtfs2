@@ -33,7 +33,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "10.0.1",
+    "@ministryofjustice/frontend": "11.0.0",
     "@types/connect-flash": "^0.0.40",
     "@types/cookie-parser": "^1.4.10",
     "@types/morgan": "^1.9.10",

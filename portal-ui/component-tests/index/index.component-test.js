@@ -52,7 +52,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-mqkV/Lm+ZWYAAnAIEBfDLc8zVDHoJejX4Ps6Bk4o9588gk3t3iYVgNIjgYTj6BhlMzk91K8BnmqkqtqpYqpAGg==');
+      .toHaveAttribute('integrity', 'sha512-Av5S/8IoKjbGRzQXHT9xQwajLbA7UPoeBbohrHzxWN+fP9vScBPwNr9Ou+e/9dYjLd610zrlWmuiCdH4IKXL8A==');
   });
 
   it('should have the correct integrity for "/assets/js/maskedInputs.js"', () => {

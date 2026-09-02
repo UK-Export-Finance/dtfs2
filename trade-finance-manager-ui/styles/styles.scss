@@ -1,7 +1,7 @@
 $govuk-new-link-styles: true;
 
-@import "node_modules/govuk-frontend/dist/govuk/index";
-@import "node_modules/@ministryofjustice/frontend/moj/all";
+@import "~govuk-frontend/dist/govuk/index";
+@import "~@ministryofjustice/frontend/moj/all";
 
 // custom styles
 @import "./moj-sub-navigation.scss";

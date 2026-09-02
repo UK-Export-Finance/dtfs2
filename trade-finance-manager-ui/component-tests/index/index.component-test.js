@@ -30,7 +30,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-65VbY6uBJ6Tx0yhZvYUCCuEPhquwqdAmkWRo7Owg5rCws11pIsLnK7I8MUH0ILV+lfTCx4qhMxhQgUBSQ3gIKA==');
+      .toHaveAttribute('integrity', 'sha512-gi85RrxP4++36PrPK4MA25CVbhJPRqqTyJ+0J/rCbfxa0B/1P1HQqIjYiXX2+k4XyhvWpujZPKeqzAxGJCXJ8Q==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {

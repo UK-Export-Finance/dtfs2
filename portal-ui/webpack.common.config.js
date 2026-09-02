@@ -60,7 +60,15 @@ module.exports = {
             loader: 'file-loader',
             options: { outputPath: '../css', name: 'styles.css' },
           },
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              webpackImporter: true,
+              sassOptions: {
+                includePaths: [path.resolve(__dirname, '..'), path.resolve(__dirname, 'node_modules')],
+              },
+            },
+          },
         ],
       },
     ],
