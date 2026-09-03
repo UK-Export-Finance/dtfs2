@@ -12,31 +12,39 @@ const createMockDeal = (overrides?: {
   exporterCreditRating?: string | null | undefined;
   buyerUrn?: string;
   exporterUrn?: string;
-}): TfmDeal =>
-  ({
+}): TfmDeal => {
+  const shouldSetDealType = overrides && 'dealType' in overrides;
+  const shouldSetSubmissionType = overrides && 'submissionType' in overrides;
+  const shouldSetBankUrn = overrides && 'bankUrn' in overrides;
+  const shouldSetExporterCreditRating = overrides && 'exporterCreditRating' in overrides;
+  const shouldSetBuyerUrn = overrides && 'buyerUrn' in overrides;
+  const shouldSetExporterUrn = overrides && 'exporterUrn' in overrides;
+
+  return {
     ...mockTfmDeal,
     dealSnapshot: {
       ...mockTfmDeal.dealSnapshot,
-      dealType: overrides?.dealType ?? mockTfmDeal.dealSnapshot.dealType,
-      submissionType: overrides?.submissionType ?? mockTfmDeal.dealSnapshot.submissionType,
+      dealType: shouldSetDealType ? overrides.dealType : mockTfmDeal.dealSnapshot.dealType,
+      submissionType: shouldSetSubmissionType ? overrides.submissionType : mockTfmDeal.dealSnapshot.submissionType,
       bank: {
         ...mockTfmDeal.dealSnapshot.bank,
-        partyUrn: overrides?.bankUrn ?? mockTfmDeal.dealSnapshot.bank.partyUrn,
+        partyUrn: shouldSetBankUrn ? overrides.bankUrn : mockTfmDeal.dealSnapshot.bank.partyUrn,
       },
     },
     tfm: {
       ...mockTfmDeal.tfm,
-      exporterCreditRating: overrides?.exporterCreditRating ?? 'Acceptable (B+)',
+      exporterCreditRating: shouldSetExporterCreditRating ? overrides.exporterCreditRating : 'Acceptable (B+)',
       parties: {
         buyer: {
-          partyUrn: overrides?.buyerUrn ?? 'Mock buyer URN',
+          partyUrn: shouldSetBuyerUrn ? overrides.buyerUrn : 'Mock buyer URN',
         },
         exporter: {
-          partyUrn: overrides?.exporterUrn ?? 'Mock exporter URN',
+          partyUrn: shouldSetExporterUrn ? overrides.exporterUrn : 'Mock exporter URN',
         },
       },
     },
-  }) as TfmDeal;
+  } as TfmDeal;
+};
 
 describe('getUrnAndDealFlags', () => {
   describe.each([
