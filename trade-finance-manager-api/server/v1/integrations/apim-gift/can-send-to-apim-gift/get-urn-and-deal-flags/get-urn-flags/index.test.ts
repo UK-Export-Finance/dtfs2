@@ -2,7 +2,7 @@ import { TfmDeal } from '@ukef/dtfs2-common';
 import { getUrnFlags } from '.';
 import { mockTfmDeal } from '../../../test-mocks';
 
-const createMockDeal = (overrides?: { bankUrn?: string; buyerUrn?: string | undefined | null; exporterUrn?: string; buyerObject?: boolean }): TfmDeal => {
+const createMockDeal = (overrides?: { bankUrn?: string; buyerUrn?: string | undefined | null; exporterUrn?: string }): TfmDeal => {
   const shouldSetBuyerUrn = overrides && 'buyerUrn' in overrides;
   const buyerUrn = shouldSetBuyerUrn ? overrides.buyerUrn : 'Mock buyer URN';
 

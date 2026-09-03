@@ -34,4 +34,14 @@ describe('isValidSubmissionType', () => {
       expect(result).toEqual(false);
     });
   });
+
+  describe('when the submission type is null', () => {
+    it('should return false', () => {
+      // Act
+      const result = isValidSubmissionType(null);
+
+      // Assert
+      expect(result).toEqual(false);
+    });
+  });
 });
