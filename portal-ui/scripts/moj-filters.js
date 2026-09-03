@@ -1,20 +1,21 @@
 /* eslint-disable no-new */
 /* eslint-disable no-undef */
 if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
-  new MOJFrontend.FilterToggleButton({
-    bigModeMediaQuery: '(min-width: 48.063em)',
-    startHidden: true,
-    toggleButton: {
-      container: $('.moj-action-bar__filter'),
-      showText: 'Show filter',
-      hideText: 'Hide filter',
-      classes: 'govuk-button--secondary',
-      attributes: {
-        'data-cy': 'show-hide-filters-toggle-button',
+  const filter = document.querySelector('.moj-filter');
+  const toggleButtonContainer = document.querySelector('.moj-action-bar__filter');
+
+  if (filter && toggleButtonContainer) {
+    new MOJFrontend.FilterToggleButton(filter, {
+      bigModeMediaQuery: '(min-width: 48.063em)',
+      startHidden: true,
+      toggleButton: {
+        showText: 'Show filter',
+        hideText: 'Hide filter',
+        classes: 'govuk-button--secondary',
       },
-    },
-    filter: {
-      container: $('.moj-filter'),
-    },
-  });
+      toggleButtonContainer: {
+        element: toggleButtonContainer,
+      },
+    });
+  }
 }

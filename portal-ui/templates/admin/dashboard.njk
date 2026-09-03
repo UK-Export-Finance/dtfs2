@@ -9,10 +9,10 @@
 
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Username</th>
-      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Organisation - Bank</th>
-      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Roles</th>
-      <th scope="col" class="govuk-table__header govuk-!-font-size-14">Last access</th>
+      <th scope="col" class="govuk-table__header govuk-body-m">Username</th>
+      <th scope="col" class="govuk-table__header govuk-body-m">Organisation - Bank</th>
+      <th scope="col" class="govuk-table__header govuk-body-m">Roles</th>
+      <th scope="col" class="govuk-table__header govuk-body-m">Last access</th>
     </tr>
   </thead>
 
@@ -20,7 +20,7 @@
     {% for displayUser in users %}
       <tr class="govuk-table__row" data-cy="user-{{ displayUser.username }}">
 
-        <td class="govuk-table__cell govuk-!-font-size-14">
+        <td class="govuk-table__cell govuk-body-m">
           <a
             href="/admin/users/edit/{{ displayUser._id | urlencode }}"
             class="govuk-link"
@@ -35,11 +35,11 @@
             {% endif %}
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
+          <td class="govuk-table__cell govuk-body-m" data-cy="bank">
             {{ displayUser.bank.name }}
           </td>
 
-          <td data-cy="roles-{{ displayUser.username }}" class="govuk-table__cell govuk-!-font-size-14">
+          <td data-cy="roles-{{ displayUser.username }}" class="govuk-table__cell govuk-body-m">
             <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
               {% for role in displayUser.roles %}
                 <li>{{ role }}</li>
@@ -47,7 +47,7 @@
             </ul>
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{ displayUser.username }}">
+          <td class="govuk-table__cell govuk-body-m" data-cy="lastLogin-{{ displayUser.username }}">
             {{ displayUser.lastLogin | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
           </td>
           
