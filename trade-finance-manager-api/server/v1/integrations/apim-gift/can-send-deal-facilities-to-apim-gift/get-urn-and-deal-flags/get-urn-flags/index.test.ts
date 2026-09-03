@@ -38,8 +38,8 @@ describe('getUrnFlags', () => {
       const result = getUrnFlags(mockDeal);
 
       // Assert
-      expect(result.hasBssEwcsUrns).toBeTruthy();
-      expect(result.hasGefUrns).toBeTruthy();
+      expect(result.hasBssEwcsUrns).toEqual(true);
+      expect(result.hasGefUrns).toEqual(true);
     });
   });
 
@@ -67,7 +67,7 @@ describe('getUrnFlags', () => {
 
       // Assert
       expect(result.hasBssEwcsUrns).toBeFalsy();
-      expect(result.hasGefUrns).toBeTruthy();
+      expect(result.hasGefUrns).toEqual(true);
     });
   });
 
@@ -80,7 +80,7 @@ describe('getUrnFlags', () => {
       const result = getUrnFlags(mockDeal);
 
       // Assert
-      expect(result.hasBssEwcsUrns).toBeTruthy();
+      expect(result.hasBssEwcsUrns).toEqual(true);
       expect(result.hasGefUrns).toBeFalsy();
     });
   });
@@ -95,7 +95,7 @@ describe('getUrnFlags', () => {
 
       // Assert
       expect(result.hasBssEwcsUrns).toBeFalsy();
-      expect(result.hasGefUrns).toBeTruthy();
+      expect(result.hasGefUrns).toEqual(true);
     });
   });
 
