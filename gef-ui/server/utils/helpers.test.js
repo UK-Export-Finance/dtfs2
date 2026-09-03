@@ -251,10 +251,10 @@ describe('validationErrorHandler()', () => {
 
 describe('isEmpty()', () => {
   it('returns True if the Value or Object is empty', () => {
-    expect(isEmpty(null)).toBeTruthy();
-    expect(isEmpty('')).toBeTruthy();
-    expect(isEmpty({ foo: '' })).toBeTruthy();
-    expect(isEmpty({ foo: null })).toBeTruthy();
+    expect(isEmpty(null)).toEqual(true)();
+    expect(isEmpty('')).toEqual(true)();
+    expect(isEmpty({ foo: '' })).toEqual(true)();
+    expect(isEmpty({ foo: null })).toEqual(true)();
     expect(isEmpty({ foo: 'Hello' })).toBeFalsy();
     expect(
       isEmpty({
@@ -263,7 +263,7 @@ describe('isEmpty()', () => {
           foo: null,
         },
       }),
-    ).toBeTruthy();
+    ).toEqual(true)();
     expect(
       isEmpty({
         foo: {

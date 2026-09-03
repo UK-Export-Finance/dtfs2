@@ -157,7 +157,7 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         const collection = await mongoDbClient.getCollection(collectionName);
         const document = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
-        expect(document).toBeTruthy();
+        expect(document).toEqual(true)();
       });
     }
   });

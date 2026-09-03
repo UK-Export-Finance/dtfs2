@@ -9,7 +9,7 @@ describe('isHttps', () => {
     const result = isHttps();
 
     // Assert
-    expect(result).toBeTruthy();
+    expect(result).toEqual(true)();
   });
 
   it('should return true if the environment variable is set to 1', () => {
@@ -20,7 +20,7 @@ describe('isHttps', () => {
     const result = isHttps();
 
     // Assert
-    expect(result).toBeTruthy();
+    expect(result).toEqual(true)();
   });
 
   it('should return false if the environment variable does not exists', () => {

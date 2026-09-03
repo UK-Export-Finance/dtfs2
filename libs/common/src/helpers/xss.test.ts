@@ -102,7 +102,7 @@ describe('xssClean', () => {
     const response = xssClean(input);
 
     // Assert
-    expect(Array.isArray(input)).toBeTruthy();
+    expect(Array.isArray(input)).toEqual(true)();
     expect(response).toEqual(output);
   });
 

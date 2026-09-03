@@ -36,6 +36,6 @@ describe('isUkefEmail', () => {
     const response = isUkefEmail(email);
 
     // Assert
-    expect(response).toBeTruthy();
+    expect(response).toEqual(true)();
   });
 });
