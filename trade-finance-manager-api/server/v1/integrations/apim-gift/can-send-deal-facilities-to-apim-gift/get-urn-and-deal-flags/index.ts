@@ -31,7 +31,7 @@ type GetUrnAndDealFlagsReturnShape = {
  * During first BSS/EWCS/GEF deal submission, deal.tfm.exporterCreditRating will never exist.
  * This is only populated when a TFM Underwriter user adds a credit rating via the "Underwriting" section of a TFM deal.
  *
- * Therefore, for the first submission of a BSS/EWCS deal, isValidBssEwcsDeal will be returned as false.
+ * Therefore, for the first submission of a deal, hasExporterCreditRating will be returned as false.
  *
  * @param {TfmDeal} deal - The TFM deal object to evaluate.
  * @returns {GetUrnAndDealFlagsReturnShape} An object containing flags indicating the presence of URNs for different parties in the deal, as well as deal type and submission type validity.

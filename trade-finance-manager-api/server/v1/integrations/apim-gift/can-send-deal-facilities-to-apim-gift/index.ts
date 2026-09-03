@@ -13,9 +13,9 @@ type CanSubmitFacilitiesToApimGiftReturnShape = {
 };
 
 /**
- * Determines if a deal's issued facilities can be sent to APIM/GIFT based on its type, submission type, and issued facilities.
- * If the deal is BSS/EWCS, a buyer party URN must be populated.
- * Checks if the APIM/GIFT integration is enabled, then evaluates the deal's type and submission type.
+ * Determines if a deal's issued facilities can be sent to APIM/GIFT based on its type, submission type, required party URNs, and issued facilities.
+ * For BSS/EWCS deals, both bank and buyer party URNs must be populated.
+ * For GEF deals, both bank and exporter party URNs must be populated.
  * If the deal is of a valid type and submission type, it retrieves the facilities associated with the deal,
  * filters for issued facilities, and determines if there are any that can be sent to APIM/GIFT.
  * @param {TfmDeal} deal - The TFM deal object to evaluate.
