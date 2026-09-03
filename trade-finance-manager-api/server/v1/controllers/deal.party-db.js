@@ -184,7 +184,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
-  const dealType = deal.dealType ?? deal.dealSnapshot?.dealType;
+  const dealType = deal.dealSnapshot?.dealType ?? deal.dealType;
 
   const isGefDeal = dealType === DEAL_TYPE.GEF;
 

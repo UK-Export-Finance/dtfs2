@@ -264,7 +264,7 @@ describe('addPartyUrns', () => {
   const createMockDeal = (dealType, tfmParties = {}) => ({
     ...mockDeal,
     dealSnapshot: { dealType },
-    tfm: tfmParties ? { parties: tfmParties } : {},
+    tfm: { parties: tfmParties },
   });
 
   /**
@@ -380,7 +380,7 @@ describe('addPartyUrns', () => {
     it('should return deal with newPartyUrnCreated flag set to false', async () => {
       // Arrange
       isSalesforceCustomerCreationEnabled.mockReturnValue(false);
-      getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: '' }]);
+      getPartyDbInfo.mockResolvedValue([{ partyUrn: '' }]);
       updateDeal.mockResolvedValue(createUpdateDealMockResponse(''));
 
       // Act
@@ -395,14 +395,17 @@ describe('addPartyUrns', () => {
     it('should use dealType from deal.dealSnapshot when available', async () => {
       // Arrange
       setupPartyUrnMocks('Mock URN', false);
-      const gefDeal = createMockDeal(DEAL_TYPE.GEF);
+      const gefDeal = createMockDeal(DEAL_TYPE.GEF, {
+        exporter: { partyUrn: 'Existing URN' }, // Add existing exporter URN
+      });
       gefDeal.dealType = DEAL_TYPE.BSS_EWCS; // Add conflicting dealType at root
 
       // Act
       const result = await api.addPartyUrns(gefDeal, {});
 
-      // Assert - Should use dealSnapshot.dealType (GEF), so newPartyUrnCreated should be true
-      expect(result).toHaveProperty('newPartyUrnCreated', true);
+      // Assert - If dealSnapshot.dealType (GEF) is used: newPartyUrnCreated = false (GEF doesn't allow when existing URN)
+      // If root dealType (BSS_EWCS) is used: newPartyUrnCreated = true (BSS/EWCS allows when existing URN, only checks party didn't exist before)
+      expect(result).toHaveProperty('newPartyUrnCreated', false);
     });
 
     it('should use dealType from deal.dealType when dealSnapshot.dealType is not available', async () => {
