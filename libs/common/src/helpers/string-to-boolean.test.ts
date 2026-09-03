@@ -17,6 +17,6 @@ describe('stringToBoolean', () => {
     const result = stringToBoolean(value);
 
     // Assert
-    expect(result).toEqual(true)();
+    expect(result).toEqual(true);
   });
 });

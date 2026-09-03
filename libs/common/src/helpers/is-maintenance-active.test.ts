@@ -9,7 +9,7 @@ describe('isMaintenanceActive', () => {
     const result = isMaintenanceActive();
 
     // Assert
-    expect(result).toEqual(true)();
+    expect(result).toEqual(true);
   });
 
   it('should return false if the environment variable does not exists', () => {

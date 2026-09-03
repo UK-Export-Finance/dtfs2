@@ -33,7 +33,7 @@ describe('user controller', () => {
 
       const { body } = await as(tokenUser).post(user).to('/v1/users');
       userId = body.user._id;
-      expect(userId).toEqual(true)();
+      expect(userId).toEqual(true);
     });
   });
 

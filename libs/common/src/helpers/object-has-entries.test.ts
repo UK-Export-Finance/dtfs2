@@ -55,7 +55,7 @@ describe('hasEntries', () => {
     const response = hasEntries(mockInput);
 
     // Assert
-    expect(response).toEqual(true)();
+    expect(response).toEqual(true);
   });
 
   it('should return true if the object has a multiple properties', () => {
@@ -74,6 +74,6 @@ describe('hasEntries', () => {
     const response = hasEntries(mockInput);
 
     // Assert
-    expect(response).toEqual(true)();
+    expect(response).toEqual(true);
   });
 });

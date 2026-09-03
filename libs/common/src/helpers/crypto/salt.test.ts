@@ -21,7 +21,7 @@ describe('salt', () => {
 
     // Assert
     expect(response).toBeDefined();
-    expect(Buffer.isBuffer(response)).toEqual(true)();
+    expect(Buffer.isBuffer(response)).toEqual(true);
   });
 
   it('should call crypto.randomBytes with 64 bytes', () => {
