@@ -7,16 +7,16 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getLatestMandatoryCriteria: jest.fn(),
+  createDeal: jest.fn(),
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { ROLES } = require('@ukef/dtfs2-common');
-const mockProvide = require('./helpers/mockProvide');
-
-mockProvide();
 
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
@@ -25,22 +25,25 @@ const { MAKER } = ROLES;
 const allRoles = Object.values(ROLES);
 
 describe('start routes', () => {
+  beforeEach(() => {
+    api.getLatestMandatoryCriteria.mockResolvedValue({ criteria: [] });
+    api.createDeal.mockResolvedValue({ _id: '123456789abcdef01234567' });
+  });
+
   describe('GET /before-you-start', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/before-you-start', {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
   describe('POST /before-you-start', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start'),
+      makeRequestWithHeaders: (headers) => post({ criteriaMet: 'true' }, headers).to('/before-you-start'),
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/before-you-start/bank-deal' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -57,8 +60,7 @@ describe('start routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start/bank-deal'),
       whitelistedRoles: [MAKER],
       successCode: 302,
-      successHeaders: { location: '/contract/undefined' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successHeaders: { location: '/contract/123456789abcdef01234567' },
     });
   });
 
