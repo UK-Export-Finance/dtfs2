@@ -57,7 +57,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     /**
      * Generate a new OTP, save it to the database.
      */
-    const { securityCode, salt: saltHex, hash: hashHex, expiry } = generateOtp();
+    const { securityCode, salt: saltHex, hash: hashHex, expiry } = await generateOtp();
 
     console.info('Saving sign in OTP for user %s', sanitisedUserId);
     await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });

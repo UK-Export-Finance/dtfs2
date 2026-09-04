@@ -53,7 +53,7 @@ describe('createAndEmailSignInOTP', () => {
     jest.mocked(isUserBlockedOrDisabled).mockReturnValue(false);
     jest.mocked(isSignInDataStale).mockReturnValue(false);
     jest.mocked(sendEmailAndIncrementSignInOTPSendCount).mockResolvedValue(2);
-    jest.mocked(generateOtp).mockReturnValue({ securityCode: '123456', salt: 'salt-hex', hash: 'hash-hex', expiry: otpExpiry });
+    jest.mocked(generateOtp).mockResolvedValue({ securityCode: '123456', salt: 'salt-hex', hash: 'hash-hex', expiry: otpExpiry });
     jest.mocked(sendAccountSuspensionEmail).mockResolvedValue(undefined);
 
     resetSignInDataSpy = jest.spyOn(PortalUsersRepo, 'resetSignInData').mockResolvedValue(undefined);
