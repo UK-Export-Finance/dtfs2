@@ -83,7 +83,6 @@ describe('createFacility', () => {
   });
 
   const params = {
-    creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
     deal: mockDeal,
     facility: mockFacility,
     facilityCategories: MOCK_FACILITY_CATEGORIES,

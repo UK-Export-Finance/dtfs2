@@ -37,7 +37,6 @@ export const sendFacilitiesToApimGift = async ({
 
   if (facilities.length === 1) {
     const payload = await APIM_GIFT_PAYLOADS.createFacility({
-      creditRiskRatings,
       deal,
       facility: facilities[0],
       facilityCategories,

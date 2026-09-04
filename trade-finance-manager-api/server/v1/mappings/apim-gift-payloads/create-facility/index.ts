@@ -9,7 +9,6 @@ import { mapObligations } from './map-obligations';
 import { getFieldValues } from './get-field-values';
 
 export type FacilityCreationParams = {
-  creditRiskRatings: string[];
   deal: TfmDeal;
   facility: TfmFacility;
   facilityCategories: FacilityCategory[];

@@ -21,7 +21,6 @@ const mockPayloadTwo = { mockPayloadTwo: true } as unknown as ApimGiftFacilityCr
 
 const baseParams = {
   deal: mockDeal,
-  creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
   facilityCategories: MOCK_FACILITY_CATEGORIES,
   newPartyUrnCreated: mockNewPartyUrnCreated,
 };

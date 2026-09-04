@@ -78,7 +78,6 @@ describe('sendFacilitiesToApimGift', () => {
         deal: mockDeal,
         facility: mockFacility,
         newPartyUrnCreated: mockNewPartyUrnCreated,
-        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
     });
@@ -174,7 +173,6 @@ describe('sendFacilitiesToApimGift', () => {
         deal: mockDeal,
         facilities: [mockFacility, mockFacilityTwo, mockFacilityThree],
         newPartyUrnCreated: mockNewPartyUrnCreated,
-        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         facilityCategories: MOCK_FACILITY_CATEGORIES,
       });
     });
