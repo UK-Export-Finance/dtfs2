@@ -20,7 +20,7 @@
         "validate-facility-ids": "ts-node validate-facility-ids/index.ts"
     },
     "dependencies": {
-        "@faker-js/faker": "^8.4.1",
+        "@faker-js/faker": "^10.5.0",
         "@ukef/dtfs2-common": "1.0.0",
         "axios": "1.18.1",
         "big.js": "^6.2.2",
