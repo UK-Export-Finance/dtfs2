@@ -1,9 +1,11 @@
 const api = require('../../../../api');
-const { hasValue, containsNumber } = require('../../../../helpers/string');
+const { hasValue } = require('../../../../helpers/string');
 const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');
 const { userCanEditGeneral } = require('./helpers');
+const { mapSelectedCreditRating } = require('../../../../helpers/map-selected-credit-rating');
+const { mapOtherCreditRatings } = require('../../../../helpers/map-other-credit-ratings');
 
 const getUnderWritingPricingAndRisk = (deal, user) => ({
   userCanEditGeneral: userCanEditGeneral(user),
@@ -14,6 +16,8 @@ const getUnderWritingPricingAndRisk = (deal, user) => ({
   dealId: deal.dealSnapshot._id,
   user,
 });
+
+const label = 'Credit rating';
 
 /**
  * Controller to get pricing and risk edit page
@@ -36,6 +40,17 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  // Map the selected credit rating to the appropriate variables for rendering the page
+  const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(deal?.tfm?.exporterCreditRating);
+
+  // Only pass the saved rating to pre-select it if "Other" is actually selected; otherwise pass undefined so no option is marked selected
+  const otherCreditRatings = await mapOtherCreditRatings(otherCreditRatingValue);
+
+  if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
+    console.error('getUnderWritingPricingAndRiskEdit - No credit ratings returned from the API.');
+    return res.render('_partials/problem-with-service.njk', { user });
+  }
+
   return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
@@ -43,6 +58,12 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
+    goodSelected,
+    acceptableSelected,
+    otherSelected,
+    otherCreditRatings,
+    otherCreditRatingValue,
+    label,
   });
 };
 
@@ -63,24 +84,24 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const existingValue = deal.tfm.exporterCreditRating;
-  let submittedValue;
-
-  if (hasValue(req.body.exporterCreditRatingOther) && req.body.exporterCreditRatingOther !== existingValue) {
-    submittedValue = req.body.exporterCreditRatingOther;
-  } else {
-    submittedValue = req.body.exporterCreditRating;
-  }
-
   let validationErrors;
+
+  const otherCreditRatings = await mapOtherCreditRatings();
+
+  if (!Array.isArray(otherCreditRatings) || !otherCreditRatings?.length) {
+    console.error('postUnderWritingPricingAndRisk -No credit ratings returned from the API.');
+    return res.render('_partials/problem-with-service.njk', { user });
+  }
 
   const selectedOther = req.body.exporterCreditRating === 'Other';
   const otherValue = hasValue(req.body.exporterCreditRatingOther);
-  const otherValueHasNumericValues = containsNumber(req.body.exporterCreditRatingOther);
+
+  // Only set the submitted value to the other value if the user has selected "Other" and provided a value for it
+  const submittedValue = selectedOther && otherValue ? req.body.exporterCreditRatingOther : req.body.exporterCreditRating;
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 
-  const hasValidationError = (selectedOther && !otherValue) || (selectedOther && otherValueHasNumericValues) || noOptionSelected;
+  const hasValidationError = (selectedOther && !otherValue) || noOptionSelected;
 
   if (hasValidationError) {
     if (noOptionSelected) {
@@ -119,25 +140,10 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
           ],
         };
       }
-
-      if (otherValueHasNumericValues) {
-        validationErrors = {
-          count: 1,
-          errorList: {
-            exporterCreditRatingOther: {
-              text: 'Credit rating must not include numbers',
-              order: '1',
-            },
-          },
-          summary: [
-            {
-              text: 'Credit rating must not include numbers',
-              href: '#exporterCreditRatingOther',
-            },
-          ],
-        };
-      }
     }
+
+    // Map the selected credit rating to the appropriate variables for rendering the page with validation errors
+    const { goodSelected, acceptableSelected, otherSelected, otherCreditRatingValue } = mapSelectedCreditRating(submittedValue);
 
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
       activePrimaryNavigation: 'manage work',
@@ -150,6 +156,12 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
       dealId: deal.dealSnapshot._id,
       user: req.session.user,
       validationErrors,
+      otherCreditRatings,
+      goodSelected,
+      acceptableSelected,
+      otherSelected,
+      otherCreditRatingValue,
+      label,
     });
   }
 

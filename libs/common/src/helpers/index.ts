@@ -69,3 +69,4 @@ export * from './parse-api-error-response';
 export * from './otp-login-result';
 export * from './sanitise-feedback-response';
 export * from './sanitise-value';
+export * from './map-select-option';

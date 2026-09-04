@@ -27,7 +27,6 @@ export type FacilityCreationParams = {
  * @returns {Promise<ApimGiftFacilityCreationPayload>} The APIM "GIFT facility creation" payload.
  */
 export const createFacility = async ({
-  creditRiskRatings,
   deal,
   facility,
   facilityCategories,
@@ -110,7 +109,6 @@ export const createFacility = async ({
       ...facilityFlags,
     }),
     riskDetails: await mapRiskDetails({
-      creditRiskRatings,
       dealId,
       ewcsSupplierType,
       exporterCreditRating,

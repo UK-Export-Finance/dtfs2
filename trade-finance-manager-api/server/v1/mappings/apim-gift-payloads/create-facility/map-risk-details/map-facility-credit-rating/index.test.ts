@@ -2,48 +2,45 @@ import { mapFacilityCreditRating } from '.';
 
 describe('mapFacilityCreditRating', () => {
   describe('when the exporter credit rating is in the TFM_CREDIT_RATING_MAP', () => {
-    it('should return the mapped credit rating', () => {
+    it('should return the mapped credit rating for BB-', () => {
       // Arrange
-      const mockCreditRiskRatings = ['BB-', 'B+'];
       const mockExporterCreditRating = 'Good (BB-)';
 
       // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
+      const result = mapFacilityCreditRating(mockExporterCreditRating);
 
       // Assert
       const expected = 'BB-';
 
       expect(result).toEqual(expected);
     });
-  });
 
-  describe('when the exporter credit rating is in the list of credit risk ratings', () => {
-    it('should return the mapped credit rating', () => {
+    it('should return the mapped credit rating for B+', () => {
       // Arrange
-      const mockCreditRiskRatings = ['AAA', 'AA+', 'AA'];
-      const mockExporterCreditRating = 'AAA';
+      const mockExporterCreditRating = 'Acceptable (B+)';
 
       // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
+      const result = mapFacilityCreditRating(mockExporterCreditRating);
 
       // Assert
-      const expected = 'AAA';
+      const expected = 'B+';
 
       expect(result).toEqual(expected);
     });
   });
 
-  describe('when the exporter credit rating is NOT in TFM_CREDIT_RATING_MAP or the list of credit risk ratings', () => {
-    it('should return null', () => {
+  describe('when the exporter credit rating is another credit rating', () => {
+    it('should return the mapped credit rating', () => {
       // Arrange
-      const mockCreditRiskRatings = ['AAA'];
-      const mockExporterCreditRating = 'CCC';
+      const mockExporterCreditRating = 'AAA';
 
       // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, mockExporterCreditRating);
+      const result = mapFacilityCreditRating(mockExporterCreditRating);
 
       // Assert
-      expect(result).toBeNull();
+      const expected = 'AAA';
+
+      expect(result).toEqual(expected);
     });
   });
 
@@ -53,11 +50,8 @@ describe('mapFacilityCreditRating', () => {
     { exporterCreditRating: '', description: 'empty string' },
   ])('when the exporter credit rating is $description', ({ exporterCreditRating }) => {
     it('should return null', () => {
-      // Arrange
-      const mockCreditRiskRatings = ['BB-', 'B+'];
-
       // Act
-      const result = mapFacilityCreditRating(mockCreditRiskRatings, exporterCreditRating);
+      const result = mapFacilityCreditRating(exporterCreditRating);
 
       // Assert
       expect(result).toBeNull();

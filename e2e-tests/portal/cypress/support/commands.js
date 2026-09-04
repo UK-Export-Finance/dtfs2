@@ -33,6 +33,11 @@ Cypress.Commands.add('assertText', require('./utils/assertText'));
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
+// Assert that a select element has an option with the given text
+Cypress.Commands.add('assertSelectOptionExists', require('./utils/assertSelectOptionExists'));
+// Assert that a select element does not have an option with the given text
+Cypress.Commands.add('assertSelectOptionDoesNotExist', require('./utils/assertSelectOptionDoesNotExist'));
+
 // Mock data loader
 Cypress.Commands.add('loadData', require('../../../gef/cypress/support/commands/loadData'));
 
