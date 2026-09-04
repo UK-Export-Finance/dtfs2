@@ -71,7 +71,7 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "axios": "1.19.0",
+    "axios": "1.18.0",
     "false": "^0.0.4",
     "release-please": "^17.11.1"
   },
