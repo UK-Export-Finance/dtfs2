@@ -7,6 +7,8 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  getUnissuedFacilitiesReport: jest.fn(),
+  getUkefDecisionReport: jest.fn(),
 }));
 
 const {
@@ -15,16 +17,25 @@ const {
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get } = createApi(app);
 
 describe('portal routes', () => {
+  beforeEach(() => {
+    api.getUnissuedFacilitiesReport.mockResolvedValue([]);
+    api.getUkefDecisionReport.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('GET /reports', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/reports', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -33,7 +44,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/review-unissued-facilities', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -42,7 +52,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/review-unconditional-decision', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -51,7 +60,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/review-conditional-decision', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -60,7 +68,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/download-unissued-facilities-report', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -69,7 +76,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/download-unconditional-decision-report', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -78,7 +84,6 @@ describe('portal routes', () => {
       makeRequestWithHeaders: (headers) => get('/reports/download-conditional-decision-report', {}, headers),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

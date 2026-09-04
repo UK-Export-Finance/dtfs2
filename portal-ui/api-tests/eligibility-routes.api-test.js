@@ -7,16 +7,21 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  updateEligibilityCriteria: jest.fn(),
+  updateEligibilityDocumentation: jest.fn(),
+  downloadEligibilityDocumentationFile: jest.fn(),
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { ROLES } = require('@ukef/dtfs2-common');
+const { PassThrough } = require('stream');
 const mockProvide = require('./helpers/mockProvide');
 
 mockProvide();
 
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
@@ -32,12 +37,56 @@ const eligibilityDocumentationGetByFieldnameAndFileNameTestCases = [
 ];
 
 describe('eligibility routes', () => {
+  beforeEach(() => {
+    api.updateEligibilityCriteria.mockResolvedValue({
+      _id,
+      additionalRefName: 'Mock deal',
+      eligibility: {
+        status: 'Incomplete',
+        criteria: [],
+        validationErrors: { count: 0, errorList: {} },
+      },
+      supportingInformation: {
+        validationErrors: { count: 0, errorList: {} },
+        securityDetails: { exporter: '' },
+      },
+    });
+
+    api.updateEligibilityDocumentation.mockResolvedValue({
+      _id,
+      additionalRefName: 'Mock deal',
+      eligibility: {
+        status: 'Incomplete',
+        criteria: [],
+        validationErrors: { count: 0, errorList: {} },
+      },
+      supportingInformation: {
+        validationErrors: { count: 0, errorList: {} },
+        securityDetails: { exporter: '' },
+      },
+    });
+
+    api.downloadEligibilityDocumentationFile.mockImplementation(async (_dealId, _fieldname, filename) => {
+      const fileStream = new PassThrough();
+      fileStream.headers = { 'content-type': 'application/octet-stream' };
+
+      process.nextTick(() => {
+        fileStream.end(filename);
+      });
+
+      return fileStream;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('GET /contract/:_id/eligibility/criteria', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/criteria`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -47,7 +96,6 @@ describe('eligibility routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/eligibility/supporting-documentation` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -57,7 +105,6 @@ describe('eligibility routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -66,7 +113,6 @@ describe('eligibility routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/supporting-documentation`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -74,8 +120,8 @@ describe('eligibility routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
       whitelistedRoles: allRoles,
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 302,
+      successHeaders: { location: `/contract/${_id}/eligibility/check-your-answers` },
     });
   });
 
@@ -85,7 +131,6 @@ describe('eligibility routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -93,10 +138,9 @@ describe('eligibility routes', () => {
     'GET /contract/:_id/eligibility-documentation/$fieldname/$filename',
     ({ fieldname, filename }) => {
       withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
+        makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
         whitelistedRoles: allRoles,
         successCode: 200,
-        disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
       });
     },
   );
@@ -106,7 +150,6 @@ describe('eligibility routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/check-your-answers`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

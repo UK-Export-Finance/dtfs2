@@ -7,11 +7,13 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
-  updateUser: jest.fn(),
   banks: jest.fn(),
+  users: jest.fn(),
   user: jest.fn(),
+  createUser: jest.fn(),
+  updateUser: jest.fn(),
 }));
-jest.mock('../server/helpers/getApiData', () => () => []);
+jest.mock('../server/helpers/getApiData', () => (query) => query);
 
 const {
   ROLES: { ADMIN },
@@ -20,7 +22,7 @@ const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../server/createApp');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
-const { login, updateUser, loginWithSignInLink } = require('../server/api');
+const { login, updateUser, loginWithSignInLink, banks, users, user, createUser } = require('../server/api');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const loginWithSignInLinkAsRole = require('./helpers/loginWithSignInLinkAsRole');
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('./fixtures/sign-in-token-constants');
@@ -38,6 +40,20 @@ describe('user routes', () => {
   beforeEach(async () => {
     login.mockImplementation(mockLogin());
     loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(ADMIN));
+    banks.mockResolvedValue([{ id: 'bank-1', name: 'Bank 1', hasGefAccessOnly: false }]);
+    users.mockResolvedValue({ users: [] });
+    user.mockResolvedValue({
+      _id,
+      bank: { id: 'bank-1', name: 'Bank 1' },
+      email,
+      firstname: 'Mock',
+      isTrusted: false,
+      roles: [],
+      surname: 'User',
+      'user-status': 'active',
+      username: email,
+    });
+    createUser.mockResolvedValue({ status: 200, data: {} });
     sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
     await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: [sessionCookie] });
     updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));
@@ -48,7 +64,6 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => get('/admin/users', {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -57,7 +72,6 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => get('/admin/users/create', {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -65,8 +79,8 @@ describe('user routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/admin/users/create'),
       whitelistedRoles: [ADMIN],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 302,
+      successHeaders: { location: '/admin/users/' },
     });
   });
 
@@ -75,7 +89,6 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => get(`/admin/users/edit/${_id}`, {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -112,7 +125,6 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => get(`/admin/users/disable/${_id}`, {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -121,25 +133,22 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => get(`/admin/users/enable/${_id}`, {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
-  describe('GET /admin/users/:_id/change-password', () => {
+  describe('GET /admin/users/reset-password/:_id', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/admin/users/${_id}/change-password`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/admin/users/reset-password/${_id}`, {}, headers),
       whitelistedRoles: [ADMIN],
       successCode: 200,
     });
   });
 
-  describe('POST /admin/users/:_id/change-password', () => {
+  describe('POST /admin/users/reset-password/:_id', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/admin/users/${_id}/change-password`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/admin/users/reset-password/${_id}`),
       whitelistedRoles: [ADMIN],
-      successCode: 302,
-      successHeaders: { location: `/admin/users/edit/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 200,
     });
   });
 });
