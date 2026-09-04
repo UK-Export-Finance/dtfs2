@@ -108,6 +108,6 @@ describe(component, () => {
     const scriptSelector = `[data-cy="${fieldId}-accessible-autocomplete-script"]`;
     wrapper
       .expectElement(scriptSelector)
-      .toHaveAttribute('integrity', 'sha512-HpHhIJuWO7UgVrJ5F0TShRp7VbXsSC9rusls5dSNUddRBsd1YMZtJc/wVS/9doIpnyYbfp0aT/nd9QgO7Pc9tA==');
+      .toHaveAttribute('integrity', 'sha512-OIVKElDMjX37oZjCyfVk5P9pPn6F0xyQOiuaKMMTjfO/VNsJuZJ48ETOkKhl/IVkqMyGi/Q9DVGUrFbK3LRLJw==');
   });
 });
