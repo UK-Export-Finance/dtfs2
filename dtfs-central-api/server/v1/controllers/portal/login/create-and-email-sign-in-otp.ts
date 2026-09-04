@@ -2,15 +2,16 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest, AuditDetails, PortalUser, isProduction } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
-import { incrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/increment-sign-in-opt-sent-count';
+import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/send-email-and-increment-sign-in-otp-sent-count';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
 import { PortalUsersRepo } from '../../../../repositories/users-repo';
-import { sendSignInOtpEmail } from '../../../../helpers/portal-2fa/send-sign-in-otp-email';
 import { sendAccountSuspensionEmail } from './send-account-suspension-email';
+import { isSignInDataStale } from '../../../../helpers/portal-2fa/is-sign-in-data-stale';
 
 /**
  * Creates and emails a sign-in OTP to the user.
  * Checks if the user exists and is not blocked or disabled.
+ * Checks if the sign-in data is stale and resets it if necessary.
  * Increments the sign-in OTP send count and resets sign-in data if stale.
  * Generates a new OTP, saves it to the database, and logs it to the console.
  * @param req request object containing user and audit details
@@ -43,9 +44,32 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     const signInOTPSendDate = user.signInOTPSendDate ? new Date(user.signInOTPSendDate) : undefined;
 
-    const signInOTPSendCount = await incrementSignInOTPSendCount({ userId, signInOTPSendDate, auditDetails });
+    // if sign in data is stale, reset sign in data first
+    const signInDataIsStale = isSignInDataStale(signInOTPSendDate);
 
-    if (signInOTPSendCount === -1) {
+    if (signInDataIsStale) {
+      console.info('Sign in data is stale for user %s, resetting sign in data', sanitisedUserId);
+      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
+    }
+
+    const userForSignInOtp = signInDataIsStale ? { ...user, signInOTPSendCount: 0 } : user;
+
+    /**
+     * Generate a new OTP, save it to the database.
+     */
+    const { securityCode, salt: saltHex, hash: hashHex, expiry } = await generateOtp();
+
+    console.info('Saving sign in OTP for user %s', sanitisedUserId);
+    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
+
+    const signInOTPSendCount = await sendEmailAndIncrementSignInOTPSendCount({ user: userForSignInOtp, securityCode, auditDetails });
+
+    /**
+     * If the user has exceeded the maximum sign in OTP send attempts,
+     * then the remaining attempts returned here will be -1 or lower.
+     * Send an account suspension email and return a response indicating that the account is suspended.
+     */
+    if (signInOTPSendCount <= -1) {
       console.info('User %s account suspended due to excessive OTP requests, sending suspension email', sanitisedUserId);
       try {
         await sendAccountSuspensionEmail(user);
@@ -56,16 +80,9 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
       return res.status(HttpStatusCode.Created).send({ signInOTPSendCount: -1 });
     }
 
-    const { securityCode, salt: saltHex, hash: hashHex, expiry } = await generateOtp();
-
-    console.info('Saving sign in OTP for user %s', sanitisedUserId);
-    await PortalUsersRepo.saveSignInOTPTokenForUser({ userId, saltHex, hashHex, expiry, auditDetails });
-
     if (!isProduction()) {
       console.info('🔑 Sign in OTP code for user: %s is: %s', user.email, securityCode);
     }
-
-    await sendSignInOtpEmail(user, securityCode);
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {

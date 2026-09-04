@@ -2,7 +2,6 @@ import { BssEwcsDeal, Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@
 import { ObjectId } from 'mongodb';
 import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
-import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
@@ -84,7 +83,6 @@ describe('createFacility', () => {
   });
 
   const params = {
-    creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
     deal: mockDeal,
     facility: mockFacility,
     facilityCategories: MOCK_FACILITY_CATEGORIES,
@@ -159,7 +157,6 @@ describe('createFacility', () => {
         isEwcsFacility,
       }),
       riskDetails: await mapRiskDetails({
-        creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
         dealId: getTfmUkefDealId(mockDeal),
         ewcsSupplierType: String((mockDeal.dealSnapshot as BssEwcsDeal).submissionDetails['supplier-type']),
         exporterCreditRating: mockDeal.tfm.exporterCreditRating,

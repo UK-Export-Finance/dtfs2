@@ -1092,7 +1092,7 @@ const getCompanyInfo = async (partyUrn) => {
 
 /**
  * Get credit risk ratings
- * @returns {Promise<import('./api-response-types').CreditRiskRating[] | false>}
+ * @returns {Promise<import('@ukef/dtfs2-common').CreditRiskRating[] | false>}
  */
 const getCreditRiskRatings = async () => {
   try {
