@@ -4,7 +4,6 @@ import { FacilityCategory } from '../../../api-response-types';
 import { ApimGiftFacilityCreationPayload } from '../types';
 
 type CreateFacilitiesParams = {
-  creditRiskRatings: string[];
   deal: TfmDeal;
   facilities: TfmFacility[];
   facilityCategories: FacilityCategory[];
@@ -21,7 +20,6 @@ type CreateFacilitiesParams = {
  * @returns {ApimGiftFacilityCreationPayload[]} An array of APIM/GIFT facility creation payloads.
  */
 export const createFacilities = async ({
-  creditRiskRatings,
   deal,
   facilities,
   facilityCategories,
@@ -32,7 +30,6 @@ export const createFacilities = async ({
       createFacility({
         deal,
         facility,
-        creditRiskRatings,
         facilityCategories,
         newPartyUrnCreated,
       }),

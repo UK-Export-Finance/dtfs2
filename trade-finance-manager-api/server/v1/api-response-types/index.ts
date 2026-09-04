@@ -1,6 +1,5 @@
 export * from './add-payment-response-body';
 export * from './bank-response';
-export * from './credit-risk-rating';
 export * from './facility-category';
 export * from './fee-record';
 export * from './fee-record-correction-request-review-response-body';
