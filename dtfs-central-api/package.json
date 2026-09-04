@@ -71,7 +71,7 @@
     "eslint-config-prettier": "^9.1.2",
     "eslint-import-resolver-typescript": "^3.10.1",
     "eslint-plugin-import": "^2.32.0",
-    "jest": "30.4.2",
+    "jest": "30.5.1",
     "jest-when": "^4.0.3",
     "node-mocks-http": "^1.18.1",
     "supertest": "7.2.2",
