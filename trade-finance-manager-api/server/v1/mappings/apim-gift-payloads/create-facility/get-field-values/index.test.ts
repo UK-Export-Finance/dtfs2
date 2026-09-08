@@ -6,13 +6,14 @@ import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { getBssSubtypeName } from '../get-bss-subtype-name';
 import { getEwcsSupplierType } from '../get-ewcs-supplier-type';
 import { getFacilityTypeFlags } from '../get-facility-type-flags';
+import { getFieldValues } from '.';
+import { getFeeFrequency } from '../get-fee-frequency';
 import { getGuaranteeFeePayableToUkef } from '../get-guarantee-fee-payable-to-ukef';
 import { getIndustryCode } from '../../get-industry-code';
 import { mapCoverPercentage } from '../map-cover-percentage';
 import { mapFacilityAmount } from '../map-overview/map-facility-amount';
 import { mapPartyUrns } from '../map-party-urns';
 import { mapProductTypeCode } from '../map-product-type-code';
-import { getFieldValues } from '.';
 
 const mockDeal = MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED as unknown as TfmDeal;
 const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
@@ -66,7 +67,10 @@ describe('getFieldValues', () => {
       }),
       facilityFlags,
       facilityType: mockFacilitySnapshot.type,
-      feeFrequency: mockFacilitySnapshot.feeFrequency,
+      feeFrequency: getFeeFrequency({
+        facilitySnapshot: mockFacilitySnapshot,
+        isEwcsFacility: facilityFlags.isEwcsFacility,
+      }),
       feeType: mockFacilitySnapshot.feeType,
       guaranteeFeePayableToUkef: getGuaranteeFeePayableToUkef({
         facilitySnapshot: mockFacilitySnapshot,

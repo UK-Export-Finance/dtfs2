@@ -49,6 +49,7 @@ export const mapPartyUrns = ({ deal, isBssFacility, isCashFacility, isContingent
   if (isEwcsFacility) {
     return {
       buyer: buyerPartyUrn,
+      exporterPartyUrn,
       issuingBank: bankPartyUrn,
     };
   }

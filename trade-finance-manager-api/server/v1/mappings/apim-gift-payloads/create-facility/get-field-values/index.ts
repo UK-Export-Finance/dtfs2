@@ -3,6 +3,7 @@ import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { getBssSubtypeName } from '../get-bss-subtype-name';
 import { getEwcsSupplierType } from '../get-ewcs-supplier-type';
 import { getFacilityTypeFlags } from '../get-facility-type-flags';
+import { getFeeFrequency } from '../get-fee-frequency';
 import { getGuaranteeFeePayableToUkef } from '../get-guarantee-fee-payable-to-ukef';
 import { getIndustryCode } from '../../get-industry-code';
 import { mapCoverPercentage } from '../map-cover-percentage';
@@ -45,7 +46,7 @@ type GetFieldValuesReturn = {
 
 /**
  * Obtain deal and facility data required for APIM for GIFT facility creation data mapping.
- * @param params - Data required to extract field values.
+ * @param {GetFieldValuesParams} params - Data required to extract field values.
  * @param {TfmDeal} params.deal - Deal data, required for mapping certain facility values.
  * @param {TfmFacility} params.facility - The TFM facility data containing `facilitySnapshot` and `tfm` values.
  * @returns {GetFieldValuesReturn} The extracted field values from a deal and facility.
@@ -60,19 +61,19 @@ export const getFieldValues = ({ deal, facility }: GetFieldValuesParams): GetFie
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis); // GEF stores this as a number. BSS/EWCS stores this as a string.
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
+  const feeType = String(facilitySnapshot.feeType);
   const monthsOfCover = Number(tfm.exposurePeriodInMonths);
 
   let ewcsSupplierType = null;
 
   const { exporterCreditRating } = deal.tfm;
-  const { feeFrequency, feeType } = facilitySnapshot;
   const { type: facilityType } = facilitySnapshot;
 
   const dealId = getTfmUkefDealId(deal);
   const industryCode = getIndustryCode(deal);
 
   const facilityFlags = getFacilityTypeFlags(facilityType);
-  const { isBssFacility } = facilityFlags;
+  const { isBssFacility, isEwcsFacility } = facilityFlags;
 
   const bssSubtypeName = getBssSubtypeName({ facilitySnapshot, isBssFacility });
 
@@ -83,13 +84,15 @@ export const getFieldValues = ({ deal, facility }: GetFieldValuesParams): GetFie
     coverPercentage,
   });
 
+  const feeFrequency = getFeeFrequency({ facilitySnapshot, isEwcsFacility });
+
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({ facilitySnapshot, ...facilityFlags });
 
   const productTypeCode = mapProductTypeCode(facilityFlags);
 
   const partyUrns = mapPartyUrns({ deal, ...facilityFlags });
 
-  if (facilityFlags.isEwcsFacility) {
+  if (isEwcsFacility) {
     ewcsSupplierType = getEwcsSupplierType(deal);
   }
 

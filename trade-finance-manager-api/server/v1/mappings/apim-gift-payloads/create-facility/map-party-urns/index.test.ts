@@ -108,7 +108,7 @@ describe('mapPartyUrns', () => {
   });
 
   describe('when isEwcsFacility is true', () => {
-    it('should return buyer and issuingBank party URNs', () => {
+    it('should return buyer, exporterPartyUrn, and issuingBank party URNs', () => {
       // Arrange & Act
       const result = mapPartyUrns({
         deal: mockDealBase,
@@ -119,6 +119,7 @@ describe('mapPartyUrns', () => {
       // Assert
       expect(result).toEqual({
         buyer: mockBuyerPartyUrn,
+        exporterPartyUrn: mockExporterPartyUrn,
         issuingBank: mockBankPartyUrn,
       });
     });
