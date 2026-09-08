@@ -10,9 +10,7 @@ import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
-import { sendEmail } from '../email.controller';
-
-const { UKEF_INTERNAL_NOTIFICATION } = process.env;
+import { sendFailureAlertEmail } from '../../../helpers/send-failure-alert-email';
 
 /**
  * The `create` function handles the creation of an eStore site. It validates the request body,
@@ -275,9 +273,12 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     });
 
     // Dispatch an alert
-    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {
-      dealIdentifier: req?.body?.dealIdentifier,
-    });
+    await sendFailureAlertEmail(
+      EMAIL_TEMPLATES.ESTORE_FAILED,
+      'eStore directories',
+      `Unable to create eStore directories: ${error instanceof Error ? error.message : String(error)}`,
+      req?.body?.dealIdentifier,
+    );
 
     // Return `500` status code
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });

@@ -15,6 +15,9 @@ import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
+import { sendFailureAlertEmail } from '../../helpers/send-failure-alert-email';
+
+const ACBS_FAILURE_TEMPLATE_ID = process.env.GOV_NOTIFY_ACBS_FAILURE_TEMPLATE_ID ?? 'TODO_GOV_NOTIFY_ACBS_FAILURE_TEMPLATE_ID';
 
 dotenv.config({ quiet: true });
 
@@ -23,6 +26,16 @@ const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+};
+
+const getDealIdentifier = (deal: unknown): string | undefined => {
+  if (typeof deal !== 'object' || deal === null) {
+    return undefined;
+  }
+
+  const { dealIdentifier } = deal as { dealIdentifier?: unknown };
+
+  return typeof dealIdentifier === 'string' ? dealIdentifier : undefined;
 };
 
 export const checkDealId = async (dealId: any) => {
@@ -143,13 +156,32 @@ const createAcbsRecord = async (deal: any, bank: any) => {
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   try {
     const { deal, bank } = req.body;
+    const dealIdentifier = typeof deal !== 'undefined' && typeof deal._id !== 'undefined' ? String(deal._id) : 'unknown';
+
     const response = await createAcbsRecord(deal, bank);
     if (response) {
       const { status, data } = response;
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS create payload',
+      `ACBS create payload failed for deal ${dealIdentifier}`,
+      getDealIdentifier(deal),
+    );
   } catch (error: unknown) {
     console.error('ACBS create POST failed %o', error);
+
+    const dealIdentifier = typeof req.body?.deal !== 'undefined' && typeof req.body.deal._id !== 'undefined' ? String(req.body.deal._id) : 'unknown';
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS create payload',
+      `ACBS create payload failed for deal ${dealIdentifier}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
+
     return res.status(400).send();
   }
 
@@ -204,8 +236,23 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS issue facility payload',
+      `ACBS issue facility payload failed for facility ${String(id)}`,
+      getDealIdentifier(deal),
+    );
   } catch (error) {
     console.error('Error during ACBS facility issue POST %o', error);
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS issue facility payload',
+      `ACBS issue facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
+
     return res.status(400).send();
   }
 
@@ -290,8 +337,22 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
 
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS amend facility payload',
+      `ACBS amend facility payload failed for facility ${String(id)}`,
+      getDealIdentifier(deal),
+    );
   } catch (error) {
     console.error('Error executing ACBS Facility POST %o', error);
+
+    await sendFailureAlertEmail(
+      ACBS_FAILURE_TEMPLATE_ID,
+      'ACBS amend facility payload',
+      `ACBS amend facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
 
     return res.status(400).send();
   }
