@@ -4,6 +4,7 @@ import { getBssSubtypeName } from '../get-bss-subtype-name';
 import { getEwcsSupplierType } from '../get-ewcs-supplier-type';
 import { getFacilityTypeFlags } from '../get-facility-type-flags';
 import { getFeeFrequency } from '../get-fee-frequency';
+import { getFeeType } from '../get-fee-type';
 import { getGuaranteeFeePayableToUkef } from '../get-guarantee-fee-payable-to-ukef';
 import { getIndustryCode } from '../../get-industry-code';
 import { mapCoverPercentage } from '../map-cover-percentage';
@@ -61,7 +62,6 @@ export const getFieldValues = ({ deal, facility }: GetFieldValuesParams): GetFie
   const dayCountBasis = Number(facilitySnapshot.dayCountBasis); // GEF stores this as a number. BSS/EWCS stores this as a string.
   const effectiveDate = String(facilityGuaranteeDates?.guaranteeCommencementDate);
   const expiryDate = String(facilityGuaranteeDates?.guaranteeExpiryDate);
-  const feeType = String(facilitySnapshot.feeType);
   const monthsOfCover = Number(tfm.exposurePeriodInMonths);
 
   let ewcsSupplierType = null;
@@ -85,6 +85,8 @@ export const getFieldValues = ({ deal, facility }: GetFieldValuesParams): GetFie
   });
 
   const feeFrequency = getFeeFrequency({ facilitySnapshot, isEwcsFacility });
+
+  const feeType = getFeeType({ facilitySnapshot, isEwcsFacility });
 
   const guaranteeFeePayableToUkef = getGuaranteeFeePayableToUkef({ facilitySnapshot, ...facilityFlags });
 

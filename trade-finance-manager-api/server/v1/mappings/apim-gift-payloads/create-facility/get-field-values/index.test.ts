@@ -8,6 +8,7 @@ import { getEwcsSupplierType } from '../get-ewcs-supplier-type';
 import { getFacilityTypeFlags } from '../get-facility-type-flags';
 import { getFieldValues } from '.';
 import { getFeeFrequency } from '../get-fee-frequency';
+import { getFeeType } from '../get-fee-type';
 import { getGuaranteeFeePayableToUkef } from '../get-guarantee-fee-payable-to-ukef';
 import { getIndustryCode } from '../../get-industry-code';
 import { mapCoverPercentage } from '../map-cover-percentage';
@@ -71,7 +72,10 @@ describe('getFieldValues', () => {
         facilitySnapshot: mockFacilitySnapshot,
         isEwcsFacility: facilityFlags.isEwcsFacility,
       }),
-      feeType: mockFacilitySnapshot.feeType,
+      feeType: getFeeType({
+        facilitySnapshot: mockFacilitySnapshot,
+        isEwcsFacility: facilityFlags.isEwcsFacility,
+      }),
       guaranteeFeePayableToUkef: getGuaranteeFeePayableToUkef({
         facilitySnapshot: mockFacilitySnapshot,
         ...facilityFlags,

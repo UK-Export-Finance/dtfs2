@@ -14,8 +14,8 @@ type GetFeeFrequencyParams = {
  */
 export const getFeeFrequency = ({ facilitySnapshot, isEwcsFacility }: GetFeeFrequencyParams): string => {
   if (isEwcsFacility) {
-    return String(facilitySnapshot.premiumFrequency);
+    return facilitySnapshot.premiumFrequency ?? '';
   }
 
-  return String(facilitySnapshot.feeFrequency);
+  return facilitySnapshot.feeFrequency ?? '';
 };

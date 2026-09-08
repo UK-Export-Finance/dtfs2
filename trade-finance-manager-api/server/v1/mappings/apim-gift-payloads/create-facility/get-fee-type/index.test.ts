@@ -1,44 +1,44 @@
 import { Facility } from '@ukef/dtfs2-common';
-import { getFeeFrequency } from '.';
+import { getFeeType } from '.';
 import { MOCK_FACILITIES } from '../../../../__mocks__/mock-facilities';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 
-describe('getFeeFrequency', () => {
+describe('getFeeType', () => {
   describe('when isEwcsFacility is true', () => {
-    it('should return the correct fee frequency', () => {
+    it('should return the correct fee type', () => {
       // Arrange
       const params = {
         facilitySnapshot: {
           ...mockFacilitySnapshot,
-          premiumFrequency: 'Mock Premium Frequency',
+          premiumType: 'Mock Premium Type',
         },
         isEwcsFacility: true,
       };
 
       // Act
-      const result = getFeeFrequency(params);
+      const result = getFeeType(params);
 
       // Assert
-      const expected = params.facilitySnapshot.premiumFrequency;
+      const expected = params.facilitySnapshot.premiumType;
 
       expect(result).toBe(expected);
     });
   });
 
-  describe('when isEwcsFacility is true and premiumFrequency is undefined', () => {
+  describe('when isEwcsFacility is true and premiumType is undefined', () => {
     it('should return an empty string', () => {
       // Arrange
       const params = {
         facilitySnapshot: {
           ...mockFacilitySnapshot,
-          premiumFrequency: undefined,
+          premiumType: undefined,
         },
         isEwcsFacility: true,
       };
 
       // Act
-      const result = getFeeFrequency(params);
+      const result = getFeeType(params);
 
       // Assert
       const expected = '';
@@ -48,39 +48,39 @@ describe('getFeeFrequency', () => {
   });
 
   describe('when isEwcsFacility is false', () => {
-    it('should return the correct fee frequency', () => {
+    it('should return the correct fee type', () => {
       // Arrange
       const params = {
         facilitySnapshot: {
           ...mockFacilitySnapshot,
-          feeFrequency: 'Mock fee frequency',
+          feeType: 'Mock fee type',
         },
         isEwcsFacility: false,
       };
 
       // Act
-      const result = getFeeFrequency(params);
+      const result = getFeeType(params);
 
       // Assert
-      const expected = params.facilitySnapshot.feeFrequency;
+      const expected = params.facilitySnapshot.feeType;
 
       expect(result).toBe(expected);
     });
   });
 
-  describe('when isEwcsFacility is false and feeFrequency is undefined', () => {
+  describe('when isEwcsFacility is false and feeType is undefined', () => {
     it('should return an empty string', () => {
       // Arrange
       const params = {
         facilitySnapshot: {
           ...mockFacilitySnapshot,
-          feeFrequency: undefined,
+          feeType: undefined,
         },
         isEwcsFacility: false,
       };
 
       // Act
-      const result = getFeeFrequency(params);
+      const result = getFeeType(params);
 
       // Assert
       const expected = '';
