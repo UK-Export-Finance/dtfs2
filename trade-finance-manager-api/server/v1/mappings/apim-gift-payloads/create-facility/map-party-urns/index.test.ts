@@ -123,6 +123,62 @@ describe('mapPartyUrns', () => {
         issuingBank: mockBankPartyUrn,
       });
     });
+
+    describe('when deal.tfm.parties.buyer.partyUrn is null', () => {
+      it('should return an object without buyer', () => {
+        // Arrange
+        const mockDeal = {
+          ...mockDealBase,
+          tfm: {
+            parties: {
+              buyer: { partyUrn: null },
+              exporter: { partyUrn: mockExporterPartyUrn },
+            },
+          },
+        } as unknown as TfmDeal;
+
+        // Act
+        const result = mapPartyUrns({
+          deal: mockDeal,
+          ...facilityFlagsAllFalse,
+          isEwcsFacility: true,
+        });
+
+        // Assert
+        expect(result).toEqual({
+          exporterPartyUrn: mockExporterPartyUrn,
+          issuingBank: mockBankPartyUrn,
+        });
+      });
+    });
+
+    describe('when deal.tfm.parties.buyer.partyUrn is undefined', () => {
+      it('should return an object without buyer', () => {
+        // Arrange
+        const mockDeal = {
+          ...mockDealBase,
+          tfm: {
+            parties: {
+              buyer: { partyUrn: undefined },
+              exporter: { partyUrn: mockExporterPartyUrn },
+            },
+          },
+        } as unknown as TfmDeal;
+
+        // Act
+        const result = mapPartyUrns({
+          deal: mockDeal,
+          ...facilityFlagsAllFalse,
+          isEwcsFacility: true,
+        });
+
+        // Assert
+        expect(result).toEqual({
+          exporterPartyUrn: mockExporterPartyUrn,
+          issuingBank: mockBankPartyUrn,
+        });
+      });
+    });
   });
 
   describe('when isCashFacility is true', () => {
