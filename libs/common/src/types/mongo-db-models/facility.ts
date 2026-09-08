@@ -59,8 +59,8 @@ export type Facility = {
   guaranteeFeePayableByBank?: string; // BSS/EWCS facilities only
   submittedAsIssuedDate: UnixTimestampString | null;
   ukefFacilityId: string | null;
-  feeType?: string; // BSS facilities only
   feeFrequency?: string; // BSS facilities only
+  feeType?: string; // BSS facilities only
   premiumFrequency?: string; // EWCS facilities only
   premiumType?: string; // EWCS facilities only
   /**
