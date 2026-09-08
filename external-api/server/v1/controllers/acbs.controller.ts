@@ -13,11 +13,11 @@ import * as dotenv from 'dotenv';
 import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
-import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
+import { EMAIL_TEMPLATES, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
 import { sendFailureAlertEmail } from '../../helpers/send-failure-alert-email';
 
-const ACBS_FAILURE_TEMPLATE_ID = process.env.GOV_NOTIFY_ACBS_FAILURE_TEMPLATE_ID ?? 'TODO_GOV_NOTIFY_ACBS_FAILURE_TEMPLATE_ID';
+const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
 
 dotenv.config({ quiet: true });
 
@@ -165,7 +165,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS create payload',
       `ACBS create payload failed for deal ${dealIdentifier}`,
       getDealIdentifier(deal),
@@ -176,7 +176,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     const dealIdentifier = typeof req.body?.deal !== 'undefined' && typeof req.body.deal._id !== 'undefined' ? String(req.body.deal._id) : 'unknown';
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS create payload',
       `ACBS create payload failed for deal ${dealIdentifier}: ${error instanceof Error ? error.message : String(error)}`,
       getDealIdentifier(req.body?.deal),
@@ -238,7 +238,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS issue facility payload',
       `ACBS issue facility payload failed for facility ${String(id)}`,
       getDealIdentifier(deal),
@@ -247,7 +247,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     console.error('Error during ACBS facility issue POST %o', error);
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS issue facility payload',
       `ACBS issue facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
       getDealIdentifier(req.body?.deal),
@@ -339,7 +339,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS amend facility payload',
       `ACBS amend facility payload failed for facility ${String(id)}`,
       getDealIdentifier(deal),
@@ -348,7 +348,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     console.error('Error executing ACBS Facility POST %o', error);
 
     await sendFailureAlertEmail(
-      ACBS_FAILURE_TEMPLATE_ID,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS amend facility payload',
       `ACBS amend facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
       getDealIdentifier(req.body?.deal),

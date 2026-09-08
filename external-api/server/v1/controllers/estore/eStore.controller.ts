@@ -12,6 +12,8 @@ import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 import { sendFailureAlertEmail } from '../../../helpers/send-failure-alert-email';
 
+const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
+
 /**
  * The `create` function handles the creation of an eStore site. It validates the request body,
  * ensures the creation of a new CRON job, and performs various checks on the provided data.
@@ -274,7 +276,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
 
     // Dispatch an alert
     await sendFailureAlertEmail(
-      EMAIL_TEMPLATES.ESTORE_FAILED,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'eStore directories',
       `Unable to create eStore directories: ${error instanceof Error ? error.message : String(error)}`,
       req?.body?.dealIdentifier,

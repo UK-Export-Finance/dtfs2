@@ -1,22 +1,25 @@
 import { sendEmail } from '../v1/controllers/email.controller';
-import { sendFailureAlertEmail } from './send-failure-alert-email';
 
 jest.mock('../v1/controllers/email.controller', () => ({
   sendEmail: jest.fn(),
 }));
 
 const mockedSendEmail = jest.mocked(sendEmail);
-const originalNotificationEmail = process.env.UKEF_INTERNAL_NOTIFICATION_EMAIL;
+const originalNotificationEmail = process.env.UKEF_INTERNAL_NOTIFICATION;
+let sendFailureAlertEmail: typeof import('./send-failure-alert-email').sendFailureAlertEmail;
 
 describe('sendFailureAlertEmail', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    process.env.UKEF_INTERNAL_NOTIFICATION_EMAIL = 'alerts@test.com';
+    process.env.UKEF_INTERNAL_NOTIFICATION = 'alerts@test.com';
+    const failureAlertEmailModule = jest.requireActual<typeof import('./send-failure-alert-email')>('./send-failure-alert-email');
+
+    sendFailureAlertEmail = failureAlertEmailModule.sendFailureAlertEmail;
   });
 
   afterEach(() => {
-    process.env.UKEF_INTERNAL_NOTIFICATION_EMAIL = originalNotificationEmail;
+    process.env.UKEF_INTERNAL_NOTIFICATION = originalNotificationEmail;
     jest.restoreAllMocks();
   });
 

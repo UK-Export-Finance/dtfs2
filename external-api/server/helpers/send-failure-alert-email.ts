@@ -1,7 +1,7 @@
 import { sendEmail } from '../v1/controllers/email.controller';
 
 // Who is supposed to receive operational alerts? Is there already a shared operations/support mailbox?
-const getFailureAlertRecipient = () => process.env.UKEF_INTERNAL_NOTIFICATION_EMAIL ?? 'TODO_UKEF_INTERNAL_NOTIFICATION_EMAIL';
+const sendToEmailAddress = process.env.UKEF_INTERNAL_NOTIFICATION ?? '';
 
 /**
  * Sends a Notify alert for a failed eStore or ACBS payload/job.
@@ -20,11 +20,10 @@ export const sendFailureAlertEmail = async (templateId: string, jobName: string,
     message: errorMessage,
     jobName,
   };
-  const recipientEmail = getFailureAlertRecipient();
 
   try {
-    await sendEmail(templateId, recipientEmail, emailVariables);
+    await sendEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
-    console.error('Failed to send failure alert email. templateId=%s job=%s recipient=%s error=%o', templateId, jobName, recipientEmail, error);
+    console.error('Failed to send failure alert email. templateId=%s job=%s recipient=%s error=%o', templateId, jobName, sendToEmailAddress, error);
   }
 };
