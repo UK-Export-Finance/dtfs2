@@ -7,6 +7,8 @@ import { APIM_GIFT_INTEGRATION } from '../constants';
 import { getDealTypeFlags } from './get-deal-type-flags';
 import { getFacilityTypeFlags } from './get-facility-type-flags';
 import { getGuaranteeFeePayableToUkef } from './get-guarantee-fee-payable-to-ukef';
+import { getFeeFrequency } from './get-fee-frequency';
+import { getFeeType } from './get-fee-type';
 import { mapCoverPercentage } from './map-cover-percentage';
 import { mapProductTypeCode } from './map-product-type-code';
 import { getIndustryCode } from '../get-industry-code';
@@ -135,8 +137,8 @@ describe('createFacility', () => {
         currency: facilitySnapshot.currency.id,
         dayCountBasis: Number(facilitySnapshot.dayCountBasis),
         expiryDate,
-        feeFrequency: String(facilitySnapshot.feeFrequency),
-        feeType: String(facilitySnapshot.feeType),
+        feeFrequency: getFeeFrequency({ facilitySnapshot, isEwcsFacility }),
+        feeType: getFeeType({ facilitySnapshot, isEwcsFacility }),
         guaranteeFeePayableToUkef,
         isEwcsFacility,
       }),

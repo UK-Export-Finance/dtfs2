@@ -10,7 +10,7 @@ type GetFeeFrequencyParams = {
  * @param {GetFeeFrequencyParams} params - The parameters for getting the fee frequency, including the facility snapshot and a flag indicating if it is an EWCS facility.
  * @param {TfmFacilitySnapshot} params.facilitySnapshot - The facility snapshot containing fee frequency information.
  * @param {boolean} params.isEwcsFacility - Flag indicating if the facility is an EWCS facility.
- * @returns {string} The fee frequency as a string, either the premium frequency for EWCS facilities or the fee frequency for BSS facilities.
+ * @returns {string} The fee frequency as a string, either the premium frequency for EWCS facilities or the fee frequency for non-EWCS facilities (e.g. BSS, GEF).
  */
 export const getFeeFrequency = ({ facilitySnapshot, isEwcsFacility }: GetFeeFrequencyParams): string => {
   if (isEwcsFacility) {
