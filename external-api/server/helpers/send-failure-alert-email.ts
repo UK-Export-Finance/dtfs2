@@ -11,8 +11,8 @@ const sendToEmailAddress = process.env.UKEF_INTERNAL_NOTIFICATION ?? '';
  *
  * @param templateId - GOV.UK Notify template id to use for the alert.
  * @param jobName - Name of the scheduled job that failed.
- * @param dealIdentifier - Optional deal identifier for the failed job.
  * @param errorMessage - Failure details to include in the notification.
+ * @param dealIdentifier - Optional deal identifier for the failed job.
  */
 export const sendFailureAlertEmail = async (templateId: string, jobName: string, errorMessage: string, dealIdentifier?: string): Promise<void> => {
   const emailVariables = {

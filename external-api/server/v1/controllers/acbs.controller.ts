@@ -35,7 +35,7 @@ const getDealIdentifier = (deal: unknown): string | undefined => {
 
   const { dealIdentifier } = deal as { dealIdentifier?: unknown };
 
-  return typeof dealIdentifier === 'string' ? dealIdentifier : undefined;
+  return typeof dealIdentifier === 'string' || typeof dealIdentifier === 'number' ? String(dealIdentifier) : undefined;
 };
 
 export const checkDealId = async (dealId: any) => {
@@ -156,8 +156,7 @@ const createAcbsRecord = async (deal: any, bank: any) => {
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   try {
     const { deal, bank } = req.body;
-    const dealIdentifier = typeof deal !== 'undefined' && typeof deal._id !== 'undefined' ? String(deal._id) : 'unknown';
-
+    const dealIdentifier = deal?._id ? String(deal._id) : 'unknown';
     const response = await createAcbsRecord(deal, bank);
     if (response) {
       const { status, data } = response;
@@ -173,7 +172,8 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     console.error('ACBS create POST failed %o', error);
 
-    const dealIdentifier = typeof req.body?.deal !== 'undefined' && typeof req.body.deal._id !== 'undefined' ? String(req.body.deal._id) : 'unknown';
+    const deal = req.body?.deal;
+    const dealIdentifier = typeof deal?._id !== 'undefined' ? String(deal._id) : 'unknown';
 
     await sendFailureAlertEmail(
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
