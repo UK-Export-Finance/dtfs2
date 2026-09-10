@@ -10,12 +10,13 @@ const { get, post } = createApi(app);
 
 const dealId = '123';
 const applicationNameUrl = `/applications/${dealId}/name`;
+const id = '123456';
 
 describe('name application routes', () => {
   beforeEach(() => {
     api.getApplication.mockResolvedValue(cloneMock(MOCK_BASIC_DEAL));
-    jest.spyOn(api, 'createApplication').mockResolvedValue({ _id: '123456' });
-    api.updateApplication.mockResolvedValue({ _id: '123456' });
+    jest.spyOn(api, 'createApplication').mockResolvedValue({ _id: id });
+    api.updateApplication.mockResolvedValue({ _id: id });
   });
 
   describe('GET /name-application', () => {
@@ -32,7 +33,7 @@ describe('name application routes', () => {
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Found,
       successHeaders: {
-        location: '/gef/application-details/123456',
+        location: `/gef/application-details/${id}`,
       },
     });
   });
@@ -51,7 +52,7 @@ describe('name application routes', () => {
       whitelistedRoles: [MAKER],
       successCode: HttpStatusCode.Found,
       successHeaders: {
-        location: '/gef/application-details/123456',
+        location: `/gef/application-details/${id}`,
       },
     });
   });
