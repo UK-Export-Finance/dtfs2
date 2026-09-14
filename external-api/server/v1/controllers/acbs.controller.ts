@@ -8,7 +8,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
@@ -160,6 +160,16 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     const response = await createAcbsRecord(deal, bank);
     if (response) {
       const { status, data } = response;
+
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS create payload',
+          `ACBS create payload failed for deal ${dealIdentifier}`,
+          getDealIdentifier(deal),
+        );
+      }
+
       return res.status(status).send(data);
     }
 
@@ -234,6 +244,16 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     const response = await issueAcbsFacility(id, facility, deal);
     if (response) {
       const { status, data } = response;
+
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS issue facility payload',
+          `ACBS issue facility payload failed for facility ${String(id)}`,
+          getDealIdentifier(deal),
+        );
+      }
+
       return res.status(status).send(data);
     }
 
@@ -334,6 +354,15 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
 
     if (response) {
       const { status, data } = response;
+
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS amend facility payload',
+          `ACBS amend facility payload failed for facility ${String(id)}`,
+          getDealIdentifier(deal),
+        );
+      }
 
       return res.status(status).send(data);
     }
