@@ -33,11 +33,10 @@ export const sendFacilitiesToApimGift = async ({
 
   const api = apiModule as ApiTypes;
 
-  const { facilityCategories, creditRiskRatings } = await getReferenceData(isGefDeal);
+  const { facilityCategories } = await getReferenceData(isGefDeal);
 
   if (facilities.length === 1) {
     const payload = await APIM_GIFT_PAYLOADS.createFacility({
-      creditRiskRatings,
       deal,
       facility: facilities[0],
       facilityCategories,
@@ -54,7 +53,6 @@ export const sendFacilitiesToApimGift = async ({
     facilities,
     newPartyUrnCreated,
     facilityCategories,
-    creditRiskRatings,
   });
 
   const responses: Array<TfmFacility | false> = [];

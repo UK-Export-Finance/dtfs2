@@ -17,6 +17,7 @@ const {
   sendManualBankDecisionEmail,
   sendFirstTaskEmail,
   internalAmendmentEmail,
+  calculateAcbsUkefExposureValue,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,
@@ -588,7 +589,8 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
     const amendmentWithUkefExposure = amendment;
 
     if (amendment.changeFacilityValue) {
-      amendmentWithUkefExposure.ukefExposure = amendment.tfm.exposure.ukefExposureValue;
+      // Calculate UKEF exposure for ACBS from the amendment value and facility coverPercentage
+      amendmentWithUkefExposure.ukefExposure = calculateAcbsUkefExposureValue(amendment.value, facility.facilitySnapshot.coverPercentage);
     }
 
     if (facility._id && amendmentWithUkefExposure && tfmDeal?.tfm) {
