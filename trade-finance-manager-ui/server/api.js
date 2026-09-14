@@ -1,18 +1,23 @@
 const { HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const axios = require('axios');
 const { HttpStatusCode } = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, logUserAuthError } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
 
 require('dotenv').config({ quiet: true });
 
-const { TFM_API_URL, TFM_API_KEY } = process.env;
+const { TFM_API_URL, TFM_API_KEY, EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const generateHeaders = () => ({
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': TFM_API_KEY,
+});
+
+const generateExternalAPIHeaders = () => ({
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+  'x-api-key': EXTERNAL_API_KEY,
 });
 
 const generateHeadersWithToken = (token) => ({
@@ -484,13 +489,18 @@ const updateUserPassword = async (userId, update, token) => {
       headers: generateHeadersWithToken(token),
       data: update,
     }).catch((error) => {
-      console.error('Unable to update user details in axios request %o', error);
+      const message = 'Unable to update user password in axios request';
+
+      logUserAuthError(error, message);
+
       return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 
     return response;
   } catch (error) {
-    console.error('Unable to update user details %o', error);
+    const message = 'Unable to update user password';
+    logUserAuthError(error, message);
+
     return { status: error?.response?.status || 500, data: 'Failed to update user password' };
   }
 };
@@ -1522,6 +1532,27 @@ const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
   return response.data;
 };
 
+/**
+ * Get credit risk ratings
+ * @returns {Promise<import('@ukef/dtfs2-common').CreditRiskRating[] | false>}
+ */
+const getCreditRiskRatings = async () => {
+  try {
+    console.info('Calling external API "Get credit risk ratings" endpoint');
+
+    const response = await axios({
+      method: 'get',
+      url: `${EXTERNAL_API_URL}/credit-risk-ratings`,
+      headers: generateExternalAPIHeaders(),
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get credit risk ratings %o', error);
+    return false;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1591,4 +1622,5 @@ module.exports = {
   deleteFeeRecordCorrectionTransientFormData,
   getRecordCorrectionLogDetailsById,
   getApprovedAmendments,
+  getCreditRiskRatings,
 };

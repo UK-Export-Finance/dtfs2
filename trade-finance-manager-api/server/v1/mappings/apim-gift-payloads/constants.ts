@@ -46,15 +46,6 @@ export const PRODUCT_TYPE_CODES_TO_DEAL_TYPE = {
 } as const satisfies Record<ProductTypeCode, string>;
 
 /**
- * TFM credit ratings that do not directly match APIM MDM credit risk ratings, and their mapped APIM MDM credit risk rating value.
- * This is required to map TFM's exporter credit rating to the expected APIM MDM credit risk rating value for the facility credit rating to be sent to GIFT.
- */
-export const TFM_CREDIT_RATING_MAP = {
-  'Good (BB-)': 'BB-',
-  'Acceptable (B+)': 'B+',
-};
-
-/**
  * Obligation amount calculations for GEF facilities, based on the APIM GIFT documentation:
  * - For Cash GEF facilities, the obligation amount is calculated as 85% of the Max UKEF exposure.
  * - For Contingent GEF facilities, the obligation amount is calculated as 70% of the Max UKEF exposure.
