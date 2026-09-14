@@ -12,6 +12,7 @@ const {
   internalAmendmentEmail,
   addLatestAmendmentFacilityEndDate,
   formatAmendmentDates,
+  calculateAcbsUkefExposureValue,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
@@ -1101,5 +1102,16 @@ describe('formatAmendmentDates', () => {
       effectiveDate: 1761087600000,
       coverEndDate: 1761087600000,
     });
+  });
+});
+
+describe('calculateAcbsUkefExposureValue', () => {
+  it('should calculate UKEF exposure correctly', () => {
+    const value = 5000;
+    const coveredPercentage = 12;
+
+    const result = calculateAcbsUkefExposureValue(value, coveredPercentage);
+
+    expect(result).toBe(600);
   });
 });

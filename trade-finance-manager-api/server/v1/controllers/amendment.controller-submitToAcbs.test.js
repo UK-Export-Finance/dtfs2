@@ -13,6 +13,7 @@ jest.mock('./acbs.controller', () => ({
 }));
 
 jest.mock('../helpers/amendment.helpers', () => ({
+  ...jest.requireActual('../helpers/amendment.helpers'),
   internalAmendmentEmail: jest.fn(),
 }));
 
@@ -28,15 +29,19 @@ describe('submitToAcbs', () => {
     amendmentId: '1234',
     dealId: '00345678910',
     changeFacilityValue: true,
+    value: 3450,
     tfm: {
       exposure: {
-        ukefExposureValue: 2760,
+        ukefExposureValue: 3500,
       },
     },
   };
 
   const facility = {
     _id: 'mock-facility-id',
+    facilitySnapshot: {
+      coverPercentage: 80,
+    },
   };
 
   const tfmDeal = {
@@ -50,6 +55,8 @@ describe('submitToAcbs', () => {
       },
     },
   };
+
+  const expectedUkefExposure = amendment.value * (facility.facilitySnapshot.coverPercentage / 100);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -85,7 +92,7 @@ describe('submitToAcbs', () => {
       },
     });
 
-    expect(result.ukefExposure).toEqual(amendment.tfm.exposure.ukefExposureValue);
+    expect(result.ukefExposure).toEqual(expectedUkefExposure);
   });
 
   describe('when amendment cannot be sent to ACBS', () => {
@@ -106,7 +113,7 @@ describe('submitToAcbs', () => {
       expect(internalAmendmentEmail).not.toHaveBeenCalled();
       expect(acbs.amendAcbsFacility).not.toHaveBeenCalled();
 
-      expect(result.ukefExposure).toEqual(amendment.tfm.exposure.ukefExposureValue);
+      expect(result.ukefExposure).toEqual(expectedUkefExposure);
     });
   });
 
