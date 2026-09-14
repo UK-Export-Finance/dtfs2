@@ -56,3 +56,5 @@ export * from './access-code';
 export * from './request-headers';
 export * from './session-cookie-response';
 export * from './api-response';
+export * from './select-options';
+export * from './credit-risk-rating';
