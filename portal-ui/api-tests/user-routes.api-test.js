@@ -3,6 +3,8 @@ jest.mock('@ukef/dtfs2-common', () => ({
   verify: jest.fn((req, res, next) => next()),
 }));
 jest.mock('../server/api', () => ({
+  user: jest.fn(),
+  updateUser: jest.fn(),
   login: jest.fn(),
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
@@ -13,6 +15,7 @@ const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
@@ -21,12 +24,16 @@ const allRoles = Object.values(ROLES);
 const _id = '64f736071f0fd6ecf617db8a';
 
 describe('user routes', () => {
+  beforeEach(() => {
+    api.user.mockResolvedValue({ _id });
+    api.updateUser.mockResolvedValue({ status: 200, data: {} });
+  });
+
   describe('GET /user/:_id', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/user/${_id}`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -43,7 +50,6 @@ describe('user routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/user/${_id}/change-password`),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

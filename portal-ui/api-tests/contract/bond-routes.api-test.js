@@ -7,6 +7,25 @@ jest.mock('../../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  createBond: jest.fn().mockResolvedValue({ dealId: '64ef48ee17a3231be0ad48b3', bondId: 'bondId' }),
+  contractBond: jest.fn().mockResolvedValue({
+    dealId: '64ef48ee17a3231be0ad48b3',
+    bond: {
+      status: 'Not started',
+      facilityStage: 'Unissued',
+      issueFacilityDetailsSubmitted: false,
+      currency: { id: 'GBP', text: 'GBP' },
+      requestedCoverStartDate: '2024-01-01T00:00:00.000Z',
+      'requestedCoverStartDate-day': '1',
+      'requestedCoverStartDate-month': '1',
+      'requestedCoverStartDate-year': '2024',
+    },
+    validationErrors: { count: 0, errorList: {} },
+  }),
+  updateBond: jest.fn().mockResolvedValue({}),
+  updateBondIssueFacility: jest.fn().mockResolvedValue({}),
+  updateBondCoverStartDate: jest.fn().mockResolvedValue({ bond: { status: 'Not started' }, validationErrors: { count: 0, errorList: {} } }),
+  deleteBond: jest.fn().mockResolvedValue({}),
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
@@ -34,7 +53,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/bond/${bondId}/details` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -43,7 +61,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/details`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -53,7 +70,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/bond/${bondId}/financial-details` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -63,7 +79,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -72,7 +87,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/financial-details`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -82,7 +96,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/bond/${bondId}/fee-details` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -92,7 +105,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -101,7 +113,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/fee-details`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -111,7 +122,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/bond/${bondId}/check-your-answers` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -121,7 +131,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -130,7 +139,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/check-your-answers`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -139,7 +147,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/issue-facility`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true,
     });
   });
 
@@ -149,7 +156,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -158,7 +164,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/confirm-requested-cover-start-date`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -168,7 +173,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -177,7 +181,6 @@ describe('bond routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/delete`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true,
       redirectUrlForInvalidRoles: `/contract/${_id}`,
     });
   });
@@ -188,7 +191,6 @@ describe('bond routes', () => {
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });
