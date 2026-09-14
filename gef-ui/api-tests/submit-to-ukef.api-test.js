@@ -1,5 +1,4 @@
-const { createApi } = require('@ukef/dtfs2-common/api-test');
-const { cloneMock } = require('@ukef/dtfs2-common/api-test');
+const { createApi, cloneMock } = require('@ukef/dtfs2-common/api-test');
 const { CHECKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');

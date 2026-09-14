@@ -19,6 +19,11 @@ describe('name application routes', () => {
     api.updateApplication.mockResolvedValue({ _id: id });
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
+
   describe('GET /name-application', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/name-application', {}, headers),
