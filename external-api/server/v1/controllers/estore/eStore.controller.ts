@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { InsertOneResult, ObjectId } from 'mongodb';
 import { Response } from 'express';
+import { sendFailureAlertEmail } from '@ukef/dtfs2-common';
 import { EstoreRepo } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
@@ -10,7 +11,7 @@ import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
-import { sendFailureAlertEmail } from '../../../helpers/send-failure-alert-email';
+import { sendEmail } from '../email.controller';
 
 const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
 
@@ -276,6 +277,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
 
     // Dispatch an alert
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'eStore directories',
       `Unable to create eStore directories: ${error instanceof Error ? error.message : String(error)}`,

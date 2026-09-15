@@ -10,12 +10,12 @@
 
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
+import { HEADERS, ENTITY_TYPE, sendFailureAlertEmail } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { EMAIL_TEMPLATES, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
-import { sendFailureAlertEmail } from '../../helpers/send-failure-alert-email';
+import { sendEmail } from './email.controller';
 
 const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
 
@@ -163,6 +163,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
 
       if (status >= HttpStatusCode.BadRequest) {
         await sendFailureAlertEmail(
+          sendEmail,
           SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
           'ACBS create payload',
           `ACBS create payload failed for deal ${dealIdentifier}`,
@@ -174,6 +175,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS create payload',
       `ACBS create payload failed for deal ${dealIdentifier}`,
@@ -186,6 +188,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     const dealIdentifier = typeof deal?._id !== 'undefined' ? String(deal._id) : 'unknown';
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS create payload',
       `ACBS create payload failed for deal ${dealIdentifier}: ${error instanceof Error ? error.message : String(error)}`,
@@ -247,6 +250,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
       if (status >= HttpStatusCode.BadRequest) {
         await sendFailureAlertEmail(
+          sendEmail,
           SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
           'ACBS issue facility payload',
           `ACBS issue facility payload failed for facility ${String(id)}`,
@@ -258,6 +262,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS issue facility payload',
       `ACBS issue facility payload failed for facility ${String(id)}`,
@@ -267,6 +272,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     console.error('Error during ACBS facility issue POST %o', error);
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS issue facility payload',
       `ACBS issue facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
@@ -357,6 +363,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
 
       if (status >= HttpStatusCode.BadRequest) {
         await sendFailureAlertEmail(
+          sendEmail,
           SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
           'ACBS amend facility payload',
           `ACBS amend facility payload failed for facility ${String(id)}`,
@@ -368,6 +375,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     }
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS amend facility payload',
       `ACBS amend facility payload failed for facility ${String(id)}`,
@@ -377,6 +385,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     console.error('Error executing ACBS Facility POST %o', error);
 
     await sendFailureAlertEmail(
+      sendEmail,
       SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
       'ACBS amend facility payload',
       `ACBS amend facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,

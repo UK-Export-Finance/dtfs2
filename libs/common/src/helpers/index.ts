@@ -70,3 +70,4 @@ export * from './otp-login-result';
 export * from './sanitise-feedback-response';
 export * from './sanitise-value';
 export * from './map-select-option';
+export * from './send-failure-alert-email';
