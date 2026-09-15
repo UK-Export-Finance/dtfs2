@@ -8,13 +8,16 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
+import { HEADERS, ENTITY_TYPE, sendFailureAlertEmail } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
-import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
+import { EMAIL_TEMPLATES, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
+import { sendEmail } from './email.controller';
+
+const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
 
 dotenv.config({ quiet: true });
 
@@ -23,6 +26,16 @@ const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+};
+
+const getDealIdentifier = (deal: unknown): string | undefined => {
+  if (typeof deal !== 'object' || deal === null) {
+    return undefined;
+  }
+
+  const { dealIdentifier } = deal as { dealIdentifier?: unknown };
+
+  return typeof dealIdentifier === 'string' || typeof dealIdentifier === 'number' ? String(dealIdentifier) : undefined;
 };
 
 export const checkDealId = async (dealId: any) => {
@@ -143,13 +156,45 @@ const createAcbsRecord = async (deal: any, bank: any) => {
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   try {
     const { deal, bank } = req.body;
+    const dealIdentifier = deal?._id ? String(deal._id) : 'unknown';
     const response = await createAcbsRecord(deal, bank);
     if (response) {
       const { status, data } = response;
+
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          sendEmail,
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS create payload',
+          `ACBS create payload failed for deal ${dealIdentifier}`,
+          getDealIdentifier(deal),
+        );
+      }
+
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS create payload',
+      `ACBS create payload failed for deal ${dealIdentifier}`,
+      getDealIdentifier(deal),
+    );
   } catch (error: unknown) {
     console.error('ACBS create POST failed %o', error);
+
+    const deal = req.body?.deal;
+    const dealIdentifier = typeof deal?._id !== 'undefined' ? String(deal._id) : 'unknown';
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS create payload',
+      `ACBS create payload failed for deal ${dealIdentifier}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
+
     return res.status(400).send();
   }
 
@@ -202,10 +247,38 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     const response = await issueAcbsFacility(id, facility, deal);
     if (response) {
       const { status, data } = response;
+
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          sendEmail,
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS issue facility payload',
+          `ACBS issue facility payload failed for facility ${String(id)}`,
+          getDealIdentifier(deal),
+        );
+      }
+
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS issue facility payload',
+      `ACBS issue facility payload failed for facility ${String(id)}`,
+      getDealIdentifier(deal),
+    );
   } catch (error) {
     console.error('Error during ACBS facility issue POST %o', error);
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS issue facility payload',
+      `ACBS issue facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
+
     return res.status(400).send();
   }
 
@@ -288,10 +361,36 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     if (response) {
       const { status, data } = response;
 
+      if (status >= HttpStatusCode.BadRequest) {
+        await sendFailureAlertEmail(
+          sendEmail,
+          SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+          'ACBS amend facility payload',
+          `ACBS amend facility payload failed for facility ${String(id)}`,
+          getDealIdentifier(deal),
+        );
+      }
+
       return res.status(status).send(data);
     }
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS amend facility payload',
+      `ACBS amend facility payload failed for facility ${String(id)}`,
+      getDealIdentifier(deal),
+    );
   } catch (error) {
     console.error('Error executing ACBS Facility POST %o', error);
+
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'ACBS amend facility payload',
+      `ACBS amend facility payload failed for facility ${String(req.params?.id ?? 'unknown')}: ${error instanceof Error ? error.message : String(error)}`,
+      getDealIdentifier(req.body?.deal),
+    );
 
     return res.status(400).send();
   }

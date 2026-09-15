@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { InsertOneResult, ObjectId } from 'mongodb';
 import { Response } from 'express';
+import { sendFailureAlertEmail } from '@ukef/dtfs2-common';
 import { EstoreRepo } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
@@ -12,7 +13,7 @@ import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 import { sendEmail } from '../email.controller';
 
-const { UKEF_INTERNAL_NOTIFICATION } = process.env;
+const SCHEDULED_JOB_FAILURE_TEMPLATE_ID = String(EMAIL_TEMPLATES.SCHEDULED_JOB_FAILURE);
 
 /**
  * The `create` function handles the creation of an eStore site. It validates the request body,
@@ -275,9 +276,13 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     });
 
     // Dispatch an alert
-    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {
-      dealIdentifier: req?.body?.dealIdentifier,
-    });
+    await sendFailureAlertEmail(
+      sendEmail,
+      SCHEDULED_JOB_FAILURE_TEMPLATE_ID,
+      'eStore directories',
+      `Unable to create eStore directories: ${error instanceof Error ? error.message : String(error)}`,
+      req?.body?.dealIdentifier,
+    );
 
     // Return `500` status code
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
