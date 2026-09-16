@@ -36,7 +36,7 @@ describe('controllers/automatic-cover/helpers', () => {
 
         const result = deriveCoverType(mockFields, mockAllCriteria);
 
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
     });
 

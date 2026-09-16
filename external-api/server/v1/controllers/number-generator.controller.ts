@@ -16,7 +16,7 @@ import {
 import { NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
 

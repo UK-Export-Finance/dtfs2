@@ -1,30 +1,29 @@
 import { CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION, PRODUCT_TYPE_CODES } from '../../constants';
 import { mapOverview } from '.';
-import { mapFacilityAmount } from './map-facility-amount';
 import { mapFacilityName } from './map-facility-name';
 
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 describe('mapOverview', () => {
   const baseParams = {
-    coverPercentage: 80,
     currency: CURRENCY.GBP,
     effectiveDate: '2026-01-30',
     expiryDate: '2026-12-31',
     exporterPartyUrn: '12345',
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
-    isGefDeal: true,
+    isCashFacility: true,
+    isContingentFacility: false,
     monthsOfCover: 12,
     ukefFacilityId: '123',
   };
 
-  const { coverPercentage, exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
+  const { exporterPartyUrn, facilityAmount, facilityType, isCashFacility, isContingentFacility, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
-    amount: mapFacilityAmount({ facilityAmount, coverPercentage }),
+    amount: facilityAmount,
     facilityId: ukefFacilityId,
     obligorUrn: exporterPartyUrn,
   };
@@ -48,7 +47,8 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT003,
         name: mapFacilityName({
           facilityType,
-          isGefDeal,
+          isCashFacility,
+          isContingentFacility,
           monthsOfCover,
           productTypeCode,
         }),
@@ -79,7 +79,8 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT004,
         name: mapFacilityName({
           facilityType,
-          isGefDeal,
+          isCashFacility,
+          isContingentFacility,
           monthsOfCover,
           productTypeCode,
         }),

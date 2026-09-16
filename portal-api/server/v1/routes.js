@@ -2,7 +2,7 @@ const { HttpStatusCode } = require('axios');
 const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
-const { OTP } = require('@ukef/dtfs2-common');
+const { OTP, REPORT_DATA_VALIDATION_ROUTE } = require('@ukef/dtfs2-common');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
@@ -18,6 +18,7 @@ const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
 const banks = require('./controllers/banks.controller');
+const { getPortalBankList } = require('./controllers/portal-bank-list.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
@@ -173,6 +174,26 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(checkApiKey, users
  *          description: Internal server error
  */
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
+
+/**
+ * @openapi
+ * /portal-bank-list:
+ *    get:
+ *      summary: Get the bank list shown on the Portal login page
+ *      tags: [Portal]
+ *      description: |
+ *        Returns the read-only list of banks displayed in the "before you start"
+ *        section of the unauthenticated portal login page. The list is curated
+ *        manually in MongoDB and proxied from `dtfs-central-api`.
+ *      responses:
+ *        200:
+ *          description: A list of banks
+ *        401:
+ *          description: Unauthorised — missing or invalid API key
+ *        default:
+ *          description: Error response (for example 5xx when DTFS Central is unavailable)
+ */
+openRouter.route('/portal-bank-list').get(checkApiKey, getPortalBankList);
 
 /**
  * @openapi
@@ -1886,7 +1907,7 @@ authRouter
  *        description: Internal server error
  */
 authRouter
-  .route('/banks/:bankId/utilisation-reports/report-data-validation')
+  .route(`/banks/:bankId${REPORT_DATA_VALIDATION_ROUTE}`)
   .post(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,

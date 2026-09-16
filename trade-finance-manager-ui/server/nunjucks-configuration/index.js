@@ -19,7 +19,7 @@ const formatAsDecimal = require('./filter-formatAsDecimal');
 const sentenceCase = require('./filter-sentenceCase');
 const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  *

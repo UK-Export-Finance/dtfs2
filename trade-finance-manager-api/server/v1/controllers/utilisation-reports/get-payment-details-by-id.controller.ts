@@ -4,7 +4,7 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { PaymentDetailsResponseBody } from '../../api-response-types';
 import api from '../../api';
 
-type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
+export type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
   query: {
     includeFeeRecords?: 'true' | 'false';
   };

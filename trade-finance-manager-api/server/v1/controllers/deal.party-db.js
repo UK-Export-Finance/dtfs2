@@ -1,4 +1,4 @@
-const { isSalesforceCustomerCreationEnabled, isCountryUk, UNITED_KINGDOM } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk, UNITED_KINGDOM, DEAL_TYPE } = require('@ukef/dtfs2-common');
 
 const api = require('../api');
 
@@ -28,6 +28,29 @@ const getCompany = async (req, res) => {
     console.error('Unable to get company from URN %o', error);
     return false;
   }
+};
+
+/**
+ * Extracts the PartyURN from the provided party database information.
+ * @param {*} partyDbInfo - The party database information.
+ * @returns {string} The PartyURN or an empty string if not found.
+ */
+const extractPartyUrn = (partyDbInfo) => {
+  if (Array.isArray(partyDbInfo) && partyDbInfo.length) {
+    return partyDbInfo[0]?.partyUrn || '';
+  }
+
+  if (partyDbInfo && typeof partyDbInfo === 'object') {
+    if (partyDbInfo.partyUrn) {
+      return partyDbInfo.partyUrn;
+    }
+
+    if (Array.isArray(partyDbInfo.data)) {
+      return partyDbInfo.data[0]?.partyUrn || '';
+    }
+  }
+
+  return '';
 };
 
 /**
@@ -73,7 +96,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
     return '';
   }
 
-  const partyUrn = partyDbInfo?.[0]?.partyUrn;
+  const partyUrn = extractPartyUrn(partyDbInfo);
 
   if (partyUrn) {
     return partyUrn;
@@ -130,7 +153,7 @@ const addPartyUrns = async (deal, auditDetails) => {
   if (shouldCheckExistingExporterParty) {
     const existingPartyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
-    exporterPartyExistedBeforeCreate = Boolean(existingPartyDbInfo?.[0]?.partyUrn);
+    exporterPartyExistedBeforeCreate = Boolean(extractPartyUrn(existingPartyDbInfo));
   }
 
   const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
@@ -161,7 +184,15 @@ const addPartyUrns = async (deal, auditDetails) => {
 
   const updatedDeal = await api.updateDeal({ dealId: deal._id, dealUpdate, auditDetails });
 
-  const newPartyUrnCreated = isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate;
+  const dealType = deal.dealSnapshot?.dealType ?? deal.dealType;
+
+  const isGefDeal = dealType === DEAL_TYPE.GEF;
+
+  const existingExporterPartyUrn = deal.tfm?.parties?.exporter?.partyUrn;
+  const hasExistingExporterPartyUrn = existingExporterPartyUrn && existingExporterPartyUrn.trim().length > 0;
+
+  const newPartyUrnCreated =
+    isSalesforceCustomerCreationEnabled() && Boolean(exporterPartyUrn) && !exporterPartyExistedBeforeCreate && (!isGefDeal || !hasExistingExporterPartyUrn);
 
   return {
     deal: {
@@ -175,6 +206,7 @@ const addPartyUrns = async (deal, auditDetails) => {
 module.exports = {
   getCompany,
   addPartyUrns,
+  extractPartyUrn,
   getPartyUrn,
   identifyDealParties,
 };

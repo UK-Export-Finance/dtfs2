@@ -4,7 +4,7 @@ import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../consta
 import { UnixTimestampString, Facility, FacilityType } from '../../types';
 import { differenceInDays } from '../index';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { CASH, CONTINGENT } = GEF_FACILITY_TYPE;
 const { CASH_UTILISATION_PERCENTAGE, CONTINGENT_UTILISATION_PERCENTAGE } = process.env;

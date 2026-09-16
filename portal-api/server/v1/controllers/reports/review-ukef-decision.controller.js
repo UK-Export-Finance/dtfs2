@@ -82,7 +82,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
     const bankId = req.user.bank.id;
 
     // get the decision - this can be either approved with or without conditions
-    const ukefDecision = req.body.ukefDecision || req.query.ukefDecision || '';
+    const ukefDecision = req.body?.ukefDecision || req.query?.ukefDecision || '';
     const ukefDecisions = [];
 
     if (
@@ -91,6 +91,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
     ) {
       // ensure that the API call is performed only if a bankId is provided
       const deals = bankId ? await getUkefDecision(ukefDecision, bankId) : [];
+
       // check to see if there are any decisions waiting to be reviewed
       if (deals.length) {
         let deal;

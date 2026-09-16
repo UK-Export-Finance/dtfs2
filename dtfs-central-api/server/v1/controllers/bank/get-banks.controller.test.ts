@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { Bank } from '@ukef/dtfs2-common';
-import { getBanks } from './get-banks.controller';
+import { getBanks, GetBanksRequest } from './get-banks.controller';
 import { getAllBanks } from '../../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { aBank } from '../../../../test-helpers';
@@ -11,6 +11,7 @@ jest.mock('../../../repositories/banks-repo');
 
 describe('getBanks', () => {
   const findReportingYearsByBankIdSpy = jest.spyOn(UtilisationReportRepo, 'findReportingYearsByBankId');
+  const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetBanksRequest>(options);
 
   beforeEach(() => {
     findReportingYearsByBankIdSpy.mockRejectedValue('Some error');
@@ -22,7 +23,7 @@ describe('getBanks', () => {
 
   describe.each(['false', undefined])("when the 'includeReportingYears' query is set to '%s'", (includeReportingYears) => {
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         query: { includeReportingYears },
       });
 
@@ -49,7 +50,7 @@ describe('getBanks', () => {
 
   describe("when the 'includeReportingYears' query is set to 'true'", () => {
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         query: { includeReportingYears: 'true' },
       });
 

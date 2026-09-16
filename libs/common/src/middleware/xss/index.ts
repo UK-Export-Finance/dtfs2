@@ -2,6 +2,41 @@ import { Request, Response, NextFunction } from 'express';
 import { xssClean, hasEntries } from '../../helpers';
 
 /**
+ * Recursively sanitises every value in an object or array to remove HTML that could be used in an XSS attack.
+ *
+ * `xssClean` returns a new object or array containing the sanitised values. This function copies those values back
+ * into `target` rather than replacing `target` itself, so the original object reference is preserved. This is useful
+ * for Express request properties such as `req.query`, which cannot be reassigned in Express 5 but can be mutated.
+ *
+ * Arrays are emptied and repopulated with their cleaned items. Objects have their existing properties removed before
+ * the cleaned properties are assigned to them. The function does nothing if the cleaned result is not the same kind
+ * of collection as the target.
+ *
+ * @param target - The mutable object or array whose values will be sanitised.
+ * @returns Nothing; `target` is updated directly.
+ */
+export const sanitiseInPlace = (target: Record<string, unknown> | unknown[]) => {
+  const mutableTarget = target;
+  const cleaned = xssClean(target);
+
+  if (Array.isArray(mutableTarget) && Array.isArray(cleaned)) {
+    mutableTarget.length = 0;
+    (cleaned as unknown[]).forEach((item) => {
+      mutableTarget.push(item);
+    });
+    return;
+  }
+
+  if (!Array.isArray(mutableTarget) && cleaned && typeof cleaned === 'object' && !Array.isArray(cleaned)) {
+    Object.keys(mutableTarget).forEach((key) => {
+      delete mutableTarget[key];
+    });
+
+    Object.assign(mutableTarget, cleaned);
+  }
+};
+
+/**
  * Express middleware to sanitize request parameters, body, and query against XSS attacks.
  *
  * This middleware applies the `xssClean` function to `req.params`, `req.body`, and `req.query`
@@ -15,15 +50,15 @@ import { xssClean, hasEntries } from '../../helpers';
 export const xss = (req: Request, _res: Response, next: NextFunction) => {
   try {
     if (hasEntries(req.params)) {
-      req.params = xssClean(req.params) as typeof req.params;
+      sanitiseInPlace(req.params);
     }
 
     if (hasEntries(req.query)) {
-      req.query = xssClean(req.query) as typeof req.query;
+      sanitiseInPlace(req.query as unknown as Record<string, unknown>);
     }
 
     if (hasEntries(req.body)) {
-      req.body = xssClean(req.body as Record<string, unknown>) as Record<string, unknown>;
+      sanitiseInPlace(req.body as Record<string, unknown>);
     }
   } catch (error) {
     console.error('An error has occurred while sanitising the request %s %o', req?.url, error);

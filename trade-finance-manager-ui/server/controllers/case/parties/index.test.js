@@ -1712,7 +1712,7 @@ describe('PartyURN: controllers - case - parties', () => {
           await partiesController.postPartyDetails(req, res);
 
           // Delete session variable `commissionRate`
-          expect(req.session.commissionRate).toEqual(undefined);
+          expect(req.session.commissionRate).toBeUndefined();
           expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
         });
       });

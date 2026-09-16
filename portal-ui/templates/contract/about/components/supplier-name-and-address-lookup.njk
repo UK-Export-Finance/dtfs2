@@ -14,7 +14,7 @@
     validationErrors: validationErrors
   }) }}
 
-   <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+  <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
     {{ govukInput({
       label: {
         text: "Supplier name"
@@ -33,7 +33,6 @@
     <span id="supplier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
       You can enter up to 150 characters
     </span>
-  </div>
   </div>
 
   {{ address.fields(

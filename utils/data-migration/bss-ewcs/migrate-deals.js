@@ -2,7 +2,7 @@
 const xml2js = require('xml2js');
 const { decodeHtmlEntities } = require('@ukef/dtfs2-common');
 const fileshare = require('./helpers/fileshare');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const {
   mapDealRoot,
   mapDetails,

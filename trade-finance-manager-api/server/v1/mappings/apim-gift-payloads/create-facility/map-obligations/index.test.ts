@@ -1,4 +1,3 @@
-import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { mapObligations } from '.';
 import { mapObligationAmount } from './map-obligation-amount';
@@ -8,32 +7,36 @@ const { DEFAULTS, OBLIGATION_SUBTYPE_MAP } = APIM_GIFT_INTEGRATION;
 describe('mapObligations', () => {
   const bssSubtypeName = 'Performance bond';
   const currency = 'GBP';
-  const facilityType = FACILITY_TYPE.CASH;
-  const ukefExposure = 1500;
+  const facilityAmount = 1500;
 
-  describe('when isBssEwcsDeal is true', () => {
+  describe('when isBssFacility is true', () => {
     it('should return an array with one obligation and mapped subtypeCode', () => {
       // Arrange
-      const isBssEwcsDeal = true;
-      const isGefDeal = false;
+      const isBssFacility = true;
+      const isCashFacility = false;
+      const isContingentFacility = false;
+      const isEwcsFacility = false;
 
       // Act
       const result = mapObligations({
-        currency,
-        isBssEwcsDeal,
-        isGefDeal,
         bssSubtypeName,
-        ukefExposure,
+        currency,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
+        facilityAmount,
       });
 
       // Assert
       const expected = [
         {
           amount: mapObligationAmount({
-            isBssEwcsDeal,
-            isGefDeal,
-            facilityType,
-            ukefExposure,
+            isBssFacility,
+            isCashFacility,
+            isContingentFacility,
+            isEwcsFacility,
+            facilityAmount,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -47,27 +50,32 @@ describe('mapObligations', () => {
     describe('when bssSubtypeName is not mapped to an obligation subtype code', () => {
       it('should return an array with the subtypeCode as null', () => {
         // Arrange
-        const isBssEwcsDeal = true;
-        const isGefDeal = false;
+        const isBssFacility = true;
+        const isCashFacility = false;
+        const isContingentFacility = false;
+        const isEwcsFacility = false;
         const unmappedBssSubtypeName = 'Unmapped BSS subtype';
 
         // Act
         const result = mapObligations({
-          currency,
-          isBssEwcsDeal,
-          isGefDeal,
           bssSubtypeName: unmappedBssSubtypeName,
-          ukefExposure,
+          currency,
+          facilityAmount,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
         });
 
         // Assert
         const expected = [
           {
             amount: mapObligationAmount({
-              isBssEwcsDeal,
-              isGefDeal,
-              facilityType,
-              ukefExposure,
+              facilityAmount,
+              isBssFacility,
+              isCashFacility,
+              isContingentFacility,
+              isEwcsFacility,
             }),
             currency,
             repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -80,29 +88,33 @@ describe('mapObligations', () => {
     });
   });
 
-  describe('when isBssEwcsDeal is false', () => {
+  describe('when isBssFacility is false', () => {
     it('should return an array with one obligation and subtypeCode as null', () => {
       // Arrange
-      const isBssEwcsDeal = false;
-      const isGefDeal = true;
+      const isBssFacility = false;
+      const isCashFacility = true;
+      const isContingentFacility = false;
+      const isEwcsFacility = false;
 
       // Act
       const result = mapObligations({
         currency,
-        isBssEwcsDeal,
-        isGefDeal,
-        facilityType,
-        ukefExposure,
+        facilityAmount,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       });
 
       // Assert
       const expected = [
         {
           amount: mapObligationAmount({
-            isBssEwcsDeal,
-            isGefDeal,
-            facilityType,
-            ukefExposure,
+            facilityAmount,
+            isBssFacility,
+            isCashFacility,
+            isContingentFacility,
+            isEwcsFacility,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,
@@ -114,28 +126,33 @@ describe('mapObligations', () => {
     });
   });
 
-  describe('when isBssEwcsDeal is true and bssSubtypeName is not provided', () => {
+  describe('when isBssFacility is true and bssSubtypeName is not provided', () => {
     it('should return an array with the subtypeCode as null', () => {
       // Arrange
-      const isBssEwcsDeal = true;
-      const isGefDeal = false;
+      const isBssFacility = true;
+      const isCashFacility = false;
+      const isContingentFacility = false;
+      const isEwcsFacility = false;
 
       // Act
       const result = mapObligations({
         currency,
-        isBssEwcsDeal,
-        isGefDeal,
-        ukefExposure,
+        facilityAmount,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
       });
 
       // Assert
       const expected = [
         {
           amount: mapObligationAmount({
-            isBssEwcsDeal,
-            isGefDeal,
-            facilityType,
-            ukefExposure,
+            facilityAmount,
+            isBssFacility,
+            isCashFacility,
+            isContingentFacility,
+            isEwcsFacility,
           }),
           currency,
           repaymentType: DEFAULTS.REPAYMENT_TYPE.BULLET,

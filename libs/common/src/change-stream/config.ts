@@ -2,7 +2,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 import { zBooleanStrictCoerce } from '../helpers';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const changeStreamConfigSchema = z.union([
   z.object({

@@ -1,9 +1,9 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { CURRENCY, PaymentEntity, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
-import { getPaymentDetailsById, GetPaymentDetailsResponseBody } from '.';
+import { getPaymentDetailsById, GetPaymentDetailsResponseBody, GetPaymentDetailsByIdRequest } from '.';
 import { mapToPaymentDetails } from './helpers';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
 
@@ -17,8 +17,10 @@ describe('get-payment-details-by-id.controller', () => {
     const paymentId = 14;
     const bankId = '123';
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetPaymentDetailsByIdRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId: reportId.toString(), paymentId: paymentId.toString() },
       });
 

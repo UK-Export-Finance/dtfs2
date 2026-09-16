@@ -1,6 +1,7 @@
 const facilitiesPage = {
   heading: () => cy.get('[data-cy="facilities-heading"]'),
   searchFormInput: () => cy.get('[data-cy="search-input"]'),
+  searchFormLabel: () => cy.get('[data-cy="search-input-label"]'),
   facilitiesTableRows: () => cy.get('[data-cy="facilities-table"] tbody tr'),
   facilityIdCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(0),
   dealTypeCell: (rowNumber) => cy.get('[data-cy="facilities-table"] tbody tr').eq(rowNumber).children('td').eq(1),

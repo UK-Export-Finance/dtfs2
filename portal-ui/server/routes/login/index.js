@@ -1,7 +1,7 @@
 const express = require('express');
 const { postCheckYourEmailAccessCode } = require('../../controllers/login/post-check-your-email-access-code');
 const api = require('../../api');
-const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler, getPortalBankListForLoginPage } = require('../../helpers');
 
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { getCheckYourEmailAccessCodePage } = require('../../controllers/login/get-check-your-email-access-code');
@@ -32,12 +32,15 @@ const router = express.Router();
  *         description: Ok
  *
  */
-router.get(LANDING_PAGES.LOGIN, (req, res) => {
+router.get(LANDING_PAGES.LOGIN, async (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
+  const banks = await getPortalBankListForLoginPage();
+
   return res.render('login/index.njk', {
     passwordreset,
     passwordupdated,
     user: req.session.user,
+    banks,
   });
 });
 

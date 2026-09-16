@@ -1,5 +1,6 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
-import { CURRENCY, FeeRecordEntity, InvalidPayloadError, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
+import { CURRENCY, FeeRecordEntity, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
+import { InvalidPayloadError } from '../../../errors';
 import {
   validateThatRequestedPaymentsMatchSavedPayments,
   validateThatPaymentGroupHasFeeRecords,

@@ -22,8 +22,8 @@ export const saveData = async (key, value) => {
   redisClient.quit();
 };
 
-export const saveUserSession = async (roles) => {
-  const { sessionCookie, sessionKey, data } = generateUserSession(roles);
+export const saveUserSession = async (roles, extraSessionData = {}) => {
+  const { sessionCookie, sessionKey, data } = generateUserSession(roles, extraSessionData);
   const dataToSave = JSON.stringify(data).toString();
 
   await saveData(sessionKey, dataToSave);

@@ -897,6 +897,44 @@ apiRoutes.post('/gift/facility/:facilityId/amendment', giftFacility.amend);
 
 /**
  * @openapi
+ * /gift/facility/{facilityId}/multiple-amendments:
+ *   post:
+ *     summary: Send multiple amendments for a GIFT facility in APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Send multiple facility amendments to APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001/multiple-amendments
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *           example: 0000000001
+ *         required: true
+ *         description: The GIFT facility ID.
+ *     requestBody:
+ *       required: true
+ *       description: Amendments to be sent to APIM TFS's GIFT endpoint.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/GiftFacilityMultipleAmendmentsRequestBody'
+ *     responses:
+ *       202:
+ *         description: Accepted
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.post('/gift/facility/:facilityId/multiple-amendments', giftFacility.multipleAmendments);
+
+/**
+ * @openapi
  * /ukef-industry-code/by-companies-house-industry-code/:industryCode:
  *   get:
  *     summary: Get a UKEF industry code by Companies House industry code

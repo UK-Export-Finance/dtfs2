@@ -127,7 +127,7 @@ describe('TfmFacilitiesRepo', () => {
         const result = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
         // Assert
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
     });
   });

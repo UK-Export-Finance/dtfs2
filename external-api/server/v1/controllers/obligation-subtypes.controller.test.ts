@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
 import { findAll } from './obligation-subtypes.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {

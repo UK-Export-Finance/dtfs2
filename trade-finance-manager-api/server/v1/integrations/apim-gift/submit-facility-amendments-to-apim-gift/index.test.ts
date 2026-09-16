@@ -1,8 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import apiModule from '../../../api';
-import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import { APIM_GIFT_INTEGRATION } from '../../../mappings/apim-gift-payloads/constants';
-import { TfmFacilityAmendmentData } from '../../../mappings/apim-gift-payloads/types';
 import { submitFacilityAmendmentsToApimGift } from '.';
 
 const {
@@ -13,27 +11,18 @@ jest.mock('../../../api', () => ({
   __esModule: true,
   default: {
     amendGiftFacility: jest.fn(),
+    multipleGiftFacilityAmendments: jest.fn(),
   },
 }));
 
-jest.mock('../../../mappings/apim-gift-payloads', () => ({
-  APIM_GIFT_PAYLOADS: {
-    amendFacility: jest.fn(),
-  },
-}));
-
-const amendFacilityPayloadSpy = APIM_GIFT_PAYLOADS.amendFacility as jest.MockedFunction<typeof APIM_GIFT_PAYLOADS.amendFacility>;
-const amendGiftFacilitySpy = apiModule.amendGiftFacility as jest.MockedFunction<typeof apiModule.amendGiftFacility>;
-
-const mockAmendment: TfmFacilityAmendmentData = {
-  changeFacilityValue: true,
-  currentValue: 100,
-  value: 120,
-  effectiveDate: 1704067200,
-  tfm: {
-    coverEndDate: 1706745600000,
-  },
+type MockedApiModule = {
+  amendGiftFacility: jest.MockedFunction<typeof apiModule.amendGiftFacility>;
+  multipleGiftFacilityAmendments: jest.MockedFunction<(payload: unknown, ukefFacilityId: string) => Promise<number | false>>;
 };
+
+const { amendGiftFacility: amendGiftFacilitySpy, multipleGiftFacilityAmendments: multipleGiftFacilityAmendmentsSpy } = jest.mocked(
+  apiModule,
+) as unknown as MockedApiModule;
 
 const mockUkefFacilityId = '0030537688';
 
@@ -53,117 +42,102 @@ const mockExpiryDatePayload = {
 };
 
 const mockAmountApiResponse = HttpStatusCode.Accepted;
-const mockExpiryDateApiResponse = HttpStatusCode.Accepted;
 
 describe('submitFacilityAmendmentsToApimGift', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('when the amendment maps to a single payload', () => {
+  describe('when there is a single amendment payload', () => {
     beforeEach(() => {
       // Arrange
-      amendFacilityPayloadSpy.mockReturnValueOnce([mockAmountPayload] as never);
       amendGiftFacilitySpy.mockResolvedValueOnce(mockAmountApiResponse as never);
     });
 
-    it('should call APIM_GIFT_PAYLOADS.amendFacility with the amendment', async () => {
+    it('should call api.amendGiftFacility with the payload and UKEF facility id', async () => {
       // Act
-      await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
-
-      // Assert
-      expect(amendFacilityPayloadSpy).toHaveBeenNthCalledWith(1, mockAmendment);
-    });
-
-    it('should call api.amendGiftFacility with the mapped payload and UKEF facility id', async () => {
-      // Act
-      await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+      await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [mockAmountPayload], ukefFacilityId: mockUkefFacilityId });
 
       // Assert
       expect(amendGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockAmountPayload, mockUkefFacilityId);
     });
 
-    it('should return an array of responses from api.amendGiftFacility', async () => {
+    it('should return the response status code from api.amendGiftFacility', async () => {
       // Act
-      const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+      const result = await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [mockAmountPayload], ukefFacilityId: mockUkefFacilityId });
 
       // Assert
-      expect(result).toEqual([mockAmountApiResponse]);
+      expect(result).toEqual(mockAmountApiResponse);
+    });
+
+    it('should not call api.multipleGiftFacilityAmendments', async () => {
+      // Act
+      await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [mockAmountPayload], ukefFacilityId: mockUkefFacilityId });
+
+      // Assert
+      expect(multipleGiftFacilityAmendmentsSpy).not.toHaveBeenCalled();
     });
   });
 
-  describe('when the amendment maps to multiple payloads', () => {
+  describe('when there are multiple amendment payloads', () => {
     beforeEach(() => {
       // Arrange
-      amendFacilityPayloadSpy.mockReturnValueOnce([mockAmountPayload, mockExpiryDatePayload] as never);
-      amendGiftFacilitySpy.mockResolvedValueOnce(mockAmountApiResponse as never).mockResolvedValueOnce(mockExpiryDateApiResponse as never);
+      multipleGiftFacilityAmendmentsSpy.mockResolvedValueOnce(HttpStatusCode.Accepted as never);
     });
 
-    it('should call APIM_GIFT_PAYLOADS.amendFacility once with the amendment', async () => {
+    it('should call api.multipleGiftFacilityAmendments with the wrapped payloads and UKEF facility id', async () => {
       // Act
-      await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+      await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [mockAmountPayload, mockExpiryDatePayload], ukefFacilityId: mockUkefFacilityId });
 
       // Assert
-      expect(amendFacilityPayloadSpy).toHaveBeenNthCalledWith(1, mockAmendment);
+      expect(multipleGiftFacilityAmendmentsSpy).toHaveBeenNthCalledWith(
+        1,
+        {
+          amendments: [mockAmountPayload, mockExpiryDatePayload],
+        },
+        mockUkefFacilityId,
+      );
     });
 
-    it('should call api.amendGiftFacility multiple times', async () => {
+    it('should return the response status code from api.multipleGiftFacilityAmendments', async () => {
       // Act
-      await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
-
-      // Assert
-      expect(amendGiftFacilitySpy).toHaveBeenCalledTimes(2);
-      expect(amendGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockAmountPayload, mockUkefFacilityId);
-      expect(amendGiftFacilitySpy).toHaveBeenNthCalledWith(2, mockExpiryDatePayload, mockUkefFacilityId);
-    });
-
-    it('should return an array of all responses', async () => {
-      // Act
-      const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
-
-      // Assert
-      expect(result).toEqual([mockAmountApiResponse, mockExpiryDateApiResponse]);
-    });
-
-    describe('when an API response is not accepted', () => {
-      it('should return false and stop processing', async () => {
-        // Arrange
-        amendFacilityPayloadSpy.mockReset();
-        amendGiftFacilitySpy.mockReset();
-
-        amendFacilityPayloadSpy.mockReturnValueOnce([mockAmountPayload, mockExpiryDatePayload] as never);
-        amendGiftFacilitySpy.mockResolvedValueOnce(HttpStatusCode.BadGateway as never);
-
-        // Act
-        const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
-
-        // Assert
-        expect(result).toEqual(false);
-        expect(amendGiftFacilitySpy).toHaveBeenNthCalledWith(1, mockAmountPayload, mockUkefFacilityId);
+      const result = await submitFacilityAmendmentsToApimGift({
+        amendmentPayloads: [mockAmountPayload, mockExpiryDatePayload],
+        ukefFacilityId: mockUkefFacilityId,
       });
+
+      // Assert
+      expect(result).toEqual(HttpStatusCode.Accepted);
+    });
+
+    it('should not call api.amendGiftFacility', async () => {
+      // Act
+      await submitFacilityAmendmentsToApimGift({
+        amendmentPayloads: [mockAmountPayload, mockExpiryDatePayload],
+        ukefFacilityId: mockUkefFacilityId,
+      });
+
+      // Assert
+      expect(amendGiftFacilitySpy).not.toHaveBeenCalled();
     });
   });
 
-  describe('when the amendment cannot be mapped to any APIM GIFT payload', () => {
-    beforeEach(() => {
-      // Arrange
-      amendFacilityPayloadSpy.mockReturnValueOnce([] as never);
-    });
-
+  describe('when there are no amendment payloads', () => {
     it('should return false', async () => {
       // Act
-      const result = await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+      const result = await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [], ukefFacilityId: mockUkefFacilityId });
 
       // Assert
       expect(result).toEqual(false);
     });
 
-    it('should not call api.amendGiftFacility', async () => {
+    it('should not call any API methods', async () => {
       // Act
-      await submitFacilityAmendmentsToApimGift({ amendment: mockAmendment, ukefFacilityId: mockUkefFacilityId });
+      await submitFacilityAmendmentsToApimGift({ amendmentPayloads: [], ukefFacilityId: mockUkefFacilityId });
 
       // Assert
       expect(amendGiftFacilitySpy).not.toHaveBeenCalled();
+      expect(multipleGiftFacilityAmendmentsSpy).not.toHaveBeenCalled();
     });
   });
 });

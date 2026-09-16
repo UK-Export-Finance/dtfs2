@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { generateApp } = require('../server/generateApp');
 

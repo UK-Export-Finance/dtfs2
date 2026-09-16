@@ -332,7 +332,7 @@ describe('utilisation-report-period-schedule-validator', () => {
       const response = validateUtilisationReportPeriodSchedule(utilisationReportPeriodSchedule);
 
       // Assert
-      expect(response).toEqual(undefined);
+      expect(response).toBeUndefined();
     });
 
     it('returns undefined (no error) when the quarterly schedule is valid', () => {
@@ -360,7 +360,7 @@ describe('utilisation-report-period-schedule-validator', () => {
       const response = validateUtilisationReportPeriodSchedule(utilisationReportPeriodSchedule);
 
       // Assert
-      expect(response).toEqual(undefined);
+      expect(response).toBeUndefined();
     });
   });
 });

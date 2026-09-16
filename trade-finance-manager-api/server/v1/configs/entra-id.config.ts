@@ -2,7 +2,7 @@ import { Configuration as MsalAppConfig } from '@azure/msal-node';
 import { z } from 'zod';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export class EntraIdConfig {
   private static readonly entraIdEnvVarConfigSchema = z.object({
