@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+
+import { HttpStatusCode } from 'axios';
 import { CURRENCY } from '@ukef/dtfs2-common';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
-
-// Mock Axios
-const axiosMock = new MockAdapter(axios);
 
 // Mock responses
 const mockResponses = {

@@ -1,7 +1,7 @@
 const request = require('supertest');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { PORTAL_API_KEY } = process.env;
 

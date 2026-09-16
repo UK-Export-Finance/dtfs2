@@ -1,3 +1,4 @@
+import { CREDIT_RATING } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
@@ -49,12 +50,12 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
 
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RATING.BB_MINUS);
     });
 
     it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
       // check value previously submitted
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RATING.BB_MINUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
@@ -68,7 +69,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       // check new value displays in `pricing and risk` page
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Acceptable (B+)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RATING.B_PLUS);
     });
   });
 

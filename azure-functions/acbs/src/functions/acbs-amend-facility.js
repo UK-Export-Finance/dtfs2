@@ -38,7 +38,7 @@
  * @module acbs-amend-facility
  */
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');

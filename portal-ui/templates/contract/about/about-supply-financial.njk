@@ -14,14 +14,11 @@
 {% block content %}
 
 {% if validationErrors.count %}
-    {{
-      govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: validationErrors.summary
-      })
-    }}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: validationErrors.summary
+    }) }}
   {% endif %}
-
 
   {{ taskListHeader.render({
     title: 'Add financial information',
@@ -124,7 +121,6 @@
           }
         ]
       }) }}
-
     </div>
 
     {{ govukButton({
@@ -140,7 +136,6 @@
         "formaction" : "/contract/"+ deal._id +"/about/financial/save-go-back"
       }
     }) }}
-
   </form>
 
 {% endblock %}

@@ -94,13 +94,16 @@ const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecord[], status: Fe
 };
 
 /**
- * Gets a checkbox aria label
+ * Gets a checkbox aria label which includes the facility ids and exporters of the fee records
  * @param feeRecords - The fee records
  * @returns The checkbox aria label
  */
 const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
   const feeRecordFacilityIdList = feeRecords.map(({ facilityId }) => facilityId).join(' ');
-  return `Select ${feeRecordFacilityIdList}`;
+
+  const exporterList = feeRecords.map(({ exporter }) => exporter).join(' ');
+
+  return `Select ${feeRecordFacilityIdList} with exporter ${exporterList} to add a payment, generate keying data or create a record correction request`;
 };
 
 /**

@@ -36,6 +36,11 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="bank-facility-reference"]').toExist();
   });
 
+  it('should render the facility-type as an h2 heading', () => {
+    wrapper.expectElement('h2[data-cy="facility-type"]').toExist();
+    wrapper.expectElement('h2[data-cy="facility-type"]').hasClass('govuk-heading-l');
+  });
+
   it('should render value and export', () => {
     wrapper.expectElement('[data-cy="facility-value-export-currency"]').toExist();
     wrapper.expectElement('[data-cy="facility-exchange-rate"]').toExist();

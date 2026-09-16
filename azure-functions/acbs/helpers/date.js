@@ -31,9 +31,11 @@ const now = () => format(new Date(), 'yyyy-MM-dd');
  * @returns {Date}
  */
 const getDateFromStringOrNumber = (dateStr) => {
-  const isoDate = parseISO(dateStr);
+  const isoDate = isString(dateStr) ? parseISO(dateStr) : new Date(NaN);
   const isValidIsoDate = isValid(isoDate);
-  const dateFromString = validDateFormats.map((formatString) => parse(dateStr, formatString, startOfDay(new Date()))).find(isValid);
+  const dateFromString = isString(dateStr)
+    ? validDateFormats.map((formatString) => parse(dateStr, formatString, startOfDay(new Date()))).find(isValid)
+    : undefined;
   const isValidEpoch = isEpoch(dateStr);
 
   if (isValidIsoDate) {
@@ -79,7 +81,7 @@ const formatDate = (dateStr) => formatOrReturnInvalidDate(getDateFromStringOrNum
 const addMonth = (date, months) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
 
-  return formatOrReturnInvalidDate(add(parsedDate, { months }));
+  return formatOrReturnInvalidDate(add(parsedDate, { months: Number(months) }));
 };
 /**
  * @param {string | number | Date} date either Date object, epoch or {@link validDateFormats}
@@ -90,7 +92,7 @@ const addMonth = (date, months) => {
 const addYear = (date, years) => {
   const parsedDate = date instanceof Date ? date : getDateFromStringOrNumber(date);
 
-  return formatOrReturnInvalidDate(add(parsedDate, { years }));
+  return formatOrReturnInvalidDate(add(parsedDate, { years: Number(years) }));
 };
 
 /**

@@ -245,7 +245,7 @@ class Facility {
       if (req.bankReviewDate === null) {
         this.bankReviewDate = null;
       } else {
-        const bankReviewDate = parseISO(req.bankReviewDate);
+        const bankReviewDate = typeof req.bankReviewDate === 'string' ? parseISO(req.bankReviewDate) : new Date(NaN);
         if (!isValid(bankReviewDate)) {
           throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
         }
@@ -260,7 +260,7 @@ class Facility {
       if (req.facilityEndDate === null) {
         this.facilityEndDate = null;
       } else {
-        const facilityEndDate = parseISO(req.facilityEndDate);
+        const facilityEndDate = typeof req.facilityEndDate === 'string' ? parseISO(req.facilityEndDate) : new Date(NaN);
         if (!isValid(facilityEndDate)) {
           throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
         }

@@ -1,3 +1,15 @@
+jest.mock('../../../server/v1/email');
+
+jest.mock('node:crypto', () => {
+  const actualCrypto = jest.requireActual('node:crypto');
+
+  return {
+    ...actualCrypto,
+    pbkdf2Sync: jest.fn(actualCrypto.pbkdf2Sync),
+    randomBytes: jest.fn(actualCrypto.randomBytes),
+  };
+});
+
 const { AxiosError } = require('axios');
 const crypto = require('crypto');
 const { PORTAL_USER_SALTS, PORTAL_USER_SIGN_IN_TOKENS, VALID_COMPUTED_HASH } = require('@ukef/dtfs2-common');

@@ -12,6 +12,8 @@ export type TfmFacilityAmendmentData = {
   currentValue?: number | null;
   effectiveDate?: number;
   coverEndDate?: number | null;
+  coveredPercentage?: number | null;
+  previousCoveredPercentage?: number | null;
   ukefDecision?: {
     value?: string;
     coverEndDate?: string;
@@ -21,8 +23,14 @@ export type TfmFacilityAmendmentData = {
   };
 };
 
+export type MapAmountParams = {
+  coveredPercentage?: number | null;
+  newAmount: number;
+  previousAmount: number;
+};
+
 export type AmendmentAmountDataParams = {
-  amount: number;
+  amount: number | null;
   date: string;
 };
 
@@ -49,8 +57,11 @@ export type AmendmentPayloadReplaceExpiryDate = {
 
 export type ApimGiftFacilityAmendmentPayload = AmendmentPayloadIncreaseAmount | AmendmentPayloadDecreaseAmount | AmendmentPayloadReplaceExpiryDate;
 
+export type MultipleAmendmentsPayload = {
+  amendments: ApimGiftFacilityAmendmentPayload[];
+};
+
 export type ApimGiftAmendmentType = (typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE)[keyof typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE];
 
 export type ApimGiftAmountAmendmentType =
-  | typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT
-  | typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT;
+  typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.INCREASE_AMOUNT | typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.DECREASE_AMOUNT;

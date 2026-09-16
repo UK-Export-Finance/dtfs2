@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { Currency, CURRENCY, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { SessionData } from 'express-session';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
+import { getEditPayment, postEditPayment, GetEditPaymentRequest, PostEditPaymentRequest } from '.';
 import api from '../../../api';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord, aRequestSession } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
@@ -30,8 +30,10 @@ describe('controllers/utilisation-reports/edit-payment', () => {
     const reportId = '12';
     const paymentId = '34';
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetEditPaymentRequest>(options);
+
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
-      httpMocks.createMocks({
+      createHttpMocks({
         session: { ...session, ...sessionData },
         params: {
           reportId,
@@ -40,7 +42,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       });
 
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId, paymentId },
         session: aRequestSession(),
       });
@@ -550,9 +552,11 @@ describe('controllers/utilisation-reports/edit-payment', () => {
     const reportId = '12';
     const paymentId = '34';
 
+    const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostEditPaymentRequest>(options);
+
     describe('when the form values are valid', () => {
       const getHttpMocks = () =>
-        httpMocks.createMocks<PostEditPaymentRequest>({
+        createHttpMocks({
           params: { reportId, paymentId },
           session: aRequestSession(),
           body: aPostEditPaymentRequestBody(),

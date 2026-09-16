@@ -2,14 +2,13 @@ import { CURRENCY, InvalidDealIdError } from '@ukef/dtfs2-common';
 
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
 const { MOCK_TFM_SESSION_USER } = require('../server/v1/__mocks__/mock-tfm-session-user');
 const { MOCK_PORTAL_USERS } = require('../server/v1/__mocks__/mock-portal-users');
 
 const api = jest.requireActual('../server/v1/api');
 
-const mockAxios = new MockAdapter(axios);
+const mockAxios = axiosMock;
 
 const localIp = '127.0.0.1';
 const urlTraversal = '../../../etc/stealpassword';

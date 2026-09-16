@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import api from '../../api';
 import { aTfmSessionUser } from '../../../../test-helpers';
-import { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';
+import { putKeyingDataMarkAsToDo, PutKeyingDataMarkAsToDoRequest } from './put-keying-data-mark-as-to-do.controller';
 
 console.error = jest.fn();
 
@@ -18,8 +18,10 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
     const feeRecordIds = [1, 2];
     const user = aTfmSessionUser();
 
+    const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<PutKeyingDataMarkAsToDoRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId },
         body: {
           user,

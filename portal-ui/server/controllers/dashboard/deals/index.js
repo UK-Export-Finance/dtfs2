@@ -73,22 +73,23 @@ exports.allDeals = async (req, res) => {
   const { userToken } = requestParams(req);
   const { user } = req.session;
   const currentPage = req.params.page;
+  const requestBody = req.body || {};
 
   let activeSortByOrder = req.session.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
 
-  if (Object.keys(req.body).length) {
-    req.session.dashboardFilters = req.body;
-    req.session.sortBy = req.body.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
+  if (Object.keys(requestBody).length) {
+    req.session.dashboardFilters = requestBody;
+    req.session.sortBy = requestBody.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
   }
 
-  if (req.body.sortBy) {
-    if (req.body.sortBy === CONSTANTS.SORT_BY.DESCENDING) {
+  if (requestBody.sortBy) {
+    if (requestBody.sortBy === CONSTANTS.SORT_BY.DESCENDING) {
       activeSortByOrder = CONSTANTS.SORT_BY.DESCENDING;
-      delete req.body.sortBy;
+      delete requestBody.sortBy;
     }
-    if (req.body.sortBy === CONSTANTS.SORT_BY.ASCENDING) {
+    if (requestBody.sortBy === CONSTANTS.SORT_BY.ASCENDING) {
       activeSortByOrder = CONSTANTS.SORT_BY.ASCENDING;
-      delete req.body.sortBy;
+      delete requestBody.sortBy;
     }
   }
 

@@ -2,12 +2,32 @@ jest.mock('../../server/services/api', () => ({
   ...jest.requireActual('../../server/services/api'),
   validateToken: () => true,
   validateBank: () => ({ isValid: true }),
+  createFacility: jest.fn(),
+  deleteFacility: jest.fn(),
+  getApplication: jest.fn(),
+  getFacilities: jest.fn(),
+  getFacility: jest.fn(),
+  getUserDetails: jest.fn(),
+  getPortalAmendmentsOnDeal: jest.fn(),
+  setApplicationStatus: jest.fn(),
+  updateFacility: jest.fn(),
+  updateApplication: jest.fn(),
+  getTfmDeal: jest.fn(),
+  downloadFile: jest.fn(),
+  uploadFile: jest.fn(),
+  updateSupportingInformation: jest.fn(),
+  deleteFile: jest.fn(),
+  getCompanyByRegistrationNumber: jest.fn(),
+  getMandatoryCriteria: jest.fn(),
+  cloneApplication: jest.fn(),
 }));
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
 
+const { HttpStatusCode } = require('axios');
 const { ROLES } = require('../../server/constants');
 const storage = require('../test-helpers/storage/storage');
 
@@ -21,22 +41,22 @@ const allRoles = Object.values(ROLES);
  * @param {import('@ukef/dtfs2-common').Role[]} params.whitelistedRoles - List of roles that are allowed.
  * @param {number} params.successCode - The expected success status code for whitelisted roles.
  * @param {object} [params.successHeaders] - Headers to validate in the success response.
- * @param {boolean} [params.disableHappyPath=false] - Flag to disable happy path tests.
  * @param {string} [params.redirectUrlForInvalidRoles='/'] - URL to redirect to for non-whitelisted roles.
+ * @param {object} [params.extraSessionData={}] - Additional session data merged into the saved user session before making the request.
  */
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
   whitelistedRoles,
   successCode,
   successHeaders,
-  disableHappyPath = false, // TODO DTFS2-6697: remove and test happy paths.
   redirectUrlForInvalidRoles = '/',
+  extraSessionData = {},
 }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
-    const includeWhitelistedRolesTests = !disableHappyPath && whitelistedRoles.length;
-    const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length;
+    const includeWhitelistedRolesTests = whitelistedRoles.length > 0;
+    const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length > 0;
 
     if (includeWhitelistedRolesTests || includeNonWhitelistedRolesTests) {
       beforeEach(async () => {
@@ -51,7 +71,7 @@ const withRoleValidationApiTests = ({
     if (includeWhitelistedRolesTests) {
       describe('whitelisted roles', () => {
         it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([allowedRole]);
+          const { sessionCookie } = await storage.saveUserSession([allowedRole], extraSessionData);
 
           const response = await makeRequestWithHeaders({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
@@ -71,13 +91,13 @@ const withRoleValidationApiTests = ({
     if (includeNonWhitelistedRolesTests) {
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
-          const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
+          const { sessionCookie } = await storage.saveUserSession([disallowedRole], extraSessionData);
 
           const response = await makeRequestWithHeaders({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
           });
 
-          expect(response.status).toEqual(302);
+          expect(response.status).toEqual(HttpStatusCode.Found);
           expect(response.headers.location).toEqual(redirectUrlForInvalidRoles);
         });
       });

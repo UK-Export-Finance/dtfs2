@@ -19,12 +19,12 @@ module.exports = (submissionDetails, errorList, deal) => {
 
       // if we have all the values, check that the date..
       if (dateHasAllValues(day, month, year)) {
-        const submisionDateStartOfDay = getStartOfDateFromDayMonthYearStrings(day, month, year);
+        const submissionDateStartOfDay = getStartOfDateFromDayMonthYearStrings(day, month, year);
         const startOfToday = startOfDay(new Date());
         const thirtyDaysAgoStartOfDay = sub(startOfToday, { days: 30 });
 
         // can't be in the future
-        if (isAfter(submisionDateStartOfDay, startOfToday)) {
+        if (isAfter(submissionDateStartOfDay, startOfToday)) {
           newErrorList.supplyContractConversionDate = {
             order: orderNumber(newErrorList),
             text: 'Supply Contract conversion date cannot be in the future',
@@ -32,7 +32,7 @@ module.exports = (submissionDetails, errorList, deal) => {
         }
 
         // can't be more than 30 days old
-        if (isBefore(submisionDateStartOfDay, thirtyDaysAgoStartOfDay)) {
+        if (isBefore(submissionDateStartOfDay, thirtyDaysAgoStartOfDay)) {
           newErrorList.supplyContractConversionDate = {
             order: orderNumber(newErrorList),
             text: 'Supply Contract conversion date cannot be more than 30 days in the past',

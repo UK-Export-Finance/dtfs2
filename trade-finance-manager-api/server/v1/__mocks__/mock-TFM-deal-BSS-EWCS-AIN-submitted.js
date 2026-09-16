@@ -29,6 +29,7 @@ const MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED = {
       },
       'supplier-companies-house-registration-number': 'SC467044',
       'supplier-name': 'TEST SERVICES LTD',
+      'supplier-type': 'Exporter',
     },
     editedBy: ['61f29adb6851c10012604bce'],
     exporter: {

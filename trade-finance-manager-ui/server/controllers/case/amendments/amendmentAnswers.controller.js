@@ -76,12 +76,16 @@ const postAmendmentAnswers = async (req, res) => {
   const { userToken } = req.session;
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { dealId, requireUkefApproval } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
+
+  const { dealId, requireUkefApproval } = amendment;
+
   const { ukefFacilityId } = facility.facilitySnapshot;
+
   const {
     response: { data: amendmentsOnDeal },
   } = await api.getApprovedAmendments(dealId, userToken);
+
   const amendmentsOnFacility = amendmentsOnDeal.filter((amendmentOnDeal) => amendmentOnDeal.facilityId.toString() === facilityId);
 
   let referenceNumber = '';
@@ -147,10 +151,13 @@ const postAmendmentAnswers = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
     }
+
     console.error('Unable to submit the amendment');
+
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   } catch (error) {
     console.error('There was a problem creating the amendment approval %o', error);
+
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

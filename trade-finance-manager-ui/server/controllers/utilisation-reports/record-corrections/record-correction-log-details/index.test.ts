@@ -1,9 +1,9 @@
 import { recordCorrectionLogDetailsMock } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getRecordCorrectionLogDetails } from '.';
+import { getRecordCorrectionLogDetails, GetRecordCorrectionLogDetailsRequest } from '.';
 import api from '../../../../api';
 import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
 import { RecordCorrectionLogDetailsViewModel } from '../../../../types/view-models';
@@ -22,12 +22,14 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
     user,
   };
 
+  const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetRecordCorrectionLogDetailsRequest>(options);
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   describe('getRecordCorrectionLogDetails', () => {
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = createHttpMocks({
       session: requestSession,
       params: { correctionId },
     });

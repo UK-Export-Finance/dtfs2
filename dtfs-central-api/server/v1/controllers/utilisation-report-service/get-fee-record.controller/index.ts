@@ -1,6 +1,6 @@
-import { SessionBank, ReportPeriod } from '@ukef/dtfs2-common';
+import { SessionBank, ReportPeriod, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ApiError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { mapFeeRecordEntityToResponse } from './helpers';
@@ -16,7 +16,13 @@ export type GetFeeRecordResponseBody = {
   exporter: string;
 };
 
-type GetFeeRecordResponse = Response<GetFeeRecordResponseBody | string>;
+export type GetFeeRecordRequest = CustomExpressRequest<{
+  params: {
+    reportId: string;
+    feeRecordId: string;
+  };
+}>;
+export type GetFeeRecordResponse = Response<GetFeeRecordResponseBody | string>;
 
 /**
  * Controller for the GET fee record route.
@@ -26,7 +32,7 @@ type GetFeeRecordResponse = Response<GetFeeRecordResponseBody | string>;
  * @throws {NotFoundError} When either the fee record is not found for the given IDs or the
  * bank on the report is not found.
  */
-export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
+export const getFeeRecord = async (req: GetFeeRecordRequest, res: GetFeeRecordResponse) => {
   const { reportId, feeRecordId } = req.params;
 
   try {

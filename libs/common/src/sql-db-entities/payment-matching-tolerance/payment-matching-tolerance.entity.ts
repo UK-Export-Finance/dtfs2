@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Currency } from '../../types';
+import type { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { MonetaryColumn } from '../custom-columns';
 

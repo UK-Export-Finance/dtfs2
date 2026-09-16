@@ -16,7 +16,7 @@ import { getNowAsUtcISOString, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@
 import { getNumber } from '../../server/v1/controllers/number-generator.controller';
 import { InvalidEntityTypeError } from '../../server/v1/errors';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const originalProcessEnv = { ...process.env };
 

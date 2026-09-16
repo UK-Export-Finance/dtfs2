@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { asString, FileshareConfig } from '@ukef/dtfs2-common';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { AZURE_UTILISATION_REPORTS_FILESHARE_NAME, AZURE_PORTAL_STORAGE_ACCOUNT, AZURE_PORTAL_STORAGE_ACCESS_KEY } = process.env;
 

@@ -17,7 +17,7 @@
 
     /* Interop Constraints */
     "esModuleInterop": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
 
     /* Language and Environment */
     "emitDecoratorMetadata": true,

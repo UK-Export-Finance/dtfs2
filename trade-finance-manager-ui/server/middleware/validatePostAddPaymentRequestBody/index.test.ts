@@ -1,6 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { Currency, CURRENCY, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { validatePostAddPaymentRequestBody } from '.';
+import { validatePostAddPaymentRequestBody, ValidatePostAddPaymentRequest } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
 import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
@@ -9,12 +9,14 @@ import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys'
 console.error = jest.fn();
 
 describe('validatePostAddPaymentRequestBody', () => {
-  const REPORT_ID = 1;
+  const REPORT_ID = '1';
 
   const REDIRECT_URL = `/utilisation-reports/${REPORT_ID}`;
 
+  const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<ValidatePostAddPaymentRequest>(options);
+
   const getHttpMocks = () =>
-    httpMocks.createMocks({
+    createHttpMocks({
       session: {
         user: MOCK_TFM_SESSION_USER,
         userToken: 'user-token',

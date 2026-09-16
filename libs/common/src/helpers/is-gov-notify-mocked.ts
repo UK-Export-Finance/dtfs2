@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * checks if notify key is mocked

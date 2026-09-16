@@ -1,5 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { canSendToAcbs, DEAL_TYPE, DEAL_SUBMISSION_TYPE, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
+const { APIM_GIFT_INTEGRATION } = require('../../../server/v1/mappings/apim-gift-payloads/constants');
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const api = require('../../../server/v1/api');
@@ -40,7 +41,19 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     amendmentId,
     dealId: mockDealId,
     changeFacilityValue: false,
+    changeCoverEndDate: true,
+    coverEndDate: Date.parse('2024-04-01T00:00:00.000Z'),
+    tfm: {},
   };
+
+  const expectedApimGiftAmendmentPayloads = [
+    {
+      amendmentType: APIM_GIFT_INTEGRATION.AMENDMENT_TYPE.REPLACE_EXPIRY_DATE,
+      amendmentData: {
+        expiryDate: '2024-04-01',
+      },
+    },
+  ];
 
   const facility = {
     _id: facilityId,
@@ -67,6 +80,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     api.getAmendmentById = jest.fn().mockResolvedValue(amendment);
     api.findOneFacility = jest.fn().mockResolvedValue(facility);
     api.findOneDeal = jest.fn().mockResolvedValue(tfmDeal);
+    api.updateFacilityAmendment = jest.fn().mockResolvedValue({});
 
     submitFacilityAmendmentsToApimGift.mockResolvedValue([HttpStatusCode.Accepted]);
     canSendToAcbs.mockReturnValue(true);
@@ -82,7 +96,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
       expect(status).toEqual(HttpStatusCode.Ok);
 
       expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
-        amendment,
+        amendmentPayloads: expectedApimGiftAmendmentPayloads,
         ukefFacilityId: mockUkefFacilityId,
       });
 
@@ -113,7 +127,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
       expect(status).toEqual(HttpStatusCode.Ok);
 
       expect(submitFacilityAmendmentsToApimGift).toHaveBeenNthCalledWith(1, {
-        amendment,
+        amendmentPayloads: expectedApimGiftAmendmentPayloads,
         ukefFacilityId: mockUkefFacilityId,
       });
 

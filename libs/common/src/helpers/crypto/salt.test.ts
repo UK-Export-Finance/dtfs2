@@ -21,10 +21,10 @@ describe('salt', () => {
 
     // Assert
     expect(response).toBeDefined();
-    expect(Buffer.isBuffer(response)).toBeTruthy();
+    expect(Buffer.isBuffer(response)).toEqual(true);
   });
 
-  it('should call crypto.randomBytes with 128 bytes', () => {
+  it('should call crypto.randomBytes with 128 bytes when no byte size is provided', () => {
     // Act
     const response = salt();
 
@@ -32,6 +32,17 @@ describe('salt', () => {
     expect(response).toBe(mockSalt);
 
     expect(crypto.randomBytes).toHaveBeenCalledWith(CRYPTO.SALT.BYTES);
+    expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call crypto.randomBytes with the provided byte size', () => {
+    // Act
+    const response = salt(CRYPTO.SALT.OTP_BYTES);
+
+    // Assert
+    expect(response).toBe(mockSalt);
+
+    expect(crypto.randomBytes).toHaveBeenCalledWith(CRYPTO.SALT.OTP_BYTES);
     expect(crypto.randomBytes).toHaveBeenCalledTimes(1);
   });
 });

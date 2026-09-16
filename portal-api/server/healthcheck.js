@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';

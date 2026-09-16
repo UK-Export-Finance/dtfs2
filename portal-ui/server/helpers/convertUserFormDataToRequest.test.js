@@ -37,7 +37,7 @@ describe('convertUserFormDataToRequest', () => {
     it('should return undefined when isTrusted is undefined', () => {
       const user = {};
       const result = convertUserFormDataToRequest(user);
-      expect(result.isTrusted).toEqual(undefined);
+      expect(result.isTrusted).toBeUndefined();
     });
   });
 
@@ -51,7 +51,7 @@ describe('convertUserFormDataToRequest', () => {
     it('should return username as undefined when email is undefined', () => {
       const user = {};
       const result = convertUserFormDataToRequest(user);
-      expect(result.email).toEqual(undefined);
+      expect(result.email).toBeUndefined();
     });
   });
 });

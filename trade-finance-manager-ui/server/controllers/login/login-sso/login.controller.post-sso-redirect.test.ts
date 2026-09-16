@@ -50,6 +50,10 @@ describe('controllers - unauthenticated auth (sso)', () => {
   });
 
   function getHttpMocks() {
-    return httpMocks.createMocks({ body: mockBody });
+    const { req: getHttpMocksReq, res: getHttpMocksRes } = httpMocks.createMocks({ body: mockBody });
+    return {
+      req: getHttpMocksReq as Parameters<typeof LoginController.postSsoRedirect>[0],
+      res: getHttpMocksRes,
+    };
   }
 });

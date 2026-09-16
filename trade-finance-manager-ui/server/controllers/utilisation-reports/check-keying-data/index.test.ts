@@ -1,6 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
-import { postCheckKeyingData } from '.';
+import { postCheckKeyingData, PostCheckKeyingDataRequest } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
 import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
@@ -11,6 +11,8 @@ import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payme
 console.error = jest.fn();
 
 jest.mock('../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostCheckKeyingDataRequest>(options);
 
 describe('controllers/utilisation-reports/check-keying-data', () => {
   describe('postCheckKeyingData', () => {
@@ -26,7 +28,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
     it('renders the problem-with-service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1' },
       });
@@ -51,7 +53,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it('sets the request session generateKeyingDataErrorKey field', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -66,7 +68,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
       it("redirects to '/utilisation-reports/:reportId'", async () => {
         // Arrange
         const reportId = '12';
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId },
         });
@@ -100,7 +102,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it("renders the 'check-keying-data' page", async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -114,7 +116,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it('renders the page with the bank', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -140,7 +142,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it('renders the page with the formatted report period', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -165,7 +167,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it('renders the page with the mapped fee records', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -212,7 +214,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
       it('sets the view model number of matching facilities property to the number of fee records to key', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '1' },
         });
@@ -235,7 +237,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
       it('sets the view model report id to path parameter report id', async () => {
         // Arrange
         const reportId = '51';
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId },
         });

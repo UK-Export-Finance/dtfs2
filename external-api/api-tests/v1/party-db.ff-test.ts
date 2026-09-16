@@ -1,17 +1,15 @@
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
-
-let axiosMock: MockAdapter;
 
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS, INVALID_TOO_SHORT, INVALID_TOO_LONG } = MOCK_COMPANY_REGISTRATION_NUMBERS;
@@ -41,8 +39,6 @@ jest.mock('../../server/v1/controllers/industry-sectors.controller', () => ({
 
 describe('party-db.controller feature flag', () => {
   beforeEach(() => {
-    axiosMock = new MockAdapter(axios);
-
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
     axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);

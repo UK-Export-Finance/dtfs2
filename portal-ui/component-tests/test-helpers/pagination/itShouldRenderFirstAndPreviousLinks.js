@@ -5,7 +5,7 @@ module.exports = ({ getWrapper, currentPage }) => {
     wrapper.expectElement('[data-cy="First_listItem"]').hasClass('govuk-body');
     wrapper.expectElement('[data-cy="First_listItem"]').hasClass('govuk-!-margin-bottom-3');
 
-    wrapper.expectLink('[data-cy="First"]').toLinkTo('/testRoute/0?testQuery=test', 'First');
+    wrapper.expectLink('[data-cy="First"]').toLinkTo('/testRoute/0?testQuery=test', 'First page');
     wrapper.expectElement('[data-cy="First"]').hasClass('govuk-link');
   });
 
@@ -15,7 +15,7 @@ module.exports = ({ getWrapper, currentPage }) => {
     wrapper.expectElement('[data-cy="Previous_listItem"]').hasClass('govuk-body');
     wrapper.expectElement('[data-cy="Previous_listItem"]').hasClass('govuk-!-margin-bottom-3');
 
-    wrapper.expectLink('[data-cy="Previous"]').toLinkTo(`/testRoute/${currentPage - 1}?testQuery=test`, 'Previous');
+    wrapper.expectLink('[data-cy="Previous"]').toLinkTo(`/testRoute/${currentPage - 1}?testQuery=test`, 'Previous page');
     wrapper.expectElement('[data-cy="Previous"]').hasClass('govuk-link');
   });
 };
