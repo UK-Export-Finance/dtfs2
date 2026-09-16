@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
 import api from '../../api';
-import { postKeyingData } from './post-keying-data.controller';
+import { postKeyingData, PostKeyingDataRequest } from './post-keying-data.controller';
 import { aTfmSessionUser } from '../../../../test-helpers';
 
 jest.mock('../../api');
@@ -17,8 +17,10 @@ describe('postKeyingData', () => {
     jest.mocked(api.generateKeyingData).mockResolvedValue();
   });
 
+  const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<PostKeyingDataRequest>(options);
+
   const getHttpMocks = () =>
-    httpMocks.createMocks({
+    createHttpMocks({
       params: { reportId: '1' },
       body: { user: aTfmSessionUser() },
     });
@@ -27,10 +29,11 @@ describe('postKeyingData', () => {
     // Arrange
     const reportId = '12';
     const user = aTfmSessionUser();
-    const { req, res } = httpMocks.createMocks({
+    const { req: mockReq, res } = httpMocks.createMocks({
       params: { reportId },
       body: { user },
     });
+    const req = mockReq as Parameters<typeof postKeyingData>[0];
 
     // Act
     await postKeyingData(req, res);

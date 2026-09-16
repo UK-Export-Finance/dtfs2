@@ -1,9 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const mongoSanitise = require('express-mongo-sanitize');
-const { exceptionHandlers, initialiseCronJobScheduler, xss } = require('@ukef/dtfs2-common');
-const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
+const { exceptionHandlers, initialiseCronJobScheduler, xss, sanitiseMongoRequest, maintenance, SWAGGER } = require('@ukef/dtfs2-common');
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
@@ -22,6 +20,13 @@ configurePassport(passport);
 
 const generateApp = () => {
   const app = express();
+
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
 
   // Register global handlers
   exceptionHandlers();
@@ -47,16 +52,12 @@ const generateApp = () => {
   app.use(xss);
   app.use(passport.initialize());
 
+  // MongoDB sanitisation
+  app.use(sanitiseMongoRequest);
+
   app.post('/v1/login', validateSsoFeatureFlagFalse, loginController.login);
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);
-
-  // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
 
   // Return 200 on get to / to confirm to Azure that
   // the container has started successfully:

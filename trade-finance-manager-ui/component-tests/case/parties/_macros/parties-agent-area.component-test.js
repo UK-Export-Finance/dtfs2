@@ -125,7 +125,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="agent-name"]').toRead(params.deal.eligibility.agentName);
   });
 
-  it('should render agent commision rate', () => {
+  it('should render agent commission rate', () => {
     wrapper = render(params);
 
     wrapper.expectText('[data-cy="agent-commission-rate"]').toRead(params.deal.eligibility.agentCommissionRate);

@@ -465,6 +465,14 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 };
 
 /**
+ * calculates the ukef exposure for ACBS from the provided newAmount and coveredPercentage
+ * @param {Number} newAmount
+ * @param {Number} coveredPercentage
+ * @returns {Number} calculated ukef exposure value
+ */
+const calculateAcbsUkefExposureValue = (newAmount, coveredPercentage) => newAmount * (coveredPercentage / 100);
+
+/**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
  * @param {object} payload Amendment payload
@@ -474,7 +482,7 @@ const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
     return {
       ...payload,
-      ukefExposure: payload.value * (payload.coveredPercentage / 100),
+      ukefExposure: calculateAcbsUkefExposureValue(payload.value, payload.coveredPercentage),
     };
   }
 
@@ -484,19 +492,19 @@ const calculateAcbsUkefExposure = (payload) => {
 /**
  * Converts non-ms epoch to ms epoch.
  * @param {object} payload Amendment payload
- * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @returns {object} Computed payload with EPOCH ms compatible `coverEndDate`.
  */
 const formatAmendmentDates = (payload) => {
-  const formatted = {
+  const formattedDates = {
     ...payload,
     effectiveDate: epochSecondsToMilliseconds(payload.effectiveDate),
   };
 
-  if (formatted?.coverEndDate) {
-    formatted.coverEndDate = epochSecondsToMilliseconds(formatted.coverEndDate);
+  if (payload?.coverEndDate) {
+    formattedDates.coverEndDate = epochSecondsToMilliseconds(payload.coverEndDate);
   }
 
-  return formatted;
+  return formattedDates;
 };
 
 module.exports = {
@@ -513,4 +521,5 @@ module.exports = {
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
   calculateAcbsUkefExposure,
+  calculateAcbsUkefExposureValue,
 };

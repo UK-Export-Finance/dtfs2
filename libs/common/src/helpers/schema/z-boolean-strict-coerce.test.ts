@@ -19,7 +19,7 @@ describe('zBooleanStrictCoerce', () => {
   describe('when parsing a value with zBooleanStrictCoerce and additional chaining', () => {
     describe('when chaining with .optional()', () => {
       it('should return undefined when the provided value is undefined', () => {
-        expect(zBooleanStrictCoerce.optional().parse(undefined)).toEqual(undefined);
+        expect(zBooleanStrictCoerce.optional().parse(undefined)).toBeUndefined();
       });
     });
 

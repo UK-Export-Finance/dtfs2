@@ -9,7 +9,7 @@ const { provide, MANDATORY_CRITERIA } = require('./api-data-provider');
 const beforeYouStartValidation = require('../validation/before-you-start');
 
 const router = express.Router();
-router.use('/before-you-start/*', validateToken);
+router.use('/before-you-start/{*path}', validateToken);
 
 /**
  * @openapi

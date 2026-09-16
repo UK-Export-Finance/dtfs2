@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios, { HttpStatusCode } from 'axios';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
 import { isValidPostcode } from '../../helpers';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
@@ -15,8 +15,11 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-export const lookup = async (req: Request, res: Response) => {
+type GeospatialAddressLookupRequest = CustomExpressRequest<{ params: { postcode: string } }>;
+
+export const lookup = async (req: GeospatialAddressLookupRequest, res: Response) => {
   const { postcode } = req.params;
+
   const noWhitespacePostcode = postcode.replace(' ', '');
 
   if (!isValidPostcode(noWhitespacePostcode)) {

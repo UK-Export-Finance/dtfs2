@@ -141,13 +141,15 @@ context('Amendments underwriting - add lead underwriter', () => {
       commonTestUnderwriterTasksAssignedToUser(dealId, UNDERWRITER_MANAGER_1);
     });
 
-    it('should not show change link when logged in as T1_USER or PIM user', () => {
+    it('should not show change link when logged in as PIM user', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
+    });
 
+    it('should not show change link when logged in as T1_USER', () => {
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 

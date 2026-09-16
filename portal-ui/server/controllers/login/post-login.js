@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
-import { isPortal2FAFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 
-import { validationErrorHandler, getNextAccessCodePage } from '../../helpers';
+import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '../../helpers';
 import api from '../../api';
 
 /**
@@ -31,8 +31,11 @@ export const postLogin = async (req, res) => {
     if (!email) loginErrors.push(emailError);
     if (!password) loginErrors.push(passwordError);
 
+    const banks = await getPortalBankListForLoginPage();
+
     return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
+      banks,
     });
   }
 
@@ -73,7 +76,8 @@ export const postLogin = async (req, res) => {
       const status = error.response?.status;
 
       if (!loginApiOtpSucceeded) {
-        console.error('Failed to login %o', error);
+        const message = 'Failed to login';
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user %s', email);
@@ -83,8 +87,11 @@ export const postLogin = async (req, res) => {
 
         loginErrors.push(emailError, passwordError);
 
+        const banks = await getPortalBankListForLoginPage();
+
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),
+          banks,
         });
       }
 
@@ -95,7 +102,8 @@ export const postLogin = async (req, res) => {
         return res.redirect('/login/temporarily-suspended-access-code');
       }
 
-      console.error('Failed to send sign in OTP, rendering problem with service page. The error was %o', error);
+      const message = 'Failed to send sign in OTP, rendering problem with service page. The error was';
+      logUserAuthError(error, message);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -128,7 +136,8 @@ export const postLogin = async (req, res) => {
       const status = error.response?.status;
 
       if (!loginApiLinkSucceeded) {
-        console.error('Failed to login %o', error);
+        const message = 'Failed to login';
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user');
@@ -137,8 +146,11 @@ export const postLogin = async (req, res) => {
 
         loginErrors.push(emailError, passwordError);
 
+        const banks = await getPortalBankListForLoginPage();
+
         return res.render('login/index.njk', {
           errors: validationErrorHandler(loginErrors),
+          banks,
         });
       }
 
@@ -148,8 +160,8 @@ export const postLogin = async (req, res) => {
         return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
       }
 
-      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was ';
-      console.error('%s %o', message, error);
+      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
+      logUserAuthError(error, message);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');

@@ -77,7 +77,7 @@ exports.findOneTfmTeam = async (req, res) => {
 
 exports.deleteTfmTeam = async (req, res) => {
   const { id } = req.params;
-  const { auditDetails } = req.body;
+  const { auditDetails } = req.body ?? {};
 
   if (!(typeof id === 'string')) {
     return res.status(400).send({ status: 400, message: 'Invalid team Id' });

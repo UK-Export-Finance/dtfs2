@@ -1,11 +1,19 @@
 const { CORS_ORIGIN } = process.env;
-const { exceptionHandlers, maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const {
+  exceptionHandlers,
+  maintenance,
+  xss,
+  MAX_REQUEST_SIZE,
+  MAX_UTILISATION_REPORT_REQUEST_SIZE,
+  sanitiseMongoRequest,
+  SWAGGER,
+  REPORT_DATA_VALIDATION_ROUTE,
+} = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
@@ -16,7 +24,7 @@ const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const createRateLimit = require('./v1/middleware/rateLimit');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const userService = new UserService();
 
@@ -26,6 +34,13 @@ const generateApp = () => {
   loginCompleteAuth(passport, userService);
 
   const app = express();
+
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
 
   // Register global handlers
   exceptionHandlers();
@@ -46,17 +61,17 @@ const generateApp = () => {
 
   app.use(createRateLimit());
   app.use(passport.initialize());
+
+  // Set the limit for express.json to larger size for the utilisation report validation endpoint as some report payloads are larger than MAX_REQUEST_SIZE.
+  app.use(`/v1/banks/:bankId${REPORT_DATA_VALIDATION_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
+
   app.use(compression());
   app.use(removeCsrfToken);
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseMongoRequest);
 
   app.use(
     cors({

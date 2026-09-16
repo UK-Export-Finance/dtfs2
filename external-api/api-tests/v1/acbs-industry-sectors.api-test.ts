@@ -4,7 +4,7 @@ import nock from 'nock';
 import * as dotenv from 'dotenv';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_URL } = process.env;
 

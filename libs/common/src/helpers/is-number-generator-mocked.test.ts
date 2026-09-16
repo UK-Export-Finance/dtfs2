@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { isNumberGeneratorMocked } from './is-number-generator-mocked';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const originalProcessEnv = { ...process.env };
 

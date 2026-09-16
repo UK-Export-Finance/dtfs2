@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const api = require('../api');
 const { createACBS } = require('./acbs.controller');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
@@ -18,6 +18,8 @@ const updateParty = async (req, res) => {
   try {
     const { dealId } = req.params;
 
+    console.info('TFM deal %s updateParty - updating parties in TFM', dealId);
+
     const dealUpdate = {
       tfm: {
         parties: req.body,
@@ -28,7 +30,7 @@ const updateParty = async (req, res) => {
     const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     // Send facilities to APIM/GIFT
-    const { canSendFacilitiesToApimGift, issuedFacilities, isBssEwcsDeal, isGefDeal } = await canSendToApimGift(tfmDeal);
+    const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendDealFacilitiesToApimGift(tfmDeal);
 
     if (canSendFacilitiesToApimGift) {
       console.info('TFM deal %s updateParty - calling sendFacilitiesToApimGift', dealId);
@@ -37,9 +39,8 @@ const updateParty = async (req, res) => {
         await sendFacilitiesToApimGift({
           deal: tfmDeal,
           facilities: issuedFacilities,
-          isBssEwcsDeal,
           isGefDeal,
-          newPartyUrnCreated: true,
+          newPartyUrnCreated: false,
         });
       } catch (error) {
         console.error('TFM deal %s updateParty - sendFacilitiesToApimGift failed %o', dealId, error);

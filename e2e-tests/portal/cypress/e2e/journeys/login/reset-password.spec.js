@@ -7,7 +7,7 @@ const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Password management screens', () => {
-  const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
+  const contactUsEmailAddress = Cypress.expose('CONTACT_US_EMAIL_ADDRESS');
 
   beforeEach(() => {
     resetPassword.visitRequestEmail();

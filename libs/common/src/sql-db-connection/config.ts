@@ -2,7 +2,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 import { zBooleanStrictCoerce } from '../helpers/schema/z-boolean-strict-coerce';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const sqlDbConfigSchema = z.object({
   SQL_DB_HOST: z.string(),

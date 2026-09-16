@@ -1,7 +1,7 @@
 const relative = require('../../relativeURL');
 const page = require('../../pages/contact');
 
-const emailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS').trim();
+const emailAddress = Cypress.expose('CONTACT_US_EMAIL_ADDRESS').trim();
 
 context('contact', () => {
   beforeEach(() => {

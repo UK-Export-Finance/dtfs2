@@ -4,7 +4,7 @@ import connectRedis from 'connect-redis';
 import session from 'express-session';
 import { REDIS } from '../../constants';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Initializes and configures a Redis-backed session store for use with Express sessions.

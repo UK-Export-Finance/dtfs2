@@ -5,7 +5,7 @@ const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
@@ -610,6 +610,27 @@ const banks = async (token) => {
   });
 
   return response.data.banks;
+};
+
+/**
+ * Get the curated, read-only list of banks shown in the "before you start" section of the unauthenticated portal login page.
+ *
+ * An explicit `timeout` is set so that a stalled or half-open upstream
+ * connection cannot hang the login page render — the caller in
+ * `get-portal-bank-list-for-login-page.js` treats a failure as a soft error
+ * and renders the fallback inset message.
+ *
+ * @returns {Promise<Array<{ _id: string, name: string, order: number }>>} The list of banks
+ */
+const getPortalBankList = async () => {
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/portal-bank-list`,
+    headers,
+    timeout: 5000,
+  });
+
+  return response.data;
 };
 
 const getCurrencies = async (token, includeDisabled) => {
@@ -1238,6 +1259,7 @@ module.exports = {
   allFacilities,
   getAllAmendments,
   banks,
+  getPortalBankList,
   cloneDeal,
   contractBond,
   createBond,

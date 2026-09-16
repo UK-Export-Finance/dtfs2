@@ -7,7 +7,7 @@ import { mapToPaymentDetails } from './helpers';
 import { Payment } from '../../../../types/payments';
 import { FeeRecord } from '../../../../types/fee-records';
 
-type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
+export type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
   query: {
     includeFeeRecords?: 'true' | 'false';
   };

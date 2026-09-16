@@ -1,7 +1,7 @@
 const page = require('../../pages/maintenance');
 
 context('Maintenance', () => {
-  const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
+  const contactUsEmailAddress = Cypress.expose('CONTACT_US_EMAIL_ADDRESS');
 
   beforeEach(() => {
     cy.saveSession();

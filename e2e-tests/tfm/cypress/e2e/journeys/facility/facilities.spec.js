@@ -194,6 +194,25 @@ context('Facility page', () => {
     cy.checkFacilitiesTableRowsTotal(1);
   });
 
+  describe('search input accessibility', () => {
+    beforeEach(() => {
+      cy.visit(relative('/facilities'));
+      cy.url().should('eq', relative('/facilities/0'));
+    });
+
+    it('should render a label for the search input', () => {
+      pages.facilitiesPage.searchFormLabel().should('exist');
+    });
+
+    it('should visually hide the search input label', () => {
+      pages.facilitiesPage.searchFormLabel().should('have.class', 'govuk-visually-hidden');
+    });
+
+    it('should render the search input label text', () => {
+      cy.assertText(pages.facilitiesPage.searchFormLabel(), 'Search facilities');
+    });
+  });
+
   it('should perform a search query based on AIN Export name', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));

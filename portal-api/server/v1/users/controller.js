@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE, generatePasswordHash } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE, generatePasswordHash, isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
@@ -189,11 +189,27 @@ exports.update = async (_id, update, auditDetails, callback) => {
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
       userSetUpdate.loginFailureCount = 0;
-      userUnsetUpdate = {
-        signInLinkSendDate: '',
-        signInLinkSendCount: '',
-        blockedStatusReason: '',
-      };
+
+      /**
+       * if 2FA is enabled,
+       * reset the signInOTPSendCount and signInOTPSendDate to 0
+       * if 2FA is not enabled,
+       * reset the signInLinkSendCount and signInLinkSendDate to ''
+       * reset the blockedStatusReason to ''
+       */
+      if (isPortal2FAFeatureFlagEnabled()) {
+        userUnsetUpdate = {
+          signInOTPSendDate: 0,
+          signInOTPSendCount: 0,
+          blockedStatusReason: '',
+        };
+      } else {
+        userUnsetUpdate = {
+          signInLinkSendDate: '',
+          signInLinkSendCount: '',
+          blockedStatusReason: '',
+        };
+      }
 
       await sendUnblockedEmail(existingUser.email);
     }

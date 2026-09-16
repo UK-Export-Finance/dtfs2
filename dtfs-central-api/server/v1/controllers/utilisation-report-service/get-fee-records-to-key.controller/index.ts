@@ -1,11 +1,13 @@
 import { HttpStatusCode } from 'axios';
-import { Request, Response } from 'express';
-import { FEE_RECORD_STATUS, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { FEE_RECORD_STATUS, ReportPeriod, SessionBank, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { ApiError, NotFoundError } from '../../../../errors';
 import { FeeRecordToKey } from '../../../../types/fee-records';
 import { mapToFeeRecordsToKey } from './helpers';
+
+export type GetFeeRecordsToKeyRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 
 export type GetFeeRecordsToKeyResponseBody = {
   feeRecords: FeeRecordToKey[];
@@ -27,7 +29,7 @@ type GetFeeRecordsToKeyResponse = Response<GetFeeRecordsToKeyResponseBody | stri
  * @param req - The request
  * @param res - The response
  */
-export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyResponse) => {
+export const getFeeRecordsToKey = async (req: GetFeeRecordsToKeyRequest, res: GetFeeRecordsToKeyResponse) => {
   const { reportId } = req.params;
 
   try {

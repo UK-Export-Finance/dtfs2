@@ -3,7 +3,12 @@ import { DEAL_TYPE, PRODUCT_TYPE_CODES } from '../../../constants';
 import { mapFacilityName } from '.';
 
 describe('mapFacilityName', () => {
-  describe('when isGefDeal is true and facilityType is provided', () => {
+  const baseParams = {
+    isCashFacility: false,
+    isContingentFacility: false,
+  };
+
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true and facilityType is provided', ({ flag }) => {
     it('should return the facility name with product type code, facility type, and months of cover', () => {
       // Arrange
       const mockFacilityType = FACILITY_TYPE.CASH;
@@ -12,9 +17,10 @@ describe('mapFacilityName', () => {
 
       const params = {
         facilityType: mockFacilityType,
-        isGefDeal: true,
         monthsOfCover: mockMonthsOfCover,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
+        [flag]: true,
       };
 
       // Act
@@ -27,16 +33,17 @@ describe('mapFacilityName', () => {
     });
   });
 
-  describe('when isGefDeal is true and facilityType is not provided', () => {
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true and facilityType is not provided', ({ flag }) => {
     it('should return the facility name with only product type code and months of cover', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
       const mockMonthsOfCover = 18;
 
       const params = {
-        isGefDeal: true,
         monthsOfCover: mockMonthsOfCover,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
+        [flag]: true,
       };
 
       // Act
@@ -49,7 +56,7 @@ describe('mapFacilityName', () => {
     });
   });
 
-  describe('when isGefDeal is true and facilityType is an empty string', () => {
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true and facilityType is an empty string', ({ flag }) => {
     it('should return the facility name with only product type code and months of cover', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
@@ -57,9 +64,10 @@ describe('mapFacilityName', () => {
 
       const params = {
         facilityType: '',
-        isGefDeal: true,
         monthsOfCover: mockMonthsOfCover,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
+        [flag]: true,
       };
 
       // Act
@@ -72,16 +80,16 @@ describe('mapFacilityName', () => {
     });
   });
 
-  describe('when isGefDeal is false', () => {
+  describe(`when both isCashFacility and isContingentFacility are false - ${PRODUCT_TYPE_CODES.BSS}`, () => {
     it('should return the facility name with product type code and months of cover', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
       const mockMonthsOfCover = 24;
 
       const params = {
-        isGefDeal: false,
         monthsOfCover: mockMonthsOfCover,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
       };
 
       // Act
@@ -94,15 +102,37 @@ describe('mapFacilityName', () => {
     });
   });
 
+  describe(`when both isCashFacility and isContingentFacility are false - ${PRODUCT_TYPE_CODES.EWCS}`, () => {
+    it('should return the facility name with product type code and months of cover', () => {
+      // Arrange
+      const mockProductTypeCode = PRODUCT_TYPE_CODES.EWCS;
+      const mockMonthsOfCover = 24;
+
+      const params = {
+        monthsOfCover: mockMonthsOfCover,
+        productTypeCode: mockProductTypeCode,
+        ...baseParams,
+      };
+
+      // Act
+      const result = mapFacilityName(params);
+
+      // Assert
+      const expected = `${DEAL_TYPE.EWCS}: ${mockMonthsOfCover} months`;
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe('when monthsOfCover is null', () => {
     it('should return null', () => {
       // Arrange
       const mockProductTypeCode = PRODUCT_TYPE_CODES.BSS;
 
       const params = {
-        isGefDeal: false,
         monthsOfCover: null,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
       };
 
       // Act
@@ -119,8 +149,8 @@ describe('mapFacilityName', () => {
       const mockProductTypeCode = PRODUCT_TYPE_CODES.GEF;
 
       const params = {
-        isGefDeal: true,
         productTypeCode: mockProductTypeCode,
+        ...baseParams,
       };
 
       // Act

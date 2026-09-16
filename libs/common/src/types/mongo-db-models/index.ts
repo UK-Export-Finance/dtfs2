@@ -15,3 +15,4 @@ export * from './tfm-parties';
 export * from './tfm-users';
 export * from './tfm-teams';
 export * from './users';
+export * from './portal-bank-list';

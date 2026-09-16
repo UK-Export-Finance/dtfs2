@@ -3,7 +3,8 @@ import { ApimGiftProductTypeCode } from '../../../types';
 
 type MapFacilityNameParams = {
   facilityType?: string;
-  isGefDeal: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
   monthsOfCover?: number | null;
   productTypeCode: ApimGiftProductTypeCode;
 };
@@ -15,19 +16,26 @@ type MapFacilityNameParams = {
  * - BSS => "BSS: 12 months"
  * @param {MapFacilityNameParams} params - Data required to build the APIM GIFT "facility name" string.
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
  * @param {number | null} [params.monthsOfCover] - The length of cover in months.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The product type code.
  * @returns {string | null} The mapped facility name.
  */
-export const mapFacilityName = ({ facilityType, isGefDeal, monthsOfCover, productTypeCode }: MapFacilityNameParams): string | null => {
+export const mapFacilityName = ({
+  facilityType,
+  isCashFacility,
+  isContingentFacility,
+  monthsOfCover,
+  productTypeCode,
+}: MapFacilityNameParams): string | null => {
   if (monthsOfCover === null || monthsOfCover === undefined) {
     return null;
   }
 
   const productName = PRODUCT_TYPE_CODES_TO_DEAL_TYPE[productTypeCode];
 
-  if (isGefDeal && facilityType) {
+  if ((isCashFacility || isContingentFacility) && facilityType) {
     return `${productName} ${facilityType}: ${monthsOfCover} months`;
   }
 

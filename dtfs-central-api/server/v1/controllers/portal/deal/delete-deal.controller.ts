@@ -17,7 +17,7 @@ export const deleteDeal = async (
   res: Response<ApiErrorResponseBody>,
 ) => {
   const { id } = req.params;
-  const { auditDetails } = req.body;
+  const { auditDetails } = req.body ?? {};
 
   if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });

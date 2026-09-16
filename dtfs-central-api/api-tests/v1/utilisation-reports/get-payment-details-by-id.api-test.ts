@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
-import { HttpStatusCode, getUri } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Bank, Currency, RECONCILIATION_IN_PROGRESS, ReportPeriod, CURRENCY } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
@@ -20,7 +20,7 @@ const BASE_URL = '/v1/utilisation-reports/:reportId/payment/:paymentId';
 
 describe(`GET ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, paymentId: number | string, includeFeeRecords: boolean | undefined = false) =>
-    getUri({
+    axios.getUri({
       url: BASE_URL.replace(':reportId', reportId.toString()).replace(':paymentId', paymentId.toString()),
       params: { includeFeeRecords },
     });

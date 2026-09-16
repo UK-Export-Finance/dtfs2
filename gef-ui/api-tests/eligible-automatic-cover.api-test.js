@@ -1,4 +1,5 @@
 const { createApi } = require('@ukef/dtfs2-common/api-test');
+const { HttpStatusCode } = require('axios');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
@@ -12,8 +13,7 @@ describe('eligible automatic cover routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/eligible-automatic-cover`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -21,8 +21,7 @@ describe('eligible automatic cover routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/ineligible-automatic-cover`, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 
@@ -30,8 +29,7 @@ describe('eligible automatic cover routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/ineligible-gef', {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
+      successCode: HttpStatusCode.Ok,
     });
   });
 });

@@ -1,5 +1,6 @@
 import { WithoutId } from 'mongodb';
 import { cloneDeep } from 'lodash';
+import { Express } from 'express';
 import { USER_STATUS, MONGO_DB_COLLECTIONS, TeamId, TfmUser, generatePasswordHash } from '@ukef/dtfs2-common';
 import { createApi } from './api';
 import MOCK_USERS from '../server/v1/__mocks__/mock-users';
@@ -95,7 +96,7 @@ const createTestUser = async ({ user, as, initialUser }: { user: MockUserWithout
  * @param app - express app
  * @returns fluent builder to access users
  */
-export const initialiseTestUsers = async (app: unknown) => {
+export const initialiseTestUsers = async (app: Express) => {
   const { post, as } = createApi(app);
 
   if (notYetInitialised) {

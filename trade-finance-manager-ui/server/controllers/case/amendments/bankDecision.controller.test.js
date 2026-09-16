@@ -1,5 +1,5 @@
 import { getUnixTime, set } from 'date-fns';
-import { AMENDMENT_BANK_DECISION, TEAM_IDS } from '@ukef/dtfs2-common';
+import { AMENDMENT_BANK_DECISION, TEAM_IDS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import amendmentsController from './bankDecision.controller';
@@ -922,7 +922,7 @@ describe('POST postAmendmentBankDecisionAnswers', () => {
 
     it('should redirect to underwriting page when no errors', async () => {
       api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
-      api.updateAmendment = () => Promise.resolve({ status: 200 });
+      api.updateAmendment = jest.fn().mockResolvedValue({ status: 200 });
 
       const req = {
         params: {
@@ -935,7 +935,74 @@ describe('POST postAmendmentBankDecisionAnswers', () => {
 
       await amendmentsController.postAmendmentBankDecisionAnswers(req, res);
 
+      expect(api.updateAmendment).toHaveBeenNthCalledWith(
+        1,
+        '12345',
+        MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES.amendmentId,
+        expect.objectContaining({
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+          effectiveDate: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES.bankDecision.effectiveDate,
+          bankDecision: expect.objectContaining({
+            submitted: true,
+            banksDecisionEmail: true,
+          }),
+          updateTfmLastUpdated: true,
+        }),
+        session.userToken,
+      );
       expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
+    });
+
+    describe('when bank decision is Proceed with an effective date', () => {
+      it('should include effectiveDate in payload', async () => {
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
+        api.updateAmendment = jest.fn().mockResolvedValue({ status: 200 });
+
+        const req = {
+          params: {
+            _id: MOCKS.MOCK_DEAL._id,
+            amendmentId: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES.amendmentId,
+            facilityId: '12345',
+          },
+          session,
+        };
+
+        await amendmentsController.postAmendmentBankDecisionAnswers(req, res);
+
+        const calledPayload = api.updateAmendment.mock.calls[0][2];
+        expect(calledPayload).toHaveProperty('effectiveDate', MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES.bankDecision.effectiveDate);
+      });
+    });
+
+    describe('when bank decision is Withdraw and effectiveDate is null', () => {
+      it('should omit effectiveDate from payload', async () => {
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_NULL_EFFECTIVE_DATE });
+        api.updateAmendment = jest.fn().mockResolvedValue({ status: 200 });
+
+        const req = {
+          params: {
+            _id: MOCKS.MOCK_DEAL._id,
+            amendmentId: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_NULL_EFFECTIVE_DATE.amendmentId,
+            facilityId: '12345',
+          },
+          session,
+        };
+
+        await amendmentsController.postAmendmentBankDecisionAnswers(req, res);
+
+        const calledPayload = api.updateAmendment.mock.calls[0][2];
+        expect(calledPayload).not.toHaveProperty('effectiveDate');
+        expect(calledPayload).toMatchObject({
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+          bankDecision: expect.objectContaining({
+            decision: AMENDMENT_BANK_DECISION.WITHDRAW,
+            submitted: true,
+          }),
+        });
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
+      });
     });
 
     it('should redirect to underwriting page if error updating amendment', async () => {

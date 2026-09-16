@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
 
-type PutKeyingDataMarkAsDoneRequest = CustomExpressRequest<{
+export type PutKeyingDataMarkAsDoneRequest = CustomExpressRequest<{
   reqBody: {
     user: TfmSessionUser;
     feeRecordIds: number[];

@@ -2,7 +2,7 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeReco
 import { Response } from 'supertest';
 import { format } from 'date-fns';
 import { Bank, RECONCILIATION_IN_PROGRESS, ReportPeriod, GetRecordCorrectionLogDetailsResponseBody, DATE_FORMATS } from '@ukef/dtfs2-common';
-import { HttpStatusCode, getUri } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -20,7 +20,7 @@ console.error = jest.fn();
 
 describe(`GET ${BASE_URL}`, () => {
   const getUrl = (correctionId: number | string) =>
-    getUri({
+    axios.getUri({
       url: BASE_URL.replace(':correctionId', correctionId.toString()),
     });
 

@@ -127,8 +127,8 @@ describe('password reset', () => {
     const fetchedUser = await databaseHelper.getUserById(testUser._id);
 
     expect(sendEmail).not.toHaveBeenCalled();
-    expect(fetchedUser.resetPwdToken).toEqual(undefined);
-    expect(fetchedUser.resetPwdTimestamp).toEqual(undefined);
+    expect(fetchedUser.resetPwdToken).toBeUndefined();
+    expect(fetchedUser.resetPwdTimestamp).toBeUndefined();
   });
 
   describe('api calls', () => {

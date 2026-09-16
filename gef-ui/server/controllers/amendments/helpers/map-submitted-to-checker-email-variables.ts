@@ -5,7 +5,7 @@ import { mapCommonEmailVariables } from './map-common-email-variables';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { PORTAL_UI_URL } = process.env;
 

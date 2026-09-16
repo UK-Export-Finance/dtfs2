@@ -1,6 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { deletePayment } from './delete-payment.controller';
+import { deletePayment, DeletePaymentRequest } from './delete-payment.controller';
 import api from '../../api';
 import { aTfmSessionUser } from '../../../../test-helpers';
 
@@ -21,8 +21,10 @@ describe('delete-payment.controller', () => {
     const reportId = '12';
     const paymentId = '6';
 
+    const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<DeletePaymentRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId, paymentId },
         body: {
           user: aTfmSessionUser(),
