@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.1](https://github.com/UK-Export-Finance/dtfs2/compare/v3.2.0...v3.2.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **DTFS2-8583:** send a facility to gift - exporter party urn check ([#4978](https://github.com/UK-Export-Finance/dtfs2/issues/4978)) ([a6a7743](https://github.com/UK-Export-Finance/dtfs2/commit/a6a7743943ca3dc765ddf3a02076d8e45c00b45c))
+* **DTFS2-8593:** create a gift facility - ewcs urn, fee mapping ([#4991](https://github.com/UK-Export-Finance/dtfs2/issues/4991)) ([e77d976](https://github.com/UK-Export-Finance/dtfs2/commit/e77d976299853eedec9e5e9722be50611196d657))
+
 ## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-08-27)
 
 
