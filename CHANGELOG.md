@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.3.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.2.0...v3.3.0) (2026-09-17)
+
+
+### Features
+
+* **DTFS2-6761:** add default byte size to salt function ([f7975b0](https://github.com/UK-Export-Finance/dtfs2/commit/f7975b0caf2d923a5b4a0f5119607e1135823faa))
+* **DTFS2-6761:** fix failing test ([9d71daa](https://github.com/UK-Export-Finance/dtfs2/commit/9d71daacb39770e7c94ea4133c83cdcb04008c2f))
+* **DTFS2-6761:** fix failing test ([6b1fc0f](https://github.com/UK-Export-Finance/dtfs2/commit/6b1fc0fb740801afb66767b44a79e7e515d7714a))
+* **DTFS2-6761:** fix failing test ([2ca976a](https://github.com/UK-Export-Finance/dtfs2/commit/2ca976a04237394ca213997d19513bba5794dfa9))
+
+
+### Bug Fixes
+
+* **DTFS2-8583:** send a facility to gift - exporter party urn check ([#4978](https://github.com/UK-Export-Finance/dtfs2/issues/4978)) ([a6a7743](https://github.com/UK-Export-Finance/dtfs2/commit/a6a7743943ca3dc765ddf3a02076d8e45c00b45c))
+* **DTFS2-8593:** create a gift facility - ewcs urn, fee mapping ([#4991](https://github.com/UK-Export-Finance/dtfs2/issues/4991)) ([e77d976](https://github.com/UK-Export-Finance/dtfs2/commit/e77d976299853eedec9e5e9722be50611196d657))
+
 ## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-08-27)
 
 
