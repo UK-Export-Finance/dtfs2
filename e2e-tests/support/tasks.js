@@ -70,10 +70,10 @@ module.exports = {
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
-      const saltValue = generateSalt();
+      const saltValue = generateSalt().toString('hex');
       const hashValue = generateHash(newSignInToken, saltValue);
 
-      const saltHex = saltValue.toString('hex');
+      const saltHex = saltValue;
       const hashHex = hashValue.toString('hex');
 
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
