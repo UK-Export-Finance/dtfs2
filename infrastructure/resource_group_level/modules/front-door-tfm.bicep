@@ -5,7 +5,7 @@ param target string
 param version string
 
 var frontDoorTfmName = 'frontdoor-${product}-tfm-${target}-${version}'
-var endpointName = 'DefaultFrontendEndpoint'
+var endpointName = 'afd-${product}-tfm-${target}-${version}'
 var originGroupName = 'DefaultBackendPool'
 var originName = 'backendOrigin'
 var routeForwardName = 'DefaultRoutingRule'
@@ -120,9 +120,9 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2025-06-01' =
   parent: afdProfile
   properties: {
     parameters: {
-      type: 'WebApplicationFirewall'                
+      type: 'WebApplicationFirewall'
       wafPolicy: {
-        id: wafPoliciesId                            
+        id: wafPoliciesId
       }
       associations: [
         {
