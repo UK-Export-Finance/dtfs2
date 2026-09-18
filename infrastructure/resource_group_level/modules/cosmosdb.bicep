@@ -141,7 +141,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -161,7 +161,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -181,7 +181,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -208,7 +208,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -238,7 +238,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -258,7 +258,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -278,7 +278,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -301,7 +301,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -331,7 +331,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -361,7 +361,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -391,7 +391,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -414,7 +414,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -437,7 +437,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -457,7 +457,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -477,7 +477,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -497,7 +497,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -520,7 +520,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -543,7 +543,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -566,7 +566,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -589,7 +589,7 @@ var collectionsArray = [
         ]
       }
       options: {
-        throughput: defaultThroughput 
+        throughput: defaultThroughput
       }
     }
   }
@@ -599,7 +599,10 @@ var collectionsArray = [
 resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-11-15' = [for collection in collectionsArray: {
   parent: submissionsDb
   name: collection.name
-  properties: collection.properties
+  // Throughput cannot be set on collections when the account uses the Serverless capacity mode
+  properties: capacityMode == 'Serverless' ? {
+    resource: collection.properties.resource
+  } : collection.properties
 }]
 
 
