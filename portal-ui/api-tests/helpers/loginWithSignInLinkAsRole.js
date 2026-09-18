@@ -1,4 +1,5 @@
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const MOCK_BANKS = require('../../test-helpers/mock-banks');
 
 const loginWithSignInLinkAsRole = (role) => () => ({
   success: true,
@@ -7,8 +8,8 @@ const loginWithSignInLinkAsRole = (role) => () => ({
   user: {
     _id: 'mock-user',
     email: 'mock-user@example.com',
-    bank: { id: '9', name: 'Mock bank' },
     roles: [role],
+    bank: MOCK_BANKS.bank1,
   },
 });
 
