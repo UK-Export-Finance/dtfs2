@@ -1,5 +1,6 @@
 const { when } = require('jest-when');
 const { cloneDeep } = require('lodash');
+const { PORTAL_USER_SALTS } = require('@ukef/dtfs2-common');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -20,7 +21,7 @@ describe('SignInLinkService', () => {
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const hashBytes = Buffer.from(hash, 'hex');
 
-  const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
+  const salt = PORTAL_USER_SALTS.VALID_FORMAT_SALT_ONE;
   const saltBytes = Buffer.from(salt, 'hex');
 
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
