@@ -16,6 +16,7 @@ const {
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionEntity,
   salt: generateSalt,
+  hash: generateHash,
 } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
@@ -70,9 +71,9 @@ module.exports = {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
       const saltValue = generateSalt();
-      const hashValue = crypto.pbkdf2Sync(newSignInToken, saltValue, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
-
       const saltHex = saltValue.toString('hex');
+      const hashValue = generateHash(newSignInToken, saltHex);
+
       const hashHex = hashValue.toString('hex');
 
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
@@ -86,9 +87,9 @@ module.exports = {
         const { signInTokenFromLink, expiry } = newSignInToken;
 
         const saltValue = generateSalt();
-        const hashValue = crypto.pbkdf2Sync(signInTokenFromLink, saltValue, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
-
         const saltHex = saltValue.toString('hex');
+        const hashValue = generateHash(signInTokenFromLink, saltHex);
+
         const hashHex = hashValue.toString('hex');
 
         return { saltHex, hashHex, expiry };
