@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { when } = require('jest-when');
+const { CRYPTO } = require('@ukef/dtfs2-common');
 const { validPassword } = require('./crypto.util');
 
 jest.mock('crypto', () => ({
@@ -9,10 +10,6 @@ jest.mock('crypto', () => ({
 
 describe('crypto utils', () => {
   describe('validPassword', () => {
-    const ITERATIONS = 10000;
-    const KEYLEN = 64;
-    const DIGEST = 'sha512';
-
     const A_SALT = 'a salt';
     const A_PASSWORD = 'a password';
     const A_HASH_AS_HEX = '61206861736820617320686578';
@@ -23,7 +20,9 @@ describe('crypto utils', () => {
 
     beforeEach(() => {
       crypto.pbkdf2Sync = jest.fn();
-      when(crypto.pbkdf2Sync).calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST).mockReturnValueOnce(A_HASH_AS_BUFFER);
+      when(crypto.pbkdf2Sync)
+        .calledWith(A_PASSWORD, A_SALT, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
+        .mockReturnValueOnce(A_HASH_AS_BUFFER);
     });
 
     describe('when password hash matches the hash', () => {
