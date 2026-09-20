@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const facilityCurrency = {
   hiddenFacilityType: () => cy.get('[data-cy="hidden-facility-type"]'),
   currencyError: () => cy.get('[data-cy="currency-error"]'),
