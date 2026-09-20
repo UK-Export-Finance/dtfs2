@@ -72,13 +72,13 @@
     "validator": "^13.15.35"
   },
   "devDependencies": {
-    "@babel/core": "8.0.1",
+    "@babel/core": "8.0.5",
     "@babel/plugin-transform-runtime": "8.0.1",
-    "@babel/preset-env": "8.0.2",
+    "@babel/preset-env": "8.0.5",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
-    "babel-jest": "30.4.1",
-    "babel-loader": "10.1.1",
+    "babel-jest": "30.5.1",
+    "babel-loader": "^10.1.1",
     "babel-plugin-polyfill-corejs3": "^1.0.0",
     "chokidar": "^3.6.0",
     "css-minimizer-webpack-plugin": "^8.0.0",
