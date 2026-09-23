@@ -12,11 +12,15 @@ const { validateRole, validateToken, virusScanUpload } = require('../../middlewa
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 
 const { UTILISATION_REPORT_MAX_FILE_SIZE_BYTES } = process.env;
+const utilisationReportMaxFileSizeBytes = Number.parseInt(UTILISATION_REPORT_MAX_FILE_SIZE_BYTES, 10);
+const validUtilisationReportMaxFileSizeBytes = Number.isSafeInteger(utilisationReportMaxFileSizeBytes) && utilisationReportMaxFileSizeBytes >= 0;
 
 const router = express.Router();
 
 const upload = multer({
-  limits: { fileSize: +UTILISATION_REPORT_MAX_FILE_SIZE_BYTES },
+  ...(validUtilisationReportMaxFileSizeBytes && {
+    limits: { fileSize: utilisationReportMaxFileSizeBytes },
+  }),
   fileFilter: utilisationReportMulterFilter,
 }).single('utilisation-report-file-upload');
 
@@ -66,7 +70,9 @@ router.post(
       }
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
-          text: `The selected file must be smaller than ${formatBytes(parseInt(UTILISATION_REPORT_MAX_FILE_SIZE_BYTES, 10))}`,
+          text: validUtilisationReportMaxFileSizeBytes
+            ? `The selected file must be smaller than ${formatBytes(utilisationReportMaxFileSizeBytes)}`
+            : error.message,
         };
       } else {
         res.locals.fileUploadError = {
