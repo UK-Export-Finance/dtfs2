@@ -66,25 +66,21 @@ export const APIM_GIFT_PAYLOADS_EXAMPLES = {
   },
   AMEND_FACILITY: {
     MULTIPLE_AMENDMENTS: {
-      messageType: 'FACILITY_MULTIPLE_AMENDMENTS',
-      facilityId: '0041745204',
-      payload: {
-        amendments: [
-          {
-            amendmentType: 'IncreaseAmount',
-            amendmentData: {
-              amount: 800000,
-              date: '2026-09-22',
-            },
+      amendments: [
+        {
+          amendmentType: 'IncreaseAmount',
+          amendmentData: {
+            amount: 800000,
+            date: '2026-09-22',
           },
-          {
-            amendmentType: 'ReplaceExpiryDate',
-            amendmentData: {
-              expiryDate: '2027-01-01',
-            },
+        },
+        {
+          amendmentType: 'ReplaceExpiryDate',
+          amendmentData: {
+            expiryDate: '2027-01-01',
           },
-        ],
-      },
+        },
+      ],
     },
     DECREASE_AMOUNT: {
       messageType: 'FACILITY_AMENDMENT',
