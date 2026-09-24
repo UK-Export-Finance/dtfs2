@@ -2,6 +2,9 @@ const crypto = require('node:crypto');
 require('./register-common-typescript');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
+const path = require('node:path');
+const { execFile } = require('node:child_process');
+const { promisify } = require('node:util');
 const {
   hash,
   CRYPTO,
@@ -427,6 +430,32 @@ module.exports = {
       return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
     };
 
+    const runLoadData = async () => {
+      const execFileAsync = promisify(execFile);
+      // npm command is different on Windows vs Unix-based systems (Linux, macOS)
+      const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
+      // The utils directory is located at the root of the repo, so we need to resolve the path to it
+      const repoRoot = path.resolve(__dirname, '..', '..');
+      // utils directory is ./utils
+      const utilsDir = path.join(repoRoot, 'utils');
+
+      // Run the load script in the utils directory
+      const { stdout, stderr } = await execFileAsync(npmCommand, ['run', 'load'], {
+        cwd: utilsDir,
+      });
+
+      if (stdout) {
+        console.info(stdout);
+      }
+
+      if (stderr) {
+        console.error(stderr);
+      }
+
+      return null;
+    };
+
     return {
       log,
       getUserFromDbByEmail,
@@ -462,6 +491,7 @@ module.exports = {
       deleteAllFromSqlDb,
       removeAllFeeRecordCorrectionRequestTransientFormDataFromDb,
       removeAllFeeRecordCorrectionTransientFormDataFromDb,
+      runLoadData,
     };
   },
 };
