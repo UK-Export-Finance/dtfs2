@@ -18,6 +18,8 @@ export const CRYPTO = {
   },
   SALT: {
     // Salt random bytes
-    BYTES: 64,
+    BYTES: 128,
+    // Salt random bytes for OTP
+    OTP_BYTES: 64,
   },
 };
