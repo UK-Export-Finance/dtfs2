@@ -7,6 +7,7 @@ const automaticCover = {
   fieldError: () => cy.get('[data-cy="correspondence-error"]'),
   yesRadioButton: () => cy.get('[data-cy="correspondence-yes"]'),
   noRadioButton: () => cy.get('[data-cy="correspondence-no"]'),
+  correspondenceAddressContainer: () => cy.get('#conditional-correspondence'),
   correspondenceAddress: () => cy.get('[data-cy="correspondence-address"]'),
   manualAddressEntryLink: () => cy.get('[data-cy="enter-address-manually"]'),
 };

@@ -430,7 +430,15 @@ module.exports = {
       return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
     };
 
-    const runLoadData = async () => {
+    /**
+     * Runs the load script with the specified command - after Cypress 16 update, cy.exec is deprecated
+     * This task is used to run the npm run load script in the utils directory, which is located at the root of the repo
+     * Takes optional command argument to pass to the load script, otherwise runs the load script without any arguments
+     * If an error occurs, it will be logged to the console and the task will return null
+     * @param {string} command The command to pass to the load script
+     * @returns {Promise<null>} Always returns null
+     */
+    const runLoadData = async (command) => {
       const execFileAsync = promisify(execFile);
       // npm command is different on Windows vs Unix-based systems (Linux, macOS)
       const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -440,8 +448,11 @@ module.exports = {
       // utils directory is ./utils
       const utilsDir = path.join(repoRoot, 'utils');
 
+      // If a command is provided, we pass it to the load script, otherwise we just run the load script without any arguments
+      const npmCommandGenerator = command ? ['run', 'load:e2e', '--', command] : ['run', 'load'];
+
       // Run the load script in the utils directory
-      const { stdout, stderr } = await execFileAsync(npmCommand, ['run', 'load'], {
+      const { stdout, stderr } = await execFileAsync(npmCommand, npmCommandGenerator, {
         cwd: utilsDir,
       });
 
