@@ -58,7 +58,10 @@ export const mapAccrualSchedules = ({
     const indexRateCode = mapEwcsIndexRateCode({ currency, frequencyCode });
 
     accrualSchedules = [
-      schedule,
+      {
+        ...schedule,
+        indexRateCode,
+      },
       {
         ...schedule,
         accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,
