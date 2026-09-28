@@ -18,7 +18,7 @@ describe('mapAccrualSchedules', () => {
   const guaranteeFeePayableToUkef = '7.0200%';
 
   const baseExpectedSchedule = {
-    accrualScheduleTypeCode: DEFAULTS.ACCRUAL_SCHEDULE.TYPE_CODE,
+    accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.PREMIUM,
     accrualFrequencyCode: mapFrequencyCode(feeFrequency, feeType),
     accrualDayBasisCode: mapDayBasisCode(dayCountBasis),
     additionalRate: DEFAULTS.ACCRUAL_SCHEDULE.ADDITIONAL_RATE,

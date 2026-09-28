@@ -52,18 +52,19 @@ export const mapAccrualSchedules = ({
     spreadRate: mapSpreadRate(guaranteeFeePayableToUkef),
   };
 
-  const accrualSchedules: ApimAccrualSchedule[] = [schedule];
+  let accrualSchedules: ApimAccrualSchedule[] = [schedule];
 
   if (isEwcsFacility) {
     const indexRateCode = mapEwcsIndexRateCode({ currency, frequencyCode });
 
-    accrualSchedules[0].indexRateCode = indexRateCode;
-
-    accrualSchedules.push({
-      ...schedule,
-      accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,
-      indexRateCode,
-    });
+    accrualSchedules = [
+      schedule,
+      {
+        ...schedule,
+        accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,
+        indexRateCode,
+      },
+    ];
   }
 
   return accrualSchedules;
