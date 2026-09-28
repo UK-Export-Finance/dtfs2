@@ -42,7 +42,7 @@ export const mapAccrualSchedules = ({
 }: MapAccrualSchedulesParams): ApimAccrualSchedule[] => {
   const frequencyCode = mapFrequencyCode(feeFrequency, feeType);
 
-  const schedule = {
+  const schedule: ApimAccrualSchedule = {
     accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.PREMIUM,
     accrualFrequencyCode: frequencyCode,
     accrualDayBasisCode: mapDayBasisCode(dayCountBasis),
