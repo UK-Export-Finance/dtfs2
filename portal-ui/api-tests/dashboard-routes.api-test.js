@@ -7,12 +7,16 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  allDeals: jest.fn(),
+  allFacilities: jest.fn(),
+  getAllAmendments: jest.fn(),
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
@@ -52,6 +56,12 @@ const facilitiesRemoveFilterTestCases = [
 ];
 
 describe('dashboard routes', () => {
+  beforeEach(() => {
+    api.allDeals.mockResolvedValue({ count: 0, deals: [] });
+    api.allFacilities.mockResolvedValue({ count: 0, facilities: [] });
+    api.getAllAmendments.mockResolvedValue([]);
+  });
+
   describe('GET /dashboard', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard', {}, headers),
@@ -120,7 +130,6 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/0', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -129,7 +138,6 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/deals/0'),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -138,7 +146,6 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/0', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -147,7 +154,6 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/facilities/0'),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });
