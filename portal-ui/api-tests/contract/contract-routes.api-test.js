@@ -7,6 +7,9 @@ jest.mock('../../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  updateDealStatus: jest.fn().mockResolvedValue({ data: { count: 0, errorList: {} } }),
+  updateDealName: jest.fn().mockResolvedValue({ data: { count: 0, errorList: {} } }),
+  cloneDeal: jest.fn().mockResolvedValue({ _id: '64ef48ee17a3231be0ad48c4' }),
 }));
 
 const { createApi } = require('@ukef/dtfs2-common/api-test');
@@ -33,7 +36,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -42,7 +44,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/comments`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -51,7 +52,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/submission-details`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -60,7 +60,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/delete`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -70,7 +69,6 @@ describe('contract routes', () => {
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/dashboard' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -79,7 +77,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/ready-for-review`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -89,7 +86,6 @@ describe('contract routes', () => {
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/dashboard' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -98,7 +94,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/edit-name`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -108,7 +103,6 @@ describe('contract routes', () => {
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -126,7 +120,6 @@ describe('contract routes', () => {
       whitelistedRoles: [CHECKER],
       successCode: 302,
       successHeaders: { location: '/dashboard' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -144,7 +137,6 @@ describe('contract routes', () => {
       whitelistedRoles: [CHECKER],
       successCode: 302,
       successHeaders: { location: '/dashboard' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -153,7 +145,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/clone`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -163,7 +154,6 @@ describe('contract routes', () => {
       whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/dashboard' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -172,7 +162,6 @@ describe('contract routes', () => {
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/clone/before-you-start`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 

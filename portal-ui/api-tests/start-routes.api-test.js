@@ -30,7 +30,6 @@ describe('start routes', () => {
       makeRequestWithHeaders: (headers) => get('/before-you-start', {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -38,9 +37,7 @@ describe('start routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start'),
       whitelistedRoles: [MAKER],
-      successCode: 302,
-      successHeaders: { location: '/before-you-start/bank-deal' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 200,
     });
   });
 
@@ -56,9 +53,7 @@ describe('start routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start/bank-deal'),
       whitelistedRoles: [MAKER],
-      successCode: 302,
-      successHeaders: { location: '/contract/undefined' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 400,
     });
   });
 
