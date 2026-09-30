@@ -269,11 +269,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Debug max file size
-        run: echo "UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${UTILISATION_REPORT_MAX_FILE_SIZE_BYTES}"
-        env:
-          UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: ${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
-
       - name: Execute
         uses: ./.github/actions/rerun
         with:
