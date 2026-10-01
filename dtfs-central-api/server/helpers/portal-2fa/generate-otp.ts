@@ -1,5 +1,5 @@
 import { generate } from 'otplib';
-import { salt, hash, OTP, GeneratedOTP, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
+import { salt, hash, OTP, GeneratedOTP, HEX_STRING_TYPE, CRYPTO } from '@ukef/dtfs2-common';
 
 /**
  * Generates a new OTP code along with its salt, hash, and expiry time.
@@ -8,7 +8,7 @@ import { salt, hash, OTP, GeneratedOTP, HEX_STRING_TYPE } from '@ukef/dtfs2-comm
 export const generateOtp = async (): Promise<GeneratedOTP> => {
   console.info('Generating OTP');
 
-  const saltBuffer = salt();
+  const saltBuffer = salt(CRYPTO.SALT.OTP_BYTES);
   const generatedSalt = saltBuffer.toString(HEX_STRING_TYPE);
 
   const securityCode = await generate({
