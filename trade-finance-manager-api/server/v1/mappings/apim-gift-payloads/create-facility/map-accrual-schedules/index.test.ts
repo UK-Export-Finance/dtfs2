@@ -27,29 +27,31 @@ describe('mapAccrualSchedules', () => {
     spreadRate: mapSpreadRate(guaranteeFeePayableToUkef),
   };
 
-  it('should return an array with a mapped accrual schedule', () => {
-    // Arrange
-    const isEwcsFacility = false;
+  describe('when isEwcsFacility is false', () => {
+    it('should return an array with a mapped accrual schedule', () => {
+      // Arrange
+      const isEwcsFacility = false;
 
-    // Act
-    const result = mapAccrualSchedules({
-      currency,
-      dayCountBasis,
-      expiryDate,
-      feeFrequency,
-      feeType,
-      guaranteeFeePayableToUkef,
-      isEwcsFacility,
+      // Act
+      const result = mapAccrualSchedules({
+        currency,
+        dayCountBasis,
+        expiryDate,
+        feeFrequency,
+        feeType,
+        guaranteeFeePayableToUkef,
+        isEwcsFacility,
+      });
+
+      // Assert
+      const expected = [baseExpectedSchedule];
+
+      expect(result).toEqual(expected);
     });
-
-    // Assert
-    const expected = [baseExpectedSchedule];
-
-    expect(result).toEqual(expected);
   });
 
   describe('when isEwcsFacility is true', () => {
-    it('should return an array with 2 accrual schedules containing indexRateCode', () => {
+    it('should return an array with 2 accrual schedules, only 1 containing indexRateCode', () => {
       // Arrange
       const isEwcsFacility = true;
 
@@ -70,10 +72,7 @@ describe('mapAccrualSchedules', () => {
       const expectedIndexRateCode = mapEwcsIndexRateCode({ currency, frequencyCode });
 
       const expected = [
-        {
-          ...baseExpectedSchedule,
-          indexRateCode: expectedIndexRateCode,
-        },
+        baseExpectedSchedule,
         {
           ...baseExpectedSchedule,
           accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,
