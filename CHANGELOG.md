@@ -1,5 +1,24 @@
 # Changelog
 
+## [4.0.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.2.0...v4.0.0) (2026-10-01)
+
+
+### Features
+
+* **DTFS2-8553:** gift facility mapping - ewcs accrual schedules ([#5023](https://github.com/UK-Export-Finance/dtfs2/issues/5023)) ([f760a9c](https://github.com/UK-Export-Finance/dtfs2/commit/f760a9c7183748d18f704c77835714417f767e74))
+
+
+### Bug Fixes
+
+* **DTFS2-8583:** send a facility to gift - exporter party urn check ([#4978](https://github.com/UK-Export-Finance/dtfs2/issues/4978)) ([a6a7743](https://github.com/UK-Export-Finance/dtfs2/commit/a6a7743943ca3dc765ddf3a02076d8e45c00b45c))
+* **DTFS2-8593:** create a gift facility - ewcs urn, fee mapping ([#4991](https://github.com/UK-Export-Finance/dtfs2/issues/4991)) ([e77d976](https://github.com/UK-Export-Finance/dtfs2/commit/e77d976299853eedec9e5e9722be50611196d657))
+* **DTFS2-8603:** apim/gift facility mapping - indexRateCode ([#5039](https://github.com/UK-Export-Finance/dtfs2/issues/5039)) ([a205458](https://github.com/UK-Export-Finance/dtfs2/commit/a2054589e39e1f20917b5072928544d822777ab9))
+
+
+### Miscellaneous Chores
+
+* prepare 4.0.0 release ([#5011](https://github.com/UK-Export-Finance/dtfs2/issues/5011)) ([bfa9a1c](https://github.com/UK-Export-Finance/dtfs2/commit/bfa9a1cdb037ff2b0681c73a523fa3d2537efacb))
+
 ## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-08-27)
 
 
