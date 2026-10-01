@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
-import { Currency, FeeRecordStatus } from '../../types';
+import type { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import {
   CreateFeeRecordParams,

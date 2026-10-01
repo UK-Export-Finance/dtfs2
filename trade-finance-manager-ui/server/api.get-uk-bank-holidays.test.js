@@ -28,6 +28,6 @@ describe('getUkBankHolidays', () => {
     mockAxios.onGet().reply(404);
 
     // Act / Assert
-    await expect(getUkBankHolidays('user-token')).rejects.toThrowError('Request failed with status code 404');
+    await expect(getUkBankHolidays('user-token')).rejects.toThrow('Request failed with status code 404');
   });
 });

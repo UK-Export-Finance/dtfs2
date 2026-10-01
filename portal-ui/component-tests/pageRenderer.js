@@ -1,4 +1,4 @@
-const cheerio = require('cheerio');
+const cheerio = require('cheerio/slim');
 
 const assertions = require('./assertions');
 const configureNunjucks = require('../server/nunjucks-configuration');

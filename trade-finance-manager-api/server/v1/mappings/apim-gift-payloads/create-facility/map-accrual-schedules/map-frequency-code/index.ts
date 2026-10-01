@@ -5,8 +5,8 @@ import { ApimGiftAccrualFrequencyCodeType } from '../../../types';
  * Maps a TFM "frequency name" to its corresponding GIFT accrual frequency code.
  * If the feeType is "At maturity", defaults to "Annually".
  * Otherwise, maps based on the frequencyName value.
- * @param frequencyName - The name of the frequency to map.
- * @param feeType - Optional fee type, used to determine if the frequency should be overridden.
+ * @param {string} frequencyName - The name of the frequency to map.
+ * @param {string | undefined} feeType - Optional fee type, used to determine if the frequency should be overridden.
  * @returns {ApimGiftAccrualFrequencyCodeType | null} The corresponding accrual frequency code, or null if not found.
  */
 export const mapFrequencyCode = (frequencyName: string, feeType?: string): ApimGiftAccrualFrequencyCodeType | null => {

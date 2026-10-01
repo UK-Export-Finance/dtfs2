@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 
 import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_KEY, APIM_MDM_VALUE, APIM_MDM_URL } = process.env;
 const headers = {

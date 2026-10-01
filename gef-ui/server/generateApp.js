@@ -13,7 +13,7 @@ const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { security, seo, createRateLimit } = require('./middleware');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const generateApp = () => {
   const app = express();

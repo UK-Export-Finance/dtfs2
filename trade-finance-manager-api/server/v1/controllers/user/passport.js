@@ -4,7 +4,7 @@ const { ExtractJwt } = require('passport-jwt');
 
 const { findByUsername } = require('./user.controller');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const PUB_KEY = Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 

@@ -48,6 +48,7 @@ context('Pressing the back button after a record correction request is submitted
 
     // press browser back button
     cy.go('back');
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecord.id}/check-the-information`));
   });
 
   after(() => {

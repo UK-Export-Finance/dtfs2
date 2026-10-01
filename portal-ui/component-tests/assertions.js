@@ -1,3 +1,14 @@
+const { load } = require('cheerio/slim');
+
+/**
+ * Serializes HTML with the same parser used by the component renderer.
+ * This treats literal Unicode characters and their equivalent HTML entities
+ * as the same content while preserving markup for exact assertions.
+ * @param {string} value HTML content to serialize
+ * @returns {string} Canonical serialized HTML
+ */
+const serializeHtml = (value) => load(value, null, false).html().trim();
+
 const assertions = (wrapper, html) => ({
   html,
   expectLink: (selector) => ({
@@ -72,10 +83,10 @@ const assertions = (wrapper, html) => ({
       expect(wrapper(selector).html()).toBeNull();
     },
     toContain: (text) => {
-      expect(wrapper(selector).html().trim()).toContain(text);
+      expect(serializeHtml(wrapper(selector).html())).toContain(serializeHtml(text));
     },
     toHaveHtmlContent: (value) => {
-      expect(wrapper(selector).html()?.trim()).toBe(value);
+      expect(serializeHtml(wrapper(selector).html())).toBe(serializeHtml(value));
     },
     hasClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);

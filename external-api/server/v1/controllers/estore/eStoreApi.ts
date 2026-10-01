@@ -23,7 +23,7 @@ import { ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
 import { validUkefId, isValidExporterName, isValidSiteId } from '../../../helpers';
 import { estoreInternalServerError } from '../../../helpers/errors/estore-internal-server-error';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const oneMinute = 1000 * 60; // 60 seconds timeout to handle medium timeouts
 const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts

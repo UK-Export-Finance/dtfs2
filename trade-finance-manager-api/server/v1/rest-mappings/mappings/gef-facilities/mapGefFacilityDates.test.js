@@ -197,7 +197,7 @@ describe('mapGefFacilityDates', () => {
 
     expect(result.isUsingFacilityEndDate).toEqual(true);
     expect(result.facilityEndDate).toEqual(new Date('2026-4-7'));
-    expect(result.bankReviewDate).toEqual(undefined);
+    expect(result.bankReviewDate).toBeUndefined();
   });
 
   it('should return mapped tenor', () => {

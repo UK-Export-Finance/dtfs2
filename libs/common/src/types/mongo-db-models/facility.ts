@@ -53,14 +53,16 @@ export type Facility = {
   paymentType: string;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
-  bondType?: string; // Bond facilities only
+  bondType?: string; // BSS facilities only
   ukefExposure: number;
   guaranteeFee?: number; // GEF facilities only
   guaranteeFeePayableByBank?: string; // BSS/EWCS facilities only
   submittedAsIssuedDate: UnixTimestampString | null;
   ukefFacilityId: string | null;
-  feeType: string;
-  feeFrequency: string;
+  feeFrequency?: string; // BSS, GEF facilities only
+  feeType?: string; // BSS, GEF facilities only
+  premiumFrequency?: string; // EWCS facilities only
+  premiumType?: string; // EWCS facilities only
   /**
    * BSS/EWCS dayCountBasis = string;
    * GEF dayCountBasis = number;
