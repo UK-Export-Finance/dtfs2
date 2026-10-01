@@ -224,8 +224,8 @@ describe(page, () => {
 
       // Assert
       wrapper
-        .expectAriaLabel(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
-        .toEqual(`${secondCorrection.facilityId} - Amend record`);
+        .expectAriaLabel(`${firstRowSelector} [data-cy="pending-corrections-row--facility-id"] [data-cy="correction-link"]`)
+        .toEqual(`${firstCorrection.facilityId} - Amend record`);
     });
 
     it('should set an accessible name on the second correction link that starts with the visible facility id', () => {
