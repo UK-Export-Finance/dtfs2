@@ -70,10 +70,7 @@ describe('mapAccrualSchedules', () => {
       const expectedIndexRateCode = mapEwcsIndexRateCode({ currency, frequencyCode });
 
       const expected = [
-        {
-          ...baseExpectedSchedule,
-          indexRateCode: expectedIndexRateCode,
-        },
+        baseExpectedSchedule,
         {
           ...baseExpectedSchedule,
           accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,

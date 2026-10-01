@@ -55,17 +55,12 @@ export const mapAccrualSchedules = ({
   let accrualSchedules: ApimAccrualSchedule[] = [schedule];
 
   if (isEwcsFacility) {
-    const indexRateCode = mapEwcsIndexRateCode({ currency, frequencyCode });
-
     accrualSchedules = [
-      {
-        ...schedule,
-        indexRateCode,
-      },
+      schedule,
       {
         ...schedule,
         accrualScheduleTypeCode: ACCRUAL_SCHEDULE_TYPE_CODES.CONTRACTUAL_INTEREST_INDEXED_FLOATING_RATE,
-        indexRateCode,
+        indexRateCode: mapEwcsIndexRateCode({ currency, frequencyCode }),
       },
     ];
   }
