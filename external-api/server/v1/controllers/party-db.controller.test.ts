@@ -1,7 +1,7 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty, CUSTOMER_TYPE } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { getOrCreateParty } from './party-db.controller';
@@ -34,11 +34,11 @@ const mockIndustryResponse = {
 
 const mockBody = {
   code: 0o1110,
-  companyName: 'test',
+  companyName: 'Mock company name',
   companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-  customerType: CUSTOMER_TYPE.CUSTOMER,
-  probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+  customerType: 'Mock customer type',
   isUkEntity: true,
+  probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
 };
 
 const mockMdmResponse = [
@@ -75,7 +75,7 @@ describe('getOrCreateParty', () => {
     jest.resetAllMocks();
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} when an company registration number is not provided`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} when a company registration number is not provided`, async () => {
     // Arrange
     mockRequest.body = {
       ...mockBody,
@@ -144,7 +144,7 @@ describe('getOrCreateParty', () => {
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Invalid customer type was provided %s', '');
+    expect(console.error).toHaveBeenCalledWith('Invalid customer type was provided %s', undefined);
 
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
@@ -235,6 +235,7 @@ describe('getOrCreateParty', () => {
       data: {
         companyRegistrationNumber: mockBody.companyRegNo,
         companyName: mockBody.companyName,
+        customerType: mockBody.customerType,
         probabilityOfDefault: mockBody.probabilityOfDefault,
         ukEntity: 'Yes',
         ukefIndustryName: mockIndustryResponse.acbsIndustryName,
