@@ -1,4 +1,5 @@
 const { HttpStatusCode } = require('axios');
+const { CUSTOMER_TYPE } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
 const { PROBABILITY_OF_DEFAULT } = require('../../constants/deals.js');
 const api = require('./deal.party-db');
@@ -17,8 +18,10 @@ const falselyUrnResponses = [
 ];
 const falselyResponses = [null, undefined, false];
 
+const mockPartyUrn = 'TEST_URN';
+
 const mockCompany = {
-  partyUrn: 'TEST_URN',
+  partyUrn: mockPartyUrn,
   name: 'Test',
   sfId: '0',
   companyRegNo: 'ABC123',
@@ -122,7 +125,7 @@ describe('getOrCreatePartyDbInfo', () => {
 
   it.each(invalidQueryParameters)('should not call APIM, and return an empty string if inputs are missing', async ({ query }) => {
     // Act
-    const result = await api.getPartyUrn(query);
+    const result = await api.getOrCreatePartyUrn(query);
 
     // Assert
     expect(result).toBe('');
@@ -131,22 +134,22 @@ describe('getOrCreatePartyDbInfo', () => {
 
   it('should call getOrCreatePartyDbInfo for a company that exists (or does not exist and is created with a new URN), and return URN', async () => {
     // Arrange
-    getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+    getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: mockPartyUrn }]);
 
     // Act
-    const result = await api.getPartyUrn(salesforceCustomer);
+    const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(salesforceCustomer);
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(0);
 
-    expect(result).toBe('TEST_URN');
+    expect(result).toBe(mockPartyUrn);
   });
 
   it('should allow a probability of default set to its default value', async () => {
     // Arrange
-    getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+    getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: mockPartyUrn }]);
 
     const customer = {
       ...salesforceCustomer,
@@ -154,15 +157,15 @@ describe('getOrCreatePartyDbInfo', () => {
     };
 
     // Act
-    const result = await api.getPartyUrn(customer);
+    const result = await api.getOrCreatePartyUrn(customer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(customer);
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...customer, customerType: CUSTOMER_TYPE.CUSTOMER });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
     expect(getPartyDbInfo).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(0);
 
-    expect(result).toBe('TEST_URN');
+    expect(result).toBe(mockPartyUrn);
   });
 
   it.each(invalidProbabilityOfDefaults)('should not allow a probability of default to be %s', async (probabilityOfDefault) => {
@@ -171,7 +174,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault };
 
     // Act
-    const result = await api.getPartyUrn(companyData);
+    const result = await api.getOrCreatePartyUrn(companyData);
 
     // Assert
     expect(getOrCreatePartyDbInfo).not.toHaveBeenCalledWith(companyData);
@@ -189,7 +192,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const companyData = { companyRegNo: '12345678', companyName: 'name' };
 
     // Act
-    const result = await api.getPartyUrn(companyData);
+    const result = await api.getOrCreatePartyUrn(companyData);
 
     // Assert
     expect(getOrCreatePartyDbInfo).not.toHaveBeenCalledWith(companyData);
@@ -206,10 +209,10 @@ describe('getOrCreatePartyDbInfo', () => {
     getOrCreatePartyDbInfo.mockResolvedValue(response);
 
     // Act
-    const result = await api.getPartyUrn(salesforceCustomer);
+    const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(salesforceCustomer);
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -223,10 +226,10 @@ describe('getOrCreatePartyDbInfo', () => {
     getOrCreatePartyDbInfo.mockResolvedValue(response);
 
     // Act
-    const result = await api.getPartyUrn(salesforceCustomer);
+    const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(salesforceCustomer);
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(console.error).toHaveBeenCalledTimes(1);

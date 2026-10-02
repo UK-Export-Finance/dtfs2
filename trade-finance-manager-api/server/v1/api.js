@@ -1041,18 +1041,19 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * @param {number} code SIC industry sector code
  * @returns {Promise<object>} Company information
  */
-const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
+const getOrCreatePartyDbInfo = async ({ code, companyRegNo, companyName, customerType, isUkEntity, probabilityOfDefault }) => {
   try {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/party-db`,
       headers: headers.external,
       data: {
-        companyRegNo,
-        companyName,
-        probabilityOfDefault,
-        isUkEntity,
         code,
+        companyName,
+        companyRegNo,
+        customerType,
+        isUkEntity,
+        probabilityOfDefault,
       },
     });
 

@@ -1,7 +1,7 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty, CUSTOMER_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { getOrCreateParty } from './party-db.controller';
@@ -33,11 +33,12 @@ const mockIndustryResponse = {
 };
 
 const mockBody = {
-  companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+  code: 0o1110,
   companyName: 'test',
+  companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+  customerType: CUSTOMER_TYPE.CUSTOMER,
   probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
   isUkEntity: true,
-  code: 0o1110,
 };
 
 const mockMdmResponse = [
@@ -74,7 +75,7 @@ describe('getOrCreateParty', () => {
     jest.resetAllMocks();
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} when an invalid company registration number is provided`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} when an company registration number is not provided`, async () => {
     // Arrange
     mockRequest.body = {
       ...mockBody,
@@ -92,7 +93,25 @@ describe('getOrCreateParty', () => {
     expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} when an invalid company name is provided`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} when an invalid company registration number is provided`, async () => {
+    // Arrange
+    mockRequest.body = {
+      ...mockBody,
+      companyRegNo: 'INVALID',
+    };
+
+    // Act
+    await getOrCreateParty(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Invalid company registration number was provided %s', 'INVALID');
+
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+  });
+
+  it(`should return ${HttpStatusCode.BadRequest} when a company name is not provided`, async () => {
     // Arrange
     mockRequest.body = {
       ...mockBody,
@@ -108,6 +127,27 @@ describe('getOrCreateParty', () => {
 
     expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
+  });
+
+  it(`should return ${HttpStatusCode.BadRequest} when a customer type is not provided`, async () => {
+    // Arrange
+    mockRequest.body = {
+      code: mockBody.code,
+      companyName: mockBody.companyName,
+      companyRegNo: mockBody.companyRegNo,
+      probabilityOfDefault: mockBody.probabilityOfDefault,
+      isUkEntity: mockBody.isUkEntity,
+    } as Partial<SalesForceParty> as SalesForceParty;
+
+    // Act
+    await getOrCreateParty(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Invalid customer type was provided %s', '');
+
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
   });
 
   it(`should return ${HttpStatusCode.InternalServerError} when an error is thrown`, async () => {
