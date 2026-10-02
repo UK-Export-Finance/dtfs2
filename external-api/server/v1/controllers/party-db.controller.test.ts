@@ -36,7 +36,7 @@ const mockBody = {
   code: 0o1110,
   companyName: 'Mock company name',
   companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-  customerType: 'Mock customer type',
+  customerType: 'CUSTOMER' as const,
   isUkEntity: true,
   probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
 };
