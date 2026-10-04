@@ -72,12 +72,12 @@
     "eslint-config-prettier": "^9.1.2",
     "eslint-import-resolver-typescript": "^3.10.1",
     "eslint-plugin-import": "^2.32.0",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "jest-when": "^4.0.3",
     "node-mocks-http": "^1.18.1",
     "prettier": "^3.9.6",
-    "supertest": "7.2.2",
-    "ts-jest": "^29.4.12",
+    "supertest": "7.3.0",
+    "ts-jest": "^29.4.14",
     "typescript": "^5.9.3"
   },
   "engines": {
