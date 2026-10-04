@@ -80,6 +80,7 @@ describe('POST /v1/amendment/facility/:facilityId/amendment/:amendmentId', () =>
     api.getAmendmentById = jest.fn().mockResolvedValue(amendment);
     api.findOneFacility = jest.fn().mockResolvedValue(facility);
     api.findOneDeal = jest.fn().mockResolvedValue(tfmDeal);
+    api.updateFacilityAmendment = jest.fn().mockResolvedValue({});
 
     submitFacilityAmendmentsToApimGift.mockResolvedValue([HttpStatusCode.Accepted]);
     canSendToAcbs.mockReturnValue(true);

@@ -1,9 +1,16 @@
-import { Response, Request } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { RecordCorrectionRequestSentViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
+
+export type GetRecordCorrectionRequestSentRequest = CustomExpressRequest<{
+  params: {
+    reportId: string;
+    feeRecordId: string;
+  };
+}>;
 
 /**
  * Renders the "request sent" page for a record correction request.
@@ -13,7 +20,7 @@ import api from '../../../../api';
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionRequestSent = async (req: Request, res: Response) => {
+export const getRecordCorrectionRequestSent = async (req: GetRecordCorrectionRequestSentRequest, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);

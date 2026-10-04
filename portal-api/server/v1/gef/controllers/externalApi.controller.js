@@ -2,7 +2,7 @@ const { HttpStatusCode } = require('axios');
 const { isValidRegex } = require('../../validation/validateIds');
 const { UK_POSTCODE } = require('../../../constants/regex');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const externalApi = require('../../../external-api/api');
 
 exports.getAddressesByPostcode = async (req, res) => {

@@ -12,7 +12,8 @@ type MapOverviewParams = {
   exporterPartyUrn?: string;
   facilityAmount: number | null;
   facilityType?: string;
-  isGefDeal: boolean;
+  isCashFacility: boolean;
+  isContingentFacility: boolean;
   monthsOfCover?: number | null;
   productTypeCode: ApimGiftProductTypeCode;
   ukefFacilityId: string;
@@ -27,7 +28,8 @@ type MapOverviewParams = {
  * @param {string} [params.exporterPartyUrn] - The exporter/obligor party URN.  This is from the deal data and is not facility specific, but is required for the "overview" section of the payload.
  * @param {number | null} params.facilityAmount - The facility amount to send to APIM GIFT (already adjusted for cover percentage).
  * @param {string} [params.facilityType] - The facility type (e.g. "Bond", "Cash", "Contingent", "Loan"). Only required for GEF facilities.
- * @param {boolean} params.isGefDeal - Flag indicating if the deal is a GEF deal.
+ * @param {boolean} params.isCashFacility - If the facility is a Cash facility.
+ * @param {boolean} params.isContingentFacility - If the facility is a Contingent facility.
  * @param {number} [params.monthsOfCover] - The length of cover in months.
  * @param {ApimGiftProductTypeCode} params.productTypeCode - The APIM GIFT product type code for the facility.
  * @param {string} params.ukefFacilityId - The UKEF facility identifier.
@@ -40,7 +42,8 @@ export const mapOverview = ({
   exporterPartyUrn,
   facilityAmount,
   facilityType,
-  isGefDeal,
+  isCashFacility,
+  isContingentFacility,
   monthsOfCover,
   productTypeCode,
   ukefFacilityId,
@@ -53,7 +56,8 @@ export const mapOverview = ({
   expiryDate,
   name: mapFacilityName({
     facilityType,
-    isGefDeal,
+    isCashFacility,
+    isContingentFacility,
     monthsOfCover,
     productTypeCode,
   }),

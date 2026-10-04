@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidCurrencyCode } = require('../v1/validation/validateIds');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 

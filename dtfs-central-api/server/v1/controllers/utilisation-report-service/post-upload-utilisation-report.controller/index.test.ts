@@ -1,10 +1,10 @@
 import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO, TestApiError } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import { postUploadUtilisationReport, PostUploadUtilisationReportRequestBody } from '.';
+import { postUploadUtilisationReport, PostUploadUtilisationReportRequestBody, PostUploadUtilisationReportRequest } from '.';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -27,8 +27,10 @@ describe('post-upload-utilisation-report controller', () => {
     },
   };
 
+  const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<PostUploadUtilisationReportRequest>(options);
+
   const getHttpMocks = (options?: Partial<PostUploadUtilisationReportRequestBody>) =>
-    httpMocks.createMocks({
+    createHttpMocks({
       body: {
         reportId: options?.reportId ?? validPostUploadUtilisationReportRequestBody.reportId,
         fileInfo: options?.fileInfo ?? validPostUploadUtilisationReportRequestBody.fileInfo,

@@ -101,7 +101,7 @@ dealsAuthRouter
   );
 
 dealsAuthRouter
-  .route('/deals/:dealId/amendments/:status?/:type?')
+  .route('/deals/:dealId/amendments{/:status}{/:type}')
   .get(validation.dealIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentsByDealId);
 
 dealsAuthRouter

@@ -1,10 +1,12 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { TfmFacility } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TfmFacility } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { ApiError, NotFoundError } from '../../../../errors';
 
-export const findOneFacilityGet = async (req: Request, res: Response<TfmFacility | { status: number; message: string }>) => {
+type FindOneFacilityRequest = CustomExpressRequest<{ params: { id: string } }>;
+
+export const findOneFacilityGet = async (req: FindOneFacilityRequest, res: Response<TfmFacility | { status: number; message: string }>) => {
   const { id } = req.params;
 
   try {

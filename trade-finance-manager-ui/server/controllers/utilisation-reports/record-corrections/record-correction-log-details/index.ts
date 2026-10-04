@@ -1,5 +1,5 @@
-import { Response, Request } from 'express';
-import { getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { asUserSession } from '../../../../helpers/express-session';
 import api from '../../../../api';
 import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
@@ -8,12 +8,14 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getReconciliationForReportHref } from '../../helpers';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../../../constants/reconciliation-for-report-tabs';
 
+export type GetRecordCorrectionLogDetailsRequest = CustomExpressRequest<{ params: { correctionId: string } }>;
+
 /**
  * Renders the "get record correction log details" page for a record correction log entry
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionLogDetails = async (req: Request, res: Response) => {
+export const getRecordCorrectionLogDetails = async (req: GetRecordCorrectionLogDetailsRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
     const { correctionId } = req.params;

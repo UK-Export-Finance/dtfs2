@@ -10,7 +10,7 @@
  * case error object does not have expected properties due to network connection, SSL verification or other issues.
  */
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const axios = require('axios');
 const { HttpStatusCode } = require('axios');
 const {

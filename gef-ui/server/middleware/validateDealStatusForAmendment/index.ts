@@ -1,7 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
-import { AMENDMENT_ACCEPTABLE_DEAL_STATUSES } from '@ukef/dtfs2-common';
+import { Response, NextFunction } from 'express';
+import { AMENDMENT_ACCEPTABLE_DEAL_STATUSES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { asLoggedInUserSession } from '../../utils/express-session';
 import * as api from '../../services/api';
+
+export type ValidateDealStatusForAmendmentRequest = CustomExpressRequest<{ params: { dealId: string } }>;
 
 /**
  * middleware to validate the deal status for amendments
@@ -12,7 +14,7 @@ import * as api from '../../services/api';
  * @param res
  * @param next
  */
-export const validateDealStatusForAmendment = async (req: Request, res: Response, next: NextFunction) => {
+export const validateDealStatusForAmendment = async (req: ValidateDealStatusForAmendmentRequest, res: Response, next: NextFunction) => {
   try {
     const { dealId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);

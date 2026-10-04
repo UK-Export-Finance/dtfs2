@@ -13,7 +13,7 @@ export type PostUploadUtilisationReportRequestBody = {
   user: { _id: string };
 };
 
-type PostUploadUtilisationReportRequest = CustomExpressRequest<{
+export type PostUploadUtilisationReportRequest = CustomExpressRequest<{
   reqBody: PostUploadUtilisationReportRequestBody;
 }>;
 

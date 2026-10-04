@@ -1,13 +1,16 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../api';
 
+export type GetFeeRecordsToKeyRequest = CustomExpressRequest<{ params: { reportId: string } }>;
+
 /**
- * Fetches utilisation report with the fee to key
+ * Fetches utilisation report with the fee records to key
  * @param {import('express').Request<{ reportId: string }>} req - Express request object
  * @param {import('express').Response} res - Express response object
  */
-export const getFeeRecordsToKey = async (req: Request, res: Response) => {
+export const getFeeRecordsToKey = async (req: GetFeeRecordsToKeyRequest, res: Response) => {
   const { reportId } = req.params;
 
   try {

@@ -83,7 +83,7 @@ users.forEach((user) => {
 
         wrapper
           .expectElement('script[src="/assets/js/printPage.js"]')
-          .toHaveAttribute('integrity', 'sha512-COV1ZxdaFcvJFaLBxO/S9vxb6lx0vun8S4gYf82aSfr/OCjWt6yeEWTeaLYS2crz70vNnQEdoDEg9JojLHqU5A==');
+          .toHaveAttribute('integrity', 'sha512-919y7jPivlBPrwsm32uCS3R9hRl/S8CM02T9vA07Cs9sHnbIIVyPpD/qAaIhMLisYIcPmo0anUnmb0HWemGn6g==');
       });
 
       it('should render amendment summary list', () => {

@@ -9,8 +9,11 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const { PORTAL_API_KEY, TFM_API_KEY, FF_PORTAL_2FA_ENABLED, TZ } = process.env;
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
   env: {
     TZ,
+  },
+  expose: {
     FF_PORTAL_2FA_ENABLED,
   },
   centralApiProtocol: 'http://',

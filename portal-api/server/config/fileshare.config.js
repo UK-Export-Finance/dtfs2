@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   FILESHARE_NAME: process.env.AZURE_WORKFLOW_FILESHARE_NAME,
   EXPORT_FOLDER: process.env.AZURE_WORKFLOW_EXPORT_FOLDER,

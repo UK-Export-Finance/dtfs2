@@ -3,7 +3,7 @@ import { Response } from 'supertest';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { testApi } from '../../test-api';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const originalProcessEnv = { ...process.env };
 

@@ -16,7 +16,7 @@ import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo'
 
 export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDetails: AuditDetails } }>, res: Response) => {
   const { id } = req.params;
-  const { auditDetails } = req.body;
+  const { auditDetails } = req.body ?? {};
 
   if (!ObjectId.isValid(id)) {
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Deal Id' });

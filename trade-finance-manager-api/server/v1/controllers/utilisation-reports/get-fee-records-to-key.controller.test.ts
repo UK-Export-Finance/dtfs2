@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import api from '../../api';
-import { getFeeRecordsToKey } from './get-fee-records-to-key.controller';
+import { getFeeRecordsToKey, GetFeeRecordsToKeyRequest } from './get-fee-records-to-key.controller';
 import { FeeRecordsToKeyResponseBody } from '../../api-response-types';
 
 console.error = jest.fn();
@@ -12,8 +12,10 @@ describe('get-fee-records-to-key.controller', () => {
   describe('getFeeRecordsToKey', () => {
     const reportId = '1';
 
+    const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetFeeRecordsToKeyRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId },
       });
 

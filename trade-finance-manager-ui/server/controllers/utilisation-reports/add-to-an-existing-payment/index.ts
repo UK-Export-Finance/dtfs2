@@ -17,7 +17,7 @@ import {
 import { mapToPaymentGroupInputsViewModel } from '../helpers/available-payment-group-view-model-mapper';
 import { getPaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
 
-type AddToAnExistingPaymentRequest = CustomExpressRequest<{
+export type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
 }>;
 

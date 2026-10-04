@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { getPaymentDetailsById } from './get-payment-details-by-id.controller';
+import { getPaymentDetailsById, GetPaymentDetailsByIdRequest } from './get-payment-details-by-id.controller';
 import api from '../../api';
 import { PaymentDetailsResponseBody } from '../../api-response-types';
 import { aPayment } from '../../../../test-helpers';
@@ -15,8 +15,10 @@ describe('get-payment-details-by-id.controller', () => {
     const reportId = '1';
     const paymentId = '2';
 
+    const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetPaymentDetailsByIdRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId, paymentId },
         query: { includeFeeRecords: 'true' },
       });

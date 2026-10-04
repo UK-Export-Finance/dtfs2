@@ -182,9 +182,11 @@ exports.delete = async (req, res) => {
   try {
     const {
       params: { id },
-      body: { documentPath },
       user,
     } = req;
+
+    const { documentPath } = req.body ?? {};
+
     const auditDetails = generatePortalAuditDetails(user._id);
 
     if (!ObjectId.isValid(id)) {

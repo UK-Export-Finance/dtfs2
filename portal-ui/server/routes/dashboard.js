@@ -12,7 +12,7 @@ const { validateToken } = require('./middleware');
 
 const router = express.Router();
 
-router.use('/dashboard/*', validateToken);
+router.use('/dashboard/{*path}', validateToken);
 
 /**
  * @openapi

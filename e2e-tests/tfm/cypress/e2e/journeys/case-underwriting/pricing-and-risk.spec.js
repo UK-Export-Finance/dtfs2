@@ -1,10 +1,19 @@
+import { CREDIT_RATING } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import { errorSummaryItems, caseSubNavigation } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
+import { assertAutocompleteInput } from '../../common-tests/assertAutocompleteInput';
 
-const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
+const CREDIT_RISK_RATINGS = {
+  ...CREDIT_RATING,
+  A: 'A',
+  BBB_PLUS: 'BBB+',
+  INVALID: 'Z',
+};
+
+const autoCompleteField = pages.autoCompleteField('exporterCreditRatingOther');
 
 context('Case Underwriting - Pricing and risk', () => {
   let dealId;
@@ -86,31 +95,36 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputValidationError().should('be.visible');
     });
 
-    it('selecting `Other` in edit form displays text input. After submit - displays validation errors if text input is empty', () => {
+    it('selecting `Other` in edit form displays a heading and text input. After submit - displays validation errors if text input is empty', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
+
+      cy.assertText(pages.underwritingPricingAndRiskEditPage.creditRatingOtherLabel(), 'Credit rating');
+
+      autoCompleteField.input().should('be.visible');
+      autoCompleteField.input().should('have.value', '');
       cy.clickSubmitButton();
 
       errorSummaryItems().should('have.length', 1);
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+      autoCompleteField.input().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
+      cy.assertText(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError(), 'Error: Enter a credit rating');
     });
 
-    it('typing numbers into `Other` text input displays validation errors after submit', () => {
+    it('typing a credit risk which does not exist into `Other` text input displays validation errors after submit', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
-      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), 'abc1');
+      autoCompleteField.input().should('be.visible');
+      autoCompleteField.input().should('have.value', '');
+      cy.keyboardInput(autoCompleteField.input(), 'abc1');
       cy.clickSubmitButton();
 
       errorSummaryItems().should('have.length', 1);
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
+      autoCompleteField.input().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
+      cy.assertText(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError(), 'Error: Enter a credit rating');
     });
 
     it('submitting a rating displays the rating in table on `pricing and risk` page and renders `change credit rating` link', () => {
@@ -125,12 +139,12 @@ context('Case Underwriting - Pricing and risk', () => {
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
 
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.BB_MINUS);
     });
 
     it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
       // check value previously submitted
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.BB_MINUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
@@ -144,25 +158,87 @@ context('Case Underwriting - Pricing and risk', () => {
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       // check new value displays in `pricing and risk` page
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Acceptable (B+)');
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.B_PLUS);
     });
 
     it('submitting `Other` in edit form displays text input and auto populates values after submit', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
+      autoCompleteField.input().should('have.value', '');
 
-      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.BBB_PLUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.BBB_PLUS).click();
       cy.clickSubmitButton();
 
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.BBB_PLUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().should('be.checked');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('exist');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      autoCompleteField.input().should('exist');
+
+      cy.assertText(autoCompleteField.results(), CREDIT_RISK_RATINGS.BBB_PLUS);
+      cy.assertValue(autoCompleteField, CREDIT_RISK_RATINGS.BBB_PLUS);
+    });
+
+    it('should use last submitted other value if revisiting the edit form and clearing the other input', () => {
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+
+      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.BBB_PLUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.BBB_PLUS).click();
+      cy.clickSubmitButton();
+
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+
+      // clear the input and submit
+      autoCompleteField.input().clear();
+      cy.clickSubmitButton();
+
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.BBB_PLUS);
+
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+
+      cy.assertText(autoCompleteField.results(), CREDIT_RISK_RATINGS.BBB_PLUS);
+      cy.assertValue(autoCompleteField, CREDIT_RISK_RATINGS.BBB_PLUS);
+    });
+
+    it(`should select the radio when coming back to the page after submitting ${CREDIT_RATING.B_PLUS} or ${CREDIT_RATING.BB_MINUS} in the other autocomplete`, () => {
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.B_PLUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.B_PLUS).click();
+      cy.clickSubmitButton();
+
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputAcceptable().should('be.checked');
+
+      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+
+      cy.keyboardInput(autoCompleteField.input(), CREDIT_RISK_RATINGS.BB_MINUS);
+      autoCompleteField.selectOption(CREDIT_RISK_RATINGS.BB_MINUS).click();
+      cy.clickSubmitButton();
+
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+      pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().should('be.checked');
+    });
+
+    describe('credit rating `Other` autocomplete page tests', () => {
+      beforeEach(() => {
+        pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
+        pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
+      });
+
+      assertAutocompleteInput({
+        fieldId: 'exporterCreditRatingOther',
+        noResultsText: CREDIT_RISK_RATINGS.INVALID,
+        singleResultText: CREDIT_RISK_RATINGS.BBB_PLUS,
+        multipleResultsText: CREDIT_RISK_RATINGS.A,
+        entry1Text: CREDIT_RISK_RATINGS.B_PLUS,
+        entry2Text: CREDIT_RISK_RATINGS.BB_MINUS,
+      });
     });
   });
 
@@ -176,7 +252,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
     it('cannot add or edit a credit rating', () => {
       // double check that a credit rating already exists from previous tests
-      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), CREDIT_RISK_RATINGS.BB_MINUS);
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');

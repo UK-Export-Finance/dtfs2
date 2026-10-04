@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+
 import { getYear, addYears } from 'date-fns';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
@@ -13,8 +13,6 @@ import { BankHolidaysEvent } from '../../server/interfaces';
 const { get } = api(app);
 
 describe('/bank-holidays', () => {
-  const axiosMock = new MockAdapter(axios);
-
   describe('when Bank Holiday API call returns 200 and body contains data', () => {
     axiosMock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });
 

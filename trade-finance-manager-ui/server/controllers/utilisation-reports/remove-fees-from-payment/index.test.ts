@@ -1,5 +1,5 @@
-import httpMocks from 'node-mocks-http';
-import { postRemoveFeesFromPayment } from '.';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { postRemoveFeesFromPayment, RemoveFeesFromPaymentRequest } from '.';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
@@ -7,6 +7,8 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 
 jest.mock('../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<RemoveFeesFromPaymentRequest>(options);
 
 console.error = jest.fn();
 
@@ -32,7 +34,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
 
       const reportId = '1';
       const paymentId = '2';
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId, paymentId },
         body: requestBody,
@@ -59,7 +61,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       const paymentId = '2';
       const redirectTab = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
 
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId, paymentId },
         body: requestBody,
@@ -84,7 +86,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
 
     it('renders the problem-with-service page when an error occurs', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '1', paymentId: '2' },
       });

@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const { HttpStatusCode } = axios;
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { PORTAL_API_URL } = process.env;
 

@@ -1,7 +1,11 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import api from '../../api';
-import { validateUtilisationReportData, ValidateUtilisationReportDataRequestBody } from './validate-utilisation-report-data.controller';
+import {
+  validateUtilisationReportData,
+  ValidateUtilisationReportDataRequestBody,
+  ValidateUtilisationReportDataRequest,
+} from './validate-utilisation-report-data.controller';
 import { ValidateUtilisationReportDataResponseBody } from '../../api-response-types';
 
 console.error = jest.fn();
@@ -14,6 +18,8 @@ describe('controllers/utilisation-report-service/validate-utilisation-report-dat
   });
 
   describe('validateUtilisationReportData', () => {
+    const createHttpMocks = (options: httpMocks.RequestOptions) => httpMocks.createMocks<ValidateUtilisationReportDataRequest>(options);
+
     const BANK_ID = '9';
     const aValidateUtilisationReportDataRequestBody = (): ValidateUtilisationReportDataRequestBody => ({
       reportData: [{ 'a csv header': { value: 'some value', row: 'A', column: '2' } }],
@@ -24,7 +30,7 @@ describe('controllers/utilisation-report-service/validate-utilisation-report-dat
     });
 
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         body: aValidateUtilisationReportDataRequestBody(),
         params: { bankId: BANK_ID },
       });

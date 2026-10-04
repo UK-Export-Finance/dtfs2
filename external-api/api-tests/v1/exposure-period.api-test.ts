@@ -10,8 +10,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
@@ -28,8 +28,6 @@ const mockResponse = {
 const mockStartDate = '2017-07-04';
 const mockEndDate = '2018-07-04';
 
-// Mock Axios
-const axiosMock = new MockAdapter(axios);
 axiosMock
   .onGet(`${APIM_MDM_URL}v1/exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`)
   .reply(HttpStatusCode.Ok, mockResponse.data);

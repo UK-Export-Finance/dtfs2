@@ -7,7 +7,7 @@ export const deleteAllEstoreLogs = async (
   req: CustomExpressRequest<{ reqBody: { auditDetails: AuditDetails } }>,
   res: Response<void | ApiErrorResponseBody>,
 ) => {
-  const { auditDetails } = req.body;
+  const { auditDetails } = req.body ?? {};
 
   try {
     validateAuditDetails(auditDetails);

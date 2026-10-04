@@ -1,13 +1,12 @@
-const MockAdapter = require('axios-mock-adapter');
-const axios = require('axios');
-require('dotenv').config();
+const { axiosMock } = require('@ukef/dtfs2-common/test-helpers/axios-mock-adapter');
+require('dotenv').config({ quiet: true });
 
 const api = require('./api');
 
 const { PORTAL_API_URL } = process.env;
 
 describe('api', () => {
-  const mock = new MockAdapter(axios);
+  const mock = axiosMock;
 
   const invalidId1 = '../../../etc/passwd';
   const invalidId2 = '127.0.0.1';

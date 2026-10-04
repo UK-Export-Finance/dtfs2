@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, FEE_RECORD_STATUS, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { addPayment } from '.';
+import { addPayment, AddPaymentRequest } from '.';
 import { PaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import * as validation from '../helpers/validate-payment-form-values';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
@@ -12,6 +12,8 @@ import { AddPaymentFormRequestBody } from '../helpers';
 jest.mock('../../../api');
 
 console.error = jest.fn();
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<AddPaymentRequest>(options);
 
 describe('controllers/utilisation-reports/add-payment', () => {
   const userToken = 'user-token';
@@ -27,7 +29,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should render add payment page', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -43,7 +45,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should fetch and map selected fee record details', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -107,7 +109,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should set payment number to number of payments plus 1', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -123,7 +125,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should not display any errors', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -141,7 +143,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should set the report id', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -157,7 +159,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should set the selected checkbox ids', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: {
@@ -177,7 +179,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should not preset any form values', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -195,7 +197,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -251,7 +253,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
     it('should set data sort values for reported payments column to order by currency alphabetically then value', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         session: requestSession,
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
@@ -315,7 +317,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should render the add payment page', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -331,7 +333,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set payment number to number of payments plus 1', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -351,7 +353,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
       it('should set the errors returned from the validator', async () => {
         // Arrange
         const feeRecordPaymentCurrency = CURRENCY.GBP;
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: {
@@ -404,7 +406,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           addAnotherPayment: 'false',
           paymentReference: 'Money',
         };
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: requestBody,
@@ -430,7 +432,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should fetch and map selected fee record details', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: {
@@ -495,7 +497,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set gbpTolerance to the tolerance value', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -514,7 +516,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set selected checkbox ids', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: {
@@ -535,7 +537,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set report id', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -551,7 +553,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -607,7 +609,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('should set data sort values for reported payments column to order by currency alphabetically then value', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
@@ -696,7 +698,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       it('adds the payment to the selected fee records', async () => {
         // Arrange
-        const { req, res } = httpMocks.createMocks({
+        const { req, res } = createHttpMocks({
           session: requestSession,
           params: { reportId },
           body: addPaymentFormSubmissionRequestBody,
@@ -723,7 +725,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
       describe("when 'addAnotherPayment' is set to 'false'", () => {
         it('redirects to premium payments', async () => {
           // Arrange
-          const { req, res } = httpMocks.createMocks({
+          const { req, res } = createHttpMocks({
             session: requestSession,
             params: { reportId },
             body: {
@@ -748,7 +750,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
           it('should redirect to premium payments with match success notification', async () => {
             // Arrange
-            const { req, res } = httpMocks.createMocks({
+            const { req, res } = createHttpMocks({
               session: requestSession,
               params: { reportId: '123' },
               body: {
@@ -773,7 +775,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
           it('should render the add payment page', async () => {
             // Arrange
-            const { req, res } = httpMocks.createMocks({
+            const { req, res } = createHttpMocks({
               session: requestSession,
               params: { reportId: '123' },
               body: {
@@ -792,7 +794,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
           it('should render the page with empty form values', async () => {
             // Arrange
-            const { req, res } = httpMocks.createMocks({
+            const { req, res } = createHttpMocks({
               session: requestSession,
               params: { reportId: '123' },
               body: {
@@ -811,7 +813,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
           it('should render the page with empty errors', async () => {
             // Arrange
-            const { req, res } = httpMocks.createMocks({
+            const { req, res } = createHttpMocks({
               session: requestSession,
               params: { reportId: '123' },
               body: {

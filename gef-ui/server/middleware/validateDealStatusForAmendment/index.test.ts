@@ -1,9 +1,9 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { PORTAL_LOGIN_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
-import { Request, NextFunction } from 'express';
+import { NextFunction } from 'express';
 
-import { validateDealStatusForAmendment } from '.';
+import { validateDealStatusForAmendment, ValidateDealStatusForAmendmentRequest } from '.';
 import * as api from '../../services/api';
 import { MOCK_BASIC_DEAL } from '../../utils/mocks/mock-applications';
 import { Deal } from '../../types/deal';
@@ -18,7 +18,7 @@ const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN,
 const mockUser = ROLES.MAKER;
 
 const getHttpMocks = (user: string) =>
-  createMocks<Request>({
+  createMocks<ValidateDealStatusForAmendmentRequest>({
     params: { dealId },
     session: {
       user: { ...aPortalSessionUser(), roles: [user] },

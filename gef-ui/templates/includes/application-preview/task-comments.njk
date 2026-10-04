@@ -8,16 +8,19 @@
       <div class="govuk-!-margin-bottom-6">
         {% if hasReadyForCheckerAmendments %}
           <h3 data-cy="amendment-details-header-ready-for-checkers">{{ readyForCheckerAmendmentStatusHeading }}</h3>
+
           <ul class="govuk-list govuk-list--bullet">
           {% for amendment in readyForCheckerAmendmentDetailsUrlAndText %}
-              <li>
-                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-ready-for-checker-{{ loop.index }}">{{ amendment.text }}</a>
-              </li>
+            <li>
+              <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-ready-for-checker-{{ loop.index }}">{{ amendment.text }}</a>
+            </li>
           {% endfor %}
           </ul>
         {% endif %}
+
         {% if hasFurtherMakersInputAmendments %}
           <h3 data-cy="amendment-details-header-further-makers-input">{{ furtherMakersInputAmendmentStatusHeading }}</h3>
+
           <ul class="govuk-list govuk-list--bullet">
             {% for amendment in furtherMakersInputAmendmentDetailsUrlAndText %}
               <li>
@@ -38,6 +41,7 @@
 
     {% if canIssueFacilities %}
       <h3 data-cy="update-unissued-header">Update facility stage for unissued facilities</h3>
+
       <div class="govuk-!-margin-bottom-6">
         <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="update-unissued-link">View unissued facilities</a>
       </div>
@@ -55,7 +59,9 @@
           <h2 data-cy="update-mia-stage">Check manual inclusion application before submitting to UKEF</h2>
         {% endif %}
       {% endif %}
+
       <strong data-cy="changed-unissued-header">The following facility stages have been updated to issued:</strong>
+
       <div class="govuk-!-margin-bottom-6" data-cy="unissued-to-issued-facilities-list">
         {% for facility in resubmitIssuedFacilities %}
           <p>{{ facility.name }}</p>
@@ -92,6 +98,7 @@
         <p>{{ comment.comment }}</p>
       {% endfor %}
     </div>
+
     {% endset %}
 
     {{ mojBanner({

@@ -79,13 +79,13 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('maps undefined to undefined', () => {
       const result = mapBooleanToYesOrNo(undefined);
 
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
 
     it('maps null to undefined', () => {
       const result = mapBooleanToYesOrNo(null);
 
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
   });
 

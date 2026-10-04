@@ -13,6 +13,8 @@ module.exports = {
   getAddressesByPostcode: jest.fn(),
   getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
+  uploadFile: jest.fn(),
+  deleteFile: jest.fn(),
   getAmendment: jest.fn(),
   upsertAmendment: jest.fn(),
   updateAmendment: jest.fn(),
@@ -20,4 +22,5 @@ module.exports = {
   getPortalAmendmentsOnDeal: jest.fn(),
   getAmendmentsOnDeal: jest.fn(),
   getTfmDeal: jest.fn(),
+  updateSupportingInformation: jest.fn(),
 };

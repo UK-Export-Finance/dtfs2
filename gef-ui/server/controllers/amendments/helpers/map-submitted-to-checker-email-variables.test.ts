@@ -9,7 +9,7 @@ import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { PORTAL_UI_URL } = process.env;
 
