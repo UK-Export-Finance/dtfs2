@@ -44,8 +44,8 @@ const insertUser = async (overrides: Partial<PortalUser> = {}): Promise<PortalUs
  * Generates a real OTP and its corresponding sign in token, so that the code
  * can be successfully verified against the stored hash by the endpoint under test.
  */
-const generateValidSignInOtp = (): { securityCode: string; signInToken: SignInTokens } => {
-  const { securityCode, salt, hash, expiry } = generateOtp();
+const generateValidSignInOtp = async (): Promise<{ securityCode: string; signInToken: SignInTokens }> => {
+  const { securityCode, salt, hash, expiry } = await generateOtp();
 
   return { securityCode, signInToken: { saltHex: salt, hashHex: hash, expiry } };
 };
@@ -60,7 +60,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Ok} and sign in the user when the OTP is valid`, async () => {
-    const { securityCode, signInToken } = generateValidSignInOtp();
+    const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], sessionIdentifier: 'existing-session-identifier' });
 
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
@@ -78,7 +78,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} when the OTP is incorrect`, async () => {
-    const { signInToken } = generateValidSignInOtp();
+    const { signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken] });
 
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: '000000', auditDetails }).to(BASE_URL);
@@ -88,7 +88,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} when the OTP has expired`, async () => {
-    const { securityCode, signInToken } = generateValidSignInOtp();
+    const { securityCode, signInToken } = await generateValidSignInOtp();
     const expiredSignInToken: SignInTokens = { ...signInToken, expiry: Date.now() - 1 };
     const user = await insertUser({ signInTokens: [expiredSignInToken] });
 
@@ -108,7 +108,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Forbidden} when the user is blocked`, async () => {
-    const { securityCode, signInToken } = generateValidSignInOtp();
+    const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], 'user-status': USER_STATUS.BLOCKED });
 
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
@@ -118,7 +118,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Forbidden} when the user is disabled`, async () => {
-    const { securityCode, signInToken } = generateValidSignInOtp();
+    const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], disabled: true });
 
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
