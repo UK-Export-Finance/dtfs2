@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const mandatoryCriteria = {
   mandatoryCriteriaText: () => cy.get('[data-cy="mandatory-criteria"]'),
   firstErrorLink: () => cy.get('[data-cy="error-summary"]').first('a'),

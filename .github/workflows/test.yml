@@ -98,6 +98,7 @@ on:
 
 env:
   environment: dev
+  CYPRESS_BROWSER: chrome
   TZ: ${{ vars.TIMEZONE_LONDON }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
@@ -154,6 +155,7 @@ env:
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
   UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
+  UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: ${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
@@ -275,6 +277,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -828,7 +831,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -941,7 +944,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1076,7 +1079,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1165,7 +1168,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1261,7 +1264,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1477,7 +1480,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1566,7 +1569,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser ${{ env.CYPRESS_BROWSER }} --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
