@@ -1,4 +1,4 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, CUSTOMER_TYPE, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
@@ -75,7 +75,7 @@ export const getOrCreateParty = async (
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid industry code' });
     }
 
-    if (!customerType) {
+    if (!customerType || !Object.values(CUSTOMER_TYPE).includes(customerType)) {
       console.error('Invalid customer type was provided %s', customerType);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
     }

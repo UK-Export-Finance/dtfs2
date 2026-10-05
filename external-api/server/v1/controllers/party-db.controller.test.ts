@@ -150,6 +150,24 @@ describe('getOrCreateParty', () => {
     expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
   });
 
+  it(`should return ${HttpStatusCode.BadRequest} when an unsupported customer type is provided`, async () => {
+    // Arrange
+    mockRequest.body = {
+      ...mockBody,
+      customerType: 'SUPPLIER',
+    } as unknown as SalesForceParty;
+
+    // Act
+    await getOrCreateParty(mockRequest, mockResponse);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Invalid customer type was provided %s', 'SUPPLIER');
+
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
+  });
+
   it(`should return ${HttpStatusCode.InternalServerError} when an error is thrown`, async () => {
     // Arrange
     const mockError = new Error('Mock error');

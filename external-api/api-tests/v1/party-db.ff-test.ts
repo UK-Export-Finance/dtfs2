@@ -219,6 +219,24 @@ describe('party-db.controller feature flag', () => {
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
+    it(`should return a ${HttpStatusCode.BadRequest} if an unsupported customer type is supplied`, async () => {
+      // Arrange
+      const payload = {
+        code: 10110,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: 'INVALID',
+        isUkEntity: true,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      };
+
+      // Act
+      const { status } = await post(payload).to(`/party-db/`);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+    });
+
     it.each(invalidPayloads)(`should return a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {
       // Act
       const { status } = await post(payload).to(`/party-db/`);

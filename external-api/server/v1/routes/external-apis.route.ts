@@ -424,6 +424,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *                 example: "12345678"
  *               customerType:
  *                 type: string
+ *                 enum: [CUSTOMER]
  *                 description: Salesforce customer type
  *                 example: "CUSTOMER"
  *               isUkEntity:

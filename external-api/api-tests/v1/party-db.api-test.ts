@@ -94,5 +94,14 @@ describe('/party-db', () => {
         expect(body).toMatchObject({ data: errorMessage, status: HttpStatusCode.BadRequest });
       });
     });
+
+    it(`should return a ${HttpStatusCode.BadRequest} if an unsupported customer type is supplied`, async () => {
+      // Arrange & Act
+      const { status, body } = await post({ ...validPayload, customerType: 'SUPPLIER' }).to('/party-db/');
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body).toMatchObject({ data: 'Invalid customer type', status: HttpStatusCode.BadRequest });
+    });
   });
 });
