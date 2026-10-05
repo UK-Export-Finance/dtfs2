@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const facilityGuarantee = {
   feeTypeInAdvanceInput: () => cy.get('[data-cy="fee-type-in-advance"]'),
   feeTypeInArrearsInput: () => cy.get('[data-cy="fee-type-in-arrears"]'),

@@ -45,29 +45,29 @@ context('Exporters Address Page', () => {
 
   describe('The separate correspondence address', () => {
     it('does not display if no radio button has been selected', () => {
-      exportersAddress.correspondenceAddress().should('not.be.visible');
+      exportersAddress.correspondenceAddressContainer().should('have.class', 'govuk-visually-hidden');
     });
 
     it('does not display if the user selects the No radio button', () => {
       exportersAddress.noRadioButton().click();
-      exportersAddress.correspondenceAddress().should('not.be.visible');
+      exportersAddress.correspondenceAddressContainer().should('have.class', 'govuk-visually-hidden');
     });
 
     it('does not display if the user selects the Yes radio button then the No radio button', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.noRadioButton().click();
-      exportersAddress.correspondenceAddress().should('not.be.visible');
+      exportersAddress.correspondenceAddressContainer().should('have.class', 'govuk-visually-hidden');
     });
 
     it('does display if the user selects the Yes radio button', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().should('be.visible');
+      exportersAddress.correspondenceAddressContainer().should('not.have.class', 'govuk-visually-hidden');
     });
 
     it('does display if the user selects the No radio button then the Yes radio button', () => {
       exportersAddress.noRadioButton().click();
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().should('be.visible');
+      exportersAddress.correspondenceAddressContainer().should('not.have.class', 'govuk-visually-hidden');
     });
   });
 
