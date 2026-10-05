@@ -402,27 +402,39 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - code
+ *               - companyRegNo
+ *               - companyName
+ *               - customerType
+ *               - isUkEntity
+ *               - probabilityOfDefault
  *             properties:
- *               companyRegNo:
- *                 type: string
- *                 description: Companies House registration number
- *                 example: "12345678"
- *               companyName:
- *                 type: string
- *                 description: Company name
- *                 example: "Some Name Ltd"
- *               probabilityOfDefault:
- *                 type: number
- *                 description: Probability of default
- *                 example: 0.01
- *               isUkEntity:
- *                 type: boolean
- *                 description: Is UK entity
- *                 example: true
  *               code:
  *                 type: number
  *                 description: Standard Industrial Classification (SIC) codes https://resources.companieshouse.gov.uk/sic/
  *                 example: 1008
+ *               companyName:
+ *                 type: string
+ *                 description: Company name
+ *                 example: "Some Name Ltd"
+ *               companyRegNo:
+ *                 type: string
+ *                 description: Companies House registration number
+ *                 example: "12345678"
+ *               customerType:
+ *                 type: string
+ *                 enum: [CUSTOMER]
+ *                 description: Salesforce customer type
+ *                 example: "CUSTOMER"
+ *               isUkEntity:
+ *                 type: boolean
+ *                 description: Is UK entity
+ *                 example: true
+ *               probabilityOfDefault:
+ *                 type: number
+ *                 description: Probability of default
+ *                 example: 0.01
  *     responses:
  *       200:
  *         description: Party created or retrieved successfully
@@ -431,7 +443,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *             schema:
  *               $ref: '#/definitions/PartyDB'
  *       400:
- *         description: Bad request. Invalid company registration number or company name
+ *         description: Bad request. Invalid company registration number, company name, industry code or customer type
  *       500:
  *         description: Error getting or creating the party
  */
