@@ -80,4 +80,24 @@
  *     description: |
  *       Supported amendment payload shapes for APIM/GIFT.
  *       The payload is nested under amendmentData and varies by amendmentType.
+ *   GiftFacilityMultipleAmendmentsRequestBody:
+ *     type: object
+ *     required:
+ *       - amendments
+ *     properties:
+ *       amendments:
+ *         type: array
+ *         description: Array of amendments to apply to a facility
+ *         items:
+ *           $ref: '#/definitions/GiftFacilityAmendmentRequestBody'
+ *         minItems: 1
+ *         example:
+ *           - amendmentType: IncreaseAmount
+ *             amendmentData:
+ *               amount: 13800
+ *               date: '2026-12-20'
+ *           - amendmentType: ReplaceExpiryDate
+ *             amendmentData:
+ *               expiryDate: '2027-12-20'
+ *     description: Request body for submitting multiple facility amendments to APIM/GIFT
  */

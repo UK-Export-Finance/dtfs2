@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import { IncomingHttpHeaders } from 'http';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Creates an API helper for testing Express applications.

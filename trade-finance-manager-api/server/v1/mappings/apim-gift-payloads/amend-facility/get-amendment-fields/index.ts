@@ -1,4 +1,4 @@
-import { getFormattedDateStringInTimeZone, getFormattedUTCDateString, TIMEZONE } from '@ukef/dtfs2-common';
+import { getFormattedDateStringInTimeZone, TIMEZONE } from '@ukef/dtfs2-common';
 import { TfmFacilityAmendmentData } from '../../types';
 
 type AmendmentFields = {
@@ -29,7 +29,7 @@ export const getAmendmentFields = (amendment: TfmFacilityAmendmentData): Amendme
 
   const effectiveDateValue = Number(amendment.effectiveDate);
 
-  const effectiveDate = hasEffectiveDate ? getFormattedUTCDateString(effectiveDateValue) : '';
+  const effectiveDate = hasEffectiveDate ? getFormattedDateStringInTimeZone(effectiveDateValue, TIMEZONE.DEFAULT) : '';
 
   const coveredPercentage = typeof amendment.coveredPercentage === 'number' ? amendment.coveredPercentage : null;
 

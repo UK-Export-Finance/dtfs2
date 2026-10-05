@@ -36,7 +36,14 @@ describe('toNumber', () => {
 });
 
 describe('mapCoverPercentage', () => {
-  describe('when isGefDeal is true', () => {
+  const baseParams = {
+    isBssFacility: false,
+    isCashFacility: false,
+    isContingentFacility: false,
+    isEwcsFacility: false,
+  };
+
+  describe.each([{ flag: 'isCashFacility' }, { flag: 'isContingentFacility' }])('when $flag is true', ({ flag }) => {
     it('should return the numeric coverPercentage', () => {
       // Arrange
       const facilitySnapshot = {
@@ -46,18 +53,18 @@ describe('mapCoverPercentage', () => {
       // Act
       const result = mapCoverPercentage({
         facilitySnapshot,
-        isBssEwcsDeal: false,
-        isGefDeal: true,
+        ...baseParams,
+        [flag]: true,
       });
 
       // Assert
-      const expected = facilitySnapshot.coverPercentage;
+      const expected = 80;
 
       expect(result).toEqual(expected);
     });
   });
 
-  describe('when isBssEwcsDeal is true', () => {
+  describe.each([{ flag: 'isBssFacility' }, { flag: 'isEwcsFacility' }])('when $flag is true', ({ flag }) => {
     it('should return the numeric value parsed from coveredPercentage', () => {
       // Arrange
       const facilitySnapshot = {
@@ -68,8 +75,8 @@ describe('mapCoverPercentage', () => {
       // Act
       const result = mapCoverPercentage({
         facilitySnapshot,
-        isBssEwcsDeal: true,
-        isGefDeal: false,
+        ...baseParams,
+        [flag]: true,
       });
 
       // Assert
@@ -79,7 +86,7 @@ describe('mapCoverPercentage', () => {
     });
   });
 
-  describe('when the deal type flags are both false', () => {
+  describe('when all flags are false', () => {
     it('should return null', () => {
       // Arrange
       const facilitySnapshot = {
@@ -89,8 +96,7 @@ describe('mapCoverPercentage', () => {
       // Act
       const result = mapCoverPercentage({
         facilitySnapshot,
-        isBssEwcsDeal: false,
-        isGefDeal: false,
+        ...baseParams,
       });
 
       // Assert

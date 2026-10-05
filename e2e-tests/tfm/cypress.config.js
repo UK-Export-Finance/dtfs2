@@ -9,8 +9,11 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const { TFM_API_KEY, CONTACT_US_EMAIL_ADDRESS, TZ } = process.env;
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
   env: {
     TZ,
+  },
+  expose: {
     CONTACT_US_EMAIL_ADDRESS,
   },
   dealApiProtocol: 'http://',

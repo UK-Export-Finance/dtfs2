@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import { createApp } from '../server/createApp';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { DTFS_CENTRAL_API_KEY } = process.env;
 
@@ -32,38 +32,39 @@ class TestApi {
     await this.initialise();
   }
 
-  private assertIsInitialised() {
+  private getApp(): Express {
     if (!this.app) {
       throw new Error('TestApi has not been initialised yet');
     }
+
+    return this.app;
   }
 
   public post(data: object) {
-    this.assertIsInitialised();
-    const to = async (url: string): Promise<Response> => await request(this.app).post(url).send(data).set(headers);
+    const app = this.getApp();
+    const to = async (url: string): Promise<Response> => await request(app).post(url).send(data).set(headers);
     return { to };
   }
 
   public put(data: object) {
-    this.assertIsInitialised();
-    const to = async (url: string): Promise<Response> => await request(this.app).put(url).send(data).set(headers);
+    const app = this.getApp();
+    const to = async (url: string): Promise<Response> => await request(app).put(url).send(data).set(headers);
     return { to };
   }
 
   public async get(url: string, data?: object): Promise<Response> {
-    this.assertIsInitialised();
-    return await request(this.app).get(url).send(data).set(headers);
+    return await request(this.getApp()).get(url).send(data).set(headers);
   }
 
   public remove(data: object) {
-    this.assertIsInitialised();
-    const to = async (url: string): Promise<Response> => await request(this.app).delete(url).send(data).set(headers);
+    const app = this.getApp();
+    const to = async (url: string): Promise<Response> => await request(app).delete(url).send(data).set(headers);
     return { to };
   }
 
   public patch(data: object) {
-    this.assertIsInitialised();
-    const to = async (url: string): Promise<Response> => await request(this.app).patch(url).send(data).set(headers);
+    const app = this.getApp();
+    const to = async (url: string): Promise<Response> => await request(app).patch(url).send(data).set(headers);
     return { to };
   }
 }

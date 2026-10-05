@@ -452,7 +452,7 @@ describe('/v1/deals/:id/loan', () => {
 
         const { body } = await updateLoan(dealId, loanId, updatedLoan);
 
-        expect(body.premiumFrequency).toEqual(undefined);
+        expect(body.premiumFrequency).toBeUndefined();
       });
     });
 

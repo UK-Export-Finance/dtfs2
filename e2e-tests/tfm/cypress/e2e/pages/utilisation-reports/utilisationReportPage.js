@@ -58,6 +58,7 @@ const utilisationReportPage = {
       markAsDoneButton: () => cy.get('[data-cy="keying-sheet-mark-as-done-button"]'),
       markAsToDoButton: () => cy.get('[data-cy="keying-sheet-mark-as-to-do-button"]'),
       keyingSheetTableRow: (feeRecordId) => cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"]`),
+      keyingSheetTableRowCheckbox: (feeRecordId) => cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] input[type="checkbox"]`),
       selectAllCheckbox: () => cy.get('#keying-sheet [data-cy="table-cell-checkbox--select-all"]'),
     },
     paymentDetailsContent: {

@@ -8,7 +8,7 @@ import { HEADERS, isGovNotifyMocked } from '@ukef/dtfs2-common';
 import { MDM } from '../../constants';
 import { getNowAsEpoch } from '../../helpers/date';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 

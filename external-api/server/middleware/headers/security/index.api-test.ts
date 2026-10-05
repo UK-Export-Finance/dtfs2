@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import { mockReq, mockRes } from '../../../test-mocks';
 import { security } from '.';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 describe('middleware/security', () => {
   const req = mockReq();

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { getLongTimeDateFormat } from './date';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Returns a formatted date string based on the maintenance timestamp.

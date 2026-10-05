@@ -10,7 +10,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const filterError = validateFacilityIdQuery('', facilityIdQuery);
 
       // Assert
-      expect(filterError).toEqual(undefined);
+      expect(filterError).toBeUndefined();
     });
 
     it('returns no error when no facilityIdQuery but originalUrl has other query param', () => {
@@ -21,7 +21,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const filterError = validateFacilityIdQuery('?someOtherQueryParam', facilityIdQuery);
 
       // Assert
-      expect(filterError).toEqual(undefined);
+      expect(filterError).toBeUndefined();
     });
 
     it('returns error when facilityIdQuery param provided with empty value', () => {
@@ -68,7 +68,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const filterError = validateFacilityIdQuery('?someOtherQueryParam=1234&premiumPaymentsFacilityId=1234', facilityIdQuery);
 
       // Assert
-      expect(filterError).toEqual(undefined);
+      expect(filterError).toBeUndefined();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp } from './date';
 
 export type CreditRiskRating = {
   id: number;

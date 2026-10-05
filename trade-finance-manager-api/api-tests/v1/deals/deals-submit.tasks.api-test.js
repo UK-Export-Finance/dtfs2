@@ -3,7 +3,7 @@ jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
 }));
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSendToApimGift: jest.fn(),
+  canSendDealFacilitiesToApimGift: jest.fn(),
   sendFacilitiesToApimGift: jest.fn(),
 }));
 
@@ -15,7 +15,7 @@ const { format } = require('date-fns');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const CONSTANTS = require('../../../server/constants');
 const { createDealTasks } = require('../../../server/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../server/v1/helpers/generate-task-email-variables');
@@ -37,8 +37,8 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    canSendToApimGift.mockClear();
-    canSendToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
+    canSendDealFacilitiesToApimGift.mockClear();
+    canSendDealFacilitiesToApimGift.mockResolvedValue({ canSendFacilitiesToApimGift: false, issuedFacilities: [] });
 
     sendFacilitiesToApimGift.mockClear();
 

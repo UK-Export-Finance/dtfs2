@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_URL } = process.env;
 

@@ -19,14 +19,16 @@ describe('middleware/xss', () => {
       // Assert
       const expected = target;
 
-      expect(expected).toBe(target);
-      expect(expected).toEqual({
+      const expectedObject = {
         name: 'Alice',
         details: {
           description: '',
         },
         tags: ['safe', ''],
-      });
+      };
+
+      expect(expected).toBe(target);
+      expect(expected).toEqual(expectedObject);
     });
 
     it('should recursively sanitise an array while preserving its reference', () => {
@@ -38,9 +40,10 @@ describe('middleware/xss', () => {
 
       // Assert
       const expected = target;
+      const expectedArray = ['Heading', '', { value: 'bold' }];
 
       expect(expected).toBe(target);
-      expect(expected).toEqual(['Heading', '', { value: 'bold' }]);
+      expect(expected).toEqual(expectedArray);
     });
 
     it.each([{}, []])('should leave an empty collection unchanged', (target) => {
@@ -52,9 +55,10 @@ describe('middleware/xss', () => {
 
       // Assert
       const expected = target;
+      const expectedObject = Array.isArray(target) ? [] : {};
 
       expect(expected).toBe(originalReference);
-      expect(expected).toEqual(Array.isArray(target) ? [] : {});
+      expect(expected).toEqual(expectedObject);
     });
   });
 

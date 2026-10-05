@@ -12,4 +12,5 @@ export const commonTestUnderwriterTasksAssignedToUser = (dealId, user) => {
 
   // Go back to original location to continue user journey.
   cy.go('back');
+  cy.url().should('include', `/case/${dealId}/underwriting`);
 };

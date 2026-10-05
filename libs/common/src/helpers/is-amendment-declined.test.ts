@@ -53,7 +53,7 @@ describe('isAmendmentDeclined', () => {
       const respone = isAmendmentDeclined(mockAmendment);
 
       // Assert
-      expect(respone).toBeTruthy();
+      expect(respone).toEqual(true);
     });
 
     const approved = [

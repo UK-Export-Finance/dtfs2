@@ -1,15 +1,19 @@
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { mapCounterparties } from '.';
 
-const { DEFAULTS } = APIM_GIFT_INTEGRATION;
+const {
+  DEFAULTS: { COUNTERPARTY_ROLE_CODE },
+} = APIM_GIFT_INTEGRATION;
 
 describe('mapCounterparties', () => {
-  describe('when isBssEwcsDeal is true', () => {
-    const isBssEwcsDeal = true;
-    const isGefDeal = false;
+  describe('when isBssFacility is true', () => {
+    const isBssFacility = true;
+    const isCashFacility = false;
+    const isContingentFacility = false;
+    const isEwcsFacility = false;
 
     describe(`when partyUrns.bondGiver exists`, () => {
-      it('should return an array with a "BOND_GIVER" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondGiver: '00300130',
@@ -17,8 +21,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -26,7 +32,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
         ];
 
@@ -35,7 +41,7 @@ describe('mapCounterparties', () => {
     });
 
     describe(`when partyUrns.bondBeneficiary exists`, () => {
-      it('should return an array with a "BOND_BENEFICIARY" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondBeneficiary: '00318345',
@@ -43,8 +49,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -52,7 +60,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
 
@@ -61,7 +69,7 @@ describe('mapCounterparties', () => {
     });
 
     describe(`when both partyUrns.bondGiver and partyUrns.bondBeneficiary exist`, () => {
-      it('should return an array with a "BOND_GIVER" counterparty and "BOND_BENEFICIARY" counterparty', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER}" counterparty and "${COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           bondGiver: '00300130',
@@ -70,8 +78,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -79,11 +89,11 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.bondGiver,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_GIVER,
           },
           {
             counterpartyUrn: mockPartyUrns.bondBeneficiary,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
+            roleCode: COUNTERPARTY_ROLE_CODE.BSS.BOND_BENEFICIARY,
           },
         ];
 
@@ -98,8 +108,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -109,12 +121,14 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when isGefDeal is true', () => {
-    const isGefDeal = true;
-    const isBssEwcsDeal = false;
+  describe('when isCashFacility is true', () => {
+    const isBssFacility = false;
+    const isCashFacility = true;
+    const isContingentFacility = false;
+    const isEwcsFacility = false;
 
     describe(`when partyUrns.issuingBank exists`, () => {
-      it('should return an array with an "ISSUING_BANK" counterparty', () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
         // Arrange
         const mockPartyUrns = {
           issuingBank: '00318345',
@@ -122,8 +136,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -131,7 +147,7 @@ describe('mapCounterparties', () => {
         const expected = [
           {
             counterpartyUrn: mockPartyUrns.issuingBank,
-            roleCode: DEFAULTS.COUNTERPARTY_ROLE_CODE.GEF.ISSUING_BANK,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
           },
         ];
 
@@ -146,8 +162,10 @@ describe('mapCounterparties', () => {
 
         // Act
         const result = mapCounterparties({
-          isBssEwcsDeal,
-          isGefDeal,
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
           partyUrns: mockPartyUrns,
         });
 
@@ -157,15 +175,152 @@ describe('mapCounterparties', () => {
     });
   });
 
-  describe('when isBssEwcsDeal and isGefDeal are both false', () => {
-    const isGefDeal = false;
-    const isBssEwcsDeal = false;
+  describe('when isContingentFacility is true', () => {
+    const isBssFacility = false;
+    const isCashFacility = false;
+    const isContingentFacility = true;
+    const isEwcsFacility = false;
+
+    describe(`when partyUrns.issuingBank exists`, () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
+        // Arrange
+        const mockPartyUrns = {
+          issuingBank: '00318345',
+        };
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        const expected = [
+          {
+            counterpartyUrn: mockPartyUrns.issuingBank,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe(`when partyUrns.issuingBank does NOT exist`, () => {
+      it('should return an empty array', () => {
+        // Arrange
+        const mockPartyUrns = {};
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('when isEwcsFacility is true', () => {
+    const isBssFacility = false;
+    const isCashFacility = false;
+    const isContingentFacility = false;
+    const isEwcsFacility = true;
+
+    describe('when partyUrns.issuingBank exists', () => {
+      it(`should return an array with an "${COUNTERPARTY_ROLE_CODE.ISSUING_BANK}" counterparty`, () => {
+        // Arrange
+        const mockPartyUrns = {
+          issuingBank: '00318345',
+        };
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        const expected = [
+          {
+            counterpartyUrn: mockPartyUrns.issuingBank,
+            roleCode: COUNTERPARTY_ROLE_CODE.ISSUING_BANK,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when partyUrns.issuingBank does NOT exist but partyUrns.buyer exists', () => {
+      it(`should return an array with a "${COUNTERPARTY_ROLE_CODE.EWCS.BUYER}" counterparty`, () => {
+        // Arrange
+        const mockPartyUrns = {
+          buyer: '00445566',
+        };
+
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
+          partyUrns: mockPartyUrns,
+        });
+
+        // Assert
+        const expected = [
+          {
+            counterpartyUrn: mockPartyUrns.buyer,
+            roleCode: COUNTERPARTY_ROLE_CODE.EWCS.BUYER,
+          },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when neither partyUrns.issuingBank nor partyUrns.buyer exist', () => {
+      it('should return an empty array', () => {
+        // Act
+        const result = mapCounterparties({
+          isBssFacility,
+          isCashFacility,
+          isContingentFacility,
+          isEwcsFacility,
+          partyUrns: {},
+        });
+
+        // Assert
+        expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('when all flags are false', () => {
+    const isCashFacility = false;
+    const isBssFacility = false;
+    const isContingentFacility = false;
+    const isEwcsFacility = false;
 
     it('should return an empty array', () => {
       // Act
       const result = mapCounterparties({
-        isBssEwcsDeal,
-        isGefDeal,
+        isBssFacility,
+        isCashFacility,
+        isContingentFacility,
+        isEwcsFacility,
         partyUrns: {},
       });
 
