@@ -133,6 +133,18 @@ describe('validateOTPAndSignIn', () => {
       expect(res.send).toHaveBeenNthCalledWith(1, { success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
     });
 
+    it('should log the user email when the OTP is invalid', async () => {
+      // Arrange
+      jest.mocked(validateOtp).mockReturnValue({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
+      const res = getMockResponse();
+
+      // Act
+      await invokeController({ userId, signInOTPCode, auditDetails }, res);
+
+      // Assert
+      expect(console.info).toHaveBeenNthCalledWith(2, 'Unable to verify account sign in code for user %s', signedInUser.email);
+    });
+
     it('should respond with Unauthorized when the OTP is invalid', async () => {
       // Arrange
       jest.mocked(validateOtp).mockReturnValue({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
@@ -248,7 +260,7 @@ describe('validateOTPAndSignIn', () => {
 
       // Assert
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP and signing in user %s', sanitisedUserId);
-      expect(console.info).toHaveBeenNthCalledWith(2, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
     });
   });
 });

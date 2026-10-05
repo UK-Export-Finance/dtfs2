@@ -14,6 +14,7 @@ describe('signInTokenStatus', () => {
     mockVerifyHash.mockReset();
 
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'info').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -139,7 +140,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithTokens, 'anySignInCode');
 
       // Assert
-      expect(console.info).toHaveBeenNthCalledWith(1, 'Sign in OTP is expired for user %s', user._id);
+      expect(console.info).toHaveBeenNthCalledWith(2, 'Sign in OTP is expired for user %s', user._id);
     });
   });
 
