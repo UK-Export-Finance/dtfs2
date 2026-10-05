@@ -3,6 +3,7 @@
 import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { sendEmail } from '../../server/v1/controllers/email.controller';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -19,7 +20,7 @@ const mockSuccessfulResponse = {
   status: HttpStatusCode.Created,
   data: {
     content: {
-      body: 'Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\nEmail: test@test.gov.uk\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)',
+      body: `Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\nEmail: ${MOCK_EMAIL}\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)`,
       from_email: 'test@notifications.service.gov.uk',
       subject: 'Status update: EuroStar bridge',
       unsubscribe_link: null,
@@ -38,7 +39,7 @@ const mockSuccessfulResponse = {
 
 const mockBody = {
   templateId: 'tmp1234-1234-5678-9012-abcd12345678',
-  sendToEmailAddress: 'test@testing.com',
+  sendToEmailAddress: MOCK_EMAIL,
   emailVariables: {
     name: 'Testing',
   },

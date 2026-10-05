@@ -3,6 +3,7 @@ import {
   UtilisationReportEntityMockBuilder,
   anEmptyRecordCorrectionTransientFormData,
   FeeRecordCorrectionEntityMockBuilder,
+  MOCK_EMAIL,
 } from '@ukef/dtfs2-common/test-helpers';
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
@@ -90,7 +91,7 @@ describe('FeeRecordStateMachine', () => {
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
           bankTeamName: 'Payment Officer Team',
-          bankTeamEmails: ['test@ukexportfinance.gov.uk'],
+          bankTeamEmails: [MOCK_EMAIL],
         },
       });
 

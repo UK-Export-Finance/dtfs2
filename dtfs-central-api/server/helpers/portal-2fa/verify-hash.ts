@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { hash as generateHash, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
+import { hash as generateHash, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 
 /**
  * verifies provided otp code against stored hash and salt
@@ -13,7 +13,7 @@ import { hash as generateHash, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
  */
 export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, userId: string) => {
   // Strip newline and punctuation characters from the logged user ID to prevent log injection.
-  const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+  const sanitisedUserId = userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   try {
     console.info('Validating OTP hash for user %s', sanitisedUserId);

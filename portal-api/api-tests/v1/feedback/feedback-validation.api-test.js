@@ -1,3 +1,4 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
@@ -13,7 +14,7 @@ describe('/v1/feedback', () => {
     clearlyExplained: 'Good',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@testing.com',
+    emailAddress: MOCK_EMAIL,
   };
 
   let testbank1Maker;

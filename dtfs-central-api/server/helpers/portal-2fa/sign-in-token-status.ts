@@ -48,7 +48,7 @@ export const signInTokenStatus = (user: PortalUser, signInCode: string) => {
   const signInTokenInDate = isSignInOtpInDate(latestToken.expiry);
 
   if (!signInTokenInDate) {
-    console.error('Sign in OTP is expired for user %s', userId);
+    console.info('Sign in OTP is expired for user %s', userId);
     return SIGN_IN_OTP_STATUS.EXPIRED;
   }
 

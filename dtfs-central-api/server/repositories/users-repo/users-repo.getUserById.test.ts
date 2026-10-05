@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
 import { getUserById } from '.';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -27,7 +28,7 @@ describe('getUserById', () => {
 
   it("should call getCollection with 'users'", async () => {
     // Arrange
-    findOneMock.mockResolvedValue({ _id: userId, email: 'test@test.com' });
+    findOneMock.mockResolvedValue({ _id: userId, email: MOCK_EMAIL });
 
     // Act
     await getUserById(userId.toString());
@@ -38,7 +39,7 @@ describe('getUserById', () => {
 
   it('should call findOne with the correct parameters', async () => {
     // Arrange
-    findOneMock.mockResolvedValue({ _id: userId, email: 'test@test.com' });
+    findOneMock.mockResolvedValue({ _id: userId, email: MOCK_EMAIL });
 
     // Act
     await getUserById(userId.toString());
@@ -49,7 +50,7 @@ describe('getUserById', () => {
 
   it('should return the user when found', async () => {
     // Arrange
-    const mockUser = { _id: userId, email: 'test@test.com' };
+    const mockUser = { _id: userId, email: MOCK_EMAIL };
     findOneMock.mockResolvedValue(mockUser);
 
     // Act

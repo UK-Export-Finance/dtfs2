@@ -1,21 +1,14 @@
 import { add, format } from 'date-fns';
-import { TEAM_IDS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
 import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import { mockRes, mockUser } from '../../../test-mocks';
 
 import amendmentsController from './amendmentRequestDate.controller';
 
 const res = mockRes();
 
-const user = {
-  _id: '12345678',
-  username: 'testUser',
-  firstName: 'Joe',
-  lastName: 'Bloggs',
-  teams: [TEAM_IDS.PIM],
-  email: 'test@localhost',
-};
+const user = mockUser;
 
 const session = { user };
 

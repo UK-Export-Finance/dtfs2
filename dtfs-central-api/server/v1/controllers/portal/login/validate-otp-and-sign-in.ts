@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest, AuditDetails, issueValid2FAJWT } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, AuditDetails, issueValid2FAJWT, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
 import { validateOtp } from '../../../../helpers/portal-2fa/validate-otp';
 import { getUserById, PortalUsersRepo } from '../../../../repositories/users-repo';
@@ -23,7 +23,7 @@ export const validateOTPAndSignIn = async (
     const { userId, signInOTPCode, auditDetails } = req.body;
 
     // Strip newline and punctuation characters from the logged user ID to prevent log injection.
-    const sanitisedUserId = typeof userId === 'string' ? userId.replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
+    const sanitisedUserId = typeof userId === 'string' ? userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';
 
     console.info('Validating OTP and signing in user %s', sanitisedUserId);
 
@@ -63,10 +63,11 @@ export const validateOTPAndSignIn = async (
     }
 
     // If the OTP is invalid, expired, or not found, return the appropriate response
-    console.error('Unable to verify account sign in code for user %s', user.email);
+    console.info('Unable to verify account sign in code for user %s', user.email);
+
     return res.status(otpResponse.statusCode).send(otpResponse);
   } catch (error) {
-    const sanitisedUserId = typeof req.body?.userId === 'string' ? req.body.userId.replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
+    const sanitisedUserId = typeof req.body?.userId === 'string' ? req.body.userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';
 
     console.error('Error validating OTP and signing in user %s: %o', sanitisedUserId, error);
 

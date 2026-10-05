@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
 import { PostNewAccessCodePageRequest, postNewAccessCodePage } from './post-new-access-code-page';
 import * as api from '../../api';
@@ -54,7 +55,7 @@ describe('postNewAccessCodePage', () => {
           userToken: 'Bearer test-token',
           userId: 'user-abc',
           numberOfSignInOtpAttemptsRemaining: 1,
-          userEmail: 'test@example.com',
+          userEmail: MOCK_EMAIL,
         },
       } as unknown as PostNewAccessCodePageRequest;
 
@@ -87,7 +88,7 @@ describe('postNewAccessCodePage', () => {
         requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: 'test@example.com',
+        email: MOCK_EMAIL,
         sixDigitAccessCode: '654321',
         validationErrors: {
           sixDigitAccessCode: {
@@ -192,7 +193,7 @@ describe('postNewAccessCodePage', () => {
           userToken: 'Bearer test-token',
           userId: 'user-abc',
           numberOfSignInOtpAttemptsRemaining: 1,
-          userEmail: 'test@example.com',
+          userEmail: MOCK_EMAIL,
         },
       } as unknown as PostNewAccessCodePageRequest;
 
@@ -217,7 +218,7 @@ describe('postNewAccessCodePage', () => {
         requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: 'test@example.com',
+        email: MOCK_EMAIL,
         sixDigitAccessCode: '111111',
         validationErrors: {
           sixDigitAccessCode: { text: 'The access code you have entered is incorrect', order: '1' },
@@ -335,7 +336,7 @@ describe('postNewAccessCodePage', () => {
           userToken: 'Bearer test-token',
           userId: 'user-abc',
           numberOfSignInOtpAttemptsRemaining: 1,
-          userEmail: 'test@example.com',
+          userEmail: MOCK_EMAIL,
         },
       } as unknown as PostNewAccessCodePageRequest;
 
@@ -363,7 +364,7 @@ describe('postNewAccessCodePage', () => {
         requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: 'test@example.com',
+        email: MOCK_EMAIL,
         sixDigitAccessCode: '',
         validationErrors: {
           sixDigitAccessCode: {

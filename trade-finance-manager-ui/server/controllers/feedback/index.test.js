@@ -1,4 +1,5 @@
 import { generateNoUserLoggedInAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import caseController from '.';
 import { mockRes } from '../../test-mocks';
 
@@ -42,7 +43,7 @@ describe('controllers - feedback', () => {
     });
 
     const mockReq = {
-      session: { user: { username: 'Tester', email: 'test@test.test' }, userToken: 'mockToken' },
+      session: { user: { username: 'Tester', email: MOCK_EMAIL }, userToken: 'mockToken' },
       body: {
         role: 'computers',
         team: 'Test ltd',
@@ -50,7 +51,7 @@ describe('controllers - feedback', () => {
         easyToUse: 'Very good',
         satisfied: 'Very satisfied',
         howCanWeImprove: 'Devs are doing a great job already',
-        emailAddress: 'test@testing.com',
+        emailAddress: MOCK_EMAIL,
       },
     };
 
@@ -60,7 +61,7 @@ describe('controllers - feedback', () => {
       // checks body has submitted by in right format from user
       mockReq.body.submittedBy = {
         username: 'Tester',
-        email: 'test@test.test',
+        email: MOCK_EMAIL,
       };
 
       expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
@@ -78,7 +79,7 @@ describe('controllers - feedback', () => {
           easyToUse: 'Very good',
           satisfied: 'Very satisfied',
           howCanWeImprove: 'Devs are doing a great job already',
-          emailAddress: 'test@testing.com',
+          emailAddress: MOCK_EMAIL,
         },
       };
       await caseController.postFeedback(mockReqNoUser, res);

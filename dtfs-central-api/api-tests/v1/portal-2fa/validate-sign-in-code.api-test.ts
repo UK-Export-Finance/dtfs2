@@ -60,11 +60,14 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Ok} and sign in the user when the OTP is valid`, async () => {
+    // Arrange
     const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], sessionIdentifier: 'existing-session-identifier' });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
     expect(response.body.success).toEqual(true);
     expect(response.body.user?._id.toString()).toEqual(user._id.toString());
@@ -78,51 +81,66 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} when the OTP is incorrect`, async () => {
+    // Arrange
     const { signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken] });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: '000000', auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.Unauthorized);
     expect(response.body).toEqual({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} when the OTP has expired`, async () => {
+    // Arrange
     const { securityCode, signInToken } = await generateValidSignInOtp();
     const expiredSignInToken: SignInTokens = { ...signInToken, expiry: Date.now() - 1 };
     const user = await insertUser({ signInTokens: [expiredSignInToken] });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.Unauthorized);
     expect(response.body).toEqual({ success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
   });
 
   it(`should respond with a ${HttpStatusCode.NotFound} when the user has no sign in tokens`, async () => {
+    // Arrange
     const user = await insertUser({ signInTokens: [] });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: '123456', auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
     expect(response.body).toEqual({ message: 'User not found' });
   });
 
   it(`should respond with a ${HttpStatusCode.Forbidden} when the user is blocked`, async () => {
+    // Arrange
     const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], 'user-status': USER_STATUS.BLOCKED });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.Forbidden);
     expect(response.body).toEqual({ message: 'User is blocked or disabled' });
   });
 
   it(`should respond with a ${HttpStatusCode.Forbidden} when the user is disabled`, async () => {
+    // Arrange
     const { securityCode, signInToken } = await generateValidSignInOtp();
     const user = await insertUser({ signInTokens: [signInToken], disabled: true });
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: user._id.toString(), signInOTPCode: securityCode, auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.Forbidden);
     expect(response.body).toEqual({ message: 'User is blocked or disabled' });
   });
@@ -135,10 +153,13 @@ describe(`POST ${BASE_URL}`, () => {
    * should be updated to expect a 404 once DTFS2-8249 is fixed.
    */
   it(`should respond with a ${HttpStatusCode.InternalServerError} when the user does not exist (see DTFS2-8249)`, async () => {
+    // Arrange
     const nonExistentUserId = new ObjectId().toString();
 
+    // Act
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: nonExistentUserId, signInOTPCode: '123456', auditDetails }).to(BASE_URL);
 
+    // Assert
     expect(response.status).toEqual(HttpStatusCode.InternalServerError);
     expect(response.body).toEqual({ message: `Failed to find user with id ${nonExistentUserId}` });
   });

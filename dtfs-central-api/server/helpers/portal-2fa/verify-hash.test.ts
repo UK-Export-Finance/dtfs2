@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
+import { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { verifyHash } from './verify-hash';
 
 describe('verifyHash', () => {
@@ -7,7 +7,7 @@ describe('verifyHash', () => {
   const otpCode = '123456';
   const otpHash = generateHash(otpCode, otpSalt).toString(HEX_STRING_TYPE);
   const maliciousUserId = 'user123\n!@#$';
-  const sanitisedUserId = maliciousUserId.replace(/[^a-zA-Z0-9_-]/g, '');
+  const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   beforeEach(() => {
     jest.spyOn(console, 'info').mockImplementation(() => {});
@@ -20,8 +20,10 @@ describe('verifyHash', () => {
 
   describe('when the provided OTP code is correct', () => {
     it('should return true', () => {
+      // Act
       const result = verifyHash(otpCode, otpSalt, otpHash, maliciousUserId);
 
+      // Assert
       expect(result).toEqual(true);
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP hash for user %s', sanitisedUserId);
     });
@@ -29,8 +31,10 @@ describe('verifyHash', () => {
 
   describe('when the provided OTP code is incorrect', () => {
     it('should return false', () => {
+      // Act
       const result = verifyHash('654321', otpSalt, otpHash, maliciousUserId);
 
+      // Assert
       expect(result).toEqual(false);
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP hash for user %s', sanitisedUserId);
     });
@@ -48,6 +52,7 @@ describe('verifyHash', () => {
     });
 
     it('should throw an error', () => {
+      // Act & Assert
       expect(() => verifyHash(otpCode, otpSalt, otpHash, maliciousUserId)).toThrow(new Error('Error validating OTP hash'));
 
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP hash for user %s', sanitisedUserId);

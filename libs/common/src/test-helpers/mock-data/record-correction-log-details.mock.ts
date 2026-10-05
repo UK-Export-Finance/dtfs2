@@ -1,3 +1,4 @@
+import { MOCK_EMAIL } from './email';
 import { GetRecordCorrectionLogDetailsResponseBody } from '../../types';
 
 export const recordCorrectionLogDetailsMock: GetRecordCorrectionLogDetailsResponseBody = {
@@ -10,7 +11,7 @@ export const recordCorrectionLogDetailsMock: GetRecordCorrectionLogDetailsRespon
     formattedCorrectRecords: 'Correct records',
     isCompleted: true,
     bankTeamName: 'Test bank team',
-    bankTeamEmails: ['test@ukexportfinance.gov.uk'],
+    bankTeamEmails: [MOCK_EMAIL],
     additionalInfo: '123',
     formattedBankCommentary: '-',
     formattedDateReceived: '-',

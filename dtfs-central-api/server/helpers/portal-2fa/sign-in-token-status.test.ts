@@ -39,7 +39,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithNoTokens, 'anySignInCode');
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('No sign in tokens found for user %s', user._id);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'No sign in tokens found for user %s', user._id);
     });
   });
 
@@ -62,7 +62,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithNoTokens, 'anySignInCode');
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('No sign in tokens found for user %s', user._id);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'No sign in tokens found for user %s', user._id);
     });
   });
 
@@ -85,7 +85,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithNoTokens, 'anySignInCode');
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('Latest sign in token is missing required fields for user %s', user._id);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'Latest sign in token is missing required fields for user %s', user._id);
     });
   });
 
@@ -112,7 +112,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithTokens, 'anySignInCode');
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('Sign in OTP is invalid for user %s', user._id);
+      expect(console.error).toHaveBeenNthCalledWith(1, 'Sign in OTP is invalid for user %s', user._id);
     });
   });
 
@@ -139,7 +139,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithTokens, 'anySignInCode');
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('Sign in OTP is expired for user %s', user._id);
+      expect(console.info).toHaveBeenNthCalledWith(1, 'Sign in OTP is expired for user %s', user._id);
     });
   });
 
@@ -180,7 +180,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithTokens, 'anySignInCode');
 
       // Assert
-      expect(mockVerifyHash).toHaveBeenCalledWith('anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
+      expect(mockVerifyHash).toHaveBeenNthCalledWith(1, 'anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
     });
 
     it('should check the latest sign in token even when the tokens are out of order', () => {
@@ -193,7 +193,7 @@ describe('signInTokenStatus', () => {
       signInTokenStatus(userWithOutOfOrderTokens, 'anySignInCode');
 
       // Assert
-      expect(mockVerifyHash).toHaveBeenCalledWith('anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
+      expect(mockVerifyHash).toHaveBeenNthCalledWith(1, 'anySignInCode', latestToken.saltHex, latestToken.hashHex, user._id.toString());
     });
   });
 });

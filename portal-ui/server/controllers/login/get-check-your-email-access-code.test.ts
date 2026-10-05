@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { getCheckYourEmailAccessCodePage, GetCheckYourEmailAccessCodePageRequest } from './get-check-your-email-access-code';
 
 describe('controllers/login/get-check-your-email-access-code', () => {
@@ -19,7 +20,7 @@ describe('controllers/login/get-check-your-email-access-code', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: 2,
-        userEmail: 'test@example.com',
+        userEmail: MOCK_EMAIL,
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 
@@ -31,7 +32,7 @@ describe('controllers/login/get-check-your-email-access-code', () => {
       requestNewCodeUrl: '/login/request-new-access-code',
       isAccessCodeLink: true,
       isSupportInfo: false,
-      email: 'test@example.com',
+      email: MOCK_EMAIL,
     });
   });
 
@@ -50,7 +51,7 @@ describe('controllers/login/get-check-your-email-access-code', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: -2,
-        userEmail: 'test@example.com',
+        userEmail: MOCK_EMAIL,
       },
     } as unknown as GetCheckYourEmailAccessCodePageRequest;
 

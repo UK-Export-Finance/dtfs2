@@ -1,3 +1,4 @@
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { sendEmail } from '.';
 import externalApi from '../../external-api/api';
 
@@ -7,7 +8,7 @@ describe('sendEmail', () => {
   let sendEmailSpy = jest.fn();
 
   const template = 'template';
-  const email = 'test@test.com';
+  const email = MOCK_EMAIL;
   const emailVariables = { variable: 'value' };
 
   beforeEach(() => {

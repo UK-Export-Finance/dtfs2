@@ -1,9 +1,8 @@
 import { OTP } from '@ukef/dtfs2-common';
 import { isSignInDataStale } from './is-sign-in-data-stale';
+import { SIGN_IN_DATA_STALE_OFFSET_MILLISECONDS } from '../../../test-helpers/test-data';
 
 describe('isSignInDataStale', () => {
-  const SIGN_IN_DATA_STALE_OFFSET_MILLISECONDS = 1000;
-
   it('should return false if signInOTPSendDate is not provided', () => {
     // Act
     const result = isSignInDataStale();

@@ -6,6 +6,7 @@ describe('doesUserHaveSignInTokens', () => {
   const user: PortalUser = aPortalUser();
 
   it('should return true if user has sign in tokens', () => {
+    // Arrange
     const userWithTokens = {
       ...user,
       signInTokens: [
@@ -17,19 +18,32 @@ describe('doesUserHaveSignInTokens', () => {
       ],
     };
 
-    expect(doesUserHaveSignInTokens(userWithTokens)).toEqual(true);
+    // Act
+    const result = doesUserHaveSignInTokens(userWithTokens);
+
+    // Assert
+    expect(result).toEqual(true);
   });
 
   it('should return false if user has no sign in tokens', () => {
+    // Arrange
     const userWithoutTokens = {
       ...user,
       signInTokens: [],
     };
 
-    expect(doesUserHaveSignInTokens(userWithoutTokens)).toEqual(false);
+    // Act
+    const result = doesUserHaveSignInTokens(userWithoutTokens);
+
+    // Assert
+    expect(result).toEqual(false);
   });
 
   it('should return false if user has undefined sign in tokens', () => {
-    expect(doesUserHaveSignInTokens(user)).toEqual(false);
+    // Act
+    const result = doesUserHaveSignInTokens(user);
+
+    // Assert
+    expect(result).toEqual(false);
   });
 });

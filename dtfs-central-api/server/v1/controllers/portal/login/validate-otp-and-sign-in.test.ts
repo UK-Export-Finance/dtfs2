@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, issueValid2FAJWT } from '@ukef/dtfs2-common';
+import { AuditDetails, issueValid2FAJWT, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { validateOTPAndSignIn } from './validate-otp-and-sign-in';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
@@ -72,10 +72,13 @@ describe('validateOTPAndSignIn', () => {
     });
 
     it(`should respond with ${HttpStatusCode.InternalServerError} and the not found error message`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: `Failed to find user with id ${userId}` });
     });
@@ -87,10 +90,13 @@ describe('validateOTPAndSignIn', () => {
     });
 
     it(`should respond with ${HttpStatusCode.NotFound}`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
     });
   });
@@ -101,10 +107,13 @@ describe('validateOTPAndSignIn', () => {
     });
 
     it(`should respond with ${HttpStatusCode.Forbidden}`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Forbidden);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'User is blocked or disabled' });
     });
@@ -112,31 +121,40 @@ describe('validateOTPAndSignIn', () => {
 
   describe('when validateOtp returns an unsuccessful result', () => {
     it('should respond with Unauthorized when the OTP is expired', async () => {
+      // Arrange
       jest.mocked(validateOtp).mockReturnValue({ success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Unauthorized);
       expect(res.send).toHaveBeenNthCalledWith(1, { success: false, isExpired: true, statusCode: HttpStatusCode.Unauthorized });
     });
 
     it('should respond with Unauthorized when the OTP is invalid', async () => {
+      // Arrange
       jest.mocked(validateOtp).mockReturnValue({ success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Unauthorized);
       expect(res.send).toHaveBeenNthCalledWith(1, { success: false, isInvalid: true, statusCode: HttpStatusCode.Unauthorized });
     });
 
     it('should respond with NotFound when the OTP is not found', async () => {
+      // Arrange
       jest.mocked(validateOtp).mockReturnValue({ success: false, notFound: true, statusCode: HttpStatusCode.NotFound });
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
       expect(res.send).toHaveBeenNthCalledWith(1, { success: false, notFound: true, statusCode: HttpStatusCode.NotFound });
     });
@@ -144,19 +162,25 @@ describe('validateOTPAndSignIn', () => {
 
   describe('when the OTP is valid', () => {
     it('should call issueValid2FAJWT and PortalUsersRepo.updateLastLoginAndResetSignInData', async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(issueValid2FAJWT).toHaveBeenNthCalledWith(1, signedInUser);
       expect(updateLastLoginAndResetSignInDataSpy).toHaveBeenNthCalledWith(1, { userId, sessionIdentifier: 'session-id', auditDetails });
     });
 
     it(`should respond with ${HttpStatusCode.Ok} and the user/tokenObject/success flag`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.Ok);
       expect(res.send).toHaveBeenNthCalledWith(1, { user: signedInUser, tokenObject: { token: 'jwt-token', expires: '12h' }, success: true });
     });
@@ -168,19 +192,25 @@ describe('validateOTPAndSignIn', () => {
     });
 
     it(`should respond with ${HttpStatusCode.InternalServerError} and the error message`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
     });
 
     it(`should respond with ${HttpStatusCode.InternalServerError} when userId is missing`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({}, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'unexpected error' });
     });
@@ -192,10 +222,13 @@ describe('validateOTPAndSignIn', () => {
     });
 
     it(`should respond with ${HttpStatusCode.InternalServerError} and a generic message`, async () => {
+      // Arrange
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
       expect(res.send).toHaveBeenNthCalledWith(1, { message: 'An unexpected error occurred' });
     });
@@ -203,16 +236,19 @@ describe('validateOTPAndSignIn', () => {
 
   describe('logging', () => {
     it('should sanitise the logged userId', async () => {
+      // Arrange
       const maliciousUserId = `${userId}\n\r!@#$%^&*()`;
-      const sanitisedUserId = maliciousUserId.replace(/[^a-zA-Z0-9_-]/g, '');
+      const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
       jest.mocked(getUserById).mockResolvedValue({ ...signedInUser, signInTokens: [] });
 
       const res = getMockResponse();
 
+      // Act
       await invokeController({ userId: maliciousUserId, signInOTPCode, auditDetails }, res);
 
+      // Assert
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP and signing in user %s', sanitisedUserId);
-      expect(console.error).toHaveBeenNthCalledWith(1, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
+      expect(console.info).toHaveBeenNthCalledWith(2, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
     });
   });
 });

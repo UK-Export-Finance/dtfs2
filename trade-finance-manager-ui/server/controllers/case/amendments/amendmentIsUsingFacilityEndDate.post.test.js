@@ -1,6 +1,6 @@
-import { MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
+import { MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import { mockRes, mockUser } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentIsUsingFacilityEndDate } from './amendmentIsUsingFacilityEndDate.controller';
 
@@ -10,14 +10,7 @@ api.getAmendmentById = jest.fn();
 api.updateAmendment = jest.fn();
 api.getFacility = jest.fn();
 
-const user = {
-  _id: '12345678',
-  username: 'testUser',
-  firstName: 'Joe',
-  lastName: 'Bloggs',
-  teams: [TEAM_IDS.PIM],
-  email: 'test@localhost',
-};
+const user = mockUser;
 
 const gefFacility = {
   facilitySnapshot: { isGef: true, type: MAPPED_FACILITY_TYPE.CASH },
