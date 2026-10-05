@@ -1,5 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { isSalesforceCustomerCreationEnabled, isCountryUk } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk, CUSTOMER_TYPE } = require('@ukef/dtfs2-common');
 const { addPartyUrns, identifyDealParties } = require('./deal.party-db');
 const { MOCK_GEF_MAPPED_DEAL } = require('../__mocks__/mock-deal');
 const { getOrCreatePartyDbInfo, getPartyDbInfo, updateDeal } = require('../api');
@@ -253,7 +253,14 @@ describe('addPartyUrns', () => {
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
     expect(updateDeal).toHaveBeenCalledTimes(1);
 
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo: 'invalid', companyName, probabilityOfDefault, isUkEntity, code });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({
+      companyRegNo: 'invalid',
+      companyName,
+      probabilityOfDefault,
+      isUkEntity,
+      code,
+      customerType: CUSTOMER_TYPE.CUSTOMER,
+    });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
   });
@@ -374,7 +381,14 @@ describe('addPartyUrns', () => {
     expect(updateDeal).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(0);
 
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({
+      companyRegNo,
+      companyName,
+      probabilityOfDefault,
+      isUkEntity,
+      code,
+      customerType: CUSTOMER_TYPE.CUSTOMER,
+    });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
@@ -443,7 +457,14 @@ describe('addPartyUrns', () => {
 
       // Assert
       expect(getPartyDbInfo).toHaveBeenNthCalledWith(1, { companyRegNo });
-      expect(getOrCreatePartyDbInfo).toHaveBeenNthCalledWith(1, { companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+      expect(getOrCreatePartyDbInfo).toHaveBeenNthCalledWith(1, {
+        companyRegNo,
+        companyName,
+        probabilityOfDefault,
+        isUkEntity,
+        code,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      });
       expect(response.newPartyUrnCreated).toBe(false);
     });
   });
@@ -506,7 +527,14 @@ describe('addPartyUrns', () => {
 
       // Assert
       expect(getPartyDbInfo).toHaveBeenNthCalledWith(1, { companyRegNo });
-      expect(getOrCreatePartyDbInfo).toHaveBeenNthCalledWith(1, { companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+      expect(getOrCreatePartyDbInfo).toHaveBeenNthCalledWith(1, {
+        companyRegNo,
+        companyName,
+        probabilityOfDefault,
+        isUkEntity,
+        code,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      });
       expect(response.newPartyUrnCreated).toBe(false);
     });
   });
@@ -577,7 +605,14 @@ describe('addPartyUrns', () => {
     expect(updateDeal).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(0);
 
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({
+      companyRegNo,
+      companyName,
+      probabilityOfDefault,
+      isUkEntity,
+      code,
+      customerType: CUSTOMER_TYPE.CUSTOMER,
+    });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
 
