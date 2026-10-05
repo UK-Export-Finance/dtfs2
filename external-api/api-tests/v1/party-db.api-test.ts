@@ -77,47 +77,21 @@ describe('/party-db', () => {
       customerType: CUSTOMER_TYPE.CUSTOMER,
     };
 
-    describe('when company registration number is not supplied', () => {
-      it(`should return a ${HttpStatusCode.BadRequest}`, async () => {
+    const missingFieldTestCases = [
+      { field: 'companyRegNo', errorMessage: 'Invalid company registration number' },
+      { field: 'companyName', errorMessage: 'Invalid company name' },
+      { field: 'code', errorMessage: 'Invalid industry code' },
+      { field: 'customerType', errorMessage: 'Invalid customer type' },
+    ];
+
+    describe.each(missingFieldTestCases)('when $field is missing', ({ field, errorMessage }) => {
+      it.each([null, undefined])(`should return a ${HttpStatusCode.BadRequest} when %s`, async (value) => {
         // Arrange & Act
-        const { status, body } = await post({ ...validPayload, companyRegNo: null }).to('/party-db/');
+        const { status, body } = await post({ ...validPayload, [field]: value }).to('/party-db/');
 
         // Assert
         expect(status).toEqual(HttpStatusCode.BadRequest);
-        expect(body).toMatchObject({ data: 'Invalid company registration number', status: HttpStatusCode.BadRequest });
-      });
-    });
-
-    describe('when company name is not supplied', () => {
-      it(`should return a ${HttpStatusCode.BadRequest}`, async () => {
-        // Arrange & Act
-        const { status, body } = await post({ ...validPayload, companyName: null }).to('/party-db/');
-
-        // Assert
-        expect(status).toEqual(HttpStatusCode.BadRequest);
-        expect(body).toMatchObject({ data: 'Invalid company name', status: HttpStatusCode.BadRequest });
-      });
-    });
-
-    describe('when industry code is not supplied', () => {
-      it(`should return a ${HttpStatusCode.BadRequest}`, async () => {
-        // Arrange & Act
-        const { status, body } = await post({ ...validPayload, code: null }).to('/party-db/');
-
-        // Assert
-        expect(status).toEqual(HttpStatusCode.BadRequest);
-        expect(body).toMatchObject({ data: 'Invalid industry code', status: HttpStatusCode.BadRequest });
-      });
-    });
-
-    describe('when customer type is not supplied', () => {
-      it(`should return a ${HttpStatusCode.BadRequest}`, async () => {
-        // Arrange & Act
-        const { status, body } = await post({ ...validPayload, customerType: null }).to('/party-db/');
-
-        // Assert
-        expect(status).toEqual(HttpStatusCode.BadRequest);
-        expect(body).toMatchObject({ data: 'Invalid customer type', status: HttpStatusCode.BadRequest });
+        expect(body).toMatchObject({ data: errorMessage, status: HttpStatusCode.BadRequest });
       });
     });
   });
