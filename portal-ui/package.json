@@ -19,7 +19,7 @@
   "author": "UK Export Finance",
   "main": "server/index.ts",
   "scripts": {
-    "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
@@ -28,9 +28,9 @@
     "start": "npx ts-node server/index.ts",
     "start:dev": "npx nodemon server/index.ts --config ../nodemon.json",
     "type-check": "tsc --noEmit --pretty",
-    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
+    "unit-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "3.0.2",
