@@ -9,7 +9,7 @@
           <a
             class="govuk-link"
             href="/gef/application-details/{{ deal.dealId }}"
-            aria-label="View deal details"
+            aria-label="{{ deal.bankInternalRefName }} - View deal details"
             data-cy="reports-deal-link">
             {{ deal.bankInternalRefName }}
           </a>
@@ -17,7 +17,7 @@
           <a
             class="govuk-link"
             href="/contract/{{ deal.dealId }}"
-            aria-label="View deal details"
+            aria-label="{{ deal.bankInternalRefName }} - View deal details"
             data-cy="reports-deal-link">
             {{ deal.bankInternalRefName }}
           </a>

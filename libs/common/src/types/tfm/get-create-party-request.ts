@@ -1,3 +1,5 @@
+import { CustomerType } from '../customer-type';
+
 /**
  * Represents a party entity in Salesforce with relevant company details.
  *
@@ -8,9 +10,10 @@
  * @property code - A numeric code associated with the party.
  */
 export type SalesForceParty = {
+  code: number;
   companyRegNo: string;
   companyName: string;
-  probabilityOfDefault: number;
+  customerType: CustomerType;
   isUkEntity: boolean;
-  code: number;
+  probabilityOfDefault: number;
 };
