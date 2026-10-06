@@ -19,8 +19,8 @@
   "author": "UK Export Finance",
   "main": "server/index.ts",
   "scripts": {
-    "api-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
-    "api-test-dev": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
@@ -29,9 +29,9 @@
     "start": "npx ts-node server/index.ts",
     "start:dev": "npx nodemon server/index.ts --config ../nodemon.json",
     "type-check": "tsc --noEmit --pretty",
-    "unit-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
+    "unit-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@azure/msal-node": "^5.5.0",
@@ -94,6 +94,7 @@
     "babel-plugin-polyfill-corejs3": "^1.0.0",
     "chokidar": "^4.0.3",
     "copy-webpack-plugin": "^14.0.0",
+    "cross-env": "^10.1.0",
     "css-minimizer-webpack-plugin": "^8.0.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",

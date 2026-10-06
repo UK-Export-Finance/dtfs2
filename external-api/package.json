@@ -19,8 +19,8 @@
   "author": "UK Export Finance",
   "main": "server/index.ts",
   "scripts": {
-    "api-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "api-test-dev": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
@@ -28,9 +28,9 @@
     "start": "npx ts-node server/index.ts",
     "start:dev": "npx nodemon server/index.ts --config ../nodemon.json",
     "type-check": "tsc --noEmit --pretty",
-    "unit-test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
+    "unit-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@types/compression": "^1.8.1",
@@ -61,6 +61,7 @@
     "@types/supertest": "^7.2.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
