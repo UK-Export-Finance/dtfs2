@@ -16,7 +16,8 @@
  *           type: integer
  *           example: 1
  *         partyTypeReason:
- *           type: union
+ *           type: string
+ *           nullable: true
  *           example: null
  *         partySubTypeId:
  *           type: integer

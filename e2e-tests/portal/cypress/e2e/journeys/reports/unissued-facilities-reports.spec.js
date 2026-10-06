@@ -120,6 +120,13 @@ context('Dashboard: Unissued facilities report', () => {
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
       cy.get('@row1').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row1')
+        .find('[data-cy="facility__row--bankRef"]')
+        .invoke('text')
+        .then((bankInternalRefName) => {
+          cy.get('@row1').find('[data-cy="reports-deal-link"]').should('contain', bankInternalRefName.trim());
+          cy.get('@row1').find('[data-cy="reports-deal-link"]').should('have.attr', 'aria-label', `${bankInternalRefName.trim()} - View deal details`);
+        });
       cy.get('@row1').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="facility__row--facilityId"]').should('contain', '0000000003');
       cy.get('@row1').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
@@ -128,6 +135,13 @@ context('Dashboard: Unissued facilities report', () => {
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
       cy.get('@row2').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row2')
+        .find('[data-cy="facility__row--bankRef"]')
+        .invoke('text')
+        .then((bankInternalRefName) => {
+          cy.get('@row2').find('[data-cy="reports-deal-link"]').should('contain', bankInternalRefName.trim());
+          cy.get('@row2').find('[data-cy="reports-deal-link"]').should('have.attr', 'aria-label', `${bankInternalRefName.trim()} - View deal details`);
+        });
       cy.get('@row2').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="facility__row--facilityId"]').should('contain', '0000000002');
       cy.get('@row2').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');

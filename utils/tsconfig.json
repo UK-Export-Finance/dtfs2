@@ -24,7 +24,7 @@
     // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
 
     /* Modules */
-    "module": "node16" /* Specify what module code is generated. */,
+    "module": "node20" /* Specify what module code is generated. */,
     "rootDirs": ["./", "../libs/"] /* Allow multiple folders to be treated as one when resolving modules. */,
     "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "paths": {

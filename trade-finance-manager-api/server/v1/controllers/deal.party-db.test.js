@@ -194,16 +194,16 @@ describe('extractPartyUrn', () => {
   });
 });
 
-describe('getPartyUrn', () => {
+describe('getOrCreatePartyUrn', () => {
   it('should return an empty string if no companyRegNo is provided', async () => {
     // Act
-    const result = await api.getPartyUrn({});
+    const result = await api.getOrCreatePartyUrn({});
 
     // Assert
     expect(result).toBe('');
   });
 
-  it('should call getPartyDbInfo and return urn', async () => {
+  it('should call getPartyDbInfo and return the URN', async () => {
     // Arrange
     getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
     isSalesforceCustomerCreationEnabled.mockReturnValue(false);
@@ -211,7 +211,7 @@ describe('getPartyUrn', () => {
     const companyData = { companyRegNo: '12345678' };
 
     // Act
-    const result = await api.getPartyUrn(companyData);
+    const result = await api.getOrCreatePartyUrn(companyData);
 
     // Assert
     expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
@@ -227,7 +227,7 @@ describe('getPartyUrn', () => {
     const companyData = { companyRegNo: '12345678' };
 
     // Act
-    await api.getPartyUrn(companyData);
+    await api.getOrCreatePartyUrn(companyData);
 
     // Assert
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(0);
@@ -241,7 +241,7 @@ describe('getPartyUrn', () => {
     const companyData = { companyRegNo: '12345678' };
 
     // Act
-    const result = await api.getPartyUrn(companyData);
+    const result = await api.getOrCreatePartyUrn(companyData);
 
     // Assert
     expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);

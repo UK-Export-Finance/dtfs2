@@ -48,8 +48,9 @@ context('Confirmation', () => {
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
     });
 
-    it('Should route to the Upload Report page when you try and access the confirm and send page directly', () => {
+    it('Should route to the Upload Report page when accessing confirm and send without report data in the session', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+
       cy.visit(relativeURL('/utilisation-report-upload/confirm-and-send'));
 
       utilisationReportUpload.assertOnThisPage();

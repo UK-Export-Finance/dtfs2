@@ -1,4 +1,4 @@
-const { isSalesforceCustomerCreationEnabled, isCountryUk, UNITED_KINGDOM, DEAL_TYPE } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk, UNITED_KINGDOM, DEAL_TYPE, CUSTOMER_TYPE } = require('@ukef/dtfs2-common');
 
 const api = require('../api');
 
@@ -54,7 +54,7 @@ const extractPartyUrn = (partyDbInfo) => {
 };
 
 /**
- * Gets a PartyURN
+ * Get or create a Party URN
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
  * @param {string} probabilityOfDefault The probability of default
@@ -62,7 +62,7 @@ const extractPartyUrn = (partyDbInfo) => {
  * @param {number} code SIC industry sector code
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
-const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
+const getOrCreatePartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
   let partyDbInfo = null;
 
   if (!companyRegNo) {
@@ -86,7 +86,14 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
       return '';
     }
 
-    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+    partyDbInfo = await api.getOrCreatePartyDbInfo({
+      code,
+      companyName,
+      companyRegNo,
+      customerType: CUSTOMER_TYPE.CUSTOMER,
+      isUkEntity,
+      probabilityOfDefault,
+    });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
@@ -156,7 +163,13 @@ const addPartyUrns = async (deal, auditDetails) => {
     exporterPartyExistedBeforeCreate = Boolean(extractPartyUrn(existingPartyDbInfo));
   }
 
-  const exporterPartyUrn = await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+  const exporterPartyUrn = await getOrCreatePartyUrn({
+    companyRegNo,
+    companyName,
+    probabilityOfDefault,
+    isUkEntity,
+    code,
+  });
 
   const dealUpdate = {
     tfm: {
@@ -207,6 +220,6 @@ module.exports = {
   getCompany,
   addPartyUrns,
   extractPartyUrn,
-  getPartyUrn,
+  getOrCreatePartyUrn,
   identifyDealParties,
 };

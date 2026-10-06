@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const facilities = {
   hasBeenIssuedHeading: () => cy.get('[data-cy="has-been-issued-heading"]'),
   hasBeenIssuedError: () => cy.get('[data-cy="has-been-issued-error"]'),

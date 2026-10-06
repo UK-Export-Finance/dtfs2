@@ -234,7 +234,7 @@ export const getReportConfirmAndSend = (req: Request, res: Response) => {
   const { user, utilisationReport } = asLoggedInUserSession(req.session);
 
   try {
-    if (!utilisationReport) {
+    if (!utilisationReport?.fileBuffer || !utilisationReport?.reportData) {
       return res.redirect('/utilisation-report-upload');
     }
 

@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.17.25",
-    "axios": "1.19.0",
+    "axios": "1.20.0",
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "durable-functions": "^3.3.0"
@@ -41,7 +41,7 @@
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
-    "jest": "^30.4.2"
+    "jest": "^30.5.1"
   },
   "engines": {
     "node": ">=24.17.0",
