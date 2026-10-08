@@ -159,7 +159,7 @@ jobs:
   # 5. Notification
   notify:
     name: Notification 🔔
-    needs: [setup, database, webapp, functions]
+    needs: [setup, database, functions]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
