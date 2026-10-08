@@ -86,44 +86,44 @@ jobs:
           log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   # 3. micro-serices WebApp deployments
-  webapp:
-    name: WebApp 🌐
-    needs: [setup, database]
-    environment: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, DTFS, deployment]
-    env:
-      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+  # webapp:
+  #   name: WebApp 🌐
+  #   needs: [setup, database]
+  #   environment: ${{ needs.setup.outputs.environment }}
+  #   runs-on: [self-hosted, DTFS, deployment]
+  #   env:
+  #     ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
-    strategy:
-      max-parallel: 1
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+  #   strategy:
+  #     max-parallel: 1
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
-    concurrency:
-      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Repository 🗂️
-        uses: actions/checkout@v7
+  #   steps:
+  #     - name: Repository 🗂️
+  #       uses: actions/checkout@v7
 
-      - name: Deploy ⚡
-        uses: ./.github/actions/webapp
-        with:
-          branch: ${{ github.ref_name }}
-          region: ${{ vars.REGION }}
-          group: ${{ secrets.RESOURCE_GROUP }}
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          acr: ${{ secrets.ACR_PASSWORD }}
-          webapp: ${{ matrix.webapp }}
+  #     - name: Deploy ⚡
+  #       uses: ./.github/actions/webapp
+  #       with:
+  #         branch: ${{ github.ref_name }}
+  #         region: ${{ vars.REGION }}
+  #         group: ${{ secrets.RESOURCE_GROUP }}
+  #         credentials: ${{ secrets.AZURE_CREDENTIALS }}
+  #         acr: ${{ secrets.ACR_PASSWORD }}
+  #         webapp: ${{ matrix.webapp }}
 
   # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
-    needs: [setup, database, webapp]
+    needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
