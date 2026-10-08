@@ -84,6 +84,9 @@ WORKDIR ${ROOT}
 COPY --chown=node:node --from=build ${ROOT}/package.json .
 COPY --chown=node:node --from=build ${ROOT}/package-lock.json .
 COPY --chown=node:node --from=build ${ROOT}/node_modules ./node_modules
+# Workspace-specific (non-hoisted) dependencies, e.g. `date-fns@4`, `dotenv@17`.
+# These must override the hoisted root versions, mirroring Node's resolution from the workspace directory.
+COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/node_modules ./node_modules
 
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/package.json ./package.json
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/tsconfig.json ./tsconfig.json
