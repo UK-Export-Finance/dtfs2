@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.0.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.2.0...v4.0.0) (2026-10-08)
+
+
+### Features
+
+* **DTFS2-8553:** gift facility mapping - ewcs accrual schedules ([#5023](https://github.com/UK-Export-Finance/dtfs2/issues/5023)) ([f760a9c](https://github.com/UK-Export-Finance/dtfs2/commit/f760a9c7183748d18f704c77835714417f767e74))
+* **DTFS2-8610:** salesforce integration - customerType field ([#5040](https://github.com/UK-Export-Finance/dtfs2/issues/5040)) ([1874445](https://github.com/UK-Export-Finance/dtfs2/commit/18744454a4ea345225c8e2a70fb51a7bcc09d686))
+
+
+### Bug Fixes
+
+* **DTFS-8626:** fix acbs failing due to removed docker copy call for acbs node_modules ([#5048](https://github.com/UK-Export-Finance/dtfs2/issues/5048)) ([e01210b](https://github.com/UK-Export-Finance/dtfs2/commit/e01210bcc30de8b08288eeae55ec90ec7f91cd3e))
+* **DTFS2-8516:** align portal-ui link accessible names with visible text ([#4864](https://github.com/UK-Export-Finance/dtfs2/issues/4864)) ([e88b474](https://github.com/UK-Export-Finance/dtfs2/commit/e88b474003628c89c22e27788858dc9faf862dbd))
+* **DTFS2-8583:** send a facility to gift - exporter party urn check ([#4978](https://github.com/UK-Export-Finance/dtfs2/issues/4978)) ([a6a7743](https://github.com/UK-Export-Finance/dtfs2/commit/a6a7743943ca3dc765ddf3a02076d8e45c00b45c))
+* **DTFS2-8593:** create a gift facility - ewcs urn, fee mapping ([#4991](https://github.com/UK-Export-Finance/dtfs2/issues/4991)) ([e77d976](https://github.com/UK-Export-Finance/dtfs2/commit/e77d976299853eedec9e5e9722be50611196d657))
+* **DTFS2-8603:** apim/gift facility mapping - indexRateCode ([#5039](https://github.com/UK-Export-Finance/dtfs2/issues/5039)) ([a205458](https://github.com/UK-Export-Finance/dtfs2/commit/a2054589e39e1f20917b5072928544d822777ab9))
+* **DTFS2-8621:** change portal-bank-list to only sort on order ([#5046](https://github.com/UK-Export-Finance/dtfs2/issues/5046)) ([c295aa9](https://github.com/UK-Export-Finance/dtfs2/commit/c295aa9761bfb1e47802bf3c281a371a06182f46))
+
+
+### Miscellaneous Chores
+
+* prepare 4.0.0 release ([#5011](https://github.com/UK-Export-Finance/dtfs2/issues/5011)) ([bfa9a1c](https://github.com/UK-Export-Finance/dtfs2/commit/bfa9a1cdb037ff2b0681c73a523fa3d2537efacb))
+
 ## [3.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v3.1.0...v3.2.0) (2026-08-27)
 
 
