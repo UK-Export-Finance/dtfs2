@@ -19,14 +19,14 @@
   "author": "UK Export Finance",
   "main": "src/functions/*.js",
   "scripts": {
-    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
+    "api-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
     "lint": "eslint --color **/*.js --ignore-path ../../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.js",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.js --ignore-path ../../.prettierignore",
     "prettier:fix": "prettier --write **/*.js --ignore-path ../../.prettierignore",
-    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
+    "unit-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@types/lodash": "^4.17.25",
@@ -38,10 +38,11 @@
   "devDependencies": {
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
-    "jest": "^30.5.1"
+    "jest": "^30.5.2"
   },
   "engines": {
     "node": ">=24.17.0",

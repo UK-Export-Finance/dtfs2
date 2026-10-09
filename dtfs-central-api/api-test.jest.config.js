@@ -9,6 +9,5 @@ module.exports = {
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['/node_modules/(?!(otplib|@otplib|@scure|@noble)/)'],
   ...commonSettings,
 };

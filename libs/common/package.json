@@ -48,9 +48,9 @@
     "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",
     "type-check": "tsc --noEmit --pretty",
     "typeorm": "typeorm-ts-node-commonjs",
-    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
+    "unit-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@azure/msal-node": "^5.5.0",
@@ -60,7 +60,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.25",
     "@types/node-cron": "^3.0.11",
-    "@types/sanitize-html": "^2.16.1",
+    "@types/sanitize-html": "^2.16.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "axios": "1.20.0",
@@ -86,7 +86,7 @@
     "qs": "^6.16.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.2.2",
-    "sanitize-html": "2.17.5",
+    "sanitize-html": "2.18.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.31",
@@ -94,7 +94,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@jest/globals": "^30.4.1",
+    "@jest/globals": "^30.5.2",
     "@types/jest": "^30.0.0",
     "@types/jest-when": "^3.5.5",
     "@types/node": "^26.5.1",
@@ -103,10 +103,10 @@
     "cross-env": "^10.1.0",
     "eslint": "^8.57.1",
     "husky": "^9.1.7",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "jest-when": "^4.0.3",
-    "supertest": "^7.2.2",
-    "ts-jest": "^29.4.12"
+    "supertest": "^7.3.0",
+    "ts-jest": "^29.4.14"
   },
   "engines": {
     "node": ">=24.17.0",
