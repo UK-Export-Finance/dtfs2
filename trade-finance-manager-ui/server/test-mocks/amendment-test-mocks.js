@@ -1,4 +1,5 @@
 const { TEAM_IDS, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, FACILITY_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const { DEAL, DECISIONS } = require('../constants');
 
 const MOCK_DEAL = {
@@ -27,7 +28,7 @@ const MOCK_USER_UNDERWRITER = {
   firstName: 'Joe',
   lastName: 'Bloggs',
   teams: [TEAM_IDS.UNDERWRITERS],
-  email: 'test@test.com',
+  email: MOCK_EMAIL,
 };
 
 const MOCK_USER_PIM = {

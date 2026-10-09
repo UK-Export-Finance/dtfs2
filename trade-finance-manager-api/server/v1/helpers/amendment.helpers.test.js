@@ -1,6 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -514,7 +515,7 @@ describe('sendFirstTaskEmail()', () => {
 
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
-    api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'test@test.com' }));
+    api.findOneTeam = jest.fn(() => Promise.resolve({ email: MOCK_EMAIL }));
   });
 
   it('should send first task email with correct variables with gef deal', async () => {

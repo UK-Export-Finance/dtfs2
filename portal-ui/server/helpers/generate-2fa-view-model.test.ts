@@ -1,3 +1,4 @@
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { generate2FAViewModel } from './generate-2fa-view-model';
 
 describe('generate2FAViewModel', () => {
@@ -10,14 +11,14 @@ describe('generate2FAViewModel', () => {
 
   describe('with validation errors', () => {
     it('should generate a 2FA view model with validation errors', () => {
-      const result = generate2FAViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
+      const result = generate2FAViewModel(2, MOCK_EMAIL, '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
 
       expect(result).toEqual({
         attemptsLeft: 2,
         requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: false,
         isAccessCodeLink: true,
-        email: 'test@example.com',
+        email: MOCK_EMAIL,
         sixDigitAccessCode: '654321',
         validationErrors: mockErrors,
         accessCodeError: mockErrors.sixDigitAccessCode,
@@ -27,14 +28,14 @@ describe('generate2FAViewModel', () => {
 
   describe('with no errors', () => {
     it('should generate a 2FA view model with null accessCodeError when errors is null', () => {
-      const result = generate2FAViewModel(1, 'user@example.com', '123456', null, { isSupportInfo: true, isAccessCodeLink: false });
+      const result = generate2FAViewModel(1, MOCK_EMAIL, '123456', null, { isSupportInfo: true, isAccessCodeLink: false });
 
       expect(result).toEqual({
         attemptsLeft: 1,
         requestNewCodeUrl: '/login/request-new-access-code',
         isSupportInfo: true,
         isAccessCodeLink: false,
-        email: 'user@example.com',
+        email: MOCK_EMAIL,
         sixDigitAccessCode: '123456',
         validationErrors: null,
         accessCodeError: null,
@@ -85,7 +86,7 @@ describe('generate2FAViewModel', () => {
       ];
 
       configs.forEach((config) => {
-        const result = generate2FAViewModel(1, 'test@example.com', '000000', null, config);
+        const result = generate2FAViewModel(1, MOCK_EMAIL, '000000', null, config);
 
         expect(result.isSupportInfo).toBe(config.isSupportInfo);
         expect(result.isAccessCodeLink).toBe(config.isAccessCodeLink);
@@ -95,7 +96,7 @@ describe('generate2FAViewModel', () => {
 
   describe('requestNewCodeUrl', () => {
     it('should always set requestNewCodeUrl to /login/request-new-access-code', () => {
-      const result = generate2FAViewModel(2, 'test@example.com', '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
+      const result = generate2FAViewModel(2, MOCK_EMAIL, '654321', mockErrors, { isSupportInfo: false, isAccessCodeLink: true });
 
       expect(result.requestNewCodeUrl).toBe('/login/request-new-access-code');
     });
@@ -110,7 +111,7 @@ describe('generate2FAViewModel', () => {
         },
       };
 
-      const result = generate2FAViewModel(1, 'test@example.com', '123456', errorsWithOrder, { isSupportInfo: false, isAccessCodeLink: false });
+      const result = generate2FAViewModel(1, MOCK_EMAIL, '123456', errorsWithOrder, { isSupportInfo: false, isAccessCodeLink: false });
 
       expect(result.accessCodeError).toEqual({
         text: 'Invalid code',
@@ -127,7 +128,7 @@ describe('generate2FAViewModel', () => {
         },
       };
 
-      const result = generate2FAViewModel(1, 'test@example.com', '123456', errorsWithoutOrder, { isSupportInfo: false, isAccessCodeLink: false });
+      const result = generate2FAViewModel(1, MOCK_EMAIL, '123456', errorsWithoutOrder, { isSupportInfo: false, isAccessCodeLink: false });
 
       expect(result.accessCodeError).toEqual({
         text: 'Invalid code',

@@ -1,3 +1,4 @@
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { AMENDMENT_TYPES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, AMENDMENT_BANK_DECISION, UNDERWRITER_MANAGER_DECISIONS } from '../constants';
 import { canSendToAcbs } from './can-submit-to-acbs';
 import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
@@ -99,7 +100,7 @@ describe('canSendToAcbs', () => {
           createdBy: {
             username: 'test',
             name: 'test',
-            email: 'test@ukexportfinance.gov.uk',
+            email: MOCK_EMAIL,
           },
         } as PortalFacilityAmendmentWithUkefId;
 
@@ -120,7 +121,7 @@ describe('canSendToAcbs', () => {
           createdBy: {
             username: 'test',
             name: 'test',
-            email: 'test@ukexportfinance.gov.uk',
+            email: MOCK_EMAIL,
           },
         } as PortalFacilityAmendmentWithUkefId;
 

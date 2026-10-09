@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest, AuditDetails, PortalUser, isProduction } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, AuditDetails, PortalUser, isProduction, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
 import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/send-email-and-increment-sign-in-otp-sent-count';
 import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';
@@ -31,7 +31,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
     }
 
     const userId = user._id.toString();
-    const sanitisedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const sanitisedUserId = userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
     console.info('Creating and emailing sign in OTP for user %s', sanitisedUserId);
 
@@ -86,7 +86,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
 
     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });
   } catch (error) {
-    const sanitisedUserId = req.body.user?._id ? String(req.body.user._id).replace(/[^a-zA-Z0-9_-]/g, '') : 'unknown';
+    const sanitisedUserId = req.body.user?._id ? String(req.body.user._id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';
 
     console.error('Failed to create and email sign in OTP for user %s: %o', sanitisedUserId, error);
 

@@ -1,7 +1,7 @@
-import { MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
+import { MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { add, format } from 'date-fns';
 import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import { mockRes, mockUser } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentBankReviewDate } from './amendmentBankReviewDate.controller';
 
@@ -11,14 +11,7 @@ api.getAmendmentById = jest.fn();
 api.updateAmendment = jest.fn();
 api.getFacility = jest.fn();
 
-const user = {
-  _id: '12345678',
-  username: 'testUser',
-  firstName: 'Joe',
-  lastName: 'Bloggs',
-  teams: [TEAM_IDS.PIM],
-  email: 'test@localhost',
-};
+const user = mockUser;
 
 const now = new Date();
 const oneYearFromNowMinusDay = add(now, { years: 1, days: -1 });

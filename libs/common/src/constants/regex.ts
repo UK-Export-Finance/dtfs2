@@ -6,3 +6,5 @@ export const CURRENCY_NUMBER_REGEX = /^\d+(\.\d{1,2})?$/;
  * Examples: "1234", "1,234", "1,234.56"
  */
 export const MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
+
+export const NEW_LINE_AND_PUNCTUATION_REGEX = /[^a-zA-Z0-9_-]/g;

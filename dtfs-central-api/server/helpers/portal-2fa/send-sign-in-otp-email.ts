@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { PortalUser } from '@ukef/dtfs2-common';
+import { PortalUser, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { EmailSendError } from '../../errors/email-send-error';
 import { MissingUserFieldsError } from '../../errors/missing-user-fields-error';
 import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
@@ -14,7 +14,7 @@ export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)
   const { _id, email, firstname, surname } = user;
 
   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
-  const sanitisedId = String(_id).replace(/[^a-zA-Z0-9_-]/g, '');
+  const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   console.info('Sending sign-in OTP email to user %s', sanitisedId);
 

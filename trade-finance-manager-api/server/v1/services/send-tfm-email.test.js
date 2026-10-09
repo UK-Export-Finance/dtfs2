@@ -1,10 +1,11 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const sendTfmEmail = require('./send-tfm-email');
 const externalApis = require('../api');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 
 describe('sendTfmEmail', () => {
   const templateId = 'MOCK-NOTIFY-TEMPLATE-ID';
-  const sendToEmailAddress = 'test@testing.com';
+  const sendToEmailAddress = MOCK_EMAIL;
   const emailVariables = {
     name: 'Testing',
   };

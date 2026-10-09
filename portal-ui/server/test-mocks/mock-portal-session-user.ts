@@ -1,11 +1,12 @@
 import { PortalSessionUser } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
 export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
   _id: '65954cc526d3899694cafff2',
   username: 'PAYMENT_REPORT_OFFICER',
   firstname: 'PAYMENT',
   surname: 'REPORT OFFICER',
-  email: 'test@testing.com',
+  email: MOCK_EMAIL,
   roles: ['payment-report-officer'],
   bank: {
     id: '1',

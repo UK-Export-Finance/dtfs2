@@ -1,8 +1,8 @@
 const { HttpStatusCode } = require('axios');
-const { AUDIT_USER_TYPES, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { AUDIT_USER_TYPES, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
-const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../../../server/v1/api');
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
 const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
@@ -74,7 +74,7 @@ const mockChecker = {
     id: '9',
     name: 'UKEF test bank (Delegated) (TFM)',
   },
-  email: 'test@testing.com',
+  email: MOCK_EMAIL,
   firstname: 'Test',
   surname: 'User',
   roles: ['checker'],

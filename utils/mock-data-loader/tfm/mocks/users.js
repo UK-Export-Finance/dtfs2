@@ -1,9 +1,10 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const TEAMS = require('./teams');
 
 module.exports = {
   T1_USER_1: {
     username: 'T1_USER_1',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
@@ -12,7 +13,7 @@ module.exports = {
   },
   T1_USER_2: {
     username: 'T1_USER_2',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
@@ -21,7 +22,7 @@ module.exports = {
   },
   T1_USER_3: {
     username: 'T1_USER_3',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
@@ -30,7 +31,7 @@ module.exports = {
   },
   T2_USER_1: {
     username: 'T2_USER_1',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
@@ -39,7 +40,7 @@ module.exports = {
   },
   T2_USER_2: {
     username: 'T2_USER_2',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
@@ -48,7 +49,7 @@ module.exports = {
   },
   T2_USER_3: {
     username: 'T2_USER_3',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
@@ -58,7 +59,7 @@ module.exports = {
   BUSINESS_SUPPORT_USER_1: {
     username: 'BUSINESS_SUPPORT_USER_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.BUSINESS_SUPPORT.id],
     timezone: 'Europe/London',
     firstName: 'John',
@@ -67,7 +68,7 @@ module.exports = {
   BUSINESS_SUPPORT_USER_2: {
     username: 'BUSINESS_SUPPORT_USER_2',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.BUSINESS_SUPPORT.id],
     timezone: 'Europe/London',
     firstName: 'Sarah',
@@ -76,7 +77,7 @@ module.exports = {
   UNDERWRITING_SUPPORT_1: {
     username: 'UNDERWRITING_SUPPORT_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITING_SUPPORT.id],
     timezone: 'Europe/London',
     firstName: 'Ben',
@@ -85,7 +86,7 @@ module.exports = {
   UNDERWRITING_SUPPORT_2: {
     username: 'UNDERWRITING_SUPPORT_2',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITING_SUPPORT.id],
     timezone: 'Europe/London',
     firstName: 'Rachel',
@@ -94,7 +95,7 @@ module.exports = {
   UNDERWRITER_MANAGER_1: {
     username: 'UNDERWRITER_MANAGER_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITER_MANAGERS.id],
     timezone: 'Europe/London',
     firstName: 'Benjamin',
@@ -103,7 +104,7 @@ module.exports = {
   UNDERWRITER_MANAGER_2: {
     username: 'UNDERWRITER_MANAGER_2',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITER_MANAGERS.id],
     timezone: 'Europe/London',
     firstName: 'Jonathan',
@@ -112,7 +113,7 @@ module.exports = {
   UNDERWRITER_1: {
     username: 'UNDERWRITER_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITERS.id],
     timezone: 'Europe/London',
     firstName: 'Olivia',
@@ -121,7 +122,7 @@ module.exports = {
   UNDERWRITER_2: {
     username: 'UNDERWRITER_2',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITERS.id],
     timezone: 'Europe/London',
     firstName: 'James',
@@ -130,7 +131,7 @@ module.exports = {
   UNDERWRITER_3: {
     username: 'UNDERWRITER_3',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITERS.id],
     timezone: 'Europe/London',
     firstName: 'Rachel',
@@ -139,7 +140,7 @@ module.exports = {
   RISK_MANAGER_1: {
     username: 'RISK_MANAGER_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.RISK_MANAGERS.id],
     timezone: 'Europe/London',
     firstName: 'Steven',
@@ -148,7 +149,7 @@ module.exports = {
   PIM_USER_1: {
     username: 'PIM_USER_1',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.PIM.id],
     timezone: 'Europe/London',
     firstName: 'Adam',
@@ -157,7 +158,7 @@ module.exports = {
   QA: {
     username: 'QA',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: [TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.PIM.id],
     timezone: 'Europe/London',
     firstName: 'Caroline-Test',
@@ -166,7 +167,7 @@ module.exports = {
   ESTORE: {
     username: 'ESTORE',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: MOCK_EMAIL,
     teams: ['ESTORE'],
     timezone: 'Europe/London',
     firstName: 'ESTORE',

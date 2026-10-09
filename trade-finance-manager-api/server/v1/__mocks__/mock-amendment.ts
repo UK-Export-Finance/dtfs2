@@ -1,4 +1,5 @@
 import { CURRENCY, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 
 export const MOCK_AMENDMENT: TfmFacilityAmendment = {
@@ -36,7 +37,7 @@ export const MOCK_AMENDMENT_WITH_UKEF_DECISION: TfmFacilityAmendment = {
     submittedAt: 1732275114,
     submittedBy: {
       _id: new ObjectId('67404a1fb4c008fea72323a8'),
-      email: 'test@testing.com',
+      email: MOCK_EMAIL,
       name: 'Benjamin Jones',
       username: 'UNDERWRITER_MANAGER_1',
     },
