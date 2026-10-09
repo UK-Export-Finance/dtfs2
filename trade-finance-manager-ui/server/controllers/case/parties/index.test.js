@@ -1,4 +1,4 @@
-import { DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS, TEAM_IDS } from '@ukef/dtfs2-common';
 import partiesController from '.';
 import api from '../../../api';
 import { mockRes, mockUser } from '../../../test-mocks';
@@ -11,7 +11,10 @@ jest.mock('../../helpers/get-success-banner-message.helper', () => ({
 }));
 
 const res = mockRes();
-const user = mockUser;
+const user = {
+  ...mockUser,
+  teams: [TEAM_IDS.BUSINESS_SUPPORT],
+};
 const userNotAllowedToEdit = {
   ...user,
   teams: ['TEST'],
