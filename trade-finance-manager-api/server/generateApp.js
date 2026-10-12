@@ -5,7 +5,7 @@ const { exceptionHandlers, initialiseCronJobScheduler, xss, sanitiseMongoRequest
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
-const swaggerRouter = require('./v1/routes/swagger.route');
+const { router: swaggerRouter } = require('./v1/routes/swagger.route');
 const loginController = require('./v1/controllers/user/user.routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
@@ -35,7 +35,7 @@ const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
 

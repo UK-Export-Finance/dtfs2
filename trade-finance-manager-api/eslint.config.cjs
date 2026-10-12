@@ -152,7 +152,8 @@ module.exports = defineConfig([
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true, caughtErrors: 'none' }],
       '@typescript-eslint/naming-convention': [
         'error',
-        // DTFS exception to allow the exact variable identifier "_id" (MongoDB)
+        // DTFS exception
+        // Why: Allow the exact variable identifier "_id" (MongoDB)
         {
           selector: 'variable',
           filter: {
@@ -240,6 +241,16 @@ module.exports = defineConfig([
 
     rules: {
       'import-x/no-default-export': 'off',
+    },
+  },
+
+  // DTFS exception
+  // Why: *.d.ts ambient declarations merge with existing interfaces (e.g. Express.Request), which `type` cannot do
+  {
+    files: ['**/*.d.ts'],
+
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
     },
   },
 ]);

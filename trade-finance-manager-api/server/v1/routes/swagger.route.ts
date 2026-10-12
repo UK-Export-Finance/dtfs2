@@ -41,4 +41,4 @@ const apis = [
   path.join(__dirname, '..', SWAGGER.DEFINITIONS.PATHS.TS),
 ];
 
-export default swaggerRouter(definition, apis);
+export const router = swaggerRouter(definition, apis);

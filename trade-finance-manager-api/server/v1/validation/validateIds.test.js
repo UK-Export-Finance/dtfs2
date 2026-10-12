@@ -209,7 +209,7 @@ describe('validateIds', () => {
     });
 
     it('should escape dangerous characters', () => {
-      const result = sanitizeUsername(`/a\a"a'a<`);
+      const result = sanitizeUsername(`/aa"a'a<`);
 
       expect(result).toEqual('&#x2F;aa&quot;a&#x27;a&lt;');
     });
