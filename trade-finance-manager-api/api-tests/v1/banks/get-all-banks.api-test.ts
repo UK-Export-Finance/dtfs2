@@ -6,9 +6,9 @@ import { createApi } from '../../api';
 
 const { as } = createApi(app);
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: Bank[];
-}
+} & Response;
 
 describe('/v1/banks', () => {
   describe('GET /v1/banks', () => {

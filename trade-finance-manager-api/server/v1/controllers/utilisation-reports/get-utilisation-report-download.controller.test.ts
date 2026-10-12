@@ -122,7 +122,7 @@ describe('get-utilisation-report-download controller', () => {
       jest.mocked(fileshare.readFile).mockResolvedValue(Buffer.from(mockFileContent));
 
       // Act
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
       getUtilisationReportDownload(req, res);
 
       // Assert

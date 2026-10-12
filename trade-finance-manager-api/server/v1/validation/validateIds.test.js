@@ -209,7 +209,6 @@ describe('validateIds', () => {
     });
 
     it('should escape dangerous characters', () => {
-      // eslint-disable-next-line no-useless-escape, quotes
       const result = sanitizeUsername(`/a\a"a'a<`);
 
       expect(result).toEqual('&#x2F;aa&quot;a&#x27;a&lt;');
