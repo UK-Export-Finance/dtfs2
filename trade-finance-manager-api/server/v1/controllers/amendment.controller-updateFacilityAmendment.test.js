@@ -4,11 +4,11 @@ const { cloneDeep } = require('lodash');
 const { canSendToAcbs, TFM_AMENDMENT_STATUS, isTfmApimGiftIntegrationEnabled } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const amendmentController = require('./amendment.controller');
-const { MOCK_AMENDMENT, MOCK_AMENDMENT_WITH_UKEF_DECISION } = require('../__mocks__/mock-amendment');
+const { MOCK_AMENDMENT, MOCK_AMENDMENT_WITH_UKEF_DECISION } = require('../mocks/mock-amendment');
 const { TEAMS } = require('../../constants');
 const { updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const taskAmendmentHelper = require('../helpers/create-tasks-amendment.helper');
-const { mockFindUserById } = require('../__mocks__/common-api-mocks');
+const { mockFindUserById } = require('../mocks/common-api-mocks');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const { submitFacilityAmendmentsToApimGift } = require('../integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 
@@ -38,10 +38,10 @@ const {
   TASKS_ASSIGNED_TO_UNDERWRITER_MANAGER,
   MOCK_TASKS,
   TASKS_UPDATE_MOCK_REQUEST,
-} = require('../__mocks__/mock-amendment-tasks-assign-by-team');
+} = require('../mocks/mock-amendment-tasks-assign-by-team');
 
-const { MOCK_FACILITIES } = require('../__mocks__/mock-facilities');
-const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
+const { MOCK_FACILITIES } = require('../mocks/mock-facilities');
+const { MOCK_BSS_EWCS_DEAL } = require('../mocks/mock-deal');
 
 const { underwriter, underwriterManager } = MOCK_USERS_FOR_TASKS;
 

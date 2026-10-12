@@ -4,9 +4,9 @@ const { AUDIT_USER_TYPES, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common')
 const amendmentController = require('../../../server/v1/controllers/amendment.controller');
 const api = require('../../../server/v1/api');
 const { updateFacilityAmendment } = require('../../helpers/updateFacilityAmendment');
-const MOCK_GEF_AIN_DEAL = require('../../../server/v1/__mocks__/mock-TFM-deal-AIN-submitted');
-const { mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
-const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
+const MOCK_GEF_AIN_DEAL = require('../../../server/v1/mocks/mock-TFM-deal-AIN-submitted');
+const { mockUpdateDeal } = require('../../../server/v1/mocks/common-api-mocks');
+const MOCK_USERS = require('../../../server/v1/mocks/mock-users');
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {

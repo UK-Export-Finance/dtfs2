@@ -4,7 +4,7 @@ const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/c
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
-const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
+const MOCK_USERS = require('../../../server/v1/mocks/mock-users');
 
 const { as } = createApi(app);
 

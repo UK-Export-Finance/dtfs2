@@ -5,7 +5,7 @@ import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constan
 import sendTfmEmail from '../send-tfm-email';
 import { DealCancellationService } from './deal-cancellation.service';
 import { formatFacilityIds } from './helpers/format-facility-ids';
-import { MOCK_TFM_SESSION_USER } from '../../__mocks__/mock-tfm-session-user';
+import { MOCK_TFM_SESSION_USER } from '../../mocks/mock-tfm-session-user';
 
 const mockPimEmailAddress = 'pim@example.com';
 const ukefDealId = 'ukefDealId';

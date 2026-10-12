@@ -3,7 +3,7 @@ const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapEligibility = require('./mapEligibility');
-const MOCK_DEAL = require('../../../__mocks__/mock-deal-AIN-submitted');
+const MOCK_DEAL = require('../../../mocks/mock-deal-AIN-submitted');
 
 describe('mapDealSnapshot', () => {
   it('should return mapped object', () => {

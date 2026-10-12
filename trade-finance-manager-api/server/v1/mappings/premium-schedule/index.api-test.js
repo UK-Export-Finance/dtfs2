@@ -4,7 +4,7 @@ const mapProductGroup = require('./map-product-group');
 const { mapBssEwcsFacility } = require('../map-submitted-deal/map-bss-ewcs-facility');
 const { stripCommas } = require('../../../utils/string');
 
-const { MOCK_FACILITIES } = require('../../__mocks__/mock-facilities');
+const { MOCK_FACILITIES } = require('../../mocks/mock-facilities');
 
 describe('mapPremiumScheduleFacility', () => {
   const mappedFacility = mapBssEwcsFacility(MOCK_FACILITIES[1]);

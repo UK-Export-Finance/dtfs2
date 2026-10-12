@@ -1,9 +1,9 @@
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('./dealHasAllUkefIds');
-const MOCK_DEAL_NO_UKEF_ID = require('../__mocks__/mock-deal-no-ukef-id');
-const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
-const MOCK_DEAL_GEF = require('../__mocks__/mock-gef-deal');
+const MOCK_DEAL_NO_UKEF_ID = require('../mocks/mock-deal-no-ukef-id');
+const { MOCK_BSS_EWCS_DEAL } = require('../mocks/mock-deal');
+const MOCK_DEAL_GEF = require('../mocks/mock-gef-deal');
 const api = require('../api');
-const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
+const { mockFindOneDeal } = require('../mocks/common-api-mocks');
 
 describe('dealHasAllUkefIds()', () => {
   beforeEach(() => {

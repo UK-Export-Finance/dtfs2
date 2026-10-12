@@ -4,8 +4,8 @@ const {
   taskCanBeEditedWithoutPreviousTaskComplete,
   handleTaskEditFlagAndStatus,
 } = require('./tasks-edit-logic');
-const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
-const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
+const MOCK_AIN_TASKS = require('../mocks/mock-AIN-tasks');
+const MOCK_MIA_TASKS = require('../mocks/mock-MIA-tasks');
 const CONSTANTS = require('../../constants');
 
 describe('tasks edit logic', () => {

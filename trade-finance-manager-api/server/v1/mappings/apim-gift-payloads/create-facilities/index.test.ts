@@ -1,5 +1,5 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
-import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
+import { MOCK_FACILITY_CATEGORIES } from '../../../mocks/mock-facility-categories';
 import * as createFacilityModule from '../create-facility';
 import { ApimGiftFacilityCreationPayload } from '../types';
 import { createFacilities } from '.';

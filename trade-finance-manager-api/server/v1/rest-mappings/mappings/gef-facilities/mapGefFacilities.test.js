@@ -1,6 +1,6 @@
 const mapGefFacilities = require('./mapGefFacilities');
 const facilityMapper = require('../../facility');
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../mocks/mock-cash-contingent-facilities');
 
 describe('mapGefFacilities', () => {
   it('should return mapped GEF facilities', () => {

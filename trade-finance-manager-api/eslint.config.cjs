@@ -152,6 +152,15 @@ module.exports = defineConfig([
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true, caughtErrors: 'none' }],
       '@typescript-eslint/naming-convention': [
         'error',
+        // DTFS exception to allow the exact variable identifier "_id" (MongoDB)
+        {
+          selector: 'variable',
+          filter: {
+            regex: '^_id$',
+            match: true,
+          },
+          format: null,
+        },
         {
           selector: 'variable',
           format: ['camelCase', 'PascalCase', 'UPPER_CASE'],

@@ -1,11 +1,11 @@
 const dealReducer = require('./deal');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
-const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapDealTfm = require('./mappings/deal/deal-tfm/mapDealTfm');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
-const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
-const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
+const MOCK_DEAL_AIN_SUBMITTED = require('../mocks/mock-deal-AIN-submitted');
+const MOCK_GEF_DEAL = require('../mocks/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../mocks/mock-cash-contingent-facilities');
 
 describe('reducer - deal', () => {
   it('should return mapped object', () => {

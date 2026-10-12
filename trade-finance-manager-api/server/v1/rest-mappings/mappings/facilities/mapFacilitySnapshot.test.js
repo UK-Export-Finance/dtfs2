@@ -11,7 +11,7 @@ const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 const { mapBssEwcsFacilityType } = require('./mapFacilityType');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../mocks/mock-deal');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {

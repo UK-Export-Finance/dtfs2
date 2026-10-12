@@ -5,14 +5,14 @@ const acbsController = require('../../../server/v1/controllers/acbs.controller')
 const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const calculateUkefExposure = require('../../../server/v1/helpers/calculateUkefExposure');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
-const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../server/v1/__mocks__/mock-deal-facilities-USD-currency');
-const MOCK_DEAL_ISSUED_FACILITIES = require('../../../server/v1/__mocks__/mock-deal-issued-facilities');
-const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../server/v1/__mocks__/mock-currency-exchange-rate');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
-const MOCK_GEF_DEAL = require('../../../server/v1/__mocks__/mock-gef-deal');
-const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/mocks/mock-deal');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../server/v1/mocks/mock-deal-facilities-USD-currency');
+const MOCK_DEAL_ISSUED_FACILITIES = require('../../../server/v1/mocks/mock-deal-issued-facilities');
+const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../server/v1/mocks/mock-currency-exchange-rate');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/mocks/mock-notify-email-response');
+const MOCK_GEF_DEAL = require('../../../server/v1/mocks/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../server/v1/mocks/mock-gef-deal-MIA');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/mocks/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 

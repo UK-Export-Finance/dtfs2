@@ -2,7 +2,7 @@ import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node'
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdService } from './entra-id.service';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
-import { EntraIdApiMockBuilder, EntraIdConfigMockBuilder } from '../__mocks__/builders';
+import { EntraIdApiMockBuilder, EntraIdConfigMockBuilder } from '../mocks/builders';
 
 jest.mock('@azure/msal-node', () => {
   return {

@@ -16,7 +16,7 @@ const { generateHeadingString, generateListItemString } = require('../../helpers
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../mocks/mock-cash-contingent-facilities');
 const { mapCashContingentFacility } = require('../../mappings/map-submitted-deal/map-cash-contingent-facility');
 
 describe('generate AIN/MIN confirmation email facilities list email variable/string  - GEF', () => {

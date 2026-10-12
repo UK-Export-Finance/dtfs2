@@ -2,7 +2,7 @@ const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilities = require('./mapFacilities');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const mapFacilityTfm = require('./mapFacilityTfm');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../mocks/mock-deal');
 
 describe('mapFacilities', () => {
   const mockTfmFacility = {

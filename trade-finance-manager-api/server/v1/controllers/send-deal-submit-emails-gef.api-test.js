@@ -1,14 +1,14 @@
 const { sendFirstTaskEmail, sendDealSubmitEmails, sendMiaAcknowledgement, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
-const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
+const { gefFacilitiesList } = require('../emails/ain-min-confirmation/gef-facilities-list');
+const { generateMiaConfirmationEmailVars } = require('../emails/mia-confirmation/generate-email-variables');
 
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
-const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
-const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-variables');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
+const { mockFindOneDeal } = require('../mocks/common-api-mocks');
+const gefEmailVariables = require('../emails/ain-min-confirmation/gef-email-variables');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));

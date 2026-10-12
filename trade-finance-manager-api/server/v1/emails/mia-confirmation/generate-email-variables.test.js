@@ -3,8 +3,8 @@ const { generateMiaConfirmationEmailVars, commonEmailVars } = require('./generat
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const bssEmailVariables = require('./bss-email-variables');
 const CONSTANTS = require('../../../constants');
-const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
-const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../mocks/mock-deal');
+const MOCK_GEF_DEAL = require('../../mocks/mock-gef-deal');
 
 describe('generate AIN/MIN confirmation email variables', () => {
   const mockFacilityLists = {};

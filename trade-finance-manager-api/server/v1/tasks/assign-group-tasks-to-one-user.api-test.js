@@ -2,12 +2,12 @@ const { when } = require('jest-when');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const assignGroupTasksToOneUser = require('./assign-group-tasks-to-one-user');
 
-const MOCK_USERS = require('../__mocks__/mock-users');
-const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
-const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
+const MOCK_USERS = require('../mocks/mock-users');
+const MOCK_MIA_TASKS = require('../mocks/mock-MIA-tasks');
+const MOCK_MIA_SECOND_SUBMIT = require('../mocks/mock-deal-MIA-second-submit');
 
 const CONSTANTS = require('../../constants');
-const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../mocks/common-api-mocks');
 const api = require('../api');
 
 describe('assignGroupTasksToOneUser', () => {

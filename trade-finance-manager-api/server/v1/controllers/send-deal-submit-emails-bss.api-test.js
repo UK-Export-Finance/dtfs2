@@ -9,8 +9,8 @@ const { generateFacilityLists } = require('../helpers/notify-template-formatters
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
-const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
+const { mockFindOneDeal } = require('../mocks/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));

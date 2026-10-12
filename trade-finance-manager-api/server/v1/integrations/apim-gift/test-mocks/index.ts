@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import { TfmFacility, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TfmDeal } from '@ukef/dtfs2-common';
-import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../mocks/mock-TFM-deal-AIN-submitted';
 
 const mockBaseDeal = MOCK_TFM_DEAL_AIN_SUBMITTED as unknown as TfmDeal;
 

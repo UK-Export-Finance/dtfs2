@@ -13,7 +13,7 @@ jest.mock('passport', () => ({
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const api = require('../../../server/v1/api');
-const { mockFindUserById } = require('../../../server/v1/__mocks__/common-api-mocks');
+const { mockFindUserById } = require('../../../server/v1/mocks/common-api-mocks');
 const { submitFacilityAmendmentsToApimGift } = require('../../../server/v1/integrations/apim-gift/submit-facility-amendments-to-apim-gift');
 const { amendIssuedFacility } = require('../../../server/v1/controllers/amend-issued-facility');
 

@@ -1,11 +1,11 @@
 const { mapBssDeal, mapGefDeal, dealsLightReducer } = require('./deals-light');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
-const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapDealTfm = require('./mappings/deal/deal-tfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapDeals = require('./mappings/deal/mapDeals');
-const MOCK_DEAL = require('../__mocks__/mock-deal-AIN-submitted');
-const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
+const MOCK_DEAL = require('../mocks/mock-deal-AIN-submitted');
+const MOCK_GEF_DEAL = require('../mocks/mock-gef-deal');
 
 const mockBssDeal = {
   ...MOCK_DEAL._id,

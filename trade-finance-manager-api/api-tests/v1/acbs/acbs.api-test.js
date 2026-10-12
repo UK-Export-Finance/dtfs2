@@ -1,7 +1,7 @@
 const acbsController = require('../../../server/v1/controllers/acbs.controller');
 const { clearACBSLog } = require('../../helpers/clear-acbs-log');
 const api = require('../../../server/v1/api');
-const MOCK_DEAL_ACBS = require('../../../server/v1/__mocks__/mock-deal-acbs');
+const MOCK_DEAL_ACBS = require('../../../server/v1/mocks/mock-deal-acbs');
 const CONSTANTS = require('../../../server/constants');
 
 jest.mock('../../../server/v1/controllers/deal.controller', () => ({

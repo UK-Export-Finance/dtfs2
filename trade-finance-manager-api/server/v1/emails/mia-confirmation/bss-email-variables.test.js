@@ -3,7 +3,7 @@ const bssEmailVariables = require('./bss-email-variables');
 const { generateFacilitiesListString } = require('../../helpers/notify-template-formatters');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
-const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../mocks/mock-deal');
 
 describe('generate MIA confirmation email variables - BSS', () => {
   it('should return object', async () => {

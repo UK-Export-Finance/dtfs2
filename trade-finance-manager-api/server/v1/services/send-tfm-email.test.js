@@ -1,6 +1,6 @@
 const sendTfmEmail = require('./send-tfm-email');
 const externalApis = require('../api');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
 
 describe('sendTfmEmail', () => {
   const templateId = 'MOCK-NOTIFY-TEMPLATE-ID';

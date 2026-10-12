@@ -3,7 +3,7 @@ import httpMock from 'node-mocks-http';
 import { USER_STATUS } from '@ukef/dtfs2-common';
 import { mapTeamMembers } from './team.controller';
 import api from '../api';
-import MOCK_USERS from '../__mocks__/mock-users';
+import MOCK_USERS from '../mocks/mock-users';
 
 jest.mock('../api');
 console.error = jest.fn();

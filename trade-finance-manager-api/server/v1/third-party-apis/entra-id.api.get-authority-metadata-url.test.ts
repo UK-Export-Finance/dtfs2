@@ -1,7 +1,7 @@
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { EntraIdApi } from './entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
-import { EntraIdConfigMockBuilder } from '../__mocks__/builders';
+import { EntraIdConfigMockBuilder } from '../mocks/builders';
 
 const mockAxios = axiosMock;
 

@@ -3,8 +3,8 @@ const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
-const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
+const MOCK_GEF_DEAL = require('../mocks/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../mocks/mock-cash-contingent-facilities');
 
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;

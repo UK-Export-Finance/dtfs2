@@ -1,8 +1,8 @@
 const dealPricingAndRisk = require('./dealPricingAndRisk');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
-const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
-const MOCK_DEAL_MIN = require('../../__mocks__/mock-deal-MIN');
-const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../mocks/mock-deal');
+const MOCK_DEAL_MIN = require('../../mocks/mock-deal-MIN');
+const MOCK_GEF_DEAL = require('../../mocks/mock-gef-deal');
 const DEFAULTS = require('../../defaults');
 
 describe('deal submit - add TFM data - deal pricing and risk', () => {

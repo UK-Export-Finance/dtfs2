@@ -20,14 +20,14 @@ const CONSTANTS = require('../../../server/constants');
 const { createDealTasks } = require('../../../server/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../server/v1/helpers/generate-task-email-variables');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
-const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../server/v1/__mocks__/mock-deal-no-companies-house');
-const MOCK_DEAL_MIN = require('../../../server/v1/__mocks__/mock-deal-MIN');
-const MOCK_DEAL_MIA_SUBMITTED = require('../../../server/v1/__mocks__/mock-deal-MIA-submitted');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/mocks/common-api-mocks');
+const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../server/v1/mocks/mock-deal-no-companies-house');
+const MOCK_DEAL_MIN = require('../../../server/v1/mocks/mock-deal-MIN');
+const MOCK_DEAL_MIA_SUBMITTED = require('../../../server/v1/mocks/mock-deal-MIA-submitted');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
-const MOCK_TEAMS = require('../../../server/v1/__mocks__/mock-teams');
-const { MOCK_PORTAL_USERS } = require('../../../server/v1/__mocks__/mock-portal-users');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/mocks/mock-notify-email-response');
+const MOCK_TEAMS = require('../../../server/v1/mocks/mock-teams');
+const { MOCK_PORTAL_USERS } = require('../../../server/v1/mocks/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 

@@ -2,7 +2,7 @@ const { getTasksAssignedToUserByGroup } = require('./create-tasks-amendment.help
 const { TEAMS, TASKS } = require('../../constants');
 
 const api = require('../api');
-const { mockFindUserById } = require('../__mocks__/common-api-mocks');
+const { mockFindUserById } = require('../mocks/common-api-mocks');
 const {
   MOCK_USERS_FOR_TASKS,
   MOCK_TASKS,
@@ -11,7 +11,7 @@ const {
   TASKS_ASSIGNED_TO_UNDERWRITER_AND_UNDERWRITER_MANAGER,
   TASKS_UNASSIGNED_FOR_UNDERWRITER,
   MOCK_TASKS_CHANGE_TIME,
-} = require('../__mocks__/mock-amendment-tasks-assign-by-team');
+} = require('../mocks/mock-amendment-tasks-assign-by-team');
 
 jest.mock('../api');
 

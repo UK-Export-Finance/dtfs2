@@ -16,9 +16,9 @@ const {
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
-const amendmentVariables = require('../__mocks__/amendmentVariables');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
-const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
+const amendmentVariables = require('../mocks/amendmentVariables');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
+const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../mocks/mock-notify-email-bad-response');
 
 const mockAuditDetails = generateTfmAuditDetails('test-id');
 

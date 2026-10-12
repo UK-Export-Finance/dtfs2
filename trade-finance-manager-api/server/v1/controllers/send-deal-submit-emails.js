@@ -2,10 +2,10 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
-const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-variables');
-const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
+const gefEmailVariables = require('../emails/ain-min-confirmation/gef-email-variables');
+const { gefFacilitiesList } = require('../emails/ain-min-confirmation/gef-facilities-list');
 const { generateFacilityLists } = require('../helpers/notify-template-formatters');
-const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
+const { generateMiaConfirmationEmailVars } = require('../emails/mia-confirmation/generate-email-variables');
 const sendTfmEmail = require('../services/send-tfm-email');
 
 /**
