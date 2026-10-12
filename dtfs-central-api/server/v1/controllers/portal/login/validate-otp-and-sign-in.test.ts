@@ -260,7 +260,7 @@ describe('validateOTPAndSignIn', () => {
 
       // Assert
       expect(console.info).toHaveBeenNthCalledWith(1, 'Validating OTP and signing in user %s', sanitisedUserId);
-      expect(console.error).toHaveBeenNthCalledWith(1, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
+      expect(console.info).toHaveBeenNthCalledWith(2, 'Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
     });
   });
 });

@@ -31,7 +31,7 @@ export const validateOTPAndSignIn = async (
 
     // If no user or no sign-in tokens are found, return 404 Not Found
     if (!user || !user?.signInTokens?.length) {
-      console.error('Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
+      console.info('Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
 
       return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
     }

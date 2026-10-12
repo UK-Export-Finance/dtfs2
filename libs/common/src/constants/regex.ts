@@ -7,4 +7,9 @@ export const CURRENCY_NUMBER_REGEX = /^\d+(\.\d{1,2})?$/;
  */
 export const MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
 
+/**
+ * Regular expression for validating a string,
+ * that contains only alphanumeric characters, hyphens, and underscores.
+ * Examples: "abc123", "abc-123", "abc_123"
+ */
 export const NEW_LINE_AND_PUNCTUATION_REGEX = /[^a-zA-Z0-9_-]/g;
