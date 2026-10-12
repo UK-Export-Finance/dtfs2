@@ -1,12 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import { validateSqlId } from '.';
+import { validateSqlId, ValidateSqlIdRequest } from '.';
 
 describe('validateSqlId', () => {
   const paramName = 'id';
-
   it(`redirects to '/not-found' if a non integer id is provided`, () => {
     // Arrange
-    const { res: mockRes, req: mockReq } = httpMocks.createMocks({
+    const { res: mockRes, req: mockReq } = httpMocks.createMocks<ValidateSqlIdRequest>({
       params: { [paramName]: 'not-an-integer' },
     });
 
@@ -22,7 +21,7 @@ describe('validateSqlId', () => {
 
   it('calls the next middleware function when an integer id is provided', () => {
     // Arrange
-    const { res: mockRes, req: mockReq } = httpMocks.createMocks({
+    const { res: mockRes, req: mockReq } = httpMocks.createMocks<ValidateSqlIdRequest>({
       params: { [paramName]: '54321' },
     });
 

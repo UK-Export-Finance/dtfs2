@@ -36,6 +36,11 @@ const EXPORTER_CREDIT_RATING = {
   BB_MINUS: 'Good (BB-)',
 };
 
+const CREDIT_RATING = {
+  B_PLUS: 'B+',
+  BB_MINUS: 'BB-',
+};
+
 const UKEF_ID = {
   PENDING: 'PENDING',
   TEST: '100000',
@@ -50,5 +55,6 @@ module.exports = {
   COUNTRY,
   UNITED_KINGDOM,
   EXPORTER_CREDIT_RATING,
+  CREDIT_RATING,
   UKEF_ID,
 };

@@ -1,6 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { getFeeRecord } from './get-fee-record.controller';
+import { getFeeRecord, GetFeeRecordRequest } from './get-fee-record.controller';
 import api from '../../api';
 import { FeeRecordResponseBody } from '../../api-response-types';
 
@@ -13,8 +13,10 @@ describe('get-fee-record.controller', () => {
     const reportId = '1';
     const feeRecordId = '2';
 
+    const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetFeeRecordRequest>(options);
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         params: { reportId, feeRecordId },
       });
 

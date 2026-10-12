@@ -6,7 +6,7 @@ import { redisStore } from './configure-redis-cache';
 import { COOKIE } from '../../constants';
 import { InvalidEnvironmentVariableError } from '../../errors';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Configures and returns an Express session middleware instance.

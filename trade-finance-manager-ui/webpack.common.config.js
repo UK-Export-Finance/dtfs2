@@ -14,6 +14,7 @@ module.exports = {
     enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
     mojFilterHide: './scripts/moj-filter-hide.ts',
     ssoRedirectAutoSubmit: './scripts/sso-redirect-auto-submit.ts',
+    accessibleAutocomplete: './scripts/accessible-autocomplete.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),

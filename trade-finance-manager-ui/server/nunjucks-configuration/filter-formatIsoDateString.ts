@@ -6,6 +6,10 @@ import { format, isValid, parseISO } from 'date-fns';
  * @returns date formatted as toFormat or 'Invalid date' if can't parse isoDateStr
  */
 export const formatIsoDateString = (isoDateStr: string, toFormat: string = 'd MMM yyyy') => {
+  if (!isoDateStr) {
+    return 'Invalid date';
+  }
+
   const date = parseISO(isoDateStr);
   return isValid(date) ? format(date, toFormat) : 'Invalid date';
 };

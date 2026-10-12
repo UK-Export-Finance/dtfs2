@@ -17,7 +17,7 @@ describe('remove fees from payment helper', () => {
 
       const result = extractTotalSelectableFeeRecordsFromRequestBody(requestBody);
 
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
   });
 });

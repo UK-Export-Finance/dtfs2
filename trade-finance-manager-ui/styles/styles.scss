@@ -38,6 +38,8 @@ $govuk-new-link-styles: true;
 
 @import "./block-header.scss";
 
+@import "./accessible-autocomplete.min.scss";
+
 .js-enabled .js-hidden {
   display: none;
 }

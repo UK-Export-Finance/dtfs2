@@ -44,7 +44,7 @@ describe('validatePartyURN()', () => {
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
-    expect(response.urn).toEqual(undefined);
+    expect(response.urn).toBeUndefined();
   });
 
   it('should return validation error if partyUrn is empty string and partyUrnRequired is false', () => {

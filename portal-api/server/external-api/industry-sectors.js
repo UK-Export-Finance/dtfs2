@@ -4,7 +4,7 @@ const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidRegex } = require('../v1/validation/validateIds');
 const { INDUSTRY_SECTOR_ID } = require('../constants/regex');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 

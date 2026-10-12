@@ -1,10 +1,12 @@
 import { PassThrough } from 'stream';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import api from '../../../api';
-import { getReportDownload } from '.';
+import { getReportDownload, GetReportDownloadRequest } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 
 jest.mock('../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetReportDownloadRequest>(options);
 
 describe('controllers/utilisation-reports/report-download', () => {
   afterEach(() => {
@@ -13,7 +15,7 @@ describe('controllers/utilisation-reports/report-download', () => {
 
   describe('getReportDownload', () => {
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      createHttpMocks({
         session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
         params: { id: '6581' },
       });

@@ -115,7 +115,7 @@ exports.findTfmTeamUser = async (req, res) => {
 
 exports.deleteTfmUser = async (req, res) => {
   const { username } = req.params;
-  const { auditDetails } = req.body;
+  const { auditDetails } = req.body ?? {};
 
   if (!(typeof username === 'string')) {
     return res.status(400).send({ status: 400, message: 'Invalid username' });

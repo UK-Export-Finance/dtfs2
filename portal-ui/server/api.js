@@ -5,7 +5,7 @@ const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 const { FILE_UPLOAD } = require('./constants');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 

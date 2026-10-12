@@ -475,7 +475,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             });
 
             const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-            expect(testUserInDb.signInTokens).toEqual(undefined);
+            expect(testUserInDb.signInTokens).toBeUndefined();
           });
         });
       });

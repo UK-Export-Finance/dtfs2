@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { ENVIRONMENTS } from '../constants';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { NODE_ENV } = process.env;
 

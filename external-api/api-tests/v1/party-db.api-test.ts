@@ -1,3 +1,4 @@
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 
 /* eslint-disable @typescript-eslint/unbound-method */
@@ -12,23 +13,20 @@ import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpe
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { HttpStatusCode } from 'axios';
+import { CUSTOMER_TYPE, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
-const { get } = api(app);
-let axiosMock: MockAdapter;
+const { get, post } = api(app);
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
 }));
 
 beforeEach(() => {
-  axiosMock = new MockAdapter(axios);
-
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);
@@ -59,11 +57,51 @@ describe('/party-db', () => {
     test.each(invalidCompaniesHouseNumberTestCases)(
       `should return a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
       async (companyHouseNumber) => {
+        // Act
         const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
+        // Assert
         expect(status).toEqual(HttpStatusCode.BadRequest);
         expect(body).toMatchObject({ data: 'Invalid company registration number', status: HttpStatusCode.BadRequest });
       },
     );
+  });
+
+  describe('POST /party-db', () => {
+    const validPayload = {
+      companyRegNo: VALID,
+      companyName: 'Some name',
+      probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      isUkEntity: true,
+      code: 10110,
+      customerType: CUSTOMER_TYPE.CUSTOMER,
+    };
+
+    const missingFieldTestCases = [
+      { field: 'companyRegNo', errorMessage: 'Invalid company registration number' },
+      { field: 'companyName', errorMessage: 'Invalid company name' },
+      { field: 'code', errorMessage: 'Invalid industry code' },
+      { field: 'customerType', errorMessage: 'Invalid customer type' },
+    ];
+
+    describe.each(missingFieldTestCases)('when $field is missing', ({ field, errorMessage }) => {
+      it.each([null, undefined])(`should return a ${HttpStatusCode.BadRequest} when %s`, async (value) => {
+        // Arrange & Act
+        const { status, body } = await post({ ...validPayload, [field]: value }).to('/party-db/');
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.BadRequest);
+        expect(body).toMatchObject({ data: errorMessage, status: HttpStatusCode.BadRequest });
+      });
+    });
+
+    it(`should return a ${HttpStatusCode.BadRequest} if an unsupported customer type is supplied`, async () => {
+      // Arrange & Act
+      const { status, body } = await post({ ...validPayload, customerType: 'SUPPLIER' }).to('/party-db/');
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body).toMatchObject({ data: 'Invalid customer type', status: HttpStatusCode.BadRequest });
+    });
   });
 });

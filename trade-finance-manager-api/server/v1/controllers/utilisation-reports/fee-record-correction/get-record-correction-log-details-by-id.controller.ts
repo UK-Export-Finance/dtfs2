@@ -1,14 +1,15 @@
-import { Request } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { GetRecordCorrectionLogDetailsResponse } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, GetRecordCorrectionLogDetailsResponse } from '@ukef/dtfs2-common';
 import api from '../../../api';
+
+export type GetRecordCorrectionLogDetailsByIdRequest = CustomExpressRequest<{ params: { correctionId: string } }>;
 
 /**
  * Get record correction log details by id
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionLogDetailsById = async (req: Request, res: GetRecordCorrectionLogDetailsResponse) => {
+export const getRecordCorrectionLogDetailsById = async (req: GetRecordCorrectionLogDetailsByIdRequest, res: GetRecordCorrectionLogDetailsResponse) => {
   try {
     const { correctionId } = req.params;
 

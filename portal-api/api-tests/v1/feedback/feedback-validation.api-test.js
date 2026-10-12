@@ -4,7 +4,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../server/v1/roles/roles');
 
-describe('/v1/deals/:id/bond', () => {
+describe('/v1/feedback', () => {
   const allFeedbackFields = {
     role: 'computers',
     organisation: 'Test ltd',
@@ -32,7 +32,7 @@ describe('/v1/deals/:id/bond', () => {
     return response;
   };
 
-  describe('GET /v1/feedback/:id', () => {
+  describe('POST /v1/feedback', () => {
     it('returns 400 with validation errors', async () => {
       const { status, body } = await postFeedback();
 

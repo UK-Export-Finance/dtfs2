@@ -75,7 +75,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentCurrencyErrorMessage).toEqual(undefined);
+      expect(errors.paymentCurrencyErrorMessage).toBeUndefined();
     });
 
     it('should set payment amount error when no payment amount is provided', () => {
@@ -131,7 +131,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentAmountErrorMessage).toEqual(undefined);
+      expect(errors.paymentAmountErrorMessage).toBeUndefined();
     });
 
     it('should set payment reference error when payment reference is more than fifty characters', () => {
@@ -161,7 +161,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentReferenceErrorMessage).toEqual(undefined);
+      expect(errors.paymentReferenceErrorMessage).toBeUndefined();
     });
 
     it('should not set payment reference error when payment reference is less than fifty one characters', () => {
@@ -176,7 +176,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentReferenceErrorMessage).toEqual(undefined);
+      expect(errors.paymentReferenceErrorMessage).toBeUndefined();
     });
 
     it('should set add another payment error when no value is provided', () => {
@@ -221,7 +221,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentReferenceErrorMessage).toEqual(undefined);
+      expect(errors.paymentReferenceErrorMessage).toBeUndefined();
     });
 
     it.each`
@@ -459,7 +459,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentDateError).toEqual(undefined);
+      expect(errors.paymentDateError).toBeUndefined();
     });
 
     it('when there are multiple errors should include all errors in error summary', () => {
@@ -549,7 +549,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentAmountErrorMessage).toEqual(undefined);
+      expect(errors.paymentAmountErrorMessage).toBeUndefined();
     });
 
     it('should set payment reference error when payment reference is more than fifty characters', () => {
@@ -579,7 +579,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentReferenceErrorMessage).toEqual(undefined);
+      expect(errors.paymentReferenceErrorMessage).toBeUndefined();
     });
 
     it('should not set payment reference error when payment reference is less than fifty one characters', () => {
@@ -594,7 +594,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentReferenceErrorMessage).toEqual(undefined);
+      expect(errors.paymentReferenceErrorMessage).toBeUndefined();
     });
 
     it.each`
@@ -832,7 +832,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(errors.errorSummary.length).toEqual(0);
-      expect(errors.paymentDateError).toEqual(undefined);
+      expect(errors.paymentDateError).toBeUndefined();
     });
 
     it('when there are multiple errors should include all errors in error summary', () => {

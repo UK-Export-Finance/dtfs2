@@ -1,7 +1,7 @@
 const fileshare = require('../helpers/fileshare');
 const log = require('../../helpers/logs');
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const AZURE_PORTAL_FILESHARE_CONFIG = {
   FILESHARE_NAME: process.env.MIGRATION_AZURE_PORTAL_FILESHARE_NAME,

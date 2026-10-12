@@ -1,14 +1,16 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { CURRENCY, FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS, ReportPeriod } from '@ukef/dtfs2-common';
-import { getFeeRecordsToKey, GetFeeRecordsToKeyResponseBody } from '.';
+import { getFeeRecordsToKey, GetFeeRecordsToKeyResponseBody, GetFeeRecordsToKeyRequest } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 
 console.error = jest.fn();
 
 jest.mock('../../../../repositories/banks-repo');
+
+const createHttpMocks = (options?: RequestOptions) => httpMocks.createMocks<GetFeeRecordsToKeyRequest>(options);
 
 describe('get-fee-records-to-key.controller', () => {
   describe('getFeeRecordsToKey', () => {
@@ -28,7 +30,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a 404 when no utilisation report can be found', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -44,7 +46,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a 404 when no bank with the utilisation report bank id can be found', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -64,7 +66,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a 200', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -80,7 +82,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a body containing the report id', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -100,7 +102,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a body containing the report session bank', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -123,7 +125,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a body containing the report report period', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 
@@ -148,7 +150,7 @@ describe('get-fee-records-to-key.controller', () => {
 
     it('responds with a body containing the fee records', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
+      const { req, res } = createHttpMocks({
         params: { reportId: '1' },
       });
 

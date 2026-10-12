@@ -1,7 +1,7 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 const accountName = process.env.AZURE_PORTAL_STORAGE_ACCOUNT;
 const accountKey = process.env.AZURE_PORTAL_STORAGE_ACCESS_KEY;
 const shareName = process.env.AZURE_PORTAL_FILESHARE_NAME;

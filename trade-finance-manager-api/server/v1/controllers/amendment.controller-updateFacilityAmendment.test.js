@@ -421,6 +421,75 @@ describe('updated facility amendment API call', () => {
             expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
           });
         });
+
+        describe('when the amendment is manual (requireUkefApproval) and bank decision has not yet been submitted', () => {
+          it('should not call APIM GIFT', async () => {
+            // Arrange
+            const updateAmendmentBody = {
+              status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
+              submittedByPim: true,
+            };
+
+            const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+            mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+            api.getAmendmentById = jest.fn().mockResolvedValue({
+              ...MOCK_AMENDMENT,
+              requireUkefApproval: true,
+              changeFacilityValue: true,
+              changeCoverEndDate: false,
+              currentValue: 100,
+              value: 130,
+            });
+
+            // Act
+            await amendmentController.updateFacilityAmendment(req, res);
+
+            // Assert
+            expect(submitFacilityAmendmentsToApimGift).not.toHaveBeenCalled();
+            expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+          });
+        });
+      });
+
+      describe('when the amendment is manual (requireUkefApproval) and bank decision has been submitted', () => {
+        it('should call APIM GIFT with the bank decision effective date', async () => {
+          // Arrange
+          const bankDecisionEffectiveDate = 1704067200;
+          const updateAmendmentBody = {
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
+            submittedByPim: true,
+          };
+
+          const { req } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: updateAmendmentBody });
+
+          mockIsTfmApimGiftIntegrationEnabled.mockReturnValue(true);
+
+          api.getAmendmentById = jest.fn().mockResolvedValue({
+            ...MOCK_AMENDMENT,
+            requireUkefApproval: true,
+            changeFacilityValue: false,
+            changeCoverEndDate: true,
+            effectiveDate: bankDecisionEffectiveDate,
+            bankDecision: {
+              decision: 'Proceed',
+              submitted: true,
+              effectiveDate: bankDecisionEffectiveDate,
+            },
+            tfm: {
+              ...MOCK_AMENDMENT.tfm,
+              coverEndDate: 1706745600000,
+            },
+          });
+
+          // Act
+          await amendmentController.updateFacilityAmendment(req, res);
+
+          // Assert
+          expect(submitFacilityAmendmentsToApimGift).toHaveBeenCalledTimes(1);
+          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        });
       });
     });
   });

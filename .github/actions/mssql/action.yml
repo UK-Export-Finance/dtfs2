@@ -44,7 +44,7 @@ runs:
 
     # Step 2: Set up Node.js.
     - name: Node
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node }}
 

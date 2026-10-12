@@ -1,7 +1,7 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import events from 'events';
 import api from '../../api';
-import { getUtilisationReportDownload } from './get-utilisation-report-download.controller';
+import { getUtilisationReportDownload, GetUtilisationReportDownloadRequest } from './get-utilisation-report-download.controller';
 import fileshare from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants';
 import { UtilisationReportResponseBody } from '../../api-response-types/utilisation-report-response-body';
@@ -15,13 +15,13 @@ describe('get-utilisation-report-download controller', () => {
   describe('getUtilisationReportDownload', () => {
     const mockReportId = '5099';
 
+    const createHttpMocks = (options?: RequestOptions) =>
+      httpMocks.createMocks<GetUtilisationReportDownloadRequest>(options, { eventEmitter: events.EventEmitter });
+
     const getHttpMocks = () =>
-      httpMocks.createMocks(
-        {
-          params: { id: mockReportId },
-        },
-        { eventEmitter: events.EventEmitter },
-      );
+      createHttpMocks({
+        params: { id: mockReportId },
+      });
 
     it('returns an error response when the report details do not contain the folder', async () => {
       // Arrange

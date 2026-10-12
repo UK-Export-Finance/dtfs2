@@ -16,6 +16,13 @@ import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './help
 export const generateApp = () => {
   const app = express();
 
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
+
   // Register global handlers
   exceptionHandlers();
 
@@ -63,7 +70,7 @@ export const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => {
+  app.get('/{*path}', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.
     // If so, the user property can be accessed on the session & passed into the template
     const userIsFullyLoggedIn = 'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';

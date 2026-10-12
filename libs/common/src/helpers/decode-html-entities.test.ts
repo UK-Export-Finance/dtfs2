@@ -6,7 +6,7 @@ describe('decodeHtmlEntities', () => {
     const result = decodeHtmlEntities();
 
     // Assert
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   it('should return empty string when input is empty string', () => {

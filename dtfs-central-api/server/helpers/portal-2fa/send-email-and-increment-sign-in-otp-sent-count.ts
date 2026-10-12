@@ -1,36 +1,41 @@
-import { AuditDetails, OTP, STATUS_BLOCKED_REASON } from '@ukef/dtfs2-common';
+import { AuditDetails, OTP, STATUS_BLOCKED_REASON, PortalUser } from '@ukef/dtfs2-common';
 import { PortalUsersRepo } from '../../repositories/users-repo';
-import { isSignInDataStale } from './is-sign-in-data-stale';
+import { sendSignInOtpEmail } from './send-sign-in-otp-email';
 
 type variables = {
-  userId: string;
-  signInOTPSendDate?: Date;
+  user: PortalUser;
+  securityCode: string;
   auditDetails: AuditDetails;
 };
 
 /**
- * Increments the sign in OTP "send count" for the user.
+ * Sends email to the user with the sign in OTP code and increments the sign in OTP "send count" for the user.
  * The "send count" is the number of times the OTP has been sent to the user
- * if the sign in data is stale, resets the sign in data before incrementing the count
  * if the count exceeds the maximum allowed attempts, blocks the user
  * returns the number of remaining attempts
  * @param userId - ID of the user
  * @param signInOTPSendDate - date when the sign in OTP was last sent
+ * @param securityCode - the sign in OTP code to be sent to the user
  * @param auditDetails - the users audit details
  * @returns number of remaining attempts to send sign in OTP
  */
-export const incrementSignInOTPSendCount = async ({ userId, signInOTPSendDate, auditDetails }: variables) => {
+export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCode, auditDetails }: variables) => {
+  const userId = user._id.toString();
+
   try {
-    console.info('Incrementing sign in OTP count for user %s', userId);
+    console.info('Sending email and incrementing sign in OTP count for user %s', userId);
 
     const maxSignInOTPSendCount = OTP.MAX_SIGN_IN_ATTEMPTS;
+    const initialSignInOTPSendCount = user.signInOTPSendCount ?? 0;
 
-    // if sign in data is stale, reset sign in data first
-    const signInDataIsStale = isSignInDataStale(signInOTPSendDate);
-
-    if (signInDataIsStale) {
-      console.info('Sign in data is stale for user %s, resetting sign in data', userId);
-      await PortalUsersRepo.resetSignInData({ userId, signInOTPSendDate, auditDetails });
+    /**
+     * If the user has not exceeded the maximum sign in OTP send attempts,
+     * then send the sign in OTP email to the user
+     * if the email sending fails, it will fall into the catch block
+     * and will not increment the sign in OTP send count
+     */
+    if (initialSignInOTPSendCount < maxSignInOTPSendCount) {
+      await sendSignInOtpEmail(user, securityCode);
     }
 
     // increment the sign in OTP send count
@@ -50,9 +55,9 @@ export const incrementSignInOTPSendCount = async ({ userId, signInOTPSendDate, a
     /*
      * If the user is past their last attempt, block the user
      * This is because the signInOTPSendCount is greater than the max allowed attempts
-     * and hence the remaining attempts will be -1
+     * and hence the remaining attempts will be -1 or lower
      */
-    if (remainingAttempts === -1) {
+    if (remainingAttempts <= -1) {
       console.info('User %s has exceeded maximum sign in OTP send attempts, blocking user', userId);
       await PortalUsersRepo.blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_OTPS, auditDetails });
     }

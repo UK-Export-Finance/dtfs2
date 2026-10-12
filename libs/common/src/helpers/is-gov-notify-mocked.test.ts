@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { isGovNotifyMocked } from './is-gov-notify-mocked';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const originalProcessEnv = { ...process.env };
 

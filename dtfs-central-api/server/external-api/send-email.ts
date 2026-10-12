@@ -2,7 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { HEADERS, AnyObject } from '@ukef/dtfs2-common';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 

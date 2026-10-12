@@ -1,6 +1,6 @@
 const { default: axios } = require('axios');
 const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const { PORTAL_API_URL, PORTAL_API_KEY, EXTERNAL_API_KEY, EXTERNAL_API_URL } = process.env;
 const VERSION = 'v1';

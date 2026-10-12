@@ -266,7 +266,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
 };
 
 exports.getQueryAllDeals = async (req, res) => {
-  const { start, pagesize, filters, sort } = req.body;
+  const { start, pagesize, filters, sort } = req.body || {};
 
   const results = await queryAllDeals(filters, sort, start, pagesize);
 

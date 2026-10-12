@@ -1,17 +1,15 @@
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
-import { PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { CUSTOMER_TYPE, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
-
-let axiosMock: MockAdapter;
 
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS, INVALID_TOO_SHORT, INVALID_TOO_LONG } = MOCK_COMPANY_REGISTRATION_NUMBERS;
@@ -41,8 +39,6 @@ jest.mock('../../server/v1/controllers/industry-sectors.controller', () => ({
 
 describe('party-db.controller feature flag', () => {
   beforeEach(() => {
-    axiosMock = new MockAdapter(axios);
-
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
     axiosMock.onGet(`${APIM_MDM_URL}v1/customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
     axiosMock.onPost(`${APIM_MDM_URL}v1/customers`).reply(HttpStatusCode.Ok);
@@ -83,22 +79,104 @@ describe('party-db.controller feature flag', () => {
 
   describe('POST /party-db', () => {
     const invalidPayloads = [
-      { companyRegNo: null, companyName: 'Some name', probabilityOfDefault: 3 },
-      { companyRegNo: VALID, companyName: null, probabilityOfDefault: 3 },
-      { companyRegNo: INVALID_TOO_SHORT, companyName: 'Some name', probabilityOfDefault: 3 },
-      { companyRegNo: INVALID_TOO_LONG, companyName: 'Some name', probabilityOfDefault: 3 },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: '' },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: true, code: '' },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 0 },
+      {
+        companyName: 'Some name',
+        companyRegNo: null,
+        probabilityOfDefault: 3,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      },
+      {
+        companyName: null,
+        companyRegNo: VALID,
+        probabilityOfDefault: 3,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      },
+      {
+        companyName: 'Some name',
+        companyRegNo: INVALID_TOO_SHORT,
+        probabilityOfDefault: 3,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      },
+      {
+        companyName: 'Some name',
+        companyRegNo: INVALID_TOO_LONG,
+        probabilityOfDefault: 3,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+      },
+      {
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: '',
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: '',
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: true,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 0,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
     ];
 
     const invalidIndustryCodes = [
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 1 },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 12 },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 123 },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 1234 },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 'ABCD' },
-      { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 111111111 },
+      {
+        code: 1,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 12,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 123,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 1234,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 'ABCD',
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
+      {
+        code: 111111111,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: false,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
     ];
 
     it(`should return a ${HttpStatusCode.Ok} response with a valid body`, async () => {
@@ -109,11 +187,12 @@ describe('party-db.controller feature flag', () => {
       });
 
       const bodyValidWithProbabilityOfDefault = {
-        companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-        companyName: 'test',
-        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
-        isUkEntity: true,
         code: 10110,
+        companyName: 'test',
+        companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+        customerType: CUSTOMER_TYPE.CUSTOMER,
+        isUkEntity: true,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       };
 
       // Act
@@ -121,6 +200,41 @@ describe('party-db.controller feature flag', () => {
 
       // Assert
       expect(status).toEqual(HttpStatusCode.Ok);
+    });
+
+    it(`should return a ${HttpStatusCode.BadRequest} if customer type is not supplied`, async () => {
+      // Arrange
+      const payload = {
+        code: 10110,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        isUkEntity: true,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      };
+
+      // Act
+      const { status } = await post(payload).to(`/party-db/`);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+    });
+
+    it(`should return a ${HttpStatusCode.BadRequest} if an unsupported customer type is supplied`, async () => {
+      // Arrange
+      const payload = {
+        code: 10110,
+        companyName: 'Some name',
+        companyRegNo: VALID,
+        customerType: 'INVALID',
+        isUkEntity: true,
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      };
+
+      // Act
+      const { status } = await post(payload).to(`/party-db/`);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it.each(invalidPayloads)(`should return a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {

@@ -6,5 +6,8 @@ module.exports = {
   testMatch: ['**/*.api-test.{js,ts}'],
   testTimeout: 80000,
   workerIdleMemoryLimit: '512MB',
+  transform: {
+    '^.+\\.[tj]sx?$': 'ts-jest',
+  },
   ...commonSettings,
 };

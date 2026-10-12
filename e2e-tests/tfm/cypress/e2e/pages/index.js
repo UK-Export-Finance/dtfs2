@@ -28,6 +28,7 @@ import activitiesPage from './activities/activitiesPage';
 import reasonForCancellingPage from './deal-cancellation/reason-for-cancelling';
 import checkDetails from './deal-cancellation/check-details';
 import { utilisationReportPages } from './utilisation-reports';
+import { autoCompleteField } from './autoCompleteField';
 
 export default {
   landingPage,
@@ -60,4 +61,5 @@ export default {
   reasonForCancellingPage,
   checkDetails,
   ...utilisationReportPages,
+  autoCompleteField,
 };

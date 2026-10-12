@@ -1,6 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
+
+export type GetReportDownloadRequest = CustomExpressRequest<{ params: { id: string } }>;
 
 /**
  * Controller to download utilisation reports
@@ -10,7 +13,7 @@ import { asUserSession } from '../../../helpers/express-session';
  * @param {import('express').Response} res - The Express response object.
  * @returns {Promise<void>}
  */
-export const getReportDownload = async (req: Request, res: Response) => {
+export const getReportDownload = async (req: GetReportDownloadRequest, res: Response) => {
   try {
     const { userToken } = asUserSession(req.session);
     const { id } = req.params;

@@ -8,7 +8,7 @@ const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 const { ADMIN } = MOCK_USERS;
 
-const PORTAL_2FA_FF = Cypress.env('FF_PORTAL_2FA_ENABLED');
+const PORTAL_2FA_FF = Cypress.expose('FF_PORTAL_2FA_ENABLED');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {

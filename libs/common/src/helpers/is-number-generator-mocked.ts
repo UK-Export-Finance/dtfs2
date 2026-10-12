@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { stringToBoolean } from './string-to-boolean';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * checks if number generator key is mocked

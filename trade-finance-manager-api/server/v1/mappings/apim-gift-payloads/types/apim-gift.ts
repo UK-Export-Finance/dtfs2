@@ -40,6 +40,7 @@ export type ApimAccrualSchedule = {
   additionalRate: number;
   baseRate: number;
   firstCycleAccrualEndDate: string;
+  indexRateCode?: string;
   spreadRate: number | null;
 };
 
@@ -64,8 +65,10 @@ export type ApimGiftFacilityRiskDetails = {
   ukefIndustryCode: string;
 };
 
+export type ApimGiftConsumerType = (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
+
 export type ApimGiftFacilityCreationPayload = {
-  consumer: (typeof APIM_GIFT_INTEGRATION)['CONSUMER'];
+  consumer: ApimGiftConsumerType;
   overview: ApimGiftFacilityOverview;
   accrualSchedules: ApimAccrualSchedule[];
   counterparties: ApimGiftCounterparty[];

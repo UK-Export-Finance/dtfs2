@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { stringToBoolean } from './string-to-boolean';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Determines if maintenance mode is currently active based on the `MAINTENANCE_ACTIVE` environment variable.

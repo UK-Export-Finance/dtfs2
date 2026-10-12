@@ -1,10 +1,10 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
-import { Request, Response } from 'express';
+import { CustomExpressRequest, CUSTOMER_TYPE, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
+import { Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { findACBSIndustrySector } from './industry-sectors.controller';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
@@ -12,7 +12,9 @@ const headers = {
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-export const lookup = async (req: Request, res: Response) => {
+type PartyDbLookupRequest = CustomExpressRequest<{ params: { partyDbCompanyRegistrationNumber: string } }>;
+
+export const lookup = async (req: PartyDbLookupRequest, res: Response) => {
   try {
     const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
@@ -39,7 +41,7 @@ export const lookup = async (req: Request, res: Response) => {
 };
 
 /**
- * Handles the creation or retrieval of a party (customer) in the Party DB.
+ * Handles the creation or retrieval of a party (customer) in Salesforce, via APIM MDM.
  *
  * Validates the provided company registration number and company name.
  * If valid, sends a POST request to the Party DB API to create or retrieve the party.
@@ -56,7 +58,7 @@ export const getOrCreateParty = async (
   res: Response,
 ) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault, isUkEntity, code } = req.body;
+    const { code, companyRegNo: companyRegistrationNumber, companyName, customerType, isUkEntity, probabilityOfDefault } = req.body;
 
     if (!companyRegistrationNumber || !isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
       console.error('Invalid company registration number was provided %s', companyRegistrationNumber);
@@ -71,6 +73,11 @@ export const getOrCreateParty = async (
     if (!code) {
       console.error('Invalid industry code was provided %s', code);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid industry code' });
+    }
+
+    if (!customerType || !Object.values(CUSTOMER_TYPE).includes(customerType)) {
+      console.error('Invalid customer type was provided %s', customerType);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
     }
 
     const industryData = await findACBSIndustrySector(code);
@@ -91,8 +98,9 @@ export const getOrCreateParty = async (
       url: `${APIM_MDM_URL}v1/customers`,
       headers,
       data: {
-        companyRegistrationNumber,
         companyName,
+        companyRegistrationNumber,
+        customerType,
         probabilityOfDefault,
         ukEntity,
         ukefIndustryName,

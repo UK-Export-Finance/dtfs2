@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 

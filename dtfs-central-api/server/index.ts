@@ -3,7 +3,7 @@ import { initialiseCronJobScheduler } from '@ukef/dtfs2-common';
 import { cronSchedulerJobs } from './cron-scheduler-jobs';
 import { createApp } from './createApp';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 initialiseCronJobScheduler(cronSchedulerJobs);
 

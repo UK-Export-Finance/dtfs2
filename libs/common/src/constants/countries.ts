@@ -1,4 +1,4 @@
-import { CountryInterface } from '@ukef/dtfs2-common';
+import { CountryInterface } from '../interfaces';
 
 export const COUNTRIES: CountryInterface[] = [
   {
@@ -56,7 +56,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 51,
     name: 'Armenia',
     code: 'ARM',
-    disabled: true,
   },
   {
     id: 533,
@@ -77,7 +76,6 @@ export const COUNTRIES: CountryInterface[] = [
     id: 31,
     name: 'Azerbaijan',
     code: 'AZE',
-    disabled: true,
   },
   {
     id: 44,

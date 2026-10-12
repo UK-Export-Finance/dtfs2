@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { stringToBoolean } from './string-to-boolean';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 /**
  * Determines if the current environment is using HTTPS.

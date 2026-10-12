@@ -1,10 +1,14 @@
 jest.mock('../../../server/v1/email');
 
-jest.mock('node:crypto', () => ({
-  ...jest.requireActual('node:crypto'),
-  pbkdf2Sync: jest.fn(),
-  randomBytes: jest.fn(),
-}));
+jest.mock('node:crypto', () => {
+  const actualCrypto = jest.requireActual('node:crypto');
+
+  return {
+    ...actualCrypto,
+    pbkdf2Sync: jest.fn(actualCrypto.pbkdf2Sync),
+    randomBytes: jest.fn(actualCrypto.randomBytes),
+  };
+});
 
 const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');

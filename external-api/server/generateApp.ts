@@ -2,20 +2,26 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
-import mongoSanitise from 'express-mongo-sanitize';
-import { exceptionHandlers, maintenance, SWAGGER, xss } from '@ukef/dtfs2-common';
+import { exceptionHandlers, maintenance, sanitiseMongoRequest, SWAGGER, xss } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
 import { checkApiKey } from './middleware/check-api-key';
 import { createRateLimit } from './middleware/rateLimit';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { CORS_ORIGIN } = process.env;
 
 export const generateApp = () => {
   const app = express();
+
+  /**
+   * Express 5 now uses simple query parser by default, which does not support nested query params.
+   * We need to set the query parser to 'extended' to support nested query params,
+   * such as sortBy[field]=... into objects.
+   */
+  app.set('query parser', 'extended');
 
   // Register global handlers
   exceptionHandlers();
@@ -41,11 +47,7 @@ export const generateApp = () => {
   app.use(xss);
 
   // MongoDB sanitisation
-  app.use(
-    mongoSanitise({
-      allowDots: true,
-    }),
-  );
+  app.use(sanitiseMongoRequest);
 
   app.use(
     cors({

@@ -3,7 +3,7 @@ import { HttpStatusCode, isAxiosError } from 'axios';
 import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
 
-type DeletePaymentRequest = CustomExpressRequest<{
+export type DeletePaymentRequest = CustomExpressRequest<{
   reqBody: {
     user: TfmSessionUser;
   };

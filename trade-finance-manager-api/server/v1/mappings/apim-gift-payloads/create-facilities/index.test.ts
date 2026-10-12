@@ -1,5 +1,4 @@
 import { TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
-import { MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS } from '../../../__mocks__/mock-credit-risk-ratings';
 import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import * as createFacilityModule from '../create-facility';
 import { ApimGiftFacilityCreationPayload } from '../types';
@@ -15,8 +14,6 @@ const mockDeal = { mockDeal: true } as unknown as TfmDeal;
 const mockFacilityOne = { mockFacilityOne: true } as unknown as TfmFacility;
 const mockFacilityTwo = { mockFacilityTwo: true } as unknown as TfmFacility;
 
-const mockIsBssEwcsDeal = true;
-const mockIsGefDeal = false;
 const mockNewPartyUrnCreated = true;
 
 const mockPayloadOne = { mockPayloadOne: true } as unknown as ApimGiftFacilityCreationPayload;
@@ -24,9 +21,6 @@ const mockPayloadTwo = { mockPayloadTwo: true } as unknown as ApimGiftFacilityCr
 
 const baseParams = {
   deal: mockDeal,
-  isBssEwcsDeal: mockIsBssEwcsDeal,
-  isGefDeal: mockIsGefDeal,
-  creditRiskRatings: MOCK_CREDIT_RISK_RATINGS_DESCRIPTIONS,
   facilityCategories: MOCK_FACILITY_CATEGORIES,
   newPartyUrnCreated: mockNewPartyUrnCreated,
 };

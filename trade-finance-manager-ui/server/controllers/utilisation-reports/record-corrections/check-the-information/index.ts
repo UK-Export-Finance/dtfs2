@@ -1,5 +1,5 @@
-import { Response, Request } from 'express';
-import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { RecordCorrectionRequestInformationViewModel, ProblemWithServiceViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
@@ -7,12 +7,19 @@ import api from '../../../../api';
 import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '../../helpers';
 import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
+export type RecordCorrectionRequestInformationRequest = CustomExpressRequest<{
+  params: {
+    reportId: string;
+    feeRecordId: string;
+  };
+}>;
+
 /**
  * Renders the "check the information" page for a record correction request
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
+export const getRecordCorrectionRequestInformation = async (req: RecordCorrectionRequestInformationRequest, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
@@ -76,7 +83,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
  * @param req - The request object
  * @param res - The response object
  */
-export const postRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
+export const postRecordCorrectionRequestInformation = async (req: RecordCorrectionRequestInformationRequest, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);

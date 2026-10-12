@@ -4,7 +4,7 @@ import { MongoConnectionStatus } from '../types';
 import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
 import { DbModel } from '../types/mongo-db-models/db-model';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { MONGODB_URI, MONGO_INITDB_DATABASE } = process.env;
 

@@ -70,8 +70,6 @@ const MOCK_FACILITIES = [
       text: 'GBP - UK Sterling',
       id: CURRENCY.GBP,
     },
-    feeType: 'At maturity',
-    feeFrequency: '12',
     hasBeenIssuedAndAcknowledged: true,
   },
   {
@@ -237,8 +235,6 @@ const MOCK_FACILITIES = [
       text: 'GBP - UK Sterling',
       id: CURRENCY.GBP,
     },
-    feeType: 'At maturity',
-    feeFrequency: '12',
     hasBeenIssuedAndAcknowledged: true,
   },
 ];

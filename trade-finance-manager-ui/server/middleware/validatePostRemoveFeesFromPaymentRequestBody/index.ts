@@ -6,7 +6,7 @@ import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/edit-pay
 import { extractTotalSelectableFeeRecordsFromRequestBody } from '../../helpers/remove-fees-from-payment-helper';
 import { ReconciliationForReportTab } from '../../types/reconciliation-for-report-tab';
 
-type PostRemoveFeesFromPaymentRequest = CustomExpressRequest<{
+export type PostRemoveFeesFromPaymentRequest = CustomExpressRequest<{
   query: {
     redirectTab?: ReconciliationForReportTab;
   };

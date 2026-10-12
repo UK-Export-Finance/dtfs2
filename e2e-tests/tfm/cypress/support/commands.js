@@ -11,7 +11,15 @@ Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
+Cypress.Commands.add('assertValue', require('./utils/assertValue'));
+
 Cypress.Commands.add('assertUrl', require('./utils/assertUrl'));
+
+Cypress.Commands.add('assertLength', require('./utils/assertLength'));
+
+Cypress.Commands.add('checkClassName', require('./utils/checkClassName'));
+
+Cypress.Commands.add('autocompleteKeyboardInput', require('./utils/autoCompleteKeyboardInput'));
 
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 

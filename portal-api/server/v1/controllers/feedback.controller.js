@@ -35,7 +35,10 @@ const findOneFeedback = async (id, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const feedback = sanitiseFeedbackResponse(req.body);
+  const feedbackBody = req.body ?? {};
+
+  const feedback = sanitiseFeedbackResponse(feedbackBody);
+
   const validationErrors = validateFeedback(feedback);
 
   if (validationErrors.count !== 0) {

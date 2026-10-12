@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { EXTERNAL_API_KEY } = process.env;
 

@@ -205,15 +205,23 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   describe('when user navigates away', () => {
     const FEE_RECORD_ID_THREE = '33';
     const FEE_RECORD_ID_FOUR = '44';
+    const FACILITY_ID_THREE = '33333333';
+    const FACILITY_ID_FOUR = '44444444';
+    const EXPORTER_THREE = 'Exporter 3';
+    const EXPORTER_FOUR = 'Exporter 4';
 
     beforeEach(() => {
       const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report)
         .withId(FEE_RECORD_ID_THREE)
+        .withFacilityId(FACILITY_ID_THREE)
+        .withExporter(EXPORTER_THREE)
         .withPaymentCurrency(PAYMENT_CURRENCY)
         .withStatus(FEE_RECORD_STATUS.TO_DO)
         .build();
       const feeRecordFour = FeeRecordEntityMockBuilder.forReport(report)
         .withId(FEE_RECORD_ID_FOUR)
+        .withFacilityId(FACILITY_ID_FOUR)
+        .withExporter(EXPORTER_FOUR)
         .withPaymentCurrency(PAYMENT_CURRENCY)
         .withStatus(FEE_RECORD_STATUS.TO_DO)
         .build();
@@ -254,6 +262,24 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
 
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+      });
+
+      it('should give each fee record checkbox a descriptive aria label', () => {
+        premiumPaymentsTable
+          .checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+          .should(
+            'have.attr',
+            'aria-label',
+            `Select ${FACILITY_ID_THREE} with exporter ${EXPORTER_THREE} to add a payment, generate keying data or create a record correction request`,
+          );
+
+        premiumPaymentsTable
+          .checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+          .should(
+            'have.attr',
+            'aria-label',
+            `Select ${FACILITY_ID_FOUR} with exporter ${EXPORTER_FOUR} to add a payment, generate keying data or create a record correction request`,
+          );
       });
     });
 

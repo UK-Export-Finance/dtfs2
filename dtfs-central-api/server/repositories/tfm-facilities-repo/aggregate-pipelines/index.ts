@@ -10,7 +10,7 @@ import { acknowledgedPortalAmendmentsByFacilityId } from './acknowledged-portal-
 import { latestCompletedValueAmendment } from './latest-completed-value-amendment';
 import { latestCompletedCoverEndDateAmendment } from './latest-completed-cover-end-date-amendment';
 
-export { AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './all-facilities-and-facility-count';
+export type { AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './all-facilities-and-facility-count';
 
 export const aggregatePipelines = {
   tfmAmendmentsByStatus,

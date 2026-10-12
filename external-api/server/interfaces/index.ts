@@ -3,3 +3,4 @@ export * from './amendment.interface';
 export * from './premiumSchedule.interface';
 export * from './bankHolidays.interface';
 export * from './number.interface';
+export * from './express.interface';

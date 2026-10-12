@@ -4,7 +4,7 @@ import { CustomExpressRequest, Bank, ApiError, ApiErrorResponseBody } from '@uke
 import { getAllBanks } from '../../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 
-type GetBanksRequest = CustomExpressRequest<{
+export type GetBanksRequest = CustomExpressRequest<{
   query: {
     includeReportingYears?: 'true' | 'false';
   };

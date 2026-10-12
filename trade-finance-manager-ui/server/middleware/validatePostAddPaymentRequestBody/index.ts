@@ -1,4 +1,4 @@
-import { allStatusesAreTheSameOrCombinationOfToDoStatuses, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { allStatusesAreTheSameOrCombinationOfToDoStatuses, Currency, CustomExpressRequest, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
@@ -12,6 +12,8 @@ import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../helpers/get-
 import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys';
 import { mapCheckedCheckboxesToRecord } from '../../helpers/map-checked-checkboxes-to-record';
 import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
+
+export type ValidatePostAddPaymentRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 
 /**
  * Checks if the given value is an object.
@@ -73,7 +75,7 @@ const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: PremiumPaymentsTa
  * @param next - The next middleware function.
  * @returns The next middleware function if validation passes, or a redirect/render response if validation fails.
  */
-export const validatePostAddPaymentRequestBody = (req: Request, res: Response, next: NextFunction) => {
+export const validatePostAddPaymentRequestBody = (req: ValidatePostAddPaymentRequest, res: Response, next: NextFunction) => {
   const { user } = asUserSession(req.session);
   const { reportId } = req.params;
 

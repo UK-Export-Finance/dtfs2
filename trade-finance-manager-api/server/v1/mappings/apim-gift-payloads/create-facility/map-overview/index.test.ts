@@ -13,12 +13,13 @@ describe('mapOverview', () => {
     exporterPartyUrn: '12345',
     facilityAmount: 20000,
     facilityType: GEF_FACILITY_TYPE.CASH,
-    isGefDeal: true,
+    isCashFacility: true,
+    isContingentFacility: false,
     monthsOfCover: 12,
     ukefFacilityId: '123',
   };
 
-  const { exporterPartyUrn, facilityAmount, facilityType, isGefDeal, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
+  const { exporterPartyUrn, facilityAmount, facilityType, isCashFacility, isContingentFacility, monthsOfCover, ukefFacilityId, ...otherParams } = baseParams;
 
   const baseExpected = {
     ...otherParams,
@@ -46,7 +47,8 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT003,
         name: mapFacilityName({
           facilityType,
-          isGefDeal,
+          isCashFacility,
+          isContingentFacility,
           monthsOfCover,
           productTypeCode,
         }),
@@ -77,7 +79,8 @@ describe('mapOverview', () => {
         creditType: DEFAULTS.OVERVIEW.CREDIT_TYPE.PRT004,
         name: mapFacilityName({
           facilityType,
-          isGefDeal,
+          isCashFacility,
+          isContingentFacility,
           monthsOfCover,
           productTypeCode,
         }),

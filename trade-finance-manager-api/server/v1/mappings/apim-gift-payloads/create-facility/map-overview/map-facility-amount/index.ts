@@ -1,3 +1,5 @@
+import { roundTo2Decimals } from '../../../helpers/round-to-2-decimals';
+
 type MapFacilityAmountParams = {
   facilityAmount: number | string;
   coverPercentage: number | null;
@@ -24,7 +26,7 @@ export const mapFacilityAmount = ({ facilityAmount, coverPercentage }: MapFacili
   if (coverPercentage) {
     const facilityAmountNumber = Number(String(facilityAmount).replace(/,/g, ''));
 
-    const amount = Math.round(facilityAmountNumber * (coverPercentage / 100) * 100) / 100;
+    const amount = roundTo2Decimals(facilityAmountNumber * (coverPercentage / 100));
 
     return amount;
   }

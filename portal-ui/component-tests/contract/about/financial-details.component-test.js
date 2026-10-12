@@ -16,13 +16,13 @@ describe(loan, () => {
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/guaranteeFeePayableByBank.js"]')
-        .toHaveAttribute('integrity', 'sha512-s1t9S69wIVNKrVuQiOyFTa5xhpf0I9T78GVjdfaje2HLgmr6UtyhyBmTGao210xj8vzXQkd2a7UnrWPutB+D4w==');
+        .toHaveAttribute('integrity', 'sha512-NL+2iGMneoDNeM+shd5vt2jSBnjirT7vqqgyaKd74LX83pWQWmeWkIfov/FtNnKcg0XE8JrFziMGIExHFTODPg==');
     });
 
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/ukefexposure.js"]')
-        .toHaveAttribute('integrity', 'sha512-qCOQC1ZdGnH31hhpXgZCdaxOb4SYTLB1dFoxku+OdY52vl1Kmdi5M/mogw3BIC9kPK2vhTDt+Tlr5+2S5tejJQ==');
+        .toHaveAttribute('integrity', 'sha512-sMu28F6ka0dXHmVC91uY5Ky4jr2GXjvHqmwc6EjfNZq46+MlZxdKVhbdcnX580rlrIGIsGSTYuxKgSN9epklFA==');
     });
   });
 });
@@ -42,13 +42,13 @@ describe(bond, () => {
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/guaranteeFeePayableByBank.js"]')
-        .toHaveAttribute('integrity', 'sha512-s1t9S69wIVNKrVuQiOyFTa5xhpf0I9T78GVjdfaje2HLgmr6UtyhyBmTGao210xj8vzXQkd2a7UnrWPutB+D4w==');
+        .toHaveAttribute('integrity', 'sha512-NL+2iGMneoDNeM+shd5vt2jSBnjirT7vqqgyaKd74LX83pWQWmeWkIfov/FtNnKcg0XE8JrFziMGIExHFTODPg==');
     });
 
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/ukefexposure.js"]')
-        .toHaveAttribute('integrity', 'sha512-qCOQC1ZdGnH31hhpXgZCdaxOb4SYTLB1dFoxku+OdY52vl1Kmdi5M/mogw3BIC9kPK2vhTDt+Tlr5+2S5tejJQ==');
+        .toHaveAttribute('integrity', 'sha512-sMu28F6ka0dXHmVC91uY5Ky4jr2GXjvHqmwc6EjfNZq46+MlZxdKVhbdcnX580rlrIGIsGSTYuxKgSN9epklFA==');
     });
   });
 });

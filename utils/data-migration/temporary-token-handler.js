@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const {
   ROLES: { MAKER, ADMIN },
 } = require('./constant');

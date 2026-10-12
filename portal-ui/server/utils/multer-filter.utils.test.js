@@ -40,7 +40,7 @@ describe('utils/multer-filter.utils multerFilter', () => {
 
     const multer = jest.spyOn(filter, 'multerFilter');
     filter.multerFilter(req, file, cb);
-    expect(multer).toBeCalled();
+    expect(multer).toHaveBeenCalled();
   });
 });
 
@@ -62,6 +62,6 @@ describe('utils/multer-filter.utils utilisationReportMulterFilter', () => {
 
     const multer = jest.spyOn(filter, 'utilisationReportMulterFilter');
     filter.utilisationReportMulterFilter(req, file, cb);
-    expect(multer).toBeCalled();
+    expect(multer).toHaveBeenCalled();
   });
 });

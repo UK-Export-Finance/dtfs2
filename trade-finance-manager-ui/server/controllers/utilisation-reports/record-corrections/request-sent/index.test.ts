@@ -1,12 +1,14 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getRecordCorrectionRequestSent } from '.';
+import { getRecordCorrectionRequestSent, GetRecordCorrectionRequestSentRequest } from '.';
 import api from '../../../../api';
 import { RecordCorrectionRequestSentViewModel } from '../../../../types/view-models';
 
 jest.mock('../../../../api');
+
+const createHttpMocks = (options: RequestOptions) => httpMocks.createMocks<GetRecordCorrectionRequestSentRequest>(options);
 
 describe('controllers/utilisation-reports/record-corrections/request-sent', () => {
   const reportId = '123';
@@ -29,7 +31,7 @@ describe('controllers/utilisation-reports/record-corrections/request-sent', () =
 
     const feeRecordResponse = aGetFeeRecordResponseBody();
 
-    const { req, res } = httpMocks.createMocks({
+    const { req, res } = createHttpMocks({
       session: requestSession,
       params: { reportId, feeRecordId },
     });

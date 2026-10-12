@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const facilityValue = {
   hiddenFacilityType: () => cy.get('[data-cy="hidden-facility-type"]'),
   value: () => cy.get('[data-cy="value"]'),

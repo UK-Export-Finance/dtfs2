@@ -402,27 +402,39 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - code
+ *               - companyRegNo
+ *               - companyName
+ *               - customerType
+ *               - isUkEntity
+ *               - probabilityOfDefault
  *             properties:
- *               companyRegNo:
- *                 type: string
- *                 description: Companies House registration number
- *                 example: "12345678"
- *               companyName:
- *                 type: string
- *                 description: Company name
- *                 example: "Some Name Ltd"
- *               probabilityOfDefault:
- *                 type: number
- *                 description: Probability of default
- *                 example: 0.01
- *               isUkEntity:
- *                 type: boolean
- *                 description: Is UK entity
- *                 example: true
  *               code:
  *                 type: number
  *                 description: Standard Industrial Classification (SIC) codes https://resources.companieshouse.gov.uk/sic/
  *                 example: 1008
+ *               companyName:
+ *                 type: string
+ *                 description: Company name
+ *                 example: "Some Name Ltd"
+ *               companyRegNo:
+ *                 type: string
+ *                 description: Companies House registration number
+ *                 example: "12345678"
+ *               customerType:
+ *                 type: string
+ *                 enum: [CUSTOMER]
+ *                 description: Salesforce customer type
+ *                 example: "CUSTOMER"
+ *               isUkEntity:
+ *                 type: boolean
+ *                 description: Is UK entity
+ *                 example: true
+ *               probabilityOfDefault:
+ *                 type: number
+ *                 description: Probability of default
+ *                 example: 0.01
  *     responses:
  *       200:
  *         description: Party created or retrieved successfully
@@ -431,7 +443,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *             schema:
  *               $ref: '#/definitions/PartyDB'
  *       400:
- *         description: Bad request. Invalid company registration number or company name
+ *         description: Bad request. Invalid company registration number, company name, industry code or customer type
  *       500:
  *         description: Error getting or creating the party
  */
@@ -894,6 +906,44 @@ apiRoutes.post('/gift/facility', giftFacility.create);
  *         description: Internal server error
  */
 apiRoutes.post('/gift/facility/:facilityId/amendment', giftFacility.amend);
+
+/**
+ * @openapi
+ * /gift/facility/{facilityId}/multiple-amendments:
+ *   post:
+ *     summary: Send multiple amendments for a GIFT facility in APIM TFS's GIFT endpoint
+ *     tags: [APIM, GIFT Facility]
+ *     description: >-
+ *       Send multiple facility amendments to APIM TFS's GIFT endpoint by facility ID.
+ *       Example endpoint: /gift/facility/0000000001/multiple-amendments
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *           example: 0000000001
+ *         required: true
+ *         description: The GIFT facility ID.
+ *     requestBody:
+ *       required: true
+ *       description: Amendments to be sent to APIM TFS's GIFT endpoint.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/GiftFacilityMultipleAmendmentsRequestBody'
+ *     responses:
+ *       202:
+ *         description: Accepted
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
+ */
+apiRoutes.post('/gift/facility/:facilityId/multiple-amendments', giftFacility.multipleAmendments);
 
 /**
  * @openapi

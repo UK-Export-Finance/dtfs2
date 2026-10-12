@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const { PORTAL_UI_URL } = process.env;
 

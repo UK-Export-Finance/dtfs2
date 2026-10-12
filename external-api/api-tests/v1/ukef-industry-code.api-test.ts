@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import MockAdapter from 'axios-mock-adapter';
-import axios, { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
+import { HttpStatusCode } from 'axios';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { get } = api(app);
 
 describe('/ukef-industry-code', () => {
-  const axiosMock = new MockAdapter(axios);
-
   describe('GET /ukef-industry-code/by-companies-house-industry-code/:industryCode', () => {
     beforeEach(() => {
       axiosMock.onGet().reply((config) => {

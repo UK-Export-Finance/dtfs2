@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios';
 import apiModule from '../../../api';
 import { ApimGiftFacilityAmendmentPayload, ApiTypes } from '../../../mappings/apim-gift-payloads/types';
 
@@ -7,7 +6,7 @@ type SubmitFacilityAmendmentToApimGiftParams = {
   ukefFacilityId: string;
 };
 
-type SubmitFacilityAmendmentToApimGiftResponse = number[] | false;
+type SubmitFacilityAmendmentToApimGiftResponse = number | false;
 
 /**
  * Submits facility amendments to APIM/GIFT.
@@ -26,24 +25,27 @@ export const submitFacilityAmendmentsToApimGift = async ({
 }: SubmitFacilityAmendmentToApimGiftParams): Promise<SubmitFacilityAmendmentToApimGiftResponse> => {
   const api = apiModule as ApiTypes;
 
-  const responses: number[] = [];
+  if (amendmentPayloads.length === 1) {
+    console.info('Sending facility %s single amendment to APIM GIFT %s', amendmentPayloads.length, ukefFacilityId);
 
-  console.info('Sending facility %s amendment(s) to APIM GIFT %s', amendmentPayloads.length, ukefFacilityId);
+    const payload = amendmentPayloads[0];
 
-  /**
-   * NOTE: We need to use a for loop instead of Promise.all, to ensure that the calls are sequential.
-   * Promise.all is not sequential.
-   * If the calls are not sequential, GIFT will error with a database deadlock error.
-   */
-  for (const payload of amendmentPayloads) {
     const response = await api.amendGiftFacility(payload, ukefFacilityId);
 
-    if (response !== HttpStatusCode.Accepted) {
-      return false;
-    }
-
-    responses.push(response);
+    return response;
   }
 
-  return responses;
+  if (amendmentPayloads.length >= 2) {
+    console.info('Sending facility %s multiple amendments to APIM GIFT %s', amendmentPayloads.length, ukefFacilityId);
+
+    const payload = {
+      amendments: amendmentPayloads,
+    };
+
+    const response = await api.multipleGiftFacilityAmendments(payload, ukefFacilityId);
+
+    return response;
+  }
+
+  return false;
 };
