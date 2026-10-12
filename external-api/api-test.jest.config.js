@@ -7,7 +7,6 @@ module.exports = {
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['/node_modules/(?!(otplib|@otplib/plugin-base32-scure|@scure/base)/)'],
   testEnvironment: 'node',
   testTimeout: 80000,
   setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
