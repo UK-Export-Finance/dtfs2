@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { getNewAccessCodePage, GetNewAccessCodePageRequest } from './get-new-access-code-page';
 
 describe('controllers/login/get-new-access-code-page', () => {
@@ -19,7 +20,7 @@ describe('controllers/login/get-new-access-code-page', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: 1,
-        userEmail: 'test@example.com',
+        userEmail: MOCK_EMAIL,
       },
     } as unknown as GetNewAccessCodePageRequest;
 
@@ -30,7 +31,7 @@ describe('controllers/login/get-new-access-code-page', () => {
       requestNewCodeUrl: '/login/request-new-access-code',
       isAccessCodeLink: true,
       isSupportInfo: false,
-      email: 'test@example.com',
+      email: MOCK_EMAIL,
     });
   });
 
@@ -49,7 +50,7 @@ describe('controllers/login/get-new-access-code-page', () => {
     const req = {
       session: {
         numberOfSignInOtpAttemptsRemaining: -1,
-        userEmail: 'test@example.com',
+        userEmail: MOCK_EMAIL,
       },
     } as unknown as GetNewAccessCodePageRequest;
 

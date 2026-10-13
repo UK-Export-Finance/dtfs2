@@ -1,3 +1,4 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
@@ -130,7 +131,7 @@ describe('submitDealAfterUkefIds', () => {
     mapSubmittedDeal.mockReturnValue(mappedDeal);
 
     sendFacilitiesToApimGift.mockResolvedValueOnce(issuedFacilities);
-    sendDealSubmitEmails.mockResolvedValue({ firstTaskEmail: { to: 'test@example.com' } });
+    sendDealSubmitEmails.mockResolvedValue({ firstTaskEmail: { to: MOCK_EMAIL } });
 
     updateFacilities.mockImplementation(async (deal) => deal);
     updatePortalDealStatus.mockResolvedValue();
@@ -402,7 +403,7 @@ describe('submitDealBeforeUkefIds', () => {
 
     mapSubmittedDeal.mockReturnValue(mappedDeal);
 
-    sendDealSubmitEmails.mockResolvedValue({ firstTaskEmail: { to: 'test@example.com' } });
+    sendDealSubmitEmails.mockResolvedValue({ firstTaskEmail: { to: MOCK_EMAIL } });
 
     updateFacilities.mockImplementation(async (deal) => deal);
     updatePortalDealStatus.mockResolvedValue();

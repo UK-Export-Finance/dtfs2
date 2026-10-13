@@ -1,6 +1,8 @@
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
+
 const defaultUserDetails = {
   password: 'AbC!2345',
-  email: 'test@testing.com',
+  email: MOCK_EMAIL,
   timezone: 'Europe/London',
 };
 

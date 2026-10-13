@@ -1,4 +1,5 @@
 import { Team, TEAM_IDS } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
 /**
  * Mock object representing a PIM TFM team.
@@ -11,5 +12,5 @@ import { Team, TEAM_IDS } from '@ukef/dtfs2-common';
 export const MOCK_PIM_TEAM: Team = {
   id: TEAM_IDS.PIM,
   name: TEAM_IDS.PIM,
-  email: 'test@ukexportfinance.gov.uk',
+  email: MOCK_EMAIL,
 };

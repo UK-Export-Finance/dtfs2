@@ -1,4 +1,5 @@
 const { DEAL_TYPE } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const Chance = require('chance');
 const { sub, getUnixTime } = require('date-fns');
 
@@ -283,7 +284,7 @@ const MockSubmissionRequest = () => ({
       username: 'maker',
       firstname: 'Bob',
       surname: 'Smith',
-      email: 'test@test.com',
+      email: MOCK_EMAIL,
       bank: { id: 'BANKID' },
       roles: [MAKER],
       _id: 1235,
