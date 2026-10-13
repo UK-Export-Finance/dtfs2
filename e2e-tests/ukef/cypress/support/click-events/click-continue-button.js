@@ -5,6 +5,7 @@ import { continueButton } from '../../e2e/partials';
  * Click the continue button.
  */
 const clickContinueButton = () => {
+  cy.document().its('readyState').should('eq', 'complete');
   continueButton().click();
 };
 
