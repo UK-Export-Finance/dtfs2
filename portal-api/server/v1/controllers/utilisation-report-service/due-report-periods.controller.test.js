@@ -30,7 +30,6 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-
       expect(res._getStatusCode()).toEqual(200);
 
       expect(res._getData()).toEqual([]);
@@ -45,7 +44,6 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-
       expect(res._getStatusCode()).toEqual(200);
 
       expect(res._getData()).toEqual([aUtilisationReportResponse().reportPeriod]);

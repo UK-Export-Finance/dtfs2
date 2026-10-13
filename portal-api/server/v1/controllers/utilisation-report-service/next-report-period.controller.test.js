@@ -30,7 +30,6 @@ describe('controllers/utilisation-report-service/next-report-period', () => {
       await getNextReportPeriodByBankId(req, res);
 
       // Assert
-
       expect(res._getData()).toEqual(reportPeriod);
 
       expect(res._getStatusCode()).toEqual(200);
@@ -51,7 +50,6 @@ describe('controllers/utilisation-report-service/next-report-period', () => {
       await getNextReportPeriodByBankId(req, res);
 
       // Assert
-
       expect(res._getStatusCode()).toEqual(errorStatus);
     });
   });

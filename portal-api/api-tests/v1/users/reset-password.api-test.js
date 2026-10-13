@@ -18,15 +18,8 @@ const MOCK_USER = {
   email: temporaryUsernameAndEmail,
 };
 
-const MOCK_USER_NO_PASSWORD = {
-  username: temporaryUsernameAndEmail,
-  email: temporaryUsernameAndEmail,
-  bank: users.testBank1Maker1.bank,
-  firstname: 'Mock',
-  surname: 'Test',
-  roles: [],
-  isTrusted: true,
-};
+const MOCK_USER_NO_PASSWORD = { ...MOCK_USER };
+delete MOCK_USER_NO_PASSWORD.password;
 
 jest.mock('../../../server/v1/email');
 const sendEmail = require('../../../server/v1/email');
