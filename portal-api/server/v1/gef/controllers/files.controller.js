@@ -20,6 +20,7 @@ const fileError = (file) => {
   let error;
 
   const fileExtension = file.originalname.match(/\.[^.]*$/g);
+
   if (!FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0])) {
     error = `The selected file must be ${FILE_UPLOAD.ALLOWED_FORMATS.join(', ')}`;
   }
@@ -29,6 +30,7 @@ const fileError = (file) => {
   if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= FILE_UPLOAD.MAX_FILE_SIZE_IN_MB)) {
     return null; // don't throw an error if the file is smaller than the max size allowed
   }
+
   error = `${file.originalname} must be smaller than ${FILE_UPLOAD.MAX_FILE_SIZE_IN_MB}MB`;
 
   return error;
@@ -48,30 +50,43 @@ exports.create = async (req, res) => {
     files,
     body: { parentId, documentPath },
   } = req;
+
   if (req.filesNotAllowed) {
     return res.status(400).json(req.filesNotAllowed);
   }
 
   // ensure a parentId exists
-  if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
+  if (!parentId || !ObjectId.isValid(parentId)) {
+    return res.status(400).send('Missing or invalid parentId');
+  }
 
   // Ensure some files have been passed
-  if (!files?.length) return res.status(400).send('missing files');
+  if (!files?.length) {
+    return res.status(400).send('missing files');
+  }
 
   // Check deal exists
   const dealCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(parentId)) } });
-  if (!deal) return res.status(422).send('Parent deal not found');
+
+  if (!deal) {
+    return res.status(422).send('Parent deal not found');
+  }
 
   // Check user has rights to access this file
-  if (!userHasAccess(req.user, deal, [MAKER])) return res.sendStatus(401);
+  if (!userHasAccess(req.user, deal, [MAKER])) {
+    return res.sendStatus(401);
+  }
 
   try {
     const processedFiles = await Promise.all(
       files.map(async (item) => {
         const file = item;
         const error = fileError(file);
-        if (error) return errorFormat(file, parentId, error);
+
+        if (error) {
+          return errorFormat(file, parentId, error);
+        }
 
         file.originalname = formatFilenameForSharepoint(file.originalname);
         const fileResult = await fileshare.uploadFile({
@@ -81,7 +96,9 @@ exports.create = async (req, res) => {
           filename: formatFilenameForSharepoint(file.originalname),
         });
 
-        if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
+        if (fileResult.error) {
+          return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
+        }
 
         const fileObject = { ...file, documentPath };
 
@@ -137,10 +154,14 @@ exports.getById = async (req, res) => {
   const [file, deal] = await getFile(req.params.id);
 
   // Check file exists
-  if (!file) return res.status(404).send();
+  if (!file) {
+    return res.status(404).send();
+  }
 
   // Check user has rights to access this file
-  if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
+  if (!userHasAccess(req.user, deal)) {
+    return res.sendStatus(401);
+  }
 
   return res.status(200).send(file);
 };
@@ -149,10 +170,14 @@ exports.downloadFile = async (req, res) => {
   const [file, deal] = await getFile(req.params.id);
 
   // Check file exists
-  if (!file) return res.status(404).send();
+  if (!file) {
+    return res.status(404).send();
+  }
 
   // Check user has rights to access this file
-  if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
+  if (!userHasAccess(req.user, deal)) {
+    return res.sendStatus(401);
+  }
 
   try {
     const { filename, mimetype, documentPath } = file;

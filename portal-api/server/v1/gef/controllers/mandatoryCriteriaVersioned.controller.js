@@ -101,9 +101,11 @@ exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.id, (mandato
  */
 exports.findLatest = async (req, res) => {
   const criteria = await api.findLatestGefMandatoryCriteria();
+
   if (criteria.status === 200) {
     return res.status(200).send(criteria.data);
   }
+
   return res.status(criteria.status).send();
 };
 
@@ -135,6 +137,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.sendStatus(404);
     }
+
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

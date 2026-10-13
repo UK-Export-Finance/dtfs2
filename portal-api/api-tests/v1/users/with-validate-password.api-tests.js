@@ -77,8 +77,10 @@ function getUpdateUserRuleWithoutCurrentPasswordTestCases({ makeRequest, payload
       makeRequestWithModifiedPayload: async () =>
         await makeRequest(
           produce(payload, (draftRequest) => {
-            draftRequest.password = A_VALID_PASSWORD;
-            draftRequest.passwordConfirm = ANOTHER_VALID_PASSWORD;
+            const modifiedDraftRequest = draftRequest;
+
+            modifiedDraftRequest.password = A_VALID_PASSWORD;
+            modifiedDraftRequest.passwordConfirm = ANOTHER_VALID_PASSWORD;
           }),
         ),
       expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.passwordConfirm.text).toEqual('Your passwords must match.'),
@@ -98,9 +100,11 @@ function getUpdateUserRuleWithCurrentPasswordTestCases({ makeRequest, payload, e
       makeRequestWithModifiedPayload: async () =>
         await makeRequest(
           produce(payload, (draftRequest) => {
-            draftRequest.password = A_VALID_PASSWORD;
-            draftRequest.passwordConfirm = A_VALID_PASSWORD;
-            draftRequest.currentPassword = 'ThisIsNotTheCurrentPassword';
+            const modifiedDraftRequest = draftRequest;
+
+            modifiedDraftRequest.password = A_VALID_PASSWORD;
+            modifiedDraftRequest.passwordConfirm = A_VALID_PASSWORD;
+            modifiedDraftRequest.currentPassword = 'ThisIsNotTheCurrentPassword';
           }),
         ),
       expectResponseErrorToMatchExpected: (body) => expect(body.errors.errorList.currentPassword.text).toEqual('Current password is not correct.'),
@@ -126,8 +130,10 @@ function itShouldReturnAnErrorIf(testCases) {
 
 function replacePassword({ payload, replacementPassword }) {
   return produce(payload, (draftRequest) => {
-    draftRequest.password = replacementPassword;
-    draftRequest.passwordConfirm = replacementPassword;
+    const modifiedDraftRequest = draftRequest;
+
+    modifiedDraftRequest.password = replacementPassword;
+    modifiedDraftRequest.passwordConfirm = replacementPassword;
   });
 }
 

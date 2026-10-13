@@ -32,4 +32,4 @@ const apis = [
   path.join(__dirname, '/**/*.ts'),
 ];
 
-export default swaggerRouter(definition, apis);
+export const router = swaggerRouter(definition, apis);

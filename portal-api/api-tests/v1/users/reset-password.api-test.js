@@ -11,10 +11,21 @@ const { resetPassword, getUserByPasswordToken } = require('../../../server/v1/us
 const users = require('./test-data');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+
 const MOCK_USER = {
   ...users.testBank1Maker1,
   username: temporaryUsernameAndEmail,
   email: temporaryUsernameAndEmail,
+};
+
+const MOCK_USER_NO_PASSWORD = {
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+  bank: users.testBank1Maker1.bank,
+  firstname: 'Mock',
+  surname: 'Test',
+  roles: [],
+  isTrusted: true,
 };
 
 jest.mock('../../../server/v1/email');
@@ -110,8 +121,7 @@ describe('password reset', () => {
     await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     const user = await getUserByPasswordToken(passwordResetToken);
 
-    const { password: _password, ...makerWithoutPassword } = MOCK_USER;
-    expect(user).toMatchObject(makerWithoutPassword);
+    expect(user).toMatchObject(MOCK_USER_NO_PASSWORD);
   });
 
   it('should not return a token if the token is invalid', async () => {

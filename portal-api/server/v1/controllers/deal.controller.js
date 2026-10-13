@@ -153,7 +153,9 @@ exports.update = async (req, res) => {
   } = req;
 
   await findOneDeal(dealId, async (deal) => {
-    if (!deal) res.status(404).send();
+    if (!deal) {
+      res.status(404).send();
+    }
 
     if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();

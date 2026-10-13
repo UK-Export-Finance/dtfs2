@@ -20,6 +20,7 @@ const supportingInfoStatus = (supportingInfo) => {
 
     return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
+
   return CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED;
 };
 

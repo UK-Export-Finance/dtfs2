@@ -2,9 +2,12 @@ const { produce } = require('immer');
 
 const createTestCasesFromRules = ({ allRules }) =>
   produce({}, (draft) => {
+    const modifiedDraft = draft;
+
     Object.keys(allRules).forEach((ruleType) => {
       const testCaseName = `${ruleType}TestCases`;
-      draft[testCaseName] = Object.entries(allRules[ruleType]).map(([description, rule]) => ({
+
+      modifiedDraft[testCaseName] = Object.entries(allRules[ruleType]).map(([description, rule]) => ({
         description,
         rule,
       }));

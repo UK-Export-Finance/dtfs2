@@ -90,29 +90,45 @@ describe('getSignInTokenStatus', () => {
       dateInFuture = Date.now() + 10000;
 
       lastIssuedTokenInDatabaseInFuture = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInFuture;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInFuture;
       });
+
       lastIssuedTokenInDatabaseNow = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateNow;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateNow;
       });
+
       lastIssuedTokenInDatabaseInPast = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInPast;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInPast;
       });
 
       secondLastIssuedTokenInDatabaseInFuture = produce(secondLastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInFuture;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInFuture;
       });
 
       secondLastIssuedTokenInDatabaseInPast = produce(secondLastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInPast;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInPast;
       });
 
       thirdLastIssuedTokenInDatabaseInFuture = produce(thirdLastIssuedSignInTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInFuture;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInFuture;
       });
 
       thirdLastIssuedTokenInDatabaseInPast = produce(thirdLastIssuedSignInTokenInDatabaseWithNoDate, (draft) => {
-        draft.expiry = dateInPast;
+        const modifiedDraft = draft;
+
+        modifiedDraft.expiry = dateInPast;
       });
     });
     describe('when a user has no saved sign in tokens', () => {
@@ -283,16 +299,22 @@ describe('getSignInTokenStatus', () => {
 
   function mockDatabaseTestUserWithSignInTokens(signInTokens) {
     testUserFromDatabase = produce(testUserFromDatabase, (draft) => {
-      delete draft.signInTokens;
-      draft.signInTokens = signInTokens;
+      const modifiedDraft = draft;
+
+      delete modifiedDraft.signInTokens;
+      modifiedDraft.signInTokens = signInTokens;
     });
+
     mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
   }
 
   function mockDatabaseTestUserWithoutSignInTokens() {
     testUserFromDatabase = produce(testUserFromDatabase, (draft) => {
-      delete draft.signInTokens;
+      const modifiedDraft = draft;
+
+      delete modifiedDraft.signInTokens;
     });
+
     mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
   }
 

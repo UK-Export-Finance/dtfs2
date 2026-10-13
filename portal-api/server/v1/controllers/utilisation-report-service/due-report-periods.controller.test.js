@@ -30,9 +30,9 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getStatusCode()).toEqual(200);
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getData()).toEqual([]);
     });
 
@@ -45,9 +45,9 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getStatusCode()).toEqual(200);
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getData()).toEqual([aUtilisationReportResponse().reportPeriod]);
     });
 
@@ -69,9 +69,9 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getStatusCode()).toEqual(200);
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getData()).toEqual([]);
     });
 
@@ -90,7 +90,7 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       await getDueReportPeriodsByBankId(req, res);
 
       // Assert
-      // eslint-disable-next-line no-underscore-dangle
+
       expect(res._getStatusCode()).toEqual(errorStatus);
     });
   });

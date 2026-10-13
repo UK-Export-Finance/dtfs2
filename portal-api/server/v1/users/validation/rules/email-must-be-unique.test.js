@@ -29,7 +29,9 @@ describe('emailMustBeUnique', () => {
   const changeRequest = { email: exampleEmail };
 
   const testUserWithoutMatchingEmail = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draftRequest) => {
-    draftRequest.email = 'notAMatchingEmail@ukexportfinance.gov.uk';
+    const modifiedDraftRequest = draftRequest;
+
+    modifiedDraftRequest.email = 'notAMatchingEmail@ukexportfinance.gov.uk';
   });
 
   const testCases = [

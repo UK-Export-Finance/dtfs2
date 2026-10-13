@@ -6,5 +6,6 @@ exports.orderNumber = (errorList) => {
     const lastFieldOrderNumber = Number(errorList[lastFieldName].order);
     return String(lastFieldOrderNumber + 1);
   }
+
   return '1';
 };

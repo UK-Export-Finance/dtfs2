@@ -16,6 +16,7 @@ const { FACILITIES } = require('../../constants');
 exports.findOne = async (req, res) => {
   try {
     const deal = await findOneDeal(req.params.id);
+
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
@@ -81,6 +82,7 @@ const checkCountryCode = async (existingDeal, submitted, fieldName) => {
     const countryObj = await countryObject(submittedCountryCode);
     return countryObj;
   }
+
   return {};
 };
 
@@ -159,11 +161,13 @@ exports.update = async (req, res) => {
     submissionDetails.status = FACILITIES.DEAL_STATUS.INCOMPLETE;
 
     const { day, month, year } = submissionDetails.supplyContractConversionDate || {};
+
     if (day && month && year) {
       submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
     }
 
     const { sanitizedValue } = sanitizeCurrency(submissionDetails.supplyContractValue);
+
     if (sanitizedValue) {
       submissionDetails.supplyContractValue = sanitizedValue;
     }
