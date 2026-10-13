@@ -1,6 +1,6 @@
 import { Facility } from '@ukef/dtfs2-common';
 import { getFeeType } from '.';
-import { MOCK_FACILITIES } from '../../../../mocks/mock-facilities';
+import { MOCK_FACILITIES } from '../../../../__mocks__/mock-facilities';
 
 const mockFacilitySnapshot = MOCK_FACILITIES[1] as unknown as Facility;
 

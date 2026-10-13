@@ -12,7 +12,7 @@ import { ObjectId } from 'mongodb';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { HttpStatusCode } from 'axios';
 import { aHandleRedirectResponse, anUpsertTfmUserFromEntraIdUserResponse } from '../../../test-helpers';
-import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../mocks/builders';
+import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../__mocks__/builders';
 import { EntraIdService, HandleRedirectResponse } from '../services/entra-id.service';
 import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../services/user.service';
 import { SsoController } from './sso.controller';

@@ -2,8 +2,8 @@ import { ObjectId } from 'mongodb';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { generateMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues';
-import { MOCK_FACILITY_SNAPSHOT } from '../../../mocks/mock-facility-snapshot';
-import { MOCK_AMENDMENT } from '../../../mocks/mock-amendment';
+import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot';
+import { MOCK_AMENDMENT } from '../../../__mocks__/mock-amendment';
 
 describe('getLatestFacilityEndDateValues', () => {
   const facility: TfmFacility = {

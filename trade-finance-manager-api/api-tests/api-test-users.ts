@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { Express } from 'express';
 import { USER_STATUS, MONGO_DB_COLLECTIONS, TeamId, TfmUser, generatePasswordHash } from '@ukef/dtfs2-common';
 import { createApi } from './api';
-import MOCK_USERS from '../server/v1/mocks/mock-users';
+import MOCK_USERS from '../server/v1/__mocks__/mock-users';
 import { TestUser } from './types/test-user';
 import { wipeCollection } from './database-helper';
 

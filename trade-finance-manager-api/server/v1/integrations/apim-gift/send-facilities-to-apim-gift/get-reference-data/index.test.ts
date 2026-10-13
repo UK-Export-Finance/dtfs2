@@ -1,7 +1,7 @@
 import { DEAL_TYPE } from '@ukef/dtfs2-common';
 import api from '../../../../api';
 import { getReferenceData } from '.';
-import { MOCK_FACILITY_CATEGORIES } from '../../../../mocks/mock-facility-categories';
+import { MOCK_FACILITY_CATEGORIES } from '../../../../__mocks__/mock-facility-categories';
 
 jest.mock('../../../../api');
 

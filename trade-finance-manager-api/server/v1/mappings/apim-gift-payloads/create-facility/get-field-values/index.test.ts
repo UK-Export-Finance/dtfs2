@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Facility, getTfmUkefDealId, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
-import { MOCK_FACILITIES } from '../../../../mocks/mock-facilities';
-import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../../mocks/mock-TFM-deal-BSS-EWCS-AIN-submitted';
+import { MOCK_FACILITIES } from '../../../../__mocks__/mock-facilities';
+import MOCK_TFM_DEAL_BSS_EWCS_AIN_SUBMITTED from '../../../../__mocks__/mock-TFM-deal-BSS-EWCS-AIN-submitted';
 import { APIM_GIFT_INTEGRATION } from '../../constants';
 import { getBssSubtypeName } from '../get-bss-subtype-name';
 import { getEwcsSupplierType } from '../get-ewcs-supplier-type';

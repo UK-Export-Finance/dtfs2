@@ -5,7 +5,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { SsoController } from './sso.controller';
 import { EntraIdService } from '../services/entra-id.service';
-import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../mocks/builders';
+import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../__mocks__/builders';
 import { UserService } from '../services/user.service';
 
 describe('SsoController', () => {

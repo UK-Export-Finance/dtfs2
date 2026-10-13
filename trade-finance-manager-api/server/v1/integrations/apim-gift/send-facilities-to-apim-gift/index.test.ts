@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { APIM_GIFT_PAYLOADS_EXAMPLES, Facility, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import apiModule from '../../../api';
-import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../mocks/mock-TFM-deal-AIN-submitted';
-import { MOCK_FACILITIES } from '../../../mocks/mock-facilities';
+import MOCK_TFM_DEAL_AIN_SUBMITTED from '../../../__mocks__/mock-TFM-deal-AIN-submitted';
+import { MOCK_FACILITIES } from '../../../__mocks__/mock-facilities';
 import { APIM_GIFT_PAYLOADS } from '../../../mappings/apim-gift-payloads';
 import { ApimGiftFacilityCreationPayload } from '../../../mappings/apim-gift-payloads/types/apim-gift';
-import { MOCK_FACILITY_CATEGORIES } from '../../../mocks/mock-facility-categories';
+import { MOCK_FACILITY_CATEGORIES } from '../../../__mocks__/mock-facility-categories';
 import { getReferenceData } from './get-reference-data';
 import { sendFacilitiesToApimGift } from '.';
 
