@@ -2,8 +2,8 @@ const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { cloneDeep } = require('lodash');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const MOCK_DEAL_ACBS = require('../mocks/mock-deal-acbs');
-const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_DEAL_LINK, MOCK_ACBS_FACILITY_LINK } = require('../mocks/mock-durable-tasks');
+const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
+const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_DEAL_LINK, MOCK_ACBS_FACILITY_LINK } = require('../__mocks__/mock-durable-tasks');
 
 const {
   createACBS,

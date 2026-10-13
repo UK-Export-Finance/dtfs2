@@ -1,7 +1,7 @@
 const getAssigneeFullName = require('./get-assignee-full-name');
-const MOCK_USERS = require('../mocks/mock-users');
+const MOCK_USERS = require('../__mocks__/mock-users');
 const api = require('../api');
-const { mockFindUserById } = require('../mocks/common-api-mocks');
+const { mockFindUserById } = require('../__mocks__/common-api-mocks');
 
 describe('getAssigneeFullName', () => {
   beforeEach(() => {

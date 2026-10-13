@@ -6,8 +6,8 @@ const { generateMiaConfirmationEmailVars } = require('../emails/mia-confirmation
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
-const { mockFindOneDeal } = require('../mocks/common-api-mocks');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
 const gefEmailVariables = require('../emails/ain-min-confirmation/gef-email-variables');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));

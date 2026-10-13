@@ -1,8 +1,8 @@
 const mapTaskObject = require('./map-task-object');
 const api = require('../api');
 
-const MOCK_USERS = require('../mocks/mock-users');
-const MOCK_MIA_TASKS = require('../mocks/mock-MIA-tasks');
+const MOCK_USERS = require('../__mocks__/mock-users');
+const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 
 const underwriterManagerUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
 

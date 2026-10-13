@@ -3,8 +3,8 @@ const mapGefDealDetails = require('./mapGefDealDetails');
 const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
 const mapTotals = require('../deal/mapTotals');
 const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
-const MOCK_GEF_DEAL = require('../../../mocks/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../mocks/mock-cash-contingent-facilities');
+const MOCK_GEF_DEAL = require('../../../__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefDealSnapshot', () => {
   const mockFacilities = [

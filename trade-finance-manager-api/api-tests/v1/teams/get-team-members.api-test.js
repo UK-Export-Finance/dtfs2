@@ -7,7 +7,7 @@ const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../server/v1/api');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { TEAMS } = require('../../../server/constants');
-const MOCK_USERS = require('../../../server/v1/mocks/mock-users');
+const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
 
 const { as, get } = createApi(app);
 

@@ -1,5 +1,5 @@
 const mapGefDealDetails = require('./mapGefDealDetails');
-const MOCK_GEF_DEAL = require('../../../mocks/mock-gef-deal');
+const MOCK_GEF_DEAL = require('../../../__mocks__/mock-gef-deal');
 
 describe('mapGefDealDetails', () => {
   const mockDeal = {

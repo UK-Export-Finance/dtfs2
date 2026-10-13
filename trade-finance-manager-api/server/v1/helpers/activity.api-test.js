@@ -1,6 +1,6 @@
 const { labelCase, getLabel, getTimestamp, getDescription, getAuthor } = require('./activity');
 
-const MOCK_TFM_GEF_AIN_DEAL = require('../mocks/mock-TFM-deal-AIN-submitted');
+const MOCK_TFM_GEF_AIN_DEAL = require('../__mocks__/mock-TFM-deal-AIN-submitted');
 
 const mockDealRecord = {
   dealIdentifier: '1234',

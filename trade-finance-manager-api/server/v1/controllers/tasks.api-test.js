@@ -6,16 +6,16 @@ const { generateTaskEmailVariables } = require('../helpers/generate-task-email-v
 
 const api = require('../api');
 
-const MOCK_USERS = require('../mocks/mock-users');
-const MOCK_DEAL_MIA_SUBMITTED = require('../mocks/mock-deal-MIA-submitted');
-const MOCK_AIN_TASKS = require('../mocks/mock-AIN-tasks');
-const MOCK_MIA_TASKS = require('../mocks/mock-MIA-tasks');
-const MOCK_MIA_TASKS_POPULATED = require('../mocks/mock-MIA-tasks-populated');
-const MOCK_DEAL_AIN_SUBMITTED = require('../mocks/mock-deal-AIN-submitted');
-const MOCK_TEAMS = require('../mocks/mock-teams');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
+const MOCK_USERS = require('../__mocks__/mock-users');
+const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
+const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
+const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
+const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
+const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
+const MOCK_TEAMS = require('../__mocks__/mock-teams');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../constants');
-const { mockUpdateDeal, mockFindOneDeal, mockFindUserById, mockFindOneTeam } = require('../mocks/common-api-mocks');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById, mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
 const taskUpdateBase = {
   assignedTo: {

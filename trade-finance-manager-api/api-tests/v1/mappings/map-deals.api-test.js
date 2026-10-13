@@ -1,8 +1,8 @@
 const externalApis = require('../../../server/v1/api');
 const mapDeals = require('../../../server/v1/mappings/map-deals');
 
-const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/mocks/mock-deal');
-const MOCK_GEF_DEAL = require('../../../server/v1/mocks/mock-gef-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const MOCK_GEF_DEAL = require('../../../server/v1/__mocks__/mock-gef-deal');
 
 describe('mappings - map-deals', () => {
   const mockFindFacilitiesByDealIdResponse = MOCK_GEF_DEAL.facilities.map((facility) => ({

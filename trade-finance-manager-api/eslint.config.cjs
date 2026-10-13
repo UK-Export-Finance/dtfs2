@@ -66,7 +66,6 @@ module.exports = defineConfig([
       },
     },
     rules: {
-      'n/no-sync': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/await-thenable': 'off',

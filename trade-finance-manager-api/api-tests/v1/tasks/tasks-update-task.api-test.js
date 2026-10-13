@@ -2,11 +2,11 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
-const MOCK_DEAL_MIA_SUBMITTED = require('../../../server/v1/mocks/mock-deal-MIA-submitted');
-const MOCK_MIA_TASKS = require('../../../server/v1/mocks/mock-MIA-tasks');
-const MOCK_USERS = require('../../../server/v1/mocks/mock-users');
+const MOCK_DEAL_MIA_SUBMITTED = require('../../../server/v1/__mocks__/mock-deal-MIA-submitted');
+const MOCK_MIA_TASKS = require('../../../server/v1/__mocks__/mock-MIA-tasks');
+const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
 const CONSTANTS = require('../../../server/constants');
-const { mockFindOneDeal, mockUpdateDeal, mockFindUserById, mockFindOneDealFailure, mockFindOneTeam } = require('../../../server/v1/mocks/common-api-mocks');
+const { mockFindOneDeal, mockUpdateDeal, mockFindUserById, mockFindOneDealFailure, mockFindOneTeam } = require('../../../server/v1/__mocks__/common-api-mocks');
 
 const { as, put } = createApi(app);
 

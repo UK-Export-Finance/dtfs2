@@ -2,12 +2,12 @@ const { shouldSendFirstTaskEmail, sendFirstTaskEmail } = require('./send-deal-su
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const CONSTANTS = require('../../constants');
-const MOCK_TEAMS = require('../mocks/mock-teams');
+const MOCK_TEAMS = require('../__mocks__/mock-teams');
 const api = require('../api');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../mocks/mock-notify-email-response');
-const MOCK_MIA_NOT_SUBMITTED = require('../mocks/mock-deal-MIA-not-submitted');
-const { mockFindOneTeam } = require('../mocks/common-api-mocks');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const MOCK_MIA_NOT_SUBMITTED = require('../__mocks__/mock-deal-MIA-not-submitted');
+const { mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
 const sendEmailApiMock = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 

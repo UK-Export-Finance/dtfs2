@@ -3,7 +3,7 @@ const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../rest-mappings/mappings/gef-facilities/mapGefFacilityFeeType');
 const CONSTANTS = require('../../../constants');
 
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../../mocks/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mappings - map submitted deal - mapCashContingentFacility', () => {
   describe('mapCoverStartDate', () => {

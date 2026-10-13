@@ -1,8 +1,8 @@
 const mapGefDeal = require('./map-gef-deal');
 const { mapCashContingentFacility } = require('./map-cash-contingent-facility');
 
-const MOCK_GEF_DEAL = require('../../mocks/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILITIES = require('../../mocks/mock-cash-contingent-facilities');
+const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
 const api = require('../../api');
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));

@@ -4,9 +4,9 @@ const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../server/v1/api');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/mocks/mock-deal');
-const MOCK_USERS = require('../../../server/v1/mocks/mock-users');
-const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../server/v1/mocks/common-api-mocks');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../server/v1/__mocks__/common-api-mocks');
 
 const { as, put } = createApi(app);
 

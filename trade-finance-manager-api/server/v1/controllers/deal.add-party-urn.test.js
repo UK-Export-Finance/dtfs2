@@ -1,9 +1,9 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isSalesforceCustomerCreationEnabled, isCountryUk, CUSTOMER_TYPE } = require('@ukef/dtfs2-common');
 const { addPartyUrns, identifyDealParties } = require('./deal.party-db');
-const { MOCK_GEF_MAPPED_DEAL } = require('../mocks/mock-deal');
+const { MOCK_GEF_MAPPED_DEAL } = require('../__mocks__/mock-deal');
 const { getOrCreatePartyDbInfo, getPartyDbInfo, updateDeal } = require('../api');
-const { MOCK_PORTAL_USERS } = require('../mocks/mock-portal-users');
+const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');
 
 jest.mock('../../../server/v1/api', () => ({
   ...jest.requireActual('../../../server/v1/api'),

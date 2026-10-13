@@ -5,8 +5,8 @@ const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 const mapGefDeal = require('./map-gef-deal');
 
 const CONSTANTS = require('../../../constants');
-const { MOCK_BSS_EWCS_DEAL } = require('../../mocks/mock-deal');
-const MOCK_GEF_DEAL = require('../../mocks/mock-gef-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
+const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('mappings - map submitted deal - mapSubmittedDeal', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {

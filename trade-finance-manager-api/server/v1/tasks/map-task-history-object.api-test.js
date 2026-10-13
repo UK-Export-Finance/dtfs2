@@ -1,5 +1,5 @@
 const mapTaskHistoryObject = require('./map-task-history-object');
-const MOCK_USERS = require('../mocks/mock-users');
+const MOCK_USERS = require('../__mocks__/mock-users');
 
 const mockUser = MOCK_USERS[0];
 
