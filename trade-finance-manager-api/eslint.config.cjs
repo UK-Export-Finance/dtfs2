@@ -241,4 +241,14 @@ module.exports = defineConfig([
       'import-x/no-default-export': 'off',
     },
   },
+
+  // DTFS exception
+  // Why: *.d.ts ambient declarations merge with existing interfaces (e.g. Express.Request), which `type` cannot do
+  {
+    files: ['**/*.d.ts'],
+
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
 ]);
