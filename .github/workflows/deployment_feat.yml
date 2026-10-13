@@ -35,7 +35,7 @@ on:
   push:
     branches:
       # Manual deployment
-      - feat/DTFS2-25605/test-feature-deployment
+      - feature
 
 env:
   PRODUCT: dtfs
@@ -114,7 +114,7 @@ jobs:
         with:
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
-          credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
           acr: ${{ secrets.ACR_FEAT_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
@@ -149,7 +149,7 @@ jobs:
         with:
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
-          credentials: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
           acr: ${{ secrets.ACR_FEAT_PASSWORD }}
           functions: ${{ matrix.functions }}
 
