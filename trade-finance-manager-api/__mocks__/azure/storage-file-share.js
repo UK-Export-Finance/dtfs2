@@ -1,4 +1,4 @@
-// mock storage-file-share copied from `portal-api/__mocks__/azure/storage-file-share.js`
+// mock storage-file-share copied from `portal-api/__mocks__/@azure/storage-file-share.js`
 
 const { RestError, StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirectoryClient, ShareFileClient } =
   jest.createMockFromModule('@azure/storage-file-share');
@@ -32,18 +32,20 @@ function createFileClient(filename) {
 
 ShareDirectoryClient.catch = jest.fn;
 ShareDirectoryClient.prototype.create = () => ShareDirectoryClient;
+ShareDirectoryClient.prototype.createIfNotExists = () => ShareDirectoryClient;
 ShareDirectoryClient.prototype.getDirectoryClient = createDirectoryClient;
 ShareDirectoryClient.prototype.getFileClient = createFileClient;
 
 ShareClient.catch = jest.fn;
 ShareClient.prototype.create = () => ShareClient;
+ShareClient.prototype.createIfNotExists = () => ShareClient;
 ShareClient.prototype.deleteFile = () => ShareClient;
 ShareClient.prototype.getDirectoryClient = createDirectoryClient;
 ShareClient.prototype.ShareClientdeleteFile = () => ShareClient;
 
 ShareServiceClient.prototype.getShareClient = () => {
   const shareClient = new ShareClient();
-  shareClient.url = 'mockurl/share';
+  shareClient.url = 'mockurl/share';  
   return shareClient;
 };
 
