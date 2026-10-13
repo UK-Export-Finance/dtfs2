@@ -3,6 +3,10 @@ const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
+/**
+ * Get the rate limit threshold per minute from the environment variables.
+ * @returns {number} The rate limit threshold per minute as a number.
+ */
 const getRateLimitThresholdFromEnvironmentVariables = () => {
   const { RATE_LIMIT_THRESHOLD } = process.env;
   const rateLimitThresholdPerMinuteAsNumber = Number(RATE_LIMIT_THRESHOLD);
