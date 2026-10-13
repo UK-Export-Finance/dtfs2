@@ -136,6 +136,7 @@ describe('tasks controller', () => {
         ...group,
         groupTasks: group.groupTasks.map((task) => {
           let isTaskThatIsBeingUpdated = false;
+
           if (group.id === 1 && task.id === '1') {
             isTaskThatIsBeingUpdated = true;
           }

@@ -27,6 +27,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   mapped.maximumLiability = Number(stripCommas(facility.ukefExposure));
 
   mapped.cumulativeAmount = 0;
+
   if (facility.disbursementAmount) {
     mapped.cumulativeAmount = Number(stripCommas(facility.disbursementAmount));
   }

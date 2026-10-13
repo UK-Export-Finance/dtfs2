@@ -22,7 +22,7 @@ const swaggerRouter = require('./v1/routes/swagger.route');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
-const createRateLimit = require('./v1/middleware/rateLimit');
+const createRateLimit = require('./v1/middleware/rate-limit');
 
 dotenv.config({ quiet: true });
 

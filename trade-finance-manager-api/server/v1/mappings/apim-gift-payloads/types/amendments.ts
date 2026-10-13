@@ -1,6 +1,10 @@
 import { APIM_GIFT_INTEGRATION } from '../constants';
 
-const { AMENDMENT_TYPE } = APIM_GIFT_INTEGRATION;
+type AmendmentType = typeof APIM_GIFT_INTEGRATION.AMENDMENT_TYPE;
+
+type DecreaseAmount = AmendmentType['DECREASE_AMOUNT'];
+type IncreaseAmount = AmendmentType['INCREASE_AMOUNT'];
+type ReplaceExpiryDate = AmendmentType['REPLACE_EXPIRY_DATE'];
 
 /**
  * Represents the partial data structure for a facility amendment from TFM.
@@ -37,12 +41,12 @@ export type AmendmentAmountDataParams = {
 export type AmendmentDataPayloadIncreaseOrDecreaseAmount = AmendmentAmountDataParams;
 
 export type AmendmentPayloadDecreaseAmount = {
-  amendmentType: typeof AMENDMENT_TYPE.DECREASE_AMOUNT;
+  amendmentType: DecreaseAmount;
   amendmentData: AmendmentDataPayloadIncreaseOrDecreaseAmount;
 };
 
 export type AmendmentPayloadIncreaseAmount = {
-  amendmentType: typeof AMENDMENT_TYPE.INCREASE_AMOUNT;
+  amendmentType: IncreaseAmount;
   amendmentData: AmendmentDataPayloadIncreaseOrDecreaseAmount;
 };
 
@@ -51,7 +55,7 @@ export type AmendmentDataPayloadReplaceExpiryDate = {
 };
 
 export type AmendmentPayloadReplaceExpiryDate = {
-  amendmentType: typeof AMENDMENT_TYPE.REPLACE_EXPIRY_DATE;
+  amendmentType: ReplaceExpiryDate;
   amendmentData: AmendmentDataPayloadReplaceExpiryDate;
 };
 

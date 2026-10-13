@@ -73,6 +73,7 @@ export const getDateFromDayMonthYearStringsReplicatingMoment = (day: string, mon
   if (Number.isNaN(Number(month))) {
     return new Date(NaN);
   }
+
   // moment().set() treats NaN date & year like undefined
   return set(startOfDay(new Date()), {
     date: Number.isNaN(Number(day)) ? undefined : Number(day),

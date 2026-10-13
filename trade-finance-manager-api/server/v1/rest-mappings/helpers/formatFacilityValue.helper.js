@@ -10,8 +10,10 @@ const formatFacilityValue = (value) => {
   if (typeof value === 'string') {
     return value;
   }
+
   // checks number of decimal places
   const totalDecimals = decimalsCount(value);
+
   // if not 2 decimal places, then set 2 decimal places
   const newValue = totalDecimals !== 2 ? value.toFixed(2) : value;
 

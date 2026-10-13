@@ -63,10 +63,12 @@ describe('user controller', () => {
 
   describe('DELETE /v1/users', () => {
     let userToDeleteId;
+
     beforeEach(async () => {
       const response = await as(tokenUser).post(MOCK_USERS[0]).to('/v1/users');
       userToDeleteId = response.body.user._id;
     });
+
     if (process.env.CHANGE_STREAM_ENABLED === 'true') {
       withDeleteOneTests({
         makeRequest: () => as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`),

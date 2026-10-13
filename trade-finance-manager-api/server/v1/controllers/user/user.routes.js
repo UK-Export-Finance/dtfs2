@@ -23,6 +23,7 @@ const combineErrors = (listOfErrors) =>
     } else {
       response[field] = value;
     }
+
     return response;
   }, {});
 
@@ -54,6 +55,7 @@ module.exports.createTfmUser = (req, res, next) => {
     if (error) {
       return next(error);
     }
+
     return res.json({
       success: true,
       user,
@@ -97,6 +99,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
       next(error);
     } else if (user) {
       const errors = applyUpdateRules(user, req.body);
+
       if (errors.length) {
         res.status(400).json({
           success: false,
@@ -128,6 +131,7 @@ module.exports.removeTfmUserById = (req, res) => {
     if (error) {
       return res.status(status).send({ status, error });
     }
+
     return res.sendStatus(status);
   });
 };
@@ -146,12 +150,14 @@ module.exports.login = async (req, res, next) => {
         msg: 'Username or password is incorrect',
       });
     }
+
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({
         success: false,
         msg: 'User is disabled',
       });
     }
+
     if (userIsBlocked === loginResult.error) {
       return res.status(401).json({
         success: false,

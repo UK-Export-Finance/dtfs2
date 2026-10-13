@@ -3,7 +3,7 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import stream from 'stream';
 import { AxiosError } from 'axios';
 import api from '../../api';
-import fileshare from '../../../drivers/fileshare';
+import { readFile } from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants/fileshares';
 
 type FileMetadata = {
@@ -49,7 +49,7 @@ export const getUtilisationReportDownload = async (req: GetUtilisationReportDown
   try {
     const { folder, filename, mimetype } = await getUtilisationReportFileMetadata(id);
 
-    const bufferedFile = await fileshare.readFile({
+    const bufferedFile = await readFile({
       fileshare: FILESHARES.UTILISATION_REPORTS,
       folder,
       filename,

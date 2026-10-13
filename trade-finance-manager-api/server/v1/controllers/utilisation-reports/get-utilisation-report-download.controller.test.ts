@@ -2,7 +2,7 @@ import httpMocks, { RequestOptions } from 'node-mocks-http';
 import events from 'events';
 import api from '../../api';
 import { getUtilisationReportDownload, GetUtilisationReportDownloadRequest } from './get-utilisation-report-download.controller';
-import fileshare from '../../../drivers/fileshare';
+import { readFile } from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants';
 import { UtilisationReportResponseBody } from '../../api-response-types/utilisation-report-response-body';
 
@@ -95,7 +95,7 @@ describe('get-utilisation-report-download controller', () => {
       } as UtilisationReportResponseBody);
 
       const azureError = new Error('Failed to authenticate');
-      jest.mocked(fileshare.readFile).mockRejectedValue(new Error('Failed to authenticate'));
+      jest.mocked(readFile).mockRejectedValue(new Error('Failed to authenticate'));
 
       // Act
       await getUtilisationReportDownload(req, res);
@@ -119,15 +119,15 @@ describe('get-utilisation-report-download controller', () => {
       } as UtilisationReportResponseBody);
 
       const mockFileContent = 'mock file content';
-      jest.mocked(fileshare.readFile).mockResolvedValue(Buffer.from(mockFileContent));
+      jest.mocked(readFile).mockResolvedValue(Buffer.from(mockFileContent));
 
       // Act
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
       getUtilisationReportDownload(req, res);
 
       // Assert
       res.on('end', () => {
-        expect(fileshare.readFile).toHaveBeenCalledWith({
+        expect(readFile).toHaveBeenCalledWith({
           fileshare: FILESHARES.UTILISATION_REPORTS,
           folder: mockFolder,
           filename: mockFilename,

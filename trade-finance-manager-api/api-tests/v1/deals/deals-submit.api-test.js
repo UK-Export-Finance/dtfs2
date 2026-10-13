@@ -133,7 +133,7 @@ describe('/v1/deals', () => {
 
       // Assert
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;
+      const { bondTransactions: bonds, loanTransactions: loans, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -157,7 +157,7 @@ describe('/v1/deals', () => {
 
       // Assert
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_PARTY_DB;
+      const { bondTransactions: bonds, loanTransactions: loans, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_PARTY_DB;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -181,7 +181,7 @@ describe('/v1/deals', () => {
 
       // Assert
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL;
+      const { bondTransactions: bonds, loanTransactions: loans, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
