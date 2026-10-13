@@ -5,7 +5,7 @@ const { exceptionHandlers, initialiseCronJobScheduler, xss, sanitiseMongoRequest
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
-const { router: swaggerRouter } = require('./v1/routes/swagger.route');
+const { swaggerRouter } = require('./v1/routes/swagger.route');
 const loginController = require('./v1/controllers/user/user.routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');

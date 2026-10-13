@@ -3,7 +3,9 @@ const { StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirect
 
 function createDirectoryClient(folder) {
   const directory = new ShareDirectoryClient();
+
   directory.folderName = this.folderName ? `${this.folderName}/${folder}` : folder;
+
   return directory;
 }
 
@@ -11,6 +13,7 @@ function createFileClient(filename) {
   const fileClient = new ShareFileClient();
   fileClient.name = filename;
   fileClient.path = `${this.folderName}/${filename}`;
+
   fileClient.downloadToBuffer = () => {
     if (filename === 'not-found.txt') {
       return {
@@ -22,9 +25,11 @@ function createFileClient(filename) {
 
     return Buffer.from('mockFile', 'utf-8');
   };
+
   fileClient.getProperties = () => ({
     catch: () => {},
   });
+
   return fileClient;
 }
 
