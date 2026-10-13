@@ -1,4 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 
@@ -12,10 +13,10 @@ describe('/feedback', () => {
     easyToUse: 'Very good',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@testing.com',
+    emailAddress: MOCK_EMAIL,
     submittedBy: {
       username: 'Tester',
-      email: 'test@test.test',
+      email: MOCK_EMAIL,
     },
     auditDetails: generateTfmAuditDetails('abcdef123456abcdef123456'),
   };

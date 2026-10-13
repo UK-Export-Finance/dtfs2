@@ -1,20 +1,13 @@
 import { getUnixTime, set } from 'date-fns';
-import { AMENDMENT_BANK_DECISION, TEAM_IDS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import { mockRes, mockUser } from '../../../test-mocks';
 import amendmentsController from './bankDecision.controller';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 
-const user = {
-  _id: '12345678',
-  username: 'testUser',
-  firstName: 'Joe',
-  lastName: 'Bloggs',
-  teams: [TEAM_IDS.PIM],
-  email: 'test@localhost',
-};
+const user = mockUser;
 
 const session = { user, userToken: 'mockToken' };
 

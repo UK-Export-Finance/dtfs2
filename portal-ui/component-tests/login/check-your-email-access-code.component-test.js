@@ -1,10 +1,11 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'login/check-your-email-access-code.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const email = 'test@example.com';
+  const email = MOCK_EMAIL;
   const attemptsLeft = 2;
   const requestNewCodeUrl = '/request-new-code';
 

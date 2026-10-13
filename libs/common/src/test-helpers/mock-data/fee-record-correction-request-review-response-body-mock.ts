@@ -1,4 +1,5 @@
 import { RECORD_CORRECTION_REASON } from '../../constants';
+import { MOCK_EMAIL } from './email';
 
 export const feeRecordCorrectionRequestReviewResponseBodyMock = {
   bank: { id: '123', name: 'Test bank' },
@@ -11,6 +12,6 @@ export const feeRecordCorrectionRequestReviewResponseBodyMock = {
     exporter: 'A sample exporter',
     reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
     additionalInfo: 'this is the reason',
-    contactEmailAddresses: ['test@test.com'],
+    contactEmailAddresses: [MOCK_EMAIL],
   },
 };
