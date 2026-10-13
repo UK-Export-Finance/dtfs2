@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { InsertOneResult, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { EstoreRepo } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
@@ -179,8 +179,6 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     if (!inserted) {
       throw new Error('eStore CRON job log insertion failed');
     }
-
-    const { insertedId: _id } = inserted as InsertOneResult;
 
     // Site exists check
     console.info('Initiating eStore site existence check for exporter %s', exporterName);

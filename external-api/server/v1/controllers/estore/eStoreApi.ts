@@ -202,7 +202,7 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
     }
 
     const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
-    return postToEstore(endpoint, [buyerName], oneMinute);
+    return await postToEstore(endpoint, [buyerName], oneMinute);
   } catch (error: unknown) {
     console.error('❌ eStore create buyer folder request has failed %o', error);
     return estoreInternalServerError(error);
@@ -224,7 +224,7 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
     }
 
     const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
-    return postToEstore(endpoint, [data], twoMinutes);
+    return await postToEstore(endpoint, [data], twoMinutes);
   } catch (error: unknown) {
     console.error('❌ eStore create deal folder request has failed %o', error);
     return estoreInternalServerError(error);
@@ -251,7 +251,7 @@ export const createFacilityFolder = async (
     }
 
     const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
-    return postToEstore(endpoint, [data], twoMinutes);
+    return await postToEstore(endpoint, [data], twoMinutes);
   } catch (error: unknown) {
     console.error('❌ eStore create facility folder request has failed %o', error);
     return estoreInternalServerError(error);
@@ -278,7 +278,7 @@ export const uploadSupportingDocuments = async (
     }
 
     const endpoint = `v1/${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
-    return postToEstore(endpoint, [file], oneMinute);
+    return await postToEstore(endpoint, [file], oneMinute);
   } catch (error: unknown) {
     console.error('❌ eStore uploading document has failed %o', error);
     return estoreInternalServerError(error);

@@ -25,17 +25,17 @@ const jobs = new Map();
 const onTick = async (eStoreData: Estore, category: Category) => {
   switch (category) {
     case ENDPOINT.SITE:
-      return eStoreSiteCreationCronJob(eStoreData);
+      return await eStoreSiteCreationCronJob(eStoreData);
     case ENDPOINT.TERM:
-      return eStoreTermStoreCreationJob(eStoreData);
+      return await eStoreTermStoreCreationJob(eStoreData);
     case ENDPOINT.BUYER:
-      return eStoreBuyerDirectoryCreationJob(eStoreData);
+      return await eStoreBuyerDirectoryCreationJob(eStoreData);
     case ENDPOINT.DEAL:
-      return eStoreDealDirectoryCreationJob(eStoreData);
+      return await eStoreDealDirectoryCreationJob(eStoreData);
     case ENDPOINT.FACILITY:
-      return eStoreFacilityDirectoryCreationJob(eStoreData);
+      return await eStoreFacilityDirectoryCreationJob(eStoreData);
     case ENDPOINT.DOCUMENT:
-      return eStoreDocumentsCreationJob(eStoreData);
+      return await eStoreDocumentsCreationJob(eStoreData);
     default:
       return undefined;
   }

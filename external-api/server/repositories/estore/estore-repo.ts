@@ -28,7 +28,7 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.findOne({ 'payload.dealId': { $eq: dealId } });
+      return await collection.findOne({ 'payload.dealId': { $eq: dealId } });
     } catch (error) {
       console.error('An error occurred while finding deal %s in %s collection.', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
       return null;
@@ -53,7 +53,7 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.insertOne(document);
+      return await collection.insertOne(document);
     } catch (error) {
       console.error('An error occurred while inserting into %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
       return false;
@@ -80,7 +80,7 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
+      return await collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
     } catch (error) {
       console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
       return false;
@@ -107,7 +107,7 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-      return collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
+      return await collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
     } catch (error) {
       console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.TFM_DEALS);
       return false;

@@ -30,7 +30,7 @@ export const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
 
