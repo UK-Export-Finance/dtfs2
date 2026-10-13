@@ -11,6 +11,7 @@ module.exports = {
       .calledWith(expect.anything())
       .mockImplementation((dealId) => {
         const mockDeal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
+
         if (!mockDeal) {
           return Promise.reject();
         }

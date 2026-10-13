@@ -11,6 +11,9 @@ jest.mock('node-cron', () => ({
   validate: jest.fn(),
 }));
 
+// not placed under a `@azure` scoped folder, so it needs an explicit factory instead of relying on Jest's automatic node_modules mock resolution
+jest.mock('@azure/storage-file-share', () => require('./__mocks__/azure/storage-file-share'));
+
 beforeAll(async () => {
   if (!console.error.mock) {
     jest.spyOn(console, 'error').mockImplementation(() => {});

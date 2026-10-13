@@ -76,6 +76,7 @@ describe('notify-template-formatters', () => {
       const { ukefFacilityId } = facility;
 
       let bankRefStr;
+
       if (bankRefField) {
         bankRefStr = `*Your bank ref: ${facility[bankRefField]}\n`;
       }

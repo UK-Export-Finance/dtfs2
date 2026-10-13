@@ -122,6 +122,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
       await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+
       if (dealType === DEAL_TYPE.BSS_EWCS) {
         // TODO: DTFS2-6966: remove this when updating the update gef comment endpoint
         expect(addPortalDealComment).toHaveBeenCalledWith(
@@ -149,6 +150,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
+
       if (dealType === DEAL_TYPE.BSS_EWCS) {
         // TODO: DTFS2-6966: remove this when updating the update gef comment endpoint
         when(addPortalDealComment)
@@ -157,6 +159,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       } else {
         when(addPortalDealComment).calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object)).mockRejectedValueOnce(new Error('Test failure'));
       }
+
       const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(status).toEqual(500);

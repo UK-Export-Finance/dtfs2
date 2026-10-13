@@ -35,11 +35,13 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {
     console.error('Failed to get utilisation report reconciliation details by id', error);
+
     if (error instanceof AxiosError) {
       return res
         .status(error.response?.status ?? HttpStatusCode.InternalServerError)
         .send(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
   }
 };

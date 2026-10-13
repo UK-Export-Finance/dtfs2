@@ -47,6 +47,7 @@ exports.create = async (req, res) => {
         message: `Invalid auditDetails: ${error.message}`,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 

@@ -3,11 +3,19 @@ const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
+/**
+ * Get the rate limit threshold per minute from the environment variables.
+ * @returns {number} The rate limit threshold per minute as a number.
+ */
 const getRateLimitThresholdFromEnvironmentVariables = () => {
   const { RATE_LIMIT_THRESHOLD } = process.env;
   const rateLimitThresholdPerMinuteAsNumber = Number(RATE_LIMIT_THRESHOLD);
 
-  if (!rateLimitThresholdPerMinuteAsNumber || rateLimitThresholdPerMinuteAsNumber < 0) {
+  if (
+    !Number.isFinite(rateLimitThresholdPerMinuteAsNumber) ||
+    !Number.isInteger(rateLimitThresholdPerMinuteAsNumber) ||
+    rateLimitThresholdPerMinuteAsNumber <= 0
+  ) {
     console.error('Invalid rate limit threshold value %s.', RATE_LIMIT_THRESHOLD);
     throw new InvalidEnvironmentVariableError('Invalid rate limit threshold value.');
   }
@@ -26,16 +34,22 @@ const createRateLimit = () => {
   return limiter({
     // The duration of the window to count requests over.
     windowMs: ONE_MINUTE_IN_MILLISECONDS,
+
     // The maximum number of requests within the window.
     max: rateLimitThresholdPerMinuteAsNumber,
+
     // Return rate limit info in the `RateLimit-*` headers.
     standardHeaders: true,
+
     // Disable the `X-RateLimit-*` headers.
     legacyHeaders: false,
+
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
+
     // The message to return when the threshold is exceeded.
     message: 'Request threshold reached, please try again later.',
+
     // Log an error message and return an error response when the threshold is exceeded.
     handler: (req, res, next, options) => {
       console.error('Rate limit threshold exceeded. Returning rate limit error message for request to %s.', req.originalUrl);

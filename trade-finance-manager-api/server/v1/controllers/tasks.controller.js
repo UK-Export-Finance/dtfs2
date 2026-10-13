@@ -91,6 +91,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
 
           // add the task to list of emails to be sent
           const shouldSendEmail = !isTaskThatIsBeingUpdated && !task.emailSent;
+
           if (shouldSendEmail) {
             taskEmailsToSend.push(task);
           }
@@ -177,6 +178,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
  * */
 const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, auditDetails }) => {
   const unmappedDeal = await api.findOneDeal(dealId);
+
   if (!unmappedDeal) {
     throw new Error(`Deal not found ${dealId}`);
   }
@@ -190,19 +192,23 @@ const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, auditDetails
   const { status: statusTo, urlOrigin } = taskUpdate;
 
   const group = getGroupById(allTasks, Number(groupId));
+
   if (!group) {
     throw new Error(`Group not found ${groupId}`);
   }
 
   const originalTask = getTaskInGroupById(group.groupTasks, taskId);
+
   if (!originalTask) {
     throw new Error(`Task not found ${taskId}`);
   }
+
   const statusFrom = originalTask.status;
 
   const updatedTask = await mapTaskObject(originalTask, taskUpdateWithIds);
 
   const canUpdateTask = previousTaskIsComplete(allTasks, group, taskId) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
+
   if (!canUpdateTask) {
     return originalTask;
   }
@@ -261,6 +267,7 @@ const updateTask = async (req, res) => {
       taskUpdate,
       auditDetails: generateTfmAuditDetails(req.user._id),
     });
+
     return res.status(200).send(result);
   } catch (error) {
     console.error('Unable to update the task %s in group %s deal %s %o', taskId, groupId, dealId, error);

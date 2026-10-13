@@ -34,6 +34,7 @@ const mapTotals = (facilities) => {
           // - Cash and Contingent facility total is `value`
           return Number(facilitySnapshot.value);
         }
+
         return null;
       });
 
