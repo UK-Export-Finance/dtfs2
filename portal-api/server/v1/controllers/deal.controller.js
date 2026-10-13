@@ -104,9 +104,9 @@ exports.findOne = (req, res) => {
 
   return findOneDeal(req.params.id, async (deal) => {
     if (!deal) {
-      res.status(404).send();
+      return res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
-      res.status(401).send();
+      return res.status(401).send();
     } else {
       // apply realtime validation so we catch any time-dependent fields
       //  that have -become- invalid..
@@ -118,7 +118,7 @@ exports.findOne = (req, res) => {
         summary: calculateDealSummary(deal),
       };
 
-      res.status(200).send({
+      return res.status(200).send({
         deal: dealWithSummary,
         validationErrors,
       });

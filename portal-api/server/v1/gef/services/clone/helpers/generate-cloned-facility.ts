@@ -21,13 +21,15 @@ export const generateClonedFacility = ({
   facility: Partial<Facility>;
   newDealId: string | ObjectId;
   auditDetails: AuditDetails;
-}): Facility =>
-  produce(facility, (draft) => {
+}): Facility => {
+  const dealId = new ObjectId(newDealId.toString());
+
+  return produce<Facility>(facility as Facility, (draft) => {
     const modifiedDraft = draft;
 
     modifiedDraft._id = new ObjectId();
 
-    modifiedDraft.dealId = new ObjectId(newDealId);
+    modifiedDraft.dealId = dealId;
     modifiedDraft.createdAt = Date.now();
     modifiedDraft.updatedAt = Date.now();
     modifiedDraft.ukefFacilityId = null;
@@ -55,4 +57,5 @@ export const generateClonedFacility = ({
         modifiedDraft.coverStartDate = null;
       }
     }
-  }) as Facility;
+  });
+};

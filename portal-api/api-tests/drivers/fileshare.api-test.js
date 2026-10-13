@@ -153,15 +153,11 @@ describe.skip('fileshare', () => {
     const nonExistentSubFolder = `${nonExistentFolder}/${randomFolderName + 1}`;
 
     afterEach(async () => {
-      try {
-        await fileshare.deleteMultipleFiles(fileshare, nonExistentSubFolder, ['out.xml']).then(async () => {
-          await fileshare.deleteDirectory(fileshare, nonExistentSubFolder).then(() => {
-            fileshare.deleteDirectory(fileshare, nonExistentFolder);
-          });
+      await fileshare.deleteMultipleFiles(fileshare, nonExistentSubFolder, ['out.xml']).then(async () => {
+        await fileshare.deleteDirectory(fileshare, nonExistentSubFolder).then(() => {
+          fileshare.deleteDirectory(fileshare, nonExistentFolder);
         });
-      } catch (error) {
-        return false;
-      }
+      });
     });
 
     it("creates parent folders if they don't exist", async () => {
