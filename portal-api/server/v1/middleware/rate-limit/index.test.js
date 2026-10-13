@@ -14,6 +14,9 @@ describe('createRateLimit', () => {
     { value: '0', description: '0' },
     { value: '-1', description: '-1' },
     { value: 'NaN', description: 'NaN' },
+    { value: 'Infinity', description: 'Infinity' },
+    { value: '-Infinity', description: '-Infinity' },
+    { value: '5.5', description: '5.5' },
   ];
 
   const validThresholds = ['1', '5', '100'];

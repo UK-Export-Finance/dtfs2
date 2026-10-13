@@ -194,7 +194,15 @@ module.exports = defineConfig([
       'import-x/no-extraneous-dependencies': [
         'error',
         {
-          devDependencies: ['**/*.test.ts', '**/test/**', 'eslint.config.cjs'],
+          devDependencies: [
+            '**/*.test.{js,ts}',
+            '**/*.tests.ts',
+            '**/*.api-test{s,}.{js,ts}',
+            '**/__mocks__/**',
+            'api-tests/**',
+            'test-helpers/**',
+            'eslint.config.cjs',
+          ],
         },
       ],
       'import-x/prefer-default-export': 'off',
@@ -213,19 +221,6 @@ module.exports = defineConfig([
       'import-x/consistent-type-specifier-style': 'off',
       '@typescript-eslint/no-import-type-side-effects': 'off',
       'import-x/no-useless-path-segments': 'off',
-      'n/prefer-node-protocol': 'off',
-
-      // disable all stylistic rules in favor of Prettier, except for a few that we want to enforce
-      '@stylistic/max-len': 'off',
-      '@stylistic/implicit-arrow-linebreak': 'off',
-      '@stylistic/quotes': 'off',
-      '@stylistic/operator-linebreak': 'off',
-      '@stylistic/object-curly-newline': 'off',
-      '@stylistic/indent': 'off',
-      '@stylistic/function-paren-newline': 'off',
-      '@stylistic/no-confusing-arrow': 'off',
-      '@stylistic/newline-per-chained-call': 'off',
-      '@stylistic/generator-star-spacing': 'off',
     },
   },
 
