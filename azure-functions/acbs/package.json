@@ -20,8 +20,8 @@
   "main": "src/functions/*.js",
   "scripts": {
     "api-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.js --ignore-path ../../.prettierignore",
     "prettier:fix": "prettier --write **/*.js --ignore-path ../../.prettierignore",
     "unit-test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.jest.config.js",
