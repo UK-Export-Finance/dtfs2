@@ -26,9 +26,9 @@ type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
 };
 
-interface CustomSuccessResponse extends Response {
+type CustomSuccessResponse = {
   body: UtilisationReportResponse[];
-}
+} & Response;
 
 const BASE_URL = '/v1/bank/:bankId/utilisation-reports';
 

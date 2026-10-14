@@ -36,5 +36,6 @@ export const feeRecordsAndPaymentsMatch = async (
   if (difference.gt(tolerance.threshold)) {
     return false;
   }
+
   return true;
 };

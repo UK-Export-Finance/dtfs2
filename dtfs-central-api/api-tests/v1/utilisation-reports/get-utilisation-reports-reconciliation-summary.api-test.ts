@@ -23,9 +23,9 @@ import { CustomErrorResponse } from '../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: UtilisationReportReconciliationSummary[];
-}
+} & Response;
 
 const BASE_URL = '/v1/utilisation-reports/reconciliation-summary/:submissionMonth';
 
@@ -97,13 +97,13 @@ describe(`GET ${BASE_URL}`, () => {
   });
 });
 
-interface CustomSuccessResponse extends Response {
+type CustomSuccessResponse = {
   body: {
     bankName: string;
     year: string;
     reports: UtilisationReportReconciliationSummaryItem[];
   };
-}
+} & Response;
 
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);

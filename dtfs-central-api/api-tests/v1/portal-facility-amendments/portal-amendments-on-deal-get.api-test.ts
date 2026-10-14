@@ -8,9 +8,9 @@ import { testApi } from '../../test-api';
 import { mongoDbClient as db } from '../../../server/drivers/db-client';
 import { aCompletedTfmFacilityAmendment, aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
-interface PortalAmendmentsResponse extends Response {
+type PortalAmendmentsResponse = {
   body: PortalFacilityAmendment[];
-}
+} & Response;
 
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 

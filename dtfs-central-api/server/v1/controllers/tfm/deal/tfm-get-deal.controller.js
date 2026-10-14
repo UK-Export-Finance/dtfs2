@@ -73,6 +73,7 @@ const findOneDeal = async (_id, callback) => {
     }
 
     console.info('findOneDeal: Returning deal %s', _id);
+
     if (callback) {
       callback(returnDeal);
     }

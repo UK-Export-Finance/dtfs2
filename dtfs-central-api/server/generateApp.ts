@@ -10,11 +10,8 @@ import {
   sanitiseMongoRequest,
 } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
-
 import { ROUTES } from './constants';
-
 import healthcheck from './healthcheck';
-
 import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 

@@ -3,6 +3,7 @@ const { expectMongoId } = require('../../expectMongoIds');
 
 const addBaseFields = (baseDeal) => {
   let eligibilityUpdate;
+
   if (baseDeal.eligibility) {
     eligibilityUpdate = baseDeal.eligibility;
   }
