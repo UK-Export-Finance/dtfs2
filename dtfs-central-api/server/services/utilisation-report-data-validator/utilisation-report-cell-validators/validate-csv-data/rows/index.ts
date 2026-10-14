@@ -1,4 +1,4 @@
-import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
+import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
 import { generateBaseCurrencyErrors } from '../../helpers/generate-base-currency-errors';
 import { generateFacilityUtilisationErrors } from '../../helpers/generate-facility-utilisation-errors';
 
@@ -8,47 +8,38 @@ import { generateFacilityUtilisationErrors } from '../../helpers/generate-facili
  * if multiple facilities have the same ukef facility ids,
  * and the "base currency" and "facility utilisation" values do not match
  * generate validation errors for each facility
- * Uses a map to store the facility ids and their base currency and facility utilisation values to match against
  * @param {UtilisationReportCsvRowData[]} csvData - The csv data
- * @returns {UtilisationReportDataValidationError[]} Generated errors, null if the data is valid
+ * @returns {UtilisationReportDataValidationError[]} Generated errors
  */
 export const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
-  // Map to store the facility ids and their base currency and facility utilisation values
-  const map = new Map<string, UtilisationReportFacilityData>();
-  let errors: UtilisationReportDataValidationError[] = [];
+  // Map to store each facility id and all of its rows
+  const map = new Map<string, UtilisationReportCsvRowData[]>();
+  const errors: UtilisationReportDataValidationError[] = [];
 
-  /**
-   * iterates through each row of the csv
-   * get value for the ukef facility id, base currency and facility utilisation and exporter name
-   * if the base currency or facility utilisation is missing, go to the next row (these errors handled)
-   * if the facility id is already in the map, check if the base currency and facility utilisation match
-   * else add the facility id and its base currency and facility utilisation to the map
-   */
+  // Groups the rows by facility id and stores them in the map
   csvData.forEach((row) => {
     const ukefFacilityId = row['ukef facility id']?.value;
-    const baseCurrencyValue = row['base currency']?.value;
-    const facilityUtilisationValue = row['facility utilisation']?.value;
 
-    if (!baseCurrencyValue || !facilityUtilisationValue || !ukefFacilityId) {
+    if (!ukefFacilityId) {
       return;
     }
 
+    // If the facility id is not already in the map, add it with an empty array
     if (!map.has(ukefFacilityId)) {
-      map.set(ukefFacilityId, {
-        baseCurrency: baseCurrencyValue,
-        facilityUtilisation: facilityUtilisationValue,
-      });
-
-      return;
+      map.set(ukefFacilityId, []);
     }
 
-    const existingData = map.get(ukefFacilityId);
+    // Add the row to the array for the facility id in the map
+    map.get(ukefFacilityId)?.push(row);
+  });
 
-    // generate errors for base currency
-    errors = generateBaseCurrencyErrors(baseCurrencyValue, errors, csvData, row, existingData);
+  // Checks each group of rows for mismatches in "base currency" and "facility utilisation"
+  map.forEach((rows) => {
+    // only compare rows which have both values (missing values are handled elsewhere)
+    const completeRows = rows.filter((row) => row['base currency']?.value && row['facility utilisation']?.value);
 
-    // generate errors for facility utilisation
-    errors = generateFacilityUtilisationErrors(facilityUtilisationValue, errors, csvData, row, existingData);
+    errors.push(...generateBaseCurrencyErrors(rows, completeRows));
+    errors.push(...generateFacilityUtilisationErrors(rows, completeRows));
   });
 
   return errors;
