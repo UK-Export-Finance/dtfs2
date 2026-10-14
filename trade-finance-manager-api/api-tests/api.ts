@@ -22,6 +22,7 @@ const getHeaders = (token?: string): IncomingHttpHeaders => {
     'content-type': 'application/json',
     accept: 'application/json',
   };
+
   if (token) {
     headers.Authorization = token;
   }
@@ -93,26 +94,33 @@ export const createApi = (app: Express): TestApi => ({
     { headers, query }: { headers: IncomingHttpHeaders | undefined; query: AnyObject | undefined } = { headers: undefined, query: undefined },
   ) => {
     const requestInProgress = request(app).get(url);
+
     if (headers) {
       await requestInProgress.set(headers);
     }
+
     if (query) {
       await requestInProgress.query(query);
     }
+
     return requestInProgress;
   },
   put: async (url: string, data: AnyObject, { headers }: { headers: IncomingHttpHeaders | undefined } = { headers: undefined }) => {
     const requestInProgress = request(app).put(url);
+
     if (headers) {
       await requestInProgress.set(headers);
     }
+
     return requestInProgress.send(data);
   },
   remove: async (url: string, data: AnyObject, { headers }: { headers: IncomingHttpHeaders | undefined } = { headers: undefined }) => {
     const requestInProgress = request(app).delete(url);
+
     if (headers) {
       await requestInProgress.set(headers);
     }
+
     return requestInProgress.send(data);
   },
 });

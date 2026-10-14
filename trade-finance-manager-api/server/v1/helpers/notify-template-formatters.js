@@ -8,6 +8,7 @@ const generateListItemString = (str) => `*${str}\n`;
 
 const generateFacilitiesListHeading = (type) => {
   let heading;
+
   if (type === FACILITY_TYPE.LOAN) {
     heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN;
   }
@@ -71,11 +72,13 @@ const generateBssFacilityLists = (facilities) => {
   const unissuedLoansList = generateFacilitiesListString(unissuedLoans);
 
   let issued = '';
+
   if (issuedBondsList.length || issuedLoansList.length) {
     issued = `${issuedBondsList}\n${issuedLoansList}`;
   }
 
   let unissued = '';
+
   if (unissuedBondsList.length || unissuedLoansList.length) {
     unissued = `${unissuedBondsList}\n${unissuedLoansList}`;
   }
@@ -96,11 +99,13 @@ const generateGefFacilityLists = (facilities) => {
   const unissuedContingentList = generateFacilitiesListString(unissuedContingent);
 
   let issued = '';
+
   if (issuedCashList.length || issuedContingentList.length) {
     issued = `${issuedCashList}\n${issuedContingentList}`;
   }
 
   let unissued = '';
+
   if (unissuedCashList.length || unissuedContingentList.length) {
     unissued = `${unissuedCashList}\n${unissuedContingentList}`;
   }

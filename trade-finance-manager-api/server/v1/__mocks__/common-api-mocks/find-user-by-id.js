@@ -12,6 +12,7 @@ module.exports = {
         if (user) {
           return user;
         }
+
         return MOCK_USERS.find((u) => u._id === userId);
       });
   },

@@ -40,6 +40,7 @@ const getAuthor = (deal) => ({
 const getComments = (role, deal) => {
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.user.roles.includes(role));
+
     if (comments.length > 0) {
       return comments[comments.length - 1].text;
     }
@@ -47,10 +48,12 @@ const getComments = (role, deal) => {
 
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.roles.includes(role));
+
     if (comments.length > 0) {
       return comments[comments.length - 1].comment;
     }
   }
+
   return '';
 };
 
@@ -64,6 +67,7 @@ const getDescription = (record, deal) => {
   if (record.dealIdentifier) {
     return getComments(CONSTANTS.ACTIVITY.ROLE.CHECKER, deal);
   }
+
   return '';
 };
 
@@ -79,9 +83,11 @@ const getLabel = (record, deal) => {
   if (record.dealIdentifier) {
     return `${dealType} submitted`;
   }
+
   if (record.facilityIdentifier) {
     return 'Facility submitted';
   }
+
   return '';
 };
 
@@ -107,6 +113,7 @@ const getObject = (record, deal) => ({
 const getActivities = (deal) => {
   try {
     const activities = [];
+
     // Add deal activity object to the array
     if (acbsResponse.deal) {
       activities.push(getObject(acbsResponse.deal.deal, deal));
@@ -120,11 +127,13 @@ const getActivities = (deal) => {
         }
       });
     }
+
     return activities;
   } catch (error) {
     console.error('Error creating activity object. %o', error);
   }
-  return {};
+
+  return [];
 };
 
 /**
@@ -137,11 +146,14 @@ const add = async (acbs) => {
   if (acbs.portalDealId) {
     acbsResponse = acbs;
     const deal = await api.findOneDeal(acbs.portalDealId);
+
     if (deal) {
       return getActivities(deal);
     }
+
     console.error('Unable to get deal %s for activities.', acbs.portalDealId);
   }
+
   return {};
 };
 

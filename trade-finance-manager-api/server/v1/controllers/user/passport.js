@@ -42,6 +42,7 @@ module.exports = (passport) => {
         if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
           return done(null, sanitize(user));
         }
+
         return done(null, false);
       });
     }),

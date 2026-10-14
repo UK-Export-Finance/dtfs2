@@ -9,6 +9,7 @@ const mapFacilityValue = (currencyId, value, facility) => {
     if (facility?.amendments?.length) {
       const { exchangeRate } = facilityTfm;
       const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
+
       // if latest completed amendment contains value
       if (latestAmendmentValue) {
         const valueInGBP = getGBPValue(exchangeRate, latestAmendmentValue);
