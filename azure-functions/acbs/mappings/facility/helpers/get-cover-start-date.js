@@ -22,6 +22,7 @@ const getCoverStartDate = (facility, formatted) => {
       ? facility.facilitySnapshot.requestedCoverStartDate
       : format(facility.facilitySnapshot.coverStartDate, formatted);
   }
+
   return facility.requestedCoverStartDate ? facility.requestedCoverStartDate : format(facility.coverStartDate, formatted);
 };
 
