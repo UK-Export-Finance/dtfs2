@@ -3,7 +3,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 import { caseSubNavigation, caseSummary } from '../../../partials';
 import { DEAL_STAGE_TFM } from '../../../../fixtures/constants';
 

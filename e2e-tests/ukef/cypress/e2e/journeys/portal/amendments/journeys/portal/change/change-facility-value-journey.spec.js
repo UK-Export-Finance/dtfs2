@@ -6,7 +6,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtu
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValue } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentSummaryList from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import submittedForChecking from '../../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';

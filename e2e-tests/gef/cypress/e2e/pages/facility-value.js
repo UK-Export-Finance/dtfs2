@@ -1,4 +1,4 @@
-const facilityValue = {
+export const facilityValue = {
   hiddenFacilityType: () => cy.get('[data-cy="hidden-facility-type"]'),
   value: () => cy.get('[data-cy="value"]'),
   valueLabel: () => cy.get('[data-cy="value-label"]'),
@@ -10,5 +10,3 @@ const facilityValue = {
   interestPercentageHint: () => cy.get('[data-cy="interest-percentage-hint"]'),
   interestPercentageError: () => cy.get('[data-cy="interest-percentage-error"]'),
 };
-
-export default facilityValue;

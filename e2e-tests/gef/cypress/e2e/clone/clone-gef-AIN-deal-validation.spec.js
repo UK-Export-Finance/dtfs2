@@ -1,8 +1,8 @@
 import relative from '../relativeURL';
 import { form, mainHeading } from '../partials';
-import cloneGEFDeal from '../pages/clone-deal';
-import nameApplication from '../pages/name-application';
-import mandatoryCriteria from '../pages/mandatory-criteria';
+import { cloneGEFDeal } from '../pages/clone-deal';
+import { nameApplication } from '../pages/name-application';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Clone GEF (AIN) deal - Validation', () => {

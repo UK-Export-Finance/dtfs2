@@ -1,4 +1,4 @@
-const page = {
+export const maintenancePage = {
   // Heading
   heading: () => cy.get('[data-cy="service-unavailable-heading"]'),
 
@@ -6,5 +6,3 @@ const page = {
   message: () => cy.get('[data-cy="service-unavailable-message"]'),
   contact: () => cy.get('[data-cy="service-unavailable-contact"]'),
 };
-
-module.exports = page;

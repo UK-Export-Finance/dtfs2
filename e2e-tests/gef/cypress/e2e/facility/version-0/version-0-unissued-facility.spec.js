@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import { aboutFacilityUnissued } from '../../pages/unissued-facilities-about-facility';
 import { DEAL_STATUS } from '../../../fixtures/constants';
 
 /**

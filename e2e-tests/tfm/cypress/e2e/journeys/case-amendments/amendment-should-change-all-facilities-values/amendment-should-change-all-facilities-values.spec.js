@@ -3,7 +3,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import facilitiesPage from '../../../pages/facilitiesPage';
+import { facilitiesPage } from '../../../pages/facilitiesPage';
 
 context('Amendments all facilities table - should show amendment value and coverEndDate', () => {
   let dealId;

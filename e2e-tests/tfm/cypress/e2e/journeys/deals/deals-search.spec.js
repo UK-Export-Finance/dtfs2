@@ -1,6 +1,6 @@
 import { DEAL_WITH_TEST_BUYER_NAME_VARS, DEAL_WITH_TEST_SUPPLIER_NAME_VARS, DEAL_WITH_TEST_MIN_SUBMISSION_TYPE_VARS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import pages from '../../pages';
+import { pages } from '../../pages';
 import { primaryNavigation } from '../../partials';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, DEAL_TYPE, ALIAS_KEY } from '../../../fixtures/constants';

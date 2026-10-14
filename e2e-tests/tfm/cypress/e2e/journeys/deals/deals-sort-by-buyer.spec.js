@@ -1,6 +1,6 @@
 import { DEAL_BUYER_A_VARS, DEAL_BUYER_B_VARS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import pages from '../../pages';
+import { pages } from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { ALIAS_KEY } from '../../../fixtures/constants';
 import { aliasSelector } from '../../../../../support/alias-selector';

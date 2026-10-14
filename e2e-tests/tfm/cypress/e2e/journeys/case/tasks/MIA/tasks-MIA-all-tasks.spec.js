@@ -1,6 +1,6 @@
 import relative from '../../../../relativeURL';
 import partials from '../../../../partials';
-import pages from '../../../../pages';
+import { pages } from '../../../../pages';
 import MOCK_DEAL_MIA from '../../../../../fixtures/deal-MIA';
 import {
   BUSINESS_SUPPORT_USER_1,

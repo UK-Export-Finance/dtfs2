@@ -4,7 +4,7 @@
  */
 import eligibility from '../../e2e/pages/automatic-cover';
 
-const automaticEligibilityCriteria = () => {
+export const automaticEligibilityCriteria = () => {
   eligibility.trueRadioButton(12).click();
   eligibility.trueRadioButton(13).click();
   eligibility.trueRadioButton(14).click();
@@ -16,5 +16,3 @@ const automaticEligibilityCriteria = () => {
   eligibility.trueRadioButton(20).click();
   eligibility.trueRadioButton(21).click();
 };
-
-export default automaticEligibilityCriteria;

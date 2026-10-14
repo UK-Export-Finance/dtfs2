@@ -1,8 +1,8 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../pages/application-details';
-import uploadFiles from '../pages/upload-files';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
+import { applicationDetails } from '../pages/application-details';
+import { uploadFiles } from '../pages/upload-files';
+import { manualInclusion } from '../pages/manual-inclusion-questionnaire';
 
 context('Upload files to Azure', () => {
   let dealId;

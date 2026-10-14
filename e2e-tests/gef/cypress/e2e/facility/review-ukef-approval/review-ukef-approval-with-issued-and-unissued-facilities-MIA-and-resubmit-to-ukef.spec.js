@@ -7,14 +7,14 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal
 import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
 import { toTitleCase } from '../../../fixtures/helpers';
 import { continueButton, errorSummary, submitButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../pages/application-submission';
-import statusBanner from '../../pages/application-status-banner';
-import coverStartDate from '../../pages/cover-start-date';
-import applicationDetails from '../../pages/application-details';
-import applicationActivities from '../../pages/application-activities';
+import { applicationPreview } from '../../pages/application-preview';
+import { unissuedFacilityTable } from '../../pages/unissued-facilities';
+import { aboutFacilityUnissued } from '../../pages/unissued-facilities-about-facility';
+import { applicationSubmission } from '../../pages/application-submission';
+import { statusBanner } from '../../pages/application-status-banner';
+import { coverStartDate } from '../../pages/cover-start-date';
+import { applicationDetails } from '../../pages/application-details';
+import { applicationActivities } from '../../pages/application-activities';
 
 let dealId;
 let token;

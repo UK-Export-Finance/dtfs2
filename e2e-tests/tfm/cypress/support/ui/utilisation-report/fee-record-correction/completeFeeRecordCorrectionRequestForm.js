@@ -1,5 +1,5 @@
 import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import pages from '../../../../e2e/pages';
+import { pages } from '../../../../e2e/pages';
 
 const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 const { createFeeRecordCorrectionRequestPage } = pages;
@@ -15,7 +15,7 @@ const { createFeeRecordCorrectionRequestPage } = pages;
  * @param {String[]} reasons - array of strings to select reason for fee record correction
  * @param {string} additionalInfoUserInput - string for additional user input
  */
-const completeFeeRecordCorrectionRequestForm = ({
+export const completeFeeRecordCorrectionRequestForm = ({
   feeRecord,
   reportId,
   reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
@@ -35,5 +35,3 @@ const completeFeeRecordCorrectionRequestForm = ({
 
   cy.clickContinueButton();
 };
-
-export default completeFeeRecordCorrectionRequestForm;

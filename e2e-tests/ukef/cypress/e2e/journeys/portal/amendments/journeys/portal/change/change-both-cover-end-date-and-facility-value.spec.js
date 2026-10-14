@@ -8,7 +8,7 @@ import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/p
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import facilityValue from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValue } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import amendmentPage from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import submittedForChecking from '../../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import amendmentSummaryList from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';

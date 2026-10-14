@@ -1,5 +1,5 @@
 import { TASKS } from '../../fixtures/constants';
-import pages from '../pages';
+import { pages } from '../pages';
 import relative from '../relativeURL';
 
 export const commonTestUnderwriterTasksAssignedToUser = (dealId, user) => {

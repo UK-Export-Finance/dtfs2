@@ -1,9 +1,9 @@
 import { today, twoDays, tomorrow, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { backLink, continueButton, errorSummary, headingCaption, mainHeading, form, saveAndReturnButton } from '../../partials';
-import aboutFacility from '../../pages/about-facility';
-import bankReviewDate from '../../pages/bank-review-date';
-import facilityEndDate from '../../pages/facility-end-date';
+import { aboutFacility } from '../../pages/about-facility';
+import { bankReviewDate } from '../../pages/bank-review-date';
+import { facilityEndDate } from '../../pages/facility-end-date';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

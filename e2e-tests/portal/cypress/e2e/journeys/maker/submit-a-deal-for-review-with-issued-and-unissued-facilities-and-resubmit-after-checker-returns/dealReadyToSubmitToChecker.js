@@ -3,7 +3,7 @@ const { oneMonth, today } = require('@ukef/dtfs2-common/test-helpers');
 
 const now = today.unixMilliseconds;
 
-const deal = {
+export const dealReadyToSubmitToChecker = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
@@ -295,5 +295,3 @@ const deal = {
     },
   },
 };
-
-export default deal;

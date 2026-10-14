@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { cancelButton, errorSummary, form, mainHeading, submitButton } from '../partials';
-import securityDetails from '../pages/security-details';
+import { securityDetails } from '../pages/security-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;

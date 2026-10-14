@@ -1,4 +1,4 @@
-const page = {
+export const header = {
   // Header
   header: () => cy.get('[data-cy="header"]').find('.govuk-header__link--homepage'),
   crown: () => cy.get('.govuk-header__logo'),
@@ -22,5 +22,3 @@ const page = {
   betaBannerTag: () => cy.get('[data-cy="beta-banner"] strong'),
   betaBannerHref: () => cy.get('[data-cy="beta-feedback-link"]'),
 };
-
-module.exports = page;

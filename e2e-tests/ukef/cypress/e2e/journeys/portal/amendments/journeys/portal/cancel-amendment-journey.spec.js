@@ -8,9 +8,9 @@ import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/page
 import whatDoYouNeedToChange from '../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import coverEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
 import doYouHaveAFacilityEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
-import bankReviewDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/bank-review-date';
-import facilityValue from '../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityEndDate } from '../../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import { bankReviewDate } from '../../../../../../../../gef/cypress/e2e/pages/amendments/bank-review-date';
+import { facilityValue } from '../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import effectiveDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
 import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';

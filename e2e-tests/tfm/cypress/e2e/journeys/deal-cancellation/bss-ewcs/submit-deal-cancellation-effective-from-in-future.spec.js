@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures'
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
 import { caseSubNavigation, successBanner } from '../../../partials';
-import facilitiesPage from '../../../pages/facilitiesPage';
+import { facilitiesPage } from '../../../pages/facilitiesPage';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 
 context('Deal cancellation - submit cancellation with "effectiveFrom" in future', () => {

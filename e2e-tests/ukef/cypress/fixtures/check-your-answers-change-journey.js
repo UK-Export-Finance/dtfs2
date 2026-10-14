@@ -1,11 +1,11 @@
 import { twoDays, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import coverEndDate from '../../../gef/cypress/e2e/pages/amendments/cover-end-date';
-import facilityEndDate from '../../../gef/cypress/e2e/pages/amendments/facility-end-date';
-import bankReviewDate from '../../../gef/cypress/e2e/pages/amendments/bank-review-date';
+import { facilityEndDate } from '../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import { bankReviewDate } from '../../../gef/cypress/e2e/pages/amendments/bank-review-date';
 import effectiveDate from '../../../gef/cypress/e2e/pages/amendments/effective-date';
 import whatDoYouNeedToChange from '../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityValue from '../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValue } from '../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentPage from '../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import amendmentSummaryList from '../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';

@@ -1,14 +1,14 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import cloneGEFDeal from '../pages/clone-deal';
-import mandatoryCriteria from '../pages/mandatory-criteria';
-import nameApplication from '../pages/name-application';
-import applicationDetails from '../pages/application-details';
-import facilityEndDate from '../pages/facility-end-date';
-import bankReviewDate from '../pages/bank-review-date';
-import facilities from '../pages/facilities';
+import { cloneGEFDeal } from '../pages/clone-deal';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
+import { nameApplication } from '../pages/name-application';
+import { applicationDetails } from '../pages/application-details';
+import { facilityEndDate } from '../pages/facility-end-date';
+import { bankReviewDate } from '../pages/bank-review-date';
+import { facilitiesPage } from '../pages/facilities';
 import { submitButton } from '../partials';
-import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
+import { aboutFacilityUnissued } from '../pages/unissued-facilities-about-facility';
 
 /**
  * NOTE: These tests check the backwards compatibility with in-flight version 0 deals.
@@ -35,7 +35,7 @@ context('Clone version 0 deal to version 1', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}`));
 
       applicationDetails.addContingentFacilityButton().click();
-      facilities.hasBeenIssuedRadioYesRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioYesRadioButton().click();
       cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${version0DealId}`));

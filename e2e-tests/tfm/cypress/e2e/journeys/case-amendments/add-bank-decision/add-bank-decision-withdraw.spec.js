@@ -6,7 +6,7 @@ import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import { NOT_ADDED } from '../../../../fixtures/constants';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 
 context('Amendments underwriting - add banks decision - withdraw', () => {
   let dealId;

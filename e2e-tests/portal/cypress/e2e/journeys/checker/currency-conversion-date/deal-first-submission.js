@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 
 const date = new Date();
 
-const deal = {
+export const firstSubmission = {
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
@@ -341,5 +341,3 @@ const deal = {
     },
   },
 };
-
-export default deal;
