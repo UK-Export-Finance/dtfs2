@@ -41,6 +41,7 @@ const findLatestCompletedAmendment = (amendments) => {
   if (!amendments) {
     return {};
   }
+
   const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED || status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
 
   // sort by version number descending - latest completed amendment first in array
@@ -83,6 +84,7 @@ const findLatestCompletedAmendment = (amendments) => {
     if (!amendment.tfm) {
       return updatedFields;
     }
+
     const existingUpdatedFields = cloneDeep(updatedFields);
 
     const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment?.effectiveDate);
@@ -94,6 +96,7 @@ const findLatestCompletedAmendment = (amendments) => {
     if (!updatedFields.amendmentExposurePeriodInMonths && !hasFutureEffectiveDate) {
       existingUpdatedFields.amendmentExposurePeriodInMonths = amendment.tfm.amendmentExposurePeriodInMonths;
     }
+
     if (!updatedFields.exposure && !hasFutureEffectiveDate) {
       existingUpdatedFields.exposure = amendment.tfm.exposure;
     }
@@ -107,6 +110,7 @@ const findLatestCompletedAmendment = (amendments) => {
     if (!amendmentTfmCoverEndDate && !hasFutureEffectiveDate) {
       amendmentTfmCoverEndDate = amendment.tfm.coverEndDate;
     }
+
     if (!amendmentCoverEndDate && !hasFutureEffectiveDate) {
       amendmentCoverEndDate = amendment.coverEndDate;
     }

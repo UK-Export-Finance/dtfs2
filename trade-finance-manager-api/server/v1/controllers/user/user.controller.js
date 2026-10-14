@@ -158,6 +158,7 @@ exports.removeTfmUserById = async (_id, auditDetails, callback) => {
     if (error instanceof DocumentNotDeletedError) {
       return callback(error, 404);
     }
+
     return callback(error, 500);
   }
 };

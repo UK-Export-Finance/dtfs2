@@ -60,5 +60,3 @@ export const readFile = async ({ fileshare, folder, filename }: ReadFileParams):
   const fileClient = directory.getFileClient(`${filename}`);
   return await fileClient.downloadToBuffer();
 };
-
-export default { readFile };

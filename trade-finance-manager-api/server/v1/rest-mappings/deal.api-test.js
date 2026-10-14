@@ -1,6 +1,6 @@
 const dealReducer = require('./deal');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
-const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapDealTfm = require('./mappings/deal/deal-tfm/mapDealTfm');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');

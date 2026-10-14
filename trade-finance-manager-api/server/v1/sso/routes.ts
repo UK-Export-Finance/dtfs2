@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 import { GetAuthCodeUrlApiRequest, GetAuthCodeUrlApiResponse, isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { SsoController } from '../controllers/sso.controller';

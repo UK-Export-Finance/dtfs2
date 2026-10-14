@@ -4,6 +4,7 @@ import { findLatestCompletedAmendment } from '../../helpers/amendment.helpers';
 export const getLatestFacilityEndDateValues = (facility: TfmFacility) => {
   if (facility?.amendments?.length) {
     const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = findLatestCompletedAmendment(facility.amendments);
+
     if (isUsingFacilityEndDate != null) {
       return {
         facilityEndDate,
