@@ -254,6 +254,7 @@ context('About Facility Page  - feature flag enabled', () => {
       aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format
       aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format
       aboutFacility.coverEndDateYear().should('have.value', tomorrow.year);
+
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacility.isUsingFacilityEndDateNo().should('not.be.checked');

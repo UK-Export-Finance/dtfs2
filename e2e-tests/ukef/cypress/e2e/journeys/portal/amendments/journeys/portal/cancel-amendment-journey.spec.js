@@ -144,6 +144,7 @@ context('Amendments - Cancel amendment journey', () => {
           cy.url().should('eq', relative(`${amendmentUrl}/cancel`));
           action().click();
           cy.url().should('eq', relative(action === cancel.continueButton ? `/gef/application-details/${dealId}` : `${amendmentUrl}/${page}`));
+
           if (action !== cancel.continueButton) {
             element.pageHeading().contains(pageHeading);
           }

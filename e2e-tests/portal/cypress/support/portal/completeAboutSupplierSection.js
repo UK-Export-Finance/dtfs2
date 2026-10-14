@@ -45,6 +45,7 @@ const completeAboutSupplierSection = ({ exporterCompanyName }) => {
     contractAboutSupplier.supplierAddress().country().select('United Kingdom');
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
   }
+
   contractAboutSupplier.smeTypeSmall().click();
   cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
   contractAboutSupplier.notLegallyDistinct().click();

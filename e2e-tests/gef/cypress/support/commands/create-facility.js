@@ -39,6 +39,7 @@ export const createFacility = ({
   } else {
     facilities.hasBeenIssuedRadioNoRadioButton().click();
   }
+
   cy.clickContinueButton();
 
   cy.keyboardInput(aboutFacility.facilityName(), name);

@@ -313,6 +313,7 @@ context('Case tasks - MIA deal - all tasks', () => {
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();
       }
+
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(4, taskId, underWriterManagerId);
         resolve();

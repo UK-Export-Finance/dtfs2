@@ -1,7 +1,10 @@
 const { listGefFacilities, logIn, deleteGefFacility } = require('./api');
 
 const deleteGefFacilities = (facilities, token) => {
-  if (!facilities || !facilities.length) return;
+  if (!facilities || !facilities.length) {
+    return;
+  }
+
   facilities.forEach((facility) => deleteGefFacility(token, facility));
 };
 

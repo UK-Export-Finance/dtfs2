@@ -27,6 +27,7 @@ context('User can view and sort deals by buyer', () => {
 
         submittedDeals.forEach((deal) => {
           const { dealSnapshot } = deal;
+
           if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
             ALL_FACILITIES.push(...dealSnapshot.facilities);
           }

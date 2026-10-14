@@ -30,6 +30,7 @@ context('User can view and filter multiple deals', () => {
 
         submittedDeals.forEach((deal) => {
           const { dealSnapshot } = deal;
+
           if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
             ALL_FACILITIES.push(...dealSnapshot.facilities);
           }
@@ -210,6 +211,7 @@ context('User can view and filter multiple deals', () => {
           return deal;
         }
       }
+
       return null;
     });
 

@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-
 module.exports = {
   login: require('./login'),
   signInLink: require('./login/sign-in-link'),
