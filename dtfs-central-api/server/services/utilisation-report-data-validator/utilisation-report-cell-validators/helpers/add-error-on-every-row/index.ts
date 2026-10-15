@@ -8,13 +8,10 @@ import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } fro
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
 export const addErrorOnEveryRow = (rows: UtilisationReportCsvRowData[], field: string, errorMessage: string): UtilisationReportDataValidationError[] =>
-  rows.map(
-    (row) =>
-      ({
-        errorMessage,
-        column: row[field]?.column,
-        row: row[field]?.row,
-        value: row[field]?.value,
-        exporter: row.exporter?.value,
-      }) as UtilisationReportDataValidationError,
-  );
+  rows.map((row) => ({
+    errorMessage,
+    column: row[field]?.column,
+    row: row[field]?.row,
+    value: row[field]?.value,
+    exporter: row.exporter?.value,
+  }));

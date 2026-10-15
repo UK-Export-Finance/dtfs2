@@ -9,7 +9,9 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
 
   describe('when the base currency does not match', () => {
     const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, '100');
+
     const rows = [csvData[0], csvData[1]] as UtilisationReportCsvRowData[];
+
     const completeRows = [
       { ...csvData[0], 'base currency': { ...csvData[0]['base currency'], value: CURRENCY.GBP } },
       { ...csvData[1], 'base currency': { ...csvData[1]['base currency'], value: 'USD' } },
@@ -28,7 +30,9 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
 
   describe('when the base currency matches', () => {
     const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, '100');
+
     const rows = [csvData[0], csvData[1]] as UtilisationReportCsvRowData[];
+
     const completeRows = [
       { ...csvData[0], 'base currency': { ...csvData[0]['base currency'], value: CURRENCY.GBP } },
       { ...csvData[1], 'base currency': { ...csvData[1]['base currency'], value: CURRENCY.GBP } },
