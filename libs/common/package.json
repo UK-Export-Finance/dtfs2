@@ -70,7 +70,7 @@
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
@@ -105,7 +105,7 @@
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "jest-when": "^4.0.3",
-    "supertest": "^7.3.0",
+    "supertest": "^7.3.1",
     "ts-jest": "^29.4.14"
   },
   "engines": {
