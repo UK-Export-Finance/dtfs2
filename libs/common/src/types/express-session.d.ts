@@ -9,9 +9,9 @@ import { Session } from 'express-session';
  */
 
 declare module 'express-session' {
-  type SessionData = {
+  interface SessionData {
     csrf?: string;
-  };
+  }
 }
 
 // TODO[DTFS2-8133] Add strict property types
@@ -32,7 +32,7 @@ declare module 'express-session' {
  * @property addPaymentErrorKey - Optional error key for adding payments.
  */
 declare module 'express' {
-  type Request = {
+  interface Request {
     session: Session & {
       csrf?: string;
       user?: any;
@@ -47,5 +47,5 @@ declare module 'express' {
       checkedCheckboxIds?: any;
       addPaymentErrorKey?: any;
     };
-  };
+  }
 }

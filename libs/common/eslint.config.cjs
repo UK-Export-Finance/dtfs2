@@ -99,7 +99,9 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src', prefix: '@ukef' }],
+      // DTFS libs/common exception
+      // Why: ESLint will otherwise autofix relative import paths, which we want to allow in this service.
+      'no-relative-import-paths/no-relative-import-paths': 'off',
 
       'no-case-declarations': 'off',
 
@@ -239,10 +241,10 @@ module.exports = defineConfig([
     },
   },
 
-  // DTFS libs/common exception
-  // Why: *.d.ts ambient declarations merge with existing interfaces (e.g. jest.Matchers), which `type` cannot do
+  // DTFS libs/common exceptions
+  // Why: These ambient declarations must merge with existing interfaces, which `type` cannot do
   {
-    files: ['**/*.d.ts'],
+    files: ['src/types/express-session.d.ts', 'src/test-helpers/expect-to-be-object-id.d.ts'],
 
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
