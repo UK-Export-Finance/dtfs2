@@ -13,8 +13,20 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     const rows = [csvData[0], csvData[1]] as UtilisationReportCsvRowData[];
 
     const completeRows = [
-      { ...csvData[0], 'base currency': { ...csvData[0]['base currency'], value: CURRENCY.GBP } },
-      { ...csvData[1], 'base currency': { ...csvData[1]['base currency'], value: 'USD' } },
+      {
+        ...csvData[0],
+        'base currency': {
+          ...csvData[0]['base currency'],
+          value: CURRENCY.GBP,
+        },
+      },
+      {
+        ...csvData[1],
+        'base currency': {
+          ...csvData[1]['base currency'],
+          value: 'USD',
+        },
+      },
     ] as UtilisationReportCsvRowData[];
 
     it(`should return the result of "addErrorOnEveryRow" for "${field}"`, () => {
@@ -34,8 +46,20 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     const rows = [csvData[0], csvData[1]] as UtilisationReportCsvRowData[];
 
     const completeRows = [
-      { ...csvData[0], 'base currency': { ...csvData[0]['base currency'], value: CURRENCY.GBP } },
-      { ...csvData[1], 'base currency': { ...csvData[1]['base currency'], value: CURRENCY.GBP } },
+      {
+        ...csvData[0],
+        'base currency': {
+          ...csvData[0]['base currency'],
+          value: CURRENCY.GBP,
+        },
+      },
+      {
+        ...csvData[1],
+        'base currency': {
+          ...csvData[1]['base currency'],
+          value: CURRENCY.GBP,
+        },
+      },
     ] as UtilisationReportCsvRowData[];
 
     it(`should return an empty array for "${field}"`, () => {

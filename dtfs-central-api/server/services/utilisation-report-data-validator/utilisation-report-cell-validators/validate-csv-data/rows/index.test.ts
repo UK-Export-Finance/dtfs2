@@ -7,6 +7,7 @@ import { generateFacilityUtilisationErrors } from '../../helpers/generate-facili
 describe('validateRows', () => {
   describe('when the base currency and facility utilisation does not match for a facility', () => {
     const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, '45');
+
     const rows = [
       {
         ...csvData[0],
@@ -19,6 +20,7 @@ describe('validateRows', () => {
         'facility utilisation': { ...csvData[1]['facility utilisation'], value: '100' },
       },
     ] as UtilisationReportCsvRowData[];
+
     const completeRows = rows.filter((row) => row['base currency']?.value && row['facility utilisation']?.value);
 
     it('should return the result of "generateBaseCurrencyErrors" and "generateFacilityUtilisationErrors" for "base currency" and "facility utilisation"', () => {
@@ -32,10 +34,24 @@ describe('validateRows', () => {
 
   describe('when the base currency does not match for a facility', () => {
     const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, mockFacilityUtilisationValue);
+
     const rows = [
-      { ...csvData[0], 'base currency': { ...csvData[0]['base currency'], value: CURRENCY.GBP } },
-      { ...csvData[1], 'base currency': { ...csvData[1]['base currency'], value: 'USD' } },
+      {
+        ...csvData[0],
+        'base currency': {
+          ...csvData[0]['base currency'],
+          value: CURRENCY.GBP,
+        },
+      },
+      {
+        ...csvData[1],
+        'base currency': {
+          ...csvData[1]['base currency'],
+          value: 'USD',
+        },
+      },
     ] as UtilisationReportCsvRowData[];
+
     const completeRows = rows.filter((row) => row['base currency']?.value && row['facility utilisation']?.value);
 
     it('should return the result of "generateBaseCurrencyErrors" for "base currency"', () => {
@@ -49,10 +65,18 @@ describe('validateRows', () => {
 
   describe('when the facility utilisation does not match for a facility', () => {
     const csvData = generateUtilisationReportMockCSVData(mockCurrencyValue, '45');
+
     const rows = [
-      { ...csvData[0], 'facility utilisation': { ...csvData[0]['facility utilisation'], value: '45' } },
-      { ...csvData[1], 'facility utilisation': { ...csvData[1]['facility utilisation'], value: '100' } },
+      {
+        ...csvData[0],
+        'facility utilisation': { ...csvData[0]['facility utilisation'], value: '45' },
+      },
+      {
+        ...csvData[1],
+        'facility utilisation': { ...csvData[1]['facility utilisation'], value: '100' },
+      },
     ] as UtilisationReportCsvRowData[];
+
     const completeRows = rows.filter((row) => row['base currency']?.value && row['facility utilisation']?.value);
 
     it('should return the result of "generateFacilityUtilisationErrors" for "facility utilisation"', () => {
