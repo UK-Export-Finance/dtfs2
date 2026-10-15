@@ -1,6 +1,6 @@
-import { pages } from '../../../../e2e/pages';
+import { tfmPages } from '../../../../e2e/pages';
 
-const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
 const { premiumPaymentsTable } = premiumPaymentsContent;
 
 /**

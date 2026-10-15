@@ -1,8 +1,8 @@
 import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { pages } from '../../../../e2e/pages';
+import { tfmPages } from '../../../../e2e/pages';
 
-const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
-const { createFeeRecordCorrectionRequestPage } = pages;
+const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
+const { createFeeRecordCorrectionRequestPage } = tfmPages;
 
 /**
  * completeFeeRecordCorrectionRequestForm
