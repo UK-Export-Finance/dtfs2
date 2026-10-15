@@ -1,4 +1,4 @@
-import { GEF_CRITERION } from '../types';
+import { GEF_CRITERION } from '@ukef/types';
 import { stripHtml } from './strip-html';
 
 /**

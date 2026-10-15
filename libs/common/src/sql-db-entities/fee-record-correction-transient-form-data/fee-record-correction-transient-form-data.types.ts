@@ -1,5 +1,5 @@
-import { RecordCorrectionTransientFormData } from '../../types';
-import { DbRequestSource } from '../helpers';
+import { RecordCorrectionTransientFormData } from '@ukef/types';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
 
 export type CreateFeeRecordCorrectionTransientFormDataParams = {
   userId: string;

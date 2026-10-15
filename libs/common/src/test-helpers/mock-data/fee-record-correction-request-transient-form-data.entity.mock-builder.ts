@@ -1,6 +1,6 @@
-import { RECORD_CORRECTION_REASON } from '../../constants';
-import { FeeRecordCorrectionRequestTransientFormDataEntity } from '../../sql-db-entities';
-import { RecordCorrectionRequestTransientFormData } from '../../types';
+import { RECORD_CORRECTION_REASON } from '@ukef/constants';
+import { FeeRecordCorrectionRequestTransientFormDataEntity } from '@ukef/sql-db-entities';
+import { RecordCorrectionRequestTransientFormData } from '@ukef/types';
 
 export class FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder {
   private readonly transientFormData: FeeRecordCorrectionRequestTransientFormDataEntity;

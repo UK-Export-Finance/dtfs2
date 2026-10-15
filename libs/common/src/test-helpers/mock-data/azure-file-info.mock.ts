@@ -1,4 +1,4 @@
-import { AzureFileInfo } from '../../types';
+import { AzureFileInfo } from '@ukef/types';
 
 export const MOCK_AZURE_FILE_INFO: AzureFileInfo = {
   folder: '123',

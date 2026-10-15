@@ -1,6 +1,6 @@
-import { BssEwcsDeal, GefDeal } from '../types';
+import { BssEwcsDeal, GefDeal } from '@ukef/types';
+import { DEAL_TYPE } from '@ukef/constants';
 import { getUkefDealId } from './get-ukef-deal-id';
-import { DEAL_TYPE } from '../constants';
 
 describe('getUkefDealId', () => {
   it('should return ukefDealId on a BSS/EWCS deal', () => {

@@ -1,8 +1,8 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs, { Options } from 'swagger-jsdoc';
-import { HEADERS, SWAGGER } from '../constants';
-import { swaggerDefinition } from '../interfaces';
+import { HEADERS, SWAGGER } from '@ukef/constants';
+import { SwaggerDefinition } from '@ukef/interfaces';
 
 /**
  * Creates an Express router that serves Swagger API documentation.
@@ -14,7 +14,7 @@ import { swaggerDefinition } from '../interfaces';
  * @param apis - An array of file paths containing API documentation annotations.
  * @returns An Express router configured to serve Swagger documentation.
  */
-export const swaggerRouter = (definition: swaggerDefinition, apis: Array<string>) => {
+export const swaggerRouter = (definition: SwaggerDefinition, apis: Array<string>) => {
   const router = express.Router();
 
   const uiConfigurations = {

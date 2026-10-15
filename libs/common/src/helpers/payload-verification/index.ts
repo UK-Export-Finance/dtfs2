@@ -1,5 +1,5 @@
 import z from 'zod';
-import { IsVerifiedPayloadParams } from '../../types/payload-verification';
+import { IsVerifiedPayloadParams } from '@ukef/types/payload-verification';
 import { isVerifiedPayloadByZod } from './is-verified-payload-by-zod';
 import { isVerifiedPayloadByType } from './is-verified-payload-by-type';
 

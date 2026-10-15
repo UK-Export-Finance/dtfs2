@@ -1,4 +1,4 @@
-import { DbRequestSourceParam } from '../helpers';
+import { DbRequestSourceParam } from '@ukef/sql-db-entities/helpers';
 
 export type CreateAzureFileInfoParams = DbRequestSourceParam & {
   folder: string;

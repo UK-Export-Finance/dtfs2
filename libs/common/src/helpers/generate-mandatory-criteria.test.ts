@@ -1,5 +1,5 @@
+import { GEF_CRITERION } from '@ukef/types';
 import { generateMandatoryCriteria } from './generate-mandatory-criteria';
-import { GEF_CRITERION } from '../types';
 
 describe('generateMandatoryCriteria', () => {
   it('should return single test criterion', () => {

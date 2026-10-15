@@ -1,4 +1,4 @@
-import { REQUEST_PLATFORM_TYPE } from '../../constants/request-platform-type';
+import { REQUEST_PLATFORM_TYPE } from '@ukef/constants/request-platform-type';
 
 type UserId = string;
 

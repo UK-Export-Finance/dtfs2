@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { TIMEZONE } from '../constants/timezone';
+import { TIMEZONE } from '@ukef/constants/timezone';
 
 dotenv.config({ quiet: true });
 

@@ -3,7 +3,7 @@ import {
   DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA,
   ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA,
   ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
-} from '../../schemas/tfm/entra-id.schema';
+} from '@ukef/schemas/tfm/entra-id.schema';
 
 export type DecodedAuthCodeRequestState = z.infer<typeof DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA>;
 

@@ -1,5 +1,5 @@
-import { RECORD_CORRECTION_REASON } from '../../constants';
-import { FeeRecordCorrectionSummary } from '../../types';
+import { RECORD_CORRECTION_REASON } from '@ukef/constants';
+import { FeeRecordCorrectionSummary } from '@ukef/types';
 
 /**
  * Mock data for fee record correction details
