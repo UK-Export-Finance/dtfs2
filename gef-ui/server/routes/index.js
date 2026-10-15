@@ -31,9 +31,9 @@ const portalActivities = require('./application-activities');
 const cloneGefDeal = require('./clone-gef-deal');
 const unissuedFacilities = require('./unissued-facilities');
 const supportingInformationUploadRoutes = require('./supporting-information-upload');
-const { default: bankReviewDate } = require('./facilities/bank-review-date');
-const { default: facilityEndDate } = require('./facilities/facility-end-date');
-const { default: amendments } = require('./facilities/amendments/index');
+const { bankReviewDateRouter } = require('./facilities/bank-review-date');
+const { facilityEndDateRouter } = require('./facilities/facility-end-date');
+const { amendmentsRouter } = require('./facilities/amendments/index');
 
 const router = express.Router();
 
@@ -54,9 +54,9 @@ router.use(selectExportersCorrespondenceAddressRoutes);
 router.use(enterExportersCorrespondenceAddressRoutes);
 router.use(aboutExporterRoutes);
 router.use(facilitiesRoutes);
-router.use(bankReviewDate);
-router.use(facilityEndDate);
-router.use(amendments);
+router.use(bankReviewDateRouter);
+router.use(facilityEndDateRouter);
+router.use(amendmentsRouter);
 router.use(aboutFacilityRoutes);
 router.use(providedFacilityRoutes);
 router.use(facilityCurrencyRoutes);

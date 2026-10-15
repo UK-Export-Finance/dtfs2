@@ -4,7 +4,7 @@ import { postFacilityEndDateFromApplicationDetailsPage } from '../../controllers
 import { validateRole, validateToken, validateBank } from '../../middleware';
 import { MAKER } from '../../constants/roles';
 
-const router = express.Router();
+export const facilityEndDateRouter = express.Router();
 
 /**
  * @openapi
@@ -98,10 +98,8 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router
+facilityEndDateRouter
   .route('/application-details/:dealId/facilities/:facilityId/facility-end-date')
   .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getFacilityEndDateFromApplicationDetailsPage)
   .post(postFacilityEndDateFromApplicationDetailsPage);
-
-export default router;

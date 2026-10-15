@@ -60,7 +60,7 @@ const {
   ABANDON,
 } = PORTAL_AMENDMENT_PAGES;
 
-const router = express.Router();
+export const amendmentsRouter = express.Router();
 
 /**
  * @openapi
@@ -92,7 +92,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/create-draft/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .post(postCreateDraftFacilityAmendment);
@@ -166,7 +166,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${WHAT_DO_YOU_NEED_TO_CHANGE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getWhatNeedsToChange)
@@ -244,7 +244,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_VALUE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getFacilityValue)
@@ -330,7 +330,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${COVER_END_DATE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getCoverEndDate)
@@ -392,7 +392,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CANCEL}`)
   .all([
     validatePortalFacilityAmendmentsEnabled,
@@ -479,7 +479,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getDoYouHaveAFacilityEndDate)
@@ -565,7 +565,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_END_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getFacilityEndDate)
@@ -651,7 +651,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${BANK_REVIEW_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getBankReviewDate)
@@ -719,7 +719,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ELIGIBILITY}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getEligibility)
@@ -755,7 +755,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${MANUAL_APPROVAL_NEEDED}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getManualApprovalNeeded);
@@ -840,7 +840,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${EFFECTIVE_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getEffectiveDate)
@@ -902,7 +902,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CHECK_YOUR_ANSWERS}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getCheckYourAnswers)
@@ -976,7 +976,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${RETURN_TO_MAKER}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [CHECKER] })])
   .get(getReturnAmendmentToMaker)
@@ -1010,7 +1010,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${RETURNED_TO_MAKER}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [CHECKER] })])
   .get(getReturnedToMaker);
@@ -1043,7 +1043,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
@@ -1114,7 +1114,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMIT_AMENDMENT_TO_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [CHECKER] })])
   .get(getSubmitAmendmentToUkef)
@@ -1148,7 +1148,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [CHECKER] })])
   .get(getApprovedByUkef);
@@ -1207,7 +1207,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ABANDON}`)
   .all([
     validatePortalFacilityAmendmentsEnabled,
@@ -1275,7 +1275,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${AMENDMENT_DETAILS}`)
   .all([
     validatePortalFacilityAmendmentsEnabled,
@@ -1318,9 +1318,7 @@ router
  *       500:
  *         description: Internal server error
  */
-router
+amendmentsRouter
   .route(`/application-details/:dealId/${ALL_TYPES_AMENDMENTS}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
   .get(getApplicationAmendments);
-
-export default router;

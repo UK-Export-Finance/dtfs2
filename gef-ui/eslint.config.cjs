@@ -16,7 +16,7 @@ const js = require('@eslint/js');
 
 module.exports = defineConfig([
   {
-    ignores: ['**/coverage/', '**/dist/', '**/node_modules/', '**/package*.json'],
+    ignores: ['**/coverage/', '**/dist/', '**/node_modules/', '**/package*.json', 'public/'],
   },
 
   // Base configs
@@ -243,9 +243,9 @@ module.exports = defineConfig([
   },
 
   // DTFS gef-ui exception
-  // Why: ui-scripts run in the browser, not Node, so they need browser globals instead
+  // Why: Frontend source scripts need browser globals; generated public assets are ignored above
   {
-    files: ['**/public/js/**'],
+    files: ['scripts/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.browser,

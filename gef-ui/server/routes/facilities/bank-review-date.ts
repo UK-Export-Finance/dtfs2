@@ -4,7 +4,7 @@ import { postBankReviewDateFromApplicationDetailsPage } from '../../controllers/
 import { validateRole, validateToken, validateBank } from '../../middleware';
 import { MAKER } from '../../constants/roles';
 
-const router = express.Router();
+export const bankReviewDateRouter = express.Router();
 
 /**
  * @openapi
@@ -60,10 +60,8 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router
+bankReviewDateRouter
   .route('/application-details/:dealId/facilities/:facilityId/bank-review-date')
   .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getBankReviewDateFromApplicationDetailsPage)
   .post(postBankReviewDateFromApplicationDetailsPage);
-
-export default router;
