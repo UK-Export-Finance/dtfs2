@@ -5,7 +5,9 @@ const { RestError, StorageSharedKeyCredential, ShareServiceClient, ShareClient, 
 
 function createDirectoryClient(folder) {
   const directory = new ShareDirectoryClient();
+
   directory.folderName = this.folderName ? `${this.folderName}/${folder}` : folder;
+
   return directory;
 }
 
@@ -13,6 +15,7 @@ function createFileClient(filename) {
   const fileClient = new ShareFileClient();
   fileClient.name = filename;
   fileClient.path = `${this.folderName}/${filename}`;
+
   fileClient.downloadToBuffer = () => {
     if (filename === 'not-found.txt') {
       return {
@@ -24,19 +27,23 @@ function createFileClient(filename) {
 
     return Buffer.from('mockFile', 'utf-8');
   };
+
   fileClient.getProperties = () => ({
     catch: () => {},
   });
+
   return fileClient;
 }
 
 ShareDirectoryClient.catch = jest.fn;
 ShareDirectoryClient.prototype.create = () => ShareDirectoryClient;
+ShareDirectoryClient.prototype.createIfNotExists = () => ShareDirectoryClient;
 ShareDirectoryClient.prototype.getDirectoryClient = createDirectoryClient;
 ShareDirectoryClient.prototype.getFileClient = createFileClient;
 
 ShareClient.catch = jest.fn;
 ShareClient.prototype.create = () => ShareClient;
+ShareClient.prototype.createIfNotExists = () => ShareClient;
 ShareClient.prototype.deleteFile = () => ShareClient;
 ShareClient.prototype.getDirectoryClient = createDirectoryClient;
 ShareClient.prototype.ShareClientdeleteFile = () => ShareClient;

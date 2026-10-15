@@ -128,6 +128,7 @@ const handleTaskEditFlagAndStatus = (allTaskGroups, group, task, isTaskThatIsBei
       if (updatedTask.status === TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
+
       return { updatedTask };
     }
 

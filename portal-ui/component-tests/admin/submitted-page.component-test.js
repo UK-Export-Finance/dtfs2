@@ -1,4 +1,5 @@
 const { ROLES } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'admin/submitted-page.njk';
@@ -8,7 +9,7 @@ const render = pageRenderer(page);
 let wrapper;
 
 const _id = '12345';
-const user = { roles: [ROLES.MAKER], _id, username: 'test@ukexportfinance.gov.uk' };
+const user = { roles: [ROLES.MAKER], _id, username: MOCK_EMAIL };
 
 const dashboardPageUrl = '/dashboard/deals';
 

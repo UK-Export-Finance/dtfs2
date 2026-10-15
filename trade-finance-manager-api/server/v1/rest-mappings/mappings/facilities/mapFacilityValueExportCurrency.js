@@ -7,6 +7,7 @@ const mapFacilityValueExportCurrency = (facility) => {
     const { facilitySnapshot } = facility;
 
     const { currency, value } = facilitySnapshot;
+
     // if amendments in facility
     if (facility?.amendments?.length) {
       const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
@@ -16,11 +17,13 @@ const mapFacilityValueExportCurrency = (facility) => {
         return amendmentChangeValueExportCurrency(latestAmendmentValue);
       }
     }
+
     const formattedFacilityValue = formattedNumber(value);
 
     // returns original value from facility
     return `${currency.id} ${formattedFacilityValue}`;
   }
+
   return null;
 };
 

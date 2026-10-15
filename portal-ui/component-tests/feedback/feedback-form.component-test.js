@@ -1,3 +1,4 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'feedback/feedback-form.njk';
@@ -13,7 +14,7 @@ describe(page, () => {
     clearlyExplained: 'Good',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@testing.com',
+    emailAddress: MOCK_EMAIL,
   };
 
   const validationErrors = {

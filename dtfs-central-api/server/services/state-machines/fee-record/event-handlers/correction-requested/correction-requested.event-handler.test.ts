@@ -1,4 +1,4 @@
-import { FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { FeeRecordEntityMockBuilder, MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
 import {
   DbRequestSource,
@@ -24,7 +24,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
   };
 
   const bankTeamName = 'Payment Officer Team';
-  const bankTeamEmails = ['test@ukexportfinance.gov.uk'];
+  const bankTeamEmails = [MOCK_EMAIL];
 
   const aCorrectionRequestedEventPayload = (): FeeRecordCorrectionRequestedEvent['payload'] => ({
     transactionEntityManager: mockEntityManager,

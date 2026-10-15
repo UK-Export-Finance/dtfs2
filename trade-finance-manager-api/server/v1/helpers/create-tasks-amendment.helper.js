@@ -102,6 +102,7 @@ const createTasksManualAmendment = (NDBDeal = false) => {
       },
     ];
   }
+
   return [
     {
       groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_1.GROUP_TITLE,
@@ -134,6 +135,7 @@ const createTasksManualAmendment = (NDBDeal = false) => {
  */
 const createAmendmentTasks = (requireUkefApproval, tfm) => {
   let tasks = [];
+
   if (!requireUkefApproval && !tfm.nonDelegatedBank) {
     tasks = createTasksAutomaticAmendment();
   } else if (requireUkefApproval && !tfm.nonDelegatedBank) {
@@ -218,6 +220,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
 
           // add the task to list of emails to be sent
           const shouldSendEmail = !isTaskThatIsBeingUpdated && !task.emailSent;
+
           if (shouldSendEmail) {
             taskEmailsToSend.push(task);
           }
@@ -251,6 +254,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
     if (!response.errors) {
       tasksToAddEmailSentFlag.push(taskEmailsToSend[index]);
     }
+
     return response;
   });
 

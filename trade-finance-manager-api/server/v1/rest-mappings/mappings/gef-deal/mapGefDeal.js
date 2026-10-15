@@ -1,5 +1,5 @@
 const mapGefDealSnapshot = require('./mapGefDealSnapshot');
-const mapDealTfm = require('../deal/dealTfm/mapDealTfm');
+const mapDealTfm = require('../deal/deal-tfm/mapDealTfm');
 
 const mapGefDeal = (deal) => {
   const mapped = {
