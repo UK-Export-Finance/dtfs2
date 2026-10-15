@@ -7,6 +7,7 @@ import {
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
 } from '../..';
+import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 
 jest.mock('../..', () => ({
   generateUkefFacilityIdError: jest.fn(),
@@ -21,6 +22,31 @@ jest.mock('../..', () => ({
 describe('validateCells', () => {
   // This test mocks out all the function from utilisation-report-cell-validators.js and
   // tests that if headers are available then the respective cell validator function is called on that data
+
+  const findExistingUkefGefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findExistingUkefGefFacilityIds');
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    findExistingUkefGefFacilityIdsSpy.mockResolvedValue(new Set(['20001371']));
+  });
+
+  it('looks up all unique, well-formed facility ids in a single query', async () => {
+    // Arrange
+    const csvData = [
+      { 'ukef facility id': { value: '20001371', column: 'B', row: 1 } },
+      { 'ukef facility id': { value: '20001371', column: 'B', row: 2 } },
+      { 'ukef facility id': { value: '20001372', column: 'B', row: 3 } },
+      { 'ukef facility id': { value: 'invalid', column: 'B', row: 4 } },
+      { 'ukef facility id': { value: null, column: 'B', row: 5 } },
+    ];
+
+    // Act
+    await validateCells(csvData, [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]);
+
+    // Assert
+    expect(findExistingUkefGefFacilityIdsSpy).toHaveBeenCalledTimes(1);
+    expect(findExistingUkefGefFacilityIdsSpy).toHaveBeenCalledWith(['20001371', '20001372']);
+  });
 
   it('calls the generate error functions for headers that are present', async () => {
     // Arrange
@@ -39,7 +65,7 @@ describe('validateCells', () => {
     await validateCells(csvData, availableHeaders);
 
     // Assert
-    expect(generateUkefFacilityIdError).toHaveBeenCalledWith(csvData[0]['ukef facility id'], 'test exporter');
+    expect(generateUkefFacilityIdError).toHaveBeenCalledWith(csvData[0]['ukef facility id'], 'test exporter', new Set(['20001371']));
     expect(generateBaseCurrencyError).toHaveBeenCalledWith(csvData[0]['base currency'], 'test exporter');
     expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
   });

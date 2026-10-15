@@ -86,60 +86,24 @@ jobs:
           log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   # 3. micro-serices WebApp deployments
-  # webapp:
-  #   name: WebApp 🌐
-  #   needs: [setup, database]
-  #   environment: ${{ needs.setup.outputs.environment }}
-  #   runs-on: [self-hosted, DTFS, deployment]
-  #   env:
-  #     ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-
-  #   strategy:
-  #     max-parallel: 1
-  #     # Do not cancel in-progress jobs upon failure
-  #     fail-fast: false
-  #     # Single dimension matrix
-  #     matrix:
-  #       webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
-
-  #   concurrency:
-  #     group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
-  #     cancel-in-progress: true
-
-  #   steps:
-  #     - name: Repository 🗂️
-  #       uses: actions/checkout@v7
-
-  #     - name: Deploy ⚡
-  #       uses: ./.github/actions/webapp
-  #       with:
-  #         branch: ${{ github.ref_name }}
-  #         region: ${{ vars.REGION }}
-  #         group: ${{ secrets.RESOURCE_GROUP }}
-  #         credentials: ${{ secrets.AZURE_CREDENTIALS }}
-  #         acr: ${{ secrets.ACR_PASSWORD }}
-  #         webapp: ${{ matrix.webapp }}
-
-  # 4. micro-serices Functions deployments
-  functions:
-    name: Functions ⚡
+  webapp:
+    name: WebApp 🌐
     needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
-
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ['acbs']
+        webapp: ['dtfs-central-api']
 
     concurrency:
-      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
       cancel-in-progress: true
 
     steps:
@@ -147,14 +111,50 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Deploy ⚡
-        uses: ./.github/actions/functions
+        uses: ./.github/actions/webapp
         with:
           branch: ${{ github.ref_name }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
           acr: ${{ secrets.ACR_PASSWORD }}
-          functions: ${{ matrix.functions }}
+          webapp: ${{ matrix.webapp }}
+
+  # 4. micro-serices Functions deployments
+  # functions:
+  #   name: Functions ⚡
+  #   needs: [setup, database]
+  #   environment: ${{ needs.setup.outputs.environment }}
+  #   runs-on: [self-hosted, DTFS, deployment]
+
+  #   env:
+  #     ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+  #   strategy:
+  #     max-parallel: 2
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       functions: ['acbs']
+
+  #   concurrency:
+  #     group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+  #     cancel-in-progress: true
+
+  #   steps:
+  #     - name: Repository 🗂️
+  #       uses: actions/checkout@v7
+
+  #     - name: Deploy ⚡
+  #       uses: ./.github/actions/functions
+  #       with:
+  #         branch: ${{ github.ref_name }}
+  #         region: ${{ vars.REGION }}
+  #         group: ${{ secrets.RESOURCE_GROUP }}
+  #         credentials: ${{ secrets.AZURE_CREDENTIALS }}
+  #         acr: ${{ secrets.ACR_PASSWORD }}
+  #         functions: ${{ matrix.functions }}
 
   # 5. Notification
   notify:

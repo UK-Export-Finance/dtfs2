@@ -1,4 +1,9 @@
-import { UTILISATION_REPORT_HEADERS, UtilisationReportDataValidationError, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
+import {
+  UTILISATION_REPORT_HEADERS,
+  UtilisationReportDataValidationError,
+  UtilisationReportCsvCellData,
+  UtilisationReportCsvRowData,
+} from '@ukef/dtfs2-common';
 import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -11,6 +16,8 @@ import {
   generateFeesPaidForThePeriodError,
   generateFeesPaidForThePeriodCurrencyError,
 } from '../..';
+import { UKEF_FACILITY_ID_REGEX } from '../../../../../constants/regex';
+import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 
 /**
  * validateCells
@@ -20,8 +27,20 @@ import {
  * @returns An array of errors if there are any
  */
 export const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHeaders: string[]): Promise<UtilisationReportDataValidationError[]> => {
+  // Look up all facility IDs in a single query rather than one query per row
+  const ukefFacilityIds = availableHeaders.includes(UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID)
+    ? csvData
+        .map((csvRow) => csvRow[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]?.value)
+        .filter((value): value is string => !!value && UKEF_FACILITY_ID_REGEX.test(value))
+    : [];
+  const existingUkefGefFacilityIds = await TfmFacilitiesRepo.findExistingUkefGefFacilityIds([...new Set(ukefFacilityIds)]);
+
   const cellValidations = [
-    { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, errorGenerator: generateUkefFacilityIdError },
+    {
+      header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID,
+      errorGenerator: (cellData: UtilisationReportCsvCellData | undefined, exporterName?: string | null) =>
+        generateUkefFacilityIdError(cellData, exporterName, existingUkefGefFacilityIds),
+    },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },

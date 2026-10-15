@@ -490,6 +490,30 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Finds which of the supplied UKEF facility IDs belong to an existing GEF facility, using a single query
+   * @param ukefFacilityIds - The UKEF facility IDs to check
+   * @returns The set of UKEF facility IDs which belong to an existing GEF facility
+   */
+  public static async findExistingUkefGefFacilityIds(ukefFacilityIds: string[]): Promise<Set<string>> {
+    if (!ukefFacilityIds.length) {
+      return new Set();
+    }
+
+    const collection = await this.getCollection();
+    const facilities = await collection
+      .find(
+        {
+          'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds },
+          'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
+        },
+        { projection: { 'facilitySnapshot.ukefFacilityId': 1 } },
+      )
+      .toArray();
+
+    return new Set(facilities.map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId).filter((id): id is string => !!id));
+  }
+
+  /**
    * Upserts a portal draft amendment for a facility in the database.
    *
    * This function first removes any existing portal amendments for the specified facility

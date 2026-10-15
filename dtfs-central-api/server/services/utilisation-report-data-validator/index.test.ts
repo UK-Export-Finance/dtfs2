@@ -3,6 +3,7 @@ import { validateUtilisationReportCsvData } from '.';
 import { validateHeaders } from './utilisation-report-cell-validators/validate-csv-data/headers';
 import { validateCells } from './utilisation-report-cell-validators/validate-csv-data/cells';
 import { validateRows } from './utilisation-report-cell-validators/validate-csv-data/rows';
+import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 jest.mock('./utilisation-report-cell-validators', () => ({
   generateUkefFacilityIdError: jest.fn(),
@@ -15,6 +16,10 @@ jest.mock('./utilisation-report-cell-validators', () => ({
 }));
 
 describe('services/utilisation-report-data-validator', () => {
+  beforeEach(() => {
+    jest.spyOn(TfmFacilitiesRepo, 'findExistingUkefGefFacilityIds').mockResolvedValue(new Set());
+  });
+
   const csvData = [
     {
       'ukef facility id': { value: '20001371', column: 'B', row: 1 },
