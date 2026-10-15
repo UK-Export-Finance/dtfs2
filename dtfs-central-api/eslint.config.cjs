@@ -134,7 +134,7 @@ module.exports = defineConfig([
           // This enforces kebab case but allows a single _ at the front
           // and allows . or - to be used as a separator in folder names
           // This means that folder names such as dashboard.service or _macros work
-          // '**/*/': '?(_)[a-z]*([a-z0-9])*([-.]+([a-z0-9]))',
+          '**/*/': '?(_)[a-z]*([a-z0-9])*([-.]+([a-z0-9]))',
         },
       ],
 
