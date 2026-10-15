@@ -1,27 +1,24 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
+import httpMocks from 'node-mocks-http';
+import { DayMonthYearInput, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
 
-/* eslint-disable import/first */
 const getFacilityMock = jest.fn();
 const updateFacilityMock = jest.fn();
 const updateApplicationMock = jest.fn();
 const validateAndParseBankReviewDateMock = jest.fn();
 const getCoverStartDateOrTodayMock = jest.fn();
 
-import httpMocks from 'node-mocks-http';
-import { DayMonthYearInput, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
-
 jest.mock('../../utils/get-cover-start-date-or-today', () => ({
   getCoverStartDateOrToday: getCoverStartDateOrTodayMock,
 }));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
 jest.mock('../../services/api', () => ({
   getFacility: getFacilityMock,
   updateFacility: updateFacilityMock,
   updateApplication: updateApplicationMock,
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('./validation', () => ({
   validateAndParseBankReviewDate: validateAndParseBankReviewDateMock,
 }));

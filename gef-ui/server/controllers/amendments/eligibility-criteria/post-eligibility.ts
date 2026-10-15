@@ -36,6 +36,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
     }
 
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
     if (!amendment) {
       console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');

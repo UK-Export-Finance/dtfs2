@@ -1,13 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const updateAmendmentStatusMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getTfmFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const getUserDetailsMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { format, fromUnixTime } from 'date-fns';
@@ -25,6 +15,14 @@ import { Deal } from '../../../types/deal';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { mockFacility } from '../../../utils/mocks/mock-facility';
 import { addExposureValuesToAmendment } from '../helpers/add-exposure-values-to-amendment';
+
+const updateAmendmentStatusMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getTfmFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   updateAmendmentStatus: updateAmendmentStatusMock,

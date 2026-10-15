@@ -3,12 +3,6 @@ import { DEAL_STATUS, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, ROLES, PortalFa
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-
 import { getCoverEndDate, GetCoverEndDateRequest } from './get-cover-end-date';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
@@ -17,6 +11,10 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
+
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

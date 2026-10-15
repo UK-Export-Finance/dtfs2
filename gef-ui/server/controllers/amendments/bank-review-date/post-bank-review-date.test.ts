@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { format, startOfDay } from 'date-fns';
@@ -29,6 +22,11 @@ import { ValidationError } from '../../../types/validation-error';
 import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
 import * as bankReviewDateValidation from '../../bank-review-date/validation';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
+
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

@@ -1,14 +1,4 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const updateAmendmentStatusMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const getUserDetailsMock = jest.fn();
-const updateApplicationMock = jest.fn();
-
 import {
   PORTAL_LOGIN_STATUS,
   ROLES,
@@ -27,6 +17,13 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { validationErrorHandler } from '../../../utils/helpers';
+
+const updateAmendmentStatusMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
+const updateApplicationMock = jest.fn();
 
 console.error = jest.fn();
 

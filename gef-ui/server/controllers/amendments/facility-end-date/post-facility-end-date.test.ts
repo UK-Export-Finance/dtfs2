@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { format, startOfDay } from 'date-fns';
@@ -29,6 +22,11 @@ import { postFacilityEndDate, PostFacilityEndDateRequest } from './post-facility
 import * as facilityEndDateValidation from '../../facility-end-date/validation';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
 import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
+
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

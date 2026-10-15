@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { format, getUnixTime, startOfDay } from 'date-fns';
@@ -29,6 +22,11 @@ import { ValidationError } from '../../../types/validation-error.ts';
 import { postEffectiveDate, PostEffectiveDateRequest } from './post-effective-date.ts';
 import { EffectiveDateViewModel } from '../../../types/view-models/amendments/effective-date-view-model';
 import { validateAndParseEffectiveDate } from './validation.ts';
+
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

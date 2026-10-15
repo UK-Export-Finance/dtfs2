@@ -1,8 +1,3 @@
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { PORTAL_LOGIN_STATUS, ROLES, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
@@ -12,6 +7,10 @@ import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications.js';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { getSubmitAmendmentToUkef, GetSubmitAmendmentToUkefRequest } from './get-submit-amendment-to-ukef.ts';
+
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

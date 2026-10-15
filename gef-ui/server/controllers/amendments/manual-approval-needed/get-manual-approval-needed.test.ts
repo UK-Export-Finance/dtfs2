@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const getTfmTeamMock = jest.fn();
-
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
@@ -18,8 +11,13 @@ import { Deal } from '../../../types/deal';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
-import { ManualApprovalNeededViewModel } from '../../../types/view-models/amendments/ManualApprovalNeededViewModel.ts';
+import { ManualApprovalNeededViewModel } from '../../../types/view-models/amendments/manual-approval-needed-view-model.ts';
 import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
+
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

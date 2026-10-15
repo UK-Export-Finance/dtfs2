@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const getFacilityMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
@@ -21,6 +14,11 @@ import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { ValidationError } from '../../../types/validation-error';
 import { postEligibility, PostEligibilityRequest } from './post-eligibility.ts';
+
+const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const getFacilityMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

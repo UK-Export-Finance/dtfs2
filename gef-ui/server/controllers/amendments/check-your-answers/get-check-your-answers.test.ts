@@ -1,9 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
@@ -16,6 +10,10 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 import { createCheckYourAnswersViewModel } from './create-check-your-answers-view-model';
 import { Deal } from '../../../types/deal';
 import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
+
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
