@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { cloneGEFDeal } from '../pages/clone-deal';
+import { cloneDeal } from '../pages/clone-deal';
 import { mandatoryCriteria } from '../pages/mandatory-criteria';
 import { nameApplication } from '../pages/name-application';
 import { applicationDetails } from '../pages/application-details';
@@ -62,7 +62,7 @@ context('Clone version 1 deal to version 1', () => {
 
       cy.visit(relative(`/gef/application-details/${originalDealId}`));
 
-      cloneGEFDeal.cloneGefDealLink().click();
+      cloneDeal.cloneGefDealLink().click();
       mandatoryCriteria.trueRadio().click();
       cy.clickContinueButton();
 

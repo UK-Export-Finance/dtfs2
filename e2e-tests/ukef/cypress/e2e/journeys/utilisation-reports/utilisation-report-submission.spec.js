@@ -5,7 +5,7 @@ import relative from '../../relativeURL';
 import { NODE_TASKS, PDC_RECONCILE, TFM_URL } from '../../../../../e2e-fixtures';
 
 import portalPages from '../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../tfm/cypress/e2e/pages';
+import { tfmPages } from '../../../../../tfm/cypress/e2e/pages';
 import { SIGN_IN_TOKENS } from '../../../../../portal/cypress/fixtures/constants';
 
 import MOCK_USERS from '../../../../../e2e-fixtures/portal-users.fixture';

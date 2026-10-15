@@ -1,11 +1,11 @@
 const relative = require('../../relativeURL');
-const { page } = require('../../pages/contact');
+const { contactPage } = require('../../pages/contact');
 
 const emailAddress = Cypress.expose('CONTACT_US_EMAIL_ADDRESS').trim();
 
 context('contact', () => {
   beforeEach(() => {
-    page.visit();
+    contactPage.visit();
   });
 
   describe('visit contact us page', () => {
@@ -14,16 +14,16 @@ context('contact', () => {
     });
 
     it('should ensure the portal headings are rendered', () => {
-      cy.assertText(page.heading(), 'Contact us');
-      cy.assertText(page.emailHeading(), 'Email');
+      cy.assertText(contactPage.heading(), 'Contact us');
+      cy.assertText(contactPage.emailHeading(), 'Email');
     });
 
     it('should ensure the contact us email address is valid', () => {
-      cy.assertText(page.email(), emailAddress);
+      cy.assertText(contactPage.email(), emailAddress);
     });
 
     it('should ensure the contact us timeframe is valid', () => {
-      cy.assertText(page.timeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
+      cy.assertText(contactPage.timeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
     });
   });
 });

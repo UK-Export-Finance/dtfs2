@@ -17,7 +17,7 @@ const criteriaWithAnswer11False = () => {
   return mapped;
 };
 
-export const DEAL_MIA_EC_11_FALSE = {
+export const MOCK_DEAL_MIA_EC_11_FALSE = {
   ...DEAL_MIA,
   eligibility: {
     ...DEAL_MIA.eligibility,

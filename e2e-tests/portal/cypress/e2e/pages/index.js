@@ -1,3 +1,5 @@
+import { landingPage } from './landingPage';
+
 module.exports = {
   login: require('./login'),
   signInLink: require('./login/sign-in-link'),
@@ -9,7 +11,7 @@ module.exports = {
   accessCodeExpired: require('./login/access-code-expired'),
   temporarilySuspendedAccessCode: require('./login/temporarily-suspended-access-code'),
   header: require('./header'),
-  landingPage: require('./landingPage'),
+  landingPage,
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),

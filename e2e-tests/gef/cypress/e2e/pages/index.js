@@ -1,6 +1,6 @@
 const { aboutExporter } = require('./about-exporter');
 const { aboutFacility } = require('./about-facility');
-const { aboutFacilityUnissued  } = require('./unissued-facilities-about-facility');
+const { aboutFacilityUnissued } = require('./unissued-facilities-about-facility');
 const { applicationActivities } = require('./application-activities');
 const { applicationDetails } = require('./application-details');
 const { applicationAmendments } = require('./application-amendments');
@@ -9,7 +9,7 @@ const { statusBanner } = require('./application-status-banner');
 const { applicationSubmission } = require('./application-submission');
 const { automaticCover } = require('./automatic-cover');
 const { bankReviewDate } = require('./bank-review-date');
-const { cloneGEFDeal } = require('./clone-deal');
+const { cloneDeal } = require('./clone-deal');
 const { companiesHouse } = require('./companies-house');
 const { contact } = require('./contact');
 const { coverStartDate } = require('./cover-start-date');
@@ -48,7 +48,7 @@ module.exports = {
   applicationSubmission,
   automaticCover,
   bankReviewDate,
-  cloneGEFDeal,
+  cloneDeal,
   companiesHouse,
   coverStartDate,
   dashboardPage,

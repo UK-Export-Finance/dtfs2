@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const dealReadyToSubmitToChecker = require('./dealReadyToSubmitToChecker');
+const { dealReadyToSubmitToChecker } = require('./dealReadyToSubmitToChecker');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 

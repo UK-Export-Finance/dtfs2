@@ -30,7 +30,7 @@ import checkDetails from './deal-cancellation/check-details';
 import { utilisationReportPages } from './utilisation-reports';
 import { autoCompleteField } from './autoCompleteField';
 
-export const pages = {
+export const tfmPages = {
   landingPage,
   dealsPage,
   caseDealPage,

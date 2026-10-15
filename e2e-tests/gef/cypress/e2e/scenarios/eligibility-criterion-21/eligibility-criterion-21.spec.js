@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import { mainHeading, form, continueButton, saveAndReturnButton, errorSummary } from '../../partials';
 import { automaticCover } from '../../pages/automatic-cover';
-import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
+import { ineligibleAutomaticCover } from '../../pages/ineligible-automatic-cover';
 import { manualInclusion } from '../../pages/manual-inclusion-questionnaire';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 

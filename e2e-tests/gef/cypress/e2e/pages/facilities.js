@@ -1,4 +1,4 @@
-export const facilities = {
+export const facilitiesPage = {
   hasBeenIssuedHeading: () => cy.get('[data-cy="has-been-issued-heading"]'),
   hasBeenIssuedError: () => cy.get('[data-cy="has-been-issued-error"]'),
   hasBeenIssuedRadioYesRadioButton: () => cy.get('[data-cy="has-been-issued-radio-yes"]'),

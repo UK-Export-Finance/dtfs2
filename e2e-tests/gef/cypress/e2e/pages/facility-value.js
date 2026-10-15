@@ -1,4 +1,4 @@
-export const facilityValue = {
+export const facilityValuePage = {
   hiddenFacilityType: () => cy.get('[data-cy="hidden-facility-type"]'),
   value: () => cy.get('[data-cy="value"]'),
   valueLabel: () => cy.get('[data-cy="value-label"]'),
