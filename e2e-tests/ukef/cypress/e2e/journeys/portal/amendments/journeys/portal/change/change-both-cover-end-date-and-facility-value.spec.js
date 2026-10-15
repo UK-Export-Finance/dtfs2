@@ -8,7 +8,7 @@ import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/p
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import { facilityValue } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValuePage } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import amendmentPage from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import submittedForChecking from '../../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import amendmentSummaryList from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
@@ -89,7 +89,7 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
+    cy.keyboardInput(facilityValuePage.facilityValue(), '10000');
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));

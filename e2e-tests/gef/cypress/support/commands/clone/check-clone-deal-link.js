@@ -1,4 +1,4 @@
-import { cloneDeal } from '../../../e2e/pages/clone-deal';
+import { cloneDealPage } from '../../../e2e/pages/clone-deal';
 
 /**
  * checkCloneDealLink
@@ -6,8 +6,9 @@ import { cloneDeal } from '../../../e2e/pages/clone-deal';
  * @param {string} dealName - name of the deal
  */
 export const checkCloneDealLink = (dealName) => {
-  cy.assertText(cloneDeal.cloneGefDealLink(), 'Clone');
-  cloneDeal
+  cy.assertText(cloneDealPage.cloneGefDealLink(), 'Clone');
+
+  cloneDealPage
     .cloneGefDealLink()
     .invoke('attr', 'aria-label')
     .then((label) => {

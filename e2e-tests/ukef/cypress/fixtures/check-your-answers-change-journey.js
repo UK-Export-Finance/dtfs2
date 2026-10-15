@@ -5,7 +5,7 @@ import { bankReviewDate } from '../../../gef/cypress/e2e/pages/amendments/bank-r
 import effectiveDate from '../../../gef/cypress/e2e/pages/amendments/effective-date';
 import whatDoYouNeedToChange from '../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import { facilityValue } from '../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValuePage } from '../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentPage from '../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import amendmentSummaryList from '../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
@@ -49,7 +49,7 @@ export const MOCK_JOURNEYS_WITH_FED = [
     page: 'facility-end-date',
     nextPage: 'facility-value',
     element: facilityEndDate,
-    nextElement: facilityValue,
+    nextElement: facilityValuePage,
     checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().facilityEndDateChangeLink(),
     fragment: 'facilityEndDate-day',
     nextPageHeading: 'New facility value',
@@ -62,13 +62,13 @@ export const MOCK_JOURNEYS_WITH_FED = [
     description: 'facility value',
     page: 'facility-value',
     nextPage: 'eligibility',
-    element: facilityValue,
+    element: facilityValuePage,
     nextElement: eligibility,
     checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().facilityValueChangeLink(),
     fragment: 'facilityValue',
     nextPageHeading: 'Eligibility',
     change: () => {
-      cy.keyboardInput(facilityValue.facilityValue(), NEW_FACILITY_VALUE);
+      cy.keyboardInput(facilityValuePage.facilityValue(), NEW_FACILITY_VALUE);
       cy.clickContinueButton();
     },
   },

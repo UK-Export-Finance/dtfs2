@@ -6,7 +6,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtu
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import { facilityValue } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValuePage } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentSummaryList from '../../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import submittedForChecking from '../../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
@@ -69,7 +69,7 @@ context('Amendments - change facility value - full journey', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
+    cy.keyboardInput(facilityValuePage.facilityValue(), '10000');
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));

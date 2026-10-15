@@ -1,5 +1,5 @@
 const MOCK_MIA_TASKS = require('../../../../fixtures/tasks-MIA');
-const pages = require('../../../pages');
+const { tfmPages } = require('../../../pages');
 
 const getGroup = (groupId) => MOCK_MIA_TASKS.find((g) => g.id === groupId);
 
@@ -19,20 +19,20 @@ const MIA_TASKS_STRUCTURE = {
 };
 
 const submitTaskInProgress = (groupId, taskId, userId) => {
-  const firstGroupFirstTask = pages.tasksPage.tasks.row(groupId, taskId);
+  const firstGroupFirstTask = tfmPages.tasksPage.tasks.row(groupId, taskId);
   firstGroupFirstTask.link().click();
 
-  pages.taskPage.assignedToSelectInput().select(userId);
-  pages.taskPage.taskStatusRadioInputInProgress().click();
+  tfmPages.taskPage.assignedToSelectInput().select(userId);
+  tfmPages.taskPage.taskStatusRadioInputInProgress().click();
   cy.clickSubmitButton();
 };
 
 const submitTaskComplete = (groupId, taskId, userId) => {
-  const firstGroupFirstTask = pages.tasksPage.tasks.row(groupId, taskId);
+  const firstGroupFirstTask = tfmPages.tasksPage.tasks.row(groupId, taskId);
   firstGroupFirstTask.link().click();
 
-  pages.taskPage.assignedToSelectInput().select(userId);
-  pages.taskPage.taskStatusRadioInputDone().click();
+  tfmPages.taskPage.assignedToSelectInput().select(userId);
+  tfmPages.taskPage.taskStatusRadioInputDone().click();
   cy.clickSubmitButton();
 };
 
@@ -46,21 +46,21 @@ const assertCannotClickPreviousTask = (currentGroupId, currentTaskId) => {
 
       const lastTaskIdInPreviousGroup = previousGroup.totalGroupTasks;
 
-      const lastTaskRow = pages.tasksPage.tasks.row(previousGroupId, lastTaskIdInPreviousGroup);
+      const lastTaskRow = tfmPages.tasksPage.tasks.row(previousGroupId, lastTaskIdInPreviousGroup);
 
       lastTaskRow.link().should('not.exist');
     }
   } else if (currentTaskId !== 1) {
     const previousTaskId = currentTaskId - 1;
 
-    const lastTaskRow = pages.tasksPage.tasks.row(currentGroupId, previousTaskId);
+    const lastTaskRow = tfmPages.tasksPage.tasks.row(currentGroupId, previousTaskId);
 
     lastTaskRow.link().should('not.exist');
   }
 };
 
 const assertCompleteTask = (groupId, taskId) => {
-  const row = pages.tasksPage.tasks.row(groupId, taskId);
+  const row = tfmPages.tasksPage.tasks.row(groupId, taskId);
 
   row.link().should('not.exist');
 
@@ -80,7 +80,7 @@ const assertTaskLinkDoesNotExist = (row) => {
 };
 
 const assertTaskStatusAndLink = (groupId, taskId, expectedStatus) => {
-  const taskRow = pages.tasksPage.tasks.row(groupId, taskId);
+  const taskRow = tfmPages.tasksPage.tasks.row(groupId, taskId);
 
   assertTaskStatus(taskRow, expectedStatus);
 
@@ -96,14 +96,14 @@ const assertNextTaskStatus = (currentGroupId, currentTaskId) => {
     // check the next task in the next group
     const nextGroupId = currentGroupId + 1;
 
-    const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
+    const nextGroupFirstTaskRow = tfmPages.tasksPage.tasks.row(nextGroupId, 1);
 
     cy.assertText(nextGroupFirstTaskRow.status(), 'To do');
   } else if (!isLastTaskInGroup && !isLastGroup) {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
 
-    const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
+    const nextTaskRow = tfmPages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
     cy.assertText(nextTaskRow.status(), 'To do');
   }
@@ -118,7 +118,7 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
     // check the next task in the next group
     const nextGroupId = currentGroupId + 1;
 
-    const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
+    const nextGroupFirstTaskRow = tfmPages.tasksPage.tasks.row(nextGroupId, 1);
 
     nextGroupFirstTaskRow.link().should('not.exist');
 
@@ -127,7 +127,7 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
 
-    const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
+    const nextTaskRow = tfmPages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
     nextTaskRow.link().should('not.exist');
 
@@ -138,13 +138,13 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
 const submitTaskCompleteAndAssertOtherTasks = (groupId, taskId, userId) => {
   submitTaskInProgress(groupId, taskId, userId);
 
-  pages.tasksPage.filterRadioAllTasks().click();
+  tfmPages.tasksPage.filterRadioAllTasks().click();
 
   assertCannotClickNextTask(groupId, taskId);
 
   submitTaskComplete(groupId, taskId, userId);
 
-  pages.tasksPage.filterRadioAllTasks().click();
+  tfmPages.tasksPage.filterRadioAllTasks().click();
 
   assertCompleteTask(groupId, taskId);
 

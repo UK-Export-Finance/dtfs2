@@ -1,4 +1,4 @@
-const firstSubmission = require('./deal-first-submission');
+const { firstSubmission } = require('./deal-first-submission');
 const CONSTANTS = require('../../../../fixtures/constants');
 
 const date = new Date();
