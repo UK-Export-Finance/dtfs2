@@ -1,4 +1,4 @@
-const generateValidationErrors = (fieldId, errorText, count, errors = { errorList: {}, summary: [] }) => {
+export const generateValidationErrors = (fieldId, errorText, count, errors = { errorList: {}, summary: [] }) => {
   let summary = [
     {
       text: errorText,
@@ -29,8 +29,4 @@ const generateValidationErrors = (fieldId, errorText, count, errors = { errorLis
   };
 
   return result;
-};
-
-module.exports = {
-  generateValidationErrors,
 };

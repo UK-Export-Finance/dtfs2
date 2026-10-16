@@ -294,6 +294,7 @@ router.post(
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       }
+
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
           fieldName: error.field,
@@ -309,6 +310,7 @@ router.post(
           summaryHref: `#criterion-group-${error.file.fieldname}`,
         };
       }
+
       return next();
     });
   },
@@ -384,6 +386,7 @@ router.post(
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       }
+
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
           fieldName: error.field,
@@ -399,6 +402,7 @@ router.post(
           summaryHref: `#criterion-group-${error.file.fieldname}`,
         };
       }
+
       return next();
     });
   },

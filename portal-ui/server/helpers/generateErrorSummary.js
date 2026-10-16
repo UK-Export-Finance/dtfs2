@@ -40,8 +40,14 @@ const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
   const filteredValidationErrorListArray = Object.entries(validationErrors.errorList)
     .filter(([, value]) => value.text)
     .sort(([, aValue], [, bValue]) => {
-      if (Number(aValue.order) < Number(bValue.order)) return -1;
-      if (Number(aValue.order) > Number(bValue.order)) return 1;
+      if (Number(aValue.order) < Number(bValue.order)) {
+        return -1;
+      }
+
+      if (Number(aValue.order) > Number(bValue.order)) {
+        return 1;
+      }
+
       return 0;
     });
   // note: [,value] used to prevent 'no unused vars' eslint warning

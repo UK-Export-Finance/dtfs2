@@ -13,6 +13,7 @@ const validRolesForAccessingAllBanks = [ADMIN, READ_ONLY];
  */
 const userCanAccessAllBanks = (user) => {
   const userBankId = user?.bank?.id;
+
   if (userBankId !== ALL_BANKS_ID) {
     return false;
   }
@@ -32,9 +33,11 @@ const validateBank = async (req, res, next) => {
 
   // check if the user has access to the resource
   const response = await api.validateBank(dealId, bankId, token);
+
   if (response.isValid) {
     return next();
   }
+
   return res.redirect('/not-found');
 };
 

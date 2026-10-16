@@ -31,7 +31,9 @@ const shouldReturnRequiredValidation = (fields, fieldValues) => {
   if (fieldValues.viewedPreviewPage) {
     return true;
   }
+
   const totalFieldValues = Object.keys(fieldValues).filter((fieldName) => allFields.includes(fieldName));
+
   if (totalFieldValues.length > 0) {
     return true;
   }
@@ -103,6 +105,7 @@ const pageSpecificValidationErrors = (validationErrors, fields, submittedFields)
       if (submittedFields.status === 'Incomplete') {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
+
       return mapAlwaysShowErrorFields(validationErrors, fields);
     }
 
@@ -110,6 +113,7 @@ const pageSpecificValidationErrors = (validationErrors, fields, submittedFields)
       if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
+
       return mapRequiredValidationErrors(validationErrors, fields);
     }
   }

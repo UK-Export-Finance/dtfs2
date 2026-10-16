@@ -70,6 +70,7 @@ const virusScanUpload = async (req, res, next) => {
         clamAVStream
           .on('scan-complete', (result) => {
             const { isInfected, viruses } = result;
+
             if (isInfected !== null) {
               console.error(`Scan complete; contents infected: ${isInfected} - ${viruses}`);
               resolve({ isInfected, viruses });
@@ -108,6 +109,7 @@ const virusScanUpload = async (req, res, next) => {
       return next();
     }
   }
+
   return next();
 };
 
