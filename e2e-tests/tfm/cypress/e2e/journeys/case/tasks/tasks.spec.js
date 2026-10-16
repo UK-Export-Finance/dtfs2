@@ -1,7 +1,7 @@
 import { MOCK_DEAL_AIN, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 

@@ -10,7 +10,7 @@ const cookiesToPreserve = [
  * Preserving the cookie, eliminates repeated logins.
  * Thus reduces execution time.
  */
-export default () => {
+export const saveSession = () => {
   cookiesToPreserve.forEach((name) => {
     cy.getCookie(name, { log: false })
       .should(Cypress._.noop)

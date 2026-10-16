@@ -1,4 +1,4 @@
-const manualInclusion = {
+export const manualInclusion = {
   url: (id) => `/gef/application-details/${id}/supporting-information/document/manual-inclusion-questionnaire`,
   templateLinkDocx: () => cy.get('[data-cy="template-link-docx"]'),
   templateLinkPdf: () => cy.get('[data-cy="template-link-pdf"]'),
@@ -6,5 +6,3 @@ const manualInclusion = {
   uploadSuccess: (fileName) => cy.get('.moj-multi-file-upload__success').contains(fileName),
   uploadFailure: (fileName) => cy.get('.moj-multi-file-upload__error').contains(fileName),
 };
-
-export default manualInclusion;

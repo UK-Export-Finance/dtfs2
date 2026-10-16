@@ -1,8 +1,8 @@
 import relative from '../relativeURL';
 import { form, mainHeading } from '../partials';
-import cloneGEFDeal from '../pages/clone-deal';
-import nameApplication from '../pages/name-application';
-import mandatoryCriteria from '../pages/mandatory-criteria';
+import { cloneDealPage } from '../pages/clone-deal';
+import { nameApplication } from '../pages/name-application';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Clone GEF (AIN) deal - Validation', () => {
@@ -27,7 +27,7 @@ context('Clone GEF (AIN) deal - Validation', () => {
     });
 
     it('should show show a not eligible error when the mandatory criteria is false', () => {
-      cloneGEFDeal.cloneGefDealLink().click();
+      cloneDealPage.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.falseRadio().click();
       form().submit();
@@ -36,7 +36,7 @@ context('Clone GEF (AIN) deal - Validation', () => {
     });
 
     it('should show an error when the bank internal reference is empty', () => {
-      cloneGEFDeal.cloneGefDealLink().click();
+      cloneDealPage.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       form().submit();

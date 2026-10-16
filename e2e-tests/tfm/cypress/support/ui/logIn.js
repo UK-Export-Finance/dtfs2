@@ -1,6 +1,6 @@
-import pages from '../../e2e/pages';
+import { pages } from '../../e2e/pages';
 
-export default (opts) => {
+export const login = (opts) => {
   const { username, password } = opts;
 
   pages.landingPage.visit();

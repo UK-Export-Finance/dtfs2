@@ -9,4 +9,4 @@ const facilityEndDate = {
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
-module.exports = facilityEndDate;
+module.exports = { facilityEndDate };

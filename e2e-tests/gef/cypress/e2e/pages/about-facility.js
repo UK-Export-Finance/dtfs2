@@ -1,4 +1,4 @@
-const aboutFacility = {
+export const aboutFacility = {
   facilityName: () => cy.get('[data-cy="facility-name"]'),
   facilityNameLabel: () => cy.get('[data-cy="facility-name-label"]'),
   facilityNameError: () => cy.get('[data-cy="facility-name-error"]'),
@@ -20,5 +20,3 @@ const aboutFacility = {
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="is-using-facility-end-date-no"]'),
 };
-
-export default aboutFacility;

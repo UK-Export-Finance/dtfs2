@@ -4,8 +4,6 @@
  * @param {object} selector: Cypress selector
  * @param {number} expectedLength: Expected amount
  */
-const assertLength = (selector, expectedLength) => {
+export const assertLength = (selector, expectedLength) => {
   selector.should('have.length', expectedLength);
 };
-
-export default assertLength;

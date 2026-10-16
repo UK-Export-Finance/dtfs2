@@ -3,7 +3,7 @@
  * @param {number} splitIndex - The index of the URL segment containing the deal ID after splitting the URL by '/'
  * @returns {string} The deal ID extracted from the URL
  */
-const getDealIdFromUrl = (splitIndex) => {
+export const getDealIdFromUrl = (splitIndex) => {
   cy.url().then((url) => {
     const urlSplit = url.split('/');
 
@@ -12,5 +12,3 @@ const getDealIdFromUrl = (splitIndex) => {
     return dealId;
   });
 };
-
-export default getDealIdFromUrl;

@@ -13,7 +13,7 @@ const facilityPage = require('../../../e2e/pages/facilityPage');
  * @param {boolean} [options.changeFacilityValue = false] - whether to change the facility value
  * @param {Date} [options.newCoverEndDate = today] - the new cover end date
  */
-const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today.date } = {}) => {
+export const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today.date } = {}) => {
   facilityPage.facilityTabAmendments().click();
 
   if (startNewAmendment) {
@@ -63,5 +63,3 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
 
   cy.url().should('contain', 'is-using-facility-end-date');
 };
-
-export default navigateToIsUsingFacilityEndDatePage;

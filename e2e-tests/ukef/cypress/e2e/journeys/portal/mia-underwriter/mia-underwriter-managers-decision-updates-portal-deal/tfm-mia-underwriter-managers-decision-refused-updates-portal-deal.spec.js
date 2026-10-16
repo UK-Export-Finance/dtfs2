@@ -1,11 +1,12 @@
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
+import portalPartials from '../../../../../../../portal/cypress/e2e/partials';
+import { tfmPages } from '../../../../../../../tfm/cypress/e2e/pages';
 import tfmPartials from '../../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import MOCK_DEAL_READY_TO_SUBMIT from '../../test-data/AIN-deal/dealReadyToSubmit';
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
+import MOCK_DEAL_READY_TO_SUBMIT from '../../test-data/MIA-deal/dealReadyToSubmit';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -17,7 +18,7 @@ context('Portal to TFM deal submission', () => {
   before(() => {
     cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
       [deal] = insertedDeals;
-      dealId = deal._id;
+      dealId = insertedDeals[0]._id;
 
       const { mockFacilities } = deal;
 
@@ -37,7 +38,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearSessionCookies();
   });
 
-  it('Portal AIN deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
+  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Refused` decision, Portal deal status is updated, comments/reason for refusal display', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -63,7 +64,7 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
     //---------------------------------------------------------------
-    // user login to TFM
+    // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
@@ -71,18 +72,48 @@ context('Portal to TFM deal submission', () => {
 
     cy.forceVisit(TFM_URL);
 
-    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
     const row = tfmPages.dealsPage.dealsTable.row(dealId);
     row.dealLink().click();
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/deal`);
 
-    tfmPartials.caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', `${TFM_URL}/case/${dealId}/tasks`);
+    //---------------------------------------------------------------
+    // Underwriter Manager submits a decision
+    //---------------------------------------------------------------
+    tfmPartials.caseSubNavigation.underwritingLink().click();
+    tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
-    tfmPages.tasksPage.filterRadioAllTasks().click();
+    const MOCK_COMMENTS = 'e2e refused comment';
 
-    const TOTAL_AIN_TASKS = 2;
-    tfmPages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
+    tfmPages.managersDecisionPage.decisionRadioInputDecline().click();
+    cy.keyboardInput(tfmPages.managersDecisionPage.commentsInputDecline(), MOCK_COMMENTS);
+    cy.clickSubmitButton();
+
+    //---------------------------------------------------------------
+    // Go back to Portal
+    //---------------------------------------------------------------
+    cy.clearCookie('dtfs-session');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
+    cy.login(BANK1_CHECKER1);
+    portalPages.contract.visit(deal);
+
+    //---------------------------------------------------------------
+    // Portal deal status should be updated
+    //---------------------------------------------------------------
+    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
+
+    cy.assertText(portalPages.contract.status(), 'Rejected by UKEF');
+
+    //---------------------------------------------------------------
+    // Portal deal comments/conditions should be displayed
+    //---------------------------------------------------------------
+    portalPages.contract.commentsTab().click();
+
+    cy.assertText(portalPartials.ukefComments.comments.title(), 'Reason for rejection:');
+
+    cy.assertText(portalPartials.ukefComments.comments.text(), MOCK_COMMENTS);
   });
 });

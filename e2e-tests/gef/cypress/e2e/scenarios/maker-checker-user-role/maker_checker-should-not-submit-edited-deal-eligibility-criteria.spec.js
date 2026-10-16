@@ -1,9 +1,9 @@
 import relative from '../../relativeURL';
 import { submitButton } from '../../partials';
-import applicationDetails from '../../pages/application-details';
-import applicationSubmission from '../../pages/application-submission';
+import { applicationDetails } from '../../pages/application-details';
+import { applicationSubmission } from '../../pages/application-submission';
 import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import applicationPreview from '../../pages/application-preview';
+import { applicationPreview } from '../../pages/application-preview';
 
 context('Create application as MAKER, edit as MAKER_CHECKER, submit application to UKEF as MAKER_CHECKER', () => {
   const dealIds = [];

@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import pages from '../../pages';
+import { pages } from '../../pages';
 
 context('TFM footer', () => {
   it('Footer is visible and contains specific links', () => {

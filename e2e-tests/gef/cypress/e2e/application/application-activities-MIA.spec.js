@@ -1,16 +1,16 @@
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
-import applicationActivities from '../pages/application-activities';
+import { applicationActivities } from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { mainHeading } from '../partials';
-import applicationDetails from '../pages/application-details';
-import automaticCover from '../pages/automatic-cover';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
-import securityDetails from '../pages/security-details';
-import applicationSubmission from '../pages/application-submission';
-import submitToUkef from '../pages/submit-to-ukef';
-import statusBanner from '../pages/application-status-banner';
+import { applicationDetails } from '../pages/application-details';
+import { automaticCover } from '../pages/automatic-cover';
+import { manualInclusion } from '../pages/manual-inclusion-questionnaire';
+import { securityDetails } from '../pages/security-details';
+import { applicationSubmission } from '../pages/application-submission';
+import { submitToUkef } from '../pages/submit-to-ukef';
+import { statusBanner } from '../pages/application-status-banner';
 import { toTitleCase } from '../../fixtures/helpers';
 
 let deal;

@@ -20,7 +20,7 @@ import leadUnderwriterPage from './underwriting/leadUnderwriterPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 import underwritingPage from './underwriting/underwritingPage';
-import facilitiesPage from './facilitiesPage';
+import { facilitiesPage } from './facilitiesPage';
 import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
@@ -30,7 +30,7 @@ import checkDetails from './deal-cancellation/check-details';
 import { utilisationReportPages } from './utilisation-reports';
 import { autoCompleteField } from './autoCompleteField';
 
-export default {
+export const tfmPages = {
   landingPage,
   dealsPage,
   caseDealPage,

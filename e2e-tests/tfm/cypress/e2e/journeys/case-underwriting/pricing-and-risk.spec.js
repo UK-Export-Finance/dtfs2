@@ -1,7 +1,7 @@
 import { CREDIT_RATING } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import { errorSummaryItems, caseSubNavigation } from '../../partials';
-import pages from '../../pages';
+import { pages } from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { assertAutocompleteInput } from '../../common-tests/assertAutocompleteInput';

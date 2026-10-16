@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { mainHeading, backLink } from '../partials';
-import ineligibleGef from '../pages/ineligible-gef';
+import { ineligibleGef } from '../pages/ineligible-gef';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Ineligible GEF Page', () => {

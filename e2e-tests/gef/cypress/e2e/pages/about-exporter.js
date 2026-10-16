@@ -1,4 +1,4 @@
-const aboutExporter = {
+export const aboutExporter = {
   industryTitle: () => cy.get('[data-cy="industry-title"]'),
   industry: () => cy.get('[data-cy="industry"]'),
   industries: () => cy.get('[data-cy="industries"]'),
@@ -14,5 +14,3 @@ const aboutExporter = {
   isFinancingIncreasingError: () => cy.get('[data-cy="is-financing-increasing-error"]'),
   doneButton: () => cy.get('[data-cy="done-button"]'),
 };
-
-export default aboutExporter;

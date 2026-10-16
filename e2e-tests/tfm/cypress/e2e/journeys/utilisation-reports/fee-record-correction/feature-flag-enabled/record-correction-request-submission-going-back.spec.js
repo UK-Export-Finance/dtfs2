@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import pages from '../../../../pages';
+import { pages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
@@ -16,7 +16,7 @@ const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withSta
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
 
-const { utilisationReportPageNotFoundPage } = pages;
+const { pageNotFoundPage } = pages;
 
 const additionalInfoUserInput = 'Some additional info';
 
@@ -58,13 +58,10 @@ context('Pressing the back button after a record correction request is submitted
 
   it('should show the "Page not found" page when pressing the browser back button after a record correction request is submitted', () => {
     cy.assertText(mainHeading(), 'Page not found');
-    cy.assertText(
-      utilisationReportPageNotFoundPage.reason(),
-      'The record correction request has been sent to the bank. You cannot make any changes to the request',
-    );
-    cy.assertText(utilisationReportPageNotFoundPage.returnToPremiumPaymentsButton(), 'Return to premium payments');
+    cy.assertText(pageNotFoundPage.reason(), 'The record correction request has been sent to the bank. You cannot make any changes to the request');
+    cy.assertText(pageNotFoundPage.returnToPremiumPaymentsButton(), 'Return to premium payments');
 
-    utilisationReportPageNotFoundPage.returnToPremiumPaymentsButton().click();
+    pageNotFoundPage.returnToPremiumPaymentsButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
   });

@@ -12,5 +12,6 @@ export const getMonthlyReportPeriodFromIsoSubmissionMonth = (submissionMonth) =>
     month: getOneIndexedMonth(reportPeriodDate),
     year: reportPeriodDate.getFullYear(),
   };
+
   return { start: reportPeriodMonthAndYear, end: reportPeriodMonthAndYear };
 };

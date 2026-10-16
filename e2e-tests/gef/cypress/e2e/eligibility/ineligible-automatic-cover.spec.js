@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { mainHeading, continueButton } from '../partials';
-import ineligibleAutomaticCover from '../pages/ineligible-automatic-cover';
+import { ineligibleAutomaticCover } from '../pages/ineligible-automatic-cover';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;

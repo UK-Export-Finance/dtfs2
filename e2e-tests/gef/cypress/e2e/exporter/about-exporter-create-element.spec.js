@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import aboutExporter from '../pages/about-exporter';
+import { aboutExporter } from '../pages/about-exporter';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
 

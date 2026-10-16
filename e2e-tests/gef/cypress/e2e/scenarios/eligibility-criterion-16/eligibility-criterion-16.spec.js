@@ -1,10 +1,10 @@
 import relative from '../../relativeURL';
 import { mainHeading, form, continueButton, saveAndReturnButton } from '../../partials';
-import automaticCover from '../../pages/automatic-cover';
-import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
-import manualInclusion from '../../pages/manual-inclusion-questionnaire';
-import securityDetails from '../../pages/security-details';
-import applicationDetails from '../../pages/application-details';
+import { automaticCover } from '../../pages/automatic-cover';
+import { ineligibleAutomaticCover } from '../../pages/ineligible-automatic-cover';
+import { manualInclusion } from '../../pages/manual-inclusion-questionnaire';
+import { securityDetails } from '../../pages/security-details';
+import { applicationDetails } from '../../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;

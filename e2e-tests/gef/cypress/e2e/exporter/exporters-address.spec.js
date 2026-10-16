@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { backLink, errorSummary, headingCaption, mainHeading } from '../partials';
-import exportersAddress from '../pages/exporters-address';
+import { exportersAddress } from '../pages/exporters-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { POSTCODE } from '../../fixtures/constants';
 

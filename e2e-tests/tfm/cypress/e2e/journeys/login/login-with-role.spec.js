@@ -1,4 +1,4 @@
-import pages from '../../pages';
+import { pages } from '../../pages';
 import USERS from '../../../fixtures/users';
 import { PDC_TEAMS, TFM_USER_TEAMS } from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';

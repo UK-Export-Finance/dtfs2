@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import { errorSummary, header } from '../../partials';
-import pages from '../../pages';
+import { pages } from '../../pages';
 
 context('User submit feedback on TFM', () => {
   it('feedback should contain correct components and text', () => {

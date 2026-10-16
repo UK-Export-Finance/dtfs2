@@ -1,4 +1,4 @@
-import pages from '../../../../e2e/pages';
+import { pages } from '../../../../e2e/pages';
 
 const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
 
@@ -15,7 +15,7 @@ const { table } = recordCorrectionLogContent;
  * @param {string} oldRecord - provided string for the old record with the values from the existing fee record
  * @param {string} status - provided string with the status of the fee record correction
  */
-const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, correctRecord, oldRecord, status }) => {
+export const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, correctRecord, oldRecord, status }) => {
   const correctionId = feeRecord.corrections[0].id;
   const row = table.row(correctionId);
 
@@ -26,5 +26,3 @@ const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, 
   cy.assertText(row.oldRecord(), oldRecord);
   cy.assertText(row.status(), status);
 };
-
-export default checkRecordCorrectionLogTableRowValues;

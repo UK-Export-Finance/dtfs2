@@ -1,9 +1,9 @@
-const firstSubmission = require('./deal-first-submission');
+const { firstSubmission } = require('./deal-first-submission');
 const CONSTANTS = require('../../../../fixtures/constants');
 
 const date = new Date();
 
-const deal = {
+export const secondSubmission = {
   ...firstSubmission,
   previousStatus: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   details: {
@@ -11,5 +11,3 @@ const deal = {
     submissionDate: date.valueOf(),
   },
 };
-
-export default deal;

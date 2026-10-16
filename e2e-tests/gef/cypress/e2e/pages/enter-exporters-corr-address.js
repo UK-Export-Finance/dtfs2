@@ -1,4 +1,4 @@
-const enterExportersCorAddress = {
+export const enterExportersCorrAddress = {
   addressLine1: () => cy.get('[data-cy="address-line-1"]'),
   addressLine2: () => cy.get('[data-cy="address-line-2"]'),
   addressLine3: () => cy.get('[data-cy="address-line-3"]'),
@@ -7,5 +7,3 @@ const enterExportersCorAddress = {
   locality: () => cy.get('[data-cy="locality"]'),
   postcode: () => cy.get('[data-cy="postcode"]'),
 };
-
-export default enterExportersCorAddress;

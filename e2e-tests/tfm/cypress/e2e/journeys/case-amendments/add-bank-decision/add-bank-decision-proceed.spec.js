@@ -5,7 +5,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
