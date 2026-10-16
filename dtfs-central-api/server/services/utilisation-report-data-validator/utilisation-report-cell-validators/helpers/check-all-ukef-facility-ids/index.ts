@@ -15,9 +15,15 @@ export const checkAllUkefFacilityIds = async (csvData: UtilisationReportCsvRowDa
   const facilityIds = csvData
     .map((row) => row[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]?.value)
     .filter((facilityId): facilityId is string => Boolean(facilityId));
+
   const uniqueFacilityIds = [...new Set(facilityIds)];
 
-  // If there are no facility IDs, return the original CSV data
+  /**
+   * If there are no ukefFacilityIds in the CSV data,
+   * as they were not provided,
+   * return the original CSV data without calling the TFM facilities repository.
+   * as we do not need to check for matches if there are no facility IDs to check.
+   */
   if (!uniqueFacilityIds.length) {
     return csvData;
   }

@@ -11,10 +11,26 @@ describe('checkAllUkefFacilityIds', () => {
 
   describe('when there are facility IDs in the CSV data', () => {
     const csvData: UtilisationReportCsvRowData[] = [
-      { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '12345678' } },
-      { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '87654321' } },
-      { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: null } },
-      { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '12345678' } },
+      {
+        [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+          value: '12345678',
+        },
+      },
+      {
+        [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+          value: '87654321',
+        },
+      },
+      {
+        [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+          value: null,
+        },
+      },
+      {
+        [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+          value: '12345678',
+        },
+      },
     ];
 
     beforeEach(() => {
@@ -36,10 +52,29 @@ describe('checkAllUkefFacilityIds', () => {
 
       // Assert
       const expectedResult = [
-        { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '12345678', ukefFacilityIdMatches: true } },
-        { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '87654321', ukefFacilityIdMatches: false } },
-        { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: null } },
-        { [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: '12345678', ukefFacilityIdMatches: true } },
+        {
+          [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+            value: '12345678',
+            ukefFacilityIdMatches: true,
+          },
+        },
+        {
+          [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+            value: '87654321',
+            ukefFacilityIdMatches: false,
+          },
+        },
+        {
+          [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+            value: null,
+          },
+        },
+        {
+          [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: {
+            value: '12345678',
+            ukefFacilityIdMatches: true,
+          },
+        },
       ];
 
       expect(result).toEqual(expectedResult);

@@ -18,6 +18,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
+import { mapMatchingUkefFacilityIds } from '../../helpers/map-matching-ukef-facility-ids';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
 export class TfmFacilitiesRepo {
@@ -503,7 +504,13 @@ export class TfmFacilitiesRepo {
 
     const collection = await this.getCollection();
 
-    const docs = await collection
+    /**
+     * projection is used to only return the ukefFacilityId field from the matching documents
+     * 'facilitySnapshot.ukefFacilityId' is set to 1 so its included in the results
+     * '_id' is set to 0 so it is excluded from the results
+     * This is done to reduce the amount of data returned from the database, as we only need the ukefFacilityId field to determine if a matching GEF facility exists.
+     */
+    const matchingGefFacilityIdDocuments = await collection
       .find(
         {
           'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds },
@@ -518,17 +525,8 @@ export class TfmFacilitiesRepo {
       )
       .toArray();
 
-    // Create a set of UKEF facility IDs that have matching GEF facilities
-    const matchedIds = new Set(docs.map((doc) => doc.facilitySnapshot.ukefFacilityId));
-
-    // Create a record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists
-    return ukefFacilityIds.reduce<Record<string, boolean>>((acc, id) => {
-      const accumulated = acc;
-
-      accumulated[id] = matchedIds.has(id);
-
-      return accumulated;
-    }, {});
+    // Map the matching UKEF facility IDs to a record indicating whether a matching GEF facility exists for each UKEF facility ID.
+    return mapMatchingUkefFacilityIds(matchingGefFacilityIdDocuments, ukefFacilityIds);
   }
 
   /**

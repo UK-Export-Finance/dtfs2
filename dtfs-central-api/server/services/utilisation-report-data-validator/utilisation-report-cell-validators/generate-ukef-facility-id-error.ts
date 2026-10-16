@@ -31,7 +31,7 @@ export const generateUkefFacilityIdError = (
     };
   }
 
-  if (facilityIdCellData.ukefFacilityIdMatches === false) {
+  if (!facilityIdCellData.ukefFacilityIdMatches) {
     return {
       errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
       column: facilityIdCellData?.column,
