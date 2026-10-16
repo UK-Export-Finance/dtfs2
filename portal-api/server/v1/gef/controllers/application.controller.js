@@ -54,9 +54,11 @@ exports.create = async (req, res) => {
     }
 
     const response = await api.findLatestGefMandatoryCriteria();
+
     if (response?.data?.version) {
       newDeal.mandatoryVersionId = response.data.version;
     }
+
     const auditDetails = generatePortalAuditDetails(req.user._id);
     newDeal.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
@@ -112,6 +114,7 @@ exports.getById = async (req, res) => {
     if (doc.eligibility) {
       doc.eligibility.status = eligibilityCriteriaStatus(doc.eligibility.criteria);
     }
+
     return res.status(200).send(doc);
   }
 
@@ -139,9 +142,11 @@ exports.getStatus = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params;
+
   if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -150,12 +155,14 @@ exports.update = async (req, res) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   });
   const validateErrs = validateApplicationReferences(update);
+
   if (validateErrs) {
     return res.status(422).send(validateErrs);
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId
   const updateAction = {};
+
   if (update.editorId) {
     updateAction.$addToSet = { editedBy: update.editorId };
     delete update.editorId;
@@ -173,6 +180,7 @@ exports.update = async (req, res) => {
     returnDocument: 'after',
   });
   let response;
+
   if (result.value) {
     response = result.value;
   }
@@ -182,6 +190,7 @@ exports.update = async (req, res) => {
 
 exports.updateSupportingInformation = async (req, res) => {
   const { id: dealId } = req.params;
+
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
@@ -203,6 +212,7 @@ exports.updateSupportingInformation = async (req, res) => {
   );
 
   let response;
+
   if (result.value) {
     response = result.value;
   }
@@ -250,6 +260,7 @@ exports.changeStatus = async (req, res) => {
 
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
     const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
+
     if (!existingApplication) {
       throw new DealNotFoundError(dealId);
     }
@@ -299,9 +310,11 @@ exports.changeStatus = async (req, res) => {
     if (error instanceof InvalidDealIdError) {
       return res.status(400).send({ status: 400, message: error.message });
     }
+
     if (error instanceof DealNotFoundError) {
       return res.status(404).send({ status: 404, message: error.message });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 };
@@ -360,6 +373,7 @@ const dealsFilters = (user, filters = []) => {
   }
 
   let result = {};
+
   if (amendedFilters.length === 1) {
     [result] = amendedFilters;
   } else if (amendedFilters.length > 1) {

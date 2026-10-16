@@ -63,6 +63,7 @@ class SignInLinkService {
     if (!this.#doesUserHaveSavedSignInTokens(user)) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
+
     const databaseSignInTokens = [...user.signInTokens];
 
     const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) =>

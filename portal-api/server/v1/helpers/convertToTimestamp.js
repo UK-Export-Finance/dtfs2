@@ -12,6 +12,7 @@ const convertToTimestamp = (time) => {
 
     return new Date(utc);
   }
+
   return null;
 };
 

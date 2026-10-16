@@ -15,6 +15,7 @@ const isValidFormat = (str) => {
   if (!validFormat) {
     return false;
   }
+
   return true;
 };
 
@@ -22,15 +23,19 @@ const isValid = (str) => {
   if (!hasValue(str)) {
     return false;
   }
+
   if (!isNumeric(Number(str))) {
     return false;
   }
+
   if (!isValidLength(str)) {
     return false;
   }
+
   if (!isValidFormat(str)) {
     return false;
   }
+
   return true;
 };
 

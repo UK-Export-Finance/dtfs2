@@ -65,6 +65,7 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
+
   if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.ELIGIBILITY })) {
     return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
@@ -99,6 +100,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
     }
+
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

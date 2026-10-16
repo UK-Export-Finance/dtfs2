@@ -610,6 +610,7 @@ router.route('/files').post(
       if (!error) {
         return next();
       }
+
       console.error('Unable to upload file %o', error);
       return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
