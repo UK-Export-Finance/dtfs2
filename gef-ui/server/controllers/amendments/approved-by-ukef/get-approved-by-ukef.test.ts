@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-const getAmendmentMock = jest.fn();
-
 import { format, fromUnixTime } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
@@ -10,8 +7,10 @@ import { createMocks } from 'node-mocks-http';
 import { getApprovedByUkef, GetApprovedByUkefRequest } from './get-approved-by-ukef.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 
+const getAmendmentMock = jest.fn();
+
 jest.mock('../../../services/api', () => ({
-  getAmendment: getAmendmentMock,
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
 }));
 
 const dealId = 'dealId';
