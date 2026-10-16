@@ -1,10 +1,10 @@
-import { GEF_CRITERION } from '@ukef/types';
+import { GefCriterion } from '@ukef/types';
 import { generateMandatoryCriteria } from './generate-mandatory-criteria';
 
 describe('generateMandatoryCriteria', () => {
   it('should return single test criterion', () => {
     // Arrange
-    const criteria: GEF_CRITERION[] = [
+    const criteria: GefCriterion[] = [
       {
         id: '1',
         body: 'test',
@@ -20,7 +20,7 @@ describe('generateMandatoryCriteria', () => {
 
   it('should return multiple criteria with HTML stripped out', () => {
     // Arrange
-    const criteria: GEF_CRITERION[] = [
+    const criteria: GefCriterion[] = [
       {
         id: '1',
         body: 'test one',
@@ -55,7 +55,7 @@ describe('generateMandatoryCriteria', () => {
 
   it('should return multiple criteria without HTML stripped out', () => {
     // Arrange
-    const criteria: GEF_CRITERION[] = [
+    const criteria: GefCriterion[] = [
       {
         id: '1',
         body: 'test one',
