@@ -15,7 +15,7 @@ const { rules: prettierConfigRules } = prettierConfig;
 const js = require('@eslint/js');
 
 module.exports = defineConfig([
-  {,
+  {
     ignores: ['**/coverage/', '**/build/', '**/.cache/', '**/dist/', '**/node_modules/', '**/package*.json'],
   },
 
