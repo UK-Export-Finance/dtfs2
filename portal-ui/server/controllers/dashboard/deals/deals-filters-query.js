@@ -57,7 +57,7 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
 
   const filtered = [];
 
-  for (const [key, value] of Object.entries(dashboardFilters)) {
+  for (const value of Object.values(dashboardFilters)) {
     if (!Object.prototype.hasOwnProperty.call(value, '_csrf')) {
       filtered.push(value);
     }
