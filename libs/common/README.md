@@ -37,7 +37,12 @@ without depending on the current working directory. This preload is also used
 by the common TypeORM commands.
 
 The Cypress task loader also preloads this mapping before compiling common
-TypeScript sources with decorator metadata.
+TypeScript sources with decorator metadata. Browser support files and specs use
+the shared `e2e-tests/support/webpack-preprocessor.js`, registered by all four
+Cypress projects. It adds `webpackAliases` to Cypress's batteries-included
+Webpack configuration; the Node task loader alone cannot resolve browser imports.
+The browser preprocessor explicitly uses `ts-loader` with common's TypeScript
+configuration to preserve decorator metadata when bundling shared sources.
 
 Jest configurations use `moduleNameMapper` from
 [`src/module-aliases.cjs`](./src/module-aliases.cjs), including API-test
