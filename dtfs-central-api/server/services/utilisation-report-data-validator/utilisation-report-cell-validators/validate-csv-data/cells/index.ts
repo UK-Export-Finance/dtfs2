@@ -11,6 +11,7 @@ import {
   generateFeesPaidForThePeriodError,
   generateFeesPaidForThePeriodCurrencyError,
 } from '../..';
+import { checkAllUkefFacilityIds } from '../../helpers/check-all-ukef-facility-ids';
 
 /**
  * validateCells
@@ -20,6 +21,8 @@ import {
  * @returns An array of errors if there are any
  */
 export const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHeaders: string[]): Promise<UtilisationReportDataValidationError[]> => {
+  const rowsWithFacilityMatches: UtilisationReportCsvRowData[] = await checkAllUkefFacilityIds(csvData);
+
   const cellValidations = [
     { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, errorGenerator: generateUkefFacilityIdError },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
@@ -43,23 +46,20 @@ export const validateCells = async (csvData: UtilisationReportCsvRowData[], avai
    * maps through the csv data
    * maps through cellValidations and generates errors for each validation
    * then maps through rowValidations and generates errors for each validation
-   * resolves the promises and returns the errors
    */
-  const errors = await Promise.all(
-    csvData.map(async (csvRow) => {
-      const cellErrorPromises = cellValidations.map(({ header, errorGenerator }) => {
-        if (!availableHeaders.includes(header)) {
-          return null;
-        }
+  const errors = rowsWithFacilityMatches.map((csvRow) => {
+    const cellErrorPromises = cellValidations.map(({ header, errorGenerator }) => {
+      if (!availableHeaders.includes(header)) {
+        return null;
+      }
 
-        return errorGenerator(csvRow[header], csvRow.exporter?.value);
-      });
+      return errorGenerator(csvRow[header], csvRow.exporter?.value);
+    });
 
-      const rowErrorPromises = rowValidations.map((errorGenerator) => errorGenerator(csvRow));
+    const rowErrorPromises = rowValidations.map((errorGenerator) => errorGenerator(csvRow));
 
-      return Promise.all([...cellErrorPromises, ...rowErrorPromises]);
-    }),
-  );
+    return [...cellErrorPromises, ...rowErrorPromises];
+  });
 
   // Filter out null errors so that we don't return any null elements in the response array
   const filteredErrors = errors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);

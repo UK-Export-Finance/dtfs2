@@ -490,6 +490,48 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Checks whether or not GEF facilities exist which have matching UKEF facility IDs
+   * All the reports UKEF facility IDs are checked in a single query to the database,
+   * and the results are returned as a record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists.
+   * @param ukefFacilityIds - The UKEF facility IDs to check.
+   * @returns A record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists.
+   */
+  public static async ukefGefFacilitiesExist(ukefFacilityIds: string[]): Promise<Record<string, boolean>> {
+    if (!ukefFacilityIds.length) {
+      return {};
+    }
+
+    const collection = await this.getCollection();
+
+    const docs = await collection
+      .find(
+        {
+          'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds },
+          'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
+        },
+        {
+          projection: {
+            _id: 0,
+            'facilitySnapshot.ukefFacilityId': 1,
+          },
+        },
+      )
+      .toArray();
+
+    // Create a set of UKEF facility IDs that have matching GEF facilities
+    const matchedIds = new Set(docs.map((doc) => doc.facilitySnapshot.ukefFacilityId));
+
+    // Create a record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists
+    return ukefFacilityIds.reduce<Record<string, boolean>>((acc, id) => {
+      const accumulated = acc;
+
+      accumulated[id] = matchedIds.has(id);
+
+      return accumulated;
+    }, {});
+  }
+
+  /**
    * Upserts a portal draft amendment for a facility in the database.
    *
    * This function first removes any existing portal amendments for the specified facility

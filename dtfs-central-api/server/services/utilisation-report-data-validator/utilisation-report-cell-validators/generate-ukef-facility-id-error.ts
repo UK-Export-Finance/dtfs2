@@ -1,6 +1,5 @@
+import { UtilisationReportCsvCellData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
 import { UKEF_FACILITY_ID_REGEX } from '../../../constants/regex';
-import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
-import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 
 /**
  * Generate and return an error for the facility id cell if value is invalid
@@ -8,7 +7,10 @@ import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
  * @param exporterName - The name of the exporter for that csv row
  * @returns The error if data is invalid, null if the data is valid
  */
-export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGenerator = async (facilityIdCellData, exporterName) => {
+export const generateUkefFacilityIdError = (
+  facilityIdCellData: (UtilisationReportCsvCellData & { ukefFacilityIdMatches?: boolean }) | undefined,
+  exporterName?: string | null,
+): UtilisationReportDataValidationError | null => {
   if (!facilityIdCellData?.value) {
     return {
       errorMessage: 'UKEF facility ID must have an entry',
@@ -29,9 +31,7 @@ export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe
     };
   }
 
-  const ukefGefFacilityExists = await TfmFacilitiesRepo.ukefGefFacilityExists(facilityIdCellData.value);
-
-  if (!ukefGefFacilityExists) {
+  if (facilityIdCellData.ukefFacilityIdMatches === false) {
     return {
       errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
       column: facilityIdCellData?.column,
