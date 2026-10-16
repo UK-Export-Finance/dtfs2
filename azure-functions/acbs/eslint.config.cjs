@@ -16,7 +16,7 @@ const js = require('@eslint/js');
 
 module.exports = defineConfig([
   {
-    ignores: ['**/coverage/', '**/dist/', '**/node_modules/', '**/package*.json'],
+    ignores: ['**/coverage/', '**/build/',  '**/.cache/', '**/dist/', '**/node_modules/', '**/package*.json'],
   },
 
   // Base configs
