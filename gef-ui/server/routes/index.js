@@ -1,5 +1,5 @@
 const express = require('express');
-const sessionUserToLocals = require('../middleware/sessionUserToLocals');
+const sessionUserToLocals = require('../middleware/session-user-to-locals');
 const mandatoryCriteriaRoutes = require('./mandatory-criteria');
 const nameApplicationRoutes = require('./name-application');
 const applicationDetailsRoutes = require('./application-details');

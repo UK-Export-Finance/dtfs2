@@ -99,7 +99,9 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src', prefix: '@ukef' }],
+      // // DTFS gef-ui exception
+      // Why: Allow relative import paths for certain exceptions in the project
+      'no-relative-import-paths/no-relative-import-paths': 'off',
 
       'no-case-declarations': 'off',
 
@@ -197,7 +199,9 @@ module.exports = defineConfig([
             '**/*.test.{js,ts}',
             '**/*.tests.ts',
             '**/*.api-test{s,}.{js,ts}',
+            '**/*.ff-test.{js,ts}',
             '**/__mocks__/**',
+            '**/webpack.*.{js,ts}',
             'api-tests/**',
             'test-helpers/**',
             'eslint.config.cjs',
