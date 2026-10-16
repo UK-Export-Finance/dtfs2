@@ -1,6 +1,6 @@
-import { DbRequestSource, DbRequestSourceParam } from '../helpers';
-import { Currency, FeeRecordStatus, RecordCorrectionValues } from '../../types';
-import { UtilisationReportEntity } from '../utilisation-report';
+import { DbRequestSource, DbRequestSourceParam } from '@ukef/sql-db-entities/helpers';
+import { Currency, FeeRecordStatus, RecordCorrectionValues } from '@ukef/types';
+import { UtilisationReportEntity } from '@ukef/sql-db-entities/utilisation-report';
 
 export type CreateFeeRecordParams = DbRequestSourceParam & {
   facilityId: string;

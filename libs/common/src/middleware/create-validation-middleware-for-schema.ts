@@ -1,8 +1,8 @@
 import { ZodError, ZodType } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, ApiErrorCode, ApiErrorResponseBody } from '../types';
-import { API_ERROR_CODE } from '../constants';
+import { AnyObject, ApiErrorCode, ApiErrorResponseBody } from '@ukef/types';
+import { API_ERROR_CODE } from '@ukef/constants';
 
 /**
  * Formats the errors from a Zod validation error into a readable array of strings.

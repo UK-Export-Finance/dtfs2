@@ -1,4 +1,4 @@
-import { InvalidEnvironmentVariableError } from '../errors';
+import { InvalidEnvironmentVariableError } from '@ukef/errors';
 import { getTfmUiUrl, getUkefGefReportingEmailRecipients } from './utilisation-report-emails';
 
 describe('utilisation-report-emails', () => {

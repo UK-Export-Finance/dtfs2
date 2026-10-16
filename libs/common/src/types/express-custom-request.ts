@@ -20,9 +20,9 @@ type RequestParams = Record<string, string>;
  * - An array of nested RequestQuery objects
  * - Or undefined
  */
-interface RequestQuery {
+type RequestQuery = {
   [key: string]: string | string[] | RequestQuery | RequestQuery[] | undefined;
-}
+};
 
 /**
  * A type representing the options for customizing the Express request type.

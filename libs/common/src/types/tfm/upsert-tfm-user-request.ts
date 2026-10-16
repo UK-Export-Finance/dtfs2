@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UPSERT_TFM_USER_REQUEST_SCHEMA } from '../../schemas';
+import { UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/schemas';
 
 /**
  * User upsert request used during SSO login

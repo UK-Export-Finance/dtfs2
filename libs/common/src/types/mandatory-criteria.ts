@@ -1,20 +1,20 @@
-export type GEF_CRITERION = {
+export type GefCriterion = {
   id: string;
   body: string;
   childList?: Array<string>;
 };
 
-export type GEF_MANDATORY_CRITERIA = {
+export type GefMandatoryCriteria = {
   version: number;
   createdAt: number;
   updatedAt: number;
   isInDraft: boolean;
   title: string;
   introText: string;
-  criteria: Array<GEF_CRITERION>;
+  criteria: Array<GefCriterion>;
 };
 
-export type BSS_EWCS_CRITERION = {
+export type BssEwcsCriterion = {
   id: number;
   title: string;
   items: Array<{
@@ -23,7 +23,7 @@ export type BSS_EWCS_CRITERION = {
   }>;
 };
 
-export type BSS_EWCS_MANDATORY_CRITERIA = {
+export type BssEwcsMandatoryCriteria = {
   version: number;
-  criteria: Array<BSS_EWCS_CRITERION>;
+  criteria: Array<BssEwcsCriterion>;
 };

@@ -1,4 +1,4 @@
-import { API_ERROR_CODE } from '../constants';
+import { API_ERROR_CODE } from '@ukef/constants';
 import { ApiError } from './api.error';
 
 export class InvalidAuditDetailsError extends ApiError {
