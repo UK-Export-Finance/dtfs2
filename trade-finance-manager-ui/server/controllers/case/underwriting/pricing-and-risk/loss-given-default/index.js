@@ -56,7 +56,6 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
 
   const { lossGivenDefault } = req.body;
 
-  // eslint-disable-next-line eqeqeq
   if (Number(lossGivenDefault) != lossGivenDefault || Number(lossGivenDefault) < 1 || Number(lossGivenDefault) > 100) {
     errorMsg = 'Enter a value between 1 - 100';
   }

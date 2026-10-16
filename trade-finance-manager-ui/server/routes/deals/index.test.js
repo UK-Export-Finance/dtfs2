@@ -4,7 +4,7 @@ const { getDeals, queryDeals } = require('../../controllers/deals');
 
 describe('routes - deals', () => {
   beforeEach(() => {
-    require('./index'); // eslint-disable-line global-require
+    require('./index');
   });
 
   afterEach(() => {

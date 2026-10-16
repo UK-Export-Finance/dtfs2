@@ -8,6 +8,7 @@ const formatAsCurrency = (str) => {
     amount = parseFloat(currencyString, 10);
     amount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   }
+
   return isEmpty ? '-' : amount;
 };
 

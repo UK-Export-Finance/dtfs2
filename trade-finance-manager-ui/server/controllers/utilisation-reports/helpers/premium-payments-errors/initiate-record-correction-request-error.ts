@@ -39,6 +39,7 @@ export const validateInitiateRecordCorrectionErrorKey = (
   initiateRecordCorrectionRequestErrorKey: string,
 ): initiateRecordCorrectionRequestErrorKey is InitiateRecordCorrectionRequestErrorKey => {
   const allKeys: string[] = Object.values(INITIATE_RECORD_CORRECTION_ERROR_KEY);
+
   if (allKeys.includes(initiateRecordCorrectionRequestErrorKey)) {
     return true;
   }

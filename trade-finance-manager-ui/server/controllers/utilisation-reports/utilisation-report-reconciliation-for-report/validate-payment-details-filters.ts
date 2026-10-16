@@ -42,6 +42,7 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   let paymentCurrencyErrorMessage;
+
   if (filters.paymentCurrency && !isPaymentCurrencyFilterValid(originalUrl, filters.paymentCurrency)) {
     paymentCurrencyErrorMessage = 'Payment currency must be unselected or one of the options';
 
@@ -49,6 +50,7 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
   }
 
   let paymentReferenceErrorMessage;
+
   if (filters.paymentReference && !isPaymentReferenceFilterValid(originalUrl, filters.paymentReference)) {
     paymentReferenceErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
@@ -56,6 +58,7 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
   }
 
   let facilityIdErrorMessage;
+
   if (filters.facilityId && !isFacilityIdFilterValid(originalUrl, filters.facilityId)) {
     facilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
 

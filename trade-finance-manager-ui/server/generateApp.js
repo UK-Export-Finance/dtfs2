@@ -78,6 +78,7 @@ const generateApp = () => {
   if (unauthenticatedLoginRoutes) {
     app.use('/', unauthenticatedLoginRoutes);
   }
+
   // Unauthenticated routes
   app.use('/', feedbackRoutes);
   app.use('/', routes);

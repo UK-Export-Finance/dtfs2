@@ -52,7 +52,6 @@ const initialiseFilterVisibility = (): boolean => {
 const initialiseFilterToggleButton = (): void => {
   const startHidden = initialiseFilterVisibility();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-new, @typescript-eslint/no-unsafe-member-access
   new window.MOJFrontend.FilterToggleButton({
     bigModeMediaQuery: '(min-width: 48.063em)',
     startHidden,
