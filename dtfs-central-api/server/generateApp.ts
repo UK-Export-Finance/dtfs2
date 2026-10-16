@@ -12,7 +12,7 @@ import {
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 import { ROUTES } from './constants';
 import healthcheck from './healthcheck';
-import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
+import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRouter } from './v1/routes';
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 
 const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
@@ -34,7 +34,7 @@ export const generateApp = (): Express => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
+  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRouter);
 
   app.use(security);
 
