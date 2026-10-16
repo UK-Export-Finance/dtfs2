@@ -1,4 +1,4 @@
-import { salt, hash, OTP, HEX_STRING_TYPE } from '@ukef/dtfs2-common';
+import { salt, hash, OTP, HEX_STRING_TYPE, CRYPTO } from '@ukef/dtfs2-common';
 import { generateOtp } from './generate-otp';
 import { verifyHash } from './verify-hash';
 
@@ -23,7 +23,7 @@ describe('generateOtp', () => {
 
       // Assert
       const expectedSaltLength = generatedOtp.salt.length;
-      const saltLength = salt().toString(HEX_STRING_TYPE).length;
+      const saltLength = salt(CRYPTO.SALT.OTP_BYTES).toString(HEX_STRING_TYPE).length;
 
       expect(expectedSaltLength).toEqual(saltLength);
     });
