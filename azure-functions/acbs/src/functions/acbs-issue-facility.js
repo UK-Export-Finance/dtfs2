@@ -80,7 +80,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
         // 4.2. Facility fixed-fee record(s) creation
         if (Array.isArray(acbsFacilityFeeInput)) {
           facilityFee = [];
-          // eslint-disable-next-line no-plusplus
+
           for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
             const input = acbsFacilityFeeInput[i];
             facilityFee.push(
