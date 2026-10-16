@@ -17,7 +17,10 @@ const findEligibilityCriteria = (callback) =>
       collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).toArray((error, result) => {
         assert.equal(error, null);
         resolve(result);
-        if (callback) callback(result);
+
+        if (callback) {
+          callback(result);
+        }
       });
     });
   });
@@ -107,6 +110,7 @@ exports.delete = async (req, res) => {
   if (Number.isNaN(versionNumber)) {
     return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria version number' });
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
   const eligibilityCriteria = await collection.findOne({ version: { $eq: versionNumber } });
 
@@ -127,6 +131,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
     }
+
     console.error('Error deleting eligibility criteria', error);
     return res.status(500).send({ status: 500, error });
   }

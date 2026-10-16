@@ -20,7 +20,9 @@ describe('UserService', () => {
     let blockedUser;
     beforeEach(() => {
       blockedUser = produce(testUser, (draft) => {
-        draft['user-status'] = STATUS.BLOCKED;
+        const modifiedDraft = draft;
+
+        modifiedDraft['user-status'] = STATUS.BLOCKED;
       });
     });
 
@@ -38,7 +40,9 @@ describe('UserService', () => {
     let disabledUser;
     beforeEach(() => {
       disabledUser = produce(testUser, (draft) => {
-        draft.disabled = true;
+        const modifiedDraft = draft;
+
+        modifiedDraft.disabled = true;
       });
     });
 
@@ -56,7 +60,9 @@ describe('UserService', () => {
     let disabledAndBlockedUser;
     beforeEach(() => {
       disabledAndBlockedUser = produce(testUser, (draft) => {
-        draft.disabled = true;
+        const modifiedDraft = draft;
+
+        modifiedDraft.disabled = true;
       });
     });
 
@@ -85,7 +91,9 @@ describe('UserService', () => {
     let disabledSetToFalseUser;
     beforeEach(() => {
       disabledSetToFalseUser = produce(testUser, (draft) => {
-        draft.disabled = false;
+        const modifiedDraft = draft;
+
+        modifiedDraft.disabled = false;
       });
     });
 

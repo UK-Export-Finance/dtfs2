@@ -20,6 +20,7 @@ module.exports = (submittedValues, deal, errorList) => {
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const coverEndDate = getStartOfDateFromDayMonthYearStrings(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
       const startOfToday = startOfDay(new Date());
+
       if (isBefore(coverEndDate, startOfToday)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',

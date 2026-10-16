@@ -105,6 +105,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 404, message: 'Bank not found' });
     }
+
     console.error('Error deleting bank %o', error);
     return res.status(500).send({ status: 500, error });
   }
@@ -124,6 +125,7 @@ exports.validateBank = async (req, res) => {
     if (isValid) {
       return res.status(200).send({ status: 200, isValid: true });
     }
+
     return res.status(404).send({ status: 404, isValid: false });
   }
 

@@ -63,6 +63,7 @@ module.exports = (facility, errorList, deal) => {
         order: orderNumber(newErrorList),
       };
     }
+
     if (coverYearValidation.error && conversionRateDateYear) {
       // error object does not exist if no errors in validation
       newErrorList.conversionRateDate = {

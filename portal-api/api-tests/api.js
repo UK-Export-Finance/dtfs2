@@ -89,41 +89,52 @@ module.exports = (app) => ({
   },
   get: (url, { headers, query } = {}) => {
     const requestInProgress = request(app).get(url);
+
     if (headers) {
       requestInProgress.set(headers);
     }
+
     if (query) {
       requestInProgress.query(query);
     }
+
     return requestInProgress;
   },
   put: (url, data, { headers } = {}) => {
     const requestInProgress = request(app).put(url);
+
     if (headers) {
       requestInProgress.set(headers);
     }
+
     return requestInProgress.send(data);
   },
   patch: (url, data, { headers } = {}) => {
     const requestInProgress = request(app).patch(url);
+
     if (headers) {
       requestInProgress.set(headers);
     }
+
     return requestInProgress.send(data);
   },
   post: (url, data, { headers } = {}) => {
     const requestInProgress = request(app).post(url);
+
     if (headers) {
       requestInProgress.set(headers);
     }
+
     return requestInProgress.send(data);
   },
   postMultipartForm: (...args) => postMultipartForm(app, ...args),
   remove: (url, { headers } = {}) => {
     const requestInProgress = request(app).delete(url);
+
     if (headers) {
       requestInProgress.set(headers);
     }
+
     return requestInProgress.send();
   },
 });

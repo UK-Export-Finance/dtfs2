@@ -13,6 +13,7 @@ module.exports = (facility, errorList, deal) => {
   const { submissionDate: dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp } = deal.details;
 
   let issuedDate;
+
   if (facility.issuedDate) {
     issuedDate = getStartOfDateFromEpochMillisecondString(facility.issuedDate);
   }
@@ -46,6 +47,7 @@ module.exports = (facility, errorList, deal) => {
           order: orderNumber(newErrorList),
         };
       }
+
       if (isAfter(issuedDate, today)) {
         newErrorList.issuedDate = {
           text: 'Issued Date must be today or in the past',

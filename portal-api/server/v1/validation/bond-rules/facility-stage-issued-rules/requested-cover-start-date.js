@@ -72,6 +72,7 @@ module.exports = (submittedValues, deal, errorList) => {
         order: orderNumber(newErrorList),
       };
     }
+
     if (coverYearValidation.error && requestedCoverStartDateYear) {
       newErrorList.requestedCoverStartDate = {
         text: 'The year for the requested Cover Start Date must include 4 numbers',

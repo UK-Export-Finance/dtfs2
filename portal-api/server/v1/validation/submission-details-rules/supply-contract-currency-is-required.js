@@ -4,6 +4,7 @@ const { currencyIsDisabled } = require('../fields/currency');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
+
   if (!submissionDetails.supplyContractCurrency || !hasValue(submissionDetails.supplyContractCurrency.id)) {
     newErrorList.supplyContractCurrency = {
       order: orderNumber(newErrorList),
@@ -13,6 +14,7 @@ module.exports = (submissionDetails, errorList) => {
 
   if (submissionDetails.supplyContractCurrency) {
     const isDisabled = currencyIsDisabled(submissionDetails.supplyContractCurrency.id);
+
     if (isDisabled) {
       newErrorList.supplyContractCurrency = {
         order: orderNumber(newErrorList),

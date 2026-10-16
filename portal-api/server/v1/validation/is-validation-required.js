@@ -11,5 +11,6 @@ module.exports = (deal) => {
   if (deal.dataMigrationInfo) {
     return false;
   }
+
   return statusToValidate.includes(deal.status);
 };

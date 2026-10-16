@@ -9,6 +9,7 @@ const getLastUploadedReportByBankId = async (req, res) => {
     });
 
     const lastUploadedReport = uploadedReports.at(-1);
+
     if (!lastUploadedReport) {
       throw new Error(`Failed to find any uploaded reports for bank with id ${bankId}`);
     }
