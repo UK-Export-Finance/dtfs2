@@ -18,6 +18,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
+import { mapMatchingUkefFacilityIds } from '../../helpers/map-matching-ukef-facility-ids';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
 export class TfmFacilitiesRepo {
@@ -487,6 +488,45 @@ export class TfmFacilitiesRepo {
       'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
     });
     return numberOfFoundDocuments > 0;
+  }
+
+  /**
+   * Checks whether or not GEF facilities exist which have matching UKEF facility IDs
+   * All the reports UKEF facility IDs are checked in a single query to the database,
+   * and the results are returned as a record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists.
+   * @param ukefFacilityIds - The UKEF facility IDs to check.
+   * @returns A record mapping each UKEF facility ID to a boolean indicating whether a matching GEF facility exists.
+   */
+  public static async ukefGefFacilitiesExist(ukefFacilityIds: string[]): Promise<Record<string, boolean>> {
+    if (!ukefFacilityIds.length) {
+      return {};
+    }
+
+    const collection = await this.getCollection();
+
+    /**
+     * projection is used to only return the ukefFacilityId field from the matching documents
+     * 'facilitySnapshot.ukefFacilityId' is set to 1 so its included in the results
+     * '_id' is set to 0 so it is excluded from the results
+     * This is done to reduce the amount of data returned from the database, as we only need the ukefFacilityId field to determine if a matching GEF facility exists.
+     */
+    const matchingGefFacilityIdDocuments = await collection
+      .find(
+        {
+          'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds },
+          'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
+        },
+        {
+          projection: {
+            _id: 0,
+            'facilitySnapshot.ukefFacilityId': 1,
+          },
+        },
+      )
+      .toArray();
+
+    // Map the matching UKEF facility IDs to a record indicating whether a matching GEF facility exists for each UKEF facility ID.
+    return mapMatchingUkefFacilityIds(matchingGefFacilityIdDocuments, ukefFacilityIds);
   }
 
   /**

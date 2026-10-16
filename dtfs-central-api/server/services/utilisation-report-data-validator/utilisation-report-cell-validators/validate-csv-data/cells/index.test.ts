@@ -7,6 +7,7 @@ import {
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
 } from '../..';
+import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 
 jest.mock('../..', () => ({
   generateUkefFacilityIdError: jest.fn(),
@@ -19,6 +20,16 @@ jest.mock('../..', () => ({
 }));
 
 describe('validateCells', () => {
+  const ukefGefFacilitiesExistSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilitiesExist');
+
+  beforeEach(() => {
+    ukefGefFacilitiesExistSpy.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   // This test mocks out all the function from utilisation-report-cell-validators.js and
   // tests that if headers are available then the respective cell validator function is called on that data
 
@@ -39,7 +50,7 @@ describe('validateCells', () => {
     await validateCells(csvData, availableHeaders);
 
     // Assert
-    expect(generateUkefFacilityIdError).toHaveBeenCalledWith(csvData[0]['ukef facility id'], 'test exporter');
+    expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ ...csvData[0]['ukef facility id'], ukefFacilityIdMatches: false }, 'test exporter');
     expect(generateBaseCurrencyError).toHaveBeenCalledWith(csvData[0]['base currency'], 'test exporter');
     expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
   });
@@ -55,5 +66,25 @@ describe('validateCells', () => {
     // Assert
     expect(generatePaymentCurrencyError).toHaveBeenCalled();
     expect(generatePaymentExchangeRateError).toHaveBeenCalled();
+  });
+
+  it('should look up unique facility IDs once and passes their matches to the validator', async () => {
+    // Arrange
+    const csvData = [
+      { 'ukef facility id': { value: '12345678' } },
+      { 'ukef facility id': { value: '87654321' } },
+      { 'ukef facility id': { value: '12345678' } },
+    ];
+    ukefGefFacilitiesExistSpy.mockResolvedValue({ '12345678': true, '87654321': false });
+
+    // Act
+    await validateCells(csvData, [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]);
+
+    // Assert
+    expect(ukefGefFacilitiesExistSpy).toHaveBeenCalledTimes(1);
+    expect(ukefGefFacilitiesExistSpy).toHaveBeenCalledWith(['12345678', '87654321']);
+    expect(generateUkefFacilityIdError).toHaveBeenNthCalledWith(1, { ...csvData[0]['ukef facility id'], ukefFacilityIdMatches: true }, undefined);
+    expect(generateUkefFacilityIdError).toHaveBeenNthCalledWith(2, { ...csvData[1]['ukef facility id'], ukefFacilityIdMatches: false }, undefined);
+    expect(generateUkefFacilityIdError).toHaveBeenNthCalledWith(3, { ...csvData[2]['ukef facility id'], ukefFacilityIdMatches: true }, undefined);
   });
 });
