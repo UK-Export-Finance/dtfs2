@@ -19,6 +19,7 @@
   "author": "UK Export Finance",
   "exports": {
     ".": "./src/index.ts",
+    "./register-paths": "./src/register-paths.cjs",
     "./swagger": "./src/swagger/index.ts",
     "./sql-db-connection": "./src/sql-db-connection/index.ts",
     "./mongo-db-client": "./src/mongo-db-client/index.ts",
@@ -92,6 +93,7 @@
     "sanitize-html": "2.18.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
+    "tsconfig-paths": "^3.15.0",
     "typeorm": "^0.3.31",
     "typescript": "^5.9.3",
     "zod": "^3.25.76"
