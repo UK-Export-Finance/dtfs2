@@ -1,4 +1,4 @@
-import accessCodeNumericRule from './access-code-numeric';
+import { accessCodeNumericRule } from './access-code-numeric';
 
 describe('controllers/login/validation/rules/access-code-numeric', () => {
   describe('accessCodeNumericRule', () => {

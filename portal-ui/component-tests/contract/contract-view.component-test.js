@@ -254,7 +254,7 @@ describe(page, () => {
       };
 
       beforeAll(() => {
-        for (deal of oneDealInEachStatus()) {
+        for (const deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,
@@ -278,7 +278,7 @@ describe(page, () => {
       };
 
       beforeAll(() => {
-        for (deal of oneDealInEachStatus()) {
+        for (const deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,

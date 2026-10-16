@@ -7,7 +7,7 @@ import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-
  * @param errors - Existing validation errors
  * @returns Updated validation errors
  */
-const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
+export const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors } as ValidationErrorsObject;
 
   const { sixDigitAccessCode } = formBody;
@@ -21,5 +21,3 @@ const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Recor
 
   return newErrors;
 };
-
-export default accessCodeRule;

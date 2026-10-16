@@ -504,14 +504,16 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
   const { loanId, userToken } = requestParams(req);
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
-  // POST to api to flag that we have viewed preview page.
-  // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
-
-  // The status is extracted, otherwise bad things happen.
-  // When we GET a facility/loan, the status is dynamically added (it's not in the DB)
-  // here, in the preview screen, we need to extract the status from the POST
-  // otherwise the status will be added to the DB and not dynamically added.
-  const { status: _status, ...loanWithoutStatus } = loan;
+  /**
+   * POST to api to flag that we have viewed preview page.
+   * this is required specifically for other Loan forms/pages, to match the existing UX/UI.
+   *
+   * The status is extracted, otherwise bad things happen.
+   * When we GET a facility/loan, the status is dynamically added (it's not in the DB)
+   * here, in the preview screen, we need to extract the status from the POST
+   * otherwise the status will be added to the DB and not dynamically added.
+   */
+  const { status: theStatus, ...loanWithoutStatus } = loan;
 
   const updatedLoan = {
     ...loanWithoutStatus,

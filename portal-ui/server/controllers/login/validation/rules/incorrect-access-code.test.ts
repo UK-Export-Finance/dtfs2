@@ -1,4 +1,4 @@
-import incorrectAccessCodeRule from './incorrect-access-code';
+import { incorrectAccessCodeRule } from './incorrect-access-code';
 
 describe('controllers/login/validation/rules/incorrect-access-code', () => {
   describe('incorrectAccessCodeRule', () => {

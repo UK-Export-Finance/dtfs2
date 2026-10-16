@@ -4,8 +4,8 @@ import { Response } from 'express';
 import { attemptOtpLogin } from './attempt-otp-login';
 import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/2fa/resend-another-access-code-view-model';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
-import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
-import generateValidationErrors from './validation';
+import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
+import { generateValidationErrors } from './validation';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 import { isOtpExpired } from '../../helpers/is-otp-expired';
 
