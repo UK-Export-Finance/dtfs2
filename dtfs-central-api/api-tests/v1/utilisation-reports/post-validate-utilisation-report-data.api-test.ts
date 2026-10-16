@@ -14,11 +14,11 @@ import { testApi } from '../../test-api';
 import { mongoDbClient } from '../../../server/drivers/db-client';
 import { aFacility, aTfmFacility } from '../../../test-helpers';
 
-type SuccessResponse = {
+type SuccessResponse = Omit<Response, 'body'> & {
   body: {
     csvValidationErrors: UtilisationReportDataValidationError[];
   };
-} & Response;
+};
 
 console.error = jest.fn();
 
