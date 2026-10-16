@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { attemptOtpLogin } from './attempt-otp-login';
-import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/2fa/resend-another-access-code-view-model';
+import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/resend-another-access-code-view-model';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
 import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
 import { generateValidationErrors } from './validation';

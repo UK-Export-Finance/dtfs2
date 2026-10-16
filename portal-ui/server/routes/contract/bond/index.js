@@ -516,7 +516,8 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
    * here, in the preview screen, we need to extract the status from the POST
    * otherwise the status will be added to the DB and not dynamically added.
    */
-  const { status: theStatus, ...bondWithoutStatus } = bond;
+  const bondWithoutStatus = { ...bond };
+  delete bondWithoutStatus.status;
 
   const updatedBond = {
     ...bondWithoutStatus,

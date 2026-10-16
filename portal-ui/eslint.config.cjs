@@ -198,6 +198,7 @@ module.exports = defineConfig([
             '**/*.tests.ts',
             '**/*.api-test{s,}.{js,ts}',
             '**/__mocks__/**',
+            '**/webpack.*.{js,ts}',
             'api-tests/**',
             'test-helpers/**',
             'eslint.config.cjs',

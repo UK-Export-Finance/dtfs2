@@ -513,7 +513,8 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
    * here, in the preview screen, we need to extract the status from the POST
    * otherwise the status will be added to the DB and not dynamically added.
    */
-  const { status: theStatus, ...loanWithoutStatus } = loan;
+  const loanWithoutStatus = { ...loan };
+  delete loanWithoutStatus.status;
 
   const updatedLoan = {
     ...loanWithoutStatus,

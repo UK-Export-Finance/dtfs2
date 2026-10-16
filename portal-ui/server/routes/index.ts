@@ -8,7 +8,7 @@ import footerRoutes from './footer.route';
 import { adminRouter } from './admin';
 import userRoutes from './user';
 import feedbackRoutes from './feedback';
-import schemeTypeRoutes from './schemeType';
+import schemeTypeRoutes from './scheme-type';
 import portalRoutes from './reports.route';
 import { staticRouter } from './static';
 import utilisationReportServiceRoutes from './utilisation-report-service';

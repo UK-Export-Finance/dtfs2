@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
 
 const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 

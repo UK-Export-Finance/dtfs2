@@ -5,7 +5,7 @@ import { attemptOtpLogin } from './attempt-otp-login';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
 import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
 import { generateValidationErrors } from './validation';
-import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 import { isOtpExpired } from '../../helpers/is-otp-expired';
 import { getUserRedirectUrl } from '../../helpers';
