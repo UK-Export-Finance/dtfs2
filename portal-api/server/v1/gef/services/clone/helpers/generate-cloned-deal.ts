@@ -52,34 +52,36 @@ export const generateClonedDeal = ({
   auditDetails: AuditDetails;
 }): GefDeal =>
   produce(existingDeal, (draft) => {
+    const modifiedDraft = draft;
+
     propertiesToRemove.forEach((property) => {
-      if (draft[property]) {
-        delete draft[property];
+      if (modifiedDraft[property]) {
+        delete modifiedDraft[property];
       }
     });
 
-    draft._id = new ObjectId();
-    draft.version = getCurrentGefDealVersion();
-    draft.createdAt = Date.now();
-    draft.updatedAt = Date.now();
-    draft.facilitiesUpdated = Date.now();
-    draft.status = DEAL.DEAL_STATUS.DRAFT;
-    draft.submissionCount = 0;
-    draft.exporter = generateClonedExporter(draft.exporter);
+    modifiedDraft._id = new ObjectId();
+    modifiedDraft.version = getCurrentGefDealVersion();
+    modifiedDraft.createdAt = Date.now();
+    modifiedDraft.updatedAt = Date.now();
+    modifiedDraft.facilitiesUpdated = Date.now();
+    modifiedDraft.status = DEAL.DEAL_STATUS.DRAFT;
+    modifiedDraft.submissionCount = 0;
+    modifiedDraft.exporter = generateClonedExporter(modifiedDraft.exporter);
 
-    draft.eligibility = { ...latestEligibilityCriteria, updatedAt: Date.now() };
-    draft.bankInternalRefName = bankInternalRefName;
-    draft.additionalRefName = additionalRefName;
-    draft.maker = maker;
-    draft.bank = bank;
-    draft.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
-    draft.clonedDealId = dealId;
-    draft.editedBy = [userId];
+    modifiedDraft.eligibility = { ...latestEligibilityCriteria, updatedAt: Date.now() };
+    modifiedDraft.bankInternalRefName = bankInternalRefName;
+    modifiedDraft.additionalRefName = additionalRefName;
+    modifiedDraft.maker = maker;
+    modifiedDraft.bank = bank;
+    modifiedDraft.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+    modifiedDraft.clonedDealId = dealId;
+    modifiedDraft.editedBy = [userId];
 
-    draft.submissionType = null;
-    draft.submissionDate = null;
-    draft.ukefDealId = null;
-    draft.checkerId = null;
-    draft.portalActivities = [];
-    draft.supportingInformation = {};
+    modifiedDraft.submissionType = null;
+    modifiedDraft.submissionDate = null;
+    modifiedDraft.ukefDealId = null;
+    modifiedDraft.checkerId = null;
+    modifiedDraft.portalActivities = [];
+    modifiedDraft.supportingInformation = {};
   });

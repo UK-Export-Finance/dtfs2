@@ -37,9 +37,11 @@ exports.getAddressesByPostcode = async (req, res) => {
     return res.status(HttpStatusCode.Ok).send(response.data);
   } catch (error) {
     let { status } = error.response;
+
     if (status >= HttpStatusCode.BadRequest && status < HttpStatusCode.InternalServerError) {
       status = HttpStatusCode.UnprocessableEntity;
     }
+
     const response = [
       {
         status,

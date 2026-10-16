@@ -8,8 +8,10 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
     const EMAIL_MUST_BE_UNIQUE_ERROR = { text: 'Email address already in use' };
     const A_MATCHING_EMAIL = 'aMatchingEmail@ukexportfinance.gov.uk';
     const EXISTING_USER_WITH_SAME_EMAIL = produce(users.testBank1Maker1, (draftUser) => {
-      draftUser.username = A_MATCHING_EMAIL;
-      draftUser.email = A_MATCHING_EMAIL;
+      const modifiedDraftUser = draftUser;
+
+      modifiedDraftUser.username = A_MATCHING_EMAIL;
+      modifiedDraftUser.email = A_MATCHING_EMAIL;
     });
 
     beforeEach(async () => {
@@ -22,8 +24,10 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
 
     it('rejects if the provided email address exists in the database', async () => {
       const payloadWithMatchingEmail = produce(payload, (draftRequest) => {
-        draftRequest.username = A_MATCHING_EMAIL;
-        draftRequest.email = A_MATCHING_EMAIL;
+        const modifiedDraftRequest = draftRequest;
+
+        modifiedDraftRequest.username = A_MATCHING_EMAIL;
+        modifiedDraftRequest.email = A_MATCHING_EMAIL;
       });
 
       await createUser(EXISTING_USER_WITH_SAME_EMAIL, getAdminUser());

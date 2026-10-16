@@ -34,6 +34,7 @@ const getIndustrySector = async (id) => {
     console.error('industry-sectors.getIndustrySector: invalid id provided %s', id);
     return { status: 400 };
   }
+
   const { status, data } = await axios({
     method: 'get',
     url: `${EXTERNAL_API_URL}/industry-sectors/${id}`,

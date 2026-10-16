@@ -71,9 +71,10 @@ const generateUkefId = async (entity, application) => {
 
 const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const facility of facilities) {
     const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
+
     /**
      * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
      * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
@@ -82,6 +83,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
       const update = {
         submittedAsIssuedDate: getNowAsEpochMillisecondString(),
       };
+
       /**
        * if canResubmitIssuedFacilities and shouldCoverStartOnSubmission is true
        * sets coverStartDate to issueDate
@@ -95,7 +97,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
           update.coverStartDate = new Date().setHours(0, 0, 0, 0);
         }
       }
-      // eslint-disable-next-line no-await-in-loop
+
       await updateFacility(_id, update, auditDetails);
     }
   }
@@ -172,6 +174,7 @@ const submissionPortalActivity = async (application) => {
   if (!submissionCount) {
     portalActivities = await ukefSubmissionPortalActivity(application);
   }
+
   // if MIA then handled by central API
   if (checkForChangedFacilities(facilities) && submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     portalActivities = await facilityChangePortalActivity(application, facilities);
@@ -218,6 +221,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
       console.error('Unable to set coverDateConfirmed for AIN facilities. %o', error);
     }
   }
+
   return hasUpdated;
 };
 

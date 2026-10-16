@@ -35,6 +35,7 @@ const updateCoverEndDate = (facility) => {
       getStartOfDateFromDayMonthYearStringsReplicatingMoment(coverEndDateDay, coverEndDateMonth, coverEndDateYear),
     );
   }
+
   return modifiedFacility;
 };
 

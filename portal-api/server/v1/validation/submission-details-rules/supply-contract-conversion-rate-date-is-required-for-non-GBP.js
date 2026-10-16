@@ -53,12 +53,14 @@ module.exports = (submissionDetails, errorList, deal) => {
               text: 'Supply Contract conversion date Day is required for non-GBP currencies',
             };
           }
+
           if (!hasValue(month)) {
             newErrorList['supplyContractConversionDate-month'] = {
               order: orderNumber(newErrorList),
               text: 'Supply Contract conversion date Month is required for non-GBP currencies',
             };
           }
+
           if (!hasValue(year)) {
             newErrorList['supplyContractConversionDate-year'] = {
               order: orderNumber(newErrorList),
@@ -69,5 +71,6 @@ module.exports = (submissionDetails, errorList, deal) => {
       }
     }
   }
+
   return newErrorList;
 };

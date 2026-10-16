@@ -1305,6 +1305,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
       if (!error) {
         return next();
       }
+
       console.error('Unable to upload file %o', error);
       return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
@@ -1831,6 +1832,7 @@ authRouter.route('/utilisation-reports').post(
       if (!error) {
         return next();
       }
+
       console.error('Unable to upload file %o', error);
       return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });

@@ -51,6 +51,7 @@ exports.updateBondIssueFacility = async (req, res) => {
     }
 
     const bondHasName = hasValue(bond.name);
+
     if (!bondHasName) {
       modifiedBond.nameRequiredForIssuance = true;
     }

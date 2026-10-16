@@ -21,36 +21,41 @@ export const generateClonedFacility = ({
   facility: Partial<Facility>;
   newDealId: string | ObjectId;
   auditDetails: AuditDetails;
-}): Facility =>
-  produce(facility, (draft) => {
-    draft._id = new ObjectId();
+}): Facility => {
+  const dealId = new ObjectId(newDealId.toString());
 
-    draft.dealId = new ObjectId(newDealId);
-    draft.createdAt = Date.now();
-    draft.updatedAt = Date.now();
-    draft.ukefFacilityId = null;
-    draft.canResubmitIssuedFacilities = null;
-    draft.issueDate = null;
-    draft.coverDateConfirmed = null;
-    draft.unissuedToIssuedByMaker = {};
-    draft.hasBeenIssuedAndAcknowledged = null;
-    draft.submittedAsIssuedDate = null;
-    draft.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+  return produce<Facility>(facility as Facility, (draft) => {
+    const modifiedDraft = draft;
 
-    draft.isUsingFacilityEndDate = null;
-    draft.facilityEndDate = null;
-    draft.bankReviewDate = null;
+    modifiedDraft._id = new ObjectId();
+
+    modifiedDraft.dealId = dealId;
+    modifiedDraft.createdAt = Date.now();
+    modifiedDraft.updatedAt = Date.now();
+    modifiedDraft.ukefFacilityId = null;
+    modifiedDraft.canResubmitIssuedFacilities = null;
+    modifiedDraft.issueDate = null;
+    modifiedDraft.coverDateConfirmed = null;
+    modifiedDraft.unissuedToIssuedByMaker = {};
+    modifiedDraft.hasBeenIssuedAndAcknowledged = null;
+    modifiedDraft.submittedAsIssuedDate = null;
+    modifiedDraft.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+    modifiedDraft.isUsingFacilityEndDate = null;
+    modifiedDraft.facilityEndDate = null;
+    modifiedDraft.bankReviewDate = null;
 
     const currentTime = new Date();
     currentTime.setHours(0, 0, 0, 0);
 
     // If the cover start date is in the past, it should be set to null
-    if (draft.coverStartDate) {
-      const coverStartDate = new Date(draft.coverStartDate);
+    if (modifiedDraft.coverStartDate) {
+      const coverStartDate = new Date(modifiedDraft.coverStartDate);
       const startOfToday = startOfDay(new Date());
 
       if (isBefore(coverStartDate, startOfToday)) {
-        draft.coverStartDate = null;
+        modifiedDraft.coverStartDate = null;
       }
     }
-  }) as Facility;
+  });
+};

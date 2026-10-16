@@ -1,6 +1,6 @@
 import { PortalSessionUser } from '@ukef/dtfs2-common';
 
-export interface TestUser extends PortalSessionUser {
+export type TestUser = {
   token: string;
   password: string;
-}
+} & PortalSessionUser;
