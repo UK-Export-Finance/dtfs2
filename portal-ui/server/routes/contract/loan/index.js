@@ -145,6 +145,7 @@ const loanGuaranteeDetailsPayloadProperties = [
 
 const filterLoanGuaranteeDetailsPayload = (body) => {
   const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties, true);
+
   if (payload.facilityStage === FACILITY_STAGE.CONDITIONAL) {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -155,6 +156,7 @@ const filterLoanGuaranteeDetailsPayload = (body) => {
   } else if (payload.facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
     delete payload.ukefGuaranteeInMonths;
   }
+
   return payload;
 };
 
@@ -293,6 +295,7 @@ const filterLoanFinancialDetailsPayload = (body) => {
     delete sanitizedPayload['conversionRateDate-month'];
     delete sanitizedPayload['conversionRateDate-year'];
   }
+
   return sanitizedPayload;
 };
 
@@ -518,6 +521,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
   await postToApi(api.updateLoan(dealId, loanId, updatedLoan, userToken));
 
   let formattedValidationErrors;
+
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(loanPreviewValidationErrors(validationErrors, dealId, loanId), errorHref);
   }

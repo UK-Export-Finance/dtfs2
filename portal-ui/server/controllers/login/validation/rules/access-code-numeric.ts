@@ -16,6 +16,7 @@ const accessCodeNumericRule = (formBody: { sixDigitAccessCode?: string }, errors
   // Only validate if the field has content (empty validation is handled by accessCodeRule)
   if (sixDigitAccessCode && sixDigitAccessCode.trim() !== '') {
     const { error } = Joi.string().length(6).pattern(/^\d+$/).validate(sixDigitAccessCode.trim());
+
     if (error) {
       newErrors.sixDigitAccessCode = {
         text: 'Access code must be 6 numbers',

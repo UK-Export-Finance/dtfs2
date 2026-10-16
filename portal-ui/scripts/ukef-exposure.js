@@ -16,6 +16,7 @@ function calculateUkefExposure() {
   if (isNumeric(calculation)) {
     let result;
     const totalDecimals = decimalsCount(calculation);
+
     if (totalDecimals > 2) {
       result = roundNumber(calculation, 2);
     } else {

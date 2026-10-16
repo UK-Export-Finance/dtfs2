@@ -137,6 +137,7 @@ const bondDetailsPayloadProperties = [
 
 const filterBondDetailsPayload = (body) => {
   const payload = constructPayload(body, bondDetailsPayloadProperties, true);
+
   if (payload.facilityStage === 'Unissued') {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -148,6 +149,7 @@ const filterBondDetailsPayload = (body) => {
   } else {
     delete payload.ukefGuaranteeInMonths;
   }
+
   return payload;
 };
 
@@ -522,6 +524,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   await postToApi(api.updateBond(dealId, bondId, updatedBond, userToken));
 
   let formattedValidationErrors;
+
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(bondPreviewValidationErrors(validationErrors, dealId, bondId), errorHref);
   }

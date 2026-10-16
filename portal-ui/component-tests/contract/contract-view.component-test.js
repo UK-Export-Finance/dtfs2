@@ -254,8 +254,7 @@ describe(page, () => {
       };
 
       beforeAll(() => {
-        // eslint-disable-next-line no-unused-vars
-        for (const deal of oneDealInEachStatus()) {
+        for (deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,
@@ -279,8 +278,7 @@ describe(page, () => {
       };
 
       beforeAll(() => {
-        // eslint-disable-next-line no-unused-vars
-        for (const deal of oneDealInEachStatus()) {
+        for (deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,

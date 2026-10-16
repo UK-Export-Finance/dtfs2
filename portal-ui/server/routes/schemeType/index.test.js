@@ -10,7 +10,6 @@ jest.mock('../middleware/isMaker');
 describe('routes/site-notices', () => {
   describe('router', () => {
     beforeEach(() => {
-      // eslint-disable-next-line global-require
       require('.');
     });
 

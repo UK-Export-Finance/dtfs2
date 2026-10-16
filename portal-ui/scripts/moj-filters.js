@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 /* eslint-disable no-undef */
 if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
   new MOJFrontend.FilterToggleButton({

@@ -12,6 +12,7 @@ export const filterReportJsonToRelevantKeys = (reportJson) => {
   const filteredJson = reportJson.map((reportRow) => {
     return Object.keys(reportRow).reduce((acc, key) => {
       const reducedKeysObject = acc;
+
       if (relevantKeys.includes(key)) {
         reducedKeysObject[key] = reportRow[key];
       }
