@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
-const portalActivityGenerator = require('../../portalActivity-object-generator');
+const portalActivityGenerator = require('../../portal-activity-object-generator');
 
 const CONSTANTS = require('../../../constants');
 

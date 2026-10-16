@@ -51,6 +51,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
     }
 
     const loanHasName = hasValue(loan.name);
+
     if (!loanHasName) {
       modifiedLoan.nameRequiredForIssuance = true;
     }

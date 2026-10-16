@@ -14,6 +14,7 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
     if (supportingInformation[fieldname] && supportingInformation[fieldname].length) {
       return {};
     }
+
     const text = `${fieldText} ${errorText}`;
 
     order += 1;

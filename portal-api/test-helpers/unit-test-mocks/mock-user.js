@@ -21,37 +21,47 @@ const BASE_TEST_USER = {
 };
 
 const TEST_USER = produce(BASE_TEST_USER, (draft) => {
-  draft.password = 'P@ssword1234';
+  const modifiedDraft = draft;
+
+  modifiedDraft.password = 'P@ssword1234';
 });
 
 const TEST_USER_PARTIAL_2FA = produce(BASE_TEST_USER, (draft) => {
-  draft['user-status'] = STATUS.ACTIVE;
+  const modifiedDraft = draft;
+
+  modifiedDraft['user-status'] = STATUS.ACTIVE;
 });
 
 const TEST_DATABASE_USER = produce(BASE_TEST_USER, (draft) => {
-  draft['user-status'] = STATUS.ACTIVE;
-  draft.salt = '01';
-  draft.hash = '02';
-  draft.signInTokens = [
+  const modifiedDraft = draft;
+
+  modifiedDraft['user-status'] = STATUS.ACTIVE;
+  modifiedDraft.salt = '01';
+  modifiedDraft.hash = '02';
+  modifiedDraft.signInTokens = [
     { saltHex: '03', hashHex: '04', expiry: 1700000000000 },
     { saltHex: '05', hashHex: '06', expiry: 1700501222290 },
   ];
 });
 
 const TEST_USER_TRANSFORMED_FROM_DATABASE = produce(BASE_TEST_USER, (draft) => {
-  draft['user-status'] = STATUS.ACTIVE;
-  draft.salt = '01';
-  draft.hash = '02';
-  draft.signInTokens = [
+  const modifiedDraft = draft;
+
+  modifiedDraft['user-status'] = STATUS.ACTIVE;
+  modifiedDraft.salt = '01';
+  modifiedDraft.hash = '02';
+  modifiedDraft.signInTokens = [
     { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex'), expiry: 1700000000000 },
     { salt: Buffer.from('05', 'hex'), hash: Buffer.from('06', 'hex'), expiry: 1700501222290 },
   ];
 });
 
 const TEST_USER_SANITISED_FOR_FRONTEND = produce(BASE_TEST_USER, (draft) => {
-  draft.disabled = undefined;
-  draft.lastLogin = undefined;
-  draft['user-status'] = STATUS.ACTIVE;
+  const modifiedDraft = draft;
+
+  modifiedDraft.disabled = undefined;
+  modifiedDraft.lastLogin = undefined;
+  modifiedDraft['user-status'] = STATUS.ACTIVE;
 });
 
 module.exports = {

@@ -3,6 +3,7 @@ const { hasValue } = require('../../../utils/string');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
+
   if (!hasValue(submissionDetails['supply-contract-description'])) {
     newErrorList['supply-contract-description'] = {
       order: orderNumber(newErrorList),

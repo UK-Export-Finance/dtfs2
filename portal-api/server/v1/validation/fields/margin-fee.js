@@ -11,6 +11,7 @@ const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
     return true;
   }
+
   return false;
 };
 

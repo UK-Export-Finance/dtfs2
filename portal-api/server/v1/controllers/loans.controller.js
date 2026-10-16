@@ -18,13 +18,16 @@ exports.create = async (req, res) => {
     params: { id: dealId },
     body,
   } = req;
+
   if (!isValidMongoId(dealId)) {
     console.error('Create loans API failed for deal id %s', dealId);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
   return findOneDeal(dealId, async (deal) => {
-    if (!deal) return res.status(404).send();
+    if (!deal) {
+      return res.status(404).send();
+    }
 
     if (!userHasAccessTo(req.user, deal)) {
       return res.status(401).send();
@@ -75,8 +78,10 @@ exports.getLoan = async (req, res) => {
           validationErrors,
         });
       }
+
       return res.status(404).send();
     }
+
     return res.status(404).send();
   });
 };
@@ -110,6 +115,7 @@ const facilityStageFields = (loan) => {
 const premiumTypeFields = (loan) => {
   const modifiedLoan = loan;
   const { premiumType } = modifiedLoan;
+
   if (premiumType === 'At maturity') {
     modifiedLoan.premiumFrequency = null;
   }
@@ -156,6 +162,7 @@ exports.updateLoan = async (req, res) => {
     const sanitizedFacilityValue = sanitizeCurrency(value);
 
     modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
+
     if (sanitizedFacilityValue.sanitizedValue) {
       modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
       modifiedLoan.value = sanitizedFacilityValue.sanitizedValue;
@@ -163,6 +170,7 @@ exports.updateLoan = async (req, res) => {
 
     if (modifiedLoan.disbursementAmount) {
       const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
+
       if (sanitizedFacilityDisbursement.sanitizedValue) {
         modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
       }
@@ -208,6 +216,7 @@ exports.deleteLoan = async (req, res) => {
 
       return res.status(status).send(data);
     }
+
     return res.status(404).send();
   });
 };

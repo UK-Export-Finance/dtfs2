@@ -125,6 +125,7 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
           // check if the `submissionDate` is not null
           defaultDate = item.submissionDate || '';
         }
+
         // ensure there is a default date (either submission date or MIN date)
         if (defaultDate) {
           const setDateToMidnight = new Date(parseInt(defaultDate, 10)).setHours(2, 0, 1, 0);

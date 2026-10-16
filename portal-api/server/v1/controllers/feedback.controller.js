@@ -72,6 +72,7 @@ exports.create = async (req, res) => {
         message: `Invalid auditDetails: ${error.message}`,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -161,6 +162,7 @@ exports.delete = async (req, res) => {
       if (error instanceof DocumentNotDeletedError) {
         return res.sendStatus(404);
       }
+
       console.error('Error deleting feedback', error);
       return res.status(500).send({ status: 500, error });
     }
