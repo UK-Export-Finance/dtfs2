@@ -7,8 +7,8 @@ const updateFacilityMock = jest.fn();
 const updateApplicationMock = jest.fn();
 
 jest.mock('../../services/api', () => ({
-  updateFacility: updateFacilityMock,
-  updateApplication: updateApplicationMock,
+  updateFacility: (...args: unknown[]) => updateFacilityMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 const facilityId = 'facilityId';

@@ -21,10 +21,10 @@ const getFacilityMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getAmendment: getAmendmentMock,
-  getFacility: getFacilityMock,
-  updateAmendment: updateAmendmentMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
 }));
 
 console.error = jest.fn();

@@ -25,13 +25,13 @@ const getUserDetailsMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  updateAmendmentStatus: updateAmendmentStatusMock,
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getTfmFacility: getTfmFacilityMock,
-  getAmendment: getAmendmentMock,
-  getUserDetails: getUserDetailsMock,
-  updateAmendment: updateAmendmentMock,
+  updateAmendmentStatus: (...args: unknown[]) => updateAmendmentStatusMock(...args),
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getTfmFacility: (...args: unknown[]) => getTfmFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  getUserDetails: (...args: unknown[]) => getUserDetailsMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
 }));
 
 dotenv.config({ quiet: true });

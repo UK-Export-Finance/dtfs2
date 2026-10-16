@@ -17,9 +17,9 @@ const userId = '6597dffeb5ef5ff4267e5046';
 const mockComment = 'This is a test comment';
 
 jest.mock('../services/api', () => ({
-  getApplication: getApplicationMock,
-  getUserDetails: getUserDetailsMock,
-  updateApplication: updateApplicationMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getUserDetails: (...args: unknown[]) => getUserDetailsMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 describe('addCheckerCommentsToApplication', () => {

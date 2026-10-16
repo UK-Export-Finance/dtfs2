@@ -16,9 +16,9 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
 }));
 
 const dealId = 'dealId';

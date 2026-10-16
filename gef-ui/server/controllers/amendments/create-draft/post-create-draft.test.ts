@@ -11,7 +11,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 const upsertAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  upsertAmendment: upsertAmendmentMock,
+  upsertAmendment: (...args: unknown[]) => upsertAmendmentMock(...args),
 }));
 
 const dealId = 'dealId';

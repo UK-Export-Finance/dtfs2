@@ -35,13 +35,13 @@ const getTfmFacilityMock = jest.fn();
 const getLatestAmendmentFacilityValueAndCoverEndDateMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendment: updateAmendmentMock,
-  getFacilityExposurePeriod: getExposurePeriodMock,
-  getTfmFacility: getTfmFacilityMock,
-  getLatestAmendmentFacilityValueAndCoverEndDate: getLatestAmendmentFacilityValueAndCoverEndDateMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
+  getFacilityExposurePeriod: (...args: unknown[]) => getExposurePeriodMock(...args),
+  getTfmFacility: (...args: unknown[]) => getTfmFacilityMock(...args),
+  getLatestAmendmentFacilityValueAndCoverEndDate: (...args: unknown[]) => getLatestAmendmentFacilityValueAndCoverEndDateMock(...args),
 }));
 
 console.error = jest.fn();

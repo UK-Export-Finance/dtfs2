@@ -10,17 +10,17 @@ const validateAndParseBankReviewDateMock = jest.fn();
 const getCoverStartDateOrTodayMock = jest.fn();
 
 jest.mock('../../utils/get-cover-start-date-or-today', () => ({
-  getCoverStartDateOrToday: getCoverStartDateOrTodayMock,
+  getCoverStartDateOrToday: (...args: unknown[]) => getCoverStartDateOrTodayMock(...args),
 }));
 
 jest.mock('../../services/api', () => ({
-  getFacility: getFacilityMock,
-  updateFacility: updateFacilityMock,
-  updateApplication: updateApplicationMock,
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  updateFacility: (...args: unknown[]) => updateFacilityMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 jest.mock('./validation', () => ({
-  validateAndParseBankReviewDate: validateAndParseBankReviewDateMock,
+  validateAndParseBankReviewDate: (...args: unknown[]) => validateAndParseBankReviewDateMock(...args),
 }));
 
 const dealId = 'dealId';

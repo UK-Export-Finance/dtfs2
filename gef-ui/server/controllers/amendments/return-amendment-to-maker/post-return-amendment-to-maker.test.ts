@@ -34,12 +34,12 @@ const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendmentStatus: updateAmendmentStatusMock,
-  getUserDetails: getUserDetailsMock,
-  updateApplication: updateApplicationMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendmentStatus: (...args: unknown[]) => updateAmendmentStatusMock(...args),
+  getUserDetails: (...args: unknown[]) => getUserDetailsMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };

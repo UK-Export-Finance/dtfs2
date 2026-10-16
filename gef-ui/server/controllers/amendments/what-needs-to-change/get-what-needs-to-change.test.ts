@@ -19,10 +19,10 @@ const getAmendmentMock = jest.fn();
 const getTfmTeamMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  getTfmTeam: getTfmTeamMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  getTfmTeam: (...args: unknown[]) => getTfmTeamMock(...args),
 }));
 
 console.error = jest.fn();

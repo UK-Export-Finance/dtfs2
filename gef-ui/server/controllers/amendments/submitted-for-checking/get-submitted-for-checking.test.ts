@@ -9,7 +9,7 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 const getAmendmentMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
-  getAmendment: getAmendmentMock,
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
 }));
 
 const dealId = 'dealId';
