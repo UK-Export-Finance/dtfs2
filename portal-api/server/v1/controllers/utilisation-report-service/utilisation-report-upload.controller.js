@@ -65,6 +65,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     if (error instanceof InvalidReportStatusError) {
       return res.status(error.status).send(error.message);
     }
+
     console.error('Failed to save utilisation report: %o', error);
     return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');
   }

@@ -1,6 +1,6 @@
 import path from 'path';
 import { SwaggerDefinition, SWAGGER, SERVICES } from '@ukef/dtfs2-common';
-import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
+import { swaggerRouter as router } from '@ukef/dtfs2-common/swagger';
 
 const definition: SwaggerDefinition = {
   openapi: '3.0.0',
@@ -32,4 +32,4 @@ const apis = [
   path.join(__dirname, '/**/*.ts'),
 ];
 
-export default swaggerRouter(definition, apis);
+export const swaggerRouter = router(definition, apis);

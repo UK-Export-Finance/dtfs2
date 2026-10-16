@@ -130,6 +130,7 @@ exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
     throw new InvalidEmailAddressError(email);
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const user = await collection.findOne({ email: { $eq: email } });
 
@@ -228,11 +229,13 @@ exports.update = async (_id, update, auditDetails, callback) => {
       // queue update of salt+hash, ie store the encrypted password
       userSetUpdate.salt = salt;
       userSetUpdate.hash = hash;
+
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       if (oldSalt && oldHash) {
         userSetUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
       }
+
       userSetUpdate.loginFailureCount = 0;
       userSetUpdate.passwordUpdatedAt = Date.now();
 
@@ -256,9 +259,11 @@ exports.update = async (_id, update, auditDetails, callback) => {
     userSetUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const userUpdate = { $set: userSetUpdate };
+
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
+
     const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
       returnDocument: 'after',
     });
@@ -290,6 +295,7 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
@@ -348,6 +354,7 @@ exports.remove = async (_id, auditDetails, callback) => {
     if (error instanceof DocumentNotDeletedError) {
       return callback(error, 404);
     }
+
     console.error('Deleting a user threw an error %o', error);
     return callback(error, 500);
   }

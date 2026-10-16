@@ -18,7 +18,7 @@ const healthcheck = require('./healthcheck');
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
 const { authRouter, openRouter } = require('./v1/routes');
-const swaggerRouter = require('./v1/routes/swagger.route');
+const { swaggerRouter } = require('./v1/routes/swagger.route');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
@@ -49,7 +49,7 @@ const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
 

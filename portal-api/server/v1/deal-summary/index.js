@@ -10,6 +10,7 @@ const calculateFacilitiesInGbp = (facilityInDealCurrency, supplyContractConversi
   if (supplyContractConversionRateToGbp && Number(supplyContractConversionRateToGbp) > 0) {
     return facilityInDealCurrency / supplyContractConversionRateToGbp;
   }
+
   return facilityInDealCurrency;
 };
 
@@ -81,6 +82,7 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return b;
     }
+
     return null;
   });
 
@@ -89,9 +91,11 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     if (l.submittedAsIssuedDate) {
       return l;
     }
+
     if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
       return l;
     }
+
     return null;
   });
 
@@ -123,6 +127,7 @@ const calculateDealSummary = (deal) => {
       totalUkefExposure: calculate(bondsTotalUkefExposureInDealCurrency, loansTotalUkefExposureInDealCurrency, Number(supplyContractConversionRateToGBP)),
     };
   }
+
   return {};
 };
 
