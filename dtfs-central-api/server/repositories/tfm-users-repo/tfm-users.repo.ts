@@ -8,7 +8,7 @@ export class TfmUsersRepo {
    * @returns The collection
    */
   private static async getCollection(): Promise<Collection<WithoutId<TfmUser>>> {
-    return mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
+    return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   }
 
   /**
@@ -18,6 +18,6 @@ export class TfmUsersRepo {
    */
   public static async findOneUserById(id: string | ObjectId): Promise<TfmUser | null> {
     const collection = await this.getCollection();
-    return collection.findOne({ _id: new ObjectId(id) });
+    return await collection.findOne({ _id: new ObjectId(id) });
   }
 }

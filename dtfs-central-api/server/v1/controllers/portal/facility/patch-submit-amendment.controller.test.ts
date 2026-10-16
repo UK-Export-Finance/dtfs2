@@ -8,8 +8,8 @@ import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PortalDealService } from '../../../../services/portal/deal.service';
 import { patchSubmitAmendment, PatchSubmitAmendmentToUkefRequest } from './patch-submit-amendment.controller';
-import externalApi from '../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
+import { externalApi } from '../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
 
 const amendmentId = new ObjectId();
 const dealId = new ObjectId();

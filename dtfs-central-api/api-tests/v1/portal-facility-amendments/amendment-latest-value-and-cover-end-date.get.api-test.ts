@@ -25,9 +25,9 @@ type LatestAmendmentValueAndCoverEndDate = {
   value: number | null;
   coverEndDate: number | null;
 };
-interface LatestAmendmentValueAndCoverEndDateResponse extends Response {
+type LatestAmendmentValueAndCoverEndDateResponse = {
   body: LatestAmendmentValueAndCoverEndDate;
-}
+} & Response;
 
 const generateUrl = (facilityId: string): string => {
   return `/v1/portal/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`;

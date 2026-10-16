@@ -60,9 +60,11 @@ export const deletePayment = async (req: DeletePaymentRequest, res: Response) =>
   } catch (error) {
     const errorMessage = `Failed to delete payment with id ${paymentId}`;
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

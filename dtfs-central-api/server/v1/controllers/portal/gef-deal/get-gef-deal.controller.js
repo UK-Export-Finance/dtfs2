@@ -14,6 +14,7 @@ const findOneDeal = async (_id, callback) => {
 
     return deal;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.findOneDeal = findOneDeal;

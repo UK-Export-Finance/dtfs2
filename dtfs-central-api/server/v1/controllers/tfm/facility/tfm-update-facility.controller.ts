@@ -51,10 +51,12 @@ export const updateFacilityPut = async (req: UpdateFacilityPutRequest, res: Resp
     return res.status(HttpStatusCode.Ok).json(updatedFacility);
   } catch (error) {
     console.error('Error updating facility:', error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: 'An unknown error occurred while updating a facility',

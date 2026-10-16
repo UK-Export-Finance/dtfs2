@@ -48,9 +48,11 @@ export const deleteDeal = async (
         code: error.code,
       });
     }
+
     if (error instanceof DocumentNotDeletedError) {
       return res.sendStatus(404);
     }
+
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 };

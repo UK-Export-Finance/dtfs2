@@ -36,11 +36,13 @@ describe('/v1/tfm/deals', () => {
         },
       ])('by $fieldPathForNonBssDeal', ({ fieldPathForNonBssDeal: nonBssPath, fieldPathForBssDeal: bssPath, fieldValuesInAscendingOrder: values }) => {
         let nonBssPathExcludingDealSnapshot = nonBssPath;
+
         if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
           nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
         }
 
         let bssPathExcludingDealSnapshot = bssPath;
+
         if (bssPath.slice(0, 12) === 'dealSnapshot') {
           bssPathExcludingDealSnapshot = bssPath.slice(13);
         }
