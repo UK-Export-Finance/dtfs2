@@ -101,7 +101,7 @@
     "sass": "^1.105.1",
     "sass-loader": "17.0.1",
     "style-loader": "4.0.0",
-    "supertest": "^7.3.0",
+    "supertest": "^7.3.1",
     "terser-webpack-plugin": "^5.6.1",
     "ts-jest": "^29.4.14",
     "webpack": "^5.111.1",
