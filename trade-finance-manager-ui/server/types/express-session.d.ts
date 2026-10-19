@@ -26,14 +26,14 @@ export type UserSessionData = {
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L199-L211
 declare module 'express-session' {
-  type SessionData = {
-    addPaymentErrorKey: AddPaymentErrorKey;
-    initiateRecordCorrectionRequestErrorKey: InitiateRecordCorrectionRequestErrorKey;
-    checkedCheckboxIds: Record<string, true | undefined>;
-    generateKeyingDataErrorKey: GenerateKeyingDataErrorKey;
-    removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey;
-    editPaymentFormValues: EditPaymentFormValues;
-    recordCorrectionRequestEmails: string[];
-  } & UserSessionData &
-    PartiallyLoggedInUserSessionData;
+  type SessionData = UserSessionData &
+    PartiallyLoggedInUserSessionData & {
+      addPaymentErrorKey: AddPaymentErrorKey;
+      initiateRecordCorrectionRequestErrorKey: InitiateRecordCorrectionRequestErrorKey;
+      checkedCheckboxIds: Record<string, true | undefined>;
+      generateKeyingDataErrorKey: GenerateKeyingDataErrorKey;
+      removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey;
+      editPaymentFormValues: EditPaymentFormValues;
+      recordCorrectionRequestEmails: string[];
+    };
 }
