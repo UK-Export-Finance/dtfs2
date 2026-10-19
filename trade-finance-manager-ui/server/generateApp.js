@@ -14,7 +14,7 @@ const configureNunjucks = require('./nunjucks-configuration');
 const healthcheck = require('./healthcheck');
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
-const createRateLimit = require('./middleware/rateLimit/index');
+const { createRateLimit } = require('./middleware/rate-limit');
 
 const generateApp = () => {
   const app = express();
