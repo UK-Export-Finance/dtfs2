@@ -9,7 +9,7 @@ const { statusBanner } = require('./application-status-banner');
 const { applicationSubmission } = require('./application-submission');
 const { automaticCover } = require('./automatic-cover');
 const { bankReviewDate } = require('./bank-review-date');
-const { cloneDeal } = require('./clone-deal');
+const { cloneDealPage } = require('./clone-deal');
 const { companiesHouse } = require('./companies-house');
 const { contact } = require('./contact');
 const { coverStartDate } = require('./cover-start-date');
@@ -48,7 +48,7 @@ module.exports = {
   applicationSubmission,
   automaticCover,
   bankReviewDate,
-  cloneDeal,
+  cloneDealPage,
   companiesHouse,
   coverStartDate,
   dashboardPage,
