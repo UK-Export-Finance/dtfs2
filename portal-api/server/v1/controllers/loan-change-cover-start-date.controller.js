@@ -18,6 +18,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
     if (!deal) {
       return res.status(404).send();
     }
+
     if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();
     }

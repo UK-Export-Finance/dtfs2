@@ -12,7 +12,7 @@ class Application {
       this.version = getCurrentGefDealVersion();
 
       // ensure we don't consume any sensitive fields
-      const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;
+      const { token: makerToken, password: makerPassword, lastLogin: makerLastLogin, ...sanitisedMaker } = req.maker;
 
       this.maker = sanitisedMaker;
 
@@ -34,9 +34,11 @@ class Application {
       };
 
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
+
       if (req.mandatoryVersionId) {
         this.mandatoryVersionId = req.mandatoryVersionId;
       }
+
       this.createdAt = Date.now();
       this.updatedAt = Date.now();
       this.submissionType = null;
@@ -90,6 +92,7 @@ class Application {
         }
       });
     }
+
     this.auditRecord = req.auditRecord;
   }
 }

@@ -1,4 +1,5 @@
 import { MAKER_SUBMIT_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { getApplicationSubmission, postApplicationSubmission } from './index';
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
@@ -93,7 +94,7 @@ describe('controllers/application-submission', () => {
               userName: 'maker',
               firstname: 'Bob',
               surname: 'Smith',
-              email: 'test@test.com',
+              email: MOCK_EMAIL,
               createdAt: expect.any(Number),
               comment: mockRequest.body.comment,
             },

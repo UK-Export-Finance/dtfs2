@@ -24,8 +24,13 @@ exports.update = (req, res) => {
   const auditDetails = generatePortalAuditDetails(user._id);
 
   findOneDeal(dealId, async (deal) => {
-    if (!deal) return res.status(404).send();
-    if (!userOwns(user, deal)) return res.status(401).send();
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    if (!userOwns(user, deal)) {
+      return res.status(401).send();
+    }
 
     const validationErrors = validateNameChange(deal, additionalRefName);
 

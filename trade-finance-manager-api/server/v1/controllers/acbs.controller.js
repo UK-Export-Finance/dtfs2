@@ -229,6 +229,7 @@ const checkAzureAcbsFunction = async () => {
             }),
           );
         }
+
         // ADD `acbs` object to tfm-deals and tfm-facilities
         if (task.runtimeStatus === DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED) {
           switch (task.name) {
@@ -269,6 +270,7 @@ const issueAcbsFacilities = async (deal) => {
     console.error('Unable to issue deal %s facility to ACBS.', deal?._id);
     return false;
   }
+
   /**
    * Ensures following pre-conditions below invoking ACBS
    * 1. Facility has been issued on Portal

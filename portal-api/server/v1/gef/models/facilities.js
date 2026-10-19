@@ -8,6 +8,7 @@ const checkType = (type) => {
   if (type === 'Cash' || type === 'Contingent') {
     return type;
   }
+
   return null;
 };
 
@@ -25,9 +26,11 @@ class Facility {
       this.dealId = ObjectId(req.dealId);
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
+
       if (req.hasBeenIssued != null) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
+
       this.name = req.name || null;
       this.shouldCoverStartOnSubmission = null;
       this.coverStartDate = null;
@@ -52,22 +55,27 @@ class Facility {
       this.dayCountBasis = null;
       this.coverDateConfirmed = null;
       this.hasBeenIssuedAndAcknowledged = null;
+
       if (req.hasBeenIssuedAndAcknowledged != null) {
         this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
       }
+
       /**
        * canResubmitIssuedFacilities used temporarily once unissued facility changed to issued after first UKEF submission
        * used to populate change links on facility table and show which facilities changed to issued
        * Used as a criteria for resubmission to UKEF
        */
       this.canResubmitIssuedFacilities = null;
+
       if (req.canResubmitIssuedFacilities != null) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
+
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
 
       this.#validateAndSetFacilityEndDateValues(req, dealVersion);
+
       if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
         this.isUsingFacilityEndDate = this.isUsingFacilityEndDate ?? null;
         this.bankReviewDate = this.bankReviewDate ?? null;
@@ -202,6 +210,7 @@ class Facility {
 
       this.updatedAt = Date.now();
     }
+
     this.auditRecord = req.auditRecord;
   }
 
@@ -234,6 +243,7 @@ class Facility {
 
     if ('isUsingFacilityEndDate' in req) {
       this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+
       if (req.isUsingFacilityEndDate) {
         this.bankReviewDate = null;
       } else {
@@ -246,6 +256,7 @@ class Facility {
         this.bankReviewDate = null;
       } else {
         const bankReviewDate = typeof req.bankReviewDate === 'string' ? parseISO(req.bankReviewDate) : new Date(NaN);
+
         if (!isValid(bankReviewDate)) {
           throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
         }
@@ -261,6 +272,7 @@ class Facility {
         this.facilityEndDate = null;
       } else {
         const facilityEndDate = typeof req.facilityEndDate === 'string' ? parseISO(req.facilityEndDate) : new Date(NaN);
+
         if (!isValid(facilityEndDate)) {
           throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
         }

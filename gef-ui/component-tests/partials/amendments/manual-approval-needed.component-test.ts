@@ -1,4 +1,5 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import pageRenderer from '../../pageRenderer';
 import { ManualApprovalNeededViewModel } from '../../../server/types/view-models/amendments/ManualApprovalNeededViewModel.ts';
 
@@ -8,7 +9,7 @@ const render = pageRenderer(page);
 describe(page, () => {
   const exporterName = 'exporterName';
   const previousPage = 'previousPage';
-  const amendmentFormEmail = 'test@email.com';
+  const amendmentFormEmail = MOCK_EMAIL;
   const returnLink = '/dashboard/deals';
   const facilityType = FACILITY_TYPE.CASH;
 

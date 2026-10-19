@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { ACCESS_CODE_PAGES } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { postLogin } from './post-login';
 import { validationErrorHandler } from '../../helpers';
 import { MOCK_PORTAL_SESSION_USER } from '../../test-mocks/mock-portal-session-user';
@@ -12,7 +13,7 @@ console.error = jest.fn();
 const token = 'mock-token';
 
 const body = {
-  email: 'test@example.com',
+  email: MOCK_EMAIL,
   password: 'password123',
 };
 

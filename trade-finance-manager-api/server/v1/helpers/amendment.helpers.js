@@ -394,6 +394,7 @@ const addLatestAmendmentValue = async (tfmObject, latestValue, facilityId) => {
     };
     return newTfmObject;
   }
+
   return tfmObject;
 };
 
@@ -407,7 +408,9 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
     if (!facilityType || !coverStartDateFormatted || !coverEndDateFormatted) {
       return null;
     }
+
     const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
     // returns exposure period in months to add to tfmObject
     if (updatedTenor?.exposurePeriodInMonths) {
       return updatedTenor.exposurePeriodInMonths;

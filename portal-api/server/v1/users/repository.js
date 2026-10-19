@@ -71,6 +71,7 @@ class UserRepository {
     if (!sessionIdentifier) {
       throw new InvalidSessionIdentifierError(sessionIdentifier);
     }
+
     const userCollection = await db.getCollection('users');
     const setUpdate = {
       lastLogin: Date.now(),
@@ -103,9 +104,11 @@ class UserRepository {
 
     const collection = await db.getCollection('users');
     const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
+
     if (!user) {
       throw new UserNotFoundError(_id);
     }
+
     return transformDatabaseUser(user);
   }
 
@@ -118,6 +121,7 @@ class UserRepository {
     if (!user) {
       throw new UserNotFoundError(username);
     }
+
     return transformDatabaseUser(user);
   }
 
