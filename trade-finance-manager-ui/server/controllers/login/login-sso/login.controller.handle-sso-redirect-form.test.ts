@@ -28,6 +28,31 @@ jest.mock('../../../services/user-session.service', () => ({
   },
 }));
 
+function aSession(sessionData: Partial<SessionData>): Session & Partial<SessionData> {
+  return {
+    ...sessionData,
+    id: 'mock-id',
+    cookie: {} as Cookie,
+    regenerate: jest.fn(),
+    destroy: jest.fn(),
+    reload: jest.fn(),
+    save: jest.fn(),
+    touch: jest.fn(),
+    resetMaxAge: jest.fn(),
+  };
+}
+
+function getHttpMocks({ session, body }: { session: Session & Partial<SessionData>; body: HandleSsoRedirectFormUiRequest['body'] }) {
+  return httpMocks.createMocks<HandleSsoRedirectFormUiRequest>({
+    session,
+    body,
+  });
+}
+
+function aValidRequestBody(): HandleSsoRedirectFormUiRequest['body'] {
+  return anEntraIdAuthCodeRedirectResponseBody();
+}
+
 describe('controllers - login (sso)', () => {
   describe('handleSsoRedirectForm', () => {
     const handleSsoRedirectFormMock = jest.mocked(LoginService.handleSsoRedirectForm);
@@ -221,30 +246,5 @@ describe('controllers - login (sso)', () => {
         });
       });
     });
-
-    function aSession(sessionData: Partial<SessionData>): Session & Partial<SessionData> {
-      return {
-        ...sessionData,
-        id: 'mock-id',
-        cookie: {} as Cookie,
-        regenerate: jest.fn(),
-        destroy: jest.fn(),
-        reload: jest.fn(),
-        save: jest.fn(),
-        touch: jest.fn(),
-        resetMaxAge: jest.fn(),
-      };
-    }
-
-    function getHttpMocks({ session, body }: { session: Session & Partial<SessionData>; body: HandleSsoRedirectFormUiRequest['body'] }) {
-      return httpMocks.createMocks<HandleSsoRedirectFormUiRequest>({
-        session,
-        body,
-      });
-    }
-
-    function aValidRequestBody(): HandleSsoRedirectFormUiRequest['body'] {
-      return anEntraIdAuthCodeRedirectResponseBody();
-    }
   });
 });
