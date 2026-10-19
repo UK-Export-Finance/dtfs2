@@ -29,7 +29,7 @@ var maskedInputs = function () {
     Array.prototype.forEach.call(inputs, function (element) {
       if (element.innerText) {
         var maskPipe = IMask.createPipe(maskOptions);
-        element.innerText = maskPipe(element.innerText);  
+        element.innerText = maskPipe(element.innerText);
         return;
       }
 
