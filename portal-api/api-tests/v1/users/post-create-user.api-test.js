@@ -56,7 +56,9 @@ describe('a user', () => {
     withValidateUsernameAndEmailMatchTests({
       createPayloadWithUpdatedEmailAddress: (email) =>
         produce(MOCK_USER, (draftRequest) => {
-          draftRequest.email = email;
+          const modifiedDraftRequest = draftRequest;
+
+          modifiedDraftRequest.email = email;
         }),
       makeRequest: async (user) => await createUser(user, aNonAdmin),
     });
@@ -64,8 +66,10 @@ describe('a user', () => {
     withValidateEmailIsCorrectFormatTests({
       createPayloadWithUpdatedEmailAddress: (email) =>
         produce(MOCK_USER, (draftRequest) => {
-          draftRequest.username = email;
-          draftRequest.email = email;
+          const modifiedDraftRequest = draftRequest;
+
+          modifiedDraftRequest.username = email;
+          modifiedDraftRequest.email = email;
         }),
       makeRequest: async (user) => await createUser(user, aNonAdmin),
     });

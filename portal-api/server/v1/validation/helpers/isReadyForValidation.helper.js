@@ -8,6 +8,7 @@ const isReadyForValidation = (deal, submittedValues) => {
   if ((submissionType === SUBMISSION_TYPE.AIN || submissionType === SUBMISSION_TYPE.MIN) && status === DEAL_STATUS.ACKNOWLEDGED) {
     return false;
   }
+
   return true;
 };
 

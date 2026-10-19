@@ -70,9 +70,11 @@ export const getStartOfDateFromDayMonthYearStringsReplicatingMoment = (day: stri
   const parsedYear = Number.isNaN(Number(year)) ? currentYear : Number(year);
 
   let parsedDay = Number(day);
+
   if (Number.isNaN(parsedDay)) {
     // If the inputted day is invalid, current date is 29th February, and the parsedYear is not a leap year moment uses the current date as 28 instead
     const use28thFebruary = !isLeapYear(parsedYear) && currentDate === 29 && new Date().getMonth() === 1;
+
     if (use28thFebruary) {
       parsedDay = 28;
     } else {

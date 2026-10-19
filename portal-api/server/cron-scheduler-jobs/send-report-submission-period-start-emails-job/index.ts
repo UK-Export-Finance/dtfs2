@@ -15,12 +15,13 @@ const sendEmails = async () => {
 
   await sendEmailToAllBanksWhereReportNotReceived({
     emailDescription: EMAIL_DESCRIPTION,
-    sendEmailCallback: async (emailAddress, recipient, formattedReportPeriod) =>
-      sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_SUBMISSION_PERIOD_START, emailAddress, {
+    sendEmailCallback: async (emailAddress, recipient, formattedReportPeriod) => {
+      await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_SUBMISSION_PERIOD_START, emailAddress, {
         recipient,
         reportPeriod: formattedReportPeriod,
         reportDueDate,
-      }),
+      });
+    },
   });
 };
 

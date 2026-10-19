@@ -35,6 +35,7 @@ module.exports = async (submissionDetails, errorList) => {
 
   if (submissionDetails['buyer-address-country']) {
     const isDisabled = await isCountryDisabled(submissionDetails['buyer-address-country'].code);
+
     if (isDisabled) {
       newErrorList['buyer-address-country'] = {
         order: orderNumber(newErrorList),

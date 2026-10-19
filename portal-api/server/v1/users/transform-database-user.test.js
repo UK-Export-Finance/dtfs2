@@ -6,13 +6,17 @@ describe('transformDatabaseUser', () => {
   describe('signinTokens transformations', () => {
     describe('with one sign in token', () => {
       const userWithOneSignInToken = produce(TEST_DATABASE_USER, (draft) => {
-        draft.signInTokens = [TEST_DATABASE_USER.signInTokens[0]];
+        const modifiedDraft = draft;
+
+        modifiedDraft.signInTokens = [TEST_DATABASE_USER.signInTokens[0]];
       });
+
       assertSignInTokensAreTurnedToHexAndOriginalTokensDeleted(userWithOneSignInToken);
     });
 
     describe('with multiple sign in tokens', () => {
       const userWithTwoSignInTokens = { ...TEST_DATABASE_USER };
+
       assertSignInTokensAreTurnedToHexAndOriginalTokensDeleted(userWithTwoSignInTokens);
     });
 
@@ -32,6 +36,7 @@ describe('transformDatabaseUser', () => {
         const databaseSignInTokens = userInDatabase.signInTokens;
 
         const result = transformDatabaseUser(userInDatabase);
+
         result.signInTokens.forEach((signInToken, i) => {
           const databaseSignInToken = databaseSignInTokens[i];
           expect(signInToken.salt).toEqual(Buffer.from(databaseSignInToken.saltHex, 'hex'));
@@ -42,6 +47,7 @@ describe('transformDatabaseUser', () => {
 
       it('returns the user without every signInTokens hashHex and saltHex', () => {
         const result = transformDatabaseUser(userInDatabase);
+
         result.signInTokens.forEach((signInToken) => {
           expect(signInToken.hashHex).toBeUndefined();
           expect(signInToken.saltHex).toBeUndefined();

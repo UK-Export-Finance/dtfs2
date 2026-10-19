@@ -15,6 +15,7 @@ const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
     return true;
   }
+
   return false;
 };
 
@@ -54,6 +55,7 @@ const validationText = (str, fieldTitle) => {
   if (!isValidFormat(str)) {
     return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 1 or 12.10`;
   }
+
   return '';
 };
 
