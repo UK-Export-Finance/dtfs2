@@ -1,1 +1,3 @@
-Cypress.Commands.add('clickBackLink', require('./click-back-link'));
+import { clickBackLink } from './click-back-link';
+
+Cypress.Commands.add('clickBackLink', clickBackLink);

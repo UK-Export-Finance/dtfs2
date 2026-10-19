@@ -2,28 +2,39 @@ import './click-events';
 import './trade-finance-manager-api';
 import './ui';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
+import { saveSession } from './utils/saveSession';
+import { keyboardInput } from './utils/keyboardInput';
+import { completeDateFormFields } from './trade-finance-manager-ui/completeDateFormFields';
+import { loadData } from './utils/loadData';
+import { assertLength } from './utils/assertLength';
+import { assertText } from './utils/assertText';
+import { assertValue } from './utils/assertValue';
+import { assertUrl } from './utils/assertUrl';
+import { checkClassName } from './utils/checkClassName';
+import { autocompleteKeyboardInput } from './utils/autoCompleteKeyboardInput';
+import { getInputByLabelText } from './utils/getInputByLabelText';
 
 // Preserve session cookie
-Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+Cypress.Commands.add('saveSession', saveSession);
 
-Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+Cypress.Commands.add('keyboardInput', keyboardInput);
 
 // Assert an element has some exact text
-Cypress.Commands.add('assertText', require('./utils/assertText'));
+Cypress.Commands.add('assertText', assertText);
 
-Cypress.Commands.add('assertValue', require('./utils/assertValue'));
+Cypress.Commands.add('assertValue', assertValue);
 
-Cypress.Commands.add('assertUrl', require('./utils/assertUrl'));
+Cypress.Commands.add('assertUrl', assertUrl);
 
-Cypress.Commands.add('assertLength', require('./utils/assertLength'));
+Cypress.Commands.add('assertLength', assertLength);
 
-Cypress.Commands.add('checkClassName', require('./utils/checkClassName'));
+Cypress.Commands.add('checkClassName', checkClassName);
 
-Cypress.Commands.add('autocompleteKeyboardInput', require('./utils/autoCompleteKeyboardInput'));
+Cypress.Commands.add('autocompleteKeyboardInput', autocompleteKeyboardInput);
 
-Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
+Cypress.Commands.add('getInputByLabelText', getInputByLabelText);
 
-Cypress.Commands.add('completeDateFormFields', require('./trade-finance-manager-ui/completeDateFormFields'));
+Cypress.Commands.add('completeDateFormFields', completeDateFormFields);
 
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
@@ -49,4 +60,4 @@ Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 Cypress.Commands.add('listAllDeals', require('./portal-api/listAllDeals'));
 
-Cypress.Commands.add('loadData', require('./utils/loadData'));
+Cypress.Commands.add('loadData', loadData);

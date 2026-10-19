@@ -1,6 +1,6 @@
-import pages from '../../../../e2e/pages';
+import { tfmPages } from '../../../../e2e/pages';
 
-const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
 const { premiumPaymentsTable } = premiumPaymentsContent;
 
 /**
@@ -10,7 +10,7 @@ const { premiumPaymentsTable } = premiumPaymentsContent;
  * @param {Currency} paymentCurrency - the currency to select for the payment
  * @param {number | string} amountReceived - the user input for the payment amount
  */
-const addPaymentToFeeRecords = ({ feeRecords, reportId, paymentCurrency, amountReceived }) => {
+export const addPaymentToFeeRecords = ({ feeRecords, reportId, paymentCurrency, amountReceived }) => {
   cy.visit(`utilisation-reports/${reportId}`);
 
   feeRecords.forEach((feeRecord) => {
@@ -29,5 +29,3 @@ const addPaymentToFeeRecords = ({ feeRecords, reportId, paymentCurrency, amountR
 
   cy.clickContinueButton();
 };
-
-export default addPaymentToFeeRecords;

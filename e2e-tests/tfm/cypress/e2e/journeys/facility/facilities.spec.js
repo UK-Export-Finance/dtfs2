@@ -4,7 +4,7 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { caseSummary } from '../../partials';
-import pages from '../../pages';
+import { pages } from '../../pages';
 import CONSTANTS from '../../../fixtures/constants';
 
 context('Facility page', () => {

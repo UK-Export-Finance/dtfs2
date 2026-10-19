@@ -4,7 +4,7 @@ import { continueButton, errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 
 context('Amendments underwriting - add underwriter decision', () => {
   let dealId;

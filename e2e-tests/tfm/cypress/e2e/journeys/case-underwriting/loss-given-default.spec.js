@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import partials, { errorSummary } from '../../partials';
-import pages from '../../pages';
+import { pages } from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 

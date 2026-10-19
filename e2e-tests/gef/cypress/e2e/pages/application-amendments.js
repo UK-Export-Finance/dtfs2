@@ -6,7 +6,7 @@ const cyGetAmendmentsSummaryListRowByKey = (summaryIndex, keyText) =>
 const cyGetAmendmentsSummaryListValueByKey = (summaryIndex, keyText) =>
   cyGetAmendmentsSummaryListRowByKey(summaryIndex, keyText).find('.govuk-summary-list__value');
 
-const applicationAmendments = {
+export const applicationAmendments = {
   subNavigationBarAmendments: () => cy.get('[data-cy="application-amendments-link"]'),
   tabHeading: () => cy.get('[data-cy="tab-heading"]'),
   amendmentDetailsLink: () => cy.get('[data-cy="amendment-details-link"]'),
@@ -37,5 +37,3 @@ const applicationAmendments = {
     createdByValue: () => cyGetAmendmentsSummaryListValueByKey(index, 'Amendment created by'),
   }),
 };
-
-module.exports = applicationAmendments;

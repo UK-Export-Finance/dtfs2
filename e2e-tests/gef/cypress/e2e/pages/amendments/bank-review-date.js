@@ -9,4 +9,4 @@ const bankReviewDate = {
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
-module.exports = bankReviewDate;
+module.exports = { bankReviewDate };

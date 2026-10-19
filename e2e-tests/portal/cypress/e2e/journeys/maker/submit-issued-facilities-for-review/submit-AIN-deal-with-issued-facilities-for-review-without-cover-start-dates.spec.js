@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
+const { dealWithNotStartedFacilityStatuses } = require('./dealWithNotStartedFacilityStatuses');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const {
   fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,

@@ -40,6 +40,7 @@ module.exports = ({ username, password, count = 0 }) => {
   // The page is determined by how many request-code clicks we just performed:
   // 0 -> check-your-email, 1 -> new-access-code, 2 -> resend-another-access-code.
   let input;
+
   if (count === 1) {
     input = newAccessCode.accessCodeInput();
   } else if (count === 2) {

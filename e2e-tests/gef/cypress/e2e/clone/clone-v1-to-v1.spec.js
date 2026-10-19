@@ -1,13 +1,13 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import cloneGEFDeal from '../pages/clone-deal';
-import mandatoryCriteria from '../pages/mandatory-criteria';
-import nameApplication from '../pages/name-application';
-import applicationDetails from '../pages/application-details';
+import { cloneDealPage } from '../pages/clone-deal';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
+import { nameApplication } from '../pages/name-application';
+import { applicationDetails } from '../pages/application-details';
 import { submitButton } from '../partials';
-import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import facilityEndDate from '../pages/facility-end-date';
-import bankReviewDate from '../pages/bank-review-date';
+import { aboutFacilityUnissued } from '../pages/unissued-facilities-about-facility';
+import { facilityEndDate } from '../pages/facility-end-date';
+import { bankReviewDate } from '../pages/bank-review-date';
 import { MOCK_APPLICATION_AIN } from '../../fixtures/mocks/mock-deals';
 import { anUnissuedCashFacility, anIssuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facilities';
 import { DEAL_STATUS, FACILITY_TYPE } from '../../fixtures/constants';
@@ -62,7 +62,7 @@ context('Clone version 1 deal to version 1', () => {
 
       cy.visit(relative(`/gef/application-details/${originalDealId}`));
 
-      cloneGEFDeal.cloneGefDealLink().click();
+      cloneDealPage.cloneGefDealLink().click();
       mandatoryCriteria.trueRadio().click();
       cy.clickContinueButton();
 

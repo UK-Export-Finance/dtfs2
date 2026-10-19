@@ -1,9 +1,9 @@
 import { today, twoDays, tomorrow, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { backLink, continueButton, errorSummary, headingCaption, mainHeading, form, saveAndReturnButton } from '../../partials';
-import aboutFacility from '../../pages/about-facility';
-import bankReviewDate from '../../pages/bank-review-date';
-import facilityEndDate from '../../pages/facility-end-date';
+import { aboutFacility } from '../../pages/about-facility';
+import { bankReviewDate } from '../../pages/bank-review-date';
+import { facilityEndDate } from '../../pages/facility-end-date';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
@@ -254,6 +254,7 @@ context('About Facility Page  - feature flag enabled', () => {
       aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format
       aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format
       aboutFacility.coverEndDateYear().should('have.value', tomorrow.year);
+
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacility.isUsingFacilityEndDateNo().should('not.be.checked');

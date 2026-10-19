@@ -1,9 +1,9 @@
 import relative from '../relativeURL';
 import { backLink, cancelLink, errorSummary, submitButton } from '../partials';
-import applicationSubmission from '../pages/application-submission';
-import applicationDetails from '../pages/application-details';
-import applicationPreview from '../pages/application-preview';
-import statusBanner from '../pages/application-status-banner';
+import { applicationSubmission } from '../pages/application-submission';
+import { applicationDetails } from '../pages/application-details';
+import { applicationPreview } from '../pages/application-preview';
+import { statusBanner } from '../pages/application-status-banner';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 const dealIds = [];

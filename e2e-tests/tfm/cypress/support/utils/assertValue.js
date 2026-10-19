@@ -4,8 +4,6 @@
  * @param {object} selector: Cypress selector
  * @param {string} expectedValue: Expected value
  */
-const assertValue = (selector, expectedValue) => {
+export const assertValue = (selector, expectedValue) => {
   selector.input().should('have.value', expectedValue);
 };
-
-module.exports = assertValue;

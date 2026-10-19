@@ -7,7 +7,7 @@ import {
   toIsoMonthStamp,
 } from '@ukef/dtfs2-common';
 import { subMonths } from 'date-fns';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../../support/alias-selector';
@@ -91,9 +91,11 @@ context('Users can route to the payments page for a bank', () => {
           pages.utilisationReportsSummaryPage.tableRowSelector(id, latestQuarterlySubmissionMonthStamp).should('exist');
           return;
         }
+
         if (id === MONTHLY_REPORTING_BANK_ID) {
           pages.utilisationReportsSummaryPage.tableRowSelector(id, previousSubmissionMonthStamp).should('exist');
         }
+
         pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonthStamp).should('exist');
       } else {
         pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonthStamp).should('not.exist');
