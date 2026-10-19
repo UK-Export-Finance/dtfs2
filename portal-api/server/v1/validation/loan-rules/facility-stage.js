@@ -13,6 +13,7 @@ const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
     return `Select the ${fieldTitle}`;
   }
+
   return '';
 };
 

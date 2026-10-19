@@ -67,8 +67,9 @@ exports.clone = async (req, res) => {
       return res.status(404).send();
     }
 
-    const { _id, previousStatus: _previousStatus, tfm: _tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const { _id, previousStatus: existingPreviousStatus, tfm: existingDealTfm, ...existingDealWithoutCertainFields } = existingDeal;
     delete existingDealWithoutCertainFields.dataMigration;
+
     if (existingDealWithoutCertainFields?.submissionDetails?.v1Status) {
       delete existingDealWithoutCertainFields.submissionDetails.v1Status;
     }
@@ -134,6 +135,7 @@ exports.clone = async (req, res) => {
           if (facility.type === FACILITY_TYPE.LOAN) {
             return stripTransaction(facility, CLONE_LOAN_FIELDS);
           }
+
           return facility;
         });
 

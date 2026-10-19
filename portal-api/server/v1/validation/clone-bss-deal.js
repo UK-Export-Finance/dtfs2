@@ -5,6 +5,7 @@ exports.getCloneDealErrors = (deal, cloneTransactions) => {
   const cloneDealErrorList = {};
 
   const dealErrors = getDealErrors(deal);
+
   if (dealErrors) {
     errorList = dealErrors.errorList;
   }

@@ -283,12 +283,14 @@ class SignInLinkController {
       return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
     } catch (error) {
       console.error('Error creating email sign in link %o', error);
+
       if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).send({
           error: 'Forbidden',
           message: error.message,
         });
       }
+
       return res.status(HttpStatusCode.InternalServerError).send({
         error: 'Internal Server Error',
         message: error.message,
@@ -312,12 +314,14 @@ class SignInLinkController {
       return res.status(HttpStatusCode.Ok).json({ numberOfSignInOtpAttemptsRemaining: signInOTPSendCount });
     } catch (error) {
       console.error('Error creating email sign in OTP %o', error);
+
       if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).send({
           error: 'Forbidden',
           message: error.message,
         });
       }
+
       return res.status(HttpStatusCode.InternalServerError).send({
         error: 'Internal Server Error',
         message: error.message,

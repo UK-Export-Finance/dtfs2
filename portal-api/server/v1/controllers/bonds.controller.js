@@ -19,7 +19,9 @@ exports.create = async (req, res) => {
   }
 
   return findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
+    if (!deal) {
+      return res.status(404).send();
+    }
 
     if (!userHasAccessTo(req.user, deal)) {
       return res.status(401).send();
@@ -73,6 +75,7 @@ exports.getBond = async (req, res) => {
 
       return res.status(404).send();
     }
+
     return res.status(404).send();
   });
 };
@@ -106,6 +109,7 @@ const facilityStageFields = (bond) => {
 const feeTypeFields = (bond) => {
   const modifiedBond = bond;
   const { feeType } = modifiedBond;
+
   if (feeType === 'At maturity') {
     modifiedBond.feeFrequency = null;
   }
@@ -171,6 +175,7 @@ exports.updateBond = async (req, res) => {
     const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, user, auditDetails);
 
     const validationErrors = bondValidationErrors(data, deal);
+
     if (validationErrors.count !== 0) {
       return res.status(400).send({
         validationErrors,
@@ -195,6 +200,7 @@ exports.deleteBond = async (req, res) => {
 
       return res.status(status).send(data);
     }
+
     return res.status(404).send();
   });
 };

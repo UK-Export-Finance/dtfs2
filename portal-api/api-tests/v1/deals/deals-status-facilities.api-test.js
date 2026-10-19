@@ -30,6 +30,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       ) {
         return facility;
       }
+
       return null;
     };
 
@@ -350,6 +351,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         if ((issuedBond || issuedLoan) && facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
           return facility;
         }
+
         return null;
       };
 
@@ -693,6 +695,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         if ((issuedBond || unconditionalLoan) && facility.issueFacilityDetailsProvided && facility.status === 'Ready for check') {
           return facility;
         }
+
         return null;
       };
 

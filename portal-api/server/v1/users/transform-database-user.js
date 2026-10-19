@@ -6,8 +6,11 @@ const transformDatabaseUser = (user) => {
   }
 
   return produce(user, (draft) => {
-    draft.signInTokens = user.signInTokens.map((signInToken) => {
+    const modifiedDraft = draft;
+
+    modifiedDraft.signInTokens = user.signInTokens.map((signInToken) => {
       const { hashHex, saltHex, expiry } = signInToken;
+
       return {
         hash: Buffer.from(hashHex, 'hex'),
         salt: Buffer.from(saltHex, 'hex'),

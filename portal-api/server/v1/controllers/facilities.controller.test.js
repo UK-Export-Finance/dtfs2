@@ -149,6 +149,7 @@ describe('facilities.controller', () => {
 
           const expectedFacilities = mockFacilities.map((facility) => {
             const amendment = amendments.find((a) => a.facilityId === facility._id);
+
             if (amendment) {
               return {
                 ...facility,
@@ -156,6 +157,7 @@ describe('facilities.controller', () => {
                 value: amendment.value,
               };
             }
+
             return facility;
           });
 

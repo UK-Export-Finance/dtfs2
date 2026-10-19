@@ -8,6 +8,7 @@ exports.calculateGuaranteeFee = (riskMarginFee) => {
     const formattedRiskMarginFee = formattedNumber(calculation, 4);
     return formattedRiskMarginFee;
   }
+
   return riskMarginFee;
 };
 
@@ -34,5 +35,6 @@ exports.calculateUkefExposure = (value, coveredPercentage) => {
     const formattedUkefExposure = formattedNumber(ukefExposure, 2);
     return formattedUkefExposure;
   }
+
   return '';
 };

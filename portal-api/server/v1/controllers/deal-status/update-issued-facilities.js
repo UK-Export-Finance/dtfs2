@@ -31,6 +31,7 @@ const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
   ) {
     return true;
   }
+
   return false;
 };
 
@@ -130,10 +131,11 @@ const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFac
         if (updatedCount === shouldUpdateCount) {
           return resolve(deal);
         }
+
         return facility;
       });
     }
-    // eslint-disable-next-line no-promise-executor-return
+
     return resolve(deal);
   });
 };
