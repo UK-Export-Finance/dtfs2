@@ -31,7 +31,8 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
 
     const validTestbank1Email = 'valid-testbank1-email@example.com';
     const validtestBank1 = produce(aBank(), (draftBank) => {
-      draftBank.paymentOfficerTeam.emails = [validTestbank1Email];
+      const modifiedDraftBank = draftBank;
+      modifiedDraftBank.paymentOfficerTeam.emails = [validTestbank1Email];
     });
 
     const validTestbank2Email1 = 'valid-testbank2-email@example.com';
@@ -42,8 +43,10 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
       { startMonth: 8, endMonth: 10 },
     ];
     const validtestBank2 = produce(aBank(), (draftBank) => {
-      draftBank.paymentOfficerTeam.emails = [validTestbank2Email1];
-      draftBank.utilisationReportPeriodSchedule = quarterlyReportingSchedule;
+      const modifiedDraftBank = draftBank;
+
+      modifiedDraftBank.paymentOfficerTeam.emails = [validTestbank2Email1];
+      modifiedDraftBank.utilisationReportPeriodSchedule = quarterlyReportingSchedule;
     });
 
     jest.mocked(api.getAllBanks).mockResolvedValue([validtestBank1, validtestBank2]);

@@ -53,7 +53,9 @@ describe('SignInLinkService', () => {
       let blockedUser;
       beforeEach(() => {
         blockedUser = produce(testUser, (draft) => {
-          draft['user-status'] = STATUS.BLOCKED;
+          const modifiedDraft = draft;
+
+          modifiedDraft['user-status'] = STATUS.BLOCKED;
         });
         when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
         when(utils.issueValid2faJWT).calledWith(blockedUser).mockReturnValueOnce(tokenObject);
@@ -70,7 +72,9 @@ describe('SignInLinkService', () => {
 
       beforeEach(() => {
         disabledUser = produce(testUser, (draft) => {
-          draft.disabled = true;
+          const modifiedDraft = draft;
+
+          modifiedDraft.disabled = true;
         });
         when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
         when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);

@@ -23,6 +23,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     ) {
       return facility;
     }
+
     return null;
   };
 

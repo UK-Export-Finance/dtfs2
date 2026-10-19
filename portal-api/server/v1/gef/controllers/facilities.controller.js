@@ -23,6 +23,7 @@ const api = require('../../api');
 exports.create = async (req, res) => {
   try {
     const enumValidationErr = facilitiesCheckEnums(req.body);
+
     if (!req.body.type || !req.body.dealId) {
       return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
     }
@@ -67,12 +68,14 @@ exports.create = async (req, res) => {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
+
     throw error;
   }
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+
   if (!dealId) {
     // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
     return collection.find().toArray();
@@ -81,6 +84,7 @@ const getAllFacilitiesByDealId = async (dealId) => {
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDatabaseQueryError('Invalid deal id');
   }
+
   const matchingFacilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   return matchingFacilities;
@@ -122,6 +126,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
          * update the facility with the amended values.
          */
         const { _id } = facility;
+
         if (isPortalAmendmentsEnabled) {
           const amendments = await api.getAcknowledgedAmendmentsByFacilityId(_id);
 
@@ -168,6 +173,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
+
     throw error;
   }
 };
@@ -180,6 +186,7 @@ exports.getById = async (req, res) => {
 
     const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
     const facility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
+
     if (facility) {
       const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
       const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(facility.dealId) } });
@@ -200,6 +207,7 @@ exports.getById = async (req, res) => {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
+
     throw error;
   }
 };
@@ -265,11 +273,13 @@ const update = async (id, updateBody, auditDetails) => {
         { returnNewDocument: true, returnDocument: 'after' },
       );
     }
+
     return updatedFacility;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     }
+
     console.error('Unable to update the facility %o', error);
     return false;
   }
@@ -279,6 +289,7 @@ exports.update = update;
 exports.updatePUT = async (req, res) => {
   try {
     const enumValidationErr = facilitiesCheckEnums(req.body);
+
     if (enumValidationErr) {
       return res.status(422).send(enumValidationErr);
     }
@@ -307,6 +318,7 @@ exports.updatePUT = async (req, res) => {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
+
     throw error;
   }
 };
@@ -331,6 +343,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.sendStatus(404);
     }
+
     return res.status(500).send({ status: 500, error });
   }
 };
@@ -357,6 +370,7 @@ exports.deleteByDealId = async (req, res) => {
     if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }
+
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-
 const CONSTANTS = require('../../../../constants');
 
 const TOTAL_REQUIRED = 8;
@@ -10,24 +8,31 @@ const unansweredFields = (answers) => {
   if (!answers.companiesHouseRegistrationNumber) {
     required.push('companiesHouseRegistrationNumber');
   }
+
   if (!answers.companyName) {
     required.push('companyName');
   }
+
   if (!answers.registeredAddress) {
     required.push('registeredAddress');
   }
+
   if (!answers.selectedIndustry) {
     required.push('selectedIndustry');
   }
+
   if (!answers.industries) {
     required.push('industries');
   }
+
   if (!answers.smeType) {
     required.push('smeType');
   }
+
   if (!answers.probabilityOfDefault) {
     required.push('probabilityOfDefault');
   }
+
   if (answers.isFinanceIncreasing !== false && !answers.isFinanceIncreasing) {
     required.push('isFinanceIncreasing');
   }

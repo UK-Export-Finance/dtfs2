@@ -9,6 +9,7 @@ const isValidFormat = (value) => {
   if (decimalsCount(value) === 0) {
     return true;
   }
+
   return false;
 };
 
@@ -48,6 +49,7 @@ const validationText = (str, fieldTitle) => {
   if (!isValidFormat(str)) {
     return `${fieldTitle} must be a whole number, like 12`;
   }
+
   return '';
 };
 

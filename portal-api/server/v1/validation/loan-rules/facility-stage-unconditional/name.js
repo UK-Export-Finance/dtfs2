@@ -9,6 +9,7 @@ const isValid = (str) => {
   if (!hasValue(str)) {
     return false;
   }
+
   if (!isValidLength(str)) {
     return false;
   }
@@ -24,6 +25,7 @@ const validationText = (str, fieldTitle) => {
   if (!isValidLength(str)) {
     return `${fieldTitle} must be ${MAX_CHARACTERS} characters or fewer`;
   }
+
   return '';
 };
 

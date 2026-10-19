@@ -57,6 +57,7 @@ const addAccurateStatusesToBonds = (deal) => {
       bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
     });
   }
+
   return deal.bondTransactions;
 };
 

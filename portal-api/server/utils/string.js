@@ -4,6 +4,7 @@ const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
     return true;
   }
+
   return false;
 };
 

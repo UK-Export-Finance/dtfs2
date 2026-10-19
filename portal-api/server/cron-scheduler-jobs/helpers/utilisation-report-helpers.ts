@@ -105,6 +105,7 @@ const sendEmailForBank = async (
       console.info(`Not sending ${emailDescription} email to '${bankName}' - paymentOfficerTeam.emails property against bank is not an array or is empty`);
       return;
     }
+
     await Promise.all(
       paymentOfficerTeamEmails.map(async (paymentOfficerTeamEmail) => {
         if (!isValidEmail(paymentOfficerTeamEmail)) {
@@ -135,6 +136,7 @@ const sendEmailToBankIfReportNotReceived = async (bank: BankResponse, emailDescr
     );
     return;
   }
+
   const isReportDue = await getIsReportDue(bankId, currentReportingPeriodForBank);
 
   if (!isReportDue) {

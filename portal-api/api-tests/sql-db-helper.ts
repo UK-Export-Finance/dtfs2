@@ -11,6 +11,7 @@ const initialize = async () => {
   if (SqlDbDataSource.isInitialized) {
     return SqlDbDataSource;
   }
+
   return await SqlDbDataSource.initialize();
 };
 

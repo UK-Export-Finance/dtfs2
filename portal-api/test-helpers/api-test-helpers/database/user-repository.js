@@ -63,6 +63,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
+
     if (loginStatus === PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
       const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
@@ -75,6 +76,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
     }
+
     if (loginStatus === PORTAL_LOGIN_STATUS.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
