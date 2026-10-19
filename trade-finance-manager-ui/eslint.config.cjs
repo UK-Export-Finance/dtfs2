@@ -247,7 +247,7 @@ module.exports = defineConfig([
   // DTFS tfm-ui exception
   // Why: Frontend source scripts need browser globals; generated public assets are ignored above
   {
-    files: ['scripts/**/*.js'],
+    files: ['scripts/**/*.js', 'scripts/**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.browser,

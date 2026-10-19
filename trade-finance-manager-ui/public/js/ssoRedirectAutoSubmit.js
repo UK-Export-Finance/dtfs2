@@ -1,2 +1,0 @@
-var DTFS_TFM;!function(){"use strict";var e={};!function(){var t=e;Object.defineProperty(t,"__esModule",{value:!0});const o=document.getElementById("accept-sso-redirect-form");o&&o.submit()}(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).ssoRedirectAutoSubmit=e}();
-//# sourceMappingURL=ssoRedirectAutoSubmit.js.map

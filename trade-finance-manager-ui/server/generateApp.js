@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { expressSession, configure } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
-const swaggerRouter = require('./routes/swagger.route');
+const { swaggerRouter } = require('./routes/swagger.route');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -36,7 +36,7 @@ const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
   app.use(expressSession());
