@@ -241,6 +241,15 @@ module.exports = defineConfig([
   },
 
   // DTFS tfm-ui exception
+  // Why: Declaration merging requires interfaces rather than type aliases.
+  {
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+
+  // DTFS tfm-ui exception
   // Why: Frontend source scripts need browser globals; generated public assets are ignored above
   {
     files: ['scripts/**/*.js', 'scripts/**/*.ts'],
