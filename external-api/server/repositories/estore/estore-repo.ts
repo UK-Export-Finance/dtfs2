@@ -16,6 +16,7 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    *
    * @returns {Promise<WithId<object> | null>} - A promise that resolves to the found document, or `null` if no document is found.
+   * @throws The database error if the lookup fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -30,8 +31,8 @@ export class EstoreRepo {
 
       return await collection.findOne({ 'payload.dealId': { $eq: dealId } });
     } catch (error) {
-      console.error('An error occurred while finding deal %s in %s collection.', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
-      return null;
+      console.error('An error occurred while finding deal %s in %s collection. %o', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS, error);
+      throw error;
     }
   }
 
