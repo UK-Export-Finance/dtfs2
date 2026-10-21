@@ -80,6 +80,7 @@ const mapAmendmentToLatestCompletedDate = (
   coverEndDate: number;
 } => {
   const { amendmentId, coverEndDate } = amendment;
+
   if (!coverEndDate) {
     throw new Error('Found amendment does not have a defined coverEndDate');
   }
@@ -92,6 +93,7 @@ const mapAmendmentToLatestCompletedDate = (
 
 const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
+
   if (isUsingFacilityEndDate) {
     if (!facilityEndDate) {
       throw new Error('Found amendment does not have a defined facility end date');
@@ -145,12 +147,14 @@ export const getAmendmentsByFacilityId = async (req: GetAmendmentsByFacilityIdRe
         } else {
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
+
         break;
       default:
         if (amendmentIdOrStatus) {
           if (!ObjectId.isValid(amendmentIdOrStatus)) {
             return res.status(400).send({ status: 400, message: 'Invalid amendment Id', code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER });
           }
+
           amendment = (await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentIdOrStatus)) ?? {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
@@ -159,6 +163,7 @@ export const getAmendmentsByFacilityId = async (req: GetAmendmentsByFacilityIdRe
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
     console.error('Error getting amendments by facility id:', error);
+
     if (error instanceof ApiError) {
       const { status, message } = error;
       return res.status(status).send({ status, message });
@@ -188,6 +193,7 @@ export const getAmendmentsByDealId = async (req: GetAmendmentsByDealIdRequest, r
         } else {
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
+
         break;
       case AMENDMENT_QUERY_STATUSES.APPROVED: {
         const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
@@ -204,6 +210,7 @@ export const getAmendmentsByDealId = async (req: GetAmendmentsByDealIdRequest, r
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
     console.error('Error getting amendments by deal id:', error);
+
     if (error instanceof ApiError) {
       const { status: errorStatus, message } = error;
 

@@ -12,9 +12,9 @@ import { aBank } from '../../../test-helpers';
 
 const BASE_URL = '/v1/utilisation-reports/record-correction-log-details/:correctionId';
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: GetRecordCorrectionLogDetailsResponseBody;
-}
+} & Response;
 
 console.error = jest.fn();
 

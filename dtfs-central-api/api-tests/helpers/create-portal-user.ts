@@ -3,9 +3,9 @@ import { PortalUser, ROLES } from '@ukef/dtfs2-common';
 import { generateSystemAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream';
 import { testApi } from '../test-api';
 
-interface CreateUserResponse extends Response {
+type CreateUserResponse = {
   body: { _id: string };
-}
+} & Response;
 
 /**
  * Creates a user by calling the test api, uses default values unless provided

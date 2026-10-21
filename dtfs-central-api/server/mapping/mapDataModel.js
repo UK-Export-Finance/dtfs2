@@ -14,13 +14,17 @@ const getBSSProperty = (propertyPath) => {
         return propertyPath;
     }
   }
+
   return null;
 };
 
 const mapDataModel = (deal, propertyPath) => {
   if (deal && propertyPath) {
-    if (deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.BSS_EWCS) return getBSSProperty(propertyPath);
+    if (deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
+      return getBSSProperty(propertyPath);
+    }
   }
+
   return propertyPath;
 };
 

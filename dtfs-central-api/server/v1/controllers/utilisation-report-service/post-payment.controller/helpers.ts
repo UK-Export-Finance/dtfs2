@@ -26,11 +26,13 @@ export const addPaymentToUtilisationReport = async (
   const utilisationReportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
 
   const feeRecords = await FeeRecordRepo.findBy({ id: In(feeRecordIds) });
+
   if (feeRecords.length === 0) {
     throw new NotFoundError(`No fee records found for report with id ${reportId}`);
   }
 
   const isValidPaymentCurrency = feeRecords.every(({ paymentCurrency }) => paymentCurrency === payment.currency);
+
   if (!isValidPaymentCurrency) {
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }

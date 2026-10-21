@@ -7,15 +7,15 @@ import { aPortalUser } from '../../../test-helpers';
 import { testApi } from '../../test-api';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../server/drivers/db-client';
-import externalApi from '../../../server/external-api/api';
+import { externalApi } from '../../../server/external-api/api';
 
 jest.mock('../../../server/external-api/api');
 
 const BASE_URL = '/v1/portal/users/me/sign-in-code';
 
-interface SignInCodeResponse extends Response {
+type SignInCodeResponse = {
   body: { signInOTPSendCount?: number; message?: string };
-}
+} & Response;
 
 const TEST_EMAIL = 'test.user@example.com';
 

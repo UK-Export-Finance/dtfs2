@@ -442,14 +442,17 @@ describe('getKeyingSheetForReportId', () => {
     data.feeRecordId = feeRecordId ?? 1;
     data.paymentId = paymentId ?? 1;
     data.paymentAmountUsedForFeeRecord = paymentAmountUsedForFeeRecord ?? null;
+
     if (feeRecord) {
       data.feeRecord = feeRecord;
       data.feeRecordId = feeRecord.id;
     }
+
     if (payment) {
       data.payment = payment;
       data.paymentId = payment.id;
     }
+
     return data;
   }
 });
