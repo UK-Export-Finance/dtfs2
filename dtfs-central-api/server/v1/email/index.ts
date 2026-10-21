@@ -1,5 +1,5 @@
 import { AnyObject } from '@ukef/dtfs2-common';
-import externalApi from '../../external-api/api';
+import { externalApi } from '../../external-api/api';
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: AnyObject) => {
   try {

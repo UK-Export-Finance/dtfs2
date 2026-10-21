@@ -12,7 +12,7 @@ const { DEAL_CANCELLATION_SCHEDULE } = process.env;
  */
 const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
   await Promise.all(
-    deals.map(async (deal) => DealCancellationService.processPendingCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
+    deals.map(async (deal) => await DealCancellationService.processPendingCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
   );
 };
 

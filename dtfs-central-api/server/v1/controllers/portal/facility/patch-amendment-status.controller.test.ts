@@ -6,8 +6,8 @@ import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { patchAmendmentStatus, PatchSubmitAmendmentToCheckerRequest } from './patch-amendment-status.controller';
-import externalApi from '../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
+import { externalApi } from '../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';

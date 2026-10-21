@@ -41,6 +41,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
     }
 
     const utilisationReport = feeRecordsAtMatchStatusWithPayments[0].report;
+
     if (!utilisationReport) {
       throw new Error('The report on the found fee records is not defined');
     }
@@ -64,9 +65,11 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
   } catch (error) {
     const errorMessage = 'Failed to generate keying data';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

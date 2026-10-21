@@ -21,9 +21,9 @@ import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
-interface PutFeeRecordCorrectionTransientFormDataResponse extends Response {
+type PutFeeRecordCorrectionTransientFormDataResponse = {
   body: { validationErrors?: RecordCorrectionFormValueValidationErrors } | string;
-}
+} & Response;
 
 const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId/transient-form-data';
 

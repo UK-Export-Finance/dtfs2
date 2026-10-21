@@ -34,6 +34,7 @@ export const getFeeRecordsToKey = async (req: GetFeeRecordsToKeyRequest, res: Ge
 
   try {
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByStatusWithPayments(Number(reportId), [FEE_RECORD_STATUS.MATCH]);
+
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id ${reportId}`);
     }
@@ -41,6 +42,7 @@ export const getFeeRecordsToKey = async (req: GetFeeRecordsToKeyRequest, res: Ge
     const { id, bankId, reportPeriod, feeRecords } = utilisationReport;
 
     const bankName = await getBankNameById(bankId);
+
     if (!bankName) {
       throw new NotFoundError(`Failed to find a bank with id ${bankId}`);
     }
@@ -59,9 +61,11 @@ export const getFeeRecordsToKey = async (req: GetFeeRecordsToKeyRequest, res: Ge
   } catch (error) {
     const errorMessage = 'Failed to generate keying data';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

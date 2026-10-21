@@ -11,7 +11,7 @@ import { generateOtp } from '../../../server/helpers/portal-2fa/generate-otp';
 
 const BASE_URL = '/v1/portal/users/me/validate-sign-in-code';
 
-interface ValidateSignInCodeResponse extends Response {
+type ValidateSignInCodeResponse = {
   body: {
     success?: boolean;
     isValid?: boolean;
@@ -23,7 +23,7 @@ interface ValidateSignInCodeResponse extends Response {
     user?: PortalUser;
     tokenObject?: { token: string; expires: string };
   };
-}
+} & Response;
 
 const auditDetails = generatePortalAuditDetails(new ObjectId());
 

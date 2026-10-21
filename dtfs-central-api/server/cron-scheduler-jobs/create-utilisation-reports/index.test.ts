@@ -3,8 +3,8 @@ import { getCurrentReportPeriodForBankSchedule, Bank, ReportPeriod, REQUEST_PLAT
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
-import externalApi from '../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
+import { externalApi } from '../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../constants/email-template-ids';
 import { UtilisationReportStateMachine } from '../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
