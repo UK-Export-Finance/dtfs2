@@ -5,6 +5,9 @@ permissions:
   contents: read
 
 on:
+  push:
+    branches:
+      - feat/DTFS2-29193/add-acr-job-for-new-feature
   schedule:
     - cron: '0 23 * * *'
 
