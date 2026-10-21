@@ -81,8 +81,8 @@
     "jest": "30.5.2",
     "jest-when": "^4.0.3",
     "node-mocks-http": "^1.18.1",
-    "supertest": "7.3.0",
-    "ts-jest": "^29.4.14",
+    "supertest": "7.3.1",
+    "ts-jest": "^29.4.15",
     "typescript-eslint": "8.71.1"
   },
   "engines": {

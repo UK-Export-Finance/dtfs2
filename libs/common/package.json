@@ -105,8 +105,8 @@
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "jest-when": "^4.0.3",
-    "supertest": "^7.3.0",
-    "ts-jest": "^29.4.14"
+    "supertest": "^7.3.1",
+    "ts-jest": "^29.4.15"
   },
   "engines": {
     "node": ">=24.17.0",
