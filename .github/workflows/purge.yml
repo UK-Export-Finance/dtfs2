@@ -141,7 +141,9 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['crdtfsdev0012lpd66flpami2', 'crdtfs2feature0017xznnnjesthws']
+        acr:
+          - 'crdtfsdev0012lpd66flpami2'
+          - 'crdtfs2feature0017xznnnjesthws'
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -156,20 +158,21 @@ jobs:
 
       - name: Subscription 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == "crdtfsdev0012lpd66flpami2" ]]; then
             echo "SUBSCRIPTION=${{ secrets.DEV1_SUBSCRIPTION }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+          elif [[ "${{ matrix.acr }}" == "crdtfs2feature0017xznnnjesthws" ]]; then
             echo "SUBSCRIPTION=${{ secrets.FEAT1_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
       - name: Resource group 🛠️
         run: |
-          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+          if [[ "${{ matrix.acr }}" == "crdtfsdev0012lpd66flpami2" ]]; then
             echo "RESOURCE_GROUP=${{ secrets.DEV1_RESOURCE_GROUP }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+          elif [[ "${{ matrix.acr }}" == "crdtfs2feature0017xznnnjesthws" ]]; then
             echo "RESOURCE_GROUP=${{ secrets.FEAT1_RESOURCE_GROUP }}" >> $GITHUB_ENV
           fi
       - name: Execute (DEV1) ⚡
+        if: matrix.acr == 'crdtfsdev0012lpd66flpami2'
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_DEV1 }}
@@ -178,6 +181,7 @@ jobs:
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
       - name: Execute (FEAT1) ⚡
+        if: matrix.acr == 'crdtfs2feature0017xznnnjesthws'
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_FEAT1 }}
