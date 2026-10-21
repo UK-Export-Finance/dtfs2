@@ -75,7 +75,7 @@ export const createApi = (app: Express): TestApi => ({
             }),
           );
 
-          return apiRequest;
+          return await apiRequest;
         },
       }),
 
@@ -103,7 +103,7 @@ export const createApi = (app: Express): TestApi => ({
       await requestInProgress.query(query);
     }
 
-    return requestInProgress;
+    return await requestInProgress;
   },
   put: async (url: string, data: AnyObject, { headers }: { headers: IncomingHttpHeaders | undefined } = { headers: undefined }) => {
     const requestInProgress = request(app).put(url);
@@ -112,7 +112,7 @@ export const createApi = (app: Express): TestApi => ({
       await requestInProgress.set(headers);
     }
 
-    return requestInProgress.send(data);
+    return await requestInProgress.send(data);
   },
   remove: async (url: string, data: AnyObject, { headers }: { headers: IncomingHttpHeaders | undefined } = { headers: undefined }) => {
     const requestInProgress = request(app).delete(url);
@@ -121,6 +121,6 @@ export const createApi = (app: Express): TestApi => ({
       await requestInProgress.set(headers);
     }
 
-    return requestInProgress.send(data);
+    return awaitrequestInProgress.send(data);
   },
 });
