@@ -4,9 +4,9 @@ import { AnyObject, DealSubmissionType, DealType, PortalUser, TFM_DEAL_STAGE } f
 import { testApi } from '../test-api';
 import { aPortalUser } from '../mocks/test-users/portal-user';
 
-interface CreateDealResponse extends Response {
+type CreateDealResponse = {
   body: { _id: string };
-}
+} & Response;
 
 /**
  * Create a deal

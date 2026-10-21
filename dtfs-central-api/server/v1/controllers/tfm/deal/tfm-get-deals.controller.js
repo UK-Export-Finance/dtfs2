@@ -20,6 +20,7 @@ const findDeals = async (queryParameters) => {
   let bssField;
 
   const selectedField = {};
+
   if (sortBy) {
     nonBssField = sortBy.field;
     bssField = getBSSProperty(nonBssField);
@@ -104,6 +105,7 @@ const findDeals = async (queryParameters) => {
       }
     });
   }
+
   const doc = await dealsCollection
     .aggregate([
       {
@@ -154,6 +156,7 @@ const findDeals = async (queryParameters) => {
     };
     return { deals: [], pagination };
   }
+
   const { count, deals } = doc[0];
 
   const pagination = {

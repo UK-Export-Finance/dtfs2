@@ -41,6 +41,7 @@ const getUserInfo = async (userId) => {
     };
     return user;
   }
+
   return { status: 400, message: 'Invalid User Id' };
 };
 
@@ -166,6 +167,7 @@ const generateMINActivities = async (req, res) => {
     params: { id: dealId },
     body: { auditDetails },
   } = req;
+
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
@@ -180,6 +182,7 @@ const generateMINActivities = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -205,6 +208,7 @@ const generateMINActivities = async (req, res) => {
 
       return res.status(code).send(response);
     }
+
     return res.status(404).send();
   } catch (error) {
     console.error('Error generating MIN activities %o', error);

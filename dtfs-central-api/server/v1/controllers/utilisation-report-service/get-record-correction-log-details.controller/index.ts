@@ -75,9 +75,11 @@ export const getRecordCorrectionLogDetails = async (req: Request, res: GetRecord
   } catch (error) {
     const errorMessage = `Failed to get record correction log details`;
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

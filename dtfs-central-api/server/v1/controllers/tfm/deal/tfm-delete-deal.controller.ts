@@ -32,6 +32,7 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
         code: error.code,
       });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 
@@ -60,6 +61,7 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
     if (error instanceof DocumentNotFoundError) {
       return res.status(HttpStatusCode.Ok).send({ acknowledged: true, deletedCount: 1 });
     }
+
     console.error('Error deleting deal %o', error);
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
