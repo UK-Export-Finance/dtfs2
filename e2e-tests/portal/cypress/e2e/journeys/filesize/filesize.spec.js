@@ -51,7 +51,7 @@ describe('submitting payloads with different file sizes', () => {
       cy.assertText(problemWithService.heading(), problemWithServicePageHeading);
     });
 
-    it.only('should successfully upload a utilisation report with a payload size less than 5mb', () => {
+    it('should successfully upload a utilisation report with a payload size less than 5mb', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('long-utilisation-report-February_2024_quarterly.xlsx');
       cy.clickContinueButton();
 
