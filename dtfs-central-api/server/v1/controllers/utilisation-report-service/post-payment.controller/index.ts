@@ -38,9 +38,11 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
   } catch (error) {
     const errorMessage = 'Failed to add a new payment';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(500).send(errorMessage);
   }
 };

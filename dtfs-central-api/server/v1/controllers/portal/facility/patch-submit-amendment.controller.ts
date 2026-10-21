@@ -5,8 +5,8 @@ import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-strea
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PortalDealService } from '../../../../services/portal/deal.service';
 import { PatchPortalFacilitySubmitAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-submit-amendment-payload';
-import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
-import externalApi from '../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
+import { externalApi } from '../../../../external-api/api';
 
 type PatchSubmitAmendmentToUkefRequestParams = {
   facilityId: string;

@@ -57,6 +57,7 @@ exports.createFacilityPost = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 

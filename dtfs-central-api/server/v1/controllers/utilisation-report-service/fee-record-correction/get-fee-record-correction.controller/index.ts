@@ -52,9 +52,11 @@ export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest,
   } catch (error) {
     const errorMessage = 'Failed to get fee record correction';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

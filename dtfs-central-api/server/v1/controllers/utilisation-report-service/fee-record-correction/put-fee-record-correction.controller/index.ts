@@ -91,9 +91,11 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
   } catch (error) {
     const errorMessage = 'Failed to put fee record correction';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };
