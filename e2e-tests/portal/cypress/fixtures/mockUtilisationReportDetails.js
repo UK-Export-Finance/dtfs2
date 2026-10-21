@@ -125,6 +125,17 @@ const ewcsTfmFacilityForReport = {
   },
 };
 
+/**
+ * TFM facilities matching the UKEF facility IDs (0010000001 to 0010000067) used in
+ * long-utilisation-report-February_2024_quarterly.xlsx
+ */
+const tfmFacilitiesForLongReport = Array.from({ length: 67 }, (_, index) => ({
+  facilitySnapshot: {
+    ...tfmFacilityForReport.facilitySnapshot,
+    ukefFacilityId: String(10000001 + index).padStart(10, '0'),
+  },
+}));
+
 module.exports = {
   previousReportDetails,
   february2023ReportDetails,
@@ -133,4 +144,5 @@ module.exports = {
   december2023ToFebruary2024ReportDetails,
   tfmFacilityForReport,
   ewcsTfmFacilityForReport,
+  tfmFacilitiesForLongReport,
 };

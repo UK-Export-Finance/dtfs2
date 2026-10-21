@@ -1,6 +1,11 @@
 import relative from '../../relativeURL';
-import { feedbackPage, problemWithService, utilisationReportUpload } from '../../pages';
-import { december2023ToFebruary2024ReportDetails, tfmFacilityForReport, ewcsTfmFacilityForReport } from '../../../fixtures/mockUtilisationReportDetails';
+import { feedbackPage, problemWithService, utilisationReportUpload, confirmAndSend } from '../../pages';
+import {
+  december2023ToFebruary2024ReportDetails,
+  tfmFacilityForReport,
+  ewcsTfmFacilityForReport,
+  tfmFacilitiesForLongReport,
+} from '../../../fixtures/mockUtilisationReportDetails';
 import { NODE_TASKS, BANK2_PAYMENT_REPORT_OFFICER1 } from '../../../../../e2e-fixtures';
 
 const problemWithServicePageHeading = 'Sorry, there is a problem with the service.';
@@ -28,7 +33,7 @@ describe('submitting payloads with different file sizes', () => {
     beforeEach(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [december2023ToFebruary2024ReportDetails]);
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport, ewcsTfmFacilityForReport]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport, ewcsTfmFacilityForReport, ...tfmFacilitiesForLongReport]);
 
       cy.login(BANK2_PAYMENT_REPORT_OFFICER1);
       cy.visit(relative('/utilisation-report-upload'));
@@ -50,8 +55,13 @@ describe('submitting payloads with different file sizes', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('long-utilisation-report-February_2024_quarterly.xlsx');
       cy.clickContinueButton();
 
-      utilisationReportUpload.checkReportTitle().should('exist');
-      utilisationReportUpload.validationErrorTable().should('exist');
+      cy.url({ timeout: 45000 }).should('contain', '/confirm-and-send');
+      problemWithService.heading().should('not.exist');
+
+      confirmAndSend.confirmAndSendButton().click();
+
+      cy.url({ timeout: 45000 }).should('contain', '/confirmation');
+      problemWithService.heading().should('not.exist');
     });
   });
 });

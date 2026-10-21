@@ -53,6 +53,9 @@ export const generateApp = (): Express => {
 
   // Set the limit for express.json to larger size for the utilisation report validation endpoint as some reports are larger than MAX_REQUEST_SIZE.
   app.use(`/v1${REPORT_DATA_VALIDATION_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
+  // Same for the utilisation report upload (save) endpoint, which receives the full report data.
+  app.post(`/v1/${UTILISATION_REPORTS_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
+  // Set the limit for express.json to MAX_REQUEST_SIZE for all other endpoints.
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
 
   app.use(compression());
