@@ -3,4 +3,7 @@ module.exports = {
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.ff-test.ts'],
   preset: 'ts-jest',
+  moduleNameMapper: {
+    '^@ukef/(?!dtfs2-common(?:/|$))(.*)$': '<rootDir>/$1',
+  },
 };

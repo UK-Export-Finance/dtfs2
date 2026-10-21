@@ -28,7 +28,9 @@
     "rootDir": ".." /* Ensure project and shared libs are both under the source root. */,
     "rootDirs": ["./", "../libs/"] /* Allow multiple folders to be treated as one when resolving modules. */,
     "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "baseUrl": ".",
     "paths": {
+      "@ukef/*": ["./*"],
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
       "@ukef/dtfs2-common/api-test": ["../libs/common/src/test-helpers/api-test/index.ts"],
       "@ukef/dtfs2-common/backend": ["../libs/common/src/helpers/backend/index.ts"],
@@ -107,7 +109,8 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "ts-node": {
-    "files": true
+    "files": true,
+    "require": ["tsconfig-paths/register"]
   },
   "include": ["**/*.ts", "../libs/common/**/*.ts"],
   "exclude": ["./node_modules/*", "node_modules"]

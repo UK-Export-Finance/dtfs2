@@ -4,6 +4,9 @@ module.exports = {
   testMatch: ['**/*.api-test.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'ts-jest',
+  moduleNameMapper: {
+    '^@ukef/(?!dtfs2-common(?:/|$))(.*)$': '<rootDir>/$1',
+  },
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
