@@ -257,6 +257,7 @@ describe(page, () => {
                   items: [],
                 },
               },
+              ...confirmedRequestStartDateParams,
             }),
           );
         }
@@ -279,6 +280,7 @@ describe(page, () => {
                   items: [],
                 },
               },
+              ...confirmedRequestStartDateParams,
             }),
           );
         }
