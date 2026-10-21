@@ -1,0 +1,172 @@
+import { resetAllWhenMocks, when } from 'jest-when';
+import { HttpStatusCode, type AxiosResponse } from 'axios';
+import { ROLES } from '@ukef/dtfs2-common';
+import { createApi } from '@ukef/dtfs2-common/api-test';
+import type { SessionCookieResponse, RequestHeaders, ApiResponse } from '@ukef/dtfs2-common';
+import extractSessionCookie from '../../helpers/extractSessionCookie';
+import mockLogin from '../../helpers/login';
+import app from '../../../server/createApp';
+import * as api from '../../../server/api';
+import { withPartial2faAuthValidationApiTests } from '../helpers/partial-2fa-auth-validation-api-tests';
+import { withRoleValidationApiTests } from '../../common-tests/role-validation-api-tests';
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
+  verify: jest.fn((_req: unknown, _res: unknown, next: () => void): void => {
+    next();
+  }),
+}));
+
+jest.mock('../../../server/api', () => ({
+  login: jest.fn(),
+  sendSignInLink: jest.fn(),
+  loginWithSignInLink: jest.fn(),
+  validateToken: () => false,
+  validatePartialAuthToken: jest.fn(),
+}));
+
+export const withSendNewSignInLinkApiTests = (endpoint: string) => {
+  describe(`POST /login/${endpoint}`, () => {
+    const { post } = createApi(app);
+    const mockedLogin = api.login as jest.Mock;
+    const mockedValidatePartialAuthToken = api.validatePartialAuthToken as jest.Mock;
+    const mockedSendSignInLink = api.sendSignInLink as jest.Mock;
+    const extractSessionCookieAsFn = extractSessionCookie as (response: SessionCookieResponse) => string;
+    const extractSessionCookieTyped = (response: unknown): string => extractSessionCookieAsFn(response as SessionCookieResponse);
+    const allRoles: string[] = Object.values(ROLES) as string[];
+
+    const originalPortal2faEnabled = process.env.FF_PORTAL_2FA_ENABLED;
+
+    beforeAll(() => {
+      process.env.FF_PORTAL_2FA_ENABLED = 'false';
+    });
+
+    afterAll(() => {
+      if (originalPortal2faEnabled === undefined) {
+        delete process.env.FF_PORTAL_2FA_ENABLED;
+      } else {
+        process.env.FF_PORTAL_2FA_ENABLED = originalPortal2faEnabled;
+      }
+    });
+
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to(`/login/${endpoint}`),
+      whitelistedRoles: allRoles,
+      successCode: HttpStatusCode.Found,
+      successHeaders: { location: '/login/check-your-email' },
+    });
+
+    withPartial2faAuthValidationApiTests({
+      makeRequestWithHeaders: (headers?: RequestHeaders) => post({}, headers).to(`/login/${endpoint}`),
+      validateResponseWasSuccessful: (response: ApiResponse) => {
+        expect(response.status).toEqual(HttpStatusCode.Found);
+        expect(response.headers.location).toEqual('/login/check-your-email');
+      },
+      flow: 'sign-in-link',
+    });
+
+    describe('with a valid partial auth token', () => {
+      const partialAuthToken = 'partial auth token';
+      const email = 'email@example.com';
+      const password = 'a password';
+      const numberOfSendSignInLinkAttemptsRemaining = 1;
+      let sessionCookie: string;
+      beforeEach(async () => {
+        resetAllWhenMocks();
+        jest.clearAllMocks();
+        mockedLogin.mockImplementation(mockLogin(partialAuthToken));
+        sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookieTyped);
+        when(mockedValidatePartialAuthToken)
+          .calledWith(partialAuthToken)
+          .mockResolvedValueOnce({ data: {} } as AxiosResponse<unknown>);
+      });
+
+      describe('when the user does not have a session', () => {
+        beforeEach(() => {
+          mockSuccessfulSendSignInLinkResponse();
+        });
+
+        it('should not send a new sign in link', async () => {
+          mockedSendSignInLink.mockClear();
+          await post({}).to(`/login/${endpoint}`);
+
+          expect(mockedSendSignInLink).not.toHaveBeenCalled();
+        });
+
+        it('should redirect the user to /login', async () => {
+          const { status, headers } = await post({}).to(`/login/${endpoint}`);
+
+          expect(status).toEqual(HttpStatusCode.Found);
+          expect(headers.location).toEqual('/login');
+        });
+      });
+
+      describe.each([
+        {
+          description: 'when a user is not blocked',
+          beforeEachSetUp: () => {
+            mockSuccessfulSendSignInLinkResponse();
+          },
+        },
+        {
+          description: 'when a user is blocked',
+          beforeEachSetUp: () => {
+            mock403SendSignInLinkResponse();
+          },
+        },
+        {
+          description: 'when sending an email fails',
+          beforeEachSetUp: () => {
+            mock500SendSignInLinkResponse();
+          },
+        },
+      ])('$description', ({ beforeEachSetUp }) => {
+        beforeEach(() => {
+          beforeEachSetUp();
+        });
+
+        itRedirectsTheUserToCheckYourEmail();
+        itSendsANewSignInLink();
+      });
+
+      function itRedirectsTheUserToCheckYourEmail() {
+        it('should redirect the user to /login/check-your-email', async () => {
+          const { status, headers } = await post({}, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
+
+          expect(status).toEqual(HttpStatusCode.Found);
+          expect(headers.location).toEqual('/login/check-your-email');
+        });
+      }
+
+      function itSendsANewSignInLink() {
+        it('should send a new sign in link', async () => {
+          mockedSendSignInLink.mockClear();
+          await post({}, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
+
+          expect(mockedSendSignInLink).toHaveBeenCalledTimes(1);
+          expect(mockedSendSignInLink).toHaveBeenCalledWith(partialAuthToken);
+        });
+      }
+
+      function mockSuccessfulSendSignInLinkResponse() {
+        when(mockedSendSignInLink).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+      }
+
+      function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode: number) {
+        const error = Object.assign(new Error(`Request failed with status: ${statusCode}`), {
+          isAxiosError: true,
+          response: { status: statusCode },
+        });
+        when(mockedSendSignInLink).calledWith(expect.anything()).mockRejectedValue(error);
+      }
+
+      function mock403SendSignInLinkResponse() {
+        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(HttpStatusCode.Forbidden);
+      }
+
+      function mock500SendSignInLinkResponse() {
+        mockUnsuccessfulSendSignInLinkResponseWithStatusCode(HttpStatusCode.InternalServerError);
+      }
+    });
+  });
+};
