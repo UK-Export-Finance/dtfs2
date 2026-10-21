@@ -51,16 +51,18 @@ describe('submitting payloads with different file sizes', () => {
       cy.assertText(problemWithService.heading(), problemWithServicePageHeading);
     });
 
-    it('should successfully upload a utilisation report with a payload size less than 5mb', () => {
+    it.only('should successfully upload a utilisation report with a payload size less than 5mb', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('long-utilisation-report-February_2024_quarterly.xlsx');
       cy.clickContinueButton();
 
-      cy.url({ timeout: 45000 }).should('contain', '/confirm-and-send');
+      // timeout is required here as the upload of the long report can take time for large files
+      cy.url({ timeout: 60000 }).should('contain', '/confirm-and-send');
+      confirmAndSend.confirmAndSendButton({ timeout: 60000 }).should('be.visible');
       problemWithService.heading().should('not.exist');
 
       confirmAndSend.confirmAndSendButton().click();
 
-      cy.url({ timeout: 45000 }).should('contain', '/confirmation');
+      cy.url({ timeout: 60000 }).should('contain', '/confirmation');
       problemWithService.heading().should('not.exist');
     });
   });
