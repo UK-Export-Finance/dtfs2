@@ -1,4 +1,4 @@
-const { defineConfig } = require('eslint/config');
+  const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const globals = require('globals');
 
@@ -196,7 +196,10 @@ module.exports = defineConfig([
           devDependencies: [
             '**/*.test.{js,ts}',
             '**/*.tests.ts',
-            '**/*.api-test{s,}.{js,ts}',
+            // DTFS portal-ui exception for API tests
+            // Why: portal-ui API tests are named api-test.js, not api-tests.js
+            '**/*.api-test{,s}.{js,ts}',
+
             '**/__mocks__/**',
             '**/webpack.*.{js,ts}',
             'api-tests/**',
