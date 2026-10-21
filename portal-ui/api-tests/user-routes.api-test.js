@@ -7,12 +7,16 @@ jest.mock('../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  user: jest.fn(),
+  updateUser: jest.fn(),
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
+const api = require('../server/api');
+const { MOCK_PORTAL_SESSION_USER } = require('../server/test-mocks/mock-portal-session-user');
 
 const { get, post } = createApi(app);
 
@@ -21,12 +25,16 @@ const allRoles = Object.values(ROLES);
 const _id = '64f736071f0fd6ecf617db8a';
 
 describe('user routes', () => {
+  beforeEach(() => {
+    api.user.mockResolvedValue(MOCK_PORTAL_SESSION_USER);
+    api.updateUser.mockResolvedValue({ status: 200, data: {} });
+  });
+
   describe('GET /user/:_id', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/user/${_id}`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -40,10 +48,11 @@ describe('user routes', () => {
 
   describe('POST /user/:_id/change-password', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/user/${_id}/change-password`),
+      makeRequestWithHeaders: (headers) =>
+        post({ currentPassword: 'CurrentPassword1!', password: 'NewPassword1!', passwordConfirm: 'NewPassword1!' }, headers).to(`/user/${_id}/change-password`),
       whitelistedRoles: allRoles,
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      successCode: 302,
+      successHeaders: { location: `/user/${_id}` },
     });
   });
 });
