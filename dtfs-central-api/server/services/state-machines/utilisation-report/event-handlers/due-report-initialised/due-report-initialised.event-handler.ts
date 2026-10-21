@@ -31,5 +31,5 @@ export const handleUtilisationReportDueReportInitialisedEvent = async ({
     requestSource,
   });
 
-  return UtilisationReportRepo.save(newUtilisationReport);
+  return await UtilisationReportRepo.save(newUtilisationReport);
 };

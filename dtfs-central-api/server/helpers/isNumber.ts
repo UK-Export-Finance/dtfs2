@@ -9,9 +9,11 @@
  */
 export const isNumber = (value: unknown, digits = 1): boolean => {
   const valueIsStringOrNumber = typeof value === 'string' || typeof value === 'number';
+
   if (valueIsStringOrNumber) {
     const regex = new RegExp(`^[0-9]{${digits}}$`);
     return regex.test(value.toString());
   }
+
   return false;
 };

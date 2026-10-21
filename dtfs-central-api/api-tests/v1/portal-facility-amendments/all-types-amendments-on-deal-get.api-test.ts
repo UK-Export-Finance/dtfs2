@@ -2,10 +2,10 @@ import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import {
   API_ERROR_CODE,
+  FacilityAmendment,
   MONGO_DB_COLLECTIONS,
   PORTAL_AMENDMENT_STATUS,
   PortalAmendmentStatus,
-  PortalFacilityAmendment,
   TfmAmendmentStatus,
   TfmFacility,
 } from '@ukef/dtfs2-common';
@@ -16,9 +16,9 @@ import { testApi } from '../../test-api';
 import { mongoDbClient as db } from '../../../server/drivers/db-client';
 import { aCompletedTfmFacilityAmendment, aFacility, aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
-interface PortalAmendmentsResponse extends Response {
-  body: PortalFacilityAmendment[];
-}
+type PortalAmendmentsResponse = Omit<Response, 'body'> & {
+  body: FacilityAmendment[];
+};
 
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 

@@ -41,6 +41,7 @@ export const getUtilisationReportSummariesByBankIdAndYear = async (req: GetUtili
     const { bankId, year } = req.params;
 
     const bank = await getBankById(bankId);
+
     if (!bank) {
       throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
     }

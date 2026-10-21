@@ -7,7 +7,7 @@ jest.mock('node-cron', () => ({
   validate: jest.fn(),
 }));
 
-jest.mock('./server/services/changeStream/setupChangeStream', () => ({
+jest.mock('./server/services/change-stream/setupChangeStream', () => ({
   setupChangeStream: jest.fn(),
 }));
 
