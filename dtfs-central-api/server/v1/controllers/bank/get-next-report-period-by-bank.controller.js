@@ -11,6 +11,7 @@ exports.getNextReportPeriodByBankId = async (req, res) => {
 
       return res.status(200).send(nextReportPeriod);
     }
+
     return res.status(404).send();
   } catch (error) {
     console.error('Error getting next report period for bank %s: %o', req?.params?.bankId, error);
