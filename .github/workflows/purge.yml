@@ -178,7 +178,6 @@ jobs:
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
       - name: Execute (FEAT1) ⚡
-        if: contains(matrix.acr, 'feature')
         uses: ./.github/actions/acr
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE_FEAT1 }}
