@@ -11,7 +11,7 @@ const {
 }: { moduleNameMapper: Record<string, string>; webpackAliases: Record<string, string> } = require('./module-aliases.cjs');
 
 describe('common source aliases', () => {
-  it('loads root and nested aliases in Jest', () => {
+  it('should load root and nested aliases in Jest', () => {
     //Assert
     expect(CURRENCY.GBP).toEqual('GBP');
 
@@ -36,7 +36,7 @@ describe('common source aliases', () => {
     expect(require.resolve(specifier)).toEqual(path.join(__dirname, target));
   });
 
-  it.each(['@ukef/constants', '@ukef/helpers/date', '@ukef/types/date'])('resolves %s during TypeScript compilation', (specifier) => {
+  it.each(['@ukef/constants', '@ukef/helpers/date', '@ukef/types/date'])('should resolve %s during TypeScript compilation', (specifier) => {
     // Arrange
     const configPath = path.join(__dirname, '../tsconfig.json');
     const config = ts.readConfigFile(configPath, ts.sys.readFile);
@@ -52,7 +52,7 @@ describe('common source aliases', () => {
     expect(resolvedModule?.resolvedFileName).toEqual(require.resolve(specifier));
   });
 
-  it('loads the public library and internal aliases at runtime from another working directory', () => {
+  it('should load the public library and internal aliases at runtime from another working directory', () => {
     // Arrange
     const script = `
       const assert = require('node:assert/strict');
