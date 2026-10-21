@@ -1,4 +1,4 @@
-  const { defineConfig } = require('eslint/config');
+const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const globals = require('globals');
 
