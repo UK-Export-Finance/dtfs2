@@ -12,7 +12,7 @@ const RecordCorrectionReasonSchema = z.enum(Object.values(RECORD_CORRECTION_REAS
  * Schema for validating fee record correction request transient form data payload.
  * Includes user information and form data with reasons and additional info.
  */
-const PutFeeRecordCorrectionRequestTransientFormDataPayload = z.object({
+const PutFeeRecordCorrectionRequestTransientFormDataPayloadSchema = z.object({
   user: TFM_SESSION_USER_SCHEMA,
   formData: z.object({
     reasons: z.array(RecordCorrectionReasonSchema).min(1),
@@ -23,9 +23,9 @@ const PutFeeRecordCorrectionRequestTransientFormDataPayload = z.object({
 /**
  * Type definition for fee record correction request transient form data payload.
  */
-export type PutFeeRecordCorrectionRequestTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionRequestTransientFormDataPayload>;
+export type PutFeeRecordCorrectionRequestTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionRequestTransientFormDataPayloadSchema>;
 
 /**
  * Middleware function to validate fee record correction request transient form data payload.
  */
-export const validatePutFeeRecordCorrectionRequestTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionRequestTransientFormDataPayload);
+export const validatePutFeeRecordCorrectionRequestTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionRequestTransientFormDataPayloadSchema);

@@ -148,6 +148,7 @@ describe('/v1/tfm/deals', () => {
         // Test evaluation
         expect(status).toEqual(200);
         expect(body.deals.length).toEqual(2);
+
         if (body.deals.length > 0) {
           expect(body.deals[0].tfm.lastUpdated).toEqual(expect.any(Number));
           expect(body.deals[1].tfm.lastUpdated).toEqual(expect.any(Number));

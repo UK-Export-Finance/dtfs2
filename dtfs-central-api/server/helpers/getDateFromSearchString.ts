@@ -28,9 +28,11 @@ export const getDateFromSearchString = (searchString: string) => {
     if (searchString.length === 8) {
       return parse(searchString, 'ddMMyyyy', new Date());
     }
+
     if (searchString.length === 6) {
       return parse(searchString, 'ddMMyy', new Date());
     }
+
     return new Date(NaN);
   }
 

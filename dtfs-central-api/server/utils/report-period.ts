@@ -7,14 +7,17 @@ const extractReportPeriodFromJsonObject = (reportPeriodJson: object): ReportPeri
   if (!('start' in reportPeriodJson)) {
     throw invalidReportPeriodError;
   }
+
   if (!('end' in reportPeriodJson)) {
     throw invalidReportPeriodError;
   }
 
   const { start, end } = reportPeriodJson;
+
   if (!(start instanceof Object) || !('month' in start) || !('year' in start)) {
     throw invalidReportPeriodError;
   }
+
   if (!(end instanceof Object) || !('month' in end) || !('year' in end)) {
     throw invalidReportPeriodError;
   }
@@ -65,19 +68,25 @@ export const validateReportPeriod = (reportPeriod: unknown): string[] => {
   const { month: endMonth, year: endYear } = end;
 
   const startMonthError = validateMonth(startMonth, "'reportPeriod.start.month'");
+
   if (startMonthError !== null) {
     reportPeriodErrors.push(`Report period is not valid: ${startMonthError}`);
   }
+
   const startYearError = validateYear(startYear, "'reportPeriod.start.year'");
+
   if (startYearError !== null) {
     reportPeriodErrors.push(`Report period is not valid: ${startYearError}`);
   }
 
   const endMonthError = validateMonth(endMonth, "'reportPeriod.end.month'");
+
   if (endMonthError !== null) {
     reportPeriodErrors.push(`Report period is not valid: ${endMonthError}`);
   }
+
   const endYearError = validateYear(endYear, "'reportPeriod.end.year'");
+
   if (endYearError !== null) {
     reportPeriodErrors.push(`Report period is not valid: ${endYearError}`);
   }
@@ -105,8 +114,10 @@ export const parseReportPeriod = (reportPeriod: object | undefined): ReportPerio
   }
 
   const parsedReportPeriod = extractReportPeriodFromJsonObject(reportPeriod);
+
   if (!isValidReportPeriod(parsedReportPeriod)) {
     throw new Error(`'${JSON.stringify(reportPeriod)}' is not a valid report period`);
   }
+
   return parsedReportPeriod;
 };
