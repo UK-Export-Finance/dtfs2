@@ -121,6 +121,6 @@ export const createApi = (app: Express): TestApi => ({
       await requestInProgress.set(headers);
     }
 
-    return awaitrequestInProgress.send(data);
+    return await requestInProgress.send(data);
   },
 });
