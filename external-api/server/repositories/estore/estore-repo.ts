@@ -66,7 +66,8 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    * @param {Document} document - The update filter containing the fields to be updated.
    *
-   * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
+   * @returns {Promise<UpdateResult>} - A promise that resolves to the result of the update operation.
+   * @throws The database error if the update fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -76,14 +77,14 @@ export class EstoreRepo {
    *   .then((result) => console.log('Update successful', result))
    *   .catch((error) => console.error('Update failed', error));
    */
-  public static async updateByDealId(dealId: string, document: Document): Promise<UpdateResult | boolean> {
+  public static async updateByDealId(dealId: string, document: Document): Promise<UpdateResult> {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
       return await collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
     } catch (error) {
-      console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
-      return false;
+      console.error('An error occurred while updating %s collection. %o', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS, error);
+      throw error;
     }
   }
 
@@ -93,7 +94,8 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    * @param {Document} document - The update filter containing the fields to be updated.
    *
-   * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
+   * @returns {Promise<UpdateResult>} - A promise that resolves to the result of the update operation.
+   * @throws The database error if the update fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -103,14 +105,14 @@ export class EstoreRepo {
    *   .then((result) => console.log('Update successful', result))
    *   .catch((error) => console.error('Update failed', error));
    */
-  public static async updateTfmDealByDealId(dealId: string, document: Document): Promise<UpdateResult | boolean> {
+  public static async updateTfmDealByDealId(dealId: string, document: Document): Promise<UpdateResult> {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
       return await collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
     } catch (error) {
-      console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.TFM_DEALS);
-      return false;
+      console.error('An error occurred while updating %s collection. %o', MONGO_DB_COLLECTIONS.TFM_DEALS, error);
+      throw error;
     }
   }
 }
