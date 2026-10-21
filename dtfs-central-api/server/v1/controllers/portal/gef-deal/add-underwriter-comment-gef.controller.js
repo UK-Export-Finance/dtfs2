@@ -30,6 +30,7 @@ const addComment = async (_id, commentType, comment) => {
 
     return value;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.addDealComment = addComment;
@@ -39,18 +40,21 @@ exports.addUnderwriterCommentToGefDeal = async (req, res) => {
     const dealId = req.params.id;
 
     await findOneDeal(dealId, async (deal) => {
-      if (!deal) res.status(404).send();
+      if (!deal) {
+        return res.status(404).send();
+      }
 
       if (deal) {
         const { commentType, comment } = req.body;
 
         const updatedDeal = await addComment(dealId, commentType, comment);
 
-        res.status(200).json(updatedDeal);
+        return res.status(200).json(updatedDeal);
       }
-      res.status(404).send();
+
+      return res.status(404).send();
     });
   } else {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 };

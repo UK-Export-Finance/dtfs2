@@ -10,9 +10,9 @@ import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers';
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: GetFeeRecordResponseBody;
-}
+} & Response;
 
 console.error = jest.fn();
 

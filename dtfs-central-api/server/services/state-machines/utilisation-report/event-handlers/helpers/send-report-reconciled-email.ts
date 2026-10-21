@@ -1,7 +1,7 @@
 import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
-import externalApi from '../../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
 
 /**
  * sends the report reconciled email to the bank

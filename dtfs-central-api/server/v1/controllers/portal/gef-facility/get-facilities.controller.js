@@ -9,6 +9,7 @@ const findAllGefFacilitiesByDealId = async (dealId) => {
     const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
     return facilities;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 

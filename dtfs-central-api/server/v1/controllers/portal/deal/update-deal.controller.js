@@ -31,6 +31,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     // but for now...
     if (!dealUpdate.editedBy) {
       const deal = await findOneDeal(dealId);
+
       if (deal?.editedBy) {
         editedBy = [...deal.editedBy, newEditedBy];
       } else {
@@ -141,6 +142,7 @@ const updateBssEwcsDeal = async ({ dealId, dealUpdate, user, auditDetails, exist
     if (routePath === ROUTES.PORTAL_ROUTE) {
       dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
     }
+
     const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;
 
     const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(dealUpdateForDatabaseWithoutId), {
@@ -236,6 +238,7 @@ exports.updateDealPut = async (req, res) => {
           code: error.code,
         });
       }
+
       return res.status(500).send({ status: 500, error });
     }
     // TODO: Refactor callback with status check
@@ -243,6 +246,7 @@ exports.updateDealPut = async (req, res) => {
       if (!existingDeal) {
         return res.status(404).send({ status: 404, message: 'Deal not found' });
       }
+
       const response = await updateBssEwcsDeal({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath });
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;

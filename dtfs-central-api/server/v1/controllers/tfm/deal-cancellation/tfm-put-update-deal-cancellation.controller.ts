@@ -34,10 +34,12 @@ export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRe
     return res.status(HttpStatusCode.Ok).json(updateResult);
   } catch (error) {
     console.error('Error updating deal cancellation:', error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: 'Unknown error occurred when updating the deal cancellation object',
