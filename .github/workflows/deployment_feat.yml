@@ -1,45 +1,41 @@
-# Deployment Workflow
-# *******************
+# Feature1 Deployment Workflow
+# ****************************
 #
-# This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
-# It is triggered on the default base branch (main) both on push and via a daily schedule at 21:00 UTC. The workflow runs after a successful Quality Assurance - Tests workflow
-# completion and includes the following key steps:
+# Deploys DTFS components to the Feature1 environment.
 #
-# Key Stages:
-# 1. Setup: Configures environment variables for the product, environment, and timezone.
-# 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
-# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
-# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs`) to Azure.
+# Stages:
+# 1. Resolve the deployment source and environment.
+# 2. Apply SQL database migrations.
+# 3. Deploy WebApps.
+# 4. Deploy Azure Functions.
+# 5. Send the deployment notification.
 #
-# Key Points:
-# - The workflow runs only after a successful Quality Assurance - Tests workflow.
-# - The deployment environment is specified via environment variables (e.g., `dev`, `staging`, `prod`).
-# - Matrix strategies are used for iterative deployment across multiple web apps and functions.
-# - Temporary deployment slots are used to minimize downtime during deployments.
-# - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
-#
-# Triggers: This workflow is triggered on a daily schedule and on push to the `main` branch.
-#
+# During DTFS2-25605 testing, deployments use:
+# feat/DTFS2-25605/test-feature-deployment
 # Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
-# - `ENVIRONMENT`: The environment where the deployment occurs (e.g., `dev`).
+# - `ENVIRONMENT`: The target DTFS environment (`feature`).
 # - `TIMEZONE`: The timezone for deployment logging and scheduling.
 
 name: Deployment
-run-name: 🚀 Deploying to feature
+run-name: 🚀 Deploying to Feature1
+
+concurrency:
+  group: deployment-feature
+  cancel-in-progress: false
 
 on:
-  schedule:
-    - cron: '0 22 * * *'
 
   push:
     branches:
-      # Manual deployment
-      - feature
+      # Temporary branch used for DTFS2-25605 deployment testing
+      - feat/DTFS2-25605/test-feature-deployment
+  workflow_dispatch:
 
 env:
   PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
+  DEPLOYMENT_BRANCH: feat/DTFS2-25605/test-feature-deployment
 
 jobs:
   # 1. Base actions configurations
@@ -50,13 +46,27 @@ jobs:
       product: ${{ env.PRODUCT }}
       environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
+      deployment_ref: ${{ steps.source.outputs.deployment_ref }}
+      deployment_branch: ${{ steps.source.outputs.deployment_branch }}
 
     steps:
+
+      - name: Repository 🗂️
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'push' && github.sha || env.DEPLOYMENT_BRANCH }}
+          fetch-depth: 1
       - name: Environment 🧪
         id: environment
         run: |
           echo "environment=feature" >> "$GITHUB_OUTPUT"
 
+
+      - name: Deployment Source 🏷️
+        id: source
+        run: |
+          echo "deployment_ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "deployment_branch=${{ env.DEPLOYMENT_BRANCH }}" >> "$GITHUB_OUTPUT"
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
@@ -72,10 +82,14 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.setup.outputs.deployment_ref }}
+
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
+          branch: ${{ needs.setup.outputs.deployment_ref }}
           host: ${{ secrets.SQL_DB_HOST }}
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
@@ -101,24 +115,25 @@ jobs:
       matrix:
         webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
-    concurrency:
-      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
-      cancel-in-progress: true
+
 
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.setup.outputs.deployment_ref }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
+          branch: ${{ needs.setup.outputs.deployment_ref }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
           acr: ${{ secrets.ACR_FEAT_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
-  # 4. micro-serices Functions deployments
+  # 4. Micro-services Functions deployments
   functions:
     name: Functions ⚡
     needs: [setup, database, webapp]
@@ -136,17 +151,18 @@ jobs:
       matrix:
         functions: ['acbs']
 
-    concurrency:
-      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
+
 
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.setup.outputs.deployment_ref }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:
+          branch: ${{ needs.setup.outputs.deployment_ref }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
@@ -161,26 +177,43 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
 
     steps:
-      - name: Notification  🔔
+
+      - name: Repository 🗂️
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.setup.outputs.deployment_ref }}
+      - name: Notification 🔔
         uses: ./.github/actions/notify
         with:
           webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
-          content: '
-                      {
+          content: |
+            {
               "@type": "MessageCard",
               "@context": "http://schema.org/extensions",
               "themeColor": "00703c",
-              "title": "🚀 main : ${{ env.ENVIRONMENT }}",
-              "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
+              "title": "🚀 ${{ needs.setup.outputs.deployment_branch }} : ${{ needs.setup.outputs.environment }}",
+              "summary": "Deployed ${{ needs.setup.outputs.deployment_branch }} branch to ${{ needs.setup.outputs.environment }} DTFS environment",
               "sections": [
                 {
                   "activityTitle": "Branch deployment",
-                  "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+                  "activitySubtitle": "Deployed **${{ needs.setup.outputs.deployment_branch }}** branch to **${{ needs.setup.outputs.environment }}** DTFS environment.",
                   "facts": [
-                    { "name": "Branch", "value": "main" },
-                    { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
-                    { "name": "Commit", "value": "${{ github.sha }}" },
-                    { "name": "Status", "value": "Successful" }
+                    {
+                      "name": "Branch",
+                      "value": "${{ needs.setup.outputs.deployment_branch }}"
+                    },
+                    {
+                      "name": "Environment",
+                      "value": "${{ needs.setup.outputs.environment }}"
+                    },
+                    {
+                      "name": "Commit",
+                      "value": "${{ needs.setup.outputs.deployment_ref }}"
+                    },
+                    {
+                      "name": "Status",
+                      "value": "Successful"
+                    }
                   ],
                   "markdown": true
                 }
@@ -198,4 +231,4 @@ jobs:
                 }
               ]
             }
-            '
+
