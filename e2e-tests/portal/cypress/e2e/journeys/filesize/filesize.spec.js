@@ -1,5 +1,6 @@
 import relative from '../../relativeURL';
 import { feedbackPage, problemWithService, utilisationReportUpload, confirmAndSend } from '../../pages';
+import { errorSummary } from '../../partials';
 import {
   december2023ToFebruary2024ReportDetails,
   tfmFacilityForReport,
@@ -44,11 +45,11 @@ describe('submitting payloads with different file sizes', () => {
       cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     });
 
-    it('should show the problem with service heading when uploading a utilisation report with a payload size greater than 5mb', () => {
+    it('should show an error message when uploading a utilisation report with a payload size greater than 5mb', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('oversized-utilisation-report-February_2024_quarterly.xlsx');
       cy.clickContinueButton();
 
-      cy.assertText(problemWithService.heading(), problemWithServicePageHeading);
+      errorSummary({ timeout: 30000 }).should('contain', 'The selected file must be smaller than 1 MB');
     });
 
     it('should successfully upload a utilisation report with a payload size less than 5mb', () => {
