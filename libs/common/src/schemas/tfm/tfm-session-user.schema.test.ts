@@ -1,4 +1,4 @@
-import { withTfmSessionUserSchemaTests } from '../../test-helpers/schemas';
+import { withTfmSessionUserSchemaTests } from '@ukef/test-helpers/schemas';
 import { TFM_SESSION_USER_SCHEMA } from './tfm-session-user.schema';
 
 describe('TFM_SESSION_USER_SCHEMA', () => {

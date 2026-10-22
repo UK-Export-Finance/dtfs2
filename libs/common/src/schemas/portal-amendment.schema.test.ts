@@ -1,7 +1,7 @@
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/test-helpers/mock-data-backend';
+import { PortalFacilityAmendmentUserValues } from '@ukef/types';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment.schema';
-import { withSchemaValidationTests } from '../test-helpers/schemas';
-import { aPortalFacilityAmendmentUserValues } from '../test-helpers/mock-data-backend';
-import { PortalFacilityAmendmentUserValues } from '../types';
 
 const aValidPayload = () => JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as PortalFacilityAmendmentUserValues;
 

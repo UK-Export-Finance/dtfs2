@@ -2,8 +2,8 @@ import httpMocks, { RequestMethod } from 'node-mocks-http';
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { HttpStatusCode } from 'axios';
+import { CSRF, SSO_URL, SSO_URL_FORM } from '@ukef/constants';
 import { verify } from './verify';
-import { CSRF, SSO_URL, SSO_URL_FORM } from '../../constants';
 import { csrfSynchronisedProtection } from './csrf-sync-instance';
 
 type CsrfCallback = (error?: unknown) => void;

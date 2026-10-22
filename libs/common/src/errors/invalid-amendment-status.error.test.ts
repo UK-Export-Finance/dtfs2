@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS } from '../constants';
+import { PORTAL_AMENDMENT_STATUS } from '@ukef/constants';
 import { ApiError } from './api.error';
 import { InvalidAmendmentStatusError } from './invalid-amendment-status.error';
 

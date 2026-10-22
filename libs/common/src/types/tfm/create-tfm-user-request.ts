@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CREATE_TFM_USER_REQUEST_SCHEMA } from '../../schemas';
+import { CREATE_TFM_USER_REQUEST_SCHEMA } from '@ukef/schemas';
 
 /**
  * User create request used during SSO login

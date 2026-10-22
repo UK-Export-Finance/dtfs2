@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { TEAM_IDS } from '../../../constants';
-import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { TEAM_IDS } from '@ukef/constants';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests/with-default-options.tests';
 
 export const withTfmTeamSchemaTests = <Schema extends ZodSchema>({
   schema,

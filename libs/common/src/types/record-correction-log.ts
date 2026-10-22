@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ReportPeriodPartialEntity } from '../sql-db-entities';
+import { ReportPeriodPartialEntity } from '@ukef/sql-db-entities';
 
 export type RecordCorrectionLogFields = {
   facilityId: string;

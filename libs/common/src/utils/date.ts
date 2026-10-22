@@ -1,6 +1,6 @@
 import { format, isValid, parseISO } from 'date-fns';
-import { isString } from '../helpers';
-import { IsoMonthStamp, IsoYearStamp, MonthAndYear, OneIndexedMonth } from '../types';
+import { isString } from '@ukef/helpers';
+import { IsoMonthStamp, IsoYearStamp, MonthAndYear, OneIndexedMonth } from '@ukef/types';
 
 /**
  * Converts date with index-0 month value to numeric index-1 month

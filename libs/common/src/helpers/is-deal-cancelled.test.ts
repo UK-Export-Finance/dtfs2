@@ -1,6 +1,6 @@
+import { MappedDealTfm } from '@ukef/types';
+import { TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/constants';
 import { isDealCancelled } from './is-deal-cancelled';
-import { MappedDealTfm } from '../types';
-import { TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS } from '../constants';
 
 describe('isDealCancelled', () => {
   it('should return true if the deal stage is CANCELLED', () => {

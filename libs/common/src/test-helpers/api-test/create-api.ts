@@ -14,9 +14,9 @@ dotenv.config({ quiet: true });
  * - `post(data, headers?)`: Returns an object with a `to(url)` method to send a POST request with the given data and headers to the specified URL.
  */
 export const createApi = (app: Express) => ({
-  get: async (url: string, query: object = {}, headers: IncomingHttpHeaders = {}) => request(app).get(url).set(headers).query(query),
+  get: async (url: string, query: object = {}, headers: IncomingHttpHeaders = {}) => await request(app).get(url).set(headers).query(query),
 
   post: (data: object, headers: IncomingHttpHeaders = {}) => ({
-    to: async (url: string) => request(app).post(url).set(headers).send(data),
+    to: async (url: string) => await request(app).post(url).set(headers).send(data),
   }),
 });

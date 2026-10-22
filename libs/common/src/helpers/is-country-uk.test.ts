@@ -1,5 +1,5 @@
+import { GB_ISO3166_CODE } from '@ukef/constants/country';
 import { isCountryUk } from './is-country-uk';
-import { GB_ISO3166_CODE } from '../constants/country';
 
 const countries = [
   {

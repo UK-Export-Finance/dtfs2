@@ -1,6 +1,6 @@
 import { addMonths, subMonths, format } from 'date-fns';
+import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '@ukef/types';
 import { getOneIndexedMonth, toIsoMonthStamp, getDateFromMonthAndYear, isEqualMonthAndYear } from './date';
-import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
 /**
  * Gets the report period end for the inputted submission month
@@ -37,6 +37,7 @@ const getReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: Ba
   const targetYear = dateInTargetReportPeriod.getFullYear();
 
   const scheduleInCurrentYear = bankReportPeriodSchedule.find((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
+
   if (scheduleInCurrentYear) {
     return {
       start: {
@@ -51,6 +52,7 @@ const getReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: Ba
   }
 
   const scheduleOverlappingYear = bankReportPeriodSchedule.find((schedule) => schedule.startMonth > schedule.endMonth);
+
   if (!scheduleOverlappingYear) {
     throw new Error('Failed to get a report period');
   }
@@ -87,9 +89,11 @@ const getPreviousReportPeriodForBankScheduleByTargetDate = (
       (schedule.startMonth > schedule.endMonth && targetMonth >= schedule.endMonth && targetMonth >= schedule.startMonth) ||
       (schedule.startMonth > schedule.endMonth && targetMonth <= schedule.endMonth && targetMonth <= schedule.startMonth),
   );
+
   if (indexOfCurrentSchedule === -1) {
     throw new Error('Failed to find a schedule');
   }
+
   const targetReportSchedule = bankReportPeriodSchedule[indexOfCurrentSchedule - 1] ?? bankReportPeriodSchedule.at(-1)!;
   const isTargetReportPeriodStartInPreviousYear = targetMonth < targetReportSchedule.startMonth;
   const isTargetReportPeriodEndInPreviousYear = targetMonth < targetReportSchedule.endMonth;
@@ -141,6 +145,7 @@ const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: strin
   const endOfReportPeriod = getDateFromMonthAndYear(reportPeriod.end);
 
   const formattedEndOfPeriod = format(endOfReportPeriod, `${monthFormat} yyyy`);
+
   if (isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)) {
     return includePeriodicity ? `${formattedEndOfPeriod} (monthly)` : formattedEndOfPeriod;
   }

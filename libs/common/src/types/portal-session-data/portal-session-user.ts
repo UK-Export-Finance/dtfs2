@@ -1,4 +1,4 @@
-import { Role } from '../portal/roles';
+import { Role } from '@ukef/types/portal/roles';
 import { PortalSessionBank } from './portal-session-bank';
 
 /**

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { createMocks } from 'node-mocks-http';
-import * as featureFlags from '../../helpers/is-feature-flag-enabled';
+import * as featureFlags from '@ukef/helpers/is-feature-flag-enabled';
 import {
   validateDealCancellationEnabled,
   validateFeeRecordCorrectionFeatureFlagIsEnabled,

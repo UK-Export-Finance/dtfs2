@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REASON } from '../../constants';
+import { RECORD_CORRECTION_REASON } from '@ukef/constants';
 import { MOCK_EMAIL } from './email';
 
 export const feeRecordCorrectionRequestReviewResponseBodyMock = {

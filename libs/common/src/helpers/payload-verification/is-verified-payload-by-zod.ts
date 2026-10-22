@@ -1,4 +1,4 @@
-import { IsVerifiedPayloadByZodParams } from '../../types/payload-verification';
+import { IsVerifiedPayloadByZodParams } from '@ukef/types/payload-verification';
 
 /**
  * Due to the lack of existing knowledge of certain types, this function should not be used to return a verified payload.

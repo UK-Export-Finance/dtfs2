@@ -1,5 +1,5 @@
-import { DEAL_TYPE } from '../constants';
-import { Deal } from '../types';
+import { DEAL_TYPE } from '@ukef/constants';
+import { Deal } from '@ukef/types';
 
 /**
  * Returns the UKEF deal ID on a deal depending on the deal type
