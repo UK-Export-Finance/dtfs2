@@ -22,9 +22,8 @@ jest.doMock('express', () => ({
 }));
 
 describe('Routes', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line global-require
-    require('../supporting-information');
+  beforeEach(async () => {
+    await import('../supporting-information');
   });
 
   afterEach(() => {

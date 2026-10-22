@@ -7,8 +7,7 @@ import { MOCK_MAKER } from '../utils/mocks/mock-users';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
 import { SubmittedAmendmentsParams } from '../types/portal-amendments';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
+jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
 }));
