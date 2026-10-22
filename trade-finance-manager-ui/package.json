@@ -116,8 +116,8 @@
     "webpack-merge": "^6.0.1"
   },
   "engines": {
-    "node": ">=24.22.1",
-    "npm": ">=11.19.1"
+    "node": ">=24.17.0",
+    "npm": ">=11.3.0"
   },
   "engineStrict": true
 }
