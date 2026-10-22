@@ -13,7 +13,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-const MOCK_BANKS = [
+export const MOCK_BANKS = [
   {
     id: '9',
     name: 'Bank 1',
@@ -190,5 +190,3 @@ const MOCK_BANKS = [
     isVisibleInTfmUtilisationReports: true,
   },
 ];
-
-export default MOCK_BANKS;

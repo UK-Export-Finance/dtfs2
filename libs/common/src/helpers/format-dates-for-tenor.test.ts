@@ -1,6 +1,6 @@
 import { format, fromUnixTime } from 'date-fns';
+import { MOCK_FACILITY } from '@ukef/test-helpers';
 import { formatDatesForTenor } from './format-dates-for-tenor';
-import { MOCK_FACILITY } from '../test-helpers';
 import { getEpochMs, convertUnixTimestampWithoutMilliseconds } from './date';
 
 describe('formatDatesForTenor', () => {

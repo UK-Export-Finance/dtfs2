@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { AuditableBaseEntity } from '../base-entities';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
+import { RecordCorrectionTransientFormData } from '@ukef/types';
 import { CreateFeeRecordCorrectionTransientFormDataParams } from './fee-record-correction-transient-form-data.types';
-import { RecordCorrectionTransientFormData } from '../../types';
 
 /**
  * Entity representing correction transient form data

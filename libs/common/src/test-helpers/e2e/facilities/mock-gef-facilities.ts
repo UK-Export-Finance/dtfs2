@@ -1,5 +1,5 @@
-import { CURRENCY, FACILITY_TYPE } from '../../../constants';
-import { tomorrow } from '../date-constants';
+import { CURRENCY, FACILITY_TYPE } from '@ukef/constants';
+import { tomorrow } from '@ukef/test-helpers/e2e/date-constants';
 
 const getFacilityEndDateProperties = ({ facilityEndDateEnabled }: { facilityEndDateEnabled: boolean }) => {
   if (facilityEndDateEnabled) {
@@ -8,6 +8,7 @@ const getFacilityEndDateProperties = ({ facilityEndDateEnabled }: { facilityEndD
       facilityEndDate: new Date(1830297600000),
     };
   }
+
   return {};
 };
 

@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
-import { ApiError } from '../errors';
-import { HttpStatusCodes, ApiErrorCode } from '../types';
+import { ApiError } from '@ukef/errors';
+import { HttpStatusCodes, ApiErrorCode } from '@ukef/types';
 
 type TestApiErrorParams = {
   status?: HttpStatusCodes;

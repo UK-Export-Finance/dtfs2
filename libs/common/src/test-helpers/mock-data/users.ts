@@ -1,5 +1,5 @@
-import { ROLES } from '../../constants';
-import MOCK_BANKS from './banks';
+import { ROLES } from '@ukef/constants';
+import { MOCK_BANKS } from './banks';
 
 const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'Bank 1');
 

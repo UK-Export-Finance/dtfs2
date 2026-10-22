@@ -1,4 +1,4 @@
-import { ApiErrorCode } from '../types';
+import { ApiErrorCode } from '@ukef/types';
 
 type ApiErrorParams = {
   status: number;

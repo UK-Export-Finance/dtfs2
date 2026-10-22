@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import { TeamId } from '../tfm/team-id';
+import { TeamId } from '@ukef/types/tfm/team-id';
 
 export type TfmTeam = WithId<{
   id: TeamId;

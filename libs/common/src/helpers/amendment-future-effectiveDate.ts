@@ -1,5 +1,5 @@
 import { fromUnixTime } from 'date-fns';
-import { UnixTimestampSeconds } from '../types/date';
+import { UnixTimestampSeconds } from '@ukef/types/date';
 import { now } from './date';
 /**
  * Returns a boolean indicating whether the given amendment effective date is in the future.

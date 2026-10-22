@@ -1,6 +1,6 @@
-import { Currency } from '../../types';
-import { FeeRecordEntity } from '../fee-record';
-import { DbRequestSource } from '../helpers';
+import { Currency } from '@ukef/types';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
 
 export type CreatePaymentParams = {
   currency: Currency;
