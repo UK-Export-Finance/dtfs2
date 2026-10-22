@@ -135,6 +135,10 @@ module.exports = defineConfig([
           // and allows . or - to be used as a separator in folder names
           // This means that folder names such as dashboard.service or _macros work
           // '**/*/': '?(_)[a-z]*([a-z0-9])*([-.]+([a-z0-9]))',
+
+          // DTFS exception
+          // Why: Allow __mocks__ directory
+          '!(**/__mocks__/**)/**/*/': '?(_)[a-z]*([a-z0-9])*([-.]+([a-z0-9]))',
         },
       ],
 
