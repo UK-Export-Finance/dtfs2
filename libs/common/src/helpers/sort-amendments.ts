@@ -40,9 +40,11 @@ export const sortAmendmentsByReferenceNumber = <T extends SortableAmendment>(ame
     if (a.referenceNumber && b.referenceNumber) {
       return b.referenceNumber.localeCompare(a.referenceNumber);
     }
+
     if (a.referenceNumber && !b.referenceNumber) {
       return -1;
     }
+
     if (!a.referenceNumber && b.referenceNumber) {
       return 1;
     }

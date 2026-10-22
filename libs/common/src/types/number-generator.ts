@@ -11,14 +11,14 @@ import { IsoDateTimeStamp } from './date';
  * @property createdDatetime - The creation datetime of the generated number.
  * @property requestingSystem - The system that requested the generation of the number.
  */
-export interface NumberGeneratorObject {
+export type NumberGeneratorObject = {
   id: number;
   maskedId: string;
   type: number;
   createdBy: string;
   createdDatetime: IsoDateTimeStamp;
   requestingSystem: string;
-}
+};
 
 /**
  * Defines the interfaces for the response of the number generator.
@@ -27,7 +27,7 @@ export interface NumberGeneratorObject {
  * @property status - The status code of the response.
  * @property data - An array of NumberGeneratorObject objects containing the generated numbers.
  */
-export interface NumberGeneratorResponse {
+export type NumberGeneratorResponse = {
   readonly status: number;
   readonly data: Array<NumberGeneratorObject>;
-}
+};

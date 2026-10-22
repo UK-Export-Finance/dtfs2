@@ -1,5 +1,5 @@
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
-import { GetAuthCodeUrlRequest } from '../../types';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { GetAuthCodeUrlRequest } from '@ukef/types';
 import { GET_AUTH_CODE_REQUEST_SCHEMA } from './get-auth-code-request.schema';
 
 describe('GET_AUTH_CODE_REQUEST_SCHEMA', () => {

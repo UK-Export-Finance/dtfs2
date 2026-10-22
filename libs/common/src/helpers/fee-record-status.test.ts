@@ -1,6 +1,6 @@
 import { difference } from 'lodash';
-import { FEE_RECORD_STATUS } from '../constants';
-import { FeeRecordStatus } from '../types';
+import { FEE_RECORD_STATUS } from '@ukef/constants';
+import { FeeRecordStatus } from '@ukef/types';
 import { allStatusesAreTheSameOrCombinationOfToDoStatuses, isStatusToDoOrToDoAmended } from './fee-record-status';
 
 describe('fee-record-status helpers', () => {

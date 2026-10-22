@@ -1,6 +1,6 @@
-import { TEAMS } from '../../constants';
+import { TEAMS } from '@ukef/constants';
+import { EntraIdUser } from '@ukef/types';
 import { MOCK_EMAIL } from './email';
-import { EntraIdUser } from '../../types';
 
 export function anEntraIdUser(): EntraIdUser {
   return {

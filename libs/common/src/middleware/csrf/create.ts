@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { SSO_URL, SSO_URL_FORM } from '../../constants';
+import { SSO_URL, SSO_URL_FORM } from '@ukef/constants';
 import { generateToken } from './csrf-sync-instance';
 
 /**

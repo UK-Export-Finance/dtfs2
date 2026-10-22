@@ -1,6 +1,6 @@
-import { RecordCorrectionReason, RequestedByUser, RecordCorrectionValues } from '../../types';
-import { FeeRecordEntity } from '../fee-record/fee-record.entity';
-import { DbRequestSource } from '../helpers';
+import { RecordCorrectionReason, RequestedByUser, RecordCorrectionValues } from '@ukef/types';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record/fee-record.entity';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
 
 export type CreateFeeRecordCorrectionParams = {
   feeRecord: FeeRecordEntity;

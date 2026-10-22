@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { xssClean, hasEntries } from '../../helpers';
+import { xssClean, hasEntries } from '@ukef/helpers';
 
 /**
  * Recursively sanitises every value in an object or array to remove HTML that could be used in an XSS attack.

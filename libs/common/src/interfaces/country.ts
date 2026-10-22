@@ -1,7 +1,7 @@
 /**
  * Interface representing a country.
  */
-export interface CountryInterface {
+export type CountryInterface = {
   /**
    * The unique identifier for the country.
    */
@@ -22,4 +22,4 @@ export interface CountryInterface {
    * @default false
    */
   disabled?: boolean;
-}
+};

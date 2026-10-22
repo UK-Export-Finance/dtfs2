@@ -1,4 +1,4 @@
-import { GetAuthCodeUrlResponse } from '../../types';
+import { GetAuthCodeUrlResponse } from '@ukef/types';
 import { anAuthorisationCodeRequest } from './authorisation-code-request.mock';
 
 export const aGetAuthCodeUrlResponse = (): GetAuthCodeUrlResponse => ({

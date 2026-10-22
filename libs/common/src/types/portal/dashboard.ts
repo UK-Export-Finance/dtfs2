@@ -1,8 +1,8 @@
-import { UnixTimestampMilliseconds, UnixTimestampString } from '../date';
-import { FacilityType } from '../facility-type';
+import { UnixTimestampMilliseconds, UnixTimestampString } from '@ukef/types/date';
+import { FacilityType } from '@ukef/types/facility-type';
+import { Currency } from '@ukef/types/currency';
+import { DealSubmissionType } from '@ukef/types/tfm/deal-submission-type';
 import { PortalFacilityStage } from './facility-stage';
-import { Currency } from '../currency';
-import { DealSubmissionType } from '../tfm/deal-submission-type';
 
 /**
  * Portal dashboard facilities
