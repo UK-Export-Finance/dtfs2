@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@cypress/webpack-batteries-included-preprocessor": "^5.0.0",
-    "@cypress/webpack-preprocessor": "^6.0.4",
+    "@cypress/webpack-preprocessor": "^8.0.0",
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.10.4",
     "chance": "^1.1.13",
-    "cypress": "^16.1.1",
+    "cypress": "^16.2.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^2.0.0",
     "date-fns": "^4.4.0",
