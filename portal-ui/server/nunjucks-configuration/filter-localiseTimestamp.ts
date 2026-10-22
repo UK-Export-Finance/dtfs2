@@ -15,6 +15,7 @@ export const filterLocaliseTimestamp = (utcTimestamp: number | string, format: s
   if (!utcTimestamp) {
     return '';
   }
+
   const timestamp = parseInt(String(utcTimestamp), 10);
 
   // Implements behaviour inherited from moment to handle invalid dates

@@ -69,6 +69,7 @@ router.post('/feedback', async (req, res) => {
     feedbackBody.auditDetails = sessionUserId ? generatePortalAuditDetails(sessionUserId) : generateNoUserLoggedInAuditDetails();
 
     const response = await api.createFeedback(feedbackBody);
+
     if (response) {
       return res.redirect('/thank-you-feedback');
     }

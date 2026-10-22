@@ -11,7 +11,9 @@ const noRolesDefault = {
 };
 
 const getUserRoles = (roles) => {
-  if (!roles) return noRolesDefault;
+  if (!roles) {
+    return noRolesDefault;
+  }
 
   const isMaker = roles.includes(MAKER);
   const isChecker = roles.includes(CHECKER);

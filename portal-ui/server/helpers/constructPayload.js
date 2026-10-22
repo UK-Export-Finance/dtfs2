@@ -10,6 +10,7 @@
  */
 const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = true) => {
   let payload = {};
+
   // Return empty payload upon void mandatory arguments
   if (!body || !properties) {
     return payload;

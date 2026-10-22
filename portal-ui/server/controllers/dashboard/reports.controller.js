@@ -113,6 +113,7 @@ exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
   const facilities = (await api.getUnissuedFacilitiesReport(userToken)) || [];
   const mappedFacilities = [];
+
   if (facilities.length) {
     // `json2csv` library strips out the leading `00` from the ukefFacility ID
     // we have to convert it to a string instead if we want to keep the leading `00`

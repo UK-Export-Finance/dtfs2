@@ -14,6 +14,7 @@ const saveFacilityAndGoBackToDeal = async (req, res, sanitizedBody) => {
   if (facility?.currency && facility?.currency?.id) {
     mappedOriginalData.currency = facility.currency.id;
   }
+
   delete mappedOriginalData._id;
   delete mappedOriginalData.status;
 

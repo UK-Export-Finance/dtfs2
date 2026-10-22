@@ -36,6 +36,7 @@ function showAdditionalFields(bool) {
 
 // 1. Show additional fields `onClick` event handler
 let element = document.querySelector('[data-cy="currency-same-as-supply-contract-currency-yes"]');
+
 if (element) {
   element.addEventListener('click', () => {
     showAdditionalFields(false);
@@ -43,6 +44,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="currency-same-as-supply-contract-currency-no"]');
+
 if (element) {
   element.addEventListener('click', () => {
     showAdditionalFields(true);
@@ -51,6 +53,7 @@ if (element) {
 
 // 2. Show additional fields `onClick` and `onChange` event handler
 element = document.querySelector('[data-cy="autoCreatePassword-true"]');
+
 if (element) {
   document.querySelector('[data-cy="autoCreatePassword-true"]').addEventListener('click', () => {
     changeScreenVisibilityOfElement('manuallyCreatePassword', false);
@@ -58,6 +61,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="autoCreatePassword-false"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('manuallyCreatePassword', true);
@@ -65,6 +69,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="supplyContractCurrency"]');
+
 if (element) {
   element.addEventListener('change', (event) => {
     changeScreenVisibilityOfElement('supply-contract-currency-conversion-fields', event.target.value !== 'GBP');
@@ -72,6 +77,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-id="criteria-11-true');
+
 if (element) {
   element.addEventListener('click', () => {
     showHideElement('criterion-group-additional-11', false);
@@ -79,6 +85,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-id="criteria-11-false"]');
+
 if (element) {
   element.addEventListener('click', () => {
     showHideElement('criterion-group-additional-11', true);
@@ -86,6 +93,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="legallyDistinct-true"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-indemnifier', true);
@@ -93,6 +101,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="legallyDistinct-false"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-indemnifier', false);
@@ -100,6 +109,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="indemnifierCorrespondenceAddressDifferent-true"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-indemnifier-correspondence-address', true);
@@ -107,6 +117,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="indemnifierCorrespondenceAddressDifferent-false"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-indemnifier-correspondence-address', false);
@@ -114,6 +125,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="supplier-correspondence-address-is-different-true"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-supplier-correspondence', true);
@@ -121,6 +133,7 @@ if (element) {
 }
 
 element = document.querySelector('[data-cy="supplier-correspondence-address-is-different-false"]');
+
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-supplier-correspondence', false);

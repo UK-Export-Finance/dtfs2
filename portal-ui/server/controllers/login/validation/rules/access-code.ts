@@ -1,4 +1,4 @@
-import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { ValidationErrorsObject } from '../../../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
 
 /**
  * Access code validation rule
@@ -7,7 +7,7 @@ import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-
  * @param errors - Existing validation errors
  * @returns Updated validation errors
  */
-const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
+export const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors } as ValidationErrorsObject;
 
   const { sixDigitAccessCode } = formBody;
@@ -21,5 +21,3 @@ const accessCodeRule = (formBody: { sixDigitAccessCode?: string }, errors: Recor
 
   return newErrors;
 };
-
-export default accessCodeRule;

@@ -18,6 +18,7 @@ const validatePartialAuthToken = async (req, res, next) => {
     // if we have a login-complete token instead of a partialAuthToken then we should redirect to home page
     // as they have already completed 2FA
     const isValidToken = await api.validateToken(userToken);
+
     if (isValidToken) {
       console.info('User already has a valid login complete token, redirecting to home page');
       return res.redirect('/');
