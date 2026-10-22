@@ -1,4 +1,4 @@
-import { ALL_PDC_TEAM_IDS, ALL_TEAM_IDS } from '../../constants/tfm/team-ids';
+import { ALL_PDC_TEAM_IDS, ALL_TEAM_IDS } from '@ukef/constants/tfm/team-ids';
 
 export type PdcTeamId = (typeof ALL_PDC_TEAM_IDS)[number];
 

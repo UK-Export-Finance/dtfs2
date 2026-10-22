@@ -1,6 +1,6 @@
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
+import { REQUEST_PLATFORM_TYPE } from '@ukef/constants';
 import { AuditableBaseEntity } from '.';
-import { DbRequestSource } from '../helpers';
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
 
 // We cannot create instances of abstract classes, so we define a test class below
 class TestAuditableBaseEntity extends AuditableBaseEntity {}

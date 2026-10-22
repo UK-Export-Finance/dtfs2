@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 
 /**
  * A list of default options
@@ -26,6 +26,7 @@ export const withDefaultOptionsTests = <Schema extends ZodSchema>({
     },
     ...options,
   };
+
   if (defaultOptions.isOptional) {
     withIsOptionalTests();
   } else {

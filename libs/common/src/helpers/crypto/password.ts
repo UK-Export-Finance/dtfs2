@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { PasswordHash } from '../../types';
-import { CSRF } from '../../constants';
+import { PasswordHash } from '@ukef/types';
+import { CSRF } from '@ukef/constants';
 
 /**
  * This function generates salt and hash from a string password.

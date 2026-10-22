@@ -1,6 +1,6 @@
 import crypto from 'crypto';
+import { CRYPTO } from '@ukef/constants';
 import { salt } from './salt';
-import { CRYPTO } from '../../constants';
 
 jest.mock('crypto');
 

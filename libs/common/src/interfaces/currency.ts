@@ -1,7 +1,7 @@
 /**
  * Interface representing a currency.
  */
-export interface CurrencyInterface {
+export type CurrencyInterface = {
   /**
    * The unique identifier for the currency.
    */
@@ -22,4 +22,4 @@ export interface CurrencyInterface {
    * @default false
    */
   disabled?: boolean;
-}
+};

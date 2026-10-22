@@ -1,5 +1,5 @@
-import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '../constants';
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
+import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/constants';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
 import { isAmendmentDeclined } from './is-amendment-declined';
 
 type CanSendToAcbsParams = {

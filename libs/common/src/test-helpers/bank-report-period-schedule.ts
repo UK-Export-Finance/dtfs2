@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule } from '../types';
+import { BankReportPeriodSchedule } from '@ukef/types';
 
 export const aMonthlyBankReportPeriodSchedule = (): BankReportPeriodSchedule => [
   { startMonth: 1, endMonth: 1 },

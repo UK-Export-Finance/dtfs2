@@ -1,5 +1,5 @@
-import { CURRENCY, RECORD_CORRECTION_REASON } from '../constants';
-import { FeeRecordCorrectionReviewInformation } from '../types';
+import { CURRENCY, RECORD_CORRECTION_REASON } from '@ukef/constants';
+import { FeeRecordCorrectionReviewInformation } from '@ukef/types';
 
 export const aFeeRecordCorrectionReviewInformation = (): FeeRecordCorrectionReviewInformation => ({
   correctionId: 7,

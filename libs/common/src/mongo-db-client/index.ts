@@ -1,8 +1,8 @@
 import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
 import dotenv from 'dotenv';
-import { MongoConnectionStatus } from '../types';
-import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
-import { DbModel } from '../types/mongo-db-models/db-model';
+import { MongoConnectionStatus } from '@ukef/types';
+import { MongoDbCollectionName } from '@ukef/types/mongo-db-models/mongo-db-collection-name';
+import { DbModel } from '@ukef/types/mongo-db-models/db-model';
 
 dotenv.config({ quiet: true });
 
