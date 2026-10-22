@@ -1,4 +1,4 @@
-import { CountryInterface } from '../interfaces';
+import { CountryInterface } from '@ukef/interfaces';
 
 export const COUNTRIES: CountryInterface[] = [
   {

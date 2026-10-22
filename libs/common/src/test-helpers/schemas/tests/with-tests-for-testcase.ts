@@ -10,16 +10,16 @@ import {
   withObjectIdStringSchemaTests,
   withObjectIdOrObjectIdStringSchemaTests,
   withEntraIdEmailSchemaTests,
-} from '../custom-types-tests';
-import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
+} from '@ukef/test-helpers/schemas/custom-types-tests';
+import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 import {
   withAuditDatabaseRecordSchemaTests,
   withEntraIdUserSchemaTests,
   withTfmSessionUserSchemaTests,
   withUpsertTfmUserRequestSchemaTests,
-} from '../schema-tests';
-import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
-import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
+} from '@ukef/test-helpers/schemas/schema-tests';
+import { withIsoDateTimeStampToDateSchemaTests } from '@ukef/test-helpers/schemas/transformation-tests';
+import { WithTestsForTestCaseProps } from '@ukef/test-helpers/schemas/types/with-tests-for-test-case';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run

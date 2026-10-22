@@ -1,4 +1,5 @@
 import { addMonths } from 'date-fns';
+import { OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '@ukef/types';
 import {
   getCurrentReportPeriodForBankSchedule,
   getNextReportPeriodForBankSchedule,
@@ -9,7 +10,6 @@ import {
   getPreviousReportPeriodForBankScheduleByMonth,
   isEqualReportPeriod,
 } from './report-period';
-import { OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
 describe('report-period utils', () => {
   describe('getReportPeriodEndForSubmissionMonth', () => {

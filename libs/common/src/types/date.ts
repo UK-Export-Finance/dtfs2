@@ -1,5 +1,5 @@
 import z from 'zod';
-import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA, UNIX_TIMESTAMP_SCHEMA, UNIX_TIMESTAMP_SECONDS_SCHEMA } from '../schemas';
+import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA, UNIX_TIMESTAMP_SCHEMA, UNIX_TIMESTAMP_SECONDS_SCHEMA } from '@ukef/schemas';
 
 /**
  * @deprecated Prefer either UnixTimestampMilliseconds or UnixTimestampSeconds depending on the unit,

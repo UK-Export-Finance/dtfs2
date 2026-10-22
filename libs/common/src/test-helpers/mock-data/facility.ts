@@ -1,6 +1,6 @@
-import { getEpochMs } from '../../helpers';
-import { CURRENCY } from '../../constants/currency';
-import { GEF_FACILITY_TYPE } from '../../constants';
+import { getEpochMs } from '@ukef/helpers';
+import { CURRENCY } from '@ukef/constants/currency';
+import { GEF_FACILITY_TYPE } from '@ukef/constants';
 
 export const MOCK_FACILITY = {
   _id: '507f1f77bcf86cd799439011',

@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
+import { BankReportPeriodSchedule } from '@ukef/types/bank-report-period-schedule';
 
 export type PortalSessionBank = {
   _id: string;
