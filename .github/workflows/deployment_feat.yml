@@ -10,12 +10,10 @@
 # 4. Deploy Azure Functions.
 # 5. Send the deployment notification.
 #
-# During DTFS2-25605 testing, deployments use:
-# feat/DTFS2-25605/test-feature-deployment
 # Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
 # - `ENVIRONMENT`: The target DTFS environment (`feature`).
-# - `TIMEZONE`: The timezone for deployment logging and scheduling.
+# - `TIMEZONE`: The timezone used for deployment logging.
 
 name: Deployment
 run-name: 🚀 Deploying to Feature1
@@ -25,17 +23,20 @@ concurrency:
   cancel-in-progress: false
 
 on:
+  schedule:
+    # Nightly deployment at 23:00 UTC
+    - cron: '0 23 * * *' # Runs every day at 23:00 UTC
 
   push:
     branches:
-      # Temporary branch used for DTFS2-25605 deployment testing
-      - feat/DTFS2-25605/test-feature-deployment
+      - feature
+
   workflow_dispatch:
 
 env:
   PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
-  DEPLOYMENT_BRANCH: feat/DTFS2-25605/test-feature-deployment
+  DEPLOYMENT_BRANCH: feature
 
 jobs:
   # 1. Base actions configurations
@@ -98,7 +99,7 @@ jobs:
           node: ${{ vars.NODE_VERSION }}
           log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
-  # 3. micro-services WebApp deployments
+  # 3. Micro-services WebApp deployments
   webapp:
     name: WebApp 🌐
     needs: [setup, database]
