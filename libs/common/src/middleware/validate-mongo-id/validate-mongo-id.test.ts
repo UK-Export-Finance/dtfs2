@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import httpMocks from 'node-mocks-http';
-import { validateMongoId } from './validate-mongoId';
-import { API_ERROR_CODE } from '../../constants/api-error-code';
+import { API_ERROR_CODE } from '@ukef/constants/api-error-code';
+import { validateMongoId } from './validate-mongo-id';
 
 describe('validateMongoId', () => {
   const getHttpMocks = () => httpMocks.createMocks();

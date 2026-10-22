@@ -18,7 +18,7 @@
  * @property effectiveFrom - ISO date string when the sector becomes effective.
  * @property effectiveTo - ISO date string when the sector is no longer effective.
  */
-export type industrySector = {
+export type IndustrySector = {
   id: number;
   ukefSectorId: string;
   ukefSectorName: string;

@@ -1,4 +1,4 @@
-import { COOKIE_SAME_SITE } from '../types';
+import { COOKIE_SAME_SITE } from '@ukef/types';
 
 /**
  * Constants for configuring cookie options.

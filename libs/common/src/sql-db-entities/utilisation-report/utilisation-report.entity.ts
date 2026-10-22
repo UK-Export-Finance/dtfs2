@@ -1,16 +1,16 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { UtilisationReportStatus } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
-import { ReportPeriodPartialEntity } from '../partial-entities';
-import { AzureFileInfoEntity } from '../azure-file-info';
-import { FeeRecordEntity } from '../fee-record';
+import type { UtilisationReportStatus } from '@ukef/types';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
+import { ReportPeriodPartialEntity } from '@ukef/sql-db-entities/partial-entities';
+import { AzureFileInfoEntity } from '@ukef/sql-db-entities/azure-file-info';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED } from '@ukef/constants';
 import {
   CreateNotReceivedUtilisationReportEntityParams,
   UpdateWithStatusParams,
   UpdateWithUploadDetailsParams,
   UpdateWithFeeRecordsParams,
 } from './utilisation-report.types';
-import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED } from '../../constants';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {

@@ -2,7 +2,6 @@ import * as cron from 'node-cron';
 
 export type CronScheduleFunc = Parameters<typeof cron.schedule>[1];
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type CronScheduleFuncParameters = Parameters<Extract<CronScheduleFunc, Function>>[0];
 
 /**

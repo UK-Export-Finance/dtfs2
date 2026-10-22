@@ -1,7 +1,7 @@
 /**
  * Represents an industry classification with a code and a name.
  */
-export interface IndustryClassInterface {
+export type IndustryClassInterface = {
   /**
    * The code of the industry sector.
    */
@@ -11,14 +11,14 @@ export interface IndustryClassInterface {
    * The name of the industry sector.
    */
   name: string;
-}
+};
 
 /**
  * Interface representing an industry sector.
  */
-export interface IndustrySectorInterface extends IndustryClassInterface {
+export type IndustrySectorInterface = {
   /**
    * The classes associated with the industry sector.
    */
   classes: IndustryClassInterface[];
-}
+} & IndustryClassInterface;

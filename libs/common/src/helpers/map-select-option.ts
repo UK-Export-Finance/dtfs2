@@ -1,4 +1,4 @@
-import { SelectOption } from '../types';
+import { SelectOption } from '@ukef/types';
 
 /**
  * maps a select option to the SelectOption type

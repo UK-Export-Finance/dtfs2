@@ -1,5 +1,5 @@
-import { AMENDMENT_TYPES } from '../constants/amendments';
-import { FacilityAllTypeAmendmentWithUkefId } from '../types/portal/amendment';
+import { AMENDMENT_TYPES } from '@ukef/constants/amendments';
+import { FacilityAllTypeAmendmentWithUkefId } from '@ukef/types/portal/amendment';
 import { createAmendmentReferenceNumber } from './create-amendment-reference-number';
 
 describe('createAmendmentReferenceNumber', () => {

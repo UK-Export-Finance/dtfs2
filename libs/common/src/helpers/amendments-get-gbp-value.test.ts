@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { CURRENCY } from '../constants';
+import { CURRENCY } from '@ukef/constants';
+import { aPortalFacilityAmendment } from '@ukef/test-helpers/mock-data-backend';
+import { PortalFacilityAmendmentWithUkefId } from '@ukef/types';
 import { getGBPValue } from './amendments-get-gbp-value';
-import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend';
-import { PortalFacilityAmendmentWithUkefId } from '../types';
 
 describe('getGBPValue()', () => {
   const amendment = {

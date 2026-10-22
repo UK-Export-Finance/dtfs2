@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
-import { TfmDealCancellationWithStatus } from './tfm-deal-cancellation';
-import { Deal } from './deals';
-import { AuditDatabaseRecord } from '../audit-database-record';
-import { AnyObject } from '../any-object';
-import { Prettify } from '../types-helper';
+import { AuditDatabaseRecord } from '@ukef/types/audit-database-record';
+import { AnyObject } from '@ukef/types/any-object';
+import { Prettify } from '@ukef/types/types-helper';
+import { TfmDealStage } from '@ukef/types/tfm/deal-stage';
 import { TfmActivity } from './tfm-activity';
-import { TfmDealStage } from '../tfm/deal-stage';
+import { Deal } from './deals';
+import { TfmDealCancellationWithStatus } from './tfm-deal-cancellation';
 import { TfmParties } from './tfm-parties';
 
 /**

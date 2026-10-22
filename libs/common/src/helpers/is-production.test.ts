@@ -1,5 +1,5 @@
+import { ENVIRONMENTS } from '@ukef/constants';
 import { isProduction } from './is-production';
-import { ENVIRONMENTS } from '../constants';
 
 describe('isProduction function', () => {
   const originalEnv = { ...process.env };
