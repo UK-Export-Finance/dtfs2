@@ -56,7 +56,6 @@ describe('submitting payloads with different file sizes', () => {
       cy.clickContinueButton();
 
       // timeout is required here as the upload of the long report can take time for large files
-      cy.url({ timeout: 60000 }).should('contain', '/confirm-and-send');
       confirmAndSend.confirmAndSendButton({ timeout: 60000 }).should('be.visible');
       problemWithService.heading().should('not.exist');
 

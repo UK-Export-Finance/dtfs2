@@ -126,7 +126,7 @@ const ewcsTfmFacilityForReport = {
 };
 
 /**
- * TFM facilities matching the UKEF facility IDs (0010000001 to 0010000067) used in
+ * TFM facilities matching the specific UKEF facility IDs (0010000001 to 0010000067) defined in
  * long-utilisation-report-February_2024_quarterly.xlsx
  */
 const tfmFacilitiesForLongReport = Array.from({ length: 67 }, (_, index) => ({
