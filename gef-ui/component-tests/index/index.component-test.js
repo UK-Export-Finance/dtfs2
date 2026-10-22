@@ -40,13 +40,13 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-csNXbjFBMgtuPWZyD3+kNhpkprNLEI57zTTgRMRb7m2lGz1vrOOCwdPLaTpj4QAy7ojdhlHHSAZ4jQv0lle/Xg==');
+      .toHaveAttribute('integrity', 'sha512-dlH0B2YPdFJmc4MnNzmba+SOKeQ4Qka+psjXmkpGGgFvOlO51qVFcZ/nYEePjNPf5kJfvsRVcg2CEl9ZhHwPeA==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-c599iIqLJv5i59fU/grSu0ihtRFa9lzgN+JM1yA6x9OEwbHjx0/KLj/n4egEUVFR/W/pYAc2K0EXc7vI0egmSg==');
+      .toHaveAttribute('integrity', 'sha512-NJhTp9mVB4ouZnRlfATQwrHcJFRa4zS+5vDpu72ZmoCdh+FsaWPUcvRxRFpU9ENjdXF6o3vqYB7VNTb1E1tbng==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {

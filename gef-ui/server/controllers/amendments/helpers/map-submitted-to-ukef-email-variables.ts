@@ -16,7 +16,7 @@ dotenv.config({ quiet: true });
  * @param referenceNumber
  * @returns an object with makersEmail checkersEmail and email variables
  */
-const mapSubmittedToUkefEmailVariables = ({
+export const mapSubmittedToUkefEmailVariables = ({
   deal,
   facility,
   amendment,
@@ -57,5 +57,3 @@ const mapSubmittedToUkefEmailVariables = ({
     },
   };
 };
-
-export default mapSubmittedToUkefEmailVariables;

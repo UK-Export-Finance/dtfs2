@@ -49,6 +49,7 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
       // redirect to the dashboard
       return res.redirect('/not-found');
     }
+
     return next(error);
   }
 };
