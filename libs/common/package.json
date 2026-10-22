@@ -87,7 +87,7 @@
     "qs": "^6.16.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.2.2",
-    "sanitize-html": "2.18.0",
+    "sanitize-html": "2.18.1",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "tsconfig-paths": "^3.15.0",
