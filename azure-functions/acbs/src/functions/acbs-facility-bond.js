@@ -34,6 +34,7 @@ df.app.orchestration('acbs-facility-bond', function* createFacilityBond(context)
     });
 
     const parties = {};
+
     // Create parties
     if (facility.tfm.bondIssuerPartyUrn) {
       parties.bondIssuer = yield context.df.callActivityWithRetry('create-party', retryOptions, {
