@@ -99,8 +99,6 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src', prefix: '@ukef' }],
-
       'no-case-declarations': 'off',
 
       'no-param-reassign': [
@@ -218,6 +216,15 @@ module.exports = defineConfig([
       'import-x/consistent-type-specifier-style': 'off',
       '@typescript-eslint/no-import-type-side-effects': 'off',
       'import-x/no-useless-path-segments': 'off',
+    },
+  },
+
+  // DTFS tfm-ui exception
+  // Why: Server-side code in the 'server' directory uses absolute imports with the '@tfm-ui' prefix, so relative import paths are discouraged.
+  {
+    files: ['server/**/*.{js,ts}'],
+    rules: {
+      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'server', prefix: '@tfm-ui' }],
     },
   },
 
