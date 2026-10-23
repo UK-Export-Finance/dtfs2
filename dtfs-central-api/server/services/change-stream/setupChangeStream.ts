@@ -36,6 +36,7 @@ const setupChangeStreamForDeletionCollection = async () => {
     if (changeStreamDocument.operationType !== 'insert') {
       throw new Error(`A document in deletion-audit-logs has been ${changeStreamDocument.operationType}d`);
     }
+
     postDeletionAuditDetails(changeStreamDocument).catch((error) => {
       console.error('Error sending change stream update to API', error);
     });

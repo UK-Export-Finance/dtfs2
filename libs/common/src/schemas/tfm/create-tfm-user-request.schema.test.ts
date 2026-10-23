@@ -1,6 +1,6 @@
-import { TEAM_IDS } from '../../constants';
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
-import { CreateTfmUserRequest } from '../../types';
+import { TEAM_IDS } from '@ukef/constants';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { CreateTfmUserRequest } from '@ukef/types';
 import { CREATE_TFM_USER_REQUEST_SCHEMA } from './create-tfm-user-request.schema';
 
 describe('CREATE_TFM_USER_REQUEST_SCHEMA', () => {

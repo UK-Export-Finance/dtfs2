@@ -1,4 +1,4 @@
-import { TestCase } from '../test-cases';
+import { TestCase } from '@ukef/test-helpers/schemas/test-cases';
 
 export type WithTestsForTestCaseProps<Schema> = {
   schema: Schema;

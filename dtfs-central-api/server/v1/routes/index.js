@@ -3,8 +3,7 @@ const portalRoutes = require('./portal-routes');
 const tfmRoutes = require('./tfm-routes');
 const userRoutes = require('./user-routes');
 const utilisationReportsRoutes = require('./utilisation-reports-routes');
-// Since import from TS file
-const swaggerRoutes = require('./swagger-routes.ts').default;
+const { swaggerRouter } = require('./swagger-routes.ts');
 
 module.exports = {
   bankRoutes,
@@ -12,5 +11,5 @@ module.exports = {
   tfmRoutes,
   userRoutes,
   utilisationReportsRoutes,
-  swaggerRoutes,
+  swaggerRouter,
 };

@@ -26,16 +26,22 @@ const createRateLimit = () => {
   return limiter({
     // The duration of the window to count requests over.
     windowMs: ONE_MINUTE_IN_MILLISECONDS,
+
     // The maximum number of requests within the window.
     max: rateLimitThresholdPerMinuteAsNumber,
+
     // Return rate limit info in the `RateLimit-*` headers.
     standardHeaders: true,
+
     // Disable the `X-RateLimit-*` headers.
     legacyHeaders: false,
+
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
+
     // The message to return when the threshold is exceeded.
     message: 'Request threshold reached, please try again later.',
+
     // Log an error message and return an error response when the threshold is exceeded.
     handler: (req, res, next, options) => {
       console.error('Rate limit threshold exceeded. Returning rate limit error message for request to %s.', req.originalUrl);

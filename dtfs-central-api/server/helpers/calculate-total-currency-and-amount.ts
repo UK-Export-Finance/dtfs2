@@ -23,6 +23,7 @@ export const calculateTotalCurrencyAndAmount = (currencyAndAmountList: CurrencyA
       if (currency !== currencyOfTotal) {
         throw new Error('Supplied currency and amount list does not have a consistent currency');
       }
+
       return total.add(amount);
     }, new Big(0))
     .toNumber();

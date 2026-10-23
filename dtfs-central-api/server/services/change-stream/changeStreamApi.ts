@@ -21,9 +21,11 @@ export const postAuditDetails = async (
   changeStreamDocument: ChangeStreamInsertDocument | ChangeStreamUpdateDocument | ChangeStreamReplaceDocument,
 ): Promise<void> => {
   const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
+
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
+
   console.info('Sending change stream update to API for document', changeStreamDocument);
 
   const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');
@@ -57,9 +59,11 @@ const mapDeletionAuditRecord = (auditRecord: AuditDatabaseRecord): DeletionAudit
  */
 export const postDeletionAuditDetails = async (changeStreamDocument: ChangeStreamInsertDocument<DeletionAuditLog>): Promise<void> => {
   const { AUDIT_API_URL, AUDIT_API_USERNAME, AUDIT_API_PASSWORD } = process.env;
+
   if (!AUDIT_API_URL || !AUDIT_API_USERNAME || !AUDIT_API_PASSWORD) {
     throw new InvalidEnvironmentVariableError('AUDIT_API_URL, AUDIT_API_USERNAME or AUDIT_API_PASSWORD not set');
   }
+
   console.info('Sending change stream update to API for deletion document', changeStreamDocument);
 
   const authorizationHeader = Buffer.from(`${AUDIT_API_USERNAME}:${AUDIT_API_PASSWORD}`).toString('base64');

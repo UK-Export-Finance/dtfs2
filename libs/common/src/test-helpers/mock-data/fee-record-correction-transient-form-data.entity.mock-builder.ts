@@ -1,6 +1,6 @@
-import { FeeRecordCorrectionTransientFormDataEntity } from '../../sql-db-entities';
-import { RecordCorrectionTransientFormData } from '../../types';
-import { anEmptyRecordCorrectionTransientFormData } from '../record-correction-transient-form-data';
+import { FeeRecordCorrectionTransientFormDataEntity } from '@ukef/sql-db-entities';
+import { RecordCorrectionTransientFormData } from '@ukef/types';
+import { anEmptyRecordCorrectionTransientFormData } from '@ukef/test-helpers/record-correction-transient-form-data';
 
 export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
   private readonly transientFormData: FeeRecordCorrectionTransientFormDataEntity;

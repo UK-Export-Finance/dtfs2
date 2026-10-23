@@ -1,6 +1,6 @@
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { sendEmail } from '.';
-import externalApi from '../../external-api/api';
+import { externalApi } from '../../external-api/api';
 
 jest.mock('../../external-api/api');
 

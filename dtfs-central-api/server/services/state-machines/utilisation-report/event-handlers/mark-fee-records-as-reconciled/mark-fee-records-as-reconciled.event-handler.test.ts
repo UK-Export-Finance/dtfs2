@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportMarkFeeRecordsAsReconciledEvent } from './mark-fee-records-as-reconciled.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import externalApi from '../../../../../external-api/api';
+import { externalApi } from '../../../../../external-api/api';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
 
@@ -70,9 +70,11 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
         if (feeRecord.id === 1) {
           return feeRecordStateMachineOne;
         }
+
         if (feeRecord.id === 2) {
           return feeRecordStateMachineTwo;
         }
+
         return aMockFeeRecordStateMachine(aMockEventHandler());
       });
 
