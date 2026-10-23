@@ -109,13 +109,8 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "ts-node": {
-<<<<<<< HEAD
-    "files": true,
-    "require": ["tsconfig-paths/register"]
-=======
     "require": ["@ukef/dtfs2-common/register-paths"],
     "files": true
->>>>>>> main
   },
   "include": ["**/*.ts", "../libs/common/**/*.ts"],
   "exclude": ["./node_modules/*", "node_modules"]

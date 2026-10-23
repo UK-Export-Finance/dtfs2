@@ -30,27 +30,35 @@ describe('EstoreRepo', () => {
   });
 
   describe('findByDealId', () => {
-    it('returns null only when the lookup succeeds with no match', async () => {
+    it('should return null only when the lookup succeeds with no match', async () => {
+      // Arrange
       mockFindOne.mockResolvedValueOnce(null);
 
+      // Act
       await expect(EstoreRepo.findByDealId(dealId)).resolves.toBeNull();
 
+      // Assert
       expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: dealId } });
     });
 
-    it('returns an existing job', async () => {
+    it('should return an existing job', async () => {
+      // Arrange
       const job = { _id: new ObjectId(dealId), payload: { dealId } };
       mockFindOne.mockResolvedValueOnce(job);
 
+      // Act & Assert
       await expect(EstoreRepo.findByDealId(dealId)).resolves.toEqual(job);
     });
 
-    it('logs and propagates a rejected lookup', async () => {
+    it('should log and propagate a rejected lookup', async () => {
+      // Arrange
       const error = new Error('MongoDB read failed');
       mockFindOne.mockRejectedValueOnce(error);
 
+      // Act
       await expect(EstoreRepo.findByDealId(dealId)).rejects.toBe(error);
 
+      // Assert
       expect(console.error).toHaveBeenCalledWith(
         'An error occurred while finding deal %s in %s collection. %o',
         dealId,
@@ -59,10 +67,12 @@ describe('EstoreRepo', () => {
       );
     });
 
-    it('propagates collection acquisition failures', async () => {
+    it('should propagate collection acquisition failures', async () => {
+      // Arrange
       const error = new Error('Collection unavailable');
       jest.mocked(getCollection).mockRejectedValueOnce(error);
 
+      // Act & Assert
       await expect(EstoreRepo.findByDealId(dealId)).rejects.toBe(error);
 
       expect(mockFindOne).not.toHaveBeenCalled();
@@ -83,28 +93,34 @@ describe('EstoreRepo', () => {
       filter: { _id: { $eq: new ObjectId(dealId) } },
     },
   ])('$name', ({ update, collectionName, filter }) => {
-    it('returns the database update result', async () => {
+    it('should return the database update result', async () => {
+      // Arrange
       mockUpdateOne.mockResolvedValueOnce(result);
 
+      // Act & Assert
       await expect(update(dealId, document)).resolves.toEqual(result);
 
       expect(getCollection).toHaveBeenCalledWith(collectionName);
       expect(mockUpdateOne).toHaveBeenCalledWith(filter, { $set: document });
     });
 
-    it('logs and propagates the original rejected write', async () => {
+    it('should log and propagates the original rejected write', async () => {
+      // Arrange
       const error = new Error('MongoDB write failed');
       mockUpdateOne.mockRejectedValueOnce(error);
 
+      // Act & Assert
       await expect(update(dealId, document)).rejects.toBe(error);
 
       expect(console.error).toHaveBeenCalledWith('An error occurred while updating %s collection. %o', collectionName, error);
     });
 
-    it('logs and propagates collection acquisition failures', async () => {
+    it('should log and propagates collection acquisition failures', async () => {
+      // Arrange
       const error = new Error('Collection unavailable');
       jest.mocked(getCollection).mockRejectedValueOnce(error);
 
+      // Act & Assert
       await expect(update(dealId, document)).rejects.toBe(error);
 
       expect(mockUpdateOne).not.toHaveBeenCalled();
