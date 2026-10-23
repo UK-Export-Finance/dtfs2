@@ -67,6 +67,7 @@ const ukefDecisionRejected = (amendment) => {
   if (changeFacilityValue && changeCoverEndDate) {
     return value === DECLINED && coverEndDate === DECLINED;
   }
+
   // Single amendment request
   return value === DECLINED || coverEndDate === DECLINED;
 };
@@ -198,6 +199,7 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
       sortByVersionWhenNoReferenceNumber: true,
     });
   }
+
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
 

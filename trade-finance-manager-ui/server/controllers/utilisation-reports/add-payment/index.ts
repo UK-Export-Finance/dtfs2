@@ -57,6 +57,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       const parsedAddPaymentFormValues = parseValidatedAddPaymentFormValues(paymentFormValues);
 
       const { feeRecordStatus } = await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
+
       if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
       }

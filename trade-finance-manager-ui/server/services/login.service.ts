@@ -6,7 +6,7 @@ export class LoginService {
    * Gets the URL to redirect the user to in order to log in.
    */
   public static getAuthCodeUrl = async ({ successRedirect }: GetAuthCodeUrlParams): Promise<GetAuthCodeUrlResponse> => {
-    return api.getAuthCodeUrl({ successRedirect });
+    return await api.getAuthCodeUrl({ successRedirect });
   };
 
   public static handleSsoRedirectForm = async ({
@@ -14,6 +14,6 @@ export class LoginService {
     originalAuthCodeUrlRequest,
     auditDetails,
   }: HandleSsoRedirectFormRequest): Promise<HandleSsoRedirectFormResponse> => {
-    return api.handleSsoRedirectForm({ authCodeResponse, originalAuthCodeUrlRequest, auditDetails });
+    return await api.handleSsoRedirectForm({ authCodeResponse, originalAuthCodeUrlRequest, auditDetails });
   };
 }

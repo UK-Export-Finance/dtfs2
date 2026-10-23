@@ -4,6 +4,7 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
 const amendFacilityValueValidation = (currentFacilityValue, newValue, currency) => {
   const newFacilityValue = Number(newValue);
   const amendFacilityValueErrors = [];
+
   if (!newValue) {
     amendFacilityValueErrors.push({
       errRef: 'facilityValue',
@@ -41,6 +42,7 @@ const amendFacilityValueValidation = (currentFacilityValue, newValue, currency) 
 
     return { errorsObject, amendFacilityValueErrors };
   }
+
   return { errorsObject: {}, amendFacilityValueErrors: [] };
 };
 

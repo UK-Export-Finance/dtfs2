@@ -41,9 +41,11 @@ const mapToEditPaymentFeeRecords = (
 
 const mapToEditPaymentFormPaymentDate = (dateReceived: IsoDateTimeStamp): EditPaymentFormValues['paymentDate'] => {
   const dateReceivedAsDate = parseISO(dateReceived);
+
   if (!isValid(dateReceivedAsDate)) {
     throw new Error(`Payment date received '${dateReceived}' is not a valid date`);
   }
+
   return {
     day: dateReceivedAsDate.getUTCDate().toString(),
     month: getOneIndexedMonth(dateReceivedAsDate).toString(),

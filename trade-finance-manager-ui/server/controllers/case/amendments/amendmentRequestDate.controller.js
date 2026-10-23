@@ -17,15 +17,18 @@ const getAmendmentRequestDate = async (req, res) => {
     const { userToken } = req.session;
 
     const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+
     if (status !== 200) {
       return res.redirect('/not-found');
     }
+
     const { dealId } = amendment;
     let amendmentRequestDateDay = '';
     let amendmentRequestDateMonth = '';
     let amendmentRequestDateYear = '';
 
     const isEditable = amendment.status !== TFM_AMENDMENT_STATUS.COMPLETED;
+
     if (amendment.requestDate) {
       amendmentRequestDateDay = format(fromUnixTime(amendment.requestDate), 'dd');
       amendmentRequestDateMonth = format(fromUnixTime(amendment.requestDate), 'M');
@@ -95,6 +98,7 @@ const postAmendmentRequestDate = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
     }
+
     console.error('Unable to update the amendment request date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
   } catch (error) {

@@ -109,6 +109,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
     }
+
     await api.updateDealCancellation(_id, { effectiveFrom: effectiveFromDate?.valueOf() }, userToken);
 
     return res.redirect(`/case/${_id}/cancellation/check-details`);

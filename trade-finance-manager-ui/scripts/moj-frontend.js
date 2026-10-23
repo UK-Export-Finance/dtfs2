@@ -9,4 +9,4 @@ const init = () => {
   window.MOJFrontend = MOJFrontend;
 };
 
-export default init();
+init();
