@@ -55,6 +55,16 @@ Before using the **EXTERNAL** micro-service, ensure that you have an `.env`
 file properly configured. You can use the `.env.sample` file as a template.
 Some sensitive variables may need to be shared within the team.
 
+## Local imports
+
+Parent-relative imports are autofixed to workspace-rooted `@ukef/` imports.
+For example, `../interfaces` in `server/helpers/cron.ts` becomes
+`@ukef/server/interfaces`. Same-folder imports can remain relative.
+
+The TypeScript paths, ts-node's `tsconfig-paths/register` hook and all Jest
+configurations resolve these aliases. Imports from `@ukef/dtfs2-common`
+continue to resolve to the shared package rather than local service files.
+
 ## Testing 🧪
 
 To run tests for the **EXTERNAL** micro-service, use the following command:

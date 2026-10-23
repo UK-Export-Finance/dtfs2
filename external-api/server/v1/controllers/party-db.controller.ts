@@ -30,12 +30,15 @@ export const lookup = async (req: PartyDbLookupRequest, res: Response) => {
     });
 
     const { status, data } = response;
+
     return res.status(status).send(data);
   } catch (error) {
     console.error('Error calling Party DB API %o', error);
+
     if (error instanceof AxiosError) {
       return res.status(error?.response?.status || HttpStatusCode.InternalServerError).send('Error calling Party DB API');
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
   }
 };
@@ -113,9 +116,11 @@ export const getOrCreateParty = async (
     return res.status(status).send(data);
   } catch (error) {
     console.error('Error calling Party DB API %o', error);
+
     if (error instanceof AxiosError) {
       return res.status(error?.response?.status || HttpStatusCode.InternalServerError).send('Error calling Party DB API');
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
   }
 };

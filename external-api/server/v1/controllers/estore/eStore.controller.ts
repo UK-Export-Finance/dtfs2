@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { InsertOneResult, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { EstoreRepo } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
@@ -180,8 +180,6 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       throw new Error('eStore CRON job log insertion failed');
     }
 
-    const { insertedId: _id } = inserted as InsertOneResult;
-
     // Site exists check
     console.info('Initiating eStore site existence check for exporter %s', exporterName);
     const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
@@ -257,22 +255,25 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
   } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
 
-    // CRON job log update
-    await EstoreRepo.updateByDealId(req?.body?.dealId, {
-      'cron.site': {
-        status: ESTORE_CRON_STATUS.FAILED,
-        create: {
+    try {
+      await EstoreRepo.updateByDealId(req?.body?.dealId, {
+        'cron.site': {
           status: ESTORE_CRON_STATUS.FAILED,
-          response: String(error),
-          timestamp: getNowAsEpoch(),
+          create: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: String(error),
+            timestamp: getNowAsEpoch(),
+          },
         },
-      },
-      'cron.term.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.buyer.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.deal.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.facility.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.document.status': ESTORE_CRON_STATUS.FAILED,
-    });
+        'cron.term.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.buyer.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.deal.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.facility.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.document.status': ESTORE_CRON_STATUS.FAILED,
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore directory creation failure for deal %s %o', req?.body?.dealId, logError);
+    }
 
     // Dispatch an alert
     await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {

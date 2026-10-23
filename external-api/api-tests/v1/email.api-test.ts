@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';

@@ -16,6 +16,7 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    *
    * @returns {Promise<WithId<object> | null>} - A promise that resolves to the found document, or `null` if no document is found.
+   * @throws The database error if the lookup fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -28,10 +29,10 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.findOne({ 'payload.dealId': { $eq: dealId } });
+      return await collection.findOne({ 'payload.dealId': { $eq: dealId } });
     } catch (error) {
-      console.error('An error occurred while finding deal %s in %s collection.', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
-      return null;
+      console.error('An error occurred while finding deal %s in %s collection. %o', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS, error);
+      throw error;
     }
   }
 
@@ -53,7 +54,7 @@ export class EstoreRepo {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.insertOne(document);
+      return await collection.insertOne(document);
     } catch (error) {
       console.error('An error occurred while inserting into %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
       return false;
@@ -66,7 +67,8 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    * @param {Document} document - The update filter containing the fields to be updated.
    *
-   * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
+   * @returns {Promise<UpdateResult>} - A promise that resolves to the result of the update operation.
+   * @throws The database error if the update fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -76,14 +78,14 @@ export class EstoreRepo {
    *   .then((result) => console.log('Update successful', result))
    *   .catch((error) => console.error('Update failed', error));
    */
-  public static async updateByDealId(dealId: string, document: Document): Promise<UpdateResult | boolean> {
+  public static async updateByDealId(dealId: string, document: Document): Promise<UpdateResult> {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-      return collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
+      return await collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
     } catch (error) {
-      console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
-      return false;
+      console.error('An error occurred while updating %s collection. %o', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS, error);
+      throw error;
     }
   }
 
@@ -93,7 +95,8 @@ export class EstoreRepo {
    * @param {string} dealId - The unique identifier for the deal.
    * @param {Document} document - The update filter containing the fields to be updated.
    *
-   * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
+   * @returns {Promise<UpdateResult>} - A promise that resolves to the result of the update operation.
+   * @throws The database error if the update fails.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';
@@ -103,14 +106,14 @@ export class EstoreRepo {
    *   .then((result) => console.log('Update successful', result))
    *   .catch((error) => console.error('Update failed', error));
    */
-  public static async updateTfmDealByDealId(dealId: string, document: Document): Promise<UpdateResult | boolean> {
+  public static async updateTfmDealByDealId(dealId: string, document: Document): Promise<UpdateResult> {
     try {
       const collection = await getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-      return collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
+      return await collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
     } catch (error) {
-      console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.TFM_DEALS);
-      return false;
+      console.error('An error occurred while updating %s collection. %o', MONGO_DB_COLLECTIONS.TFM_DEALS, error);
+      throw error;
     }
   }
 }
