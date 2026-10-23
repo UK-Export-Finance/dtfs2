@@ -1,7 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
@@ -132,7 +132,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Send facilities to APIM/GIFT
-      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendToApimGift(tfmDeal);
+      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendDealFacilitiesToApimGift(tfmDeal);
 
       if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - first submission - calling sendFacilitiesToApimGift', dealId);
@@ -228,7 +228,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
       tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
       // Submit facilities to APIM/GIFT
-      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendToApimGift(tfmDeal);
+      const { canSendFacilitiesToApimGift, issuedFacilities, isGefDeal } = await canSendDealFacilitiesToApimGift(tfmDeal);
 
       if (canSendFacilitiesToApimGift) {
         console.info('TFM deal %s submitDealAfterUkefIds - resubmission - calling sendFacilitiesToApimGift', dealId);

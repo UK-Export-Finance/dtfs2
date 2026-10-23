@@ -17,6 +17,7 @@ const {
   sendManualBankDecisionEmail,
   sendFirstTaskEmail,
   internalAmendmentEmail,
+  calculateAcbsUkefExposureValue,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,
@@ -124,17 +125,20 @@ const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
           // sends email and updates flag if sent
           await sendAutomaticAmendmentEmail(automaticAmendmentVariables, auditDetails);
         }
+
         if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
           // if managers decision email to be sent and not already sent
           const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
 
           await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables, auditDetails);
         }
+
         if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
           const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
 
           await sendManualBankDecisionEmail(bankDecisionAmendmentVariables, auditDetails);
         }
+
         // if first amendment task email has not already been sent
         if (amendment?.sendFirstTaskEmail && !amendment?.firstTaskEmailSent) {
           const firstTaskVariables = { amendment, dealSnapshot, facilityId, amendmentId };
@@ -588,7 +592,8 @@ const submitToAcbs = async (amendment, facility, ukefFacilityId) => {
     const amendmentWithUkefExposure = amendment;
 
     if (amendment.changeFacilityValue) {
-      amendmentWithUkefExposure.ukefExposure = amendment.tfm.exposure.ukefExposureValue;
+      // Calculate UKEF exposure for ACBS from the amendment value and facility coverPercentage
+      amendmentWithUkefExposure.ukefExposure = calculateAcbsUkefExposureValue(amendment.value, facility.facilitySnapshot.coverPercentage);
     }
 
     if (facility._id && amendmentWithUkefExposure && tfmDeal?.tfm) {

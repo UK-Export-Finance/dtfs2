@@ -17,9 +17,9 @@ import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/e
 
 const originalEnv = { ...process.env };
 
-interface ErrorResponse extends Response {
+type ErrorResponse = {
   body: { status?: number; message: string; code?: string };
-}
+} & Response;
 
 const generateUrl = (facilityId: string, amendmentId: string): string => {
   return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status`;

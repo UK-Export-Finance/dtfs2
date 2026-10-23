@@ -1,6 +1,6 @@
+import { AMENDMENT_TYPES, UNDERWRITER_MANAGER_DECISIONS } from '@ukef/constants';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
 import { isAmendmentDeclined } from './is-amendment-declined';
-import { AMENDMENT_TYPES, UNDERWRITER_MANAGER_DECISIONS } from '../constants';
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 
 describe('isAmendmentDeclined', () => {
   describe('TFM amendment', () => {
@@ -53,7 +53,7 @@ describe('isAmendmentDeclined', () => {
       const respone = isAmendmentDeclined(mockAmendment);
 
       // Assert
-      expect(respone).toBeTruthy();
+      expect(respone).toEqual(true);
     });
 
     const approved = [

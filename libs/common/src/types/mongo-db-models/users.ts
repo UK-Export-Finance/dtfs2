@@ -1,7 +1,7 @@
 import { WithId } from 'mongodb';
+import { UnixTimestampMilliseconds } from '@ukef/types/date';
+import { Prettify } from '@ukef/types/types-helper';
 import { Bank } from './banks';
-import { UnixTimestampMilliseconds } from '../date';
-import { Prettify } from '../types-helper';
 
 export type PortalRole = 'maker' | 'checker' | 'admin' | 'read-only' | 'payment-report-officer';
 

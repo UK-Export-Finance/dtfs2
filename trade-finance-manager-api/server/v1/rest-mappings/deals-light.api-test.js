@@ -1,6 +1,6 @@
 const { mapBssDeal, mapGefDeal, dealsLightReducer } = require('./deals-light');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
-const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
+const mapDealTfm = require('./mappings/deal/deal-tfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapDeals = require('./mappings/deal/mapDeals');

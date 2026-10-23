@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE, generatePasswordHash } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE, generatePasswordHash, isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
@@ -130,6 +130,7 @@ exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
     throw new InvalidEmailAddressError(email);
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const user = await collection.findOne({ email: { $eq: email } });
 
@@ -189,11 +190,27 @@ exports.update = async (_id, update, auditDetails, callback) => {
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
       userSetUpdate.loginFailureCount = 0;
-      userUnsetUpdate = {
-        signInLinkSendDate: '',
-        signInLinkSendCount: '',
-        blockedStatusReason: '',
-      };
+
+      /**
+       * if 2FA is enabled,
+       * reset the signInOTPSendCount and signInOTPSendDate to 0
+       * if 2FA is not enabled,
+       * reset the signInLinkSendCount and signInLinkSendDate to ''
+       * reset the blockedStatusReason to ''
+       */
+      if (isPortal2FAFeatureFlagEnabled()) {
+        userUnsetUpdate = {
+          signInOTPSendDate: 0,
+          signInOTPSendCount: 0,
+          blockedStatusReason: '',
+        };
+      } else {
+        userUnsetUpdate = {
+          signInLinkSendDate: '',
+          signInLinkSendCount: '',
+          blockedStatusReason: '',
+        };
+      }
 
       await sendUnblockedEmail(existingUser.email);
     }
@@ -212,11 +229,13 @@ exports.update = async (_id, update, auditDetails, callback) => {
       // queue update of salt+hash, ie store the encrypted password
       userSetUpdate.salt = salt;
       userSetUpdate.hash = hash;
+
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       if (oldSalt && oldHash) {
         userSetUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
       }
+
       userSetUpdate.loginFailureCount = 0;
       userSetUpdate.passwordUpdatedAt = Date.now();
 
@@ -240,9 +259,11 @@ exports.update = async (_id, update, auditDetails, callback) => {
     userSetUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const userUpdate = { $set: userSetUpdate };
+
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
+
     const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
       returnDocument: 'after',
     });
@@ -274,6 +295,7 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
@@ -332,6 +354,7 @@ exports.remove = async (_id, auditDetails, callback) => {
     if (error instanceof DocumentNotDeletedError) {
       return callback(error, 404);
     }
+
     console.error('Deleting a user threw an error %o', error);
     return callback(error, 500);
   }

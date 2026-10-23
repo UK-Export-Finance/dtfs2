@@ -4,8 +4,8 @@ import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PatchPortalFacilityAmendmentStatusPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload';
-import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
-import externalApi from '../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
+import { externalApi } from '../../../../external-api/api';
 
 type PatchSubmitAmendmentToCheckerRequestParams = {
   facilityId: string;

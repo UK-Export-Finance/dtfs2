@@ -1,5 +1,5 @@
-import { AMENDMENT_TYPES, UNDERWRITER_MANAGER_DECISIONS } from '../constants';
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
+import { AMENDMENT_TYPES, UNDERWRITER_MANAGER_DECISIONS } from '@ukef/constants';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
 
 /**
  * Determines if a given amendment has been declined by UKEF.

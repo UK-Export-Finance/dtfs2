@@ -49,8 +49,14 @@ const getShareClient = async (fileshare) => {
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
 
   await shareClient.create().catch(({ details }) => {
-    if (!details) return;
-    if (details.errorCode === 'ShareAlreadyExists') return;
+    if (!details) {
+      return;
+    }
+
+    if (details.errorCode === 'ShareAlreadyExists') {
+      return;
+    }
+
     throw new Error(details.message);
   });
 
@@ -63,8 +69,14 @@ const getDirectory = async (fileshare, folderPaths = '') => {
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
 
   await directoryClient.create().catch(async ({ details }) => {
-    if (!details) return false;
-    if (details.errorCode === 'ResourceAlreadyExists') return false;
+    if (!details) {
+      return false;
+    }
+
+    if (details.errorCode === 'ResourceAlreadyExists') {
+      return false;
+    }
+
     if (details.errorCode === 'ParentNotFound') {
       const parentFolder = folderPaths.replace(/(\/[^/]*)\/?$/, ''); // remove last folder from string
       await getDirectory(fileshare, parentFolder);
@@ -96,11 +108,18 @@ const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite 
   if (process.env.AZURE_LOG_LEVEL) {
     tmpTests();
   }
+
   const directoryClient = await getDirectory(fileshare, folder);
 
   await directoryClient.create().catch(({ details }) => {
-    if (!details) return false;
-    if (details.errorCode === 'ResourceAlreadyExists') return false;
+    if (!details) {
+      return false;
+    }
+
+    if (details.errorCode === 'ResourceAlreadyExists') {
+      return false;
+    }
+
     console.error('Fileshare create resource error %o', { fileshare, folder, details });
     return {
       errorCount: 1,
@@ -162,7 +181,9 @@ const deleteFile = async (fileshare, filePath) => {
 };
 
 const deleteMultipleFiles = async (fileshare, filePath, fileList) => {
-  if (!fileList) return false;
+  if (!fileList) {
+    return false;
+  }
 
   if (Array.isArray(fileList)) {
     return fileList.map(async (filename) => {
@@ -187,6 +208,7 @@ const copyFile = async ({ from, to }) => {
   };
 
   const bufferedFile = await readFile(fromFile);
+
   if (bufferedFile.error) {
     return bufferedFile;
   }
@@ -210,6 +232,7 @@ const moveFile = async ({ from, to }) => {
   if (copied.error) {
     return Promise.reject(new Error(`${filePath}: ${JSON.stringify(copied.error)}`));
   }
+
   await deleteFile(from.fileshare, filePath);
   return copied;
 };
@@ -228,7 +251,7 @@ const listDirectoryFiles = async ({ fileshare, folder }) => {
 
   while (!entity.done) {
     directoryList.push(entity.value);
-    entity = await iter.next(); // eslint-disable-line no-await-in-loop
+    entity = await iter.next();
   }
 
   return directoryList;

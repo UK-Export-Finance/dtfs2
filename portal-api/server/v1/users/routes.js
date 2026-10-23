@@ -60,6 +60,7 @@ const combineErrors = (listOfErrors) =>
     } else {
       response[field] = value;
     }
+
     return response;
   }, {});
 
@@ -94,6 +95,7 @@ module.exports.create = async (req, res, next) => {
     if (e) {
       return next(e);
     }
+
     return res.json({ success: true, user });
   });
 };
@@ -126,10 +128,12 @@ module.exports.updateById = async (req, res, next) => {
       if (error) {
         return next(error);
       }
+
       if (!user) {
         console.error('Failed to find user with _id', req.params._id);
         return res.status(404).send();
       }
+
       const errors = await applyUpdateRules(user, req.body);
 
       if (errors.length) {
@@ -146,6 +150,7 @@ module.exports.updateById = async (req, res, next) => {
         if (updateErr) {
           return next(updateErr);
         }
+
         return res.status(200).json(sanitizeUser(updatedUser));
       });
     });
@@ -171,6 +176,7 @@ module.exports.remove = (req, res) => {
     if (error) {
       return res.status(status).send({ status, error });
     }
+
     return res.sendStatus(status);
   });
 };
@@ -340,6 +346,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       },
     });
   }
+
   const auditDetails = generatePortalAuditDetails(user._id);
   const updateData = {
     password,

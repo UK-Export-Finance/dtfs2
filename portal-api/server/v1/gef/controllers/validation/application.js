@@ -4,6 +4,7 @@ const { ERROR } = require('../../enums');
 
 const validateMandatoryField = (fieldName, fieldValue) => {
   const value = fieldValue ?? '';
+
   if (value.length <= 0) {
     return {
       status: 422,
@@ -18,6 +19,7 @@ const validateMandatoryField = (fieldName, fieldValue) => {
 
 const validateNameFieldValue = (fieldName, fieldValue) => {
   const value = fieldValue ?? '';
+
   if (value.length > 30) {
     return {
       status: 422,
@@ -46,7 +48,10 @@ const validateApplicationReferences = (body = {}) => {
     validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
     validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
   }
-  if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', sanitizeHtml(body.additionalRefName)));
+
+  if (body.additionalRefName) {
+    validationErrors.push(validateNameFieldValue('additionalRefName', sanitizeHtml(body.additionalRefName)));
+  }
 
   validationErrors = validationErrors.filter((el) => el !== null); // remove nulls
   return validationErrors.length === 0 ? null : validationErrors;

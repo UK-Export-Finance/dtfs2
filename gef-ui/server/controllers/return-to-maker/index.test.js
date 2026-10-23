@@ -1,4 +1,5 @@
 import { RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { getReturnToMaker, postReturnToMaker } from './index';
 import { getApplication, updateApplication, setApplicationStatus, getUserDetails } from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
@@ -39,7 +40,7 @@ describe('controllers/return-to-maker', () => {
       username: 'checker',
       firstname: 'Bob',
       surname: 'Smith',
-      email: 'test@test.com',
+      email: MOCK_EMAIL,
       roles: 'Checker,',
     });
   });
@@ -119,7 +120,7 @@ describe('controllers/return-to-maker', () => {
               userName: 'checker',
               firstname: 'Bob',
               surname: 'Smith',
-              email: 'test@test.com',
+              email: MOCK_EMAIL,
               roles: 'Checker,',
             },
           ],

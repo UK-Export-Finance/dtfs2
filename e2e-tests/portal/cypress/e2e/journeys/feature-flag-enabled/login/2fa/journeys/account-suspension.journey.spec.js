@@ -110,4 +110,20 @@ context('Portal 2FA Journey - Account suspension - too many access-code resend/r
       });
     });
   });
+
+  describe('when a user has more than the maximum allowed attempts', () => {
+    beforeEach(() => {
+      cy.task('updatePortalUserByUsername', {
+        username: BANK1_MAKER1.username,
+        update: { 'user-status': 'blocked', signInOTPSendCount: 15 },
+      });
+
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+    });
+
+    it('should show the suspension page when the user has more than the maximum allowed attempts', () => {
+      cy.url().should('eq', relative('/login/temporarily-suspended-access-code'));
+      cy.assertText(temporarilySuspendedAccessCode.heading(), 'This account has been temporarily suspended');
+    });
+  });
 });

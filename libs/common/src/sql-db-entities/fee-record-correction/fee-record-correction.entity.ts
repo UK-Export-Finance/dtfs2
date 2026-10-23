@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { FeeRecordEntity } from '../fee-record/fee-record.entity';
-import { CorrectionValuesPartialEntity, RequestedByUserPartialEntity } from '../partial-entities';
-import { AuditableBaseEntity } from '../base-entities';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record/fee-record.entity';
+import { CorrectionValuesPartialEntity, RequestedByUserPartialEntity } from '@ukef/sql-db-entities/partial-entities';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
+import { RecordCorrectionReason } from '@ukef/types';
 import { CompleteCorrectionParams, CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
-import { RecordCorrectionReason } from '../../types';
 
 @Entity('FeeRecordCorrection')
 export class FeeRecordCorrectionEntity extends AuditableBaseEntity {

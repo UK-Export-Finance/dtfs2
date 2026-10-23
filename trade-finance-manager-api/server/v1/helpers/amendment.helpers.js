@@ -394,6 +394,7 @@ const addLatestAmendmentValue = async (tfmObject, latestValue, facilityId) => {
     };
     return newTfmObject;
   }
+
   return tfmObject;
 };
 
@@ -407,7 +408,9 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
     if (!facilityType || !coverStartDateFormatted || !coverEndDateFormatted) {
       return null;
     }
+
     const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
     // returns exposure period in months to add to tfmObject
     if (updatedTenor?.exposurePeriodInMonths) {
       return updatedTenor.exposurePeriodInMonths;
@@ -465,6 +468,14 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 };
 
 /**
+ * calculates the ukef exposure for ACBS from the provided newAmount and coveredPercentage
+ * @param {Number} newAmount
+ * @param {Number} coveredPercentage
+ * @returns {Number} calculated ukef exposure value
+ */
+const calculateAcbsUkefExposureValue = (newAmount, coveredPercentage) => newAmount * (coveredPercentage / 100);
+
+/**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
  * @param {object} payload Amendment payload
@@ -474,7 +485,7 @@ const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
     return {
       ...payload,
-      ukefExposure: payload.value * (payload.coveredPercentage / 100),
+      ukefExposure: calculateAcbsUkefExposureValue(payload.value, payload.coveredPercentage),
     };
   }
 
@@ -513,4 +524,5 @@ module.exports = {
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
   calculateAcbsUkefExposure,
+  calculateAcbsUkefExposureValue,
 };

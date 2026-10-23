@@ -1,9 +1,9 @@
-import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { UtilisationReportEntityMockBuilder, MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { SendReportReconciledEmail } from './send-report-reconciled-email';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
-import externalApi from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
 
@@ -13,7 +13,7 @@ jest.mock('../../../../../external-api/api');
 describe('SendReportReconciledEmail', () => {
   let sendEmailSpy = jest.fn();
   const mockGetBankByIdResponse = aBank();
-  mockGetBankByIdResponse.paymentOfficerTeam.emails = ['test@test.com'];
+  mockGetBankByIdResponse.paymentOfficerTeam.emails = [MOCK_EMAIL];
 
   beforeEach(() => {
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
@@ -69,7 +69,7 @@ describe('SendReportReconciledEmail', () => {
 
   describe('when a valid report is provided and multiple emails are returned by "generateReportReconciledEmailVariables"', () => {
     const bankResponse = aBank();
-    bankResponse.paymentOfficerTeam.emails = ['test@test.com', 'test2@test.com'];
+    bankResponse.paymentOfficerTeam.emails = [MOCK_EMAIL, 'test2@test.com'];
 
     beforeEach(() => {
       jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValue(bankResponse));

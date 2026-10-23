@@ -90,7 +90,7 @@ describe('mapRiskDetails', () => {
         isContingentFacility: params.isContingentFacility,
         isEwcsFacility: params.isEwcsFacility,
       }),
-      facilityCreditRating: mapFacilityCreditRating(params.creditRiskRatings, params.exporterCreditRating),
+      facilityCreditRating: mapFacilityCreditRating(params.exporterCreditRating),
       riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
       ukefIndustryCode: mockUkefIndustryCode,
     };

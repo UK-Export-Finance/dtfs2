@@ -25,7 +25,9 @@ const getFileType = (fieldname) => {
 };
 
 const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
-  if (!deletedFilesList) return supportingInformation;
+  if (!deletedFilesList) {
+    return supportingInformation;
+  }
 
   const updatedDealFiles = {};
 
@@ -108,6 +110,7 @@ exports.update = async (req, res) => {
         if (!(fieldname in supportingInformation)) {
           supportingInformation[fieldname] = [];
         }
+
         if (!supportingInformation[fieldname].some((df) => df.filename === rest.filename)) {
           supportingInformation[fieldname].push({ ...rest });
         }
@@ -193,11 +196,13 @@ exports.downloadFile = async (req, res) => {
     }
 
     const fieldFiles = deal.supportingInformation && deal.supportingInformation[fieldname];
+
     if (!fieldFiles) {
       return res.status(404).send();
     }
 
     const fileInfo = fieldFiles.find((file) => file.filename === filename);
+
     if (!fileInfo) {
       return res.status(404).send();
     }

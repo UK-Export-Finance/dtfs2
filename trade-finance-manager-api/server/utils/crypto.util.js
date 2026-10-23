@@ -19,6 +19,7 @@ function validPassword(password, hash, salt) {
   if (!hash || !salt) {
     return false;
   }
+
   const hashAsBuffer = Buffer.from(hash, 'hex');
   const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512');
 

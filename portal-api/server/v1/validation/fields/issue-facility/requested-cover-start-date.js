@@ -100,6 +100,7 @@ module.exports = (submittedValues, errorList, deal) => {
         };
       }
     }
+
     const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
       requestedCoverStartDateDay,
       requestedCoverStartDateMonth,

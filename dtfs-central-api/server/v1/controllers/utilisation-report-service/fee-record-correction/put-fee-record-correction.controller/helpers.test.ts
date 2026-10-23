@@ -1,7 +1,7 @@
 import { getTfmUiUrl, getUkefGefReportingEmailRecipients } from '@ukef/dtfs2-common';
 import { aBank } from '../../../../../../test-helpers';
-import externalApi from '../../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
 import { sendCorrectionReceivedBankNotificationEmails, sendCorrectionReceivedUkefNotificationEmails, sendFeeRecordCorrectionReceivedEmails } from './helpers';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';

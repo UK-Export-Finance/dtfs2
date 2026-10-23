@@ -14,6 +14,7 @@ const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
     return true;
   }
+
   return false;
 };
 
@@ -54,6 +55,7 @@ const canValidateAgainstFacilityValue = (disbursementAmount, value) => {
   ) {
     return true;
   }
+
   return false;
 };
 

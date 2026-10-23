@@ -2,7 +2,7 @@ const { HttpStatusCode } = require('axios');
 const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
-const { OTP } = require('@ukef/dtfs2-common');
+const { OTP, REPORT_DATA_VALIDATION_ROUTE } = require('@ukef/dtfs2-common');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
@@ -1305,6 +1305,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
       if (!error) {
         return next();
       }
+
       console.error('Unable to upload file %o', error);
       return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
@@ -1831,6 +1832,7 @@ authRouter.route('/utilisation-reports').post(
       if (!error) {
         return next();
       }
+
       console.error('Unable to upload file %o', error);
       return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
@@ -1907,7 +1909,7 @@ authRouter
  *        description: Internal server error
  */
 authRouter
-  .route('/banks/:bankId/utilisation-reports/report-data-validation')
+  .route(`/banks/:bankId${REPORT_DATA_VALIDATION_ROUTE}`)
   .post(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,

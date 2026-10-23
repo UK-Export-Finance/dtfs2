@@ -56,6 +56,7 @@ const addAccurateStatusesToLoans = (deal) => {
       loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
     });
   }
+
   return deal.loanTransactions;
 };
 

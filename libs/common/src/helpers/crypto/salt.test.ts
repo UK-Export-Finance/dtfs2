@@ -1,6 +1,6 @@
 import crypto from 'crypto';
+import { CRYPTO } from '@ukef/constants';
 import { salt } from './salt';
-import { CRYPTO } from '../../constants';
 
 jest.mock('crypto');
 
@@ -21,7 +21,7 @@ describe('salt', () => {
 
     // Assert
     expect(response).toBeDefined();
-    expect(Buffer.isBuffer(response)).toBeTruthy();
+    expect(Buffer.isBuffer(response)).toEqual(true);
   });
 
   it('should call crypto.randomBytes with 64 bytes', () => {

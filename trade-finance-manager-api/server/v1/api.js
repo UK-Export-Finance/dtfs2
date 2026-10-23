@@ -27,10 +27,12 @@ const headers = {
 const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
+
     if (!isValidDealId) {
       console.error('findOnePortalDeal: Invalid deal id %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -617,6 +619,7 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
  */
 const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -647,6 +650,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDe
  */
 const getAmendmentInProgress = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -673,6 +677,7 @@ const getAmendmentInProgress = async (facilityId) => {
  */
 const getCompletedAmendment = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -699,6 +704,7 @@ const getCompletedAmendment = async (facilityId) => {
  */
 const getLatestCompletedAmendmentValue = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -725,6 +731,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
  */
 const getLatestCompletedAmendmentDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -754,10 +761,12 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
  */
 const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (!isValid) {
     console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
+
   try {
     const response = await axios({
       method: 'get',
@@ -783,6 +792,7 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
  */
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -809,6 +819,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
  */
 const getAmendmentByFacilityId = async (facilityId) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -835,6 +846,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
  */
 const getAmendmentsByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -861,6 +873,7 @@ const getAmendmentsByDealId = async (dealId) => {
  */
 const getAmendmentInProgressByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -887,6 +900,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
  */
 const getCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -913,6 +927,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
  */
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -938,6 +953,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
  */
 const getAllAmendmentsInProgress = async () => {
   const isValid = hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
@@ -1034,25 +1050,27 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 
 /**
  * Calls getOrCreatePartyDbInfo in external-api to get a customer in Salesforce, and create it if it doesn't exist
- * @param {string} companyRegNo Party URN
- * @param {string} companyName Company name
- * @param {string} probabilityOfDefault Probability of default
- * @param {boolean} isUkEntity Whether the party source country is UK or not
  * @param {number} code SIC industry sector code
+ * @param {string} companyName Company name
+ * @param {string} companyRegNo Party URN
+ * @param {string} customerType Customer type
+ * @param {boolean} isUkEntity Whether the party source country is UK or not
+ * @param {string} probabilityOfDefault Probability of default
  * @returns {Promise<object>} Company information
  */
-const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
+const getOrCreatePartyDbInfo = async ({ code, companyRegNo, companyName, customerType, isUkEntity, probabilityOfDefault }) => {
   try {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/party-db`,
       headers: headers.external,
       data: {
-        companyRegNo,
-        companyName,
-        probabilityOfDefault,
-        isUkEntity,
         code,
+        companyName,
+        companyRegNo,
+        customerType,
+        isUkEntity,
+        probabilityOfDefault,
       },
     });
 
@@ -1092,7 +1110,7 @@ const getCompanyInfo = async (partyUrn) => {
 
 /**
  * Get credit risk ratings
- * @returns {Promise<import('./api-response-types').CreditRiskRating[] | false>}
+ * @returns {Promise<import('@ukef/dtfs2-common').CreditRiskRating[] | false>}
  */
 const getCreditRiskRatings = async () => {
   try {
@@ -1405,6 +1423,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     if (response.status === 200 || response.status === 201) {
       return response.data;
     }
+
     return null;
   } catch (error) {
     console.error('TFM-API error calling premium schedule %o', error);
@@ -1430,12 +1449,14 @@ const createACBS = async (deal, bank) => {
           bank,
         },
       });
+
       return response.data;
     } catch (error) {
       console.error('ACBS create error\n\r %o', error);
       return false;
     }
   }
+
   return {};
 };
 
@@ -1457,12 +1478,14 @@ const issueACBSfacility = async (facility, deal) => {
           deal,
         },
       });
+
       return response.data;
     } catch (error) {
       console.error('TFM-API Facility update error %o', error);
       return { status: error?.code || 500, data: 'Failed to update ACBS facility' };
     }
   }
+
   return {};
 };
 
@@ -1475,6 +1498,7 @@ const issueACBSfacility = async (facility, deal) => {
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
     const { ukefFacilityId } = facility.facilitySnapshot;
+
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/acbs/facility/${ukefFacilityId}/amendments`,
@@ -1494,6 +1518,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       return response.data;
     }
   }
+
   return null;
 };
 
@@ -1510,6 +1535,7 @@ const getFunctionsAPI = async (url = '') => {
       method: 'get',
       url: modifiedUrl,
     });
+
     return response.data;
   } catch (error) {
     console.error('Unable to getFunctionsAPI for %s %o', modifiedUrl, error);

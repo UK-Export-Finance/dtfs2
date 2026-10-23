@@ -89,14 +89,17 @@ const addDisableFormSubmitOnSubmission = () => {
     }
 
     const hasPreviouslySubmitted = !!priorSubmitter;
+
     if (hasPreviouslySubmitted) {
       const isSameSubmitterAsPrevious = submitter === priorSubmitter;
+
       if (isSameSubmitterAsPrevious) {
         // prevents a duplicate resubmission if a user resubmits the form not using buttons
         // ie from using keyboard navigation to submit the form
         event.preventDefault();
         return;
       }
+
       validateAndDeleteElement(priorSubmitterHiddenInput);
       validateAndEnableSubmitter(priorSubmitter);
     }

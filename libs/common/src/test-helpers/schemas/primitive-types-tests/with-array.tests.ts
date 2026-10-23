@@ -1,8 +1,8 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { withTestsForTestcase } from '../tests/with-tests-for-testcase';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { withTestsForTestcase } from '@ukef/test-helpers/schemas/tests/with-tests-for-testcase';
+import { TestCase } from '@ukef/test-helpers/schemas/test-cases/test-case';
 import { withDefaultOptionsTests } from './with-default-options.tests';
-import { TestCase } from '../test-cases/test-case';
 
 export type WithArrayTestsOptions = {
   arrayTypeTestCase: TestCase;

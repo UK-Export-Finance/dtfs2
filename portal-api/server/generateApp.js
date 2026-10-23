@@ -1,5 +1,14 @@
 const { CORS_ORIGIN } = process.env;
-const { exceptionHandlers, maintenance, sanitiseMongoRequest, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const {
+  exceptionHandlers,
+  maintenance,
+  xss,
+  MAX_REQUEST_SIZE,
+  MAX_UTILISATION_REPORT_REQUEST_SIZE,
+  sanitiseMongoRequest,
+  SWAGGER,
+  REPORT_DATA_VALIDATION_ROUTE,
+} = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -9,11 +18,11 @@ const healthcheck = require('./healthcheck');
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
 const { authRouter, openRouter } = require('./v1/routes');
-const swaggerRouter = require('./v1/routes/swagger.route');
+const { swaggerRouter } = require('./v1/routes/swagger.route');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
-const createRateLimit = require('./v1/middleware/rateLimit');
+const createRateLimit = require('./v1/middleware/rate-limit');
 
 dotenv.config({ quiet: true });
 
@@ -40,7 +49,7 @@ const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
 
@@ -52,7 +61,11 @@ const generateApp = () => {
 
   app.use(createRateLimit());
   app.use(passport.initialize());
+
+  // Set the limit for express.json to larger size for the utilisation report validation endpoint as some report payloads are larger than MAX_REQUEST_SIZE.
+  app.use(`/v1/banks/:bankId${REPORT_DATA_VALIDATION_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
+
   app.use(compression());
   app.use(removeCsrfToken);
   app.use(xss);

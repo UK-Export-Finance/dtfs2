@@ -1,6 +1,7 @@
-import { AMENDMENT_TYPES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, AMENDMENT_BANK_DECISION, UNDERWRITER_MANAGER_DECISIONS } from '../constants';
+import { AMENDMENT_TYPES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, AMENDMENT_BANK_DECISION, UNDERWRITER_MANAGER_DECISIONS } from '@ukef/constants';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { canSendToAcbs } from './can-submit-to-acbs';
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 
 describe('canSendToAcbs', () => {
   describe('Automatic amendment', () => {
@@ -99,7 +100,7 @@ describe('canSendToAcbs', () => {
           createdBy: {
             username: 'test',
             name: 'test',
-            email: 'test@ukexportfinance.gov.uk',
+            email: MOCK_EMAIL,
           },
         } as PortalFacilityAmendmentWithUkefId;
 
@@ -107,7 +108,7 @@ describe('canSendToAcbs', () => {
         const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
-        expect(response).toBeTruthy();
+        expect(response).toEqual(true);
       });
 
       it('should return true when both the attributes has been amended, has been sent to UKEF and has a user', () => {
@@ -120,7 +121,7 @@ describe('canSendToAcbs', () => {
           createdBy: {
             username: 'test',
             name: 'test',
-            email: 'test@ukexportfinance.gov.uk',
+            email: MOCK_EMAIL,
           },
         } as PortalFacilityAmendmentWithUkefId;
 
@@ -128,7 +129,7 @@ describe('canSendToAcbs', () => {
         const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
-        expect(response).toBeTruthy();
+        expect(response).toEqual(true);
       });
     });
 
@@ -258,7 +259,7 @@ describe('canSendToAcbs', () => {
         const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
-        expect(response).toBeTruthy();
+        expect(response).toEqual(true);
       });
 
       it('should return true when both the attributes of a facility has been amended, has been sent to UKEF and has been submitted by PIM', () => {
@@ -275,7 +276,7 @@ describe('canSendToAcbs', () => {
         const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
-        expect(response).toBeTruthy();
+        expect(response).toEqual(true);
       });
     });
   });
@@ -467,7 +468,7 @@ describe('canSendToAcbs', () => {
         const response = canSendToAcbs({ amendment: mockAmendment });
 
         // Assert
-        expect(response).toBeTruthy();
+        expect(response).toEqual(true);
       });
 
       it('should return false when the amendment has been approved by UKEF but is a task update', () => {

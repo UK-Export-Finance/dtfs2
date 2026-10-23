@@ -84,6 +84,10 @@ WORKDIR ${ROOT}
 COPY --chown=node:node --from=build ${ROOT}/package.json .
 COPY --chown=node:node --from=build ${ROOT}/package-lock.json .
 COPY --chown=node:node --from=build ${ROOT}/node_modules ./node_modules
+# ACBS-specific (non-hoisted) dependencies, e.g. `date-fns@4`, `dotenv@17`.
+# Some dependencies are hoisted to the root `node_modules` directory, but some are not. This is because of the way NPM workspaces work.
+# so this handles the non-hoisted dependencies for the ACBS microservice.
+COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/node_modules ./node_modules
 
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/package.json ./package.json
 COPY --chown=node:node --from=build ${AzureWebJobsScriptRoot}/tsconfig.json ./tsconfig.json

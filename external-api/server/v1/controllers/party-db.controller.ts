@@ -1,4 +1,4 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, CUSTOMER_TYPE, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
@@ -58,7 +58,7 @@ export const getOrCreateParty = async (
   res: Response,
 ) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault, isUkEntity, code } = req.body;
+    const { code, companyRegNo: companyRegistrationNumber, companyName, customerType, isUkEntity, probabilityOfDefault } = req.body;
 
     if (!companyRegistrationNumber || !isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
       console.error('Invalid company registration number was provided %s', companyRegistrationNumber);
@@ -73,6 +73,11 @@ export const getOrCreateParty = async (
     if (!code) {
       console.error('Invalid industry code was provided %s', code);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid industry code' });
+    }
+
+    if (!customerType || !Object.values(CUSTOMER_TYPE).includes(customerType)) {
+      console.error('Invalid customer type was provided %s', customerType);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid customer type' });
     }
 
     const industryData = await findACBSIndustrySector(code);
@@ -93,8 +98,9 @@ export const getOrCreateParty = async (
       url: `${APIM_MDM_URL}v1/customers`,
       headers,
       data: {
-        companyRegistrationNumber,
         companyName,
+        companyRegistrationNumber,
+        customerType,
         probabilityOfDefault,
         ukEntity,
         ukefIndustryName,

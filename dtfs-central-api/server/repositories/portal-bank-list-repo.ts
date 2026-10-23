@@ -11,7 +11,7 @@ export const getAllPortalBankListEntries = async (): Promise<PortalBankListEntry
 
   const banks = await collection
     .find({}, { projection: { name: 1, order: 1 } })
-    .sort({ order: 1, name: 1 })
+    .sort({ order: 1 })
     .toArray();
 
   return banks;

@@ -28,6 +28,7 @@
     "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "rootDir": ".." /* Ensure project and shared libs are both under the source root. */,
     "paths": {
+      "@ukef/*": ["../libs/common/src/*"],
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
       "@ukef/dtfs2-common/api-test": ["../libs/common/src/test-helpers/api-test/index.ts"],
       "@ukef/dtfs2-common/backend": ["../libs/common/src/helpers/backend/index.ts"],
@@ -107,6 +108,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "ts-node": {
+    "require": ["@ukef/dtfs2-common/register-paths"],
     "files": true
   },
   "include": ["**/*.ts", "../libs/common/**/*.ts"],

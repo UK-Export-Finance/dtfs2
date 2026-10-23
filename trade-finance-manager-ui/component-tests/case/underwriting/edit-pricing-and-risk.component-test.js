@@ -21,15 +21,56 @@ describe(page, () => {
 
   describe('radio buttons', () => {
     it('should render `Good` radio button', () => {
-      wrapper.expectInput('[data-cy="credit-rating-good"]').toHaveValue('Good (BB-)');
+      wrapper.expectInput('[data-cy="credit-rating-good"]').toHaveValue('BB-');
     });
 
     it('should render `Acceptable (B+)` radio button', () => {
-      wrapper.expectInput('[data-cy="credit-rating-acceptable"]').toHaveValue('Acceptable (B+)');
+      wrapper.expectInput('[data-cy="credit-rating-acceptable"]').toHaveValue('B+');
     });
 
     it('should render `Other` radio button', () => {
       wrapper.expectInput('[data-cy="credit-rating-other"]').toHaveValue('Other');
+    });
+  });
+
+  describe('accessible autocomplete select', () => {
+    beforeEach(() => {
+      wrapper = render({
+        ...params,
+        tfm: {
+          exporterCreditRating: 'A+',
+        },
+        otherCreditRatings: [
+          {
+            value: '',
+            text: '',
+          },
+          {
+            value: 'A+',
+            text: 'A+',
+            selected: true,
+          },
+          {
+            value: 'BBB',
+            text: 'BBB',
+          },
+        ],
+        label: 'Credit rating',
+      });
+    });
+
+    it('should render a heading for the accessible autocomplete select', () => {
+      wrapper.expectElement('[data-cy="exporterCreditRatingOther-label"]').toExist();
+      wrapper.expectText('[data-cy="exporterCreditRatingOther-label"]').toRead('Credit rating');
+    });
+
+    it('should render `Other` accessible autocomplete select', () => {
+      wrapper.expectElement('#exporterCreditRatingOther[name="exporterCreditRatingOther"]').toExist();
+      wrapper.expectElement('#exporterCreditRatingOther option[value="A+"][selected]').toExist();
+    });
+
+    it('should render accessible autocomplete script', () => {
+      wrapper.expectElement('script[src="/assets/js/accessibleAutocomplete.js"]').toExist();
     });
   });
 });

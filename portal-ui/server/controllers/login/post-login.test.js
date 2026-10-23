@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { ACCESS_CODE_PAGES } from '@ukef/dtfs2-common';
+import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { postLogin } from './post-login';
 import { validationErrorHandler } from '../../helpers';
 import { MOCK_PORTAL_SESSION_USER } from '../../test-mocks/mock-portal-session-user';
@@ -12,7 +13,7 @@ console.error = jest.fn();
 const token = 'mock-token';
 
 const body = {
-  email: 'test@example.com',
+  email: MOCK_EMAIL,
   password: 'password123',
 };
 
@@ -215,7 +216,15 @@ describe('postLogin', () => {
         it('should log the error and render the problem with service page', async () => {
           await postLogin(req, res);
 
-          expect(console.error).toHaveBeenNthCalledWith(1, 'Failed to send sign in OTP, rendering problem with service page. The error was %o', error);
+          expect(console.error).toHaveBeenNthCalledWith(
+            1,
+            '%s: %s (status: %s, code: %s) %o',
+            'Failed to send sign in OTP, rendering problem with service page. The error was',
+            'OTP sending failed',
+            undefined,
+            'UNKNOWN',
+            'Unknown error',
+          );
 
           expect(res.render).toHaveBeenNthCalledWith(1, '_partials/problem-with-service.njk');
           expect(res.redirect).not.toHaveBeenCalled();
@@ -254,7 +263,15 @@ describe('postLogin', () => {
         it('should log the error and render the login page with errors', async () => {
           await postLogin(req, res);
 
-          expect(console.error).toHaveBeenNthCalledWith(1, 'Failed to login %o', error);
+          expect(console.error).toHaveBeenNthCalledWith(
+            1,
+            '%s: %s (status: %s, code: %s) %o',
+            'Failed to login',
+            'Login failed',
+            undefined,
+            'UNKNOWN',
+            'Unknown error',
+          );
 
           const expectedErrors = [
             {

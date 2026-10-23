@@ -37,9 +37,11 @@ const getArrayKeyOperatorName = (key) => {
   if (key === 'AND') {
     return '$and';
   }
+
   if (key === 'OR') {
     return '$or';
   }
+
   return key;
 };
 
@@ -56,47 +58,55 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
 
   const keys = Object.keys(filters);
 
+  const modifiedResult = result;
+
   keys.forEach((key) => {
     // This handles when there is an array -- ie in the case of AND and OR
     if (Array.isArray(filters[key])) {
       const newKeyName = getArrayKeyOperatorName(key);
+
       /**
        * This handles CHECKERS_AMENDMENTS_DEAL_ID  key
        * When  key is present, transforms filter _id within the array of dealIds
        */
       if (newKeyName === CHECKERS_AMENDMENTS_DEAL_ID) {
-        result._id = { $in: filters[newKeyName].map((dealId) => new ObjectId(dealId)) };
+        modifiedResult._id = { $in: filters[newKeyName].map((dealId) => new ObjectId(dealId)) };
       } else {
-        if (!result[newKeyName]) {
-          result[newKeyName] = [];
+        if (!modifiedResult[newKeyName]) {
+          modifiedResult[newKeyName] = [];
         }
 
         filters[key].forEach((condition, i) => {
-          result[newKeyName][i] = {};
-          recursivelyReplaceEscapeOperators(condition, result[newKeyName][i]);
+          modifiedResult[newKeyName][i] = {};
+
+          recursivelyReplaceEscapeOperators(condition, modifiedResult[newKeyName][i]);
         });
       }
 
       // This handles nested objects ie {example: {REGEX: 'example'}}
     } else if (typeof filters[key] === 'object' && filters[key] !== null) {
-      result[key] = {};
-      recursivelyReplaceEscapeOperators(filters[key], result[key]);
+      modifiedResult[key] = {};
+
+      recursivelyReplaceEscapeOperators(filters[key], modifiedResult[key]);
+
       // These last few statements handle the lowest level cases
     } else if (key === 'KEYWORD') {
-      result.$regex = escapeStringRegexp(filters[key]);
+      modifiedResult.$regex = escapeStringRegexp(filters[key]);
     } else if (key === 'hasBeenIssued') {
-      result.hasBeenIssued = {
+      modifiedResult.hasBeenIssued = {
         $eq: filters.hasBeenIssued,
       };
+
       // When filtering by `hasBeenIssued`, want to exclude cases where `facilityStage` is 'Risk expired'
-      result.facilityStage = { $ne: FACILITY_STAGE.RISK_EXPIRED };
+      modifiedResult.facilityStage = { $ne: FACILITY_STAGE.RISK_EXPIRED };
     } else {
-      result[key] = {
+      modifiedResult[key] = {
         $eq: filters[key],
       };
     }
   });
-  return result;
+
+  return modifiedResult;
 };
 
 const escapeOperators = (filters) => recursivelyReplaceEscapeOperators(filters);

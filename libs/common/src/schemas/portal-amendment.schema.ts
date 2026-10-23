@@ -1,6 +1,6 @@
 import z from 'zod';
-import { getEpochMs } from '../helpers';
-import { AMENDMENT_TYPES } from '../constants';
+import { getEpochMs } from '@ukef/helpers';
+import { AMENDMENT_TYPES } from '@ukef/constants';
 import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-date.schema';
 import { CURRENCY_SCHEMA } from './currency.schema';
 /**

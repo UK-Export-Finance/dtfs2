@@ -1,3 +1,4 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
@@ -12,7 +13,7 @@ describe('/feedback', () => {
     easyToUse: 'Very good',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@testing.com',
+    emailAddress: MOCK_EMAIL,
   };
 
   const postFeedback = async (body) => {

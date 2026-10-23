@@ -1,6 +1,7 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { webpackAliases } = require('../libs/common/src/module-aliases.cjs');
 
 module.exports = {
   entry: {
@@ -30,6 +31,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
+      ...webpackAliases,
       'node_modules/govuk-frontend': path.resolve(__dirname, 'node_modules/govuk-frontend'),
       'node_modules/@ministryofjustice': path.resolve(__dirname, 'node_modules/@ministryofjustice'),
     },

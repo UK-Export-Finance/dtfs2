@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../integrations/apim-gift');
 const { createACBS } = require('./acbs.controller');
 const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 const api = require('../api');
@@ -22,7 +22,7 @@ jest.mock('../api', () => ({
 }));
 
 jest.mock('../integrations/apim-gift', () => ({
-  canSendToApimGift: jest.fn(),
+  canSendDealFacilitiesToApimGift: jest.fn(),
   sendFacilitiesToApimGift: jest.fn(),
 }));
 
@@ -93,7 +93,7 @@ describe('updateParty', () => {
 
     updateDealMock.mockResolvedValue(mockTfmDeal);
 
-    canSendToApimGift.mockResolvedValue({
+    canSendDealFacilitiesToApimGift.mockResolvedValue({
       canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isGefDeal: true,
@@ -131,7 +131,7 @@ describe('updateParty', () => {
       auditDetails: generateTfmAuditDetails(mockRequest.user._id),
     });
 
-    expect(canSendToApimGift).toHaveBeenCalledWith(mockTfmDeal);
+    expect(canSendDealFacilitiesToApimGift).toHaveBeenCalledWith(mockTfmDeal);
     expect(sendFacilitiesToApimGift).not.toHaveBeenCalled();
     expect(createACBS).not.toHaveBeenCalled();
 
@@ -156,7 +156,7 @@ describe('updateParty', () => {
         },
       };
 
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
@@ -187,7 +187,7 @@ describe('updateParty', () => {
       };
       const apimGiftError = new Error('APIM/GIFT failed');
 
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
@@ -217,7 +217,7 @@ describe('updateParty', () => {
         },
       };
 
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: false,
         issuedFacilities,
         isBssEwcsDeal: false,

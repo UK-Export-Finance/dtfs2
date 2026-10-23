@@ -20,6 +20,10 @@ const login = ({ username, password }) => {
       signInLink.visit({ token: signInToken, userId: _id });
     });
   }
+
+  // The successful login response uses a meta refresh. Wait for it to finish
+  // before another visit can replace the transitional login page.
+  cy.url().should('not.include', '/login');
 };
 
 export default login;

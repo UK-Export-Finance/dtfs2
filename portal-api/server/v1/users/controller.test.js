@@ -3,19 +3,26 @@ jest.mock('./sanitizeUserData');
 jest.mock('../email');
 jest.mock('@ukef/dtfs2-common/payload-verification');
 jest.mock('../../crypto/utils');
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortal2FAFeatureFlagEnabled: jest.fn(),
+}));
 
 const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
+const { isPortal2FAFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateMockNoUserLoggedInAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { updateSessionIdentifier, createPasswordToken, create, update } = require('./controller');
 const { TEST_USER, TEST_DATABASE_USER, TEST_USER_SANITISED_FOR_FRONTEND } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { STATUS } = require('../../constants/user');
 const { InvalidUserIdError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { sanitizeUser } = require('./sanitizeUserData');
 const sendEmail = require('../email');
+const CONSTANTS = require('../../constants');
 
 const MOCK_EMAIL = 'mockEmail';
 const utils = require('../../crypto/utils');
@@ -126,6 +133,7 @@ describe('user controller', () => {
 
     function givenEverythingElseSucceeds() {
       sendEmail.mockResolvedValue({});
+      isPortal2FAFeatureFlagEnabled.mockReturnValue(false);
       when(db.getCollection)
         .calledWith('users')
         .mockResolvedValue({
@@ -134,6 +142,121 @@ describe('user controller', () => {
           findOneAndUpdate: jest.fn().mockResolvedValue(TEST_DATABASE_USER),
         });
     }
+
+    describe('when reactivating a blocked user', () => {
+      const BLOCKED_DATABASE_USER = {
+        ...TEST_DATABASE_USER,
+        'user-status': STATUS.BLOCKED,
+        blockedStatusReason: 'Too many invalid password entries',
+        loginFailureCount: 3,
+      };
+      const reactivationUpdate = { 'user-status': STATUS.ACTIVE };
+      let mockFindOneAndUpdate;
+
+      beforeEach(() => {
+        jest.resetAllMocks();
+        resetAllWhenMocks();
+        sendEmail.mockResolvedValue({});
+        isPortal2FAFeatureFlagEnabled.mockReturnValue(false);
+        mockFindOneAndUpdate = jest.fn().mockResolvedValue(BLOCKED_DATABASE_USER);
+        db.getCollection.mockResolvedValue({
+          findOne: jest.fn().mockImplementation(async (id, findOneCallback) => await findOneCallback(null, BLOCKED_DATABASE_USER)),
+          findOneAndUpdate: mockFindOneAndUpdate,
+        });
+      });
+
+      it('should send an unblocked email to the user', async () => {
+        // Arrange
+        isVerifiedPayload.mockReturnValue(true);
+
+        // Act
+        await new Promise((resolve) => {
+          update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+        });
+
+        // Assert
+        expect(sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, BLOCKED_DATABASE_USER.email, {});
+      });
+
+      it('should reset loginFailureCount to 0', async () => {
+        // Arrange
+        isVerifiedPayload.mockReturnValue(true);
+
+        // Act
+        await new Promise((resolve) => {
+          update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+        });
+
+        // Assert
+        expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({ $set: expect.objectContaining({ loginFailureCount: 0 }) }),
+          expect.anything(),
+        );
+      });
+
+      describe('when the portal 2FA feature flag is disabled', () => {
+        beforeEach(() => {
+          isPortal2FAFeatureFlagEnabled.mockReturnValue(false);
+        });
+
+        it('should unset signInLinkSendDate, signInLinkSendCount, and blockedStatusReason', async () => {
+          // Arrange
+          isVerifiedPayload.mockReturnValue(true);
+
+          // Act
+          await new Promise((resolve) => {
+            update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+          });
+
+          // Assert
+          const expected = [
+            expect.anything(),
+            expect.objectContaining({
+              $unset: {
+                signInLinkSendDate: '',
+                signInLinkSendCount: '',
+                blockedStatusReason: '',
+              },
+            }),
+            expect.anything(),
+          ];
+
+          expect(mockFindOneAndUpdate).toHaveBeenCalledWith(...expected);
+        });
+      });
+
+      describe('when the portal 2FA feature flag is enabled', () => {
+        beforeEach(() => {
+          isPortal2FAFeatureFlagEnabled.mockReturnValue(true);
+        });
+
+        it('should unset signInOTPSendDate, signInOTPSendCount, and blockedStatusReason', async () => {
+          // Arrange
+          isVerifiedPayload.mockReturnValue(true);
+
+          // Act
+          await new Promise((resolve) => {
+            update(TEST_DATABASE_USER._id, reactivationUpdate, generatePortalAuditDetails(new ObjectId()), resolve);
+          });
+
+          // Assert
+          const expected = [
+            expect.anything(),
+            expect.objectContaining({
+              $unset: {
+                signInOTPSendDate: 0,
+                signInOTPSendCount: 0,
+                blockedStatusReason: '',
+              },
+            }),
+            expect.anything(),
+          ];
+
+          expect(mockFindOneAndUpdate).toHaveBeenCalledWith(...expected);
+        });
+      });
+    });
   });
 
   function withValidationTests({ givenEverythingElseSucceeds, makeRequest, successResult }) {

@@ -29,16 +29,19 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@cypress/webpack-batteries-included-preprocessor": "^5.0.0",
+    "@cypress/webpack-preprocessor": "^6.0.4",
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.10.4",
     "chance": "^1.1.13",
-    "cypress": "^15.20.1",
+    "cypress": "^16.1.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^2.0.0",
     "date-fns": "^4.4.0",
     "eslint": "^8.57.1",
     "eslint-plugin-cypress": "^2.15.2",
-    "mongodb": "^4.17.2"
+    "mongodb": "^4.17.2",
+    "ts-loader": "^9.6.2"
   },
   "engines": {
     "node": ">=24.17.0",

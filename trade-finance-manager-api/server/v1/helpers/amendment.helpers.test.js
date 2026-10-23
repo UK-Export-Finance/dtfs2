@@ -1,6 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -12,6 +13,7 @@ const {
   internalAmendmentEmail,
   addLatestAmendmentFacilityEndDate,
   formatAmendmentDates,
+  calculateAcbsUkefExposureValue,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
@@ -513,7 +515,7 @@ describe('sendFirstTaskEmail()', () => {
 
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
-    api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'test@test.com' }));
+    api.findOneTeam = jest.fn(() => Promise.resolve({ email: MOCK_EMAIL }));
   });
 
   it('should send first task email with correct variables with gef deal', async () => {
@@ -1101,5 +1103,16 @@ describe('formatAmendmentDates', () => {
       effectiveDate: 1761087600000,
       coverEndDate: 1761087600000,
     });
+  });
+});
+
+describe('calculateAcbsUkefExposureValue', () => {
+  it('should calculate UKEF exposure correctly', () => {
+    const value = 5000;
+    const coveredPercentage = 12;
+
+    const result = calculateAcbsUkefExposureValue(value, coveredPercentage);
+
+    expect(result).toBe(600);
   });
 });

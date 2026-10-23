@@ -6,6 +6,7 @@ const { findLatestCompletedAmendment } = require('../../helpers/amendment.helper
 
 const mapCoverEndDate = (day, month, year, facility) => {
   const hasCoverEndDate = hasValue(day) && hasValue(month) && hasValue(year);
+
   if (hasCoverEndDate) {
     let dayToUse = day;
     let monthToUse = month;

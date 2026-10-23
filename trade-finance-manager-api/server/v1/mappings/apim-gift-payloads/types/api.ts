@@ -1,6 +1,6 @@
-import { TfmFacility } from '@ukef/dtfs2-common';
+import { CreditRiskRating, TfmFacility } from '@ukef/dtfs2-common';
 import { ApimGiftFacilityCreationPayload } from './apim-gift';
-import { CreditRiskRating, FacilityCategory } from '../../../api-response-types';
+import { FacilityCategory } from '../../../api-response-types';
 import { ApimGiftFacilityAmendmentPayload, MultipleAmendmentsPayload } from './amendments';
 
 type FindFacilitiesByDealIdErrorResponse = {

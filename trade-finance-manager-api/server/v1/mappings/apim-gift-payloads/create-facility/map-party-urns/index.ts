@@ -22,9 +22,11 @@ type MapPartyUrnsParams = {
  * For a BSS (Bond) facility:
  * - GIFT's "bond beneficiary" is the "buyer party URN" from TFM parties (if it exists).
  * - GIFT's "bond giver" is the "bank party URN" from the deal snapshot.
+ * - GIFT's "exporter" is the "exporter party URN" from TFM parties.
  * For an EWCS (Loan) facility:
  * - GIFT's "buyer" is the "buyer party URN" from TFM parties (if it exists).
  * - GIFT's "issuing bank" is the "bank party URN" from the deal snapshot.
+ * - GIFT's "exporter" is the "exporter party URN" from TFM parties.
  * For a Cash or Contingent facility:
  * - GIFT's "issuing bank" is the "bank party URN" from the deal snapshot.
  * - GIFT's "exporter" is the "exporter party URN" from TFM parties.
@@ -47,8 +49,11 @@ export const mapPartyUrns = ({ deal, isBssFacility, isCashFacility, isContingent
   }
 
   if (isEwcsFacility) {
+    const buyer = buyerPartyUrn != null && { buyer: String(buyerPartyUrn) };
+
     return {
-      buyer: buyerPartyUrn,
+      ...buyer,
+      exporterPartyUrn,
       issuingBank: bankPartyUrn,
     };
   }

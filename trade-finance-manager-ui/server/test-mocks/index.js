@@ -1,3 +1,5 @@
+const { mockUser } = require('./mock-user');
+
 const mockReq = () => ({
   session: {},
   flash: jest.fn(),
@@ -14,4 +16,5 @@ const mockRes = () => {
 module.exports = {
   mockReq,
   mockRes,
+  mockUser,
 };

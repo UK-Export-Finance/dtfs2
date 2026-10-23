@@ -1,5 +1,5 @@
+import { FACILITY_STAGE } from '@ukef/constants/portal/facility-stage';
 import { ValuesOf } from '..';
-import { FACILITY_STAGE } from '../../constants/portal/facility-stage';
 
 /**
  * Type representing the stages of a facility in the portal.

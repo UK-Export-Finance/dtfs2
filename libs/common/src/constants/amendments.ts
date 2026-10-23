@@ -1,5 +1,5 @@
+import type { PortalAmendmentStatus } from '@ukef/types/amendment-status';
 import { DEAL_STATUS } from './portal';
-import type { PortalAmendmentStatus } from '../types/amendment-status';
 
 export const TFM_AMENDMENT_STATUS = {
   /**

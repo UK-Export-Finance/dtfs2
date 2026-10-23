@@ -1,3 +1,4 @@
+const { MOCK_EMAIL } = require('@ukef/dtfs2-common/test-helpers');
 const {
   DEALS: { AMENDMENT_UW_DECISION, DEAL_TYPE },
   TASKS_AMENDMENT: { AUTOMATIC_AMENDMENT },
@@ -15,7 +16,7 @@ const approvedWithoutConditionsBothAmendments = {
   user: {
     firstname: 'Bob',
     surname: 'Smith',
-    email: 'test@test.com',
+    email: MOCK_EMAIL,
   },
   dealSnapshot: {
     ukefDealId,

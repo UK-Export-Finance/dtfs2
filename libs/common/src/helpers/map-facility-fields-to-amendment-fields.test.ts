@@ -1,8 +1,8 @@
 import { add, sub, getUnixTime } from 'date-fns';
+import { aPortalFacilityAmendment } from '@ukef/test-helpers/mock-data-backend/portal-facility-amendment';
+import { PORTAL_AMENDMENT_STATUS } from '@ukef/constants';
 import { now } from './date';
 import { mapFacilityFieldsToAmendmentFields } from './map-facility-fields-to-amendment-fields';
-import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend/portal-facility-amendment';
-import { PORTAL_AMENDMENT_STATUS } from '../constants';
 
 describe('map-facility-fields-to-amendment-fields helper', () => {
   const tomorrow = add(now(), { days: 1 });

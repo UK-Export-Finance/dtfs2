@@ -71,7 +71,7 @@ services:
       - "9223:9223" # debug
     volumes:
       - ./dtfs-central-api/server:/app/dtfs-central-api/server:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -125,7 +125,7 @@ services:
       - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
       - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
       - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -172,7 +172,7 @@ services:
       - "9225:9225" # debug
     volumes:
       - ./trade-finance-manager-api/server:/app/trade-finance-manager-api/server:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -229,7 +229,7 @@ services:
       - ./portal-ui/server:/app/portal-ui/server:ro
       - ./portal-ui/public:/app/portal-ui/public:ro
       - ./portal-ui/templates:/app/portal-ui/templates:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -270,7 +270,7 @@ services:
       - "9227:9227" # debug
     volumes:
       - ./portal-api/server:/app/portal-api/server:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -330,7 +330,7 @@ services:
       - "9228:9228" # debug
     volumes:
       - ./external-api/server:/app/external-api/server:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV
@@ -378,7 +378,7 @@ services:
       - ./gef-ui/server:/app/gef-ui/server:ro
       - ./gef-ui/public:/app/gef-ui/public:ro
       - ./gef-ui/templates:/app/gef-ui/templates:ro
-      - ./libs:/app/libs:ro
+      - ./libs/common/src:/app/libs/common/src:ro
     environment:
       - TZ
       - NODE_ENV

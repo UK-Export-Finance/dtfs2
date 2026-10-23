@@ -7,6 +7,7 @@ const page = {
 
   buyerName: () => cy.get('[data-cy="buyer-name"]'),
   buyerAddress: () => address('buyer-address'),
+  buyerCountry: () => cy.get('[data-cy="buyer-address-country"]'),
   destinationOfGoodsAndServices: () => cy.get('[data-cy="destinationOfGoodsAndServices"]'),
 
   nextPage: () => cy.get('[data-cy="NextPage"]'),

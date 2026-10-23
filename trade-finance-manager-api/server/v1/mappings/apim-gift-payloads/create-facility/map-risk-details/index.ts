@@ -8,7 +8,6 @@ import { FacilityCategory, UkefIndustryCode } from '../../../../api-response-typ
 const { DEFAULTS } = APIM_GIFT_INTEGRATION;
 
 type MapRiskDetailsParams = {
-  creditRiskRatings: string[];
   dealId: string | null;
   ewcsSupplierType: string | null;
   exporterCreditRating: string;
@@ -23,7 +22,6 @@ type MapRiskDetailsParams = {
 /**
  * Map the facility "risk details".
  * @param {MapRiskDetailsParams} params - Data required to build the APIM GIFT "facility risk details" data.
- * @param {string[]} params.creditRiskRatings - The list of credit risk ratings. Required to map the facility credit rating to the APIM expected value.
  * @param {string | null} params.dealId - The TFM deal ID.
  * @param {string | null} params.ewcsSupplierType - The EWCS supplier type for the facility. Required to map the facility category code to the APIM expected value for an EWCS facility.
  * @param {string} params.exporterCreditRating - TFM's exporter's credit rating.
@@ -36,7 +34,6 @@ type MapRiskDetailsParams = {
  * @returns {ApimGiftFacilityRiskDetails} The mapped risk details for the APIM GIFT payload.
  */
 export const mapRiskDetails = async ({
-  creditRiskRatings,
   dealId,
   ewcsSupplierType,
   exporterCreditRating,
@@ -80,7 +77,7 @@ export const mapRiskDetails = async ({
       isContingentFacility,
       isEwcsFacility,
     }),
-    facilityCreditRating: mapFacilityCreditRating(creditRiskRatings, exporterCreditRating),
+    facilityCreditRating: mapFacilityCreditRating(exporterCreditRating),
     riskStatus: DEFAULTS.RISK_DETAILS.RISK_STATUS,
     ukefIndustryCode,
   };

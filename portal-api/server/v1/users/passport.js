@@ -80,6 +80,7 @@ const loginCompleteAuth = (passport, userService) => {
       console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
       return PASSPORT_VALIDATION_RESULTS.FAILED;
     }
+
     return PASSPORT_VALIDATION_RESULTS.PASSED;
   };
   baseAuthenticationConfiguration({ name, passport, additionalPayloadValidation, additionalUserValidation });
@@ -92,6 +93,8 @@ const loginInProgressAuth = (passport) => {
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,
     signInLinkSendCount: user.signInLinkSendCount,
+    signInOTPSendDate: user.signInOTPSendDate,
+    signInOTPSendCount: user.signInOTPSendCount,
   });
   baseAuthenticationConfiguration({
     name: 'login-in-progress',

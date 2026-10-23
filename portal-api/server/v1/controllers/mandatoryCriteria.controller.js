@@ -33,6 +33,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
   if (typeof version !== 'string' || Number.isNaN(version)) {
     throw new Error('Invalid Version');
   }
+
   const versionAsNumber = Number(version);
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
@@ -154,6 +155,7 @@ exports.delete = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: 'Mandatory Criteria not found' });
     }
+
     console.error('Error occurred deleting mandatory criteria, %o', error);
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }

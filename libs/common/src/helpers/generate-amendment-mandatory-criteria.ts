@@ -1,4 +1,4 @@
-import { AmendmentsEligibilityCriterionWithAnswer } from '../types/mongo-db-models/tfm-facilities';
+import { AmendmentsEligibilityCriterionWithAnswer } from '@ukef/types/mongo-db-models/tfm-facilities';
 
 /**
  * Generates a formatted string of mandatory criteria for GovNotify email template based on the provided criteria array.

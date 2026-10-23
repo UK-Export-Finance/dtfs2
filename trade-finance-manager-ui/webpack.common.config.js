@@ -2,6 +2,7 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { webpackAliases } = require('../libs/common/src/module-aliases.cjs');
 
 module.exports = {
   entry: {
@@ -14,6 +15,7 @@ module.exports = {
     enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
     mojFilterHide: './scripts/moj-filter-hide.ts',
     ssoRedirectAutoSubmit: './scripts/sso-redirect-auto-submit.ts',
+    accessibleAutocomplete: './scripts/accessible-autocomplete.js',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
@@ -27,7 +29,10 @@ module.exports = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   resolve: {
+    extensions: ['.ts', '.js', '.json', '.wasm'],
+    // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
+      ...webpackAliases,
       'node_modules/govuk-frontend': path.resolve(__dirname, 'node_modules/govuk-frontend'),
       'node_modules/@ministryofjustice': path.resolve(__dirname, 'node_modules/@ministryofjustice'),
     },

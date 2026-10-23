@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { when } = require('jest-when');
-const { canSendToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
+const { canSendDealFacilitiesToApimGift, sendFacilitiesToApimGift } = require('../../../server/v1/integrations/apim-gift');
 const { createACBS } = require('../../../server/v1/controllers/acbs.controller');
 const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
 const api = require('../../../server/v1/api');
@@ -16,7 +16,7 @@ jest.mock('../../../server/v1/controllers/user/user.controller', () => ({
 }));
 
 jest.mock('../../../server/v1/integrations/apim-gift', () => ({
-  canSendToApimGift: jest.fn(),
+  canSendDealFacilitiesToApimGift: jest.fn(),
   sendFacilitiesToApimGift: jest.fn(),
 }));
 
@@ -57,8 +57,8 @@ describe('PUT /v1/parties/:dealId', () => {
   beforeEach(() => {
     api.updateDeal.mockReset();
 
-    canSendToApimGift.mockReset();
-    canSendToApimGift.mockResolvedValue({
+    canSendDealFacilitiesToApimGift.mockReset();
+    canSendDealFacilitiesToApimGift.mockResolvedValue({
       canSendFacilitiesToApimGift: false,
       issuedFacilities: [],
       isGefDeal: true,
@@ -116,7 +116,7 @@ describe('PUT /v1/parties/:dealId', () => {
       // Arrange
       const issuedFacilities = [{ _id: 'facility-1' }];
 
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: true,
         issuedFacilities,
         isBssEwcsDeal: false,
@@ -142,7 +142,7 @@ describe('PUT /v1/parties/:dealId', () => {
   describe('when APIM/GIFT submission is not allowed', () => {
     it(`should not call sendFacilitiesToApimGift when APIM/GIFT submission is not allowed`, async () => {
       // Arrange
-      canSendToApimGift.mockResolvedValue({
+      canSendDealFacilitiesToApimGift.mockResolvedValue({
         canSendFacilitiesToApimGift: false,
         issuedFacilities: [],
         isBssEwcsDeal: false,

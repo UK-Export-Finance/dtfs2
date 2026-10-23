@@ -28,7 +28,7 @@ describe('validateToken()', () => {
   it('returns `true` if token is valid', async () => {
     portalApi.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.Ok }));
     const response = await api.validateToken(userToken);
-    expect(response).toBeTruthy();
+    expect(response).toEqual(true);
   });
 
   it('returns `false` if token is not valid', async () => {

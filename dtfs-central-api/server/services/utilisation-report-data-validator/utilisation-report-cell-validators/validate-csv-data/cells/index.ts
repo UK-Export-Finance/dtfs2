@@ -57,7 +57,7 @@ export const validateCells = async (csvData: UtilisationReportCsvRowData[], avai
 
       const rowErrorPromises = rowValidations.map((errorGenerator) => errorGenerator(csvRow));
 
-      return Promise.all([...cellErrorPromises, ...rowErrorPromises]);
+      return await Promise.all([...cellErrorPromises, ...rowErrorPromises]);
     }),
   );
 

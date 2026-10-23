@@ -1,13 +1,18 @@
 import express, { Express } from 'express';
 import compression from 'compression';
-import { exceptionHandlers, MAX_REQUEST_SIZE, sanitiseMongoRequest, xss, maintenance } from '@ukef/dtfs2-common';
+import {
+  exceptionHandlers,
+  MAX_REQUEST_SIZE,
+  MAX_UTILISATION_REPORT_REQUEST_SIZE,
+  xss,
+  maintenance,
+  REPORT_DATA_VALIDATION_ROUTE,
+  sanitiseMongoRequest,
+} from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
-
 import { ROUTES } from './constants';
-
 import healthcheck from './healthcheck';
-
-import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
+import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRouter } from './v1/routes';
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 
 const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
@@ -29,7 +34,7 @@ export const generateApp = (): Express => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
+  app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRouter);
 
   app.use(security);
 
@@ -40,11 +45,16 @@ export const generateApp = (): Express => {
   app.use(maintenance);
 
   app.use(checkApiKey);
-  // added limit for larger payloads
+
+  app.use(createRateLimit());
+
+  // Set the limit for express.json to larger size for the utilisation report validation endpoint as some reports are larger than MAX_REQUEST_SIZE.
+  app.use(`/v1${REPORT_DATA_VALIDATION_ROUTE}`, express.json({ limit: MAX_UTILISATION_REPORT_REQUEST_SIZE }));
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
+
   app.use(compression());
   app.use(removeCsrfToken);
-  app.use(createRateLimit());
+
   app.use(xss);
   // MongoDB sanitisation
   app.use(sanitiseMongoRequest);
