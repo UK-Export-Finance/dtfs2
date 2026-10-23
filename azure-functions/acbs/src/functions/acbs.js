@@ -76,6 +76,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
 
       // 1.3. Buyer (Non-GEF)
       let buyerTask;
+
       if (product !== CONSTANTS.PRODUCT.TYPE.GEF) {
         const buyer = mappings.party.buyer({ deal });
         buyerTask = context.df.callActivityWithRetry('create-party', retryOptions, buyer);
@@ -153,6 +154,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
         facilities: facilityTasks.map(({ result }) => result),
       };
     }
+
     console.error('No input specified');
   } catch (error) {
     console.error('Error processing ACBS payload %o', error);

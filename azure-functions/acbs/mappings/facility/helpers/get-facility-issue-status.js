@@ -5,6 +5,7 @@ const hasFacilityBeenIssued = (facility) => {
   if (facility.facilitySnapshot.hasBeenIssued) {
     return facility.facilitySnapshot.hasBeenIssued;
   }
+
   // BSS/EWCS
   if (facility.facilitySnapshot.facilityStage) {
     return isIssued(facility.facilitySnapshot.facilityStage);
