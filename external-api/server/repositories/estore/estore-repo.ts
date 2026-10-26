@@ -56,7 +56,8 @@ export class EstoreRepo {
 
       return await collection.insertOne(document);
     } catch (error) {
-      console.error('An error occurred while inserting into %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
+      console.error('An error occurred while inserting into %s collection. %o', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS, error);
+
       return false;
     }
   }
