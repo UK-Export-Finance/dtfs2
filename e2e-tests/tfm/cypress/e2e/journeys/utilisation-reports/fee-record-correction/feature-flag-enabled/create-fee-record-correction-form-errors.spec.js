@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, RECORD_CORRECTION_REASON, PENDING_RECONCILIATION, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT } from '@ukef/dtfs2-common';
-import { pages } from '../../../../pages';
+import { tfmPages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
@@ -12,8 +12,9 @@ context('When fee record correction feature flag is enabled', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const feeRecordAtToDoStatus = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
-  const { reasonCheckbox, reasonsInputError, additionalInfoInput, additionalInfoInputError, errorSummaryErrors } = pages.createFeeRecordCorrectionRequestPage;
+  const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
+  const { reasonCheckbox, reasonsInputError, additionalInfoInput, additionalInfoInputError, errorSummaryErrors } =
+    tfmPages.createFeeRecordCorrectionRequestPage;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -33,7 +34,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   context('PDC_RECONCILE users cannot create record correction requests with invalid form values', () => {
     beforeEach(() => {
-      pages.landingPage.visit();
+      tfmPages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
 
       cy.visit(`utilisation-reports/${reportId}`);

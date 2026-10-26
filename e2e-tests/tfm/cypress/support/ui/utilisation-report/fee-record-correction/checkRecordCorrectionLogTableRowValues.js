@@ -1,6 +1,6 @@
-import { pages } from '../../../../e2e/pages';
+import { tfmPages } from '../../../../e2e/pages';
 
-const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
+const { recordCorrectionLogContent } = tfmPages.utilisationReportPage.tabs;
 
 const { table } = recordCorrectionLogContent;
 

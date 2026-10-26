@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { PENDING_RECONCILIATION, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { pages } from '../../../../pages';
+import { tfmPages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
@@ -45,8 +45,8 @@ const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([
   tenthFeeRecord,
 ]);
 
-const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
-const { utilisationReportPage } = pages;
+const { recordCorrectionLogContent } = tfmPages.utilisationReportPage.tabs;
+const { utilisationReportPage } = tfmPages;
 const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
@@ -75,7 +75,7 @@ context('When fee record correction feature flag is enabled - record correction 
       tenthFeeRecord,
     ]);
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
 
     cy.login(USERS.PDC_RECONCILE);
 
@@ -169,7 +169,7 @@ context('When fee record correction feature flag is enabled - record correction 
   });
 
   beforeEach(() => {
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
