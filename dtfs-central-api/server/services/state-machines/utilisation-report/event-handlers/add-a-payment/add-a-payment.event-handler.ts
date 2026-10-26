@@ -63,5 +63,6 @@ export const handleUtilisationReportAddAPaymentEvent = async (
   } else {
     report.updateLastUpdatedBy(requestSource);
   }
+
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

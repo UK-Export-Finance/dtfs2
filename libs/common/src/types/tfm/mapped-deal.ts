@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { DEAL_TYPE } from '../../constants';
-import { AnyObject } from '../any-object';
+import { DEAL_TYPE } from '@ukef/constants';
+import { AnyObject } from '@ukef/types/any-object';
 import { DealSubmissionType, DealType, TfmActivity, TfmDealCancellationWithStatus } from '..';
 import { TfmDealStage } from './deal-stage';
 
@@ -22,11 +22,11 @@ type MappedBaseDealSnapshot = AnyObject & {
   eligibility: AnyObject;
 };
 
-export interface MappedBssEwcsDealSnapshot extends MappedBaseDealSnapshot {
+export type MappedBssEwcsDealSnapshot = {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
-}
+} & MappedBaseDealSnapshot;
 
-export interface MappedGefDealSnapshot extends MappedBaseDealSnapshot {
+export type MappedGefDealSnapshot = {
   dealType: typeof DEAL_TYPE.GEF;
   status: string;
   updatedAt: number;
@@ -40,7 +40,7 @@ export interface MappedGefDealSnapshot extends MappedBaseDealSnapshot {
   supportingInformation: {
     status: string;
   };
-}
+} & MappedBaseDealSnapshot;
 
 export type MappedDealSnapshot = MappedBssEwcsDealSnapshot | MappedGefDealSnapshot;
 

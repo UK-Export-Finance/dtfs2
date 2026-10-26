@@ -7,7 +7,7 @@
  * @property security - Default security requirements applied to documented operations.
  * @property tags - An array of tag objects used for grouping API endpoints.
  */
-export interface swaggerDefinition {
+export type SwaggerDefinition = {
   openapi?: '3.0.0';
   info: { title: string; version: string; description: string };
   components?: {
@@ -26,4 +26,4 @@ export interface swaggerDefinition {
     name: string;
     description: string;
   }>;
-}
+};

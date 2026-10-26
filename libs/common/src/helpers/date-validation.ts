@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
-import { DayMonthYearInput, GenericValidationError } from '../types';
+import { DayMonthYearInput, GenericValidationError } from '@ukef/types';
 
 type ValueAndFieldRefs = {
   value: string;
@@ -52,6 +52,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
         fieldRefs: [refs.day, refs.month],
       };
     }
+
     if (!day && !year) {
       return {
         message: `${capitalisedValueName} must include a day and a year`,
@@ -59,6 +60,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
         fieldRefs: [refs.day, refs.year],
       };
     }
+
     if (!month && !year) {
       return {
         message: `${capitalisedValueName} must include a month and a year`,
@@ -66,13 +68,16 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
         fieldRefs: [refs.month, refs.year],
       };
     }
-    if (!day)
+
+    if (!day) {
       return {
         message: `${capitalisedValueName} must include a day`,
         ref: refs.value,
         fieldRefs: [refs.day],
       };
+    }
   }
+
   if (!month) {
     return {
       message: `${capitalisedValueName} must include a month`,
@@ -80,6 +85,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
       fieldRefs: [refs.month],
     };
   }
+
   if (!year) {
     return {
       message: `${capitalisedValueName} must include a year`,
@@ -87,6 +93,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
       fieldRefs: [refs.year],
     };
   }
+
   return null;
 };
 

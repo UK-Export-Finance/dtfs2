@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { CRYPTO } from '../../constants';
+import { CRYPTO } from '@ukef/constants';
 
 /**
  * Generates a cryptographic hash of a password using a provided salt.

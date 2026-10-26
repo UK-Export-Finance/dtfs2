@@ -25,6 +25,7 @@ const isOfTypeBankReportPeriodSchedule = (reportPeriodSchedule: unknown[]): repo
     if (!('endMonth' in scheduledPeriod) || typeof scheduledPeriod.endMonth !== 'number') {
       return false;
     }
+
     return true;
   });
 
@@ -54,6 +55,7 @@ const validateFirstPeriodCoversStartOfYear = (reportPeriodSchedule: BankReportPe
 
 const validateReportPeriodScheduleCoversTheYearChronologically = (reportPeriodSchedule: BankReportPeriodSchedule): void => {
   const monthsInSchedule = reportPeriodSchedule.flatMap((period) => getMonthsCoveredByPeriod(period));
+
   if (monthsInSchedule.length !== 12) {
     throw new InvalidReportPeriodScheduleError('Utilisation report period schedule does not contain 12 months');
   }

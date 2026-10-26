@@ -50,10 +50,12 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
     return res.status(HttpStatusCode.Ok).json(updatedAmendment);
   } catch (error) {
     console.error('Error updating amendment:', error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: 'Unknown error',

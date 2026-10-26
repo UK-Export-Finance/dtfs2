@@ -1,6 +1,6 @@
+import { UTILISATION_REPORT_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '@ukef/constants';
 import { Prettify, ValuesOf } from './types-helper';
 import { MonthAndYear } from './date';
-import { UTILISATION_REPORT_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
 import { Currency } from './currency';
 
 export type UtilisationReportStatus = ValuesOf<typeof UTILISATION_REPORT_STATUS>;

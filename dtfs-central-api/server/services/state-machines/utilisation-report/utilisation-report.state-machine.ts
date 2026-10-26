@@ -50,9 +50,11 @@ export class UtilisationReportStateMachine {
    */
   public static async forReportId(id: number): Promise<UtilisationReportStateMachine> {
     const report = await UtilisationReportRepo.findOneBy({ id });
+
     if (!report) {
       throw new NotFoundError(`Failed to find report with id ${id}`);
     }
+
     return new UtilisationReportStateMachine(report);
   }
 
@@ -100,51 +102,51 @@ export class UtilisationReportStateMachine {
       case undefined:
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.DUE_REPORT_INITIALISED:
-            return handleUtilisationReportDueReportInitialisedEvent(event.payload);
+            return await handleUtilisationReportDueReportInitialisedEvent(event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case REPORT_NOT_RECEIVED:
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED:
-            return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
+            return await handleUtilisationReportReportUploadedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case PENDING_RECONCILIATION:
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
-            return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
+            return await handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
-            return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
+            return await handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case RECONCILIATION_IN_PROGRESS:
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
-            return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
+            return await handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT:
-            return handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
+            return await handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
-            return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
+            return await handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT:
-            return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
+            return await handleUtilisationReportEditPaymentEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY:
-            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
+            return await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED:
-            return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
+            return await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP:
-            return handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
+            return await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP:
-            return handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(this.report, event.payload);
+            return await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case RECONCILIATION_COMPLETED:
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY:
-            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
+            return await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

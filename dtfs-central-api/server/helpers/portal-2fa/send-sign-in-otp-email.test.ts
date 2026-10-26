@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
-import externalApi from '../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
+import { externalApi } from '../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../constants/email-template-ids';
 import { sendSignInOtpEmail } from './send-sign-in-otp-email';
 import { MissingUserFieldsError } from '../../errors/missing-user-fields-error';
 import { EmailSendError } from '../../errors/email-send-error';

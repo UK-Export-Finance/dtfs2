@@ -36,6 +36,7 @@ exports.createTfmUser = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -82,6 +83,7 @@ const findOneUserById = async (userId) => {
     const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
+
   return { status: 400, message: 'Invalid User Id' };
 };
 exports.findOneUserById = findOneUserById;
@@ -96,6 +98,7 @@ exports.findOneTfmUserById = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'User not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
@@ -105,6 +108,7 @@ exports.findTfmTeamUser = async (req, res) => {
   if (typeof teamId !== 'string') {
     return res.status(400).send('Invalid teamId');
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
 
   const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
@@ -131,6 +135,7 @@ exports.deleteTfmUser = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -154,6 +159,7 @@ exports.deleteTfmUser = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 404, message: 'User not found' });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 };

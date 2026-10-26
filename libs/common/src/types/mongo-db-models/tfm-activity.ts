@@ -1,12 +1,10 @@
-import { ACTIVITY_TYPES } from '../../constants';
-import { UnixTimestamp, UnixTimestampSeconds } from '../date';
+import { ACTIVITY_TYPES } from '@ukef/constants';
+import { UnixTimestamp, UnixTimestampSeconds } from '@ukef/types/date';
 import { ActivityAuthor } from './activity-author';
-
-const { ACTIVITY, COMMENT, CANCELLATION } = ACTIVITY_TYPES;
 
 export type TfmActivity =
   | {
-      type: typeof ACTIVITY | typeof COMMENT;
+      type: typeof ACTIVITY_TYPES.ACTIVITY | typeof ACTIVITY_TYPES.COMMENT;
       timestamp: UnixTimestampSeconds;
       author: ActivityAuthor;
       text: string;
@@ -15,7 +13,7 @@ export type TfmActivity =
       amendmentId?: string;
     }
   | {
-      type: typeof CANCELLATION;
+      type: typeof ACTIVITY_TYPES.CANCELLATION;
       timestamp: UnixTimestampSeconds;
       author: ActivityAuthor;
       bankRequestDate: UnixTimestamp;

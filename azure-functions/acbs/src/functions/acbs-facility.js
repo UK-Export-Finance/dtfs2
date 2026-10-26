@@ -95,7 +95,7 @@ df.app.orchestration('acbs-facility', function* createFacility(context) {
 
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
-        // eslint-disable-next-line no-plusplus
+
         for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
           const input = acbsFacilityFeeInput[i];
           facilityFee.push(

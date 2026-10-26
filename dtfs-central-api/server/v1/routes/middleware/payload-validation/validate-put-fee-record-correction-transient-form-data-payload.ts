@@ -7,7 +7,7 @@ import { MongoObjectIdSchema } from './schemas';
  * All the form data fields are of type string and nullable because the
  * form validation itself is taking place in the controller.
  */
-const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
+const PutFeeRecordCorrectionTransientFormDataPayloadSchema = z.object({
   user: z.object({ _id: MongoObjectIdSchema }),
   formData: z.object({
     utilisation: z.string().optional(),
@@ -21,9 +21,9 @@ const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
 /**
  * Type definition for fee record correction transient form data payload.
  */
-export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionTransientFormDataPayload>;
+export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionTransientFormDataPayloadSchema>;
 
 /**
  * Middleware function to validate fee record correction transient form data payload.
  */
-export const validatePutFeeRecordCorrectionTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionTransientFormDataPayload);
+export const validatePutFeeRecordCorrectionTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionTransientFormDataPayloadSchema);

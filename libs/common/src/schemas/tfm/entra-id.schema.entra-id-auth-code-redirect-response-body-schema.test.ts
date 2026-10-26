@@ -1,5 +1,5 @@
-import { anEntraIdAuthCodeRedirectResponseBody } from '../../test-helpers';
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
+import { anEntraIdAuthCodeRedirectResponseBody } from '@ukef/test-helpers';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from './entra-id.schema';
 
 describe('ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA', () => {

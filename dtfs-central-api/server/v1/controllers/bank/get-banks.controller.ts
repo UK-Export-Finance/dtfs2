@@ -18,6 +18,7 @@ type GetBanksResponseBody = Bank[] | BankWithReportingYears[] | ApiErrorResponse
 
 const mapBankToBankWithReportingYears = async (bank: Bank): Promise<BankWithReportingYears> => {
   const { id: bankId, isVisibleInTfmUtilisationReports } = bank;
+
   if (!isVisibleInTfmUtilisationReports) {
     return { ...bank, reportingYears: [] };
   }
@@ -31,6 +32,7 @@ export const getBanks = async (req: GetBanksRequest, res: Response<GetBanksRespo
 
   try {
     const banks = await getAllBanks();
+
     if (includeReportingYears !== 'true') {
       return res.status(HttpStatusCode.Ok).send(banks);
     }
@@ -40,6 +42,7 @@ export const getBanks = async (req: GetBanksRequest, res: Response<GetBanksRespo
   } catch (error) {
     const errorMessage = 'Failed to get all banks';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
@@ -47,6 +50,7 @@ export const getBanks = async (req: GetBanksRequest, res: Response<GetBanksRespo
         code: error.code,
       });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: errorMessage,

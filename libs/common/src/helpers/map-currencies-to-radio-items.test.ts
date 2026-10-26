@@ -1,5 +1,5 @@
-import { CURRENCY } from '../constants';
-import { aCurrencyRadioItem } from '../test-helpers/currency-radio-item';
+import { CURRENCY } from '@ukef/constants';
+import { aCurrencyRadioItem } from '@ukef/test-helpers/currency-radio-item';
 import { mapCurrenciesToRadioItems } from './map-currencies-to-radio-items';
 
 describe('map-currencies-to-radio-items helper', () => {
