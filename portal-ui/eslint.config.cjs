@@ -99,7 +99,10 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src', prefix: '@ukef' }],
+      // DTFS exception
+      // Why: Allow relative imports within the portal-ui package itself,
+      // but enforce the use of the '@ukef/portal-ui' prefix for imports from other parts of the package.
+      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: '', prefix: '@ukef/portal-ui' }],
 
       'no-case-declarations': 'off',
 
