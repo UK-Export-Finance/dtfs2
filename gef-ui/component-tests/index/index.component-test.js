@@ -40,7 +40,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-dlH0B2YPdFJmc4MnNzmba+SOKeQ4Qka+psjXmkpGGgFvOlO51qVFcZ/nYEePjNPf5kJfvsRVcg2CEl9ZhHwPeA==');
+      .toHaveAttribute('integrity', 'sha512-csNXbjFBMgtuPWZyD3+kNhpkprNLEI57zTTgRMRb7m2lGz1vrOOCwdPLaTpj4QAy7ojdhlHHSAZ4jQv0lle/Xg==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
