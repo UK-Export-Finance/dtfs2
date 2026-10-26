@@ -59,12 +59,6 @@
  */
 
 /**
- * Header component
- *
- * @preserve
- */
-
-/**
  * JavaScript enhancements for the Button component
  *
  * @preserve

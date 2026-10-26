@@ -33,8 +33,10 @@ module.exports = {
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
       ...webpackAliases,
-      'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),
-      'node_modules/@ministryofjustice': path.resolve(__dirname, '../node_modules/@ministryofjustice'),
+      'node_modules/govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),
+      'node_modules/@ministryofjustice': path.resolve(__dirname, '..', 'node_modules', '@ministryofjustice'),
+      'govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),
+      '@ministryofjustice/frontend': path.resolve(__dirname, '..', 'node_modules', '@ministryofjustice', 'frontend'),
     },
   },
   module: {
@@ -60,7 +62,15 @@ module.exports = {
             loader: 'file-loader',
             options: { outputPath: '../css', name: 'styles.css' },
           },
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              webpackImporter: true,
+              sassOptions: {
+                loadPaths: [path.resolve(__dirname, '..'), path.resolve(__dirname, '../node_modules'), path.resolve(__dirname, 'node_modules')],
+              },
+            },
+          },
         ],
       },
     ],

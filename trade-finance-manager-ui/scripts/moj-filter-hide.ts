@@ -1,22 +1,30 @@
-// Required as the MOJ component expects elements with jQuery functions (e.g., `addClass` and `removeClass`).
-// document.querySelector returns a standard DOM Element without these methods, so we use jQuery to provide them.
-// See: https://api.jquery.com/removeClass/ and https://developer.mozilla.org/en-US/docs/Web/API/Element
-import $ from 'jquery';
+type FilterToggleButtonConfig = {
+  bigModeMediaQuery: string;
+  startHidden: boolean;
+  toggleButton: {
+    showText: string;
+    hideText: string;
+    classes: string;
+  };
+  toggleButtonContainer: {
+    element: Element;
+  };
+};
 
-/**
- * Extends the global Window interface to include MOJFrontend property.
- * This is required for typing on the window property when using MOJFrontend functionality.
- */
+type MOJFrontend = {
+  FilterToggleButton: new (root: Element, config: FilterToggleButtonConfig) => object;
+};
+
 declare global {
   interface Window {
-    MOJFrontend: any;
+    MOJFrontend: MOJFrontend;
   }
 }
 
 type FilterVisibility = 'SHOWN' | 'HIDDEN';
 
-const filterSelector = '.moj-filter-layout__filter';
 const toggleButtonContainerSelector = '.moj-action-bar__filter';
+const filterComponentSelector = '.moj-filter';
 
 const toggleButtonContainer = document.querySelector(toggleButtonContainerSelector)!;
 const toggleButtonContainerDataAttributes = (toggleButtonContainer as HTMLElement).dataset;
@@ -49,23 +57,27 @@ const initialiseFilterVisibility = (): boolean => {
  * Initialises the MOJFrontend FilterToggleButton with specified configuration.
  * This function sets up the filter panel toggle functionality for the UI.
  */
-const initialiseFilterToggleButton = (): void => {
+const initialiseFilterToggleButton = (): object | undefined => {
   const startHidden = initialiseFilterVisibility();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-new, @typescript-eslint/no-unsafe-member-access
-  new window.MOJFrontend.FilterToggleButton({
-    bigModeMediaQuery: '(min-width: 48.063em)',
-    startHidden,
-    toggleButton: {
-      container: $(toggleButtonContainerSelector),
-      showText: 'Show filters',
-      hideText: 'Hide filters',
-      classes: 'govuk-button--secondary',
-    },
-    filter: {
-      container: $(filterSelector),
-    },
-  });
+  const filter = document.querySelector(filterComponentSelector);
+
+  if (filter && toggleButtonContainer) {
+    return new window.MOJFrontend.FilterToggleButton(filter, {
+      bigModeMediaQuery: '(min-width: 48.063em)',
+      startHidden,
+      toggleButton: {
+        showText: 'Show filters',
+        hideText: 'Hide filters',
+        classes: 'govuk-button--secondary',
+      },
+      toggleButtonContainer: {
+        element: toggleButtonContainer,
+      },
+    });
+  }
+
+  return undefined;
 };
 
 /**

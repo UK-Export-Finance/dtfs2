@@ -26,7 +26,7 @@ describe(component, () => {
     { status: PENDING_RECONCILIATION, expectedColourClass: 'govuk-tag--blue' },
     {
       status: RECONCILIATION_IN_PROGRESS,
-      expectedColourClass: 'govuk-tag--light-blue',
+      expectedColourClass: 'govuk-tag--blue',
     },
     {
       status: RECONCILIATION_COMPLETED,
