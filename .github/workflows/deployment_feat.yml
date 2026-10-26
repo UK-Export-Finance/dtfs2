@@ -23,20 +23,20 @@ concurrency:
   cancel-in-progress: false
 
 on:
-  # schedule:
-  #   # Nightly deployment at 23:00 UTC
-  #   - cron: '0 23 * * *' # Runs every day at 23:00 UTC
+  schedule:
+    # Nightly deployment at 23:00 UTC
+    - cron: '0 23 * * *' # Runs every day at 23:00 UTC
 
   push:
     branches:
-      - feat/DTFS2-25605/test-feature-deployment
+      - feature
 
   workflow_dispatch:
 
 env:
   PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
-  DEPLOYMENT_BRANCH: feat/DTFS2-25605/test-feature-deployment
+  DEPLOYMENT_BRANCH: feature
 
 jobs:
   # 1. Base actions configurations
