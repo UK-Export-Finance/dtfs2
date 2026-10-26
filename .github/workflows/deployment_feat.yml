@@ -23,20 +23,20 @@ concurrency:
   cancel-in-progress: false
 
 on:
-  schedule:
-    # Nightly deployment at 23:00 UTC
-    - cron: '0 23 * * *' # Runs every day at 23:00 UTC
+  # schedule:
+  #   # Nightly deployment at 23:00 UTC
+  #   - cron: '0 23 * * *' # Runs every day at 23:00 UTC
 
   push:
     branches:
-      - feature
+      - feat/DTFS2-25605/test-feature-deployment
 
   workflow_dispatch:
 
 env:
   PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
-  DEPLOYMENT_BRANCH: feature
+  DEPLOYMENT_BRANCH: feat/DTFS2-25605/test-feature-deployment
 
 jobs:
   # 1. Base actions configurations
@@ -128,6 +128,7 @@ jobs:
         uses: ./.github/actions/webapp
         with:
           branch: ${{ needs.setup.outputs.deployment_ref }}
+          sha: ${{ needs.setup.outputs.deployment_ref }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
@@ -164,6 +165,7 @@ jobs:
         uses: ./.github/actions/functions
         with:
           branch: ${{ needs.setup.outputs.deployment_ref }}
+          sha: ${{ needs.setup.outputs.deployment_ref }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.FEAT_RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_FEAT_CREDENTIALS }}
