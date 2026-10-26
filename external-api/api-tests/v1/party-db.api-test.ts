@@ -61,7 +61,7 @@ describe('/party-db', () => {
       probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       isUkEntity: true,
       code: 10110,
-      customerType: CUSTOMER_TYPE.CUSTOMER,
+      customerType: CUSTOMER_TYPE.COMPANY,
     };
 
     const missingFieldTestCases = [
