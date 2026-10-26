@@ -259,7 +259,7 @@ describe('addPartyUrns', () => {
       probabilityOfDefault,
       isUkEntity,
       code,
-      customerType: CUSTOMER_TYPE.CUSTOMER,
+      customerType: CUSTOMER_TYPE.COMPANY,
     });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('');
@@ -387,7 +387,7 @@ describe('addPartyUrns', () => {
       probabilityOfDefault,
       isUkEntity,
       code,
-      customerType: CUSTOMER_TYPE.CUSTOMER,
+      customerType: CUSTOMER_TYPE.COMPANY,
     });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
@@ -463,7 +463,7 @@ describe('addPartyUrns', () => {
         probabilityOfDefault,
         isUkEntity,
         code,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       });
       expect(response.newPartyUrnCreated).toBe(false);
     });
@@ -533,7 +533,7 @@ describe('addPartyUrns', () => {
         probabilityOfDefault,
         isUkEntity,
         code,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       });
       expect(response.newPartyUrnCreated).toBe(false);
     });
@@ -611,7 +611,7 @@ describe('addPartyUrns', () => {
       probabilityOfDefault,
       isUkEntity,
       code,
-      customerType: CUSTOMER_TYPE.CUSTOMER,
+      customerType: CUSTOMER_TYPE.COMPANY,
     });
 
     expect(response.deal.tfm.parties.exporter.partyUrn).toBe('00328682');
