@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
+import { AUDIT_USER_TYPES } from '@ukef/constants';
 import { AuditUserTypes, AuditUserTypesNotRequiringId, AuditUserTypesRequiringId } from './audit-user-types';
-import { AUDIT_USER_TYPES } from '../constants';
 
 /**
  * TFM Endpoints in dtfs-central-api can be called by tfm or portal users and system updates

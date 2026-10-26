@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import { ObjectId } from 'mongodb';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { withDefaultOptionsTests } from '../primitive-types-tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 
 export const withObjectIdOrObjectIdStringSchemaTests = <Schema extends ZodSchema>({
   schema,

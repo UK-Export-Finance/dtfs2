@@ -26,10 +26,14 @@ export type ApiErrorResponse = {
  */
 export const parseApiErrorResponse = (value: unknown): ApiErrorResponse | undefined => {
   // Defensive checks: must be a non-null, non-array object
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) return undefined;
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return undefined;
+  }
 
   // Check for presence of the `errors` key on the object
-  if (!('errors' in value)) return undefined;
+  if (!('errors' in value)) {
+    return undefined;
+  }
 
   const apiErrorResponse = value as ApiErrorResponse;
 

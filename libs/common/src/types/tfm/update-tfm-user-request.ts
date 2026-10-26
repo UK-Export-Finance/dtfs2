@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UPDATE_TFM_USER_REQUEST_SCHEMA } from '../../schemas';
+import { UPDATE_TFM_USER_REQUEST_SCHEMA } from '@ukef/schemas';
 
 /**
  * User update request used during SSO login

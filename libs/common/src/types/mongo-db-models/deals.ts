@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { DEAL_TYPE } from '../../constants';
-import { AnyObject } from '../any-object';
+import { DEAL_TYPE } from '@ukef/constants';
+import { AnyObject } from '@ukef/types/any-object';
+import { PortalActivity } from '@ukef/types/portal';
 import { Bank, DealSubmissionType } from '..';
-import { PortalActivity } from '../portal';
 import { BssEwcsSubmissionDetails } from './bss-deal';
 import { GefExporter } from './gef-deal';
 
@@ -13,7 +13,7 @@ type BaseDeal = AnyObject & {
   submissionType: DealSubmissionType | null;
 };
 
-export interface BssEwcsDeal extends BaseDeal {
+export type BssEwcsDeal = {
   bank: Bank;
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
@@ -21,9 +21,9 @@ export interface BssEwcsDeal extends BaseDeal {
     submissionCount: number;
   };
   submissionDetails: BssEwcsSubmissionDetails;
-}
+} & BaseDeal;
 
-export interface GefDeal extends BaseDeal {
+export type GefDeal = {
   bank: Bank;
   dealType: typeof DEAL_TYPE.GEF;
   eligibility: AnyObject;
@@ -31,7 +31,7 @@ export interface GefDeal extends BaseDeal {
   portalActivities: PortalActivity[];
   submissionCount: number;
   ukefDealId: string | null;
-}
+} & BaseDeal;
 
 /**
  * Type of the mongo db "deal" collection

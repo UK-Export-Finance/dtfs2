@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
-import { UpdateTfmUserRequest } from '../../types';
-import { TEAM_IDS } from '../../constants';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { UpdateTfmUserRequest } from '@ukef/types';
+import { TEAM_IDS } from '@ukef/constants';
 import { UPDATE_TFM_USER_REQUEST_SCHEMA } from './update-tfm-user-request.schema';
 
 describe('UPDATE_TFM_USER_SCHEMA', () => {

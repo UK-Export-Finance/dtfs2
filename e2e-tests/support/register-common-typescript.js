@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const Module = require('node:module');
 const path = require('node:path');
 const vm = require('node:vm');
+require('@ukef/dtfs2-common/register-paths');
 
 /**
  * Cypress 15 uses tsx to load TypeScript in its Node process. That transform

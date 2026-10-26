@@ -1,8 +1,8 @@
 import path from 'path';
-import { swaggerDefinition, SWAGGER, SERVICES } from '@ukef/dtfs2-common';
+import { SwaggerDefinition, SWAGGER, SERVICES } from '@ukef/dtfs2-common';
 import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
-const definition: swaggerDefinition = {
+const definition: SwaggerDefinition = {
   info: {
     title: SERVICES.PORTAL_UI,
     version: '1.0.0',

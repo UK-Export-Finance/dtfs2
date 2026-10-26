@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { withDefaultOptionsTests } from '../primitive-types-tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 
 export const withObjectIdStringSchemaTests = <Schema extends ZodSchema>({
   schema,
@@ -33,7 +33,6 @@ export const withObjectIdStringSchemaTests = <Schema extends ZodSchema>({
     it('should not transform a valid string ObjectId to an ObjectId', () => {
       const stringObjectId = new ObjectId().toString();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(stringObjectId));
 
       expect(data).toEqual(getTestObjectWithUpdatedParameter(stringObjectId));
@@ -42,7 +41,6 @@ export const withObjectIdStringSchemaTests = <Schema extends ZodSchema>({
     it('should transform a valid ObjectId to a string', () => {
       const objectId = new ObjectId();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(objectId));
 
       expect(data).toEqual(getTestObjectWithUpdatedParameter(objectId.toString()));

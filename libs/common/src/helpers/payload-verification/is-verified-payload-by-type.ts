@@ -1,4 +1,4 @@
-import { IsVerifiedPayloadByTypeParams } from '../../types/payload-verification';
+import { IsVerifiedPayloadByTypeParams } from '@ukef/types/payload-verification';
 
 /**
  * @deprecated prefer IsVerifiedPayloadByZod

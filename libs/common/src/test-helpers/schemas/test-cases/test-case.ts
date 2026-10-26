@@ -1,5 +1,5 @@
-import { WithArrayTestsOptions } from '../primitive-types-tests';
-import { TestCaseWithType } from '../types/test-case-with-type.type';
+import { WithArrayTestsOptions } from '@ukef/test-helpers/schemas/primitive-types-tests';
+import { TestCaseWithType } from '@ukef/test-helpers/schemas/types/test-case-with-type.type';
 
 export type TestCase =
   | TestCaseWithType<'string'>

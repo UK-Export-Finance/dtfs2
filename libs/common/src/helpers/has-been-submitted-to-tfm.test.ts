@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
+import { BssEwcsSubmissionDetails, Deal } from '@ukef/types';
+import { DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '@ukef/constants';
+import { MOCK_BANKS } from '@ukef/test-helpers/mock-data/banks';
 import { hasBeenSubmittedToTfm } from './has-been-submitted-to-tfm';
-import { BssEwcsSubmissionDetails, Deal } from '../types';
-import { DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
-import MOCK_BANKS from '../test-helpers/mock-data/banks';
 
 describe('hasBeenSubmittedToTfm', () => {
   const mockBank = {

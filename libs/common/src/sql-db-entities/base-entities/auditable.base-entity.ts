@@ -1,6 +1,6 @@
 import { Column, UpdateDateColumn } from 'typeorm';
-import { DbRequestSource } from '../helpers';
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
+import { REQUEST_PLATFORM_TYPE } from '@ukef/constants';
 
 export abstract class AuditableBaseEntity {
   /**

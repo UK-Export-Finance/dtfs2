@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import type { Currency } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
-import { MonetaryColumn } from '../custom-columns';
+import type { Currency } from '@ukef/types';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
+import { MonetaryColumn } from '@ukef/sql-db-entities/custom-columns';
 
 @Entity('PaymentMatchingTolerance')
 export class PaymentMatchingToleranceEntity extends AuditableBaseEntity {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import dotenv from 'dotenv';
-import { zBooleanStrictCoerce } from '../helpers';
+import { zBooleanStrictCoerce } from '@ukef/helpers';
 
 dotenv.config({ quiet: true });
 

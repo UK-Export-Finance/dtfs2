@@ -1,6 +1,6 @@
-import { RECONCILIATION_IN_PROGRESS, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
-import { UtilisationReportStatus } from '../../types';
+import { RECONCILIATION_IN_PROGRESS, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
+import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '@ukef/sql-db-entities';
+import { UtilisationReportStatus } from '@ukef/types';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 
 export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportStatus> {
