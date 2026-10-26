@@ -32,8 +32,10 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       ...webpackAliases,
-      'node_modules/govuk-frontend': path.resolve(__dirname, 'node_modules/govuk-frontend'),
-      'node_modules/@ministryofjustice': path.resolve(__dirname, 'node_modules/@ministryofjustice'),
+      'node_modules/govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),
+      'node_modules/@ministryofjustice': path.resolve(__dirname, '..', 'node_modules', '@ministryofjustice'),
+      'govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),
+      '@ministryofjustice/frontend': path.resolve(__dirname, '..', 'node_modules', '@ministryofjustice', 'frontend'),
     },
   },
   module: {
@@ -67,7 +69,7 @@ module.exports = {
             options: {
               webpackImporter: true,
               sassOptions: {
-                includePaths: [path.resolve(__dirname, '..'), path.resolve(__dirname, 'node_modules')],
+                loadPaths: [path.resolve(__dirname, '..'), path.resolve(__dirname, '../node_modules'), path.resolve(__dirname, 'node_modules')],
               },
             },
           },

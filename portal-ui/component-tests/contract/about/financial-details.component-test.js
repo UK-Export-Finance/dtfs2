@@ -22,7 +22,7 @@ describe(loan, () => {
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/ukefexposure.js"]')
-        .toHaveAttribute('integrity', 'sha512-sMu28F6ka0dXHmVC91uY5Ky4jr2GXjvHqmwc6EjfNZq46+MlZxdKVhbdcnX580rlrIGIsGSTYuxKgSN9epklFA==');
+        .toHaveAttribute('integrity', 'sha512-CXH1KfMUnEYhDXwnOUsMO4hca370xchjprcr/Funuwj802QCC0rdY6Af2gnAQr8U/+Nl32YKyBKwQssOeNkbbQ==');
     });
   });
 });
@@ -48,7 +48,7 @@ describe(bond, () => {
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/ukefexposure.js"]')
-        .toHaveAttribute('integrity', 'sha512-sMu28F6ka0dXHmVC91uY5Ky4jr2GXjvHqmwc6EjfNZq46+MlZxdKVhbdcnX580rlrIGIsGSTYuxKgSN9epklFA==');
+        .toHaveAttribute('integrity', 'sha512-CXH1KfMUnEYhDXwnOUsMO4hca370xchjprcr/Funuwj802QCC0rdY6Af2gnAQr8U/+Nl32YKyBKwQssOeNkbbQ==');
     });
   });
 });
