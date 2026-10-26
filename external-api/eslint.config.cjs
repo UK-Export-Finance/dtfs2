@@ -99,7 +99,10 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: '.', prefix: '@ukef' }],
+      // DTFS exception
+      // Why: Allow relative imports within the external-api package itself,
+      // but enforce the use of the '@ukef/external-api' prefix for imports from other parts of the package.
+      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: '.', prefix: '@ukef/external-api' }],
 
       'no-case-declarations': 'off',
 

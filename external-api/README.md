@@ -57,13 +57,17 @@ Some sensitive variables may need to be shared within the team.
 
 ## Local imports
 
-Parent-relative imports are autofixed to workspace-rooted `@ukef/` imports.
-For example, `../interfaces` in `server/helpers/cron.ts` becomes
-`@ukef/server/interfaces`. Same-folder imports can remain relative.
+Parent-relative imports are autofixed to service-rooted `@ukef/external-api/`
+imports. For example, `../interfaces` in `server/helpers/cron.ts` becomes
+`@ukef/external-api/server/interfaces`. Same-folder imports can remain
+relative.
 
-The TypeScript paths, ts-node's `tsconfig-paths/register` hook and all Jest
-configurations resolve these aliases. Imports from `@ukef/dtfs2-common`
-continue to resolve to the shared package rather than local service files.
+The `@ukef/external-api/*` alias is defined once in `module-aliases.cjs` and
+resolved consistently everywhere: the ESLint autofix (`eslint.config.cjs`),
+TypeScript's `paths` (`tsconfig.json`), ts-node's runtime `require` hook
+(`register-paths.cjs`), and all Jest configurations. Imports from
+`@ukef/dtfs2-common` continue to resolve to the shared package rather than
+local service files.
 
 ## Testing 🧪
 
