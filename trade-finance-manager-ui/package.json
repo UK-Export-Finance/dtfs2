@@ -34,7 +34,7 @@
     "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^5.5.0",
+    "@azure/msal-node": "^7.1.0",
     "@babel/plugin-transform-runtime": "8.0.1",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "3.0.2",
