@@ -107,7 +107,7 @@ describe('user repo', () => {
     }
 
     async function makeRequest() {
-      return UserRepo.updateUserById({ userId, userUpdate: updateTfmUserRequest, auditDetails });
+      return await UserRepo.updateUserById({ userId, userUpdate: updateTfmUserRequest, auditDetails });
     }
   });
 });

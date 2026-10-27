@@ -44,6 +44,8 @@ COPY --chown=node:node ./libs/common/src ./libs/common/src
 # Microservice codebase
 COPY --chown=node:node ./${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
 COPY --chown=node:node ./${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
+COPY --chown=node:node ./${MICROSERVICE}/register-paths.cjs ./${MICROSERVICE}/register-paths.cjs
+COPY --chown=node:node ./${MICROSERVICE}/module-aliases.cjs ./${MICROSERVICE}/module-aliases.cjs
 COPY --chown=node:node ./${MICROSERVICE}/server ./${MICROSERVICE}/server
 
 # Lean NPM - Only install `dependencies`
@@ -88,6 +90,8 @@ COPY --chown=node:node --from=build ${ROOT}/libs/common/src ./libs/common/src
 
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/register-paths.cjs ./${MICROSERVICE}/register-paths.cjs
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/module-aliases.cjs ./${MICROSERVICE}/module-aliases.cjs
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/node_modules ./${MICROSERVICE}/node_modules
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/server ./${MICROSERVICE}/server
 
