@@ -33,9 +33,11 @@ const aboutFacility = async (req, res) => {
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
     let isUsingFacilityEndDate;
+
     if (details.isUsingFacilityEndDate === true) {
       isUsingFacilityEndDate = 'true';
     }
+
     if (details.isUsingFacilityEndDate === false) {
       isUsingFacilityEndDate = 'false';
     }

@@ -47,6 +47,7 @@ const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPre
    * 4. ACBS creation has been successful
    */
   const cannotIssueFacilities = !isMaker || !unissuedFacilitiesPresent || canResubmitIssuedFacilities || !isInAcbs;
+
   if (cannotIssueFacilities) {
     return false;
   }

@@ -5,7 +5,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
-import { ManualApprovalNeededViewModel } from '../../../types/view-models/amendments/ManualApprovalNeededViewModel.ts';
+import { ManualApprovalNeededViewModel } from '../../../types/view-models/amendments/manual-approval-needed-view-model.ts';
 
 export type GetManualApprovalNeededRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };

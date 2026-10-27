@@ -128,7 +128,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
  * Controller for post bank review date from application preview page
  */
 export const postBankReviewDateFromApplicationPreviewPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  postBankReviewDate({
+  await postBankReviewDate({
     req,
     res,
     uris: {
@@ -142,7 +142,7 @@ export const postBankReviewDateFromApplicationPreviewPage = async (req: PostBank
  * Controller for post bank review date from unissued facilities page
  */
 export const postBankReviewDateFromUnissuedFacilitiesPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  postBankReviewDate({
+  await postBankReviewDate({
     req,
     res,
     uris: {
@@ -156,7 +156,7 @@ export const postBankReviewDateFromUnissuedFacilitiesPage = async (req: PostBank
  * Controller for post bank review date from application details page
  */
 export const postBankReviewDateFromApplicationDetailsPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  postBankReviewDate({
+  await postBankReviewDate({
     req,
     res,
     uris: {
