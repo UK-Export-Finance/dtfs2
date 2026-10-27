@@ -1,4 +1,4 @@
-const { header } = require('../headers/header');
+const { header } = require('../pages/header');
 const MOCK_USERS = require('../../../../e2e-fixtures/portal-users.fixture');
 const relative = require('../relativeURL');
 
