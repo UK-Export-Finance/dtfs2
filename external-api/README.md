@@ -55,6 +55,20 @@ Before using the **EXTERNAL** micro-service, ensure that you have an `.env`
 file properly configured. You can use the `.env.sample` file as a template.
 Some sensitive variables may need to be shared within the team.
 
+## Local imports
+
+Parent-relative imports are autofixed to service-rooted `@ukef/external-api/`
+imports. For example, `../interfaces` in `server/helpers/cron.ts` becomes
+`@ukef/external-api/server/interfaces`. Same-folder imports can remain
+relative.
+
+The `@ukef/external-api/*` alias is defined once in `module-aliases.cjs` and
+resolved consistently everywhere: the ESLint autofix (`eslint.config.cjs`),
+TypeScript's `paths` (`tsconfig.json`), ts-node's runtime `require` hook
+(`register-paths.cjs`), and all Jest configurations. Imports from
+`@ukef/dtfs2-common` continue to resolve to the shared package rather than
+local service files.
+
 ## Testing 🧪
 
 To run tests for the **EXTERNAL** micro-service, use the following command:

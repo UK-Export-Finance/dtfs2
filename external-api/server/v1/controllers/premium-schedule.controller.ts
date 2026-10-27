@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // Premium Schedule API returns the premium schedule for a given facility
 // 1) Post parameters to Premium Schedule API, returns  header location to load the segments
 // 2) Premium Schedule Segments gets the segments by facilityURN
@@ -43,6 +38,7 @@ export const premiumScheduleCalls = {
     if (premiumSchedulePayload.facilityURN) {
       premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
     }
+
     try {
       const response = await axios({
         method: 'post',
@@ -153,5 +149,3 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
 
   return new Error(`Error calling Premium schedule. Facility:${premiumScheduleParameters.facilityURN}`);
 };
-
-export default premiumScheduleCalls;

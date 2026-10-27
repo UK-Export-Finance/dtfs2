@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { HttpStatusCode } from 'axios';
+import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 
