@@ -25,7 +25,7 @@ describe('common source aliases', () => {
     ['@ukef/dtfs2-common', 'index.ts'],
     ['@ukef/dtfs2-common/test-helpers', 'test-helpers/index.ts'],
     ['@ukef/dtfs2-common/swagger', 'swagger/index.ts'],
-  ])('does not remap the public package import %s', (specifier, target) => {
+  ])('should not remap the public package import %s', (specifier, target) => {
     for (const pattern of Object.keys(moduleNameMapper)) {
       // Assert
       expect(new RegExp(pattern).test(specifier)).toEqual(false);

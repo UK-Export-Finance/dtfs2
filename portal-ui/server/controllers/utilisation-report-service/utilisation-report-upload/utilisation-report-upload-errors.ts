@@ -75,6 +75,7 @@ export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadError
   const { reportPeriod } = asLoggedInUserSession(req.session).utilisationReport!;
   const filename = req.file.originalname;
   const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+
   if (filenameError) {
     const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };

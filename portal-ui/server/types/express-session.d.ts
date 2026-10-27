@@ -4,5 +4,5 @@ export type UserSessionData = PartiallyLoggedInPortalSessionData | LoggedInPorta
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L199-L211
 declare module 'express-session' {
-  interface SessionData extends UserSessionData {}
+  type SessionData = {} & UserSessionData;
 }

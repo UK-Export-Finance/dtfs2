@@ -9,6 +9,7 @@ const userRoleIsValid = (requiredRoles, user) => {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
+
   if (!user) {
     return false;
   }
@@ -29,6 +30,7 @@ const validateRole = (opts, getRedirectUrl = () => '/') => {
     if (userRoleIsValid(requiredRoles, req.session.user)) {
       return next();
     }
+
     return res.redirect(getRedirectUrl(req));
   };
 };

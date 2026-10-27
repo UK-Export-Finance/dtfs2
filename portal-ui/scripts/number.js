@@ -2,6 +2,7 @@ export const isNumeric = (value) => {
   if (typeof value === 'number' && value === Number(value) && Number.isFinite(value)) {
     return true;
   }
+
   return false;
 };
 

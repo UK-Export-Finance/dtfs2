@@ -1,4 +1,4 @@
-import generateValidationErrors from './index';
+import { generateValidationErrors } from './index';
 
 describe('controllers/login/validation', () => {
   describe('generateValidationErrors', () => {
