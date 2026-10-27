@@ -187,6 +187,8 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
+    # Skip QA suite for Dependabot-authored PRs
+    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
