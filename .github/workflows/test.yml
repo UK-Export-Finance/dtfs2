@@ -186,7 +186,7 @@ env:
 jobs:
   # 1. Setup test infrastructure
   setup:
-    name: Infrastructure setup 🔧
+    name: Infrastructure setup   🔧
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
