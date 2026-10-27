@@ -31,7 +31,6 @@ describe('controllers - login (sso)', () => {
       logout(req, res);
 
       // Assert
-
       expect(req.session.destroy).toHaveBeenCalled();
     });
   });
