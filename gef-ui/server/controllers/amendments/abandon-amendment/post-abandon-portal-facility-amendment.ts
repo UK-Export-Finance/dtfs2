@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { AbandonedViewModel } from '../../../types/view-models/amendments/abandoned-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import mapAbandonAmendmentEmailVariables from '../helpers/map-abandon-amendment-email-variables';
+import { mapAbandonAmendmentEmailVariables } from '../helpers/map-abandon-amendment-email-variables';
 
 export type PostAbandonPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };

@@ -39,6 +39,6 @@ export type Facility = {
   canIssuedFacilitiesBeAmended?: boolean;
 };
 
-export interface FacilityParams extends Facility {
+export type FacilityParams = {
   facilityId: string;
-}
+} & Facility;

@@ -390,6 +390,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
   try {
     if (body.hasBeenIssued === 'false') {
       const { details } = await api.getFacility({ facilityId, userToken });
+
       if (details) {
         await api.updateFacility({
           facilityId,
@@ -416,6 +417,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
         await api.updateApplication({ dealId, application: applicationUpdate, userToken });
       }
     }
+
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
     console.error('Error creating a facility %o', error);

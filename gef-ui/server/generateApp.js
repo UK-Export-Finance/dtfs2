@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const { exceptionHandlers, SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
-const swaggerRouter = require('./routes/swagger.route');
+const { swagger } = require('./routes/swagger.route');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { security, seo, createRateLimit } = require('./middleware');
@@ -35,7 +35,7 @@ const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swagger);
 
   app.use(security);
   app.use(expressSession());

@@ -27,6 +27,7 @@ const confirmAbandonApplication = async (req, res, next) => {
     if (!application) {
       return res.redirect(dashboardUrl);
     }
+
     if (!applicationIsAbandonable(application)) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
@@ -51,6 +52,7 @@ const abandonApplication = async (req, res, next) => {
   const { user, userToken } = session;
   try {
     const application = await Application.findById(dealId, user, userToken);
+
     if (applicationIsAbandonable(application)) {
       await api.setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.ABANDONED, userToken });
     }

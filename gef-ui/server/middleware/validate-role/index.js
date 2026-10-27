@@ -9,6 +9,7 @@ const userRoleIsValid = (requiredRoles, user) => {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
+
   if (!user) {
     return false;
   }

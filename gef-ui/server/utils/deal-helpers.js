@@ -31,6 +31,7 @@ const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
     ];
     return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
   }
+
   return false;
 };
 
@@ -39,6 +40,7 @@ const isUkefReviewPositive = (applicationStatus, ukefDecision) => {
     const acceptable = [CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS];
     return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
   }
+
   return false;
 };
 
@@ -54,6 +56,7 @@ const makerCanReSubmit = (maker, application) => {
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
     canResubmitIssuedFacilities = isFacilityResubmissionAvailable(application);
   }
+
   const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
   const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
   const makerAuthorised = maker.roles.includes(MAKER) && maker.bank.id === application.bank.id;
@@ -73,9 +76,11 @@ const getApplicationType = (isAutomaticCover) => {
   if (isAutomaticCover === true) {
     return 'Automatic inclusion notice';
   }
+
   if (isAutomaticCover === false) {
     return 'Manual inclusion notice';
   }
+
   return 'Unknown';
 };
 

@@ -1,10 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
   DEAL_STATUS,
@@ -29,11 +22,16 @@ import { validationErrorHandler } from '../../../utils/helpers';
 import { validateIsUsingFacilityEndDate } from './validation';
 import { ValidationError } from '../../../types/validation-error';
 
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
+
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendment: updateAmendmentMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
 }));
 
 console.error = jest.fn();

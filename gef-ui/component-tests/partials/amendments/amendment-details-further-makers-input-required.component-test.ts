@@ -45,6 +45,7 @@ users.forEach((user) => {
 
       it('should render the page heading', () => {
         const wrapper = render(params);
+
         if (user === ROLES.MAKER) {
           wrapper.expectText('[data-cy="page-heading"]').toContain('Check your answers before submitting the amendment request');
         } else {
