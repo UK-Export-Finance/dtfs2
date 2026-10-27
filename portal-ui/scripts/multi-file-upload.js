@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
   /**
    * Handles the deletion of a file in the multi-file upload component.

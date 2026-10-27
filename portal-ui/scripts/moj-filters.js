@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 if (typeof MOJFrontend.FilterToggleButton !== 'undefined') {
   new MOJFrontend.FilterToggleButton({
     bigModeMediaQuery: '(min-width: 48.063em)',

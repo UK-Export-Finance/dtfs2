@@ -256,6 +256,10 @@ module.exports = defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
+        // jQuery and MOJFrontend are attached to `window` at runtime (see moj-frontend.js)
+        // rather than imported, so they must be declared explicitly here.
+        $: 'readonly',
+        MOJFrontend: 'readonly',
       },
     },
   },
