@@ -8,10 +8,14 @@ const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const mapDocTypeParameterToProps = (type) => {
   let mappedValues = null;
+
   if (Object.prototype.hasOwnProperty.call(docType, type)) {
     mappedValues = docType[type];
   }
-  if (!mappedValues) throw new Error('NOT_SUPPORTED');
+
+  if (!mappedValues) {
+    throw new Error('NOT_SUPPORTED');
+  }
 
   return mappedValues;
 };
@@ -41,6 +45,7 @@ const validateFileQuestion = (application, field, errRef) => {
 const nextDocument = (application, dealId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
   let currentIndex = 0;
+
   if (application.supportingInformation?.requiredFields?.length > 0) {
     // append the security details to the requiredFields
     application.supportingInformation.requiredFields.push('securityDetails');
@@ -56,15 +61,18 @@ const nextDocument = (application, dealId, fieldName) => {
         supportingDocument = value.path;
       }
     });
+
     if (nextItem === 'securityDetails') {
       supportingDocument = 'security-details';
     }
   }
 
   let nextDoc = `/gef/application-details/${dealId}/supporting-information/document/${supportingDocument}`;
+
   if (supportingDocument === 'security-details') {
     nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
   }
+
   // check if there are no required fields or check if we reached the end of the required fields
   if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
@@ -75,6 +83,7 @@ const nextDocument = (application, dealId, fieldName) => {
 
 const getApplication = async (dealId, user, userToken) => {
   const application = await Application.findById(dealId, user, userToken);
+
   if (!application) {
     throw new Error('NO_APPLICATION');
   }
@@ -93,6 +102,7 @@ const handleError = (error, req, res, next) => {
 
     return next(new Error(errMessage));
   }
+
   if (error.message === 'NO_APPLICATION') {
     const errMessage = `User unauthorised to access application ${dealId}`;
     console.error(errMessage);
@@ -125,9 +135,11 @@ const getSupportingDocuments = async (req, res, next) => {
     const { fieldName, title } = mapDocTypeParameterToProps(documentType);
 
     let files = [];
+
     if (Object.prototype.hasOwnProperty.call(application.supportingInformation, fieldName)) {
       files = application.supportingInformation?.[fieldName];
     }
+
     return res.render('partials/upload-supporting-documents.njk', {
       title,
       formHeaderFragment: fieldName,
@@ -202,7 +214,9 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     // Need to re-get the application here if any file changes
-    if (processedFiles.length) application = await Application.findById(dealId, user, userToken);
+    if (processedFiles.length) {
+      application = await Application.findById(dealId, user, userToken);
+    }
 
     if (fileToDelete) {
       try {
@@ -256,7 +270,9 @@ const uploadSupportingDocument = async (req, res, next) => {
   try {
     const { fieldName } = mapDocTypeParameterToProps(documentType);
 
-    if (!file) return res.status(400).send('Missing file');
+    if (!file) {
+      return res.status(400).send('Missing file');
+    }
 
     const [isValid, error] = validateFile(file, FILE_UPLOAD.MAX_FILE_SIZE_MB);
 
@@ -301,7 +317,9 @@ const deleteSupportingDocument = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   try {
-    if (!fileToDelete) return res.status(400).send('Missing file to delete');
+    if (!fileToDelete) {
+      return res.status(400).send('Missing file to delete');
+    }
 
     const { fieldName } = mapDocTypeParameterToProps(documentType);
 
