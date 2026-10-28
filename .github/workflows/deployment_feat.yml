@@ -26,17 +26,12 @@ on:
   schedule:
     # Nightly deployment at 23:00 UTC
     - cron: '0 23 * * *' # Runs every day at 23:00 UTC
-
-  push:
-    branches:
-      - feature
-
   workflow_dispatch:
 
 env:
   PRODUCT: dtfs
   TIMEZONE: ${{ vars.TIMEZONE_LONDON }}
-  DEPLOYMENT_BRANCH: feature
+  DEPLOYMENT_BRANCH: main
 
 jobs:
   # 1. Base actions configurations
@@ -55,7 +50,7 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'push' && github.sha || env.DEPLOYMENT_BRANCH }}
+          ref: ${{ env.DEPLOYMENT_BRANCH }}
           fetch-depth: 1
       - name: Environment 🧪
         id: environment
