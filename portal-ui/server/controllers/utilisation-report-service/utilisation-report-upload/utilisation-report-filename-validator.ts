@@ -10,9 +10,11 @@ import { MONTH_NAMES, FILE_UPLOAD } from '../../../constants';
  */
 const getMonthRegexString = (oneIndexedMonth: OneIndexedMonth): string => {
   const monthNames = Object.values(MONTH_NAMES).find(({ index }) => index === oneIndexedMonth);
+
   if (!monthNames) {
     throw new Error(`Failed to find month names for one indexed month '${oneIndexedMonth}'`);
   }
+
   return `(${monthNames.long}|${monthNames.short}|${monthNames.numeric})`;
 };
 
@@ -94,10 +96,12 @@ export const validateFilenameFormat = (filename: string, dueReportPeriod: Report
   }
 
   const isMonthlyReportPeriod = isEqualMonthAndYear(dueReportPeriod.start, dueReportPeriod.end);
+
   if (isMonthlyReportPeriod && !/monthly/i.test(filename)) {
     const filenameError = "The selected file must contain the word 'monthly'";
     return { filenameError };
   }
+
   if (!isMonthlyReportPeriod && !/quarterly/i.test(filename)) {
     const filenameError = "The selected file must contain the word 'quarterly'";
     return { filenameError };
@@ -108,5 +112,6 @@ export const validateFilenameFormat = (filename: string, dueReportPeriod: Report
     const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
     return { filenameError };
   }
+
   return {};
 };

@@ -1,16 +1,14 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getBankReviewDate, GetBankReviewDateRequest } from './get-bank-review-date';
 
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+
 jest.mock('../../services/api', () => ({
-  getFacility: getFacilityMock,
-  getApplication: getApplicationMock,
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
 }));
 
 const dealId = 'dealId';

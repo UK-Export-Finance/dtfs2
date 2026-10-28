@@ -4,13 +4,12 @@ import { validateToken } from '../middleware';
 
 import { getSchemeType, postSchemeType } from '../../controllers/schemeType';
 
-jest.mock('../middleware/validateToken');
-jest.mock('../middleware/isMaker');
+jest.mock('../middleware/validate-token');
+jest.mock('../middleware/is-maker');
 
 describe('routes/site-notices', () => {
   describe('router', () => {
     beforeEach(() => {
-      // eslint-disable-next-line global-require
       require('.');
     });
 

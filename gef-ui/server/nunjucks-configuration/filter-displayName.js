@@ -4,6 +4,7 @@ const displayName = (person) => {
   if (person && person !== null && person.surname !== null) {
     response = `${person.firstname} ${person.surname}`;
   }
+
   return response;
 };
 

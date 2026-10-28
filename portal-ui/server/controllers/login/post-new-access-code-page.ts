@@ -2,10 +2,10 @@ import { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { attemptOtpLogin } from './attempt-otp-login';
-import { NewAccessCodeViewModel } from '../../types/view-models/2fa/new-access-code-view-model';
+import { NewAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/new-access-code-view-model';
 import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
-import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
-import generateValidationErrors from './validation';
+import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
+import { generateValidationErrors } from './validation';
 import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
 import { isOtpExpired } from '../../helpers/is-otp-expired';
 

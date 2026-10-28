@@ -15,6 +15,7 @@ const mapPortalActivities = (dealId, portalActivities) =>
     if (amendmentId) {
       amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
     }
+
     const date = fromUnixTime(new Date(timestamp));
 
     const mappedActivity = {

@@ -28,8 +28,13 @@ export const postLogin = async (req, res) => {
   };
 
   if (!email || !password) {
-    if (!email) loginErrors.push(emailError);
-    if (!password) loginErrors.push(passwordError);
+    if (!email) {
+      loginErrors.push(emailError);
+    }
+
+    if (!password) {
+      loginErrors.push(passwordError);
+    }
 
     const banks = await getPortalBankListForLoginPage();
 

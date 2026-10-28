@@ -1,13 +1,17 @@
 const calculateStatusOfEachPage = (errors) => {
   const supplierPageIsValid = () => {
-    if (!errors.length) return true;
+    if (!errors.length) {
+      return true;
+    }
 
     const anyErrorsStartWithSupplier = errors.reduce((result, error) => result || error.startsWith('supplier'), false);
+
     if (anyErrorsStartWithSupplier) {
       return false;
     }
 
     const anyErrorsStartWithIndemnifier = errors.reduce((result, error) => result || error.startsWith('indemnifier'), false);
+
     if (anyErrorsStartWithIndemnifier) {
       return false;
     }
@@ -26,9 +30,12 @@ const calculateStatusOfEachPage = (errors) => {
   };
 
   const buyerPageIsValid = () => {
-    if (!errors.length) return true;
+    if (!errors.length) {
+      return true;
+    }
 
     const anyErrorsStartWithBuyer = errors.reduce((result, error) => result || error.startsWith('buyer'), false);
+
     if (anyErrorsStartWithBuyer) {
       return false;
     }
@@ -41,7 +48,9 @@ const calculateStatusOfEachPage = (errors) => {
   };
 
   const financialPageIsValid = () => {
-    if (!errors.length) return true;
+    if (!errors.length) {
+      return true;
+    }
 
     if (
       errors.includes('supplyContractValue') ||
@@ -53,6 +62,7 @@ const calculateStatusOfEachPage = (errors) => {
     }
 
     const anyErrorsToDoWithConversionDate = errors.reduce((result, error) => result || error.startsWith('supplyContractConversionDate'), false);
+
     if (anyErrorsToDoWithConversionDate) {
       return false;
     }

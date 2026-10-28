@@ -88,7 +88,6 @@ const isHyperlinkedCell = (cellValue) => Boolean(cellValue && cellValue?.hyperli
  * @returns {string | number} - cell value.
  */
 const extractCellValue = (cell) => {
-  /* eslint-disable-next-line no-underscore-dangle */
   const cellValue = cell.value?.result ?? cell._value?.result ?? cell.value;
 
   if (typeof cellValue === 'number') {
@@ -221,13 +220,17 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
 
               // Split the cell address into column and row
               const cellAddressMatch = cellAddress.match(CELL_ADDRESS_REGEX);
+
               if (!cellAddressMatch) {
                 return { value: cellValue !== 'null' ? cellValue : null, column: null, row: null };
               }
+
               const [column, row] = cellAddressMatch.slice(1);
+
               if (!column || !row) {
                 throw new Error('Error parsing CSV data');
               }
+
               return { value: cellValue !== 'null' ? cellValue : null, column, row };
             },
           }),
@@ -302,6 +305,7 @@ const extractCsvData = async (file) => {
         // An Excel file must contain at least 1 visible worksheet at all times.
         // Assume the utilisation report data is on the first visible sheet.
         const worksheet = workbook.worksheets.find((sheet) => sheet.state === 'visible');
+
         if (!worksheet) {
           throw new Error('No visible worksheet found in the Excel file');
         }

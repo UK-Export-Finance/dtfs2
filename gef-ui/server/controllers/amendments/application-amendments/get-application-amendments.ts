@@ -30,11 +30,13 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
     const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
 
     let checkedBy;
+
     if (checker) {
       checkedBy = `${String(checker.firstname)} ${String(checker.surname)}`;
     }
 
     let createdBy;
+
     if (deal.maker) {
       const { maker } = deal;
       createdBy = `${String(maker.firstname)} ${String(maker.surname)}`;

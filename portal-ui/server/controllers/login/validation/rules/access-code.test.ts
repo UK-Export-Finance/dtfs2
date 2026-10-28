@@ -1,4 +1,4 @@
-import accessCodeRule from './access-code';
+import { accessCodeRule } from './access-code';
 
 describe('controllers/login/validation/rules/access-code', () => {
   describe('accessCodeRule', () => {

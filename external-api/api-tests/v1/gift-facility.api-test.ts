@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';

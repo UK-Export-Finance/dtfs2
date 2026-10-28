@@ -84,6 +84,7 @@ const updateFacilityValue = async (req, res) => {
       if (saveAndReturn) {
         return res.redirect(`/gef/application-details/${dealId}`);
       }
+
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`);
     } catch (error) {
       return res.render('partials/problem-with-service.njk');
@@ -92,6 +93,7 @@ const updateFacilityValue = async (req, res) => {
 
   if (saveAndReturn) {
     facilityValueErrors.push(...validateFacilityValue(body, saveAndReturn));
+
     //  save the updated values
     if (facilityValueErrors.length > 0) {
       return res.render('partials/facility-value.njk', {
@@ -107,9 +109,12 @@ const updateFacilityValue = async (req, res) => {
         status,
       });
     }
+
     return update();
   }
+
   facilityValueErrors.push(...validateFacilityValue(body));
+
   if (facilityValueErrors.length > 0) {
     return res.render('partials/facility-value.njk', {
       errors: validationErrorHandler(facilityValueErrors),
@@ -124,6 +129,7 @@ const updateFacilityValue = async (req, res) => {
       status,
     });
   }
+
   return update();
 };
 
