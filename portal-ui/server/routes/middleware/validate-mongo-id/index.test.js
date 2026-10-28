@@ -15,7 +15,7 @@ describe('validateMongoId', () => {
 
     // Assert
     expect(mockNext).not.toHaveBeenCalled();
-    // eslint-disable-next-line no-underscore-dangle
+
     expect(mockRes._getRedirectUrl()).toBe('/not-found');
   });
 

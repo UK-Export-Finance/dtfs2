@@ -41,6 +41,7 @@ const apiErrorHandler = ({ code, response }) => {
   if (code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
   }
+
   // Is validation error
   if (response?.status === 422 || response?.status === 400) {
     return response;
@@ -91,6 +92,7 @@ const validationErrorHandler = (errs, href = '') => {
     fieldErrors[el.errRef] = {
       text: mappedErrorMessage,
     };
+
     if (el.subFieldErrorRefs) {
       el.subFieldErrorRefs.forEach((subFieldRef) => {
         fieldErrors[subFieldRef] = {
@@ -378,12 +380,14 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, p
   if (!data || lodashIsEmpty(data)) {
     return [];
   }
+
   const { details, validation } = data;
 
   const valueObj = (val, isRequired, currency, detailsOther, options = {}) => {
     if (isRequired && val === null) {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
+
     /* returns text for if cover starts on submission selected
        if changing unissued to issued, should display date rather than message
     */
@@ -391,6 +395,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, p
       if (options.issueDate) {
         return { text: format(new Date(options.issueDate), 'dd MMMM yyyy') };
       }
+
       return { text: 'Date you submit the notice' };
     }
 
@@ -452,6 +457,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, p
      * set the latestAmendmentStatus to the status of that amendment
      * */
     const facilityMongoId = details._id;
+
     if (latestAmendments?.[facilityMongoId]) {
       details.latestAmendmentStatus = latestAmendments[details._id].status;
     }
@@ -601,6 +607,7 @@ const futureDateInRange = ({ day, month, year }, days) => {
     range += 86400000 * days;
     return input <= range;
   }
+
   return false;
 };
 

@@ -62,9 +62,11 @@ const areUnissuedFacilitiesPresent = (application) => {
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
+
   if (!ACCEPTABLE_STATUSES.includes(application.status)) {
     return false;
   }
+
   /**
    * accounts for edge case
    * when MIA -> MIN and returned to maker without issuing facilities (must be able to see unissued facilities link)
@@ -81,6 +83,7 @@ const areUnissuedFacilitiesPresent = (application) => {
       hasUnissuedFacilities = true;
       return hasUnissuedFacilities;
     }
+
     return hasUnissuedFacilities;
   });
 
@@ -162,6 +165,7 @@ const getIssuedFacilitiesAsArray = (facilities) => {
         },
       ]);
   }
+
   return [];
 };
 
@@ -180,6 +184,7 @@ const coverDatesConfirmed = (facilities) => {
       facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length
     );
   }
+
   return false;
 };
 
@@ -209,6 +214,7 @@ const facilityTypeStringGenerator = (facilityType) => {
     const type = CONSTANTS.FACILITY_TYPE[facilityType.toUpperCase()];
     return type.toLowerCase();
   }
+
   return null;
 };
 

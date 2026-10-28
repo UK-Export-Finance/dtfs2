@@ -246,20 +246,18 @@ describe(page, () => {
 
     describe('when viewed with no bonds', () => {
       const wrappers = [];
-      const dealWithNoBonds = {
-        ...mockDeal,
-        bondTransactions: {
-          items: [],
-        },
-      };
-
       beforeAll(() => {
-        // eslint-disable-next-line no-unused-vars
         for (const deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,
-              dealWithNoBonds,
+              deal: {
+                ...deal,
+                bondTransactions: {
+                  items: [],
+                },
+              },
+              ...confirmedRequestStartDateParams,
             }),
           );
         }
@@ -271,20 +269,18 @@ describe(page, () => {
 
     describe('when viewed with no loans', () => {
       const wrappers = [];
-      const dealWithNoLoans = {
-        ...mockDeal,
-        loanTransactions: {
-          items: [],
-        },
-      };
-
       beforeAll(() => {
-        // eslint-disable-next-line no-unused-vars
         for (const deal of oneDealInEachStatus()) {
           wrappers.push(
             render({
               user,
-              dealWithNoLoans,
+              deal: {
+                ...deal,
+                loanTransactions: {
+                  items: [],
+                },
+              },
+              ...confirmedRequestStartDateParams,
             }),
           );
         }

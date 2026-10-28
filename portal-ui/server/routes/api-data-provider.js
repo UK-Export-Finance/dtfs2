@@ -23,6 +23,7 @@ const get = async (dataType, req) => {
     req.apiData[DEAL] = deal;
     return;
   }
+
   if (INDUSTRY_SECTORS === dataType) {
     const { industrySectors } = await api.getIndustrySectors(token).catch((error) => {
       console.error('api-data-provider: querying for industry sectors => %o', error);
@@ -31,6 +32,7 @@ const get = async (dataType, req) => {
     req.apiData[INDUSTRY_SECTORS] = industrySectors;
     return;
   }
+
   if (COUNTRIES === dataType) {
     const { countries } = await api.getCountries(token).catch((error) => {
       console.error('api-data-provider: querying for countries => %o', error);
@@ -39,6 +41,7 @@ const get = async (dataType, req) => {
     req.apiData[COUNTRIES] = countries;
     return;
   }
+
   if (CURRENCIES === dataType) {
     const { currencies } = await api.getCurrencies(token).catch((error) => {
       console.error('api-data-provider: querying for currencies => %o', error);
@@ -47,6 +50,7 @@ const get = async (dataType, req) => {
     req.apiData[CURRENCIES] = currencies;
     return;
   }
+
   if (MANDATORY_CRITERIA === dataType) {
     const mandatoryCriteria = await api.getLatestMandatoryCriteria(token).catch((error) => {
       console.error('api-data-provider: querying for latest mandatory criteria => %o', error);
@@ -56,6 +60,7 @@ const get = async (dataType, req) => {
     req.apiData[MANDATORY_CRITERIA] = mandatoryCriteria;
     return;
   }
+
   if (LOAN === dataType) {
     const { _id, loanId } = req.params;
 
@@ -66,6 +71,7 @@ const get = async (dataType, req) => {
     req.apiData[LOAN] = loan;
     return;
   }
+
   if (BOND === dataType) {
     const { _id, bondId } = req.params;
 
@@ -76,6 +82,7 @@ const get = async (dataType, req) => {
     req.apiData[BOND] = bond;
     return;
   }
+
   console.info("api-data-provider has been asked to provide %s but doesn't know how...", dataType);
 };
 

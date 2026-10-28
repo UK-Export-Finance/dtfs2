@@ -30,6 +30,7 @@ export const mapCommonEmailVariables = ({ deal, facility, amendment }: { deal: D
   const formattedFacilityEndDate = isUsingFacilityEndDate && facilityEndDate ? format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
 
   let formattedFacilityValue = '-';
+
   if (changeFacilityValue && value) {
     const currencySymbol = facility?.currency?.id ? getCurrencySymbol(facility.currency.id) : '';
     formattedFacilityValue = `${currencySymbol}${value}`;

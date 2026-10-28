@@ -3,7 +3,7 @@ import { format, fromUnixTime } from 'date-fns';
 import { DATE_FORMATS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { Deal } from '../../../types/deal';
-import mapReturnToMakerEmailVariables from './map-return-to-maker-email-variables';
+import { mapReturnToMakerEmailVariables } from './map-return-to-maker-email-variables';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';

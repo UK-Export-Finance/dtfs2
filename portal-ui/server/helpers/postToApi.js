@@ -22,6 +22,7 @@ const responseWithValidationErrors = (apiResponse, errorHref) => {
 
 const postToApi = async (query, errorHref) => {
   const apiResponse = await makeApiCall(query);
+
   if (isErrorResponse(apiResponse)) {
     return responseWithValidationErrors(apiResponse, errorHref);
   }

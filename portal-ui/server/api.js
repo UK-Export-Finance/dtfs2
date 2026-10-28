@@ -411,6 +411,7 @@ const getLoan = async (dealId, loanId, token) => {
     console.error('Get loan API call failed for id %s %s', dealId, loanId);
     return false;
   }
+
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
@@ -516,6 +517,7 @@ const contractBond = async (dealId, bondId, token) => {
     console.error('Get contract bond API call failed for id %s %s', dealId, bondId);
     return false;
   }
+
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
@@ -686,7 +688,9 @@ const getIndustrySectors = async (token) => {
 };
 
 const validateToken = async (token) => {
-  if (!token) return false;
+  if (!token) {
+    return false;
+  }
 
   const response = await axios({
     method: 'get',

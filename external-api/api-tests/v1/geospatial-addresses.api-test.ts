@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import { HttpStatusCode } from 'axios';
 import { ADDRESSES } from '@ukef/dtfs2-common';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';

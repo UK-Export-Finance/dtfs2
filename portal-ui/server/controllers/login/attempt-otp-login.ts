@@ -50,6 +50,7 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
         return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
       }
     }
+
     throw apiError;
   }
 };

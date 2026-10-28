@@ -36,6 +36,7 @@ const acceptUkefDecision = async (req, res) => {
 
       return res.redirect(link);
     }
+
     const errors = validationErrorHandler({
       errRef: 'decision',
       errMsg: 'Select yes if you want to accept the conditions and proceed with UKEF cover.',
