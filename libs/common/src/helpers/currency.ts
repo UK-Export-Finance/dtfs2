@@ -1,5 +1,5 @@
-import { CURRENCY } from '../constants';
-import { Currency, CurrencyAndAmount, CurrencyAndAmountString } from '../types';
+import { CURRENCY } from '@ukef/constants';
+import { Currency, CurrencyAndAmount, CurrencyAndAmountString } from '@ukef/types';
 import { getFormattedMonetaryValue } from './monetary-value';
 import { isNonEmptyString } from './string';
 

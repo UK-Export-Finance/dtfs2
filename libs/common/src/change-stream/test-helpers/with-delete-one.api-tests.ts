@@ -1,15 +1,15 @@
 import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { Response } from 'supertest';
 import { when } from 'jest-when';
-import { MongoDbClient } from '../../mongo-db-client';
-import { ApiErrorResponseBody, AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
-import { changeStreamConfig } from '../config';
+import { MongoDbClient } from '@ukef/mongo-db-client';
+import { ApiErrorResponseBody, AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '@ukef/types';
+import { changeStreamConfig } from '@ukef/change-stream/config';
 
 const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
-interface ApiErrorResponse extends Response {
+type ApiErrorResponse = {
   body: ApiErrorResponseBody;
-}
+} & Response;
 
 type Params = {
   makeRequest: () => Promise<ApiErrorResponse>;

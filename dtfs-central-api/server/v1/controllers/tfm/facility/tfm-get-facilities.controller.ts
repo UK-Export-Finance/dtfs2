@@ -36,9 +36,11 @@ export const getAllFacilities = async (req: GetAllFacilitiesRequest, res: Respon
   const pagesizeNumber = pagesize ? parseInt(pagesize, 10) : 0;
 
   const fieldsToSortOn: Record<string, number> = {};
+
   if (sortBy) {
     fieldsToSortOn[sortBy.field] = sortBy.order === FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
   }
+
   if (sortBy?.field !== 'ukefFacilityId') {
     fieldsToSortOn.ukefFacilityId = 1;
   }

@@ -1,6 +1,6 @@
 import { Response } from 'supertest';
-import { ApiErrorResponseBody } from '../../../types';
+import { ApiErrorResponseBody } from '@ukef/types';
 
-export interface ErrorResponse extends Response {
+export type ErrorResponse = {
   body: ApiErrorResponseBody;
-}
+} & Response;

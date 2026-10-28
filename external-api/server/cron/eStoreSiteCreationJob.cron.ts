@@ -103,15 +103,18 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
       throw new Error(`eStore site creation has failed for deal ${dealIdentifier} ${JSON.stringify(siteExistsResponse)}`);
     }
   } catch (error) {
-    // CRON job log update
-    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
-      'cron.site.create': {
-        error: String(error),
-        status: ESTORE_CRON_STATUS.FAILED,
-        timestamp: getNowAsEpoch(),
-      },
-      'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-    });
+    try {
+      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        'cron.site.create': {
+          error: String(error),
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
+        },
+        'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore site creation failure for deal %s %o', eStoreData?.dealId, logError);
+    }
 
     // Stop the CRON job
     cron({

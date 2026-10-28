@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
+import { aPortalFacilityAmendment } from '@ukef/test-helpers/mock-data-backend';
 import { getLatestAmendmentsByFacility } from './get-latest-amendment-by-facility';
-import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend';
 
 const facilityId1 = new ObjectId();
 const facilityId2 = new ObjectId();

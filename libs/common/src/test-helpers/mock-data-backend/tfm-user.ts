@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { TfmUser } from '../../types';
+import { TfmUser } from '@ukef/types';
 
 export const aTfmUser = (): TfmUser => ({
   _id: new ObjectId(),

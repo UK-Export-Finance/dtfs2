@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
-import { TfmUser } from '../../types';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { TfmUser } from '@ukef/types';
+import { TEAM_IDS } from '@ukef/constants';
 import { TFM_USER_SCHEMA } from './tfm-user.schema';
-import { TEAM_IDS } from '../../constants';
 
 describe('TFM_USER_SCHEMA', () => {
   withSchemaValidationTests({

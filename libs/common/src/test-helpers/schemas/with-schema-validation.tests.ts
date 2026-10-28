@@ -100,6 +100,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
       if (!testCase.options) {
         testCase.options = {};
       }
+
       testCase.options.isOptional = true;
     }
 

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { ENVIRONMENTS } from '../constants';
+import { ENVIRONMENTS } from '@ukef/constants';
 
 dotenv.config({ quiet: true });
 

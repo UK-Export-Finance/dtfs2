@@ -2,8 +2,8 @@ import { UtilisationReportEntityMockBuilder, MOCK_EMAIL } from '@ukef/dtfs2-comm
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { SendReportReconciledEmail } from './send-report-reconciled-email';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
-import externalApi from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
 

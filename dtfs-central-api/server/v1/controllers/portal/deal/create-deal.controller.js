@@ -55,6 +55,7 @@ exports.createDealPost = async (req, res) => {
   if (typeof deal?.dealType !== 'string') {
     return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
+
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
   } catch (error) {
@@ -65,6 +66,7 @@ exports.createDealPost = async (req, res) => {
         code: error.code,
       });
     }
+
     throw error;
   }
 

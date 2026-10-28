@@ -84,14 +84,17 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       }
     }
   } catch (error) {
-    // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
-      'cron.term': {
-        error: String(error),
-        status: ESTORE_CRON_STATUS.FAILED,
-        timestamp: getNowAsEpoch(),
-      },
-    });
+    try {
+      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        'cron.term': {
+          error: String(error),
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
+        },
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore term store creation failure for deal %s %o', eStoreData?.dealId, logError);
+    }
 
     // Stop the CRON job
     cron({

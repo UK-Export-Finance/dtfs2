@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportEntity } from '../utilisation-report';
-import { AuditableBaseEntity } from '../base-entities';
+import { UtilisationReportEntity } from '@ukef/sql-db-entities/utilisation-report';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
 import { CreateAzureFileInfoParams } from './azure-file-info.types';
 
 @Entity('AzureFileInfo')

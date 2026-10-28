@@ -109,6 +109,7 @@ const validateAutomaticCover = async (req, res, next) => {
     if (coverType === DEAL_SUBMISSION_TYPE.MIA) {
       return res.redirect(`/gef/application-details/${dealId}/ineligible-automatic-cover`);
     }
+
     if (coverType === DEAL_SUBMISSION_TYPE.AIN) {
       return res.redirect(`/gef/application-details/${dealId}/eligible-automatic-cover`);
     }

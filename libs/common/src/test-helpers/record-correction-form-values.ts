@@ -1,5 +1,5 @@
-import { CURRENCY } from '../constants';
-import { RecordCorrectionFormValues } from '../types';
+import { CURRENCY } from '@ukef/constants';
+import { RecordCorrectionFormValues } from '@ukef/types';
 
 export const aRecordCorrectionFormValues = (): RecordCorrectionFormValues => ({
   utilisation: '10,000.23',

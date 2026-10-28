@@ -1,19 +1,7 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
-
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';
 import { api } from '../api';
-import premiumScheduleController from '../../server/v1/controllers/premium-schedule.controller';
+import { premiumScheduleCalls } from '../../server/v1/controllers/premium-schedule.controller';
 import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
 
 const { getWithRequestBody } = api(app);
@@ -66,7 +54,7 @@ describe('/premium-schedule', () => {
 
   describe('when premium schedule parameters contain an injection ', () => {
     it('should call "postPremiumSchedule" without the injection', async () => {
-      const spy = jest.spyOn(premiumScheduleController, 'postPremiumSchedule');
+      const spy = jest.spyOn(premiumScheduleCalls, 'postPremiumSchedule');
 
       const data = {
         ...payload,

@@ -1,12 +1,12 @@
-import { ValidationErrorsObject } from '../../../types/view-models/2fa/check-your-email-access-code-view-model';
-import validationRules from './rules';
+import { ValidationErrorsObject } from '../../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
+import { validationRules } from './rules';
 
 /**
  * Combines validation rules and returns validation errors
  * @param formBody - The submitted form data
  * @returns Validation errors when present; otherwise no errors
  */
-const generateValidationErrors = (formBody: Record<string, unknown>): ValidationErrorsObject | null => {
+export const generateValidationErrors = (formBody: Record<string, unknown>): ValidationErrorsObject | null => {
   let errors: ValidationErrorsObject = {};
 
   validationRules.forEach((rule) => {
@@ -17,5 +17,3 @@ const generateValidationErrors = (formBody: Record<string, unknown>): Validation
 
   return hasErrors ? errors : null;
 };
-
-export default generateValidationErrors;

@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 /**
 Objective:
   The objective of the `getExchangeRate` function is to retrieve the exchange rate between two currencies, with an optional date parameter,

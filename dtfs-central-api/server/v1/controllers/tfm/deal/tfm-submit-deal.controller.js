@@ -59,6 +59,7 @@ const createDealSnapshot = async (deal, auditDetails) => {
 
     return findAndUpdateResponse.value;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
@@ -67,6 +68,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
     const { dealType, _id: dealId } = deal;
 
     let dealFacilities = [];
+
     if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
       dealFacilities = await findAllFacilitiesByDealId(dealId);
     }
@@ -99,6 +101,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
 
     return null;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
@@ -133,6 +136,7 @@ exports.submitDealPut = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -145,6 +149,7 @@ exports.submitDealPut = async (req, res) => {
   if (dealType === DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
+
   if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     deal = await findOneDeal(dealId);
   }

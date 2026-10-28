@@ -21,6 +21,7 @@ const findAllFacilitiesByDealId = async (dealId) => {
     const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) }, $or: [{ type: { $eq: 'Bond' } }, { type: { $eq: 'Loan' } }] }).toArray();
     return facilities;
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;

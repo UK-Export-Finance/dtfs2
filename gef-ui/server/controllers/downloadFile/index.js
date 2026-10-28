@@ -25,7 +25,10 @@ const generateDownload = async (req, res) => {
       return;
     }
 
-    if (filename) res.set('Content-disposition', `attachment; filename=${filename}`);
+    if (filename) {
+      res.set('Content-disposition', `attachment; filename=${filename}`);
+    }
+
     res.set('Content-Type', file.headers['content-type']);
 
     const readStream = new stream.PassThrough();

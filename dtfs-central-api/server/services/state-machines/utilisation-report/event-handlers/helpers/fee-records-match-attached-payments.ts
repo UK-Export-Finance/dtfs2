@@ -23,5 +23,5 @@ const getPaymentsAttachedToFeeRecord = async (feeRecord: FeeRecordEntity, entity
  * @returns Whether or not the fee records match the attached payments
  */
 export const feeRecordsMatchAttachedPayments = async (feeRecords: FeeRecordEntity[], entityManager: EntityManager): Promise<boolean> => {
-  return feeRecordsAndPaymentsMatch(feeRecords, await getPaymentsAttachedToFeeRecord(feeRecords[0], entityManager), entityManager);
+  return await feeRecordsAndPaymentsMatch(feeRecords, await getPaymentsAttachedToFeeRecord(feeRecords[0], entityManager), entityManager);
 };

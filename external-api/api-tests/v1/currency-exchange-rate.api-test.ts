@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { HttpStatusCode } from 'axios';
 import { CURRENCY } from '@ukef/dtfs2-common';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
@@ -10,7 +7,6 @@ import { api } from '../api';
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
-// Mock responses
 const mockResponses = {
   GBP: {
     status: HttpStatusCode.Ok,

@@ -113,6 +113,7 @@ const getNowAsIsoString = () => formatISO(new Date()).replace('Z', '+00:00');
 const getInclusiveMonthDifference = (startDate, endDate) => {
   let date1;
   let date2;
+
   if (startDate === null || endDate === null) {
     return NaN;
   }

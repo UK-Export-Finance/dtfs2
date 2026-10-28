@@ -38,6 +38,7 @@ export const validatePostUploadUtilisationReportPayload = async (req: PreValidat
 
   const reportDataSchema = z.array(z.record(z.string(), z.string().nullable()));
   const { success, error, data } = reportDataSchema.safeParse(reportData);
+
   if (!success) {
     console.error('Report data not provided in valid format %s', error);
     return res.status(HttpStatusCode.BadRequest).send('Failed to save utilisation report - report data structure invalid');

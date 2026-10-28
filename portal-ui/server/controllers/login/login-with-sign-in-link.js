@@ -23,9 +23,11 @@ const getUserRedirectUrl = (user) => {
   if (isMaker || isChecker || isAdmin) {
     return LANDING_PAGES.DEFAULT;
   }
+
   if (isPaymentReportOfficer) {
     return LANDING_PAGES.UTILISATION_REPORT_UPLOAD;
   }
+
   return LANDING_PAGES.DEFAULT;
 };
 
@@ -81,6 +83,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
       ) {
         return res.status(403).render('login/temporarily-suspended.njk');
       }
+
       return res.redirect('/login/sign-in-link-expired');
     }
 

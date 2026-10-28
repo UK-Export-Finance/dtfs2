@@ -84,6 +84,7 @@ export const getUtilisationReportReconciliationDetails = async (
   }
 
   const bankName = await getBankNameById(bankId);
+
   if (!bankName) {
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }

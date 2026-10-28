@@ -1,4 +1,4 @@
-import { UtilisationReportCsvRowData } from '../../types';
+import { UtilisationReportCsvRowData } from '@ukef/types';
 
 export const mockCurrencyValue = 'EUR';
 export const mockFacilityUtilisationValue = '34538.54';

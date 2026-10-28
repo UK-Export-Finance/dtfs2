@@ -1,5 +1,5 @@
-import { Prettify } from '../../types/types-helper';
-import { TeamId, Team } from '../../types/tfm';
+import { Prettify } from '@ukef/types/types-helper';
+import { TeamId, Team } from '@ukef/types/tfm';
 
 type TeamRecord = {
   readonly [Id in TeamId]: Readonly<Team & { id: Id }>;

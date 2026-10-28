@@ -1,7 +1,9 @@
 const { FILE_UPLOAD } = require('../constants/file-upload');
 // format file from bytes to MB/KB, etc
 const formatBytes = (bytes, decimals = 2) => {
-  if (!bytes) return '0 Bytes';
+  if (!bytes) {
+    return '0 Bytes';
+  }
 
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -14,6 +16,7 @@ const formatBytes = (bytes, decimals = 2) => {
 
 const multerFilter = (req, file, cb) => {
   const allowedFormatsRegex = new RegExp(`\\.(${FILE_UPLOAD.ALLOWED_FORMATS.join('|')})$`);
+
   if (file.originalname.match(allowedFormatsRegex)) {
     cb(null, true);
   } else {

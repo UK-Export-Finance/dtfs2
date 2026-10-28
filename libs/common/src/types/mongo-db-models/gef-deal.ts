@@ -1,4 +1,4 @@
-import { AnyObject } from '../any-object';
+import { AnyObject } from '@ukef/types/any-object';
 
 type AccountingReferenceDate = {
   day: string;

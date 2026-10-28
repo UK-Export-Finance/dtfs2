@@ -1,5 +1,5 @@
 import z from 'zod';
-import { InvalidEnvironmentVariableError } from '../errors';
+import { InvalidEnvironmentVariableError } from '@ukef/errors';
 import { asString } from './validation';
 
 /**

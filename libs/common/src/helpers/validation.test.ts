@@ -1,5 +1,5 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/test-helpers';
 import { asString, isMonetaryValueValid, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '../test-helpers';
 
 const {
   VALID,

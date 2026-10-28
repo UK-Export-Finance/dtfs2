@@ -1,8 +1,8 @@
 import { ZodSchema } from 'zod';
-import { anEntraIdUser } from '../../mock-data';
-import { withDefaultOptionsTests } from '../primitive-types-tests';
-import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
+import { anEntraIdUser } from '@ukef/test-helpers/mock-data';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas/with-schema-validation.tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 
 export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
   schema,

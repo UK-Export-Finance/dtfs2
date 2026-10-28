@@ -1,4 +1,4 @@
-import { PortalSessionUser } from '../types';
+import { PortalSessionUser } from '@ukef/types';
 
 export type LoginWithSignInOtpResponse = {
   loginStatus?: string;

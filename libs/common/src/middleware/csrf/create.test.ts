@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { Request } from 'express';
+import { SSO_URL, SSO_URL_FORM } from '@ukef/constants';
 import { create } from './create';
-import { SSO_URL, SSO_URL_FORM } from '../../constants';
 import { generateToken } from './csrf-sync-instance';
 
 jest.mock('./csrf-sync-instance', () => ({

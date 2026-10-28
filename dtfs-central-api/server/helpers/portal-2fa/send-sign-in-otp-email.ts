@@ -2,8 +2,8 @@ import { isAxiosError } from 'axios';
 import { PortalUser, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
 import { EmailSendError } from '../../errors/email-send-error';
 import { MissingUserFieldsError } from '../../errors/missing-user-fields-error';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
-import externalApi from '../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../constants/email-template-ids';
+import { externalApi } from '../../external-api/api';
 
 /**
  * Sends the sign-in OTP security code to the user's email address via GOV.UK Notify.

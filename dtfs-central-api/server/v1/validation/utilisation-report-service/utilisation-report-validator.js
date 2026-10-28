@@ -24,9 +24,11 @@ const validateMonth = (month, propertyName = 'Month') => {
   if (!month && month !== 0) {
     return `${propertyName} is required`;
   }
+
   if (!REGEX.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
     return `${propertyName} must be between 1 and 12`;
   }
+
   return null;
 };
 
@@ -40,9 +42,11 @@ const validateYear = (year, propertyName = 'Year') => {
   if (!year && year !== 0) {
     return `${propertyName} is required`;
   }
+
   if (!REGEX.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
     return `${propertyName} must be between 2020 and 2100`;
   }
+
   return null;
 };
 
@@ -58,31 +62,37 @@ const validateFileInfo = (fileInfo) => {
 
   const fileInfoErrors = [];
   const { folder, filename, fullPath, url, mimetype } = fileInfo;
+
   if (!folder) {
     fileInfoErrors.push('Folder name from file info is required');
   } else if (typeof folder !== 'string') {
     fileInfoErrors.push('Folder name from file info must be a string');
   }
+
   if (!filename) {
     fileInfoErrors.push('Filename from file info is required');
   } else if (typeof filename !== 'string') {
     fileInfoErrors.push('Filename from file info must be a string');
   }
+
   if (!fullPath) {
     fileInfoErrors.push('Full path from file info is required');
   } else if (typeof fullPath !== 'string') {
     fileInfoErrors.push('Full path from file info must be a string');
   }
+
   if (!url) {
     fileInfoErrors.push('Url from file info is required');
   } else if (typeof url !== 'string') {
     fileInfoErrors.push('Url from file info must be a string');
   }
+
   if (!mimetype) {
     fileInfoErrors.push('Mimetype from file info is required');
   } else if (typeof mimetype !== 'string') {
     fileInfoErrors.push('Mimetype from file info must be a string');
   }
+
   return fileInfoErrors;
 };
 
@@ -106,6 +116,7 @@ const validateReportUser = (user) => {
   }
 
   const { _id } = user;
+
   if (typeof _id !== 'string' || !isMongoId(_id)) {
     errors.push(`User '_id' is not a valid MongoDB ID: '${_id}'`);
     return errors;

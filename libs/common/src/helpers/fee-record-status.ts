@@ -1,5 +1,5 @@
-import { FEE_RECORD_STATUS } from '../constants';
-import { FeeRecordStatus } from '../types';
+import { FEE_RECORD_STATUS } from '@ukef/constants';
+import { FeeRecordStatus } from '@ukef/types';
 
 /**
  * Checks if all statuses in the set are the same.

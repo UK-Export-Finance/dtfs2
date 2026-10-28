@@ -19,6 +19,7 @@ export const mapToPaymentDetails = async (payment: PaymentEntity, includeFeeReco
   } = feeRecords[0];
 
   const bankName = await getBankNameById(bankId);
+
   if (!bankName) {
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }

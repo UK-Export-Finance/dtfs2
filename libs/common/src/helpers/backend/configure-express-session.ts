@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import { isHttps } from '../is-https';
+import { isHttps } from '@ukef/helpers/is-https';
+import { COOKIE } from '@ukef/constants';
+import { InvalidEnvironmentVariableError } from '@ukef/errors';
 import { redisStore } from './configure-redis-cache';
-import { COOKIE } from '../../constants';
-import { InvalidEnvironmentVariableError } from '../../errors';
 
 dotenv.config({ quiet: true });
 

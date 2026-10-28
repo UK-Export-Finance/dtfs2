@@ -1,6 +1,6 @@
-import { DbRequestSource, PaymentMatchingToleranceEntity } from '../../sql-db-entities';
-import { Currency } from '../../types';
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { DbRequestSource, PaymentMatchingToleranceEntity } from '@ukef/sql-db-entities';
+import { Currency } from '@ukef/types';
+import { REQUEST_PLATFORM_TYPE } from '@ukef/constants';
 
 export class PaymentMatchingToleranceEntityMockBuilder {
   private readonly tolerance: PaymentMatchingToleranceEntity;

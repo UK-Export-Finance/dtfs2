@@ -1,5 +1,5 @@
+import { AmendmentsEligibilityCriterionWithAnswer } from '@ukef/types/mongo-db-models/tfm-facilities';
 import { generateAmendmentMandatoryCriteria } from './generate-amendment-mandatory-criteria';
-import { AmendmentsEligibilityCriterionWithAnswer } from '../types/mongo-db-models/tfm-facilities';
 
 describe('generateMandatoryCriteria', () => {
   it('should return single test criterion', () => {

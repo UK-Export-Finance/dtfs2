@@ -11,6 +11,9 @@
     /* Modules */
     "module": "node16",
     "moduleResolution": "node16",
+    "paths": {
+      "@ukef/*": ["./src/*"]
+    },
 
     /* Emit */
     "noEmit": true,
@@ -29,6 +32,7 @@
     "skipLibCheck": true
   },
   "ts-node": {
+    "require": ["@ukef/dtfs2-common/register-paths"],
     "files": true
   },
   "include": ["**/*.ts", "**/*.d.ts"],

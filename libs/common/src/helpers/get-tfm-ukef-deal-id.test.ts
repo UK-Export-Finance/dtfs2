@@ -1,6 +1,6 @@
-import { TfmDeal } from '../types';
+import { TfmDeal } from '@ukef/types';
+import { DEAL_TYPE } from '@ukef/constants';
 import { getTfmUkefDealId } from './get-tfm-ukef-deal-id';
-import { DEAL_TYPE } from '../constants';
 
 describe('getTfmUkefDealId', () => {
   it('should return ukefDealId on a TFM BSS/EWCS deal', () => {

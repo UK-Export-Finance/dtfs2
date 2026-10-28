@@ -27,6 +27,7 @@ const getIncomeClassCode = (facility) => {
         return null;
     }
   }
+
   return null;
 };
 

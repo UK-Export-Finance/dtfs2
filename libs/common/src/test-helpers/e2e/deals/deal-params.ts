@@ -1,6 +1,6 @@
+import { FACILITY_TYPE } from '@ukef/constants';
+import { yesterday, twoDaysAgo } from '@ukef/test-helpers/e2e/date-constants';
 import { MOCK_DEAL_AIN } from './mock-AIN-deal';
-import { FACILITY_TYPE } from '../../../constants';
-import { yesterday, twoDaysAgo } from '../date-constants';
 
 export const DEAL_WITH_TEST_SUPPLIER_NAME_VARS = {
   status: 'Submitted',

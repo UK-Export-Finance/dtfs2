@@ -12,6 +12,7 @@ export const isOtpExpired = (otpResult: OtpLoginResult, userId: string): otpResu
   if (otpResult.type !== OTP_RESULT_TYPE.EXPIRED) {
     return false;
   }
+
   console.error('Access code expired for user %s', userId);
 
   return true;

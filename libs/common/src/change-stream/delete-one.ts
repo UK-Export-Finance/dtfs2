@@ -1,10 +1,10 @@
 import { DeleteResult, ObjectId } from 'mongodb';
 import { add } from 'date-fns';
-import { AuditDetails, MongoDbCollectionName } from '../types';
-import { MongoDbClient } from '../mongo-db-client';
+import { AuditDetails, MongoDbCollectionName } from '@ukef/types';
+import { MongoDbClient } from '@ukef/mongo-db-client';
+import { DocumentNotDeletedError, WriteConcernError } from '@ukef/errors';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
-import { DocumentNotDeletedError, WriteConcernError } from '../errors';
 
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
@@ -34,6 +34,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
 
     const collection = await db.getCollection(collectionName);
     const deleteResult = await collection.deleteOne({ _id: { $eq: documentId } });
+
     if (!deleteResult.acknowledged) {
       throw new WriteConcernError();
     }
@@ -56,7 +57,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
  */
 export const deleteOne = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams): Promise<DeleteResult> => {
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    return deleteDocumentWithAuditLogs({
+    return await deleteDocumentWithAuditLogs({
       documentId,
       collectionName,
       db,
@@ -65,5 +66,6 @@ export const deleteOne = async ({ documentId, collectionName, db, auditDetails }
   }
 
   const collection = await db.getCollection(collectionName);
-  return collection.deleteOne({ _id: { $eq: documentId } });
+
+  return await collection.deleteOne({ _id: { $eq: documentId } });
 };

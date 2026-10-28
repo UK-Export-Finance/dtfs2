@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
+import { aPortalFacilityAmendment } from '@ukef/test-helpers/mock-data-backend';
+import { PortalFacilityAmendmentWithUkefId } from '@ukef/types';
 import { createAmendmentFacilityExposure } from './create-amendment-facility-exposure';
 import { getGBPValue } from './amendments-get-gbp-value';
 import { calculateUkefExposure } from './calculate-ukef-exposure';
 import { formattedNumber } from './formatted-number';
-import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend';
-import { PortalFacilityAmendmentWithUkefId } from '../types';
 
 describe('createAmendmentFacilityExposure()', () => {
   const amendment = {

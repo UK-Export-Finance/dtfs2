@@ -1,11 +1,6 @@
+import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
-
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
-import { HttpStatusCode } from 'axios';
 import { CUSTOMER_TYPE, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
@@ -83,30 +78,30 @@ describe('party-db.controller feature flag', () => {
         companyName: 'Some name',
         companyRegNo: null,
         probabilityOfDefault: 3,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       },
       {
         companyName: null,
         companyRegNo: VALID,
         probabilityOfDefault: 3,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       },
       {
         companyName: 'Some name',
         companyRegNo: INVALID_TOO_SHORT,
         probabilityOfDefault: 3,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       },
       {
         companyName: 'Some name',
         companyRegNo: INVALID_TOO_LONG,
         probabilityOfDefault: 3,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
       },
       {
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: '',
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -114,7 +109,7 @@ describe('party-db.controller feature flag', () => {
         code: '',
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: true,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -122,7 +117,7 @@ describe('party-db.controller feature flag', () => {
         code: 0,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -133,7 +128,7 @@ describe('party-db.controller feature flag', () => {
         code: 1,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -141,7 +136,7 @@ describe('party-db.controller feature flag', () => {
         code: 12,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -149,7 +144,7 @@ describe('party-db.controller feature flag', () => {
         code: 123,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -157,7 +152,7 @@ describe('party-db.controller feature flag', () => {
         code: 1234,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -165,7 +160,7 @@ describe('party-db.controller feature flag', () => {
         code: 'ABCD',
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -173,7 +168,7 @@ describe('party-db.controller feature flag', () => {
         code: 111111111,
         companyName: 'Some name',
         companyRegNo: VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: false,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
@@ -190,7 +185,7 @@ describe('party-db.controller feature flag', () => {
         code: 10110,
         companyName: 'test',
         companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
-        customerType: CUSTOMER_TYPE.CUSTOMER,
+        customerType: CUSTOMER_TYPE.COMPANY,
         isUkEntity: true,
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       };

@@ -19,9 +19,9 @@ type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
 };
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: UtilisationReportResponse;
-}
+} & Response;
 
 describe(`GET ${BASE_URL}`, () => {
   const portalUser = {

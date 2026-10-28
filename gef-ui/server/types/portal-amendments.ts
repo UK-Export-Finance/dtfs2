@@ -11,11 +11,11 @@ export type SubmittedAmendmentsParams = {
   effectiveDate: Date;
 };
 
-export interface FacilityWithAmendment extends FacilityParams {
+export type FacilityWithAmendment = {
   isFacilityWithEffectiveAmendment?: SubmittedAmendmentsParams;
   isFacilityWithAmendmentInProgress?: SubmittedAmendmentsParams;
   amendmentDetailsUrl: string;
-}
+} & FacilityParams;
 
 export type AmendmentDetailsUrlAndText = {
   text: string;

@@ -1,4 +1,4 @@
-import { UKEF } from '../constants';
+import { UKEF } from '@ukef/constants';
 
 /**
  * Checks if a given email address has a UKEF domain.

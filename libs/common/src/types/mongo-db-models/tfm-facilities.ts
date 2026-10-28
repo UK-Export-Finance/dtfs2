@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp, UnixTimestampSeconds } from '../date';
-import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
-import { Currency } from '../currency';
+import { UnixTimestamp, UnixTimestampSeconds } from '@ukef/types/date';
+import { PortalAmendmentStatus, TfmAmendmentStatus } from '@ukef/types/amendment-status';
+import { Currency } from '@ukef/types/currency';
+import { AnyObject } from '@ukef/types/any-object';
+import { AuditDatabaseRecord } from '@ukef/types/audit-database-record';
+import { AMENDMENT_TYPES } from '@ukef/constants';
 import { Facility, FacilityWithStringDealId } from './facility';
-import { AnyObject } from '../any-object';
-import { AuditDatabaseRecord } from '../audit-database-record';
-import { AMENDMENT_TYPES } from '../../constants';
 import { AmendmentsEligibilityCriterion } from './amendments-eligibility-criteria';
 
 type SubmittedByUser = {
@@ -41,7 +41,7 @@ export type FacilityAmendmentTfmObject = {
 /*
  * Properties common to all amendments
  */
-interface BaseAmendment {
+type BaseAmendment = {
   amendmentId: ObjectId;
   facilityId: ObjectId;
   dealId: ObjectId;
@@ -64,7 +64,7 @@ interface BaseAmendment {
   };
   referenceNumber?: string | null;
   requestDate?: number | null;
-}
+};
 
 /**
  * Amendments created in TFM
@@ -72,7 +72,7 @@ interface BaseAmendment {
  * This type is likely incomplete and should be added
  * to as and when new properties are discovered
  */
-export interface TfmFacilityAmendment extends BaseAmendment {
+export type TfmFacilityAmendment = {
   type?: typeof AMENDMENT_TYPES.TFM;
   currentCoverEndDate?: UnixTimestamp | null;
   currentValue?: number | null;
@@ -122,16 +122,16 @@ export interface TfmFacilityAmendment extends BaseAmendment {
     firstName: string;
     lastName: string;
   };
-}
+} & BaseAmendment;
 
-export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsEligibilityCriterion {
+export type AmendmentsEligibilityCriterionWithAnswer = {
   answer: boolean | null;
-}
+} & AmendmentsEligibilityCriterion;
 
 /**
  * Amendments created in Portal
  */
-export interface PortalFacilityAmendment extends BaseAmendment {
+export type PortalFacilityAmendment = {
   type: typeof AMENDMENT_TYPES.PORTAL;
   status: PortalAmendmentStatus;
   eligibilityCriteria: {
@@ -140,7 +140,7 @@ export interface PortalFacilityAmendment extends BaseAmendment {
   };
   tfm?: FacilityAmendmentTfmObject;
   bankName?: string;
-}
+} & BaseAmendment;
 
 /**
  * Type of the mongo db "tfm-facilities" collection

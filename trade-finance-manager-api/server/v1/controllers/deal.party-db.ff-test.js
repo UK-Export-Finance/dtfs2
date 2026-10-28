@@ -140,7 +140,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.COMPANY });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledTimes(0);
 
@@ -160,7 +160,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const result = await api.getOrCreatePartyUrn(customer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...customer, customerType: CUSTOMER_TYPE.CUSTOMER });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...customer, customerType: CUSTOMER_TYPE.COMPANY });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
     expect(getPartyDbInfo).toHaveBeenCalledTimes(0);
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -212,7 +212,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.COMPANY });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -229,7 +229,7 @@ describe('getOrCreatePartyDbInfo', () => {
     const result = await api.getOrCreatePartyUrn(salesforceCustomer);
 
     // Assert
-    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.CUSTOMER });
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ ...salesforceCustomer, customerType: CUSTOMER_TYPE.COMPANY });
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(console.error).toHaveBeenCalledTimes(1);

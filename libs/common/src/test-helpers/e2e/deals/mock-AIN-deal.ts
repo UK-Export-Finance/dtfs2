@@ -1,6 +1,6 @@
-import { today, oneMonth, twoYearsAgo } from '../date-constants';
-import { DEAL_TYPE, DEAL_SUBMISSION_TYPE, FACILITY_TYPE, BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } from '../../../constants';
-import { BANK1_MAKER1 } from '../../mock-data';
+import { today, oneMonth, twoYearsAgo } from '@ukef/test-helpers/e2e/date-constants';
+import { DEAL_TYPE, DEAL_SUBMISSION_TYPE, FACILITY_TYPE, BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } from '@ukef/constants';
+import { BANK1_MAKER1 } from '@ukef/test-helpers/mock-data';
 
 export const MOCK_DEAL_AIN = {
   dealType: DEAL_TYPE.BSS_EWCS,

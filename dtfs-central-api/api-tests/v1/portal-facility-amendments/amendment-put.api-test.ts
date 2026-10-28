@@ -26,9 +26,9 @@ import { aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 const originalEnv = { ...process.env };
 
-interface FacilityAmendmentResponse extends Response {
+type FacilityAmendmentResponse = {
   body: PortalFacilityAmendment;
-}
+} & Response;
 
 const generateUrl = (facilityId: string): string => {
   return `/v1/portal/facilities/${facilityId}/amendments/`;

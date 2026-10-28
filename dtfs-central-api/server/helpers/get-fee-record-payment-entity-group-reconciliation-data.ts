@@ -33,6 +33,7 @@ export const getFeeRecordPaymentEntityGroupReconciliationData = async (
     if (group.payments.length === 0) {
       return {};
     }
+
     throw new Error(`Fee records with payments at the '${FEE_RECORD_STATUS.RECONCILED}' status cannot have a null 'dateReconciled' property`);
   }
 

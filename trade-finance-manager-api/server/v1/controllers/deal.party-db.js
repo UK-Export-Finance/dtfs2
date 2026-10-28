@@ -90,7 +90,7 @@ const getOrCreatePartyUrn = async ({ companyRegNo, companyName, probabilityOfDef
       code,
       companyName,
       companyRegNo,
-      customerType: CUSTOMER_TYPE.CUSTOMER,
+      customerType: CUSTOMER_TYPE.COMPANY,
       isUkEntity,
       probabilityOfDefault,
     });

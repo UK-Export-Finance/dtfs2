@@ -1,4 +1,4 @@
-import { EntraIdAuthCodeRedirectResponseBody } from '../../types';
+import { EntraIdAuthCodeRedirectResponseBody } from '@ukef/types';
 
 export const anEntraIdAuthCodeRedirectResponseBody = (): EntraIdAuthCodeRedirectResponseBody => ({
   code: 'a-code',

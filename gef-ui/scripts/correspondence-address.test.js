@@ -13,7 +13,6 @@ describe('correspondence-address.js', () => {
 
   const divContaining = (...htmlItems) => `<div>${htmlItems.join('')}</div>`;
 
-  // eslint-disable-next-line global-require
   const runCorrespondenceAddressScript = () => jest.isolateModules(() => require('./correspondence-address'));
 
   it('does not set a class to hide the conditional correspondence element on load if the yes correspondence radio is checked', () => {

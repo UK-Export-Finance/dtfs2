@@ -1,8 +1,8 @@
 import z from 'zod';
+import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '@ukef/schemas/unix-timestamp.schema';
+import { AUDIT_DATABASE_RECORD_SCHEMA } from '@ukef/schemas/audit-database-record.schema';
+import { OBJECT_ID_SCHEMA } from '@ukef/schemas/object-id.schema';
 import { TfmTeamSchema } from './tfm-team.schema';
-import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '../unix-timestamp.schema';
-import { AUDIT_DATABASE_RECORD_SCHEMA } from '../audit-database-record.schema';
-import { OBJECT_ID_SCHEMA } from '../object-id.schema';
 
 /**
  * These fields only are relevant to users when SSO is not enabled

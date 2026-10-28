@@ -8,6 +8,7 @@ const removeCsrfToken = (req, res, next) => {
   if (req?.body?._csrf) {
     delete req.body._csrf;
   }
+
   next();
 };
 

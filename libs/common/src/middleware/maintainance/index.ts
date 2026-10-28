@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { isMaintenanceActive, getMaintenanceTimestamp } from '../../helpers';
-import { MAINTENANCE } from '../../constants';
+import { isMaintenanceActive, getMaintenanceTimestamp } from '@ukef/helpers';
+import { MAINTENANCE } from '@ukef/constants';
 
 /**
  * Express middleware to handle scheduled maintenance mode.

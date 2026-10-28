@@ -6,6 +6,7 @@ module.exports = {
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.api-test.{js,ts}'],
   moduleNameMapper: {
+    ...commonSettings.moduleNameMapper,
     '^.+\\.(css|less|scss)$': 'babel-jest',
   },
   testTimeout: 80000,

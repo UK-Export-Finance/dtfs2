@@ -1,4 +1,4 @@
-import { PortalSessionUser } from '../types/portal-session-data/portal-session-user';
+import { PortalSessionUser } from '@ukef/types/portal-session-data/portal-session-user';
 import { aPortalSessionBank } from './portal-session-bank';
 
 export const aPortalSessionUser = (): PortalSessionUser => ({

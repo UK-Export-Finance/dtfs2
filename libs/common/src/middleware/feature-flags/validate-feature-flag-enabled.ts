@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from 'axios';
-import { isPortalFacilityAmendmentsFeatureFlagEnabled, isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
-import { FeatureFlag, isFeeRecordCorrectionFeatureFlagEnabled, isPortal2FAFeatureFlagEnabled } from '../../helpers/is-feature-flag-enabled';
+import { isPortalFacilityAmendmentsFeatureFlagEnabled, isTfmDealCancellationFeatureFlagEnabled } from '@ukef/helpers';
+import { FeatureFlag, isFeeRecordCorrectionFeatureFlagEnabled, isPortal2FAFeatureFlagEnabled } from '@ukef/helpers/is-feature-flag-enabled';
 
 /**
  * Creates a middleware function to check if the given feature flag is enabled

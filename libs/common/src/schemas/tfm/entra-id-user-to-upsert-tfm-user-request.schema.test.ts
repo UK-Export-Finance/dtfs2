@@ -1,7 +1,7 @@
 import { afterAll } from '@jest/globals';
-import { anEntraIdUser } from '../../test-helpers';
-import { EntraIdUser } from '../../types';
-import { timezone } from '../../helpers';
+import { anEntraIdUser } from '@ukef/test-helpers';
+import { EntraIdUser } from '@ukef/types';
+import { timezone } from '@ukef/helpers';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from './entra-id-user-to-upsert-tfm-user-request.schema';
 
 describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
@@ -29,7 +29,7 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   });
 
   describe('when provided with a invalid entra id user with missing fields', () => {
-    const { roles: _roles, ...request } = anEntraIdUser();
+    const { roles: theRoles, ...request } = anEntraIdUser();
     itShouldThrowAnError(request);
   });
 

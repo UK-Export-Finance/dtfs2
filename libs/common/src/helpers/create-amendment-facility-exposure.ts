@@ -1,7 +1,7 @@
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
 import { getGBPValue } from './amendments-get-gbp-value';
 import { calculateUkefExposure } from './calculate-ukef-exposure';
 import { formattedNumber } from './formatted-number';
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 
 /**
  * creates exposure object for an amendment

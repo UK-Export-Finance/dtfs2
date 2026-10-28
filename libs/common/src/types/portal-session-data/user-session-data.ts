@@ -1,4 +1,4 @@
-import { ReportPeriod, UtilisationReportCsvRowData } from '../utilisation-reports';
+import { ReportPeriod, UtilisationReportCsvRowData } from '@ukef/types/utilisation-reports';
 import { PortalSessionUser } from './portal-session-user';
 
 /**

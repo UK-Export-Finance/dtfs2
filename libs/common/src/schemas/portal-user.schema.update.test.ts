@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
 import z from 'zod';
-import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
+import { generatePortalUserAuditDatabaseRecord } from '@ukef/change-stream';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
 import { UPDATE } from './portal-user.schema';
-import { withSchemaValidationTests } from '../test-helpers/schemas';
 
 describe('PORTAL_USER', () => {
   describe('UPDATE', () => {

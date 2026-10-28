@@ -17,6 +17,7 @@ function assertAllUploadFieldsArePopulated(uploadedReportEntity: UtilisationRepo
 } {
   const allUploadFieldsArePopulated: boolean =
     uploadedReportEntity.dateUploaded !== null && uploadedReportEntity.azureFileInfo !== undefined && uploadedReportEntity.uploadedByUserId !== null;
+
   if (!allUploadFieldsArePopulated) {
     throw new Error('Failed to map data - report seems to have been uploaded but is missing some required fields');
   }
@@ -36,6 +37,7 @@ export const mapUtilisationReportEntityToGetUtilisationReportResponse = async (
   };
 
   const isUploadedReport = reportEntity.status !== REPORT_NOT_RECEIVED && reportEntity.azureFileInfo;
+
   if (!isUploadedReport) {
     return response;
   }

@@ -1,4 +1,4 @@
-import { industrySector } from '@ukef/dtfs2-common';
+import { IndustrySector } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';
@@ -44,13 +44,13 @@ describe('findACBSIndustrySector', () => {
     nock(baseUrl).get(url).reply(HttpStatusCode.Ok, mockResponseData);
 
     // Arrange
-    const expected: Array<industrySector> = mockResponseData;
+    const expected: Array<IndustrySector> = mockResponseData;
 
     // Act
     const { status, data } = await findACBSIndustrySector(ukefIndustryId);
 
     // Assert
-    const responseData = data[0] as industrySector;
+    const responseData = data[0] as IndustrySector;
 
     expect(status).toEqual(HttpStatusCode.Ok);
 

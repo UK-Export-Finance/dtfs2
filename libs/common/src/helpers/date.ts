@@ -1,7 +1,7 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import { format, getUnixTime } from 'date-fns';
-import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '../types/date';
-import { EPOCH } from '../constants';
+import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '@ukef/types/date';
+import { EPOCH } from '@ukef/constants';
 
 /**
  * Returns the current date and time.

@@ -11,6 +11,7 @@ const connect = () => {
       tls: { servername: process.env.REDIS_HOSTNAME },
     };
   }
+
   const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
   return redisClient;
 };

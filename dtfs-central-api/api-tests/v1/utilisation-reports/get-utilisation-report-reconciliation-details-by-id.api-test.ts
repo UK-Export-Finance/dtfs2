@@ -19,9 +19,9 @@ type UtilisationReportReconciliationDetailsResponseBody = Omit<UtilisationReport
   dateUploaded: IsoDateTimeStamp;
 };
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: UtilisationReportReconciliationDetailsResponseBody;
-}
+} & Response;
 
 describe(`GET ${BASE_URL}`, () => {
   const portalUser: PortalUser = aPortalUser();

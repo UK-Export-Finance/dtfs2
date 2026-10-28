@@ -32,6 +32,7 @@ export const validateFeeRecordsFormCompleteGroup = async (ids: number[]) => {
   const feeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(ids);
 
   const feeRecordStatuses = feeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
+
   if (!allStatusesAreTheSameOrCombinationOfToDoStatuses(feeRecordStatuses)) {
     throw new InvalidPayloadError('Fee records must all have the same status');
   }

@@ -1,8 +1,12 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
-import { UtilisationReportEntity } from '../utilisation-report';
-import type { Currency, FeeRecordStatus } from '../../types';
-import { AuditableBaseEntity } from '../base-entities';
+import { UtilisationReportEntity } from '@ukef/sql-db-entities/utilisation-report';
+import type { Currency, FeeRecordStatus } from '@ukef/types';
+import { AuditableBaseEntity } from '@ukef/sql-db-entities/base-entities';
+import { MonetaryColumn, ExchangeRateColumn } from '@ukef/sql-db-entities/custom-columns';
+import { PaymentEntity } from '@ukef/sql-db-entities/payment';
+import { FEE_RECORD_STATUS } from '@ukef/constants';
+import { FeeRecordCorrectionEntity } from '@ukef/sql-db-entities/fee-record-correction';
 import {
   CreateFeeRecordParams,
   MarkAsReadyToKeyParams,
@@ -11,10 +15,6 @@ import {
   UpdateWithCorrectionParams,
   UpdateWithStatusParams,
 } from './fee-record.types';
-import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
-import { PaymentEntity } from '../payment';
-import { FEE_RECORD_STATUS } from '../../constants';
-import { FeeRecordCorrectionEntity } from '../fee-record-correction';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {

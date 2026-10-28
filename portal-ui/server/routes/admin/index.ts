@@ -5,8 +5,6 @@ import userAdminRoutes from './users';
 
 import { validateToken, validateRole } from '../middleware';
 
-const router = express.Router();
+export const adminRouter = express.Router();
 
-router.use('/admin/', [validateToken, validateRole({ role: [ROLES.ADMIN] }), userAdminRoutes]);
-
-export default router;
+adminRouter.use('/admin/', [validateToken, validateRole({ role: [ROLES.ADMIN] }), userAdminRoutes]);

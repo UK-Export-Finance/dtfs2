@@ -1,5 +1,5 @@
-import { withSchemaValidationTests } from '../../test-helpers/schemas';
-import { DecodedAuthCodeRequestState } from '../../types/tfm/entra-id';
+import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
+import { DecodedAuthCodeRequestState } from '@ukef/types/tfm/entra-id';
 import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA } from './entra-id.schema';
 
 describe('DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA', () => {

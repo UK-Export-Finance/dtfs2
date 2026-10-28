@@ -1,5 +1,5 @@
-import { CURRENCY } from '../constants';
-import { CurrencyAndAmount } from '../types';
+import { CURRENCY } from '@ukef/constants';
+import { CurrencyAndAmount } from '@ukef/types';
 import { getFormattedCurrencyAndAmount, isCurrencyValid, formatCurrencyUpperCase } from './currency';
 
 describe('currency helpers', () => {

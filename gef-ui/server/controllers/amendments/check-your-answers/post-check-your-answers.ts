@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
-import mapSubmittedToCheckerEmailVariables from '../helpers/map-submitted-to-checker-email-variables.ts';
+import { mapSubmittedToCheckerEmailVariables } from '../helpers/map-submitted-to-checker-email-variables.ts';
 import { addExposureValuesToAmendment } from '../helpers/add-exposure-values-to-amendment.ts';
 
 export type PostCheckYourAnswersRequest = CustomExpressRequest<{

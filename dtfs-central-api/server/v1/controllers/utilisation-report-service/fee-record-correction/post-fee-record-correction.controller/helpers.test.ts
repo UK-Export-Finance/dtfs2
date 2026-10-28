@@ -1,8 +1,8 @@
 import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { formatReasonsAsBulletedListForEmail, generateFeeRecordCorrectionRequestEmailParameters, sendFeeRecordCorrectionRequestEmails } from './helpers';
 import { aReportPeriod } from '../../../../../../test-helpers';
-import externalApi from '../../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
 
 jest.mock('../../../../../repositories/banks-repo');
 jest.mock('../../../../../external-api/api');

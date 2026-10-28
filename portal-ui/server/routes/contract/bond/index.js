@@ -137,6 +137,7 @@ const bondDetailsPayloadProperties = [
 
 const filterBondDetailsPayload = (body) => {
   const payload = constructPayload(body, bondDetailsPayloadProperties, true);
+
   if (payload.facilityStage === 'Unissued') {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -148,6 +149,7 @@ const filterBondDetailsPayload = (body) => {
   } else {
     delete payload.ukefGuaranteeInMonths;
   }
+
   return payload;
 };
 
@@ -505,14 +507,17 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
 
   const { dealId, bond, validationErrors } = apiResponse;
 
-  // POST to api to flag that we have viewed preview page.
-  // this is required specifically for other Bond forms/pages, to match the existing UX/UI.
-
-  // The status is extracted, otherwise bad things happen.
-  // When we GET a facility/bond, the status is dynamically added (it's not in the DB)
-  // here, in the preview screen, we need to extract the status from the POST
-  // otherwise the status will be added to the DB and not dynamically added.
-  const { status: _status, ...bondWithoutStatus } = bond;
+  /**
+   * POST to api to flag that we have viewed preview page.
+   * this is required specifically for other Bond forms/pages, to match the existing UX/UI.
+   *
+   * The status is extracted, otherwise bad things happen.
+   * When we GET a facility/bond, the status is dynamically added (it's not in the DB)
+   * here, in the preview screen, we need to extract the status from the POST
+   * otherwise the status will be added to the DB and not dynamically added.
+   */
+  const bondWithoutStatus = { ...bond };
+  delete bondWithoutStatus.status;
 
   const updatedBond = {
     ...bondWithoutStatus,
@@ -522,6 +527,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   await postToApi(api.updateBond(dealId, bondId, updatedBond, userToken));
 
   let formattedValidationErrors;
+
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(bondPreviewValidationErrors(validationErrors, dealId, bondId), errorHref);
   }

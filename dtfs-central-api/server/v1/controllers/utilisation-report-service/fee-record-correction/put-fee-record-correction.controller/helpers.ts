@@ -1,6 +1,6 @@
 import { getTfmUiUrl, getUkefGefReportingEmailRecipients } from '@ukef/dtfs2-common';
-import externalApi from '../../../../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
+import { externalApi } from '../../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../../constants/email-template-ids';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 

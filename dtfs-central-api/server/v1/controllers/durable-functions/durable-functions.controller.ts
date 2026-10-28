@@ -23,6 +23,7 @@ export const deleteAllDurableFunctions = async (
     if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }
+
     console.error('ACBS DOF error %o', error);
 
     return res.status(500).send({

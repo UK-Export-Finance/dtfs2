@@ -2,7 +2,7 @@ import { AuditDetails, OTP, STATUS_BLOCKED_REASON, PortalUser } from '@ukef/dtfs
 import { PortalUsersRepo } from '../../repositories/users-repo';
 import { sendSignInOtpEmail } from './send-sign-in-otp-email';
 
-type variables = {
+type Params = {
   user: PortalUser;
   securityCode: string;
   auditDetails: AuditDetails;
@@ -19,7 +19,7 @@ type variables = {
  * @param auditDetails - the users audit details
  * @returns number of remaining attempts to send sign in OTP
  */
-export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCode, auditDetails }: variables) => {
+export const sendEmailAndIncrementSignInOTPSendCount = async ({ user, securityCode, auditDetails }: Params) => {
   const userId = user._id.toString();
 
   try {

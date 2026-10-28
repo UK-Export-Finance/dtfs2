@@ -1,5 +1,5 @@
 import { Response } from 'supertest';
 
-export interface CustomErrorResponse extends Response {
+export type CustomErrorResponse = {
   body: { errors: { msg: string }[] };
-}
+} & Response;

@@ -94,7 +94,7 @@ describe('user repo', () => {
     }
 
     async function makeRequest() {
-      return UserRepo.createUser({ user: createTfmUserRequest, auditDetails });
+      return await UserRepo.createUser({ user: createTfmUserRequest, auditDetails });
     }
   });
 });

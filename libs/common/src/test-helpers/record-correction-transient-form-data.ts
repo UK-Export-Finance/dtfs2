@@ -1,4 +1,4 @@
-import { RecordCorrectionTransientFormData } from '../types';
+import { RecordCorrectionTransientFormData } from '@ukef/types';
 
 export const anEmptyRecordCorrectionTransientFormData = (): RecordCorrectionTransientFormData => ({
   utilisation: null,

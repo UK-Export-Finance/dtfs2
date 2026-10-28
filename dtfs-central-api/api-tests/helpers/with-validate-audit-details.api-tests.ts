@@ -9,9 +9,9 @@ import {
 import { MOCK_TFM_USER } from '../mocks/test-users/mock-tfm-user';
 import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
-interface ApiErrorResponse extends Response {
+type ApiErrorResponse = {
   body: ApiErrorResponseBody;
-}
+} & Response;
 
 type MakeRequest = (auditDetails?: AuditDetails) => Promise<ApiErrorResponse>;
 

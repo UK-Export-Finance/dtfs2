@@ -1,4 +1,4 @@
-import { FacilityAmendment } from '../types';
+import { FacilityAmendment } from '@ukef/types';
 import { isFutureEffectiveDate } from './amendment-future-effectiveDate';
 
 type UpdatedFields = {

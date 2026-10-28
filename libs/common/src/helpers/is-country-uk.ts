@@ -1,4 +1,4 @@
-import { GREAT_BRITIAN, GB_ISO3166_CODE } from '../constants/country';
+import { GREAT_BRITIAN, GB_ISO3166_CODE } from '@ukef/constants/country';
 
 /**
  * Determines if the provided country is considered the UK (Great Britain).

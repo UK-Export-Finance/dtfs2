@@ -1,6 +1,6 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, PaymentEntity, FeeRecordCorrectionEntity } from '../../sql-db-entities';
-import { Currency, FeeRecordStatus } from '../../types';
-import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, PaymentEntity, FeeRecordCorrectionEntity } from '@ukef/sql-db-entities';
+import { Currency, FeeRecordStatus } from '@ukef/types';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
 import { UtilisationReportEntityMockBuilder } from './utilisation-report.entity.mock-builder';
 
 export class FeeRecordEntityMockBuilder {

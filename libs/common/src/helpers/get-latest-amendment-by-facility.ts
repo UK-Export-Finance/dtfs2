@@ -1,4 +1,4 @@
-import { PortalFacilityAmendment } from '../types';
+import { PortalFacilityAmendment } from '@ukef/types';
 
 /**
  * Returns the latest amendment for each facilityId based on updatedAt.

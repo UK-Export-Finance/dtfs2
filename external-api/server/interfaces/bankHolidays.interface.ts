@@ -1,17 +1,17 @@
-export interface BankHolidaysEvent {
+export type BankHolidaysEvent = {
   title: string;
   date: string;
   notes: string;
   bunting: boolean;
-}
+};
 
-interface BankHolidaysDivision {
+type BankHolidaysDivision = {
   division: string;
   events: BankHolidaysEvent[];
-}
+};
 
-export interface BankHolidays {
+export type BankHolidays = {
   'england-and-wales': BankHolidaysDivision;
   scotland: BankHolidaysDivision;
   'northern-ireland': BankHolidaysDivision;
-}
+};

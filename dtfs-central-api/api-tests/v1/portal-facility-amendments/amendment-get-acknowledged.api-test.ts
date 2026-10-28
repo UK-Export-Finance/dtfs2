@@ -31,9 +31,9 @@ const originalEnv = { ...process.env };
 const bankId = '1';
 const bankName = 'Bank Name';
 
-interface FacilityAmendmentResponse extends Response {
+type FacilityAmendmentResponse = {
   body: PortalFacilityAmendment;
-}
+} & Response;
 
 const generateUrl = (facilityId: string): string => {
   return `/v1/portal/facilities/${facilityId}/amendments/acknowledged`;

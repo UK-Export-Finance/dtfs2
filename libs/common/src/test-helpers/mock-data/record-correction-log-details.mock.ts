@@ -1,5 +1,5 @@
+import { GetRecordCorrectionLogDetailsResponseBody } from '@ukef/types';
 import { MOCK_EMAIL } from './email';
-import { GetRecordCorrectionLogDetailsResponseBody } from '../../types';
 
 export const recordCorrectionLogDetailsMock: GetRecordCorrectionLogDetailsResponseBody = {
   correctionDetails: {

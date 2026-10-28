@@ -6,9 +6,9 @@ import { portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common/test-
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { testApi } from '../test-api';
 
-interface FacilityAmendmentResponse extends Response {
+type FacilityAmendmentResponse = {
   body: PortalFacilityAmendmentWithUkefId;
-}
+} & Response;
 
 /**
  * Creates a portal facility amendment by calling the test api

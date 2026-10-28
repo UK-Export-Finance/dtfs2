@@ -25,6 +25,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
         isPortalAmendmentInProgress: false,
       };
     }
+
     const amendmentInProgress = amendments.find((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
     const amendmentAcknowledged = amendments.find((amendment) => PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED === amendment.status);
 

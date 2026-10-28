@@ -1,5 +1,5 @@
-import { Deal } from '../types';
-import { DEAL_TYPE } from '../constants';
+import { Deal } from '@ukef/types';
+import { DEAL_TYPE } from '@ukef/constants';
 
 /**
  * Determines whether a deal has been submitted to TFM based on its submission count property value.

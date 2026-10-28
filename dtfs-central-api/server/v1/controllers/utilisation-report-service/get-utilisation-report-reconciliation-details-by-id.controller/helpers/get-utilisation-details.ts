@@ -26,6 +26,7 @@ export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[], repor
 
     tfmFacilities.forEach((tfmFacility) => {
       const { ukefFacilityId } = tfmFacility.facilitySnapshot;
+
       if (ukefFacilityId) {
         tfmFacilitiesRecord[ukefFacilityId] = tfmFacility;
       }

@@ -21,6 +21,7 @@ export const convertTimestampToDate = (timestamp: string | number | Date): Date 
   }
 
   const timestampAsString = timestamp.toString();
+
   if (!/^\d+$/.test(timestampAsString)) {
     throw new Error(`Expected timestamp to be either a date object, number or string of digits (received '${timestamp}')`);
   }

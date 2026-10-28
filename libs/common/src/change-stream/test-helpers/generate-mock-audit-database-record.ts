@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ObjectId } from 'mongodb';
 import {
   generateTfmUserAuditDatabaseRecord,
   generatePortalUserAuditDatabaseRecord,
   generateSystemAuditDatabaseRecord,
   generateNoUserLoggedInAuditDatabaseRecord,
-} from '../generate-audit-database-record';
-import { AuditDetails } from '../../types';
-import '../../test-helpers/expect-to-be-object-id';
+} from '@ukef/change-stream/generate-audit-database-record';
+import { AuditDetails } from '@ukef/types';
+import '@ukef/test-helpers/expect-to-be-object-id';
 
 export const generateMockTfmUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...generateTfmUserAuditDatabaseRecord(mockUserId),

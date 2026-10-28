@@ -1,7 +1,7 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import pageRenderer from '../../pageRenderer';
-import { ManualApprovalNeededViewModel } from '../../../server/types/view-models/amendments/ManualApprovalNeededViewModel.ts';
+import { ManualApprovalNeededViewModel } from '../../../server/types/view-models/amendments/manual-approval-needed-view-model.ts';
 
 const page = 'partials/amendments/manual-approval-needed.njk';
 const render = pageRenderer(page);

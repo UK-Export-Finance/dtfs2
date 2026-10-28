@@ -14,9 +14,11 @@ exports.bankIdValidation = [bankIdValidation];
  */
 const mongoIdValidation = (paramName) => (req, res, next) => {
   const pathParam = req.params[paramName];
+
   if (ObjectId.isValid(pathParam)) {
     return next();
   }
+
   return res.status(HttpStatusCode.BadRequest).send({
     message: `Expected path parameter '${paramName}' to be a valid mongo id`,
     code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
@@ -32,9 +34,11 @@ exports.mongoIdValidation = mongoIdValidation;
  */
 const sqlIdValidation = (paramName) => (req, res, next) => {
   const pathParam = req.params[paramName];
+
   if (/^\d+$/.test(pathParam)) {
     return next();
   }
+
   return res.status(HttpStatusCode.BadRequest).send({
     message: `Expected path parameter '${paramName}' to be a valid sql id`,
     code: API_ERROR_CODE.INVALID_SQL_ID_PATH_PARAMETER,

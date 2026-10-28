@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, JoinColumn, PrimaryColumn, Index } from 'typeorm';
-import { FeeRecordEntity } from '../../fee-record';
-import { PaymentEntity } from '../../payment';
-import { MonetaryColumn } from '../../custom-columns';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record';
+import { PaymentEntity } from '@ukef/sql-db-entities/payment';
+import { MonetaryColumn } from '@ukef/sql-db-entities/custom-columns';
 import { CreateFeeRecordPaymentJoinTableEntityParams } from './fee-record-payment.join-table.types';
 
 @Entity('fee_record_payments_payment')

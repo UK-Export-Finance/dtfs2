@@ -28,12 +28,12 @@ import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
-interface CustomSuccessResponse extends Response {
+type CustomSuccessResponse = {
   body: {
     sentToEmails: string[];
     reportPeriod: ReportPeriod;
   };
-}
+} & Response;
 
 const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId';
 

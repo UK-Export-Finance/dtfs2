@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { AuditDetails } from '../types/audit-details';
-import { AuditDatabaseRecord } from '../types/audit-database-record';
-import { getNowAsUtcISOString } from '../helpers/date';
+import { AuditDetails } from '@ukef/types/audit-details';
+import { AuditDatabaseRecord } from '@ukef/types/audit-database-record';
+import { getNowAsUtcISOString } from '@ukef/helpers/date';
 
 export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
   lastUpdatedAt: getNowAsUtcISOString(),

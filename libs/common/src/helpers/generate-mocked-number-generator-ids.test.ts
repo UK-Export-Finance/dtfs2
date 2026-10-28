@@ -1,6 +1,6 @@
+import { USER, NUMBER_TYPE, ID_PREFIX } from '@ukef/constants';
 import { generateMockedNumberGeneratorIds } from './generate-mocked-number-generator-ids';
 import { getNowAsUtcISOString } from './date';
-import { USER, NUMBER_TYPE, ID_PREFIX } from '../constants';
 
 const type = NUMBER_TYPE.DEAL;
 const createdBy = USER.DTFS;

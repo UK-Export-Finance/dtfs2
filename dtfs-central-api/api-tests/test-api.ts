@@ -24,6 +24,7 @@ class TestApi {
     if (this.app) {
       return;
     }
+
     this.app = await createApp();
   }
 

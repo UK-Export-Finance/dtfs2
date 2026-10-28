@@ -1,5 +1,5 @@
+import { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '@ukef/constants';
 import { ActivityAuthor, ValuesOf } from '..';
-import { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '../../constants';
 
 export type PortalActivityType = ValuesOf<typeof PORTAL_ACTIVITY_TYPE>;
 export type PortalActivityLabel = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;

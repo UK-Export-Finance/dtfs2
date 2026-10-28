@@ -1,5 +1,5 @@
 import swaggerDocs, { Options } from 'swagger-jsdoc';
-import { SERVICES } from '../constants';
+import { SERVICES } from '@ukef/constants';
 import { swaggerRouter } from './create-swagger-router';
 
 jest.mock('swagger-jsdoc');

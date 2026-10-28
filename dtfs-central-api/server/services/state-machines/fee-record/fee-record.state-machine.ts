@@ -43,9 +43,11 @@ export class FeeRecordStateMachine {
    */
   public static async forFeeRecordId(id: number): Promise<FeeRecordStateMachine> {
     const feeRecord = await FeeRecordRepo.findOneBy({ id });
+
     if (!feeRecord) {
       throw new NotFoundError(`Failed to find a fee record with id ${id}`);
     }
+
     return new FeeRecordStateMachine(feeRecord);
   }
 
@@ -76,62 +78,62 @@ export class FeeRecordStateMachine {
       case FEE_RECORD_STATUS.TO_DO_AMENDED:
         switch (event.type) {
           case 'PAYMENT_ADDED':
-            return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           case 'CORRECTION_REQUESTED':
-            return handleFeeRecordCorrectionRequestedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordCorrectionRequestedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.PENDING_CORRECTION:
         switch (event.type) {
           case 'CORRECTION_RECEIVED':
-            return handleFeeRecordCorrectionReceivedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordCorrectionReceivedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.MATCH:
         switch (event.type) {
           case 'PAYMENT_DELETED':
-            return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_EDITED':
-            return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
           case 'GENERATE_KEYING_DATA':
-            return handleFeeRecordGenerateKeyingDataEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordGenerateKeyingDataEvent(this.feeRecord, event.payload);
           case 'REMOVE_FROM_PAYMENT_GROUP':
-            return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
           case 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP':
-            return handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.DOES_NOT_MATCH:
         switch (event.type) {
           case 'PAYMENT_ADDED':
-            return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_DELETED':
-            return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_EDITED':
-            return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
           case 'REMOVE_FROM_PAYMENT_GROUP':
-            return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
           case 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP':
-            return handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(this.feeRecord, event.payload);
           case 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP':
-            return handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.READY_TO_KEY:
         switch (event.type) {
           case 'MARK_AS_RECONCILED':
-            return handleFeeRecordMarkAsReconciledEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordMarkAsReconciledEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.RECONCILED:
         switch (event.type) {
           case 'MARK_AS_READY_TO_KEY':
-            return handleFeeRecordMarkAsReadyToKeyEvent(this.feeRecord, event.payload);
+            return await handleFeeRecordMarkAsReadyToKeyEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

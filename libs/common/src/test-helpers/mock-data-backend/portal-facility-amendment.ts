@@ -1,9 +1,9 @@
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_TYPES, CURRENCY, PORTAL_AMENDMENT_STATUS } from '../../constants';
-import { PortalAmendmentStatus, PortalFacilityAmendment } from '../../types';
-import { PortalFacilityAmendmentUserValues } from '../../types/portal/amendment';
-import { nowZeroSeconds } from '../../helpers';
+import { AMENDMENT_TYPES, CURRENCY, PORTAL_AMENDMENT_STATUS } from '@ukef/constants';
+import { PortalAmendmentStatus, PortalFacilityAmendment } from '@ukef/types';
+import { PortalFacilityAmendmentUserValues } from '@ukef/types/portal/amendment';
+import { nowZeroSeconds } from '@ukef/helpers';
 
 export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUserValues => ({
   changeCoverEndDate: true,

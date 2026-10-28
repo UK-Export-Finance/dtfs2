@@ -1,4 +1,6 @@
 import { ObjectId } from 'mongodb';
+import { GefFacilityType } from '@ukef/types';
+import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE, CURRENCY, FACILITY_TYPE } from '@ukef/constants';
 import {
   calculateDrawnAmount,
   calculateFixedPercentage,
@@ -7,8 +9,6 @@ import {
   calculateFeeAmount,
   calculateGefFacilityFeeRecord,
 } from '.';
-import { GefFacilityType } from '../../types';
-import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE, CURRENCY, FACILITY_TYPE } from '../../constants';
 
 describe('GEF drawn amount', () => {
   describe('calculateDrawnAmount', () => {

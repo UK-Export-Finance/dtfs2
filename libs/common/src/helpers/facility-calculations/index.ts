@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 
-import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
-import { UnixTimestampString, Facility, FacilityType } from '../../types';
-import { differenceInDays } from '../index';
+import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '@ukef/constants';
+import { UnixTimestampString, Facility, FacilityType } from '@ukef/types';
+import { differenceInDays } from '@ukef/helpers/index';
 
 dotenv.config({ quiet: true });
 

@@ -1,4 +1,4 @@
-import { Facility, FacilityWithStringDealId } from '../types';
+import { Facility, FacilityWithStringDealId } from '@ukef/types';
 
 /**
  * calculates the cover start date for a facility based on deal type

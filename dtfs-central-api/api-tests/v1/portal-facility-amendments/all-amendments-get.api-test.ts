@@ -11,9 +11,9 @@ import { aCompletedTfmFacilityAmendment, aTfmFacility, aTfmFacilityAmendment } f
 import { TfmFacilitiesRepo } from '../../../server/repositories/tfm-facilities-repo';
 
 console.error = jest.fn();
-interface PortalAmendmentsResponse extends Response {
+type PortalAmendmentsResponse = Omit<Response, 'body'> & {
   body: PortalFacilityAmendment[];
-}
+};
 
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 

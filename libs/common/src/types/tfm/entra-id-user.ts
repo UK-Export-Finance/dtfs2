@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ENTRA_ID_USER_SCHEMA } from '../../schemas';
+import { ENTRA_ID_USER_SCHEMA } from '@ukef/schemas';
 
 /**
  * Entra ID User during SSO login

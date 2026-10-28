@@ -51,6 +51,7 @@ jobs:
           days-before-pr-stale: ${{ vars.STALE_PR_DAYS }}
           stale-pr-message: 'Pull request marked as stale due to inactivity.'
           stale-pr-label: 'Stale'
-          days-before-pr-close: ${{ vars.CLOSE_PR_DAYS }}
-          close-pr-message: 'Pull request has been closed due to inactivity.'
-          close-pr-label: 'Closed'
+          # TODO: DTFS2-8670 - re-enable closing stale PRs
+          days-before-pr-close: -1
+          # close-pr-message: 'Pull request has been closed due to inactivity.'
+          # close-pr-label: 'Closed'

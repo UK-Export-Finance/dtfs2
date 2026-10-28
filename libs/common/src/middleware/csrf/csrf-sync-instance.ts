@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { csrfSync, RequestMethod } from 'csrf-sync';
-import { CSRF } from '../../constants';
+import { CSRF } from '@ukef/constants';
 
 const { CSRF_TOKEN_BODY_PROPERTY_NAME } = CSRF;
 

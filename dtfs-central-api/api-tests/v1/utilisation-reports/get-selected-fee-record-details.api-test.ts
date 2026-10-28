@@ -28,9 +28,9 @@ const BASE_URL = '/v1/utilisation-reports/:reportId/selected-fee-records-details
 
 const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: SelectedFeeRecordDetails;
-}
+} & Response;
 
 describe(`GET ${BASE_URL}`, () => {
   const bankId = '123';

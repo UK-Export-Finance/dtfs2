@@ -89,7 +89,7 @@ const createInitialTestUser = async (user: MockUserWithoutTokenOrId) => {
  * @param params.initialUser - already created initial user with token
  */
 const createTestUser = async ({ user, as, initialUser }: { user: MockUserWithoutTokenOrId; as: TestAs; initialUser: TestUser }) =>
-  as(initialUser).post(user).to('/v1/users');
+  await as(initialUser).post(user).to('/v1/users');
 
 /**
  * Initialises the test users

@@ -1,4 +1,4 @@
-import { Currency, RadioItem } from '../types';
+import { Currency, RadioItem } from '@ukef/types';
 
 type CurrencyRadioItemParams = {
   currency: Currency;

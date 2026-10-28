@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { isHttpError } from 'http-errors';
 import { HttpStatusCode } from 'axios';
-import { SSO_URL, SSO_URL_FORM, CSRF } from '../../constants';
+import { SSO_URL, SSO_URL_FORM, CSRF } from '@ukef/constants';
 import { csrfSynchronisedProtection } from './csrf-sync-instance';
 
 const { INVALID_CSRF_TOKEN_ERROR_CODE, CSRF_TOKEN_BODY_PROPERTY_NAME } = CSRF;

@@ -14,9 +14,7 @@ export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
   };
 }>;
 
-const { INVALID_STATUS } = ERROR_KEY;
-
-export type InvalidStatusType = typeof INVALID_STATUS;
+export type InvalidStatusType = typeof ERROR_KEY.INVALID_STATUS;
 
 /**
  * Response body type for the GET fee record correction request review route.
@@ -107,9 +105,11 @@ export const getFeeRecordCorrectionRequestReview = async (
   } catch (error) {
     const errorMessage = `Failed to get fee record correction request review`;
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

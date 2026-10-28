@@ -6,9 +6,11 @@ class Facility {
     try {
       const { details } = await getFacility({ facilityId, userToken });
       const { bank } = await getApplication({ dealId, userToken });
+
       if (bank.id !== user.bank.id) {
         return null;
       }
+
       const facilityTypeConst = FACILITY_TYPE[details.type?.toUpperCase()];
       const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
       // Ternary operator ensures `null` does not appear on the facility value field

@@ -1,6 +1,7 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { webpackAliases } = require('../libs/common/src/module-aliases.cjs');
 
 module.exports = {
   entry: {
@@ -31,6 +32,12 @@ module.exports = {
     extensions: ['.ts', '.js'],
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
+      ...webpackAliases,
+      /**
+       * Mirrors the '@ukef/portal-ui/*' path mapping in tsconfig.json so lint:fix's
+       * no-relative-import-paths autofix (which rewrites imports to this prefix) stays resolvable by Webpack.
+       */
+      '@ukef/portal-ui': path.resolve(__dirname),
       'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),
       'node_modules/@ministryofjustice': path.resolve(__dirname, '../node_modules/@ministryofjustice'),
     },

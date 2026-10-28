@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '../constants';
+import { PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '@ukef/constants';
 import { getAmendmentStatusTagColour } from './amendment-status-tag-colour';
 
 describe('getAmendmentStatusTagColour', () => {

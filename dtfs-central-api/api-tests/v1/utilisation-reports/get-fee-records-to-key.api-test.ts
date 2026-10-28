@@ -11,9 +11,9 @@ import { aBank } from '../../../test-helpers';
 import { FeeRecordToKey } from '../../../server/types/fee-records';
 import { GetFeeRecordsToKeyResponseBody } from '../../../server/v1/controllers/utilisation-report-service/get-fee-records-to-key.controller';
 
-interface CustomResponse extends Response {
+type CustomResponse = {
   body: GetFeeRecordsToKeyResponseBody;
-}
+} & Response;
 
 console.error = jest.fn();
 

@@ -1,5 +1,5 @@
 import z from 'zod';
-import { MAX_CHARACTER_COUNT } from '../constants';
+import { MAX_CHARACTER_COUNT } from '@ukef/constants';
 
 /**
  * Deal Cancellation schema to validate an object is of type `TfmDealCancellation`

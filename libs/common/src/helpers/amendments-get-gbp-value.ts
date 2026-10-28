@@ -1,5 +1,5 @@
-import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
-import { CURRENCY } from '../constants/currency';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '@ukef/types';
+import { CURRENCY } from '@ukef/constants/currency';
 import { roundValue } from './round-value';
 
 /**

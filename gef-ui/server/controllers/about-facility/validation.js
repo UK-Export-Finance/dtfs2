@@ -52,6 +52,7 @@ const validateAboutFacility = ({
   const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
   const aboutFacilityErrors = [];
+
   if (isTrueSet(hasBeenIssued)) {
     // Only validate facility name if hasBeenIssued is set to Yes
     if (!saveAndReturn && !facilityName) {
@@ -127,6 +128,7 @@ const validateAboutFacility = ({
       }
     }
   }
+
   // Only validate months of cover if hasBeenIssued is set to No
   if (!saveAndReturn && !isTrueSet(hasBeenIssued) && !monthsOfCover) {
     aboutFacilityErrors.push({
@@ -193,6 +195,7 @@ const validateAboutFacility = ({
 
   // Regex tests to see if value is a number only
   const digitsRegex = /^[0-9]*$/;
+
   if (monthsOfCover) {
     if (!digitsRegex.test(monthsOfCover)) {
       aboutFacilityErrors.push({
@@ -200,6 +203,7 @@ const validateAboutFacility = ({
         errMsg: 'You can only enter numbers',
       });
     }
+
     if (monthsOfCover > 999) {
       aboutFacilityErrors.push({
         errRef: 'monthsOfCover',

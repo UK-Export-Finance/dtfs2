@@ -8,7 +8,7 @@ import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { deletePortalAmendment, DeletePortalAmendmentRequest } from './delete-amendment.controller';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
-import externalApi from '../../../../external-api/api';
+import { externalApi } from '../../../../external-api/api';
 
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();

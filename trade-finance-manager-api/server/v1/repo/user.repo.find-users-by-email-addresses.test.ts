@@ -61,8 +61,9 @@ describe('user repo', () => {
       });
 
       async function makeRequest() {
-        return UserRepo.findUsersByEmailAddresses(emailsToTest);
+        return await UserRepo.findUsersByEmailAddresses(emailsToTest);
       }
+
       function mockFindResponse(response: unknown[]) {
         toArrayMock = jest.fn().mockResolvedValue(response);
       }

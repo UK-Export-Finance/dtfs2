@@ -1,4 +1,4 @@
-import { CURRENCY } from '../constants';
+import { CURRENCY } from '@ukef/constants';
 
 export type Currency = keyof typeof CURRENCY;
 

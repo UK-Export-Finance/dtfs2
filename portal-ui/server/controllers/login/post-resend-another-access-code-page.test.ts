@@ -5,8 +5,8 @@ import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
 import { PostResendAnotherAccessCodePageRequest, postResendAnotherAccessCodePage } from './post-resend-another-access-code-page';
 import * as api from '../../api';
-import generateValidationErrors from './validation';
-import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
+import { generateValidationErrors } from './validation';
+import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
 
 jest.mock('../../api');
 jest.mock('./validation');

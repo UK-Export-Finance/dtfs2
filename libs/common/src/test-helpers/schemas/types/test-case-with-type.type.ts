@@ -1,4 +1,4 @@
-import { DefaultOptions } from '../primitive-types-tests';
+import { DefaultOptions } from '@ukef/test-helpers/schemas/primitive-types-tests';
 
 /**
  * The test case to be tested, including the type and any options that are required

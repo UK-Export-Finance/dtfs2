@@ -1,16 +1,14 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-
-/* eslint-disable import/first */
-const updateFacilityMock = jest.fn();
-const updateApplicationMock = jest.fn();
 import { Facility } from '../../types/facility';
 import { updateBankReviewDateIfChanged } from './post-bank-review-date';
 import { LoggedInUserSession } from '../../utils/express-session';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+const updateFacilityMock = jest.fn();
+const updateApplicationMock = jest.fn();
+
 jest.mock('../../services/api', () => ({
-  updateFacility: updateFacilityMock,
-  updateApplication: updateApplicationMock,
+  updateFacility: (...args: unknown[]) => updateFacilityMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 const facilityId = 'facilityId';

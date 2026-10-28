@@ -1,6 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
-import { PORTAL_LOGIN_STATUS, SESSION_EXPIRY, JWT_ALGORITHM, BUFFER_ENCODING, ASCII_STRING_TYPE } from '../../constants';
-import { PortalUser } from '../../types';
+import { PORTAL_LOGIN_STATUS, SESSION_EXPIRY, JWT_ALGORITHM, BUFFER_ENCODING, ASCII_STRING_TYPE } from '@ukef/constants';
+import { PortalUser } from '@ukef/types';
 
 /**
  * Issues valid JWT for the user.

@@ -33,6 +33,7 @@ exports.createTfmTeam = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -66,6 +67,7 @@ exports.findOneTeam = findOneTeam;
 
 exports.findOneTfmTeam = async (req, res) => {
   const team = await findOneTeam(req.params.id);
+
   if (team) {
     return res.status(200).send({
       team,
@@ -101,6 +103,7 @@ exports.deleteTfmTeam = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -117,6 +120,7 @@ exports.deleteTfmTeam = async (req, res) => {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 404, message: 'Team not found' });
     }
+
     console.error('Error deleting TFM team %o', error);
     return res.status(500).send({ status: 500, error });
   }

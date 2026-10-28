@@ -1,7 +1,7 @@
-import { AzureFileInfoEntity } from '../azure-file-info';
-import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '../../test-helpers';
-import { DbRequestSource } from '../helpers';
-import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS } from '../../constants';
+import { AzureFileInfoEntity } from '@ukef/sql-db-entities/azure-file-info';
+import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/test-helpers';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS } from '@ukef/constants';
 
 describe('UtilisationReportEntity', () => {
   describe('updateReportWithUploadDetails', () => {

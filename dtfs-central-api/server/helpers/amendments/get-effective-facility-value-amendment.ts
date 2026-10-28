@@ -15,6 +15,7 @@ import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-com
  */
 export const getEffectiveFacilityValueAmendment = (tfmFacility: TfmFacility, effectiveAtDate: Date): number | null => {
   const { amendments } = tfmFacility;
+
   if (!amendments) {
     return null;
   }

@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp, UnixTimestampString } from '../date';
-import { Currency } from '../currency';
-import { FacilityType } from '../facility-type';
-import { AuditDatabaseRecord } from '../audit-database-record';
-import { FacilityStatus } from '../portal';
+import { UnixTimestamp, UnixTimestampString } from '@ukef/types/date';
+import { Currency } from '@ukef/types/currency';
+import { FacilityType } from '@ukef/types/facility-type';
+import { AuditDatabaseRecord } from '@ukef/types/audit-database-record';
+import { FacilityStatus } from '@ukef/types/portal';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1

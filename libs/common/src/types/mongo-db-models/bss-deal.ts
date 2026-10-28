@@ -11,7 +11,7 @@ type SupplyContractCurrency = {
   currencyId?: number;
 };
 
-export interface BssEwcsSubmissionDetails {
+export type BssEwcsSubmissionDetails = {
   status: string;
   'supplier-type': string;
   'supplier-companies-house-registration-number': string;
@@ -64,4 +64,4 @@ export interface BssEwcsSubmissionDetails {
   'supplyContractConversionDate-month'?: string;
   'supplyContractConversionDate-year'?: string;
   supplyContractConversionRateToGBP?: string;
-}
+};

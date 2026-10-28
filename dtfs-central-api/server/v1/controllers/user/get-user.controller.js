@@ -10,6 +10,7 @@ const findOneUser = async (_id) => {
 
     return user;
   }
+
   return { status: 400, message: 'Invalid User Id' };
 };
 exports.findOneUser = findOneUser;

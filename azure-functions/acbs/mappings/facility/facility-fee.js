@@ -41,18 +41,21 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
 
 const facilityFee = (deal, facility) => {
   let feeRecord;
+
   if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     // Singular GEF fixed fee record - Object
     feeRecord = constructFeeRecord(deal, facility);
   } else {
     // Multiple EWCS/BSS Fee records as per premium schedule - Array
     feeRecord = [];
+
     if (facility.tfm.premiumSchedule) {
       facility.tfm.premiumSchedule.forEach((premiumSchedule, index) => {
         feeRecord.push(constructFeeRecord(deal, facility, index));
       });
     }
   }
+
   return feeRecord;
 };
 

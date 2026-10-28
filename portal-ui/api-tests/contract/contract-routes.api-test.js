@@ -14,7 +14,7 @@ const { ROLES } = require('@ukef/dtfs2-common');
 const mockProvide = require('../helpers/mockProvide');
 
 mockProvide();
-jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) => next());
+jest.mock('../../server/routes/middleware/validate-bank', () => (req, res, next) => next());
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');

@@ -1,7 +1,7 @@
-import { DbRequestSource, FeeRecordEntity, FeeRecordCorrectionEntity } from '../../sql-db-entities';
-import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '../../constants';
+import { DbRequestSource, FeeRecordEntity, FeeRecordCorrectionEntity } from '@ukef/sql-db-entities';
+import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
+import { RecordCorrectionReason, RecordCorrectionValues, RequestedByUser } from '@ukef/types';
 import { FeeRecordEntityMockBuilder } from './fee-record.entity.mock-builder';
-import { RecordCorrectionReason, RecordCorrectionValues, RequestedByUser } from '../../types';
 
 export class FeeRecordCorrectionEntityMockBuilder {
   private readonly correction: FeeRecordCorrectionEntity;

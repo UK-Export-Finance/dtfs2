@@ -1,4 +1,4 @@
-import { CurrencyInterface } from '../interfaces';
+import { CurrencyInterface } from '@ukef/interfaces';
 
 // GEF Currencies
 export const CURRENCY = {

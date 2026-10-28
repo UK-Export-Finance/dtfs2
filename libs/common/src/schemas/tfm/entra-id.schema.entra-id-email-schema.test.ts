@@ -1,4 +1,4 @@
-import { withEntraIdEmailSchemaTests } from '../../test-helpers/schemas';
+import { withEntraIdEmailSchemaTests } from '@ukef/test-helpers/schemas';
 import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id-email.schema';
 
 describe('entra-id.schema', () => {

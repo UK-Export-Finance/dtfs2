@@ -149,6 +149,7 @@ const initialize = async () => {
     await reinsertZeroThresholdPaymentMatchingTolerances();
     return SqlDbDataSource;
   }
+
   const dataSource = await SqlDbDataSource.initialize();
   await reinsertZeroThresholdPaymentMatchingTolerances();
   return dataSource;

@@ -1,10 +1,10 @@
-import { GEF_CRITERION } from '../types';
+import { GefCriterion } from '@ukef/types';
 import { stripHtml } from './strip-html';
 
 /**
  * Generates a formatted string of mandatory criteria for GovNotify email template based on the provided criteria array.
  *
- * @param {Array<GEF_CRITERION>} criteria - An array of criteria objects, each containing an `id`, `body`, and optionally a `childList`.
+ * @param {Array<GefCriterion>} criteria - An array of criteria objects, each containing an `id`, `body`, and optionally a `childList`.
  * @param {boolean} [html=false] - A flag indicating whether the content should include HTML or be stripped of HTML tags.
  * @returns {string} A formatted string of mandatory criteria, including sub-items if present.
  *                   If no criteria are provided, an empty string is returned.
@@ -22,7 +22,7 @@ import { stripHtml } from './strip-html';
  * ^True
  * ```
  */
-export const generateMandatoryCriteria = (criteria: Array<GEF_CRITERION>, html = false): string => {
+export const generateMandatoryCriteria = (criteria: Array<GefCriterion>, html = false): string => {
   if (criteria?.length) {
     let mandatoryCriteria = '';
 

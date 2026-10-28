@@ -15,7 +15,7 @@ dotenv.config({ quiet: true });
  * @param user
  * @returns mapped email variables
  */
-const mapAbandonEmailVariables = ({
+export const mapAbandonAmendmentEmailVariables = ({
   deal,
   facility,
   amendment,
@@ -48,5 +48,3 @@ const mapAbandonEmailVariables = ({
     },
   };
 };
-
-export default mapAbandonEmailVariables;

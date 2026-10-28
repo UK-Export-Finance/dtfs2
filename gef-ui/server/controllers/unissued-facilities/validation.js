@@ -63,6 +63,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     // if AIN then 3 months from submission date
     threeMonthsFromSubmission = add(submissionDate, { months: 3 });
   }
+
   const now = new Date().setHours(0, 0, 0, 0);
 
   // Only validate facility name if hasBeenIssued is set to Yes
@@ -83,14 +84,17 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
   } else if (issueDateIsPartiallyComplete) {
     let msg = 'Issued date must include a ';
     const dateFieldsInError = [];
+
     if (!issueDateDay) {
       msg += 'day ';
       dateFieldsInError.push('issueDate-day');
     }
+
     if (!issueDateMonth) {
       msg += !issueDateDay ? ' and month ' : 'month ';
       dateFieldsInError.push('issueDate-month');
     }
+
     if (!issueDateYear) {
       msg += !issueDateDay || !issueDateMonth ? 'and year' : 'year';
       dateFieldsInError.push('issueDate-year');
@@ -164,14 +168,17 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     } else if (coverStartDateIsPartiallyComplete) {
       let msg = 'Cover start date must include a ';
       const dateFieldsInError = [];
+
       if (!coverStartDateDay) {
         msg += 'day ';
         dateFieldsInError.push('coverStartDate-day');
       }
+
       if (!coverStartDateMonth) {
         msg += !coverStartDateDay ? ' and month ' : 'month ';
         dateFieldsInError.push('coverStartDate-month');
       }
+
       if (!coverStartDateYear) {
         msg += !coverStartDateDay || !coverStartDateMonth ? 'and year' : 'year';
         dateFieldsInError.push('coverStartDate-year');
@@ -209,6 +216,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
        */
       if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
         let errMsg = 'The cover start date must be within 3 months of the inclusion notice submission date';
+
         // if MIA, from todays date so different error message
         if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
           errMsg = "The cover start date must be within 3 months from today's date";
@@ -259,14 +267,17 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
   } else if (coverEndDateIsPartiallyComplete) {
     let msg = 'Cover end date must include a ';
     const dateFieldsInError = [];
+
     if (!coverEndDateDay) {
       msg += 'day ';
       dateFieldsInError.push('coverEndDate-day');
     }
+
     if (!coverEndDateMonth) {
       msg += !coverEndDateDay ? ' and month ' : 'month ';
       dateFieldsInError.push('coverEndDate-month');
     }
+
     if (!coverEndDateYear) {
       msg += !coverEndDateDay || !coverEndDateMonth ? 'and year' : 'year';
       dateFieldsInError.push('coverEndDate-year');
@@ -299,6 +310,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
 
   if (coverStartDateIsFullyComplete) {
     let value;
+
     if (shouldCoverStartOnSubmission === 'true') {
       value = {
         year: issueDateYear,
@@ -312,6 +324,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
         date: coverStartDateDay,
       };
     }
+
     coverStartDate = set(new Date(), value);
   }
 
@@ -379,6 +392,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
 
   // Regex tests to see if value is a number only
   const digitsRegex = /^[0-9]*$/;
+
   if (body.monthsOfCover) {
     if (!digitsRegex.test(body.monthsOfCover)) {
       aboutFacilityErrors.push({
@@ -386,6 +400,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
         errMsg: 'You can only enter numbers',
       });
     }
+
     if (body.monthsOfCover > 999) {
       aboutFacilityErrors.push({
         errRef: 'monthsOfCover',
@@ -398,6 +413,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
    * @type{boolean | undefined}
    */
   let isUsingFacilityEndDate;
+
   if (isFacilityEndDateEnabledOnGefVersion(parseDealVersion(application.version))) {
     try {
       isUsingFacilityEndDate = zBooleanStrictCoerce.parse(isUsingFacilityEndDateString);

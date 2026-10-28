@@ -1,4 +1,4 @@
-import { AnyObject } from '../types';
+import { AnyObject } from '@ukef/types';
 import { sanitiseValue } from './sanitise-value';
 
 /**

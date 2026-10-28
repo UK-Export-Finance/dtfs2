@@ -1,6 +1,6 @@
 import { orderBy } from 'lodash';
 import { parseISO } from 'date-fns';
-import { IsoDateTimeStamp } from '../../types';
+import { IsoDateTimeStamp } from '@ukef/types';
 
 export type GetKeyToDateSortValueMapItem = {
   date?: IsoDateTimeStamp;

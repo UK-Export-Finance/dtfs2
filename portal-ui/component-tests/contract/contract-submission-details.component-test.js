@@ -118,7 +118,6 @@ describe(page, () => {
   describe('Bonds', () => {
     it('should render a heading, edit link component and Bond Submission Details component', () => {
       for (const bond of deal.bondTransactions.items) {
-        // eslint-disable-line no-restricted-syntax
         const bondSelector = `[data-cy="bond-${bond._id}"]`;
 
         wrapper.expectText(`${bondSelector} [data-cy="bond-heading"]`).toRead('Bond');

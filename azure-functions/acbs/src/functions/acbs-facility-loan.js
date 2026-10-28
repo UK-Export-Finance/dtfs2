@@ -57,6 +57,7 @@ df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context)
         facilityProviderGuarantee: facilityProviderTask.result,
       };
     }
+
     return response;
   } catch (error) {
     console.error('Error creating facility loan record %o', error);

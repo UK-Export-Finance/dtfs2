@@ -26,10 +26,12 @@ const facilityGuarantee = async (req, res) => {
       user,
       userToken,
     });
+
     if (!facility) {
       console.error('Facility not found, or not authorised');
       return res.redirect('/');
     }
+
     return res.render('partials/facility-guarantee.njk', {
       dealId: facility.dealId,
       facilityId: facility.facilityId,
@@ -113,6 +115,7 @@ const updateFacilityGuarantee = async (req, res) => {
       status,
     });
   }
+
   return update();
 };
 

@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
-import { API_ERROR_CODE } from '../../constants';
-import { TestApiError } from '../test-api-error';
+import { API_ERROR_CODE } from '@ukef/constants';
+import { TestApiError } from '@ukef/test-helpers/test-api-error';
 
 /**
  * Parameters for the withApiErrorTests function

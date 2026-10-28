@@ -5,8 +5,8 @@ import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { DeletePortalFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-delete-portal-facility-amendment-payload';
-import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
-import externalApi from '../../../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
+import { externalApi } from '../../../../external-api/api';
 
 type DeletePortalAmendmentRequestParams = { facilityId: string; amendmentId: string };
 export type DeletePortalAmendmentRequest = CustomExpressRequest<{ params: DeletePortalAmendmentRequestParams; reqBody: DeletePortalFacilityAmendmentPayload }>;
@@ -39,6 +39,7 @@ export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, r
     });
 
     const { status } = amendment;
+
     if (status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED) {
       // sends email to maker with the details of the amendment
       await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_ABANDON_MAKER_EMAIL, makersEmail, emailVariables);

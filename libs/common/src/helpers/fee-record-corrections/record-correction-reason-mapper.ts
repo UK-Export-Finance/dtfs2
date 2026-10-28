@@ -1,5 +1,5 @@
-import { RECORD_CORRECTION_REASON } from '../../constants';
-import { RecordCorrectionReason } from '../../types';
+import { RECORD_CORRECTION_REASON } from '@ukef/constants';
+import { RecordCorrectionReason } from '@ukef/types';
 
 /**
  * Maps a record correction reason to a display value

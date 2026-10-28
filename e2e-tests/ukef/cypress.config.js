@@ -2,6 +2,7 @@ const { defineConfig } = require('cypress');
 const dotenv = require('dotenv');
 const path = require('path');
 const { createTasks } = require('../support/tasks');
+const { createWebpackPreprocessor } = require('../support/webpack-preprocessor');
 
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -43,6 +44,7 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on) {
+      on('file:preprocessor', createWebpackPreprocessor());
       on('task', createTasks());
     },
   },

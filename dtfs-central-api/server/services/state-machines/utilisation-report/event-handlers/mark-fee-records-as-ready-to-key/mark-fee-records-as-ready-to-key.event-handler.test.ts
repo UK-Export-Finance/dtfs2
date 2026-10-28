@@ -56,9 +56,11 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
       if (feeRecord.id === 1) {
         return firstFeeRecordStateMachine;
       }
+
       if (feeRecord.id === 2) {
         return secondFeeRecordStateMachineTwo;
       }
+
       return aMockFeeRecordStateMachine(aMockEventHandler());
     });
 

@@ -1,3 +1,3 @@
 export const CUSTOMER_TYPE = {
-  CUSTOMER: 'CUSTOMER',
+  COMPANY: 'COMPANY',
 } as const;

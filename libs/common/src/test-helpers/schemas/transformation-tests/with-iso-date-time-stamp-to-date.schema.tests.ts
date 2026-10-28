@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests/with-default-options.tests';
 
 export const withIsoDateTimeStampToDateSchemaTests = <Schema extends ZodSchema>({
   schema,
@@ -28,7 +28,7 @@ export const withIsoDateTimeStampToDateSchemaTests = <Schema extends ZodSchema>(
 
     it('should transform the string into a date object', () => {
       const testDateAsIsoTimeStamp = '2023-10-01T12:00:00Z';
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(testDateAsIsoTimeStamp));
       expect(getUpdatedParameterFromParsedTestObject(data)).toEqual(new Date(testDateAsIsoTimeStamp));
     });

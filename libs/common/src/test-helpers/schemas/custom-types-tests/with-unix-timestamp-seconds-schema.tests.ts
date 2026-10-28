@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../types/with-schema-test.type';
-import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
-import { withNumberTests } from '../primitive-types-tests';
+import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
+import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests/with-default-options.tests';
+import { withNumberTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 
 export const withUnixTimestampSecondsSchemaTests = <Schema extends ZodSchema>({
   schema,

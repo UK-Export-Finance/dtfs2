@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { setupChangeStream } from './services/changeStream/setupChangeStream';
+import { setupChangeStream } from './services/change-stream/setupChangeStream';
 import { generateApp } from './generateApp';
 
 export const createApp = async (): Promise<Express> => {

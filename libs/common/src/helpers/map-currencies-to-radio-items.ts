@@ -1,5 +1,5 @@
-import { CURRENCY } from '../constants';
-import { RadioItem } from '../types';
+import { CURRENCY } from '@ukef/constants';
+import { RadioItem } from '@ukef/types';
 
 /**
  * Maps currencies to radio items for form input.

@@ -1,5 +1,5 @@
-import { PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '../constants';
-import { PortalAmendmentStatus } from '../types';
+import { PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '@ukef/constants';
+import { PortalAmendmentStatus } from '@ukef/types';
 
 /**
  * Returns the facility amendment status tag colour with regards to its status.

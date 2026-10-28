@@ -117,14 +117,17 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
       throw new Error(`eStore facility directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(responses)}`);
     }
   } catch (error) {
-    // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
-      'cron.facility': {
-        error: String(error),
-        status: ESTORE_CRON_STATUS.FAILED,
-        timestamp: getNowAsEpoch(),
-      },
-    });
+    try {
+      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        'cron.facility': {
+          error: String(error),
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
+        },
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore facility directory creation failure for deal %s %o', eStoreData?.dealId, logError);
+    }
 
     // Stop the CRON job
     cron({

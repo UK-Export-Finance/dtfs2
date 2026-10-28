@@ -1,6 +1,6 @@
-import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
-import { Currency } from '../../types';
+import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
+import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/test-helpers';
+import { Currency } from '@ukef/types';
 
 describe('FeeRecordEntity', () => {
   const utilisationReport = new UtilisationReportEntityMockBuilder().build();

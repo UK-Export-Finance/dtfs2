@@ -1,5 +1,5 @@
-import { DEAL_TYPE } from '../constants';
-import { TfmDeal } from '../types';
+import { DEAL_TYPE } from '@ukef/constants';
+import { TfmDeal } from '@ukef/types';
 
 /**
  * Returns the UKEF deal ID from a TFM deal structure, depending on the deal type

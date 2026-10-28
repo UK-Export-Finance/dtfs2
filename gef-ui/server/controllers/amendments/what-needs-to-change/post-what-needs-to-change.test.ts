@@ -1,11 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-const getTfmTeamMock = jest.fn();
-
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
@@ -23,12 +15,18 @@ import { ValidationError } from '../../../types/validation-error.ts';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
+
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendment: updateAmendmentMock,
-  getTfmTeam: getTfmTeamMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
+  getTfmTeam: (...args: unknown[]) => getTfmTeamMock(...args),
 }));
 
 console.error = jest.fn();

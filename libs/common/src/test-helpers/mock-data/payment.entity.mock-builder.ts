@@ -1,5 +1,5 @@
-import { FeeRecordEntity, PaymentEntity } from '../../sql-db-entities';
-import { Currency } from '../../types';
+import { FeeRecordEntity, PaymentEntity } from '@ukef/sql-db-entities';
+import { Currency } from '@ukef/types';
 
 export class PaymentEntityMockBuilder {
   private readonly payment: PaymentEntity;

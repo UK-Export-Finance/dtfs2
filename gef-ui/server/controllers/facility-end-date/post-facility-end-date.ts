@@ -121,7 +121,7 @@ const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDate
  * Controller for post facility end date from application preview page
  */
 export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  postFacilityEndDate({
+  await postFacilityEndDate({
     req,
     res,
     uris: {
@@ -135,7 +135,7 @@ export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFac
  * Controller for post facility end date from unissued facilities page
  */
 export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  postFacilityEndDate({
+  await postFacilityEndDate({
     req,
     res,
     uris: {
@@ -149,7 +149,7 @@ export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFac
  * Controller for post facility end date from application details page
  */
 export const postFacilityEndDateFromApplicationDetailsPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  postFacilityEndDate({
+  await postFacilityEndDate({
     req,
     res,
     uris: {

@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { API_ERROR_CODE } from '../../constants';
+import { API_ERROR_CODE } from '@ukef/constants';
 import { ErrorResponse } from './types';
 import { extractPathParameterPlaceholders } from './extract-path-parameter-placeholders';
 

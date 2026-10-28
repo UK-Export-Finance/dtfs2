@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AuditDetails, PortalAuditDetails, TfmAuditDetails } from '../types/audit-details';
+import { AuditDetails, PortalAuditDetails, TfmAuditDetails } from '@ukef/types/audit-details';
 
 export const generateSystemAuditDetails = (): AuditDetails<'system'> => ({
   userType: 'system',

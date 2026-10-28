@@ -1,6 +1,6 @@
 import { Column } from 'typeorm';
-import { Currency } from '../../types';
-import { MonetaryColumn } from '../custom-columns';
+import { Currency } from '@ukef/types';
+import { MonetaryColumn } from '@ukef/sql-db-entities/custom-columns';
 
 /**
  * Partial entity for the correction values of a fee record

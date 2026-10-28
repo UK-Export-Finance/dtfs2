@@ -69,5 +69,6 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   } else {
     report.updateLastUpdatedBy(requestSource);
   }
+
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

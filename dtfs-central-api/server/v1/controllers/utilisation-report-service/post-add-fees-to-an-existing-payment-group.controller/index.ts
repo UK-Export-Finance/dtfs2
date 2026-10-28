@@ -30,6 +30,7 @@ export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnEx
 
   try {
     const payments = await PaymentRepo.findPaymentsInGroupByPaymentIdAndReportIdWithFeeRecords(requestedPaymentIds[0], Number(reportId));
+
     if (payments.length === 0) {
       throw new NotFoundError('No payments found for the given payment IDs.');
     }
@@ -47,11 +48,13 @@ export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnEx
     const feeRecordsToAdd = selectedFeeRecords.filter(
       (record) => !existingPaymentGroupFeeRecords.some((paymentFeeRecord) => paymentFeeRecord.id === record.id),
     );
+
     if (feeRecordsToAdd.length === 0) {
       throw new InvalidPayloadError('Cannot add fees to the payment group they are already in.');
     }
 
     const utilisationReport = existingPaymentGroupFeeRecords.at(0)?.report;
+
     if (!utilisationReport) {
       throw new Error('The found payment group does not have a defined report in the feeRecords.');
     }
@@ -61,9 +64,11 @@ export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnEx
   } catch (error) {
     const errorMessage = `Failed to add fees to an existing payment group`;
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

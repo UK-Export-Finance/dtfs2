@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { getYear, addYears } from 'date-fns';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { app } from '../../server/createApp';

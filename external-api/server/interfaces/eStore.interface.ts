@@ -9,12 +9,12 @@ import { Category } from '../helpers/types/estore';
  * @property {string} fileLocationPath - The location path of the file in Azure storage.
  * @property {string} parentId - The identifier of the parent entity to which this document belongs.
  */
-export interface AzureDocument {
+export type AzureDocument = {
   readonly documentType: string;
   readonly fileName: string;
   readonly fileLocationPath: string;
   readonly parentId: string;
-}
+};
 
 /**
  * Represents the main structure for an eStore, including deal, site, and various identifiers.
@@ -30,7 +30,7 @@ export interface AzureDocument {
  * @property {string} destinationMarket - Destination market for the deal.
  * @property {string} riskMarket - Risk market for the deal.
  */
-export interface Estore {
+export type Estore = {
   dealId: string;
   siteId: string;
   facilityIdentifiers: number[];
@@ -40,7 +40,7 @@ export interface Estore {
   dealIdentifier: string;
   destinationMarket: string;
   riskMarket: string;
-}
+};
 
 /**
  * Defines the basic structure for an eStore site, primarily focused on the exporter's name.
@@ -48,9 +48,9 @@ export interface Estore {
  * @interface EstoreSite
  * @property {string} exporterName - Name of the exporter.
  */
-export interface EstoreSite {
+export type EstoreSite = {
   readonly exporterName: string;
-}
+};
 
 /**
  * Represents a term store within the eStore, identified by a unique string ID.
@@ -58,9 +58,9 @@ export interface EstoreSite {
  * @interface EstoreTermStore
  * @property {number} facilityId - Unique identifier for the term store.
  */
-export interface EstoreTermStore {
+export type EstoreTermStore = {
   readonly id: number;
-}
+};
 
 /**
  * Extends EstoreSite to include buyer information, specifically the buyer's name.
@@ -69,9 +69,9 @@ export interface EstoreTermStore {
  * @extends EstoreSite
  * @property {string} buyerName - Name of the buyer.
  */
-export interface EstoreBuyer {
+export type EstoreBuyer = {
   readonly buyerName: string;
-}
+};
 
 /**
  * Represents a deal folder within the eStore, including deal and market information.
@@ -82,11 +82,12 @@ export interface EstoreBuyer {
  * @property {string} destinationMarket - Destination market for the deal.
  * @property {string} riskMarket - Risk market for the deal.
  */
-export interface EstoreDealFolder extends EstoreSite, EstoreBuyer {
-  readonly dealIdentifier: string;
-  readonly destinationMarket: string;
-  readonly riskMarket: string;
-}
+export type EstoreDealFolder = EstoreSite &
+  EstoreBuyer & {
+    readonly dealIdentifier: string;
+    readonly destinationMarket: string;
+    readonly riskMarket: string;
+  };
 
 /**
  * Represents a facility folder within the eStore, identified by a facility identifier.
@@ -96,9 +97,10 @@ export interface EstoreDealFolder extends EstoreSite, EstoreBuyer {
  * @extends EstoreBuyer
  * @property {number} facilityIdentifier - Unique identifier for the facility.
  */
-export interface EstoreFacilityFolder extends EstoreSite, EstoreBuyer {
-  readonly facilityIdentifier: number;
-}
+export type EstoreFacilityFolder = EstoreSite &
+  EstoreBuyer & {
+    readonly facilityIdentifier: number;
+  };
 
 /**
  * Represents a document in the eStore, extending the AzureDocument interface to include the buyer's name.
@@ -107,9 +109,9 @@ export interface EstoreFacilityFolder extends EstoreSite, EstoreBuyer {
  * @extends AzureDocument
  * @property {string} buyerName - Name of the buyer.
  */
-export interface EstoreDocument extends AzureDocument {
+export type EstoreDocument = AzureDocument & {
   readonly buyerName: string;
-}
+};
 
 /**
  * Represents a generic Axios response from the eStore, including status and data.
@@ -118,12 +120,12 @@ export interface EstoreDocument extends AzureDocument {
  * @property {number} status - HTTP status code of the response.
  * @property {object} body - Body payload comprising a response.
  */
-export interface EstoreAxiosResponse {
+export type EstoreAxiosResponse = {
   readonly status: number;
   readonly body: {
     message?: string;
   };
-}
+};
 
 /**
  * Represents a generic response from the eStore, including status and data.
@@ -132,10 +134,10 @@ export interface EstoreAxiosResponse {
  * @property {number} status - HTTP status code of the response.
  * @property {object} data - Data payload of the response.
  */
-export interface EstoreResponse {
+export type EstoreResponse = {
   readonly status: number;
   readonly data: object;
-}
+};
 
 /**
  * Represents the response for site creation within the eStore, including the site ID.
@@ -144,12 +146,12 @@ export interface EstoreResponse {
  * @extends EstoreResponse
  * @property {string} data.siteId - Unique identifier for the created site.
  */
-export interface SiteCreationResponse {
+export type SiteCreationResponse = {
   readonly status: number;
   readonly data: {
     siteId: string;
   };
-}
+};
 
 /**
  * Represents a response from APIM on eStore site existence check.
@@ -161,7 +163,7 @@ export interface SiteCreationResponse {
  * @property {number} data.statusCode - HTTP status code.
  * @property {string} data.message - Message comprising site status.
  */
-export interface SiteExistsResponse {
+export type SiteExistsResponse = {
   readonly status: number;
   readonly data: {
     status: string;
@@ -169,7 +171,7 @@ export interface SiteExistsResponse {
     statusCode?: number;
     message?: string;
   };
-}
+};
 
 /**
  * Represents the response for a buyer folder operation within the eStore.
@@ -179,13 +181,13 @@ export interface SiteExistsResponse {
  * @property {string} data.buyerName - Name of the buyer.
  * @property {string} data.error - Error message, if any.
  */
-export interface BuyerFolderResponse {
+export type BuyerFolderResponse = {
   readonly status: number;
   readonly data: {
     buyerName?: string;
     error?: string;
   };
-}
+};
 
 /**
  * Represents the response for a deal folder operation within the eStore.
@@ -195,13 +197,13 @@ export interface BuyerFolderResponse {
  * @property {string} data.foldername - Name of the deal folder.
  * @property {string} data.error - Error message, if any.
  */
-export interface DealFolderResponse {
+export type DealFolderResponse = {
   readonly status: number;
   readonly data: {
     foldername?: string;
     error?: string;
   };
-}
+};
 
 /**
  * Represents the response for a facility folder operation within the eStore.
@@ -212,14 +214,14 @@ export interface DealFolderResponse {
  * @property {string} data.error - Error message, if any.
  * @property {unknown} data.message - Additional message, if any.
  */
-export interface FacilityFolderResponse {
+export type FacilityFolderResponse = {
   readonly status: number;
   readonly data: {
     foldername?: string;
     error?: string;
     message?: unknown;
   };
-}
+};
 
 /**
  * Represents the response for a document upload operation within the eStore.
@@ -229,14 +231,14 @@ export interface FacilityFolderResponse {
  * @property {string} data.fileUpload - Status of the file upload.
  * @property {string} data.error - Error message, if any.
  */
-export interface DocumentCreationResponse {
+export type DocumentCreationResponse = {
   readonly status: number;
   readonly data: {
     fileUpload?: string;
     error?: string;
     message?: unknown;
   };
-}
+};
 
 /**
  * Represents the response for a term store operation within the eStore.
@@ -245,12 +247,12 @@ export interface DocumentCreationResponse {
  * @extends EstoreResponse
  * @property {string} data.message - Message related to the term store operation.
  */
-export interface TermStoreResponse {
+export type TermStoreResponse = {
   readonly status: number;
   readonly data: {
     message: string;
   };
-}
+};
 
 /**
  * Represents an error response from the eStore, including status, site ID, and message.
@@ -261,14 +263,14 @@ export interface TermStoreResponse {
  * @property {string} data.siteId - Site ID related to the error, if applicable.
  * @property {unknown} data.message - Error message.
  */
-export interface EstoreErrorResponse {
+export type EstoreErrorResponse = {
   readonly status: number;
   readonly data: {
     status?: number;
     siteId?: string;
     message?: unknown;
   };
-}
+};
 
 /**
  * Represents a cron job for the eStore.
@@ -278,8 +280,8 @@ export interface EstoreErrorResponse {
  * @property {Category} category - The category of the cron job.
  * @property {boolean} [kill] - Optional flag to indicate if the cron job should be stopped.
  */
-export interface EstoreCronJob {
+export type EstoreCronJob = {
   readonly data: Estore;
   readonly category: Category;
   readonly kill?: boolean;
-}
+};

@@ -40,6 +40,7 @@ const handler = async (payload) => {
     const { facilityIdentifier, acbsFacilityFeeInput } = payload;
 
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
+
     if (missingMandatory.length) {
       return { missingMandatory };
     }

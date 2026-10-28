@@ -136,6 +136,7 @@ const renderPageWithError = (
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     });
   }
+
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,
@@ -155,6 +156,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
     }
 
     const uploadErrors = getUploadErrors(req, res);
+
     if (uploadErrors) {
       const { uploadErrorSummary, uploadValidationError } = uploadErrors;
 
@@ -283,6 +285,7 @@ export const postReportConfirmAndSend = async (req: Request, res: Response) => {
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
+
     console.error('Error saving utilisation report %o', response);
     return res.render('_partials/problem-with-service.njk', { user });
   } catch (error) {
@@ -303,6 +306,7 @@ export const getReportConfirmation = (req: Request, res: Response) => {
     if (!utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
+
     const { formattedReportPeriod, paymentOfficerEmails } = utilisationReport;
     delete (req.session as LoggedInUserSession).utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {

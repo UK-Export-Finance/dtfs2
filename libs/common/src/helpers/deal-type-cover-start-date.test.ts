@@ -1,5 +1,5 @@
+import { MOCK_FACILITY } from '@ukef/test-helpers';
 import { dealTypeCoverStartDate } from './deal-type-cover-start-date';
-import { MOCK_FACILITY } from '../test-helpers';
 
 describe('dealTypeCoverStartDate()', () => {
   it('should return gef coverStartDate if provided', () => {

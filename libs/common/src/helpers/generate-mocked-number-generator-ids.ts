@@ -1,6 +1,6 @@
+import { NumberGeneratorObject } from '@ukef/types';
+import { USER, NUMBER_TYPE, ID_PREFIX } from '@ukef/constants';
 import { getNowAsUtcISOString } from './date';
-import { NumberGeneratorObject } from '../types';
-import { USER, NUMBER_TYPE, ID_PREFIX } from '../constants';
 
 /**
  * Generates mocked number generator object

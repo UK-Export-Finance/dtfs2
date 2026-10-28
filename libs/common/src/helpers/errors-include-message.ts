@@ -24,7 +24,9 @@ type ApiErrors = ApiErrorItem[] | undefined;
  */
 export const errorsIncludeMessage = (errors: ApiErrors, substring: string): boolean => {
   // Defensive checks: ensure `errors` is an array and `substring` is non-empty.
-  if (!substring || !Array.isArray(errors)) return false;
+  if (!substring || !Array.isArray(errors)) {
+    return false;
+  }
 
   // Make lowercase so not case sensitive when comparing.
   const searchTerm = substring.toLowerCase();

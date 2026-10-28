@@ -17,4 +17,4 @@ export const mongoDbClient = new MongoDbClient();
  * @returns {Promise<Collection<CollectionName>>} A promise that resolves to the MongoDB collection.
  */
 export const getCollection = async <CollectionName extends MongoDbCollectionName>(collectionName: CollectionName) =>
-  mongoDbClient.getCollection<CollectionName>(collectionName);
+  await mongoDbClient.getCollection<CollectionName>(collectionName);

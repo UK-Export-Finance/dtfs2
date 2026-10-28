@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
+import { BankReportPeriodSchedule } from '@ukef/types/bank-report-period-schedule';
 
 export type PaymentOfficerTeam = {
   teamName: string;

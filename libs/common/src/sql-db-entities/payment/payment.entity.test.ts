@@ -1,5 +1,5 @@
-import { PENDING_RECONCILIATION, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import { PENDING_RECONCILIATION, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/test-helpers';
 
 describe('PaymentEntity', () => {
   const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();

@@ -5,6 +5,7 @@ const mappedIndustries = (industries, selectedIndustry) => {
   if (!industries) {
     return null;
   }
+
   return industries.map((industry) => ({
     value: JSON.stringify(industry),
     html: `${industry.name}<br />${industry.class.name}`,

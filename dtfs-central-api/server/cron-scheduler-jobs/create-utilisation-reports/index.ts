@@ -2,8 +2,8 @@ import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../repositories/banks-repo';
-import externalApi from '../../external-api/api';
-import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
+import { externalApi } from '../../external-api/api';
+import { EMAIL_TEMPLATE_IDS } from '../../constants/email-template-ids';
 import { UtilisationReportStateMachine } from '../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
@@ -54,6 +54,7 @@ const getBanksWithMissingReports = async (): Promise<Bank[]> => {
  */
 const createUtilisationReportForBanks = async (): Promise<void> => {
   const banksWithMissingReports = await getBanksWithMissingReports();
+
   if (banksWithMissingReports.length === 0) {
     return;
   }

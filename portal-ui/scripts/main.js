@@ -1,15 +1,6 @@
-import { decimalsCount } from '@ukef/dtfs2-common/frontend';
-import { changeScreenVisibilityOfElement, showHideElement } from './show-hide-element';
-import { changeIndustryClasses } from './change-industry-classes';
-import { isNumeric, roundNumber } from './number';
+export * from '@ukef/dtfs2-common/frontend';
+export * from './show-hide-element';
+export * from './change-industry-classes';
+export * from './number';
 
 import '../styles/styles.scss';
-
-export default {
-  showHideElement,
-  changeScreenVisibilityOfElement,
-  isNumeric,
-  decimalsCount,
-  roundNumber,
-  changeIndustryClasses,
-};

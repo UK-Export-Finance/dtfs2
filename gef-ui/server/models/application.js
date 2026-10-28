@@ -40,6 +40,7 @@ const deriveSupportingInfoRequiredDocuments = (application) => {
     const answerObj = application.eligibility.criteria.find((a) => a.name === term);
 
     let criterionAnswer;
+
     if (answerObj) {
       criterionAnswer = answerObj.answer;
     }
@@ -123,6 +124,7 @@ class Application {
 
       application.eligibilityCriteriaStatus = status[application.eligibility.status || DEAL_STATUS.NOT_STARTED];
       application.facilitiesStatus = status[application.facilities.status || DEAL_STATUS.NOT_STARTED];
+
       if (application.supportingInformation) {
         application.supportingInfoStatus = deriveSupportingInfoStatus(application);
         application.supportingInformation.requiredFields = deriveSupportingInfoRequiredDocuments(application);

@@ -1,4 +1,4 @@
-import { HEADERS, IndustrySectorInterface, industrySector } from '@ukef/dtfs2-common';
+import { HEADERS, IndustrySectorInterface, IndustrySector } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
@@ -17,7 +17,7 @@ const headers = {
  * @param {number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
-export const findACBSIndustrySector = async (industryId: number): Promise<{ data: string | Array<industrySector>; status: number }> => {
+export const findACBSIndustrySector = async (industryId: number): Promise<{ data: string | Array<IndustrySector>; status: number }> => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: HttpStatusCode.BadRequest };

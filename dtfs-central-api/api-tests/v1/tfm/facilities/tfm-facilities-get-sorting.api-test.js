@@ -197,22 +197,26 @@ describe('/v1/tfm/facilities', () => {
 
   function getFieldPathAndExpectedFieldValuesForField(fieldValuesInAscendingOrder, sortByOrder, sortByField) {
     let expectedFieldValues;
+
     if (sortByOrder === 'ascending') {
       expectedFieldValues = fieldValuesInAscendingOrder;
     } else {
       expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse();
     }
+
     return { fieldPath: sortByField, expectedFieldValues };
   }
 
   function getFieldPathAndExpectedFieldValuesForFacilityStage(fieldValuesInAscendingOrder, sortByOrder) {
     const mapFacilityStageToHasBeenIssued = (facilityStage) => facilityStage === 'Issued';
     let expectedFieldValues;
+
     if (sortByOrder === 'ascending') {
       expectedFieldValues = fieldValuesInAscendingOrder.map(mapFacilityStageToHasBeenIssued);
     } else {
       expectedFieldValues = fieldValuesInAscendingOrder.slice().reverse().map(mapFacilityStageToHasBeenIssued);
     }
+
     return { fieldPath: 'tfmFacilities.hasBeenIssued', expectedFieldValues };
   }
 });

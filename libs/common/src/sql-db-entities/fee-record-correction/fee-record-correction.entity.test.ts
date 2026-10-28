@@ -1,7 +1,7 @@
-import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { aRecordCorrectionValues, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } from '../../test-helpers';
-import { RequestedByUser } from '../../types';
-import { DbRequestSource } from '../helpers';
+import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '@ukef/constants';
+import { aRecordCorrectionValues, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } from '@ukef/test-helpers';
+import { RequestedByUser } from '@ukef/types';
+import { DbRequestSource } from '@ukef/sql-db-entities/helpers';
 import { FeeRecordCorrectionEntity } from './fee-record-correction.entity';
 
 describe('FeeRecordEntity', () => {

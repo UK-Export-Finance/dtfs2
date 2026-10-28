@@ -75,6 +75,7 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -82,6 +83,7 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
     if (!deal) {
       return res.status(404).send('Deal not found');
     }
+
     const response = await createFacilities(facilities, dealId, auditDetails);
     const status = isNumber(response?.status, 3);
     const code = status ? response.status : 200;

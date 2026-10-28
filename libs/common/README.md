@@ -23,6 +23,38 @@ You can then import from this package as you would with any other package, e.g.
 import { asString } from '@ukef/dtfs2-common';
 ```
 
+### Internal source aliases
+
+Within the shared library, imports such as `@ukef/helpers`, `@ukef/constants`
+and `@ukef/types/date` refer to directories under `libs/common/src`, not separate
+npm packages. Services should continue using the public `@ukef/dtfs2-common`
+exports.
+
+The common and consuming workspace TypeScript configurations map `@ukef/*` to
+the common source directory. Their `ts-node.require` settings preload
+`@ukef/dtfs2-common/register-paths`, which registers the same mapping at runtime
+without depending on the current working directory. This preload is also used
+by the common TypeORM commands.
+
+The Cypress task loader also preloads this mapping before compiling common
+TypeScript sources with decorator metadata. Browser support files and specs use
+the shared `e2e-tests/support/webpack-preprocessor.js`, registered by all four
+Cypress projects. It adds `webpackAliases` to Cypress's batteries-included
+Webpack configuration; the Node task loader alone cannot resolve browser imports.
+The browser preprocessor explicitly uses `ts-loader` with common's TypeScript
+configuration to preserve decorator metadata when bundling shared sources.
+
+Jest configurations use `moduleNameMapper` from
+[`src/module-aliases.cjs`](./src/module-aliases.cjs), including API-test
+configurations that override other mappings. Browser webpack configurations use
+its `webpackAliases`. These mappings preserve the public package name and its
+exported subpaths. Add new top-level source directories to `sourceDirectories`
+in that file when they need browser aliases.
+
+New consuming workspaces must configure both TypeScript paths and the runtime
+preload, plus the Jest mapper and webpack aliases when applicable. A TypeScript
+path mapping alone does not rewrite imports or make them resolvable at runtime.
+
 ### Common importing issues
 
 #### `tsconfig.json`

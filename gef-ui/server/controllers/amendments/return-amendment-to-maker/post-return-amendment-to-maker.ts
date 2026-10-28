@@ -6,7 +6,7 @@ import { ReturnAmendmentToMakerViewModel } from '../../../types/view-models/amen
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
-import mapReturnToMakerEmailVariables from '../helpers/map-return-to-maker-email-variables';
+import { mapReturnToMakerEmailVariables } from '../helpers/map-return-to-maker-email-variables';
 import { addCheckerCommentsToApplication } from '../../../helpers/add-checker-comments-to-application';
 
 export type PostReturnToMakerRequest = CustomExpressRequest<{

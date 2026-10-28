@@ -15,14 +15,17 @@ const getDealEffectiveDate = (deal) => {
   const submissionDate = formatDate(getDealSubmissionDate(deal));
   const earliestGuaranteeDate = deal.dealSnapshot.facilities.reduce((earliestDate, facility) => {
     let effectiveDate;
+
     if (facility.tfm.facilityGuaranteeDates) {
       effectiveDate = facility.facilitySnapshot.hasBeenIssued
         ? formatDate(getCoverStartDate(facility, true))
         : facility.tfm.facilityGuaranteeDates.effectiveDate;
     }
+
     if (earliestDate === submissionDate) {
       return effectiveDate > earliestDate ? effectiveDate : earliestDate;
     }
+
     return effectiveDate < earliestDate ? effectiveDate : earliestDate;
   }, submissionDate);
 

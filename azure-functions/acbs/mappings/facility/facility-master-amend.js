@@ -47,6 +47,7 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
       productTypeName: deal.dealSnapshot.dealType,
     };
     const { amendment } = amendments;
+
     // Construct amendment record
     if (amendment) {
       const { amount, coverEndDate } = amendment;

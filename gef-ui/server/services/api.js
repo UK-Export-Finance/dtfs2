@@ -319,7 +319,10 @@ const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, document
   const formData = new FormData();
 
   formData.append('parentId', id);
-  if (maxFileSize) formData.append('maxSize', maxFileSize);
+
+  if (maxFileSize) {
+    formData.append('maxSize', maxFileSize);
+  }
 
   formData.append('documentPath', documentPath);
   files.forEach((file) => {

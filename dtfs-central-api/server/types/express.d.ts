@@ -1,5 +1,5 @@
 declare namespace Express {
-  export interface Request {
+  export type Request = {
     routePath?: 'portal' | 'tfm';
-  }
+  };
 }

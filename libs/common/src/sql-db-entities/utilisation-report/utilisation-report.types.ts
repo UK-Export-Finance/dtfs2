@@ -1,8 +1,8 @@
-import { ReportPeriodPartialEntity } from '../partial-entities';
-import { DbRequestSourceParam } from '../helpers';
-import { AzureFileInfoEntity } from '../azure-file-info';
-import { UtilisationReportStatus } from '../../types';
-import { FeeRecordEntity } from '../fee-record';
+import { ReportPeriodPartialEntity } from '@ukef/sql-db-entities/partial-entities';
+import { DbRequestSourceParam } from '@ukef/sql-db-entities/helpers';
+import { AzureFileInfoEntity } from '@ukef/sql-db-entities/azure-file-info';
+import { UtilisationReportStatus } from '@ukef/types';
+import { FeeRecordEntity } from '@ukef/sql-db-entities/fee-record';
 
 export type CreateNotReceivedUtilisationReportEntityParams = DbRequestSourceParam & {
   bankId: string;

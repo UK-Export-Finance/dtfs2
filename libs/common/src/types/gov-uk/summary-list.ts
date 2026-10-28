@@ -1,4 +1,4 @@
-import { Prettify } from '../types-helper';
+import { Prettify } from '@ukef/types/types-helper';
 
 type GovUkField =
   | {

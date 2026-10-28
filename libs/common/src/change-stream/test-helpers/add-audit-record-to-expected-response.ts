@@ -1,4 +1,4 @@
-import { AuditDatabaseRecord, AuditDetails } from '../../types';
+import { AuditDatabaseRecord, AuditDetails } from '@ukef/types';
 import { generateParsedMockAuditDatabaseRecord } from './generate-mock-audit-database-record';
 
 type AddAuditRecordToResponseParams =
@@ -18,6 +18,6 @@ export const addAuditRecordToExpectedResponse = ({ baseResponse, ...auditObject 
       auditRecord: auditObject.auditRecord,
     };
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
   return { ...baseResponse, auditRecord: generateParsedMockAuditDatabaseRecord(auditObject.auditDetails) };
 };

@@ -1,5 +1,5 @@
 import sanitise from 'sanitize-html';
-import { RequestInput } from '../types';
+import { RequestInput } from '@ukef/types';
 
 /**
  * Recursively sanitizes the provided input to prevent XSS attacks.

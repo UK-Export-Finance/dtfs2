@@ -223,6 +223,7 @@ ${criterion.textList.map((item) => `<li>${item}</li>`).join('')}
     if (criterion.answer === true) {
       formattedAnswer = 'True';
     }
+
     if (criterion.answer === false) {
       formattedAnswer = 'False';
     }

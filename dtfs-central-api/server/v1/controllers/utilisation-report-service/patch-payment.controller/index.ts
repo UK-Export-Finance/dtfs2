@@ -18,11 +18,13 @@ export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
 
   try {
     const payment = await PaymentRepo.findOneByIdWithFeeRecordsAndReportFilteredById(Number(paymentId), Number(reportId));
+
     if (!payment) {
       throw new NotFoundError(`Failed to find a payment with id '${paymentId}' linked to report with id '${reportId}'`);
     }
 
     const utilisationReport = payment.feeRecords.at(0)?.report;
+
     if (!utilisationReport) {
       throw new Error('The found payment does not have a defined report in the feeRecords');
     }
@@ -51,9 +53,11 @@ export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
   } catch (error) {
     const errorMessage = 'Failed to edit payment';
     console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
+
     return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
 };

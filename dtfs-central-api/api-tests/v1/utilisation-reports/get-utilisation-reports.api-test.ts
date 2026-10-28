@@ -22,13 +22,13 @@ console.error = jest.fn();
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
 
-type UtilisationReportResponse = GetUtilisationReportResponse & {
-  dateUploaded: IsoDateTimeStamp;
+type UtilisationReportResponse = Omit<GetUtilisationReportResponse, 'dateUploaded'> & {
+  dateUploaded: IsoDateTimeStamp | null;
 };
 
-interface CustomSuccessResponse extends Response {
+type CustomSuccessResponse = Omit<Response, 'body'> & {
   body: UtilisationReportResponse[];
-}
+};
 
 const BASE_URL = '/v1/bank/:bankId/utilisation-reports';
 

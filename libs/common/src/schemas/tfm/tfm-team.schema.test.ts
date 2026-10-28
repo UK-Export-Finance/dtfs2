@@ -1,4 +1,4 @@
-import { withTfmTeamSchemaTests } from '../../test-helpers/schemas';
+import { withTfmTeamSchemaTests } from '@ukef/test-helpers/schemas';
 import { TfmTeamSchema } from './tfm-team.schema';
 
 describe('tfm-team.schema', () => {

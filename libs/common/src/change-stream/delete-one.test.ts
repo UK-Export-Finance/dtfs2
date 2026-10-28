@@ -1,8 +1,8 @@
 import { when } from 'jest-when';
 import { ObjectId } from 'mongodb';
-import { MongoDbClient } from '../mongo-db-client';
+import { MongoDbClient } from '@ukef/mongo-db-client';
+import { MONGO_DB_COLLECTIONS } from '@ukef/constants';
 import { generateNoUserLoggedInAuditDetails } from './generate-audit-details';
-import { MONGO_DB_COLLECTIONS } from '../constants';
 import { generateMockNoUserLoggedInAuditDatabaseRecord } from './test-helpers';
 import { deleteOne } from './delete-one';
 

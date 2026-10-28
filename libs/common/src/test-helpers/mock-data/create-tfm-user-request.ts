@@ -1,4 +1,4 @@
-import { CreateTfmUserRequest } from '../../types';
+import { CreateTfmUserRequest } from '@ukef/types';
 
 export const aCreateTfmUserRequest = (): CreateTfmUserRequest => ({
   azureOid: 'an-azure-oid',

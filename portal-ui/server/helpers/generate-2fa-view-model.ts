@@ -1,9 +1,9 @@
 const REQUEST_NEW_CODE_URL = '/login/request-new-access-code';
 
-interface ViewModelConfig {
+type ViewModelConfig = {
   isSupportInfo: boolean;
   isAccessCodeLink: boolean;
-}
+};
 
 /**
  * Generates a view model for OTP access code pages.

@@ -1,4 +1,4 @@
-import { PdcTeamId, TeamId } from '../../types';
+import { PdcTeamId, TeamId } from '@ukef/types';
 
 export const ALL_PDC_TEAM_IDS = ['PDC_READ', 'PDC_RECONCILE'] as const;
 

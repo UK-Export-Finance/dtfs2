@@ -1,4 +1,4 @@
-import { CustomerType } from '../customer-type';
+import { CustomerType } from '@ukef/types/customer-type';
 
 /**
  * Represents a party entity in Salesforce with relevant company details.

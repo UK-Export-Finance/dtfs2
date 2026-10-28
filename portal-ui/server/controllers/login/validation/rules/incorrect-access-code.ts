@@ -1,4 +1,4 @@
-import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-your-email-access-code-view-model';
+import { ValidationErrorsObject } from '../../../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
 
 /**
  * Generates validation error for incorrect access code
@@ -7,7 +7,7 @@ import { ValidationErrorsObject } from '../../../../types/view-models/2fa/check-
  * @param errors - Existing validation errors
  * @returns Updated validation errors object with incorrect code message
  */
-const incorrectAccessCodeRule = (formBody: Record<string, unknown>, errors: Record<string, unknown>): ValidationErrorsObject => {
+export const incorrectAccessCodeRule = (formBody: Record<string, unknown>, errors: Record<string, unknown>): ValidationErrorsObject => {
   const newErrors = { ...errors };
 
   newErrors.sixDigitAccessCode = {
@@ -17,5 +17,3 @@ const incorrectAccessCodeRule = (formBody: Record<string, unknown>, errors: Reco
 
   return newErrors as ValidationErrorsObject;
 };
-
-export default incorrectAccessCodeRule;

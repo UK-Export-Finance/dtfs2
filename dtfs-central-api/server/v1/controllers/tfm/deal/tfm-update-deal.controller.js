@@ -45,6 +45,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
 
   const existingDealActivities = existingDeal?.tfm?.activities;
   const tfmUpdateHasActivities = dealTfmUpdate.tfm.activities && Object.keys(dealTfmUpdate.tfm.activities).length > 0;
+
   /**
    * ACBS activities update is an array whereas TFM activity update is an object
    * Checks if array, then uses spread operator
@@ -79,6 +80,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
 
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
+
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
@@ -99,6 +101,7 @@ exports.updateDealPut = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 
@@ -117,6 +120,7 @@ exports.updateDealPut = async (req, res) => {
 
 const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
   const dealId = deal._id;
+
   if (ObjectId.isValid(dealId)) {
     try {
       const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
@@ -139,14 +143,17 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
       return { status: error?.response?.status || 500, data: 'Failed to update deal snapshot' };
     }
   }
+
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
 exports.updateDealSnapshotPut = async (req, res) => {
   const dealId = req.params.id;
+
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
   const { snapshotUpdate, auditDetails } = req.body;
 
   try {
@@ -159,6 +166,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
         code: error.code,
       });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 

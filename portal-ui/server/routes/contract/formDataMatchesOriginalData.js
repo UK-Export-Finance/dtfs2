@@ -55,6 +55,7 @@ const formDataMatchesOriginalData = (formData, originalData) => {
   if (isEqual(strippedOriginalData, cleanFormData)) {
     return true;
   }
+
   return false;
 };
 
