@@ -104,7 +104,7 @@ describe('EstoreRepo', () => {
       expect(mockUpdateOne).toHaveBeenCalledWith(filter, { $set: document });
     });
 
-    it('should log and propagates the original rejected write', async () => {
+    it('should log and propagate the original rejected write', async () => {
       // Arrange
       const error = new Error('MongoDB write failed');
       mockUpdateOne.mockRejectedValueOnce(error);
