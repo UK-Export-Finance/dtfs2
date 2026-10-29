@@ -7,13 +7,13 @@ const addFirstTaskEmailSentFlag = (emailResponse, tasks) => {
 
   if (!emailResponse.errors) {
     modifiedTasks.map((group) => {
-      const modifiedgGroup = group;
+      const modifiedGroup = group;
 
       if (group.id === 1) {
-        modifiedgGroup.groupTasks[0].emailSent = true;
+        modifiedGroup.groupTasks[0].emailSent = true;
       }
 
-      return modifiedgGroup;
+      return modifiedGroup;
     });
   }
 

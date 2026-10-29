@@ -181,17 +181,17 @@ const updateTask = (allTaskGroups, taskUpdate) =>
 const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
   const taskEmailsToSend = [];
 
-  let taskGroups = allTaskGroups.map((tGroup) => {
-    let group = tGroup;
+  let taskGroups = allTaskGroups.map((taskGroup) => {
+    let modifiedGroup = taskGroup;
 
-    group = {
-      ...group,
-      groupTasks: group.groupTasks.map((t) => {
+    modifiedGroup = {
+      ...modifiedGroup,
+      groupTasks: modifiedGroup.groupTasks.map((t) => {
         const task = t;
 
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
-        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, modifiedGroup, task, isTaskThatIsBeingUpdated);
 
         if (sendEmail) {
           taskEmailsToSend.push(updatedTask);
@@ -201,7 +201,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
       }),
     };
 
-    return group;
+    return modifiedGroup;
   });
 
   /**
@@ -211,11 +211,11 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
   const canUnlockUnderWritingGroupTasks = hasAmendmentAdverseHistoryTaskCompleted(taskGroups);
 
   if (canUnlockUnderWritingGroupTasks) {
-    taskGroups = taskGroups.map((g) => {
-      const group = g;
+    taskGroups = taskGroups.map((taskGroup) => {
+      const modifiedGroup = taskGroup;
 
-      if (group.groupTitle === CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING) {
-        group.groupTasks = group.groupTasks.map((task) => {
+      if (modifiedGroup.groupTitle === CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING) {
+        modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
           // add the task to list of emails to be sent
@@ -240,7 +240,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
         });
       }
 
-      return group;
+      return modifiedGroup;
     });
   }
 
@@ -258,13 +258,13 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
     return response;
   });
 
-  taskGroups = taskGroups.map((g) => {
-    const group = g;
+  taskGroups = taskGroups.map((taskGroup) => {
+    const modifiedGroup = taskGroup;
 
-    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === modifiedGroup.id);
 
     if (groupHasTaskToUpdate) {
-      group.groupTasks = group.groupTasks.map((t) => {
+      modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((t) => {
         const task = t;
 
         const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
@@ -277,7 +277,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
       });
     }
 
-    return group;
+    return modifiedGroup;
   });
 
   return taskGroups;

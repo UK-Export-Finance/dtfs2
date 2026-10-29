@@ -81,10 +81,10 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
 
   if (canUnlockUnderWritingGroupTasks) {
     taskGroups = taskGroups.map((group) => {
-      const modfiedGroup = group;
+      const modifiedGroup = group;
 
       if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
-        modfiedGroup.groupTasks = modfiedGroup.groupTasks.map((task) => {
+        modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
           // add the task to list of emails to be sent
@@ -109,7 +109,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
         });
       }
 
-      return modfiedGroup;
+      return modifiedGroup;
     });
   }
 
