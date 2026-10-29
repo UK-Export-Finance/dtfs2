@@ -97,7 +97,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
         mockDeal.ukefDealId,
       );
 
-      const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
+      const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((team) => team.id === firstTask.team.id);
 
       await sendFirstTaskEmail(mockDeal);
 

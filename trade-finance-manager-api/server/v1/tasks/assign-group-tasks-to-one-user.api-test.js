@@ -27,7 +27,7 @@ describe('assignGroupTasksToOneUser', () => {
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-    const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+    const mockUser = MOCK_USERS.find(({ username }) => username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
     const tasksThatShouldBeUpdated = [];
@@ -74,7 +74,7 @@ describe('assignGroupTasksToOneUser', () => {
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-    const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+    const mockUser = MOCK_USERS.find(({ username }) => username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
     await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);
@@ -88,7 +88,7 @@ describe('assignGroupTasksToOneUser', () => {
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-    const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+    const mockUser = MOCK_USERS.find(({ username }) => username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
 
     await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId, generateTfmAuditDetails(MOCK_USERS[0]._id))).rejects.toThrow(Error);

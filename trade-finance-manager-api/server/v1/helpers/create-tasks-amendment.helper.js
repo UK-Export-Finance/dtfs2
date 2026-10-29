@@ -19,8 +19,8 @@ const createGroupTasks = (tasks, groupId) => {
   const mappedTasks = [];
   let taskIdCount = 0;
 
-  tasks.forEach((t) => {
-    let task = t;
+  tasks.forEach((task) => {
+    let modifiedTask = task;
 
     /**
      * Only create the task if:
@@ -33,7 +33,7 @@ const createGroupTasks = (tasks, groupId) => {
       // we can end up with e.g id 1 then skipping to id 3
       taskIdCount += 1;
 
-      task = {
+      modifiedTask = {
         id: String(taskIdCount),
         groupId,
         ...task,
@@ -47,11 +47,11 @@ const createGroupTasks = (tasks, groupId) => {
 
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
-        task.canEdit = true;
-        task.status = CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO;
+        modifiedTask.canEdit = true;
+        modifiedTask.status = CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO;
       }
 
-      mappedTasks.push(task);
+      mappedTasks.push(modifiedTask);
     }
   });
 
@@ -157,17 +157,17 @@ const updateTask = (allTaskGroups, taskUpdate) =>
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
+      groupTasks: group.groupTasks.map((task) => {
+        let modifiedTask = task;
 
         if (task.id === taskUpdate.id && task.groupId === taskUpdate.groupId) {
-          task = {
-            ...task,
+          modifiedTask = {
+            ...modifiedTask,
             ...taskUpdate,
           };
         }
 
-        return task;
+        return modifiedTask;
       }),
     };
 
