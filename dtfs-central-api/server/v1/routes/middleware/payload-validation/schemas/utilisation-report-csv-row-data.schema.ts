@@ -1,9 +1,9 @@
 import zod from 'zod';
 
-const UtilisationReportCsvCellDataSchema = z.object({
-  value: z.string().nullable(),
-  column: z.string(),
-  row: z.union([z.string(), z.number()]),
+const UtilisationReportCsvCellDataSchema = zod.object({
+  value: zod.string().nullable(),
+  column: zod.string(),
+  row: zod.union([zod.string(), zod.number()]),
 });
 
 /**

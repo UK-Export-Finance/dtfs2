@@ -11,7 +11,7 @@ const SubmittedBySchema = zod.object({
 });
 
 const PutFacilityAmendmentSchema = zod.object({
-  payload: z
+  payload: zod
     .object({
       requestDate: zod.number(),
       changeFacilityValue: zod.boolean(),
@@ -42,7 +42,7 @@ const PutFacilityAmendmentSchema = zod.object({
       }),
       referenceNumber: zod.string().optional(),
       shouldNotUpdateTimestamp: zod.boolean().optional(),
-      ukefDecision: z
+      ukefDecision: zod
         .object({
           coverEndDate: zod.string(),
           value: zod.string(),
@@ -56,7 +56,7 @@ const PutFacilityAmendmentSchema = zod.object({
           managersDecisionEmailSent: zod.boolean(),
         })
         .partial(),
-      bankDecision: z
+      bankDecision: zod
         .object({
           decision: zod.string(),
           receivedDate: zod.number(),
@@ -73,7 +73,7 @@ const PutFacilityAmendmentSchema = zod.object({
         name: zod.string(),
         email: zod.string().email(),
       }),
-      tfm: z
+      tfm: zod
         .object({
           value: zod.object({
             value: zod.number(),

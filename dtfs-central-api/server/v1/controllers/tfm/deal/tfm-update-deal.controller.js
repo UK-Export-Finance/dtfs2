@@ -131,7 +131,7 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
-      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
+      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, flatten(withoutId(update)), {
         returnNewDocument: true,
         returnDocument: 'after',
         upsert: true,
