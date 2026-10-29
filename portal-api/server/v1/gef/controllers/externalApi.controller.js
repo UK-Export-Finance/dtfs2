@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { isValidRegex } = require('../../validation/validateIds');
-const { UK_POSTCODE } = require('../../../constants/regex');
+const { REGEX } = require('../../../constants');
 
 require('dotenv').config({ quiet: true });
 const externalApi = require('../../../external-api/api');
@@ -9,7 +9,7 @@ exports.getAddressesByPostcode = async (req, res) => {
   try {
     const { postcode } = req.params;
 
-    if (!isValidRegex(UK_POSTCODE, postcode)) {
+    if (!isValidRegex(REGEX.UK_POSTCODE, postcode)) {
       console.error('Get addresses by postcode failed for postcode %s', postcode);
       return res.status(HttpStatusCode.BadRequest).send([
         {

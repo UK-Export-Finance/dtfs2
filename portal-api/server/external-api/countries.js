@@ -2,7 +2,7 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidRegex } = require('../v1/validation/validateIds');
-const { COUNTRY_CODE } = require('../constants/regex');
+const { REGEX } = require('../constants');
 
 dotenv.config({ quiet: true });
 
@@ -45,7 +45,7 @@ const getCountries = async () => {
  * getCountry('INVALID');
  */
 const getCountry = async (code) => {
-  if (!isValidRegex(COUNTRY_CODE, code)) {
+  if (!isValidRegex(REGEX.COUNTRY_CODE, code)) {
     console.error('Invalid country code supplied %s', code);
     return {
       status: 400,

@@ -1,9 +1,7 @@
-import { KEYING_SHEET_ROW_STATUS, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
+import { KEYING_SHEET_ROW_STATUS, KeyingSheetRowStatus, REGEX } from '@ukef/dtfs2-common';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
-const KEYING_SHEET_ROW_STATUS_GROUP = `(?<status>${Object.values(KEYING_SHEET_ROW_STATUS).join('|')})`;
-
-const KEYING_SHEET_ROW_CHECKBOX_ID_REGEX = new RegExp(`feeRecordId-(?<id>\\d+,?)-status-${KEYING_SHEET_ROW_STATUS_GROUP}`);
+const KEYING_SHEET_ROW_CHECKBOX_ID_REGEX = REGEX.createKeyingSheetRowCheckboxIdRegex(Object.values(KEYING_SHEET_ROW_STATUS));
 
 const getKeyingSheetCheckboxIdsFromObjectKeys = (object: object): KeyingSheetCheckboxId[] =>
   Object.keys(object).filter((key) => KEYING_SHEET_ROW_CHECKBOX_ID_REGEX.test(key)) as KeyingSheetCheckboxId[];
