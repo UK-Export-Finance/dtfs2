@@ -11,5 +11,7 @@ type UnionCountryCurrencyIndustryInterface = CountryInterface | CurrencyInterfac
  */
 export const sortArrayAlphabetically = (arr: UnionCountryCurrencyIndustryInterface[], field: string): UnionCountryCurrencyIndustryInterface[] =>
   arr.sort((previous, current) =>
-    (previous[field as keyof UnionCountryCurrencyIndustryInterface] as string).localeCompare(current[field as keyof UnionCountryCurrencyIndustryInterface] as string),
+    (previous[field as keyof UnionCountryCurrencyIndustryInterface] as string).localeCompare(
+      current[field as keyof UnionCountryCurrencyIndustryInterface] as string,
+    ),
   );
