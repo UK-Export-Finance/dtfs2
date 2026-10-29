@@ -1,6 +1,6 @@
 import type { PortalSessionUser } from '@ukef/dtfs2-common';
+import { LANDING_PAGES } from '@ukef/portal-ui/server/constants';
 import getUserRoles from './getUserRoles';
-import { LANDING_PAGES } from '../constants';
 
 type UserRolesCheck = {
   isMaker: boolean;

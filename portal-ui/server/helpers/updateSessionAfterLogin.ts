@@ -1,6 +1,6 @@
 import { PortalSessionUser } from '@ukef/dtfs2-common';
 import { Request } from 'express';
-import { DASHBOARD } from '../constants';
+import { DASHBOARD } from '@ukef/portal-ui/server/constants';
 
 type AugmentedSession = Request['session'] & {
   dashboardFilters?: { keyword: null };

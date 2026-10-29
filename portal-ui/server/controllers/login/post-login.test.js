@@ -2,10 +2,10 @@ import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { ACCESS_CODE_PAGES } from '@ukef/dtfs2-common';
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
+import { validationErrorHandler } from '@ukef/portal-ui/server/helpers';
+import { MOCK_PORTAL_SESSION_USER } from '@ukef/portal-ui/server/test-mocks/mock-portal-session-user';
+import api from '@ukef/portal-ui/server/api';
 import { postLogin } from './post-login';
-import { validationErrorHandler } from '../../helpers';
-import { MOCK_PORTAL_SESSION_USER } from '../../test-mocks/mock-portal-session-user';
-import api from '../../api';
 
 jest.mock('../../api');
 console.error = jest.fn();

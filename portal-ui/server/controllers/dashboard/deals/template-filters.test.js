@@ -1,8 +1,8 @@
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
+import { FIELD_NAMES, PRODUCT } from '@ukef/portal-ui/server/constants';
+import CONTENT_STRINGS from '@ukef/portal-ui/server/content-strings';
+import { generateFiltersArray, submissionTypeFilters } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-template-filters';
 import { dealTypeFilters, statusFilters, dealsTemplateFilters, createdByYouFilter } from './template-filters';
-import { FIELD_NAMES, PRODUCT } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
-import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),

@@ -1,3 +1,5 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/bond/pageFields';
+import ABOUT_CONTRACT_FIELDS from '@ukef/portal-ui/server/routes/contract/about/pageFields';
 import {
   pageSpecificValidationErrors,
   allFieldsArray,
@@ -10,8 +12,6 @@ import {
 import { requiredFieldsArray, filterErrorList } from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
-import FIELDS from '../routes/contract/bond/pageFields';
-import ABOUT_CONTRACT_FIELDS from '../routes/contract/about/pageFields';
 
 describe('page specific validation errors', () => {
   const mockErrors = {

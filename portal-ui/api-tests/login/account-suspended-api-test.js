@@ -1,6 +1,6 @@
 import { createApi } from '@ukef/dtfs2-common/api-test';
 import { HttpStatusCode } from 'axios';
-import app from '../../server/createApp';
+import app from '@ukef/portal-ui/server/createApp';
 
 const { get } = createApi(app);
 

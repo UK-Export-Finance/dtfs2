@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 
-import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '../../helpers';
-import api from '../../api';
+import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '@ukef/portal-ui/server/helpers';
+import api from '@ukef/portal-ui/server/api';
 
 /**
  * Controller to handle login form submission

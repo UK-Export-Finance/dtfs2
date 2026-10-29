@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import { MOCK_PORTAL_SESSION_USER } from '../../../../test-mocks/mock-portal-session-user';
+import { MOCK_PORTAL_SESSION_USER } from '@ukef/portal-ui/server/test-mocks/mock-portal-session-user';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
 import { getReportConfirmAndSend } from '..';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
   describe('getReportConfirmAndSend', () => {

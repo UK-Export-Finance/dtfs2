@@ -10,6 +10,9 @@ import {
   RecordCorrectionReason,
   RecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
+import { aGetFeeRecordCorrectionResponseBody } from '@ukef/portal-ui/test-helpers/test-data/get-fee-record-correction-response';
+import { GetFeeRecordCorrectionResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { CorrectionRequestDetailsViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/provide-utilisation-report-correction';
 import {
   getAdditionalCommentsFieldLabels,
   mapToProvideCorrectionFormValuesViewModel,
@@ -19,9 +22,6 @@ import {
   requiredAdditionalCommentsFieldLabelsForSingleReason,
   mapInputValueToFormattedMonetaryValueOrOriginal,
 } from './helpers';
-import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
-import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
-import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 
 describe('provide-utilisation-report-correction helpers', () => {
   describe('mapToCorrectionRequestDetailsViewModel', () => {

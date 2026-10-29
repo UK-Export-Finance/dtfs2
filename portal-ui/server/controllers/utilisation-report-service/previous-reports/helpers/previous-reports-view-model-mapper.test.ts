@@ -7,10 +7,10 @@ import {
   UtilisationReportStatus,
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { aUtilisationReportResponse } from '@ukef/portal-ui/test-helpers/test-data/utilisation-report';
 import { mapToPreviousReportsViewModel } from './previous-reports-view-model-mapper';
-import { aUtilisationReportResponse } from '../../../../../test-helpers/test-data/utilisation-report';
 
 describe('previous-reports-view-model-mapper', () => {
   describe('mapToPreviousReportsViewModel', () => {

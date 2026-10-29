@@ -1,6 +1,6 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-import { PendingCorrectionsViewModel } from '../../../../server/types/view-models/record-correction/pending-corrections';
-import { PRIMARY_NAV_KEY } from '../../../../server/constants';
+import { PendingCorrectionsViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/pending-corrections';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
 
 export const aPendingCorrectionsViewModel = (): PendingCorrectionsViewModel => ({
   user: aPortalSessionUser(),

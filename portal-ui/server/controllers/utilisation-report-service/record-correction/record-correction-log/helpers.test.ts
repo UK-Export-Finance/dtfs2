@@ -1,5 +1,5 @@
-import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
-import { CompletedCorrectionViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
+import { GetCompletedFeeRecordCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { CompletedCorrectionViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-log';
 import { getFormattedDateSent, mapCompletedCorrectionsToViewModel } from './helpers';
 
 describe('record-correction-log helpers', () => {

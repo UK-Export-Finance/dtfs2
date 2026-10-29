@@ -10,20 +10,20 @@ import {
   RecordCorrectionFormValueValidationErrors,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import api from '../../../../api';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import api from '@ukef/portal-ui/server/api';
+import { ProvideUtilisationReportCorrectionViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/provide-utilisation-report-correction';
+import { aGetFeeRecordCorrectionResponseBody } from '@ukef/portal-ui/test-helpers/test-data/get-fee-record-correction-response';
+import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { getRecordCorrectionCancelLinkHref } from '@ukef/portal-ui/server/helpers';
+import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
+import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import {
   getProvideUtilisationReportCorrection,
   GetProvideUtilisationReportCorrection,
   PostProvideUtilisationReportCorrectionRequest,
   postProvideUtilisationReportCorrection,
 } from '.';
-import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
-import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
-import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
-import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
-import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
-import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 jest.mock('../../../../api');
 

@@ -1,7 +1,7 @@
 import { FACILITY_STAGE, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { FIELD_NAMES } from '@ukef/portal-ui/server/constants';
+import { generateFiltersArray, submissionTypeFilters } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-template-filters';
 import { typeFilters, facilitiesTemplateFilters, createdByYouFilter, stageFilters } from './template-filters';
-import { FIELD_NAMES } from '../../../constants';
-import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),

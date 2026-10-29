@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ValidationErrorsObject } from '../../../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
+import { ValidationErrorsObject } from '@ukef/portal-ui/server/types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
 
 /**
  * Access code numeric validation rule

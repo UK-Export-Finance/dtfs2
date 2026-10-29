@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { CustomExpressRequest, mapCurrenciesToRadioItems, RecordCorrectionFormValues } from '@ukef/dtfs2-common';
-import api from '../../../../api';
-import { asLoggedInUserSession } from '../../../../helpers/express-session';
-import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
+import api from '@ukef/portal-ui/server/api';
+import { asLoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { ProvideUtilisationReportCorrectionViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/provide-utilisation-report-correction';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { getRecordCorrectionCancelLinkHref } from '@ukef/portal-ui/server/helpers';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
-import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
 import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
-import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
