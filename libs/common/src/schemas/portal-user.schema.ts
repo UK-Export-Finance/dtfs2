@@ -2,7 +2,7 @@ import zod from 'zod';
 import { AUDIT_DATABASE_RECORD_SCHEMA } from './audit-database-record.schema';
 import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from './unix-timestamp.schema';
 
-const BASE_PORTAL_USER_SCHEMA = z
+const BASE_PORTAL_USER_SCHEMA = zod
   .object({
     username: zod.string(),
     firstname: zod.string(),

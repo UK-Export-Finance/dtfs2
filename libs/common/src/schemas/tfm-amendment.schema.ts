@@ -46,7 +46,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
   sendFirstTaskEmail: zod.boolean().optional(),
   firstTaskEmailSent: zod.boolean().optional(),
   automaticApprovalEmail: zod.boolean().optional(),
-  ukefDecision: z
+  ukefDecision: zod
     .object({
       coverEndDate: zod.string().optional(),
       value: zod.string().optional(),
@@ -55,7 +55,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
       comments: zod.string().optional(),
       submitted: zod.boolean().optional(),
       submittedAt: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
-      submittedBy: z
+      submittedBy: zod
         .object({
           id: zod.string(),
           username: zod.string(),
@@ -67,7 +67,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
       managersDecisionEmailSent: zod.boolean().optional(),
     })
     .optional(),
-  bankDecision: z
+  bankDecision: zod
     .object({
       decision: zod.string().optional(),
       receivedDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative()),
@@ -76,7 +76,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
       banksDecisionEmail: zod.boolean().optional(),
       banksDecisionEmailSent: zod.boolean().optional(),
       submittedAt: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
-      submittedBy: z
+      submittedBy: zod
         .object({
           id: zod.string(),
           username: zod.string(),
@@ -87,14 +87,14 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
     })
     .optional(),
   tfm: zod.object({
-    value: z
+    value: zod
       .object({
         value: zod.number(),
         currency: CURRENCY_SCHEMA,
       })
       .optional(),
     amendmentExposurePeriodInMonths: zod.number().nullable().optional(),
-    exposure: z
+    exposure: zod
       .object({
         exposure: zod.union([zod.number(), zod.string()]),
         timestamp: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable()),
@@ -106,7 +106,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
     bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
     isUsingFacilityEndDate: zod.boolean().optional(),
   }),
-  tasks: z
+  tasks: zod
     .array(
       zod.object({
         groupTitle: zod.string(),
@@ -115,7 +115,7 @@ export const TFM_FACILITY_AMENDMENT = zod.object({
       }),
     )
     .optional(),
-  leadUnderwriter: z
+  leadUnderwriter: zod
     .object({
       _id: zod.union([zod.string(), zod.literal('Unassigned')]),
       firstName: zod.string(),

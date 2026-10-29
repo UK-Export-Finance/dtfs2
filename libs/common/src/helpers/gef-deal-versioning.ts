@@ -5,8 +5,8 @@ import zod from 'zod';
  */
 const DEFAULT_GEF_DEAL_VERSION_NUMBER = 0;
 
-const dealVersionSchema = z.object({
-  GEF_DEAL_VERSION: zod.preprocess((value) => value ?? DEFAULT_GEF_DEAL_VERSION_NUMBER, z.coerce.number()),
+const dealVersionSchema = zod.object({
+  GEF_DEAL_VERSION: zod.preprocess((value) => value ?? DEFAULT_GEF_DEAL_VERSION_NUMBER, zod.coerce.number()),
 });
 
 export const getCurrentGefDealVersion = () => dealVersionSchema.parse(process.env).GEF_DEAL_VERSION;

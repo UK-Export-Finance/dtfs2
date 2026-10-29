@@ -20,7 +20,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = zod
     value: zod.number().nullable().optional(),
     currentValue: zod.number().nullable().optional(),
     currency: CURRENCY_SCHEMA.optional(),
-    eligibilityCriteria: z
+    eligibilityCriteria: zod
       .object({
         version: zod.number(),
         criteria: zod.array(
@@ -100,7 +100,7 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
         })
         .optional(),
       amendmentExposurePeriodInMonths: zod.number().nullable().optional(),
-      exposure: z
+      exposure: zod
         .object({
           exposure: zod.union([zod.number(), zod.string()]),
           timestamp: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable()),
