@@ -39,6 +39,7 @@
     "@types/lodash": "^4.17.25",
     "@typescript-eslint/eslint-plugin": "8.59.2",
     "@typescript-eslint/parser": "8.59.2",
+    "@ukef/eslint-local-rules": "1.0.0",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
     "cross-env": "^10.1.0",

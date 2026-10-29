@@ -1,4 +1,4 @@
-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';
+import { REGEX } from '@ukef/dtfs2-common';
 import { CSV } from '../../../constants';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
@@ -19,7 +19,7 @@ export const generateFacilityUtilisationError: UtilisationReportCellValidationEr
     };
   }
 
-  if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData.value)) {
+  if (!REGEX.CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData.value)) {
     return {
       errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
       column: facilityUtilisationCellData?.column,

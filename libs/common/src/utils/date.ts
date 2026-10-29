@@ -1,5 +1,6 @@
 import { format, isValid, parseISO } from 'date-fns';
 import { isString } from '@ukef/helpers';
+import { REGEX } from '@ukef/constants/regex';
 import { IsoMonthStamp, IsoYearStamp, MonthAndYear, OneIndexedMonth } from '@ukef/types';
 
 /**
@@ -7,12 +8,10 @@ import { IsoMonthStamp, IsoYearStamp, MonthAndYear, OneIndexedMonth } from '@uke
  */
 export const getOneIndexedMonth = (date: Date): OneIndexedMonth => date.getMonth() + 1;
 
-const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
-
 /**
  * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
  * */
-export const isValidIsoMonth = (value: unknown): value is IsoMonthStamp => isString(value) && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
+export const isValidIsoMonth = (value: unknown): value is IsoMonthStamp => isString(value) && REGEX.ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
 
 export const toIsoMonthStamp = (date: Date): IsoMonthStamp => format(date, 'yyyy-MM');
 
@@ -29,9 +28,7 @@ export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: 
  */
 export const getDateFromMonthAndYear = (monthAndYear: MonthAndYear): Date => new Date(monthAndYear.year, monthAndYear.month - 1);
 
-const ISO_YEAR_REGEX = /^\d{4}$/;
-
 /**
  * Checks whether the provided value is an ISO year string in format 'yyyy'
  * */
-export const isValidIsoYear = (value: unknown): value is IsoYearStamp => isString(value) && ISO_YEAR_REGEX.test(value) && isValid(parseISO(value));
+export const isValidIsoYear = (value: unknown): value is IsoYearStamp => isString(value) && REGEX.ISO_YEAR_REGEX.test(value) && isValid(parseISO(value));

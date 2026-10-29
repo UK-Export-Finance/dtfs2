@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER, MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '@ukef/constants';
+import { COMPANY_REGISTRATION_NUMBER, REGEX, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '@ukef/constants';
 import { isNonEmptyString, isString } from './string';
 
 /**
@@ -50,7 +50,7 @@ export const isPaymentReferenceOverMaxCharacterCount = (paymentReference: string
  * otherwise.
  */
 const isMonetaryValueOptionallyWithThousandsSeparators = (value: string) => {
-  return MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX.test(value);
+  return REGEX.MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX.test(value);
 };
 
 /**

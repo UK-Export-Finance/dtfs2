@@ -1,3 +1,5 @@
+import { REGEX } from '@ukef/constants/regex';
+
 /**
  * Formats the input by converting Markdown-style links `[text](url)` to GovUK-compliant hyperlinks.
  * - If the input is a string, replaces all Markdown links with `<a>` tags.
@@ -23,15 +25,8 @@ export const format = (input: string | object): string | object => {
     return input;
   }
 
-  /**
-   * 1. URL Pattern
-   * convert all [text](link) markdown pattern to
-   * GovUK compliant hyperlink
-   */
-  const urlPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-
   if (isString) {
-    return input.replace(urlPattern, "<a href='$2' class='govuk-link'>$1</a>");
+    return input.replace(REGEX.MARKDOWN_LINK_REGEX, "<a href='$2' class='govuk-link'>$1</a>");
   }
 
   if (isArray) {
