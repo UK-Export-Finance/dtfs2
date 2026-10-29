@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { InvalidEnvironmentVariableError } from '@ukef/errors';
 import { asString } from './validation';
 
@@ -7,7 +7,7 @@ import { asString } from './validation';
  * @returns The UKEF GEF Reporting email recipients.
  */
 export const getUkefGefReportingEmailRecipients = () => {
-  const EmailsSchema = z.array(z.string().email());
+  const EmailsSchema = zod.array(zod.string().email());
 
   try {
     const emails = EmailsSchema.parse(JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')));

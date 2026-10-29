@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { MAX_CHARACTER_COUNT } from '@ukef/constants';
 
 /**
@@ -6,8 +6,8 @@ import { MAX_CHARACTER_COUNT } from '@ukef/constants';
  */
 export const DEAL_CANCELLATION = z
   .object({
-    reason: z.string().max(MAX_CHARACTER_COUNT),
-    bankRequestDate: z.number(),
-    effectiveFrom: z.number(),
+    reason: zod.string().max(MAX_CHARACTER_COUNT),
+    bankRequestDate: zod.number(),
+    effectiveFrom: zod.number(),
   })
   .strict();
