@@ -1,0 +1,25 @@
+{
+  "name": "@ukef/eslint-local-rules",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Custom ESLint rules shared across all dtfs2 workspaces",
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
+  "author": "UK Export Finance",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint": "9.39.4"
+  },
+  "engines": {
+    "node": ">=24.17.0",
+    "npm": ">=11.3.0"
+  },
+  "engineStrict": true
+}

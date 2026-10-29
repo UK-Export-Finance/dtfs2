@@ -1,10 +1,10 @@
 import { HttpStatusCode } from 'axios';
 import { UKEF_ID } from '@ukef/dtfs2-common';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
-import { app } from '../../server/createApp';
-import { api } from '../api';
-import { ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../server/constants';
-import { Estore, EstoreAxiosResponse } from '../../server/interfaces';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
+import { ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '@ukef/external-api/server/constants';
+import { Estore, EstoreAxiosResponse } from '@ukef/external-api/server/interfaces';
 
 const { post } = api(app);
 

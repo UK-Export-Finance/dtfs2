@@ -1,4 +1,4 @@
-import { ERRORS } from '../../constants';
+import { ERRORS } from '@ukef/external-api/server/constants';
 
 export class InvalidEntityTypeError extends Error {
   /**

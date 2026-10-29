@@ -1,11 +1,11 @@
 import { cloneDeep } from 'lodash';
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { cron } from '../helpers/cron';
-import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
-import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { Estore, EstoreErrorResponse, SiteExistsResponse } from '@ukef/external-api/server/interfaces';
+import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '@ukef/external-api/server/constants';
+import { siteExists } from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
 import { eStoreTermStoreCreationJob } from './eStoreTermStoreCreationJob.cron';
-import { siteExists } from '../v1/controllers/estore/eStoreApi';
-import { getNowAsEpoch } from '../helpers/date';
 
 /**
  * The `eStoreSiteCreationCronJob` function is responsible for creating a site for a given eStore data object.

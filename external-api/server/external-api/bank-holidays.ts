@@ -1,4 +1,4 @@
-import { BankHolidays } from '../interfaces';
+import { BankHolidays } from '@ukef/external-api/server/interfaces';
 
 export const BANK_HOLIDAYS: BankHolidays = {
   'england-and-wales': {

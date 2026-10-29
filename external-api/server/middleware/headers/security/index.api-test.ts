@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { mockReq, mockRes } from '../../../test-mocks';
+import { mockReq, mockRes } from '@ukef/external-api/server/test-mocks';
 import { security } from '.';
 
 dotenv.config({ quiet: true });
