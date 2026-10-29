@@ -27,10 +27,10 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
 
     appendSelectOption(selectElement, { value: '', name: 'Select value' });
 
-    industryClasses.forEach((i) => {
+    industryClasses.forEach((index) => {
       appendSelectOption(selectElement, {
-        value: i.code,
-        name: i.name,
+        value: index.code,
+        name: index.name,
         selectedValue,
       });
     });

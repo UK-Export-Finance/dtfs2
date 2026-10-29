@@ -66,8 +66,8 @@ describe('/v1/tfm/deals/:dealId/facilities', () => {
       });
 
       // assert all facilities returned from GET against the created facilities
-      const facility1 = body.find((f) => f._id === allFacilitiesAfterCreation[0]._id);
-      const facility2 = body.find((f) => f._id === allFacilitiesAfterCreation[1]._id);
+      const facility1 = body.find((facility) => facility._id === allFacilitiesAfterCreation[0]._id);
+      const facility2 = body.find((facility) => facility._id === allFacilitiesAfterCreation[1]._id);
 
       expect(facility1).toEqual(expectedFacilityShape(facility1));
       expect(facility2).toEqual(expectedFacilityShape(facility2));

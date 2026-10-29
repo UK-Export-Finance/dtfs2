@@ -5,13 +5,14 @@
 const mapCurrencies = (currencies, selectedCurrency) => {
   const mappedCurrencies = [
     { text: 'Select value' },
-    ...currencies.map((c) => {
-      const currency = {
-        value: c.id,
-        text: c.text,
-        selected: selectedCurrency && selectedCurrency.id === c.id,
+    ...currencies.map((currency) => {
+      const mappedCurrency = {
+        value: currency.id,
+        text: currency.text,
+        selected: selectedCurrency && selectedCurrency.id === currency.id,
       };
-      return currency;
+
+      return mappedCurrency;
     }),
   ];
   return mappedCurrencies;

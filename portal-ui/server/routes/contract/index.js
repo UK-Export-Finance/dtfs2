@@ -88,8 +88,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 
-  const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
-  const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
+  const issuedBonds = deal.bondTransactions.items.filter((bond) => bond.facilityStage === 'Issued');
+  const unconditionalLoans = deal.loanTransactions.items.filter((loan) => loan.facilityStage === 'Unconditional');
   const issuedTotal = issuedBonds.length + unconditionalLoans.length;
 
   const allRequestedCoverStartDatesConfirmed =

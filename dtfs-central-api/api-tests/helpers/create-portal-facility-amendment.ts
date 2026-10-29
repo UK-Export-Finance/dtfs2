@@ -1,5 +1,5 @@
 import { Response } from 'supertest';
-import * as z from 'zod';
+import * as zod from 'zod';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
 import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common/test-helpers';
@@ -28,7 +28,7 @@ export const createPortalFacilityAmendment = async ({
 }: {
   facilityId: string;
   dealId: string;
-  amendment?: Partial<z.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>>;
+  amendment?: Partial<zod.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>>;
   userId: string;
   status?: string;
 }) => {

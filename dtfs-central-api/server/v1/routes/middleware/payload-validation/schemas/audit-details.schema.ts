@@ -5,21 +5,21 @@ import {
   AuditUserTypesNotRequiringId,
   API_ERROR_CODE,
 } from '@ukef/dtfs2-common';
-import z from 'zod';
+import zod from 'zod';
 import { MongoObjectIdSchema } from './mongo-object-id.schema';
 
-const AuditUserTypesNotRequiringIdSchema = z.enum(
+const AuditUserTypesNotRequiringIdSchema = zod.enum(
   Object.values(AUDIT_USER_TYPES_NOT_REQUIRING_ID) as [AuditUserTypesNotRequiringId, ...AuditUserTypesNotRequiringId[]],
 );
 
-const AuditUserTypesRequiringIdSchema = z.enum(Object.values(AUDIT_USER_TYPES_REQUIRING_ID) as [AuditUserTypesRequiringId, ...AuditUserTypesRequiringId[]]);
+const AuditUserTypesRequiringIdSchema = zod.enum(Object.values(AUDIT_USER_TYPES_REQUIRING_ID) as [AuditUserTypesRequiringId, ...AuditUserTypesRequiringId[]]);
 
-export const AuditDetailsSchema = z.union(
+export const AuditDetailsSchema = zod.union(
   [
-    z.object({
+    zod.object({
       userType: AuditUserTypesNotRequiringIdSchema,
     }),
-    z.object({
+    zod.object({
       userType: AuditUserTypesRequiringIdSchema,
       id: MongoObjectIdSchema,
     }),

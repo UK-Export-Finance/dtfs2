@@ -41,11 +41,11 @@ const columnIndexToExcelColumn = (index) => {
  */
 const excelColumnToColumnIndex = (column) => {
   let result = 0;
-  for (let i = 0; i < column.length; i += 1) {
+  for (let index = 0; index < column.length; index += 1) {
     // 26 represents the number of letters in the alphabet
     result *= 26;
     // the unicode value of A is 65 so we minus 64 to get the index of A as 1
-    result += column.charCodeAt(i) - 64;
+    result += column.charCodeAt(index) - 64;
   }
   return result - 1;
 };

@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common')
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
+const { flatten } = require('mongo-dot-notation');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
@@ -70,7 +70,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
   dealTfmUpdate.tfm.lastUpdated = new Date().valueOf();
   dealTfmUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealTfmUpdate)), {
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, flatten(withoutId(dealTfmUpdate)), {
     returnNewDocument: true,
     returnDocument: 'after',
   });

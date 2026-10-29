@@ -79,12 +79,12 @@ describe('/v1/tfm/deals', () => {
             expect(body.pagination.currentPage).toEqual(0);
             expect(body.pagination.totalPages).toEqual(1);
 
-            for (let i = 0; i < 4; i += 1) {
-              const firstPart = body.deals[order === 'ascending' ? i : 3 - i];
-              const secondPart = i % 2 === 0 ? nonBssPath : bssPath;
+            for (let index = 0; index < 4; index += 1) {
+              const firstPart = body.deals[order === 'ascending' ? index : 3 - index];
+              const secondPart = index % 2 === 0 ? nonBssPath : bssPath;
               const fieldValue = getObjectPropertyValueFromStringPath(firstPart, secondPart);
 
-              const expectedFieldValue = values[i];
+              const expectedFieldValue = values[index];
 
               expect(fieldValue).toEqual(expectedFieldValue);
             }
@@ -166,9 +166,9 @@ describe('/v1/tfm/deals', () => {
         beforeEach(async () => {
           submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
-          submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
-          submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
-          submittedDealWithBondAndLoans = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
+          submittedDealWith1Bond = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === '1-BOND');
+          submittedDealWith1Loan = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === '1-LOAN');
+          submittedDealWithBondAndLoans = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
 
           await updateDealsTfm(
             [
@@ -202,8 +202,8 @@ describe('/v1/tfm/deals', () => {
             expect(body.pagination.currentPage).toEqual(0);
             expect(body.pagination.totalPages).toEqual(1);
 
-            const getDealsOnlyIds = body.deals.map((d) => ({
-              _id: d._id,
+            const getDealsOnlyIds = body.deals.map((deal) => ({
+              _id: deal._id,
             }));
 
             expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
@@ -230,8 +230,8 @@ describe('/v1/tfm/deals', () => {
             expect(page1Body.pagination.currentPage).toEqual(0);
             expect(page1Body.pagination.totalPages).toEqual(2);
 
-            const getDealsPage1OnlyIds = page1Body.deals.map((d) => ({
-              _id: d._id,
+            const getDealsPage1OnlyIds = page1Body.deals.map((deal) => ({
+              _id: deal._id,
             }));
 
             expect(getDealsPage1OnlyIds.length).toEqual(2);
@@ -250,8 +250,8 @@ describe('/v1/tfm/deals', () => {
             expect(page2Body.pagination.currentPage).toEqual(1);
             expect(page2Body.pagination.totalPages).toEqual(2);
 
-            const getDealsPage2OnlyIds = page2Body.deals.map((d) => ({
-              _id: d._id,
+            const getDealsPage2OnlyIds = page2Body.deals.map((deal) => ({
+              _id: deal._id,
             }));
 
             expect(getDealsPage2OnlyIds.length).toEqual(1);

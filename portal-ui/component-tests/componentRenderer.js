@@ -21,10 +21,10 @@ const componentRenderer = (componentLocation) => (params) => {
   const html = nunjucks.renderString(fakePage, { payload: params });
 
   // Load the rendered HTML into Cheerio
-  const $ = load(html);
+  const loadedHtml = load(html);
 
   // Perform assertions on the rendered HTML
-  return assertions($, html, params);
+  return assertions(loadedHtml, html, params);
 };
 
 module.exports = componentRenderer;

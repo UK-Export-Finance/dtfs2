@@ -1,25 +1,25 @@
-import z from 'zod';
+import zod from 'zod';
 import { validateSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
-const DeletePortalFacilityAmendmentSchema = z.object({
+const DeletePortalFacilityAmendmentSchema = zod.object({
   auditDetails: AuditDetailsSchema,
-  makersEmail: z.string(),
-  checkersEmail: z.string(),
-  emailVariables: z.object({
-    exporterName: z.string(),
-    bankInternalRefName: z.string(),
-    ukefDealId: z.string(),
-    ukefFacilityId: z.string(),
-    makersName: z.string(),
-    checkersName: z.string(),
-    dateEffectiveFrom: z.string(),
-    newCoverEndDate: z.string(),
-    newFacilityEndDate: z.string(),
-    newFacilityValue: z.string(),
+  makersEmail: zod.string(),
+  checkersEmail: zod.string(),
+  emailVariables: zod.object({
+    exporterName: zod.string(),
+    bankInternalRefName: zod.string(),
+    ukefDealId: zod.string(),
+    ukefFacilityId: zod.string(),
+    makersName: zod.string(),
+    checkersName: zod.string(),
+    dateEffectiveFrom: zod.string(),
+    newCoverEndDate: zod.string(),
+    newFacilityEndDate: zod.string(),
+    newFacilityValue: zod.string(),
   }),
 });
 
-export type DeletePortalFacilityAmendmentPayload = z.infer<typeof DeletePortalFacilityAmendmentSchema>;
+export type DeletePortalFacilityAmendmentPayload = zod.infer<typeof DeletePortalFacilityAmendmentSchema>;
 
 export const validateDeletePortalFacilityAmendmentPayload = validateSchema(DeletePortalFacilityAmendmentSchema);

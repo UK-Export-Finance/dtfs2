@@ -1,8 +1,8 @@
 const formatCountriesForGDSComponent = (countries, selectedCountryCode, showSelectLabel) => {
-  const countryOptions = countries.map((c) => ({
-    value: c.code,
-    text: c.name,
-    selected: c.code === selectedCountryCode,
+  const countryOptions = countries.map((country) => ({
+    value: country.code,
+    text: country.name,
+    selected: country.code === selectedCountryCode,
   }));
 
   const selectLabel = {

@@ -1,7 +1,7 @@
 import { CustomExpressRequest, Unknown, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
 import { NextFunction, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import z from 'zod';
+import zod from 'zod';
 import { validateFileInfo, validateReportId, validateReportUser } from '../../../validation/utilisation-report-service/utilisation-report-validator';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
 import { PostUploadUtilisationReportRequestBody } from '../../../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
@@ -36,7 +36,7 @@ export const getReportDataErrors = async (data: Record<string, string | null>[])
 export const validatePostUploadUtilisationReportPayload = async (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
-  const reportDataSchema = z.array(z.record(z.string(), z.string().nullable()));
+  const reportDataSchema = zod.array(zod.record(zod.string(), zod.string().nullable()));
   const { success, error, data } = reportDataSchema.safeParse(reportData);
 
   if (!success) {

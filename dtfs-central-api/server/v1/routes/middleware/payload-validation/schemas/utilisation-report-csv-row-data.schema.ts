@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 
 const UtilisationReportCsvCellDataSchema = z.object({
   value: z.string().nullable(),
@@ -11,4 +11,4 @@ const UtilisationReportCsvCellDataSchema = z.object({
  * (a record where the keys are strings and the properties are cell data objects)
  * For more information on zod see {@link https://zod.dev/}.
  */
-export const UtilisationReportCsvRowDataSchema = z.record(z.string(), UtilisationReportCsvCellDataSchema);
+export const UtilisationReportCsvRowDataSchema = zod.record(zod.string(), UtilisationReportCsvCellDataSchema);
