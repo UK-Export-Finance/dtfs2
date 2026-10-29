@@ -1,6 +1,6 @@
 import { AuthorizationUrlRequest } from '@azure/msal-node';
 import { Response } from 'express';
-import z from 'zod';
+import zod from 'zod';
 import { AuditDetails } from '@ukef/types/audit-details';
 import { CustomExpressRequest } from '@ukef/types/express-custom-request';
 import { ApiErrorResponseBody } from '@ukef/types/api-error-response-body';
@@ -13,7 +13,7 @@ export type HandleSsoRedirectFormRequest = {
   auditDetails: AuditDetails<'system'>;
 };
 
-export type HandleSsoRedirectFormResponse = z.infer<typeof HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA>;
+export type HandleSsoRedirectFormResponse = zod.infer<typeof HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA>;
 
 export type HandleSsoRedirectFormUiRequest = CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>;
 

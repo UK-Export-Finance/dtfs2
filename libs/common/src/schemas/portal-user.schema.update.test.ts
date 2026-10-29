@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import z from 'zod';
+import zod from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '@ukef/change-stream';
 import { withSchemaValidationTests } from '@ukef/test-helpers/schemas';
 import { UPDATE } from './portal-user.schema';
@@ -104,7 +104,7 @@ describe('PORTAL_USER', () => {
   });
 });
 
-function aValidPayload(): z.infer<typeof UPDATE> {
+function aValidPayload(): zod.infer<typeof UPDATE> {
   return {
     username: 'maker-1',
     firstname: 'Mister',

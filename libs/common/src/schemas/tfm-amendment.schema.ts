@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { getEpochMs } from '@ukef/helpers';
 import { AMENDMENT_TYPES } from '@ukef/constants';
 import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-date.schema';
@@ -9,124 +9,124 @@ import { CURRENCY_SCHEMA } from './currency.schema';
  *
  * If this schema is changed the Open Api docs should be updated too
  */
-export const TFM_FACILITY_AMENDMENT = z.object({
-  amendmentId: z.string(),
-  facilityId: z.string(),
-  dealId: z.string(),
-  type: z.literal(AMENDMENT_TYPES.TFM),
-  createdAt: z.number(),
-  updatedAt: z.number(),
-  createdBy: z.object({
-    username: z.string(),
-    name: z.string(),
-    email: z.string().email(),
+export const TFM_FACILITY_AMENDMENT = zod.object({
+  amendmentId: zod.string(),
+  facilityId: zod.string(),
+  dealId: zod.string(),
+  type: zod.literal(AMENDMENT_TYPES.TFM),
+  createdAt: zod.number(),
+  updatedAt: zod.number(),
+  createdBy: zod.object({
+    username: zod.string(),
+    name: zod.string(),
+    email: zod.string().email(),
   }),
-  facilityType: z.string().optional(),
-  changeCoverEndDate: z.boolean().optional(),
-  currentCoverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-  coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-  isUsingFacilityEndDate: z.boolean().nullable().optional(),
+  facilityType: zod.string().optional(),
+  changeCoverEndDate: zod.boolean().optional(),
+  currentCoverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+  coverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+  isUsingFacilityEndDate: zod.boolean().nullable().optional(),
   facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
   bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
-  changeFacilityValue: z.boolean().optional(),
-  currentValue: z.number().nullable().optional(),
-  value: z.number().nullable().optional(),
+  changeFacilityValue: zod.boolean().optional(),
+  currentValue: zod.number().nullable().optional(),
+  value: zod.number().nullable().optional(),
   currency: CURRENCY_SCHEMA.optional(),
-  effectiveDate: z.number().nonnegative().optional(),
-  requestDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-  ukefExposure: z.number().nullable().optional(),
-  coveredPercentage: z.number().nullable().optional(),
-  requireUkefApproval: z.boolean().nullable().optional(),
-  submissionType: z.string().optional(),
-  submittedAt: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
-  submissionDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
-  status: z.string(),
-  version: z.number(),
-  submittedByPim: z.boolean().optional(),
-  sendFirstTaskEmail: z.boolean().optional(),
-  firstTaskEmailSent: z.boolean().optional(),
-  automaticApprovalEmail: z.boolean().optional(),
-  ukefDecision: z
+  effectiveDate: zod.number().nonnegative().optional(),
+  requestDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+  ukefExposure: zod.number().nullable().optional(),
+  coveredPercentage: zod.number().nullable().optional(),
+  requireUkefApproval: zod.boolean().nullable().optional(),
+  submissionType: zod.string().optional(),
+  submittedAt: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
+  submissionDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
+  status: zod.string(),
+  version: zod.number(),
+  submittedByPim: zod.boolean().optional(),
+  sendFirstTaskEmail: zod.boolean().optional(),
+  firstTaskEmailSent: zod.boolean().optional(),
+  automaticApprovalEmail: zod.boolean().optional(),
+  ukefDecision: zod
     .object({
-      coverEndDate: z.string().optional(),
-      value: z.string().optional(),
-      conditions: z.string().nullable().optional(),
-      declined: z.string().nullable().optional(),
-      comments: z.string().optional(),
-      submitted: z.boolean().optional(),
-      submittedAt: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-      submittedBy: z
+      coverEndDate: zod.string().optional(),
+      value: zod.string().optional(),
+      conditions: zod.string().nullable().optional(),
+      declined: zod.string().nullable().optional(),
+      comments: zod.string().optional(),
+      submitted: zod.boolean().optional(),
+      submittedAt: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+      submittedBy: zod
         .object({
-          id: z.string(),
-          username: z.string(),
-          name: z.string(),
-          email: z.string(),
+          id: zod.string(),
+          username: zod.string(),
+          name: zod.string(),
+          email: zod.string(),
         })
         .optional(),
-      managersDecisionEmail: z.boolean().optional(),
-      managersDecisionEmailSent: z.boolean().optional(),
+      managersDecisionEmail: zod.boolean().optional(),
+      managersDecisionEmailSent: zod.boolean().optional(),
     })
     .optional(),
-  bankDecision: z
+  bankDecision: zod
     .object({
-      decision: z.string().optional(),
-      receivedDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative()),
-      effectiveDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-      submitted: z.boolean().optional(),
-      banksDecisionEmail: z.boolean().optional(),
-      banksDecisionEmailSent: z.boolean().optional(),
-      submittedAt: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
-      submittedBy: z
+      decision: zod.string().optional(),
+      receivedDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative()),
+      effectiveDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+      submitted: zod.boolean().optional(),
+      banksDecisionEmail: zod.boolean().optional(),
+      banksDecisionEmailSent: zod.boolean().optional(),
+      submittedAt: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
+      submittedBy: zod
         .object({
-          id: z.string(),
-          username: z.string(),
-          name: z.string(),
-          email: z.string(),
+          id: zod.string(),
+          username: zod.string(),
+          name: zod.string(),
+          email: zod.string(),
         })
         .optional(),
     })
     .optional(),
-  tfm: z.object({
-    value: z
+  tfm: zod.object({
+    value: zod
       .object({
-        value: z.number(),
+        value: zod.number(),
         currency: CURRENCY_SCHEMA,
       })
       .optional(),
-    amendmentExposurePeriodInMonths: z.number().nullable().optional(),
-    exposure: z
+    amendmentExposurePeriodInMonths: zod.number().nullable().optional(),
+    exposure: zod
       .object({
-        exposure: z.union([z.number(), z.string()]),
-        timestamp: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable()),
-        ukefExposureValue: z.number(),
+        exposure: zod.union([zod.number(), zod.string()]),
+        timestamp: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable()),
+        ukefExposureValue: zod.number(),
       })
       .optional(),
-    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
+    coverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
     facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
     bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
-    isUsingFacilityEndDate: z.boolean().optional(),
+    isUsingFacilityEndDate: zod.boolean().optional(),
   }),
-  tasks: z
+  tasks: zod
     .array(
-      z.object({
-        groupTitle: z.string(),
-        id: z.number(),
-        groupTasks: z.array(z.any()),
+      zod.object({
+        groupTitle: zod.string(),
+        id: zod.number(),
+        groupTasks: zod.array(zod.any()),
       }),
     )
     .optional(),
-  leadUnderwriter: z
+  leadUnderwriter: zod
     .object({
-      _id: z.union([z.string(), z.literal('Unassigned')]),
-      firstName: z.string(),
-      lastName: z.string(),
+      _id: zod.union([zod.string(), zod.literal('Unassigned')]),
+      firstName: zod.string(),
+      lastName: zod.string(),
     })
     .optional(),
 });
 
 export const TFM_FACILITY_AMENDMENT_WITH_UKEF_ID = TFM_FACILITY_AMENDMENT.merge(
-  z.object({
-    ukefFacilityId: z.string().nullable().optional(),
-    referenceNumber: z.string().optional(),
+  zod.object({
+    ukefFacilityId: zod.string().nullable().optional(),
+    referenceNumber: zod.string().optional(),
   }),
 );

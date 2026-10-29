@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA, UNIX_TIMESTAMP_SCHEMA, UNIX_TIMESTAMP_SECONDS_SCHEMA } from '@ukef/schemas';
 
 /**
@@ -17,9 +17,9 @@ import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA, UNIX_TIMESTAMP_SCHEMA, UNIX_TIMESTA
  *  * 16 digits - microseconds
  *  * 19 digits - nanoseconds
  */
-export type UnixTimestamp = z.infer<typeof UNIX_TIMESTAMP_SCHEMA>;
+export type UnixTimestamp = zod.infer<typeof UNIX_TIMESTAMP_SCHEMA>;
 
-export type UnixTimestampMilliseconds = z.infer<typeof UNIX_TIMESTAMP_MILLISECONDS_SCHEMA>;
+export type UnixTimestampMilliseconds = zod.infer<typeof UNIX_TIMESTAMP_MILLISECONDS_SCHEMA>;
 /**
  * Unix timestamp, representing the seconds that have elapsed since 1st January 1970
  * (UTC).
@@ -28,7 +28,7 @@ export type UnixTimestampMilliseconds = z.infer<typeof UNIX_TIMESTAMP_MILLISECON
  * stamp of '2023-12-18T11:51:54Z'
  *
  */
-export type UnixTimestampSeconds = z.infer<typeof UNIX_TIMESTAMP_SECONDS_SCHEMA>;
+export type UnixTimestampSeconds = zod.infer<typeof UNIX_TIMESTAMP_SECONDS_SCHEMA>;
 
 /**
  * ISO 8601 date time string in format 'yyyy-MM-ddThh:mm:ssZ'

@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { isVerifiedPayload } from '.';
 import { isVerifiedPayloadByZod } from './is-verified-payload-by-zod';
 import { isVerifiedPayloadByType } from './is-verified-payload-by-type';
@@ -19,7 +19,7 @@ describe('isVerifiedPayload', () => {
   describe('when a zod object is passed as a template', () => {
     it('should call isVerifiedPayloadByZod with the correct parameters', () => {
       const payload = { name: 'First', age: 30 };
-      const template = z.object({ name: z.string(), age: z.number() });
+      const template = zod.object({ name: zod.string(), age: zod.number() });
 
       isVerifiedPayload({ payload, template });
 
@@ -28,7 +28,7 @@ describe('isVerifiedPayload', () => {
 
     it('should not call isVerifiedPayloadByType', () => {
       const payload = { name: 'First', age: 30 };
-      const template = z.object({ name: z.string(), age: z.number() });
+      const template = zod.object({ name: zod.string(), age: zod.number() });
 
       isVerifiedPayload({ payload, template });
 

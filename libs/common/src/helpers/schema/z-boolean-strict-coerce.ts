@@ -1,6 +1,6 @@
-import z from 'zod';
+import zod from 'zod';
 
-const booleanLike = z.union([z.enum(['true', 'false', 'TRUE', 'FALSE', 'True', 'False', '0', '1']), z.literal(0), z.literal(1), z.boolean()]);
+const booleanLike = zod.union([zod.enum(['true', 'false', 'TRUE', 'FALSE', 'True', 'False', '0', '1']), zod.literal(0), zod.literal(1), zod.boolean()]);
 
 /**
  * This function coerces a value to a boolean.

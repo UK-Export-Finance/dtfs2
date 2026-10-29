@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { IsVerifiedPayloadParams } from '@ukef/types/payload-verification';
 import { isVerifiedPayloadByZod } from './is-verified-payload-by-zod';
 import { isVerifiedPayloadByType } from './is-verified-payload-by-type';
@@ -9,7 +9,7 @@ import { isVerifiedPayloadByType } from './is-verified-payload-by-type';
  * New implementation should use schema and zod
  */
 export const isVerifiedPayload = ({ payload, template }: IsVerifiedPayloadParams): boolean => {
-  if (template instanceof z.Schema) {
+  if (template instanceof zod.Schema) {
     return isVerifiedPayloadByZod({ payload, template });
   }
 

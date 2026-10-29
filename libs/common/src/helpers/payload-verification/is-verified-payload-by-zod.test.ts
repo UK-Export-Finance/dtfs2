@@ -1,17 +1,17 @@
-import z from 'zod';
+import zod from 'zod';
 import { isVerifiedPayloadByZod } from './is-verified-payload-by-zod';
 
 describe('isVerifiedPayloadByZod', () => {
   const templates = {
-    nameAndAge: z.object({ name: z.string(), age: z.number() }),
-    nameAndAddress: z.object({
-      name: z.string(),
-      address: z.object({ city: z.string(), country: z.string() }),
+    nameAndAge: zod.object({ name: zod.string(), age: zod.number() }),
+    nameAndAddress: zod.object({
+      name: zod.string(),
+      address: zod.object({ city: zod.string(), country: zod.string() }),
     }),
-    nameAndAddressGeneric: z.object({ name: z.string(), address: z.object({}) }),
-    nameAndAddressIncorrect: z.object({ name: z.string(), address: z.string() }),
-    items: z.object({ items: z.array(z.number()) }),
-    itemsGeneric: z.object({ items: z.array(z.unknown()) }),
+    nameAndAddressGeneric: zod.object({ name: zod.string(), address: zod.object({}) }),
+    nameAndAddressIncorrect: zod.object({ name: zod.string(), address: zod.string() }),
+    items: zod.object({ items: zod.array(zod.number()) }),
+    itemsGeneric: zod.object({ items: zod.array(zod.unknown()) }),
   };
 
   const successTestCases = [
