@@ -23,7 +23,7 @@ module.exports = (submittedValues, errorList, deal) => {
   const requestedCoverStartDate = getStartOfDateFromEpochMillisecondString(submittedValues.requestedCoverStartDate);
   const manualInclusionNoticeSubmissionDate = getStartOfDateFromEpochMillisecondString(manualInclusionNoticeSubmissionDateTimestamp);
   // EC 15 is: 'Cover Start Date is no more than three months from the date of submission'
-  const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
+  const eligibilityCriteria15 = deal.eligibility.criteria.find((criterion) => criterion.id === 15);
   const canEnterDateGreaterThan3Months = eligibilityCriteria15 && eligibilityCriteria15.answer === false;
 
   const today = startOfDay(new Date());

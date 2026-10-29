@@ -11,15 +11,15 @@ const stripDecimals = (numb) => {
 
 const roundNumber = (value, digits) => {
   let modifiedValue = value;
-  let d = digits;
+  let modifiedDigits = digits;
 
   if (!digits) {
-    d = 2;
+    modifiedDigits = 2;
   }
 
-  modifiedValue *= 10 ** d;
+  modifiedValue *= 10 ** modifiedDigits;
   modifiedValue = Math.round(modifiedValue);
-  modifiedValue /= 10 ** d;
+  modifiedValue /= 10 ** modifiedDigits;
   return modifiedValue;
 };
 

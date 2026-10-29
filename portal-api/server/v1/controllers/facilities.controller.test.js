@@ -148,7 +148,7 @@ describe('facilities.controller', () => {
           const results = await queryAllFacilities({}, {}, 0, 0);
 
           const expectedFacilities = mockFacilities.map((facility) => {
-            const amendment = amendments.find((a) => a.facilityId === facility._id);
+            const amendment = amendments.find((amendment) => amendment.facilityId === facility._id);
 
             if (amendment) {
               return {

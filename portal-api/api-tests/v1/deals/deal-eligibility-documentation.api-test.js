@@ -449,8 +449,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(testbank1Maker).putMultipartForm(deleteFileData, []).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      files.forEach((f) => {
-        expect(body.supportingInformation[f.fieldname].length).toEqual(0);
+      files.forEach((file) => {
+        expect(body.supportingInformation[file.fieldname].length).toEqual(0);
       });
     });
 

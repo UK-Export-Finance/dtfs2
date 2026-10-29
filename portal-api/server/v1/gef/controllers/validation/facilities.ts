@@ -49,7 +49,7 @@ const hasRequiredItems = (facility: Facility, dealVersion: number): (keyof Facil
   }
 
   // doc.details[] sometimes comes through with nulls so strip them out
-  const strippedDetails = facility.details ? facility.details.filter((n) => n) : [];
+  const strippedDetails = facility.details ? facility.details.filter((detail) => detail) : [];
 
   if (!strippedDetails.length) {
     required.push('details');

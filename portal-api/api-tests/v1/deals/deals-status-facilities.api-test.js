@@ -91,10 +91,10 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter(
-            (b) =>
-              b.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED &&
-              b.issueFacilityDetailsProvided === true &&
-              !b.issueFacilityDetailsSubmitted,
+            (bond) =>
+              bond.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED &&
+              bond.issueFacilityDetailsProvided === true &&
+              !bond.issueFacilityDetailsSubmitted,
           );
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
@@ -103,10 +103,10 @@ describe('/v1/deals/:id/status - facilities', () => {
           });
 
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter(
-            (l) =>
-              l.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
-              l.issueFacilityDetailsProvided === true &&
-              !l.issueFacilityDetailsSubmitted,
+            (loan) =>
+              loan.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
+              loan.issueFacilityDetailsProvided === true &&
+              !loan.issueFacilityDetailsSubmitted,
           );
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
@@ -138,14 +138,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Bond' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
-              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
               expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
               expect(typeof updatedBond.updatedAt).toEqual('number');
             });
@@ -160,14 +160,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Loan' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
-              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              const updatedLoan = body.deal.loanTransactions.items.find((item) => item._id === loan._id);
               expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
               expect(typeof updatedLoan.updatedAt).toEqual('number');
             });
@@ -184,14 +184,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Bond' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
-              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
               expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
               expect(typeof updatedBond.updatedAt).toEqual('number');
             });
@@ -206,14 +206,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Loan' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
-              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              const updatedLoan = body.deal.loanTransactions.items.find((item) => item._id === loan._id);
               expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
               expect(typeof updatedLoan.updatedAt).toEqual('number');
             });
@@ -268,14 +268,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Bond' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
-              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
               expect(typeof updatedBond.requestedCoverStartDate).toEqual('number');
               expect(typeof updatedBond.updatedAt).toEqual('number');
             });
@@ -290,14 +290,14 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = createdFacilities.filter(
-              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+              (facility) => facility.type === 'Loan' && isUnsubmittedIssuedFacility(facility) && !facility.requestedCoverStartDate,
             );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
-              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              const updatedLoan = body.deal.loanTransactions.items.find((item) => item._id === loan._id);
               expect(typeof updatedLoan.requestedCoverStartDate).toEqual('number');
               expect(typeof updatedLoan.updatedAt).toEqual('number');
             });
@@ -362,13 +362,15 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Bond' && isIssuedFacilityWithFacilityStageChange(f));
+          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (facility) => facility.type === 'Bond' && isIssuedFacilityWithFacilityStageChange(facility),
+          );
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+            const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
             expect(updatedBond.status).toEqual("Maker's input required");
             expect(typeof updatedBond.updatedAt).toEqual('number');
           });
@@ -382,13 +384,15 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Loan' && isIssuedFacilityWithFacilityStageChange(f));
+          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (facility) => facility.type === 'Loan' && isIssuedFacilityWithFacilityStageChange(facility),
+          );
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            const updatedLoan = body.deal.loanTransactions.items.find((loanItem) => loanItem._id === loan._id);
             expect(updatedLoan.status).toEqual("Maker's input required");
             expect(typeof updatedLoan.updatedAt).toEqual('number');
           });
@@ -707,14 +711,14 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Loan' && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL,
+            (facility) => facility.type === 'Loan' && facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL,
           );
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
           unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
-            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            const updatedLoan = body.deal.loanTransactions.items.find((item) => item._id === loan._id);
             expect(typeof updatedLoan.updatedAt).toEqual('number');
             expect(typeof updatedLoan.submittedAsIssuedDate).toEqual('number');
             expect(updatedLoan.submittedAsIssuedBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
@@ -733,14 +737,14 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Bond' && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED,
+            (facility) => facility.type === 'Bond' && facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED,
           );
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+            const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
             expect(typeof updatedBond.updatedAt).toEqual('number');
             expect(typeof updatedBond.submittedAsIssuedDate).toEqual('number');
             expect(updatedBond.submittedAsIssuedBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
@@ -759,14 +763,14 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Loan' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f),
+            (facility) => facility.type === 'Loan' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(facility),
           );
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
           unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
-            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            const updatedLoan = body.deal.loanTransactions.items.find((item) => item._id === loan._id);
             expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
             expect(updatedLoan.status).toEqual('Submitted');
             expect(typeof updatedLoan.updatedAt).toEqual('number');
@@ -782,14 +786,14 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
-            (f) => f.type === 'Bond' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f),
+            (facility) => facility.type === 'Bond' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(facility),
           );
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+            const updatedBond = body.deal.bondTransactions.items.find((item) => item._id === bond._id);
             expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
             expect(updatedBond.status).toEqual('Submitted');
             expect(typeof updatedBond.updatedAt).toEqual('number');

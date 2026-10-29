@@ -45,8 +45,9 @@ const addAccurateStatusesToBonds = (deal) => {
   const { status: dealStatus, previousStatus: previousDealStatus } = deal;
 
   if (deal.bondTransactions.items.length) {
-    deal.bondTransactions.items.forEach((b) => {
-      const bond = b;
+    deal.bondTransactions.items.forEach((bond) => {
+      const modifiedBond = bond;
+
       const validationErrors = isValidationRequired(deal) && bondValidationErrors(bond, deal);
       let issueFacilityValidationErrors;
 
@@ -54,7 +55,7 @@ const addAccurateStatusesToBonds = (deal) => {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond, deal);
       }
 
-      bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
+      modifiedBond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
     });
   }
 
