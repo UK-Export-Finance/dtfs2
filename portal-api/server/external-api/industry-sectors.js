@@ -2,7 +2,7 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidRegex } = require('../v1/validation/validateIds');
-const { INDUSTRY_SECTOR_ID } = require('../constants/regex');
+const { REGEX } = require('../constants');
 
 dotenv.config({ quiet: true });
 
@@ -30,7 +30,7 @@ const getIndustrySectors = async () => {
 };
 
 const getIndustrySector = async (id) => {
-  if (!isValidRegex(INDUSTRY_SECTOR_ID, id)) {
+  if (!isValidRegex(REGEX.INDUSTRY_SECTOR_ID, id)) {
     console.error('industry-sectors.getIndustrySector: invalid id provided %s', id);
     return { status: 400 };
   }

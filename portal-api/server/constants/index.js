@@ -10,6 +10,7 @@ const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const PASSPORT_VALIDATION_RESULTS = require('./passport-validation-results');
 const DATE_FORMATS = require('./date-formats');
 const NUMBER = require('./number');
+const REGEX = require('./regex');
 
 module.exports = {
   FACILITIES,
@@ -25,5 +26,6 @@ module.exports = {
   DATE_FORMATS,
   NUMBER,
   BANKS,
+  REGEX,
   ALL: 'all',
 };
