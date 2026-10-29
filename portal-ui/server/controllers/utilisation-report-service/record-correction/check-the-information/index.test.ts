@@ -2,13 +2,13 @@ import { aPortalSessionUser, aFeeRecordCorrectionReviewInformation, aPortalSessi
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
 import { CURRENCY, FeeRecordCorrectionReviewInformation, getFormattedMonetaryValue, mapReasonsToDisplayValues, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import api from '../../../../api';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import api from '@ukef/portal-ui/server/api';
+import { UtilisationReportCorrectionInformationViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/utilisation-report-correction-information';
+import { SaveFeeRecordCorrectionResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { LoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { getRecordCorrectionCancelLinkHref } from '@ukef/portal-ui/server/helpers';
 import { getUtilisationReportCorrectionReview, UtilisationReportCorrectionReviewRequest, postUtilisationReportCorrectionReview } from '.';
-import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
-import { SaveFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
-import { LoggedInUserSession } from '../../../../helpers/express-session';
-import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 jest.mock('../../../../api');
 

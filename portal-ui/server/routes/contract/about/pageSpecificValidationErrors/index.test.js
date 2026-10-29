@@ -1,6 +1,6 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/about/pageFields';
+import { pageSpecificValidationErrors } from '@ukef/portal-ui/server/helpers/pageSpecificValidationErrors';
 import { supplierValidationErrors, buyerValidationErrors, financialPageValidationErrors, aboutSupplyContractPreviewValidationErrors } from '.';
-import FIELDS from '../pageFields';
-import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 
 describe('about supply contract page specific validation errors', () => {
   const mockErrors = {

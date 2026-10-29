@@ -1,5 +1,5 @@
 import { isEqualMonthAndYear, OneIndexedMonth, ReportPeriod } from '@ukef/dtfs2-common';
-import { MONTH_NAMES, FILE_UPLOAD } from '../../../constants';
+import { MONTH_NAMES, FILE_UPLOAD } from '@ukef/portal-ui/server/constants';
 
 /**
  * Gets the regex group for all the possible month representations we

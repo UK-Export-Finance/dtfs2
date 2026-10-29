@@ -1,13 +1,16 @@
 import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { isFeeRecordCorrectionFeatureFlagEnabled, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import api from '@ukef/portal-ui/server/api';
+import { aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '@ukef/portal-ui/test-helpers/test-data';
+import { mapToPendingCorrectionsViewModel } from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/pending-corrections-helper';
+import { UtilisationReportPendingCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import {
+  getDueReportPeriodsByBankId,
+  getReportDueDate,
+} from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/utilisation-report-status';
 import { getUtilisationReportUpload } from '..';
-import api from '../../../../api';
-import { aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '../../../../../test-helpers/test-data';
-import { mapToPendingCorrectionsViewModel } from '../pending-corrections-helper';
-import { UtilisationReportPendingCorrectionsResponseBody } from '../../../../api-response-types';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { getDueReportPeriodsByBankId, getReportDueDate } from '../utilisation-report-status';
 
 jest.mock('../utilisation-report-upload-errors');
 jest.mock('../utilisation-report-status');

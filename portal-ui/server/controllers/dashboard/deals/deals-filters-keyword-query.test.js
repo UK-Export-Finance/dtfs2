@@ -1,5 +1,5 @@
-import CONSTANTS from '../../../constants';
-import { generateKeywordQuery } from '../filters/generate-keyword-query';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
+import { generateKeywordQuery } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-keyword-query';
 import dealsKeywordQuery from './deals-filters-keyword-query';
 
 describe('controllers/dashboard/deals - filters - keyword query', () => {

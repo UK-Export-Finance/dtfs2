@@ -1,9 +1,8 @@
 import express from 'express';
 import { ROLES } from '@ukef/dtfs2-common';
 
+import { validateToken, validateRole } from '@ukef/portal-ui/server/routes/middleware';
 import userAdminRoutes from './users';
-
-import { validateToken, validateRole } from '../middleware';
 
 export const adminRouter = express.Router();
 

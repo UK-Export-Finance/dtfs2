@@ -1,6 +1,6 @@
 import { FACILITY_STATUS } from '@ukef/dtfs2-common';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { isEligibilityComplete, isSubmissionDetailComplete, isEveryDealFormComplete, isEveryFacilityInDealComplete } from './dealFormsCompleted';
-import CONSTANTS from '../constants';
 
 const completeFacilities = {
   items: [

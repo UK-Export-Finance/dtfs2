@@ -1,6 +1,6 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-import { PRIMARY_NAV_KEY } from '../../../../server/constants';
-import { RecordCorrectionSentViewModel } from '../../../../server/types/view-models/record-correction/record-correction-sent';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { RecordCorrectionSentViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-sent';
 
 export const aRecordCorrectionSentViewModel = (): RecordCorrectionSentViewModel => ({
   user: aPortalSessionUser(),

@@ -1,7 +1,7 @@
 import axios, { HttpStatusCode } from 'axios';
 import { OTP_RESULT_TYPE, PORTAL_LOGIN_STATUS, LoginWithSignInOtpResponse } from '@ukef/dtfs2-common';
+import * as api from '@ukef/portal-ui/server/api';
 import { attemptOtpLogin } from './attempt-otp-login';
-import * as api from '../../api';
 
 jest.mock('axios');
 jest.mock('../../api');

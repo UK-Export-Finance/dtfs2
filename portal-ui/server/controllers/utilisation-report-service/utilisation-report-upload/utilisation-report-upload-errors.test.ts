@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
+import { asLoggedInUserSession, LoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
 import { GetUploadErrorsRequest, GetUploadErrorsResponse, getUploadErrors } from './utilisation-report-upload-errors';
 import { validateFilenameFormat } from './utilisation-report-filename-validator';
-import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
 
 jest.mock('./utilisation-report-filename-validator');
 jest.mock('../../../helpers/express-session');

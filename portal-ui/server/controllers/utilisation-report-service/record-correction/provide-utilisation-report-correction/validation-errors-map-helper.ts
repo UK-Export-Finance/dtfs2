@@ -1,6 +1,6 @@
 import { RecordCorrectionFormValueValidationErrors } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel } from '../../../../types/view-models/error-summary-view-model';
-import { ProvideUtilisationReportCorrectionErrorsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
+import { ErrorSummaryViewModel } from '@ukef/portal-ui/server/types/view-models/error-summary-view-model';
+import { ProvideUtilisationReportCorrectionErrorsViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/provide-utilisation-report-correction';
 
 /**
  * Maps form field error keys to their corresponding HTML element IDs for error summary links.

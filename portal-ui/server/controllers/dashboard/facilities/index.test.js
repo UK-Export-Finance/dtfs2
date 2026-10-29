@@ -1,5 +1,14 @@
 import { BSS_EWCS_FACILITY_TYPE, GEF_FACILITY_TYPE, FACILITY_STAGE, CURRENCY, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { cloneDeep } from 'lodash';
+import mockResponse from '@ukef/portal-ui/server/helpers/responseMock';
+import { mapFacilityProperties, getFlashSuccessMessage } from '@ukef/portal-ui/server/helpers';
+import api from '@ukef/portal-ui/server/api';
+import { submittedFiltersArray, submittedFiltersObject } from '@ukef/portal-ui/server/controllers/dashboard/filters/helpers';
+import { removeSessionFilter } from '@ukef/portal-ui/server/controllers/dashboard/filters/remove-filter-from-session';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
+import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
+import { facilitiesTemplateFilters as templateFilters } from './template-filters';
+import { selectedFilters } from './selected-filters';
 import {
   getAllFacilitiesData,
   getTemplateVariables,
@@ -8,15 +17,6 @@ import {
   removeSingleAllFacilitiesFilter,
   removeAllFacilitiesFilters,
 } from '.';
-import mockResponse from '../../../helpers/responseMock';
-import { mapFacilityProperties, getFlashSuccessMessage } from '../../../helpers';
-import api from '../../../api';
-import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
-import { removeSessionFilter } from '../filters/remove-filter-from-session';
-import { facilitiesTemplateFilters as templateFilters } from './template-filters';
-import { selectedFilters } from './selected-filters';
-import CONSTANTS from '../../../constants';
 
 const { CHECKER, MAKER } = ROLES;
 const mockFacilities = [
