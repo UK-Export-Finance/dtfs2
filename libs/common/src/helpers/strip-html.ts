@@ -1,3 +1,5 @@
+import { REGEX } from '@ukef/constants/regex';
+
 /**
  * Removes all HTML tags from a given string.
  *
@@ -5,4 +7,4 @@
  * @param replace - The replace string, defaults to ''.
  * @returns A new string with all HTML tags stripped out.
  */
-export const stripHtml = (string: string, replace: string = ''): string => string.replace(/<[^>]*>/g, replace);
+export const stripHtml = (string: string, replace: string = ''): string => string.replace(REGEX.HTML_TAG_REGEX, replace);
