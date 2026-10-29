@@ -1,6 +1,6 @@
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { CSV } from '../../../constants/csv';
-import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';
+import { REGEX } from '../../../constants';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -38,7 +38,7 @@ export const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowVali
     };
   }
 
-  if (!EXCHANGE_RATE_REGEX.test(totalFeesAccruedExchangeRateValue)) {
+  if (!REGEX.EXCHANGE_RATE_REGEX.test(totalFeesAccruedExchangeRateValue)) {
     return {
       errorMessage: 'Accrual exchange rate must be a number',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,

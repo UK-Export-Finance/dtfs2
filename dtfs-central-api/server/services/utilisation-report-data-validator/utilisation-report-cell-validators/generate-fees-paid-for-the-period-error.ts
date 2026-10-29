@@ -1,4 +1,4 @@
-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';
+import { REGEX } from '@ukef/dtfs2-common';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 import { CSV } from '../../../constants';
 
@@ -19,7 +19,7 @@ export const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE
     };
   }
 
-  if (!CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {
+  if (!REGEX.CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {
     return {
       errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
       column: feesPaidForThePeriodCellData?.column,

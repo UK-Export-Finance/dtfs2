@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
+import { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE, REGEX } from '@ukef/dtfs2-common';
 import { verifyHash } from './verify-hash';
 
 describe('verifyHash', () => {
@@ -7,7 +7,7 @@ describe('verifyHash', () => {
   const otpCode = '123456';
   const otpHash = generateHash(otpCode, otpSalt).toString(HEX_STRING_TYPE);
   const maliciousUserId = 'user123\n!@#$';
-  const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
+  const sanitisedUserId = maliciousUserId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   beforeEach(() => {
     jest.spyOn(console, 'info').mockImplementation(() => {});

@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, issueValid2FAJWT, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
+import { AuditDetails, issueValid2FAJWT, REGEX } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { validateOTPAndSignIn } from './validate-otp-and-sign-in';
 import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';
@@ -250,7 +250,7 @@ describe('validateOTPAndSignIn', () => {
     it('should sanitise the logged userId', async () => {
       // Arrange
       const maliciousUserId = `${userId}\n\r!@#$%^&*()`;
-      const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
+      const sanitisedUserId = maliciousUserId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');
       jest.mocked(getUserById).mockResolvedValue({ ...signedInUser, signInTokens: [] });
 
       const res = getMockResponse();
