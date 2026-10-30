@@ -29,7 +29,7 @@ import { Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { CURRENCY, CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
-import { isValidCurrency, isValidDate } from '../../helpers';
+import { isValidCurrency, isValidDate } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

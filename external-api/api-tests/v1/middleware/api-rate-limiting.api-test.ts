@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { ENTITY_TYPE, UKEF_ID, USER } from '@ukef/dtfs2-common';
-import { generateApp } from '../../../server/generateApp';
-import { api } from '../../api';
+import { generateApp } from '@ukef/external-api/server/generateApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 dotenv.config({ quiet: true });
 

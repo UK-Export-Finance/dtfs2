@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { EstoreRepo } from '../../../repositories/estore/estore-repo';
-import { getCollection } from '../../../database';
-import { EstoreRequest } from '../../../helpers/types/estore';
-import { EMAIL_TEMPLATES } from '../../../constants';
-import { eStoreSiteCreationCronJob, eStoreTermStoreCreationJob } from '../../../cron';
-import { sendEmail } from '../email.controller';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { getCollection } from '@ukef/external-api/server/database';
+import { EstoreRequest } from '@ukef/external-api/server/helpers/types/estore';
+import { EMAIL_TEMPLATES } from '@ukef/external-api/server/constants';
+import { eStoreSiteCreationCronJob, eStoreTermStoreCreationJob } from '@ukef/external-api/server/cron';
+import { sendEmail } from '@ukef/external-api/server/v1/controllers/email.controller';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { create } from './eStore.controller';
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import { BANK_HOLIDAYS } from '../../external-api';
+import { BANK_HOLIDAYS } from '@ukef/external-api/server/external-api';
 
 /**
  * Get UK bank holidays from gov API, if that fails returns data from backup external API

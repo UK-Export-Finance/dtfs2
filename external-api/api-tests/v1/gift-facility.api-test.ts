@@ -2,8 +2,8 @@ import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';
 import { APIM_GIFT_PAYLOADS_EXAMPLES } from '@ukef/dtfs2-common';
-import { app } from '../../server/createApp';
-import { api } from '../api';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 dotenv.config({ quiet: true });
 

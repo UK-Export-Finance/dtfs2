@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
-import { sendEmail } from '../../server/v1/controllers/email.controller';
-import { app } from '../../server/createApp';
-import { api } from '../api';
+import { sendEmail } from '@ukef/external-api/server/v1/controllers/email.controller';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 dotenv.config({ quiet: true });
 
