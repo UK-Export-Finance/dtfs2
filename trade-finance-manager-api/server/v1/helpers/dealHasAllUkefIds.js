@@ -17,7 +17,7 @@ const dealHasAllUkefIds = async (dealId) => {
         ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId)
         : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId);
 
-    const facilitiesHaveIds = tfmDeal.dealSnapshot.facilities.filter((f) => !f?.facilitySnapshot?.ukefFacilityId).length === 0;
+    const facilitiesHaveIds = tfmDeal.dealSnapshot.facilities.filter((facility) => !facility?.facilitySnapshot?.ukefFacilityId).length === 0;
 
     return { status: dealHasId && facilitiesHaveIds };
   }
@@ -41,8 +41,9 @@ const dealHasAllValidUkefIds = async (dealId) => {
         : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.details.ukefDealId);
 
     const facilitiesHaveIds =
-      tfmDeal.dealSnapshot.facilities.filter((f) => !f?.facilitySnapshot?.ukefFacilityId && !isValidUkefNumericId(f?.facilitySnapshot?.ukefFacilityId))
-        .length === 0;
+      tfmDeal.dealSnapshot.facilities.filter(
+        (facility) => !facility?.facilitySnapshot?.ukefFacilityId && !isValidUkefNumericId(facility?.facilitySnapshot?.ukefFacilityId),
+      ).length === 0;
 
     return { status: dealHasId && facilitiesHaveIds };
   }

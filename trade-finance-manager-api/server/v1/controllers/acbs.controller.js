@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
+const { flatten } = require('mongo-dot-notation');
 const { MONGO_DB_COLLECTIONS, DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
@@ -222,7 +222,7 @@ const checkAzureAcbsFunction = async () => {
         if (task.runtimeStatus !== DURABLE_FUNCTIONS_LOG.STATUS.RUNNING) {
           await collection.findOneAndUpdate(
             { instanceId: { $eq: task.instanceId } },
-            $.flatten({
+            flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,
               auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),

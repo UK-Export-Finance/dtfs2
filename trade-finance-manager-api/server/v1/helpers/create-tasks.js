@@ -21,35 +21,35 @@ const createGroupTasks = (tasks, groupId, additionalTasks = []) => {
   const mappedTasks = [];
   let taskIdCount = 0;
 
-  tasks.forEach((t) => {
-    let task = t;
+  tasks.forEach((task) => {
+    let modifiedTask = task;
 
     /**
      * Only create the task if:
      * - task title is NOT conditional and always applies.
      * - OR the task is conditional and the task title is listed in additionalTasks array
      */
-    const shouldCreateTask = !task.isConditional || (task.isConditional && additionalTasks.includes(task.title));
+    const shouldCreateTask = !modifiedTask.isConditional || (modifiedTask.isConditional && additionalTasks.includes(modifiedTask.title));
 
     if (shouldCreateTask) {
       // do not rely on index - otherwise if a task is conditional,
       // we can end up with e.g id 1 then skipping to id 3
       taskIdCount += 1;
 
-      task = {
+      modifiedTask = {
         id: String(taskIdCount),
         groupId,
-        ...task,
+        ...modifiedTask,
         ...NEW_TASK,
       };
 
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
-        task.canEdit = true;
-        task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+        modifiedTask.canEdit = true;
+        modifiedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
       }
 
-      mappedTasks.push(task);
+      mappedTasks.push(modifiedTask);
     }
   });
 

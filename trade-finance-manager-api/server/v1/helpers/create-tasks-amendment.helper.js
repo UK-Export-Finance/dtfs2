@@ -19,8 +19,8 @@ const createGroupTasks = (tasks, groupId) => {
   const mappedTasks = [];
   let taskIdCount = 0;
 
-  tasks.forEach((t) => {
-    let task = t;
+  tasks.forEach((task) => {
+    let modifiedTask = task;
 
     /**
      * Only create the task if:
@@ -33,7 +33,7 @@ const createGroupTasks = (tasks, groupId) => {
       // we can end up with e.g id 1 then skipping to id 3
       taskIdCount += 1;
 
-      task = {
+      modifiedTask = {
         id: String(taskIdCount),
         groupId,
         ...task,
@@ -47,11 +47,11 @@ const createGroupTasks = (tasks, groupId) => {
 
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
-        task.canEdit = true;
-        task.status = CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO;
+        modifiedTask.canEdit = true;
+        modifiedTask.status = CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO;
       }
 
-      mappedTasks.push(task);
+      mappedTasks.push(modifiedTask);
     }
   });
 
@@ -157,17 +157,17 @@ const updateTask = (allTaskGroups, taskUpdate) =>
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
+      groupTasks: group.groupTasks.map((task) => {
+        let modifiedTask = task;
 
         if (task.id === taskUpdate.id && task.groupId === taskUpdate.groupId) {
-          task = {
-            ...task,
+          modifiedTask = {
+            ...modifiedTask,
             ...taskUpdate,
           };
         }
 
-        return task;
+        return modifiedTask;
       }),
     };
 
@@ -181,17 +181,17 @@ const updateTask = (allTaskGroups, taskUpdate) =>
 const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
   const taskEmailsToSend = [];
 
-  let taskGroups = allTaskGroups.map((tGroup) => {
-    let group = tGroup;
+  let taskGroups = allTaskGroups.map((taskGroup) => {
+    let modifiedGroup = taskGroup;
 
-    group = {
-      ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        const task = t;
+    modifiedGroup = {
+      ...modifiedGroup,
+      groupTasks: modifiedGroup.groupTasks.map((groupTask) => {
+        const task = groupTask;
 
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
-        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, modifiedGroup, task, isTaskThatIsBeingUpdated);
 
         if (sendEmail) {
           taskEmailsToSend.push(updatedTask);
@@ -201,7 +201,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
       }),
     };
 
-    return group;
+    return modifiedGroup;
   });
 
   /**
@@ -211,11 +211,11 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
   const canUnlockUnderWritingGroupTasks = hasAmendmentAdverseHistoryTaskCompleted(taskGroups);
 
   if (canUnlockUnderWritingGroupTasks) {
-    taskGroups = taskGroups.map((g) => {
-      const group = g;
+    taskGroups = taskGroups.map((taskGroup) => {
+      const modifiedGroup = taskGroup;
 
-      if (group.groupTitle === CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING) {
-        group.groupTasks = group.groupTasks.map((task) => {
+      if (modifiedGroup.groupTitle === CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING) {
+        modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
           // add the task to list of emails to be sent
@@ -240,7 +240,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
         });
       }
 
-      return group;
+      return modifiedGroup;
     });
   }
 
@@ -258,14 +258,14 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
     return response;
   });
 
-  taskGroups = taskGroups.map((g) => {
-    const group = g;
+  taskGroups = taskGroups.map((taskGroup) => {
+    const modifiedGroup = taskGroup;
 
-    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === modifiedGroup.id);
 
     if (groupHasTaskToUpdate) {
-      group.groupTasks = group.groupTasks.map((t) => {
-        const task = t;
+      modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((groupTask) => {
+        const task = groupTask;
 
         const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
 
@@ -277,7 +277,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
       });
     }
 
-    return group;
+    return modifiedGroup;
   });
 
   return taskGroups;

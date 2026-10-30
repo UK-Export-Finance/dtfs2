@@ -38,22 +38,22 @@ const mapTotals = (facilities) => {
         return null;
       });
 
-  const formattedFacilitiesValue = facilitiesValue.length ? formattedNumber(facilitiesValue.reduce((a, b) => a + b)) : 0;
+  const formattedFacilitiesValue = facilitiesValue.length ? formattedNumber(facilitiesValue.reduce((previous, current) => previous + current)) : 0;
 
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
   // maps through facility and returns total from exposure array
   const mappedExposureTotal = !facilities
     ? null
-    : facilities.map((f) => {
+    : facilities.map((facility) => {
         // if amendment completed, then returns exposure value of amendment
-        if (calculateAmendmentTotalExposure(f)) {
-          const amendmentExposureValue = calculateAmendmentTotalExposure(f);
+        if (calculateAmendmentTotalExposure(facility)) {
+          const amendmentExposureValue = calculateAmendmentTotalExposure(facility);
           return amendmentExposureValue;
         }
 
-        if (f.tfm.ukefExposure) {
-          return f.tfm.ukefExposure;
+        if (facility.tfm.ukefExposure) {
+          return facility.tfm.ukefExposure;
         }
 
         return null;
@@ -62,7 +62,7 @@ const mapTotals = (facilities) => {
   // total ukef exposure for all facilities
   const ukefExposureArray = [...mappedExposureTotal];
 
-  const formattedUkefExposure = ukefExposureArray.length ? formattedNumber(ukefExposureArray.reduce((a, b) => a + b)) : 0;
+  const formattedUkefExposure = ukefExposureArray.length ? formattedNumber(ukefExposureArray.reduce((previous, current) => previous + current)) : 0;
 
   totals.facilitiesUkefExposure = `${CURRENCY.GBP} ${formattedUkefExposure}`;
 
