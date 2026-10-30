@@ -33,6 +33,7 @@ const coverEndDateValidation = (body, currentEndDate) => {
         errMsg: 'The new cover end date cannot be the same as the current cover end date',
       });
     }
+
     // if year in wrong format
     if (amendmentYearValidation(coverEndYear)) {
       coverEndDateErrors.push({

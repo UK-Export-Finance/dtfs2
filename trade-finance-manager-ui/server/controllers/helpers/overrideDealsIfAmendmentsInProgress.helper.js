@@ -23,6 +23,7 @@ const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
       return modifiedDeal;
     });
   }
+
   return deals;
 };
 

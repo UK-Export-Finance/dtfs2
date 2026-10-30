@@ -7,7 +7,7 @@ import {
   InvalidPayloadError,
   UserPartialLoginDataNotDefinedError,
 } from '@ukef/dtfs2-common';
-import { Session, SessionData } from 'express-session';
+import { Cookie, Session, SessionData } from 'express-session';
 import { Response } from 'express';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { LoginController } from './login.controller';
@@ -28,6 +28,31 @@ jest.mock('../../../services/user-session.service', () => ({
   },
 }));
 
+function aSession(sessionData: Partial<SessionData>): Session & Partial<SessionData> {
+  return {
+    ...sessionData,
+    id: 'mock-id',
+    cookie: {} as Cookie,
+    regenerate: jest.fn(),
+    destroy: jest.fn(),
+    reload: jest.fn(),
+    save: jest.fn(),
+    touch: jest.fn(),
+    resetMaxAge: jest.fn(),
+  };
+}
+
+function getHttpMocks({ session, body }: { session: Session & Partial<SessionData>; body: HandleSsoRedirectFormUiRequest['body'] }) {
+  return httpMocks.createMocks<HandleSsoRedirectFormUiRequest>({
+    session,
+    body,
+  });
+}
+
+function aValidRequestBody(): HandleSsoRedirectFormUiRequest['body'] {
+  return anEntraIdAuthCodeRedirectResponseBody();
+}
+
 describe('controllers - login (sso)', () => {
   describe('handleSsoRedirectForm', () => {
     const handleSsoRedirectFormMock = jest.mocked(LoginService.handleSsoRedirectForm);
@@ -43,7 +68,7 @@ describe('controllers - login (sso)', () => {
     });
 
     describe('when the user does not have an active partially logged in session', () => {
-      describe.each([
+      describe.each<{ description: string; session: Partial<SessionData> }>([
         {
           description: 'no user data',
           session: {},
@@ -58,7 +83,7 @@ describe('controllers - login (sso)', () => {
       ])('when the session has $description', ({ session }) => {
         beforeEach(() => {
           ({ req, res } = getHttpMocks({
-            session: session as Session & Partial<SessionData>,
+            session: aSession(session),
             body: aValidRequestBody(),
           }));
         });
@@ -91,7 +116,7 @@ describe('controllers - login (sso)', () => {
       describe('when the payload is not verified', () => {
         beforeEach(() => {
           ({ req, res } = getHttpMocks({
-            session: validSession as Session & Partial<SessionData>,
+            session: aSession(validSession),
             body: { invalidBody: 'invalid-body' } as unknown as HandleSsoRedirectFormUiRequest['body'],
           }));
         });
@@ -112,7 +137,7 @@ describe('controllers - login (sso)', () => {
       describe('when the payload is verified', () => {
         beforeEach(() => {
           ({ req, res } = getHttpMocks({
-            session: validSession as Session & Partial<SessionData>,
+            session: aSession(validSession),
             body: aValidRequestBody(),
           }));
         });
@@ -221,16 +246,5 @@ describe('controllers - login (sso)', () => {
         });
       });
     });
-
-    function getHttpMocks({ session, body }: { session: Session & Partial<SessionData>; body: HandleSsoRedirectFormUiRequest['body'] }) {
-      return httpMocks.createMocks<HandleSsoRedirectFormUiRequest>({
-        session,
-        body,
-      });
-    }
-
-    function aValidRequestBody(): HandleSsoRedirectFormUiRequest['body'] {
-      return anEntraIdAuthCodeRedirectResponseBody();
-    }
   });
 });

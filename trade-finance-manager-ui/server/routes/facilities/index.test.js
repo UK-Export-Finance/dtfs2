@@ -4,7 +4,7 @@ const { getFacilities, queryFacilities } = require('../../controllers/facilities
 
 describe('routes - facilities', () => {
   beforeEach(() => {
-    require('./index'); // eslint-disable-line global-require
+    require('./index');
   });
 
   afterEach(() => {

@@ -26,6 +26,7 @@ const getAmendmentEffectiveDate = async (req, res) => {
   let effectiveDateYear = '';
 
   const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
+
   if (amendment.effectiveDate) {
     effectiveDateDay = format(fromUnixTime(amendment.effectiveDate), 'dd');
     effectiveDateMonth = format(fromUnixTime(amendment.effectiveDate), 'M');
@@ -79,6 +80,7 @@ const postAmendmentEffectiveDate = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
     }
+
     console.error('Unable to update the amendment effective date');
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
   } catch (error) {

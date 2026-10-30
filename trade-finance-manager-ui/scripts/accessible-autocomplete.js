@@ -13,4 +13,4 @@ const init = () => {
   return accessibleAutocomplete;
 };
 
-export default init();
+init();

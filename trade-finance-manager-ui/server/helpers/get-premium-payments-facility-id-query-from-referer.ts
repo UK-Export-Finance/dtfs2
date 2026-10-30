@@ -17,8 +17,10 @@ export const getPremiumPaymentsFacilityIdQueryFromReferer = (referer?: string): 
   }
 
   const captureGroups = PREMIUM_PAYMENTS_FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
+
   if (!captureGroups) {
     return undefined;
   }
+
   return captureGroups.premiumPaymentsFacilityId;
 };
