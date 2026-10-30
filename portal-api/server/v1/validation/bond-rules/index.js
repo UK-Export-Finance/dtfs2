@@ -29,8 +29,8 @@ const rules = [
 module.exports = (bond, deal) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](bond, errorList, deal);
+  for (let index = 0; index < rules.length; index += 1) {
+    errorList = rules[index](bond, errorList, deal);
   }
 
   return errorList;

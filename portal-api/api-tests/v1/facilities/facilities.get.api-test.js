@@ -103,7 +103,7 @@ describe(baseUrl, () => {
       const items = body.facilities || [];
 
       // Act
-      const responseFacilityItem = items.find((i) => `${i._id}` === `${createdFacility._id}`);
+      const responseFacilityItem = items.find((facility) => `${facility._id}` === `${createdFacility._id}`);
       const response = responseFacilityItem;
 
       // Assert
@@ -119,7 +119,7 @@ describe(baseUrl, () => {
       const items = body.facilities || [];
 
       // Act
-      const responseFacilityItem = items.find((i) => `${i._id}` === `${createdFacility._id}`);
+      const responseFacilityItem = items.find((facility) => `${facility._id}` === `${createdFacility._id}`);
       const response = responseFacilityItem;
 
       // Assert

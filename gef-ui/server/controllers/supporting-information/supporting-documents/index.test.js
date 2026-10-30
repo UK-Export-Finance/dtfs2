@@ -277,9 +277,9 @@ describe('controllers/supporting-documents', () => {
         Application.findById.mockResolvedValueOnce({
           ...MOCKS.MockApplicationResponseDraft(),
           supportingInformation: {
-            manualInclusion: new Array(21).fill({}).map((_, i) => ({
-              _id: `mockFileId${i}`,
-              filename: `mock-file-${i}.pdf`,
+            manualInclusion: new Array(21).fill({}).map((item, index) => ({
+              _id: `mockFileId${index}`,
+              filename: `mock-file-${index}.pdf`,
             })),
           },
         });

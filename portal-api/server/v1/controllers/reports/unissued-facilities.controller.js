@@ -145,7 +145,7 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
     }
 
     // sort the facilities based on `daysLeftToIssue` property with the most urgent item at the top
-    unissuedFacilities.sort((a, b) => (a.daysLeftToIssue > b.daysLeftToIssue ? 1 : -1));
+    unissuedFacilities.sort((previous, current) => (previous.daysLeftToIssue > current.daysLeftToIssue ? 1 : -1));
     res.status(200).send(unissuedFacilities);
   } catch (error) {
     console.error('Unable to retrieve unissued facilities %o', error);

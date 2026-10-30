@@ -57,18 +57,19 @@ exports.update = async (req, res) => {
       let criteriaComplete = true;
       let criteriaAllTrue = true;
 
-      const updatedCriteria = criteria.map((c) => {
-        if (typeof req.body[`criterion-${c.id}`] === 'undefined') {
+      const updatedCriteria = criteria.map((criterion) => {
+        if (typeof req.body[`criterion-${criterion.id}`] === 'undefined') {
           criteriaAllTrue = false;
           criteriaComplete = false;
-          return c;
+
+          return criterion;
         }
 
-        criteriaAllTrue = criteriaAllTrue && req.body[`criterion-${c.id}`].toLowerCase() === 'true';
+        criteriaAllTrue = criteriaAllTrue && req.body[`criterion-${criterion.id}`].toLowerCase() === 'true';
 
         return {
-          ...c,
-          answer: req.body[`criterion-${c.id}`].toLowerCase() === 'true',
+          ...criterion,
+          answer: req.body[`criterion-${criterion.id}`].toLowerCase() === 'true',
         };
       });
 
@@ -79,7 +80,7 @@ exports.update = async (req, res) => {
       const documentationErrors = getDocumentationErrors(submissionType, supportingInformation);
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
-      const criteria11 = updatedCriteria.find((c) => c.id === 11);
+      const criteria11 = updatedCriteria.find((criterion) => criterion.id === 11);
 
       const criteria11IsFalse = typeof criteria11.answer !== 'undefined' && criteria11.answer === false;
 

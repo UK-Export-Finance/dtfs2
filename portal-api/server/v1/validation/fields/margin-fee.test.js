@@ -69,8 +69,8 @@ describe('validateMarginFee', () => {
   });
 
   it('should pass for all values in range 1 to 99', () => {
-    for (let i = 1; i <= 99; i += 10) {
-      const entity = { [fieldName]: i.toString() };
+    for (let index = 1; index <= 99; index += 10) {
+      const entity = { [fieldName]: index.toString() };
       const errorList = {};
       const result = validateMarginFee(entity, fieldName, fieldTitle, errorList);
 

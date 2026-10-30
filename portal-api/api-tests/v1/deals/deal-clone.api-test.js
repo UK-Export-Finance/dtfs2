@@ -249,8 +249,8 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(testbank2Maker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
-        const secondOriginalBond = createdFacilities.find((f) => f.type === 'Bond' && f._id !== firstOriginalBond._id);
+        const firstOriginalBond = createdFacilities.find((facility) => facility.type === 'Bond');
+        const secondOriginalBond = createdFacilities.find((facility) => facility.type === 'Bond' && facility._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
           type: 'Bond',
@@ -304,8 +304,8 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(testbank2Maker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
-        const secondOriginalLoan = createdFacilities.find((f) => f.type === 'Loan' && f._id !== firstOriginalLoan._id);
+        const firstOriginalLoan = createdFacilities.find((facility) => facility.type === 'Loan');
+        const secondOriginalLoan = createdFacilities.find((facility) => facility.type === 'Loan' && facility._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
           type: 'Loan',

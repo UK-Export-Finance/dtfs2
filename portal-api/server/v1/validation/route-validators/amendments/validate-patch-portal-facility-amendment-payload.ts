@@ -1,8 +1,8 @@
 import { validateSchema } from '@ukef/dtfs2-common';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
-import z from 'zod';
+import zod from 'zod';
 
-const PatchPortalFacilityAmendmentSchema = z.object({
+const PatchPortalFacilityAmendmentSchema = zod.object({
   update: PORTAL_FACILITY_AMENDMENT_USER_VALUES.partial(),
 });
 

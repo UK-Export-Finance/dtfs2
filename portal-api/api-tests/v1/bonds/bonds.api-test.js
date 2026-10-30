@@ -345,7 +345,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((bond) => bond._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -415,7 +415,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((bond) => bond._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -491,7 +491,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((bond) => bond._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -553,7 +553,7 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
 
-      const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) => b._id === bondId);
+      const updatedBond = updatedDeal.deal.bondTransactions.items.find((bond) => bond._id === bondId);
 
       const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -619,7 +619,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((bond) => bond._id === bondId);
 
         expect(updatedBond._id).toEqual(bondId);
         expect(updatedBond.value).toEqual(bondWithSameCurrencyAsContract.value);

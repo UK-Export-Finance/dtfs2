@@ -162,7 +162,7 @@ const buildBody = async (app, amendmentsOnDeal, previewMode, user) => {
             // canResubmitIssuedFacilities is true only when an unissued facility has been changed to issued and not yet submitted
             canResubmitIssuedFacilities: item.details?.canResubmitIssuedFacilities || false,
           }))
-          .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
+          .sort((previous, current) => current.createdAt - previous.createdAt), // latest facility appears at top
       },
       supportingInfo: {
         ...app.supportingInformation,

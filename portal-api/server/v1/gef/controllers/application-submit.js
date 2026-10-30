@@ -202,18 +202,18 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
       if (notYetSubmittedToUKEF && haveFacilities) {
         // Iterate through issued facilities
         facilities
-          .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
-          .map(async (f) => {
+          .filter((facility) => facility.hasBeenIssued && !facility.coverDateConfirmed)
+          .map(async (facility) => {
             hasUpdated = true;
-            await updateFacility(f._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
+            await updateFacility(facility._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
           });
 
         // Iterate through unissued facilities
         facilities
-          .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
-          .map(async (f) => {
+          .filter((facility) => !facility.hasBeenIssued && facility.coverDateConfirmed)
+          .map(async (facility) => {
             hasUpdated = true;
-            await updateFacility(f._id, { coverDateConfirmed: false }, auditDetails);
+            await updateFacility(facility._id, { coverDateConfirmed: false }, auditDetails);
           });
         return hasUpdated;
       }
