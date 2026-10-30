@@ -14,8 +14,10 @@ export const validateUserTeam =
   (requiredTeamIds: TeamId[], redirectUrl: string = '/home'): RequestHandler =>
   (req, res, next) => {
     const { user } = asUserSession(req.session);
+
     if (userIsInTeam(user, requiredTeamIds)) {
       return next();
     }
+
     return res.redirect(redirectUrl);
   };

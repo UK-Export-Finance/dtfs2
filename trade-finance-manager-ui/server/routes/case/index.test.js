@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { expect, jest } from '@jest/globals';
 import { TEAM_IDS } from '@ukef/dtfs2-common';
 import { route } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
@@ -23,7 +21,7 @@ describe('routes - case', () => {
   });
 
   it('should setup routes with controllers', () => {
-    require('./index'); // eslint-disable-line global-require
+    require('./index');
 
     expect(route).toHaveBeenCalledTimes(47);
 

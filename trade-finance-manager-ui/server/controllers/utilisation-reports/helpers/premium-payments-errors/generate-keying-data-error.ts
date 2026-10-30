@@ -28,6 +28,7 @@ export const getGenerateKeyingDataError = (generateKeyingDataErrorKey: GenerateK
  */
 export const validateGenerateKeyingDataErrorKey = (generateKeyingDataErrorKey: string): generateKeyingDataErrorKey is GenerateKeyingDataErrorKey => {
   const allKeys: string[] = Object.values(GENERATE_KEYING_DATA_ERROR_KEY);
+
   if (allKeys.includes(generateKeyingDataErrorKey)) {
     return true;
   }

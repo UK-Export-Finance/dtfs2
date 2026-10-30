@@ -30,6 +30,7 @@ allTablesWithSelectAllCheckbox.forEach(($table) => {
       selectAllTableCellCheckbox.checked = true;
       return;
     }
+
     if (isAnyOtherTableCellCheckboxNotChecked()) {
       selectAllTableCellCheckbox.checked = false;
     }

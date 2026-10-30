@@ -184,6 +184,7 @@ const postComment = async (req, res) => {
         comment,
       });
     }
+
     if (normalizedComment.length > 0) {
       const shortUser = {
         firstName: user.firstName,
