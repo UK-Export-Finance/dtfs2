@@ -27,8 +27,8 @@ const mockIndustryResponse = {
   effectiveTo: '9999-12-31T00:00:00.000Z',
 };
 
-jest.mock('../../server/v1/controllers/industry-sectors.controller', () => ({
-  ...jest.requireActual<object>('../../server/v1/controllers/industry-sectors.controller'),
+jest.mock('@ukef/external-api/server/v1/controllers/industry-sectors.controller', () => ({
+  ...jest.requireActual<object>('@ukef/external-api/server/v1/controllers/industry-sectors.controller'),
   findACBSIndustrySector: jest.fn(),
 }));
 

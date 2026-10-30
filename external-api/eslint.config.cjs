@@ -73,25 +73,6 @@ module.exports = defineConfig([
     },
   },
 
-  // Restrict usage of regular expressions outside of libs/gift-common/src/constants
-  {
-    files: ['**/src/**/*.ts'],
-    ignores: ['libs/common/src/constants/regex/**/*.ts', 'dist/**', '**/dist/**'],
-    rules: {
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'Literal[regex]',
-          message: 'Regular expressions must be defined in libs/gift-common/src/constants/regex.',
-        },
-        {
-          selector: 'NewExpression[callee.name="RegExp"]',
-          message: 'Regular expressions must be defined in libs/gift-common/src/constants/regex.',
-        },
-      ],
-    },
-  },
-
   // Global overrides
   {
     languageOptions: {
@@ -246,6 +227,26 @@ module.exports = defineConfig([
       'import-x/no-useless-path-segments': 'off',
 
       'local-rules/require-regex-documentation': 'error',
+    },
+  },
+
+  // Restrict usage of regular expressions outside of libs/common/src/constants/regex
+  // Why: must come after "Global overrides" above, otherwise its blanket 'no-restricted-syntax': 'off' wins
+  {
+    files: ['server/**/*.ts', 'api-tests/**/*.ts'],
+    ignores: ['**/dist/**'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[regex]',
+          message: 'Regular expressions must be defined in libs/common/src/constants/regex.',
+        },
+        {
+          selector: 'NewExpression[callee.name="RegExp"]',
+          message: 'Regular expressions must be defined in libs/common/src/constants/regex.',
+        },
+      ],
     },
   },
 
