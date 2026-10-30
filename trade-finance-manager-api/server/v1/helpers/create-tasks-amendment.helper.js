@@ -186,8 +186,8 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
 
     modifiedGroup = {
       ...modifiedGroup,
-      groupTasks: modifiedGroup.groupTasks.map((t) => {
-        const task = t;
+      groupTasks: modifiedGroup.groupTasks.map((groupTask) => {
+        const task = groupTask;
 
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
@@ -264,8 +264,8 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
     const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === modifiedGroup.id);
 
     if (groupHasTaskToUpdate) {
-      modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((t) => {
-        const task = t;
+      modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((groupTask) => {
+        const task = groupTask;
 
         const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
 
