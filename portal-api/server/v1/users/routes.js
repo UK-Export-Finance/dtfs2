@@ -91,9 +91,9 @@ module.exports.create = async (req, res, next) => {
   // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
   const auditDetails = req.user?._id ? generatePortalAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
-  return create(newUser, userService, auditDetails, (shouldReturnNext, user) => {
-    if (shouldReturnNext) {
-      return next(shouldReturnNext);
+  return create(newUser, userService, auditDetails, (error, user) => {
+    if (error) {
+      return next(error);
     }
 
     return res.json({ success: true, user });
