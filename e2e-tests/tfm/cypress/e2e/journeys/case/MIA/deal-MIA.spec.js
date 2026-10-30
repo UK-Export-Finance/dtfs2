@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import relative from '../../../relativeURL';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 import { caseSummary, caseSubNavigation } from '../../../partials';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';

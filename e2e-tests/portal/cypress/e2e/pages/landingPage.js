@@ -1,4 +1,4 @@
-const landingPage = {
+export const landingPage = {
   visit: () => cy.visit('/login'),
   email: () => cy.get('[data-cy="email"]'),
   password: () => cy.get('[data-cy="password"]'),
@@ -8,5 +8,3 @@ const landingPage = {
   expectError: (text) => cy.get('[data-cy="error-summary"]').contains(text),
   accountSuspended: () => cy.get('[data-cy="account-suspended"]'),
 };
-
-module.exports = landingPage;

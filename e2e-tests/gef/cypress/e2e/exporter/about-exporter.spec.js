@@ -1,7 +1,7 @@
 import relative from '../relativeURL';
 import { backLink, errorSummary, form, headingCaption, mainHeading, saveAndReturnButton } from '../partials';
-import aboutExporter from '../pages/about-exporter';
-import applicationDetails from '../pages/application-details';
+import { aboutExporter } from '../pages/about-exporter';
+import { applicationDetails } from '../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 const dealIds = [];

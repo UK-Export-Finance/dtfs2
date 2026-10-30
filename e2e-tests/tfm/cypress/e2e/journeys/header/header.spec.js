@@ -1,4 +1,4 @@
-import pages from '../../pages';
+import { pages } from '../../pages';
 import { primaryNavigation } from '../../partials';
 import USERS from '../../../fixtures/users';
 import { TFM_USER_TEAMS, PDC_TEAMS } from '../../../fixtures/teams';

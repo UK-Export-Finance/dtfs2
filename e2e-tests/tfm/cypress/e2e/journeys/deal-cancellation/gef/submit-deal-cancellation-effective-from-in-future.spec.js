@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
 import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
-import facilitiesPage from '../../../pages/facilitiesPage';
+import { facilitiesPage } from '../../../pages/facilitiesPage';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';

@@ -1,8 +1,8 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
-import applicationDetails from '../pages/application-details';
-import dashboardPage from '../pages/dashboard-page';
-import companiesHouse from '../pages/companies-house';
-import exportersAddress from '../pages/exporters-address';
+import { applicationDetails } from '../pages/application-details';
+import { dashboardPage } from '../pages/dashboard-page';
+import { companiesHouse } from '../pages/companies-house';
+import { exportersAddress } from '../pages/exporters-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let url;

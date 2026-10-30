@@ -5,7 +5,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { caseSubNavigation, caseSummary } from '../../../partials';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 
 context('Amendment versions - amendments should have correct versions when completing tasks on older amendments', () => {
   let dealId;

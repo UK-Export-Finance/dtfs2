@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, today } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, RECORD_CORRECTION_REASON, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import pages from '../../../../pages';
+import { tfmPages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
@@ -21,8 +21,8 @@ const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
-const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
-const { utilisationReportPage } = pages;
+const { recordCorrectionLogContent } = tfmPages.utilisationReportPage.tabs;
+const { utilisationReportPage } = tfmPages;
 const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
@@ -40,7 +40,7 @@ context('When fee record correction feature flag is enabled', () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [firstReport]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
 
     cy.login(USERS.PDC_RECONCILE);
 
@@ -62,7 +62,7 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   beforeEach(() => {
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);

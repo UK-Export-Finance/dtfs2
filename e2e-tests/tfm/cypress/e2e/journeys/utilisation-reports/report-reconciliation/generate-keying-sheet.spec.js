@@ -1,13 +1,13 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { startOfMonth, subMonths } from 'date-fns';
 import { PENDING_RECONCILIATION, CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
+import { tfmPages } from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import relative from '../../../relativeURL';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
-const { keyingSheetContent } = pages.utilisationReportPage.tabs;
+const { keyingSheetContent } = tfmPages.utilisationReportPage.tabs;
 
 context('PDC_RECONCILE users can generate keying data', () => {
   const bankId = '961';
@@ -68,14 +68,14 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords(feeRecords));
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
   });
 
   it('can generate keying data for fee record at MATCH status', () => {
     cy.visit(`utilisation-reports/${reportId}`);
-    pages.utilisationReportPage.tabs.premiumPaymentsContent.generateKeyingDataButton().click();
-    pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
+    tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.generateKeyingDataButton().click();
+    tfmPages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}#keying-sheet`));
 

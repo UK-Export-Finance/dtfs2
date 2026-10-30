@@ -1,6 +1,6 @@
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
-const minDealWithNotStartedFacilityStatuses = require('./MINDealWithNotStartedFacilityStatuses');
+const { minDealWithNotStartedFacilityStatuses } = require('./minDealWithNotStartedFacilityStatuses');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const {
   fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,

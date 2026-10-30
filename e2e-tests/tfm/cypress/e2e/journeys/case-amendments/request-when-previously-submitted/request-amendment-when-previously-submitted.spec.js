@@ -4,7 +4,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import pages from '../../../pages';
+import { pages } from '../../../pages';
 
 context('Amendments - should not allow amendments to have same coverEndDate/value if previously submitted', () => {
   let dealId;

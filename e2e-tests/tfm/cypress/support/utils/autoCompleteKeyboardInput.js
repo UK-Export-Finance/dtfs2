@@ -1,4 +1,4 @@
-import pages from '../../e2e/pages';
+import { pages } from '../../e2e/pages';
 
 /**
  * autocompleteKeyboardInput
@@ -7,12 +7,10 @@ import pages from '../../e2e/pages';
  * @param {string} fieldId: Autocomplete field ID
  * @param {string} text: Text to enter
  */
-const autocompleteKeyboardInput = (fieldId, text) => {
+export const autocompleteKeyboardInput = (fieldId, text) => {
   const autocompleteField = pages.autoCompleteField(fieldId);
 
   cy.keyboardInput(autocompleteField.input(), text);
 
   autocompleteField.selectOption(text).click();
 };
-
-export default autocompleteKeyboardInput;

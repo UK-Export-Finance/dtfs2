@@ -4,6 +4,4 @@
  * 2. Inserts mocked data
  */
 
-const loadData = () => cy.task('runLoadData');
-
-export default loadData;
+export const loadData = () => cy.task('runLoadData');

@@ -1,9 +1,9 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 
-import applicationDetails from '../../e2e/pages/application-details';
-import companiesHouse from '../../e2e/pages/companies-house';
-import exportersAddress from '../../e2e/pages/exporters-address';
-import aboutExporter from '../../e2e/pages/about-exporter';
+import { applicationDetails } from '../../e2e/pages/application-details';
+import { companiesHouse } from '../../e2e/pages/companies-house';
+import { exportersAddress } from '../../e2e/pages/exporters-address';
+import { aboutExporter } from '../../e2e/pages/about-exporter';
 
 /**
  * Completes the about exporter section of the application

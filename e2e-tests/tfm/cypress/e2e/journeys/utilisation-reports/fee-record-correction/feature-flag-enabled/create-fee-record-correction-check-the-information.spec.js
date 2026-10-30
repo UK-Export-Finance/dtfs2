@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import pages from '../../../../pages';
+import { tfmPages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import BANKS from '../../../../../fixtures/banks';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
@@ -15,7 +15,7 @@ context('When fee record correction feature flag is enabled', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const feeRecordAtToDoStatus = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+  const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -40,7 +40,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   context('PDC_READ users cannot send record correction requests', () => {
     beforeEach(() => {
-      pages.landingPage.visit();
+      tfmPages.landingPage.visit();
       cy.login(USERS.PDC_READ);
 
       cy.visit(`utilisation-reports/${reportId}`);
@@ -54,12 +54,12 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can send record correction requests', () => {
-    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage, feeRecordCorrectionRequestSentPage } = pages;
+    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage, feeRecordCorrectionRequestSentPage } = tfmPages;
     const additionalInfoUserInput = 'Some additional info.\nSome special characters &$%!?@*()_+={}[];:~`\'"';
     const expectedBankEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
 
     beforeEach(() => {
-      pages.landingPage.visit();
+      tfmPages.landingPage.visit();
 
       cy.login(USERS.PDC_RECONCILE);
 

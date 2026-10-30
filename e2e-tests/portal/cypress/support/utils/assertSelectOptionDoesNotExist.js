@@ -4,11 +4,9 @@
  * @param {Function} selectElement - the select element to check
  * @param {string} optionText - the text of the option that should not exist
  */
-const assertSelectOptionDoesNotExist = (selectElement, optionText) => {
+export const assertSelectOptionDoesNotExist = (selectElement, optionText) => {
   selectElement
     .find('option')
     .filter((_, option) => option.innerText.trim() === optionText)
     .should('not.exist');
 };
-
-export default assertSelectOptionDoesNotExist;

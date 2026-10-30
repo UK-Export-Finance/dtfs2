@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import { backLink, cancelLink, continueButton, form, errorSummary, headingCaption } from '../../partials';
-import facilities from '../../pages/facilities';
+import { facilitiesPage } from '../../pages/facilities';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../../fixtures/constants';
 
@@ -32,10 +32,10 @@ context('Facilities Page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       backLink();
       headingCaption();
-      facilities.hasBeenIssuedHeading().contains('cash');
+      facilitiesPage.hasBeenIssuedHeading().contains('cash');
       form();
-      facilities.hasBeenIssuedRadioYesRadioButton();
-      facilities.hasBeenIssuedRadioNoRadioButton();
+      facilitiesPage.hasBeenIssuedRadioYesRadioButton();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton();
       continueButton();
       cancelLink();
     });
@@ -44,10 +44,10 @@ context('Facilities Page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
       backLink();
       headingCaption();
-      facilities.hasBeenIssuedHeading().contains('contingent');
+      facilitiesPage.hasBeenIssuedHeading().contains('contingent');
       form();
-      facilities.hasBeenIssuedRadioYesRadioButton();
-      facilities.hasBeenIssuedRadioNoRadioButton();
+      facilitiesPage.hasBeenIssuedRadioYesRadioButton();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton();
       continueButton();
       cancelLink();
     });
@@ -69,20 +69,20 @@ context('Facilities Page', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       cy.clickContinueButton();
-      facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
+      facilitiesPage.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
       errorSummary().contains('Select if your bank has already issued this cash facility');
-      facilities.hasBeenIssuedError().contains('Select if your bank has already issued this cash facility');
+      facilitiesPage.hasBeenIssuedError().contains('Select if your bank has already issued this cash facility');
     });
 
     it('takes you to `about facility` page when selecting one of the radio buttons', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      facilities.hasBeenIssuedRadioYesRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioYesRadioButton().click();
       cy.clickContinueButton();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      facilities.hasBeenIssuedRadioNoRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton().click();
       cy.clickContinueButton();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,

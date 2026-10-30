@@ -1,6 +1,6 @@
 import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import pages from '../../../../pages';
+import { pages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 
