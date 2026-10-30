@@ -1,7 +1,7 @@
 const getObjectPropertyValueFromStringPath = (object, field) =>
-  field.split('.').reduce((o, p) => {
-    if (o && o[p] !== undefined) {
-      return o[p];
+  field.split('.').reduce((previous, current) => {
+    if (previous && previous[current] !== undefined) {
+      return previous[current];
     }
 
     return null;

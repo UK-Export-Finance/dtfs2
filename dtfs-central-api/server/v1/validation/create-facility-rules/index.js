@@ -6,8 +6,8 @@ const rules = [type, dealId];
 module.exports = (facility) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](facility, errorList);
+  for (let index = 0; index < rules.length; index += 1) {
+    errorList = rules[index](facility, errorList);
   }
 
   return errorList;

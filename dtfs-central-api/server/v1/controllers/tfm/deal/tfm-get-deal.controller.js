@@ -40,7 +40,7 @@ const findOneDeal = async (_id, callback) => {
           console.info('findOneDeal: Retrieved %d facilities for deal %s', facilities?.length || 0, _id);
 
           facilityIds.forEach((id) => {
-            const facility = facilities.find((f) => f._id.toHexString() === id.toHexString());
+            const facility = facilities.find((facility) => facility._id.toHexString() === id.toHexString());
             const facilitySnapshot = facility?.facilitySnapshot;
 
             if (facilitySnapshot) {

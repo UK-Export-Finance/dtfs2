@@ -1,6 +1,6 @@
-import z from 'zod';
+import zod from 'zod';
 
-export const dateFromIsoStringSchema = z
+export const dateFromIsoStringSchema = zod
   .string()
   .datetime()
-  .transform((val) => new Date(val));
+  .transform((value) => new Date(value));

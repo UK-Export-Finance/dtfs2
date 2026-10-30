@@ -125,7 +125,7 @@ export class TfmFacilitiesRepo {
 
           return hasAmendmentId && hasAmendmentReference && hasCorrectAmendmentStatus;
         })
-        .sort((a, b) => b.updatedAt - a.updatedAt);
+        .sort((previous, current) => current.updatedAt - previous.updatedAt);
 
       return filteredAndSortingAmendments;
     }

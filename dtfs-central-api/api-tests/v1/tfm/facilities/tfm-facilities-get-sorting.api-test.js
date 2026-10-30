@@ -75,10 +75,10 @@ describe('/v1/tfm/facilities', () => {
 
             const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(fieldValuesInAscendingOrder, sortByOrder, sortByField);
 
-            for (let i = 0; i < 4; i += 1) {
-              const fieldValue = getObjectPropertyValueFromStringPath(body.facilities[i], fieldPath);
+            for (let index = 0; index < 4; index += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(body.facilities[index], fieldPath);
 
-              expect(fieldValue).toEqual(expectedFieldValues[i]);
+              expect(fieldValue).toEqual(expectedFieldValues[index]);
             }
           });
 
@@ -105,16 +105,16 @@ describe('/v1/tfm/facilities', () => {
 
             const { fieldPath, expectedFieldValues } = getFieldPathAndExpectedFieldValues(fieldValuesInAscendingOrder, sortByOrder, sortByField);
 
-            for (let i = 0; i < 2; i += 1) {
-              const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[i], fieldPath);
+            for (let index = 0; index < 2; index += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(page1Body.facilities[index], fieldPath);
 
-              expect(fieldValue).toEqual(expectedFieldValues[i]);
+              expect(fieldValue).toEqual(expectedFieldValues[index]);
             }
 
-            for (let i = 0; i < 2; i += 1) {
-              const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[i], fieldPath);
+            for (let index = 0; index < 2; index += 1) {
+              const fieldValue = getObjectPropertyValueFromStringPath(page2Body.facilities[index], fieldPath);
 
-              expect(fieldValue).toEqual(expectedFieldValues[i + 2]);
+              expect(fieldValue).toEqual(expectedFieldValues[index + 2]);
             }
           });
         });

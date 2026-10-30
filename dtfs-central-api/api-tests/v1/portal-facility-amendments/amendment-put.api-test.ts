@@ -267,7 +267,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
         amendmentsEligibilityCriteria(2, [FACILITY_TYPE.CASH], true),
         amendmentsEligibilityCriteria(1.5, [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN]),
       ];
-      await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS).then((c) => c.insertMany(eligibilityCriteriaNoCash));
+      await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS).then((criteria) => criteria.insertMany(eligibilityCriteriaNoCash));
 
       // Act
       const { body, status } = (await testApi

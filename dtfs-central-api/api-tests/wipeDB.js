@@ -7,7 +7,7 @@ const { mongoDbClient: db } = require('../server/drivers/db-client');
 const wipe = async (collections) => {
   const drop = async (collection) =>
     new Promise((resolve) => {
-      db.getCollection(collection).then((c) => c.drop(() => resolve()));
+      db.getCollection(collection).then((collection) => collection.drop(() => resolve()));
     });
 
   const dropPromises = [];

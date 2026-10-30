@@ -360,11 +360,11 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
   const formData = new FormData();
 
-  Object.entries(body).forEach(([fieldname, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((v) => formData.append(fieldname, v));
+  Object.entries(body).forEach(([fieldname, fieldValue]) => {
+    if (Array.isArray(fieldValue)) {
+      fieldValue.forEach((value) => formData.append(fieldname, value));
     } else {
-      formData.append(`${fieldname}`, value);
+      formData.append(`${fieldname}`, fieldValue);
     }
   });
 

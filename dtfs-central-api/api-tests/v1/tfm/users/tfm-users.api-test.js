@@ -174,7 +174,7 @@ describe('/v1/tfm/users', () => {
         mockUsers.map(async (mockUser) => testApi.post({ user: mockUser, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/users')),
       );
 
-      const team1Users = mockUsers.filter((u) => u.teams.includes('TEAM1'));
+      const team1Users = mockUsers.filter((user) => user.teams.includes('TEAM1'));
 
       const { status, body } = await testApi.get(`/v1/tfm/users/team/${mockUsers[0].teams[0]}`);
 
@@ -184,8 +184,8 @@ describe('/v1/tfm/users', () => {
       const firstUserUsername = team1Users[0].username;
       const secondUserUsername = team1Users[1].username;
 
-      expect(body.find((u) => u.username === firstUserUsername)).toBeDefined();
-      expect(body.find((u) => u.username === secondUserUsername)).toBeDefined();
+      expect(body.find((user) => user.username === firstUserUsername)).toBeDefined();
+      expect(body.find((user) => user.username === secondUserUsername)).toBeDefined();
     });
   });
 });

@@ -1,8 +1,8 @@
-import $ from 'jquery';
+import jquery from 'jquery';
 import MOJFrontend, { initAll } from '@ministryofjustice/frontend';
 
 const init = () => {
-  window.$ = $;
+  window.$ = jquery;
 
   initAll();
 

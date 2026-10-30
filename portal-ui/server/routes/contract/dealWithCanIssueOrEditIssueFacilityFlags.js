@@ -6,24 +6,24 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   const bonds = modifiedDeal.bondTransactions.items;
   const loans = modifiedDeal.loanTransactions.items;
 
-  bonds.map((b) => {
-    const bond = b;
+  bonds.map((bond) => {
+    const mappedBond = bond;
 
-    if (canIssueOrEditIssueFacility(userRoles, deal, b)) {
-      bond.canIssueOrEditIssueFacility = true;
+    if (canIssueOrEditIssueFacility(userRoles, deal, bond)) {
+      mappedBond.canIssueOrEditIssueFacility = true;
     }
 
-    return bond;
+    return mappedBond;
   });
 
-  loans.map((l) => {
-    const loan = l;
+  loans.map((loan) => {
+    const mappedLoan = loan;
 
-    if (canIssueOrEditIssueFacility(userRoles, deal, l)) {
-      loan.canIssueOrEditIssueFacility = true;
+    if (canIssueOrEditIssueFacility(userRoles, deal, loan)) {
+      mappedLoan.canIssueOrEditIssueFacility = true;
     }
 
-    return loan;
+    return mappedLoan;
   });
 
   return modifiedDeal;

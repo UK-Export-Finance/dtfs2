@@ -96,8 +96,9 @@ df.app.orchestration('acbs-facility', function* createFacility(context) {
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
 
-        for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
-          const input = acbsFacilityFeeInput[i];
+        for (let index = 0; index < acbsFacilityFeeInput.length; index++) {
+          const input = acbsFacilityFeeInput[index];
+
           facilityFee.push(
             yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
               facilityIdentifier,

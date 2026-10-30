@@ -1,16 +1,16 @@
 // add a 'value' property so it plays nicely with GDS select macro
 // add selected value if id matches a given selectedCurrency
 // also add empty first option for design.
-
 const mapCountries = (countries, selectedCountry) => {
   const mappedCountries = [
-    ...countries.map((c) => {
-      const country = {
-        value: c.code,
-        text: c.name,
-        selected: selectedCountry === c.code,
+    ...countries.map((country) => {
+      const mappedCountry = {
+        value: country.code,
+        text: country.name,
+        selected: selectedCountry === country.code,
       };
-      return country;
+
+      return mappedCountry;
     }),
   ];
 

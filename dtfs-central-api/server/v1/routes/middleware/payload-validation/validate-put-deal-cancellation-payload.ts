@@ -1,13 +1,13 @@
-import z from 'zod';
+import zod from 'zod';
 import { AuditDetails, TfmDealCancellation, validateSchema } from '@ukef/dtfs2-common';
 import { DEAL_CANCELLATION } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema } from './schemas';
 
-const PutDealCancellationSchema: z.ZodType<{ dealCancellationUpdate: Partial<TfmDealCancellation>; auditDetails: AuditDetails }> = z.object({
+const PutDealCancellationSchema: zod.ZodType<{ dealCancellationUpdate: Partial<TfmDealCancellation>; auditDetails: AuditDetails }> = zod.object({
   dealCancellationUpdate: DEAL_CANCELLATION.partial(),
   auditDetails: AuditDetailsSchema,
 });
 
-export type PutDealCancellationPayload = z.infer<typeof PutDealCancellationSchema>;
+export type PutDealCancellationPayload = zod.infer<typeof PutDealCancellationSchema>;
 
 export const validatePutDealCancellationPayload = validateSchema(PutDealCancellationSchema);

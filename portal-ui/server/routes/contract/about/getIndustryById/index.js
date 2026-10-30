@@ -12,7 +12,7 @@ const getIndustrySectorById = (industrySectors, id) => industrySectors.find((sec
  * @param {string} id - The code of the industry class to find.
  * @returns {Object} Industry class object containing code and name, or undefined if not found.
  */
-const getIndustryClassById = (industrySectorClasses, id) => industrySectorClasses.find((c) => c.code === id);
+const getIndustryClassById = (industrySectorClasses, id) => industrySectorClasses.find((industryClass) => industryClass.code === id);
 
 module.exports = {
   getIndustrySectorById,
