@@ -11,13 +11,16 @@ import { userIsOnlyInTeams } from '../../helpers/user';
  */
 export const getUserHomepage = (req: Request, res: Response) => {
   const { user } = req.session;
+
   if (!user) {
     return res.redirect('/');
   }
 
   const userIsOnlyInPdcTeam = Object.values(PDC_TEAM_IDS).some((pdcTeamId) => userIsOnlyInTeams(user, [pdcTeamId]));
+
   if (userIsOnlyInPdcTeam) {
     return res.redirect('/utilisation-reports');
   }
+
   return res.redirect('/deals');
 };

@@ -348,6 +348,7 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
       console.error('updateUnderwriterManagersDecision: Invalid deal id provided %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/managers-decision`,

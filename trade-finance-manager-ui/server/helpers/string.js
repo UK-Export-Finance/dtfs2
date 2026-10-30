@@ -4,6 +4,7 @@ const isEmptyString = (str) => {
   if (!str || (isString(str) && !str.trim().length)) {
     return true;
   }
+
   return false;
 };
 
@@ -11,6 +12,7 @@ const hasValue = (str) => {
   if (str && !isEmptyString(str)) {
     return true;
   }
+
   return false;
 };
 

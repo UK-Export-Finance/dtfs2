@@ -34,6 +34,17 @@ using `npm run start`.
 Login credentials can be found in the mock users data, specifically in the
 file: `utils/mock-data-loader/tfm/users.js`.
 
+## Server import aliases
+
+Use `@tfm-ui/*` for modules under `server`, for example
+`@tfm-ui/helpers/user`. The `@ukef/*` aliases remain reserved for the shared
+common library.
+
+ESLint's `lint:fix` converts parent-relative imports within `server` to
+`@tfm-ui/*`, while preserving same-folder imports and imports outside the
+server source tree. This alias is configured in TypeScript, the ts-node
+runtime preload, the shared Jest configuration and Webpack.
+
 ## Testing :test_tube:
 
 ### Run a UI Test Suite :heavy_check_mark:

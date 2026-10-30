@@ -23,8 +23,13 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
     errRef: 'password',
   };
 
-  if (!email) loginErrors.push(emailError);
-  if (!password) loginErrors.push(passwordError);
+  if (!email) {
+    loginErrors.push(emailError);
+  }
+
+  if (!password) {
+    loginErrors.push(passwordError);
+  }
 
   if (email && password) {
     const response = (await api.login(email, password)) as {

@@ -10,11 +10,13 @@ const getUserProfile = (req, res) => {
       requireCurrentPassword: true,
     });
   }
+
   return res.redirect('/');
 };
 
 const postUserProfile = async (req, res) => {
   const { userToken } = req.session;
+
   if (req?.session?.user) {
     const { _id } = req.session.user;
     const { status, data } = await api.updateUserPassword(_id, req.body, userToken);
@@ -32,6 +34,7 @@ const postUserProfile = async (req, res) => {
       requireCurrentPassword: true,
     });
   }
+
   const message = 'Unable to update the user details: The current user is not logged in';
   console.error(message);
   return { status: 400, message };

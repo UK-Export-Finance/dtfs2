@@ -74,15 +74,19 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.frequency}")`).toExist();
+
       if (summaryItem.formattedDateUploaded) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
       }
+
       if (summaryItem.totalFacilitiesReported) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFacilitiesReported}")`).toExist();
       }
+
       if (summaryItem.totalFeesReported) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFeesReported}")`).toExist();
       }
+
       if (summaryItem.reportedFeesLeftToReconcile) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.reportedFeesLeftToReconcile}")`).toExist();
       }

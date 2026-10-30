@@ -18,6 +18,7 @@ const getAmendmentTask = async (req, res) => {
     let { data: amendment } = await api.getAmendmentsByDealId(dealId, userToken);
     [amendment] = amendment.filter((a) => a.amendmentId === amendmentId && a.facilityId === facilityId);
     const task = getTask(Number(groupId), taskId, amendment.tasks);
+
     if (!task) {
       return res.redirect('/not-found');
     }

@@ -33,14 +33,17 @@ const effectiveDateValidation = (body) => {
   } else if (amendmentEffectiveIsPartiallyComplete) {
     let msg = 'Amendment effective date must include a ';
     const dateFieldsInError = [];
+
     if (!effectiveDateDay) {
       msg += 'day ';
       dateFieldsInError.push('effectiveDate-day');
     }
+
     if (!effectiveDateMonth) {
       msg += !effectiveDateDay ? ' and month ' : 'month ';
       dateFieldsInError.push('effectiveDate-month');
     }
+
     if (!effectiveDateYear) {
       msg += !effectiveDateDay || !effectiveDateMonth ? 'and year' : 'year';
       dateFieldsInError.push('effectiveDate-year');

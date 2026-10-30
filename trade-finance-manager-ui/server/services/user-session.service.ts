@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { AuthorizationUrlRequest } from '@azure/msal-node';
 import { TfmSessionUser } from '@ukef/dtfs2-common';
 import { Session, SessionData } from 'express-session';
