@@ -1,4 +1,4 @@
-import { pages } from '../../e2e/pages';
+import { tfmPages as pages } from '../../e2e/pages';
 
 /**
  * autocompleteKeyboardInput

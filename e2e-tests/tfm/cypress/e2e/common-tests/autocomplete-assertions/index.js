@@ -1,4 +1,4 @@
-import { pages } from '../../pages';
+import { tfmPages as pages } from '../../pages';
 
 /**
  * checkAutocompleteInput

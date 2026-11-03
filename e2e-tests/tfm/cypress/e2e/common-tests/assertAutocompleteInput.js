@@ -1,5 +1,5 @@
 import { checkAutocompleteInput } from './autocomplete-assertions';
-import { pages } from '../pages';
+import { tfmPages as pages } from '../pages';
 
 /**
  * assertAutocompleteInput
