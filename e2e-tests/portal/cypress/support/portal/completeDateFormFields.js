@@ -13,7 +13,7 @@ import { LONG_DAY_FORMAT, LONG_MONTH_FORMAT, LONG_YEAR_FORMAT, today } from '@uk
  * @param {string} month: Optional month string
  * @param {string} year: Optional year string
  */
-const completeDateFormFields = ({ idPrefix, date = today.date, day, month, year }) => {
+export const completeDateFormFields = ({ idPrefix, date = today.date, day, month, year }) => {
   if (day !== null) {
     const dayValue = day || format(date, LONG_DAY_FORMAT);
 
@@ -32,5 +32,3 @@ const completeDateFormFields = ({ idPrefix, date = today.date, day, month, year 
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-year"]`), yearValue);
   }
 };
-
-export default completeDateFormFields;

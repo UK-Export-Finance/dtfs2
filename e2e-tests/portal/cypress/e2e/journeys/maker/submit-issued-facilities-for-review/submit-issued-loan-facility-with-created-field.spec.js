@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
-const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
+const { dealWithNotStartedFacilityStatuses } = require('./dealWithNotStartedFacilityStatuses');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
 } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');

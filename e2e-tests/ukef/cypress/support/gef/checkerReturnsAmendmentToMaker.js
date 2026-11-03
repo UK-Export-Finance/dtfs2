@@ -1,6 +1,6 @@
 import MOCK_USERS from '../../../../e2e-fixtures/portal-users.fixture';
 import relative from '../../e2e/relativeURL';
-import returnToMaker from '../../../../gef/cypress/e2e/pages/return-to-maker';
+import { returnToMaker } from '../../../../gef/cypress/e2e/pages/return-to-maker';
 
 const { BANK1_CHECKER1 } = MOCK_USERS;
 

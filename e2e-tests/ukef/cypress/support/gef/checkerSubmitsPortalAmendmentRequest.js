@@ -1,6 +1,6 @@
 import MOCK_USERS from '../../../../e2e-fixtures/portal-users.fixture';
 import relative from '../../e2e/relativeURL';
-import submitToUkef from '../../../../gef/cypress/e2e/pages/submit-to-ukef';
+import { submitToUkef } from '../../../../gef/cypress/e2e/pages/submit-to-ukef';
 
 const { BANK1_CHECKER1 } = MOCK_USERS;
 

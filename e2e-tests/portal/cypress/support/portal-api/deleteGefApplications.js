@@ -1,7 +1,10 @@
 const { listGefApplications, logIn, deleteGefApplication } = require('./api');
 
 const deleteGefApplications = (token, deals) => {
-  if (!deals || !deals.length) return;
+  if (!deals || !deals.length) {
+    return;
+  }
+
   deals.forEach((deal) => deleteGefApplication(token, deal._id));
 };
 

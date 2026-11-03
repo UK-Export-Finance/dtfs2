@@ -12,6 +12,7 @@ module.exports = (deals, userDetails) => {
 
       insertGefDeal(dealWithId, userDetails, token).then((insertedDeal) => {
         persistedDeals.push(insertedDeal);
+
         if (persistedDeals.length === deals.length) {
           return persistedDeals;
         }

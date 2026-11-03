@@ -4,7 +4,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtu
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValuePage } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 const notEnteredNumberError = 'Enter a new facility value';
@@ -67,19 +67,19 @@ context('Amendments - Facility value - page tests', () => {
   });
 
   it('should render key features of the page', () => {
-    facilityValue.pageHeading().contains('New facility value');
-    facilityValue.backLink();
-    facilityValue.facilityValuePrefix().contains('£');
+    facilityValuePage.pageHeading().contains('New facility value');
+    facilityValuePage.backLink();
+    facilityValuePage.facilityValuePrefix().contains('£');
   });
 
   it('should render an error if no facility value is provided', () => {
     cy.clickContinueButton();
 
-    facilityValue.errorSummary().should('be.visible');
-    facilityValue.errorSummary().contains(notEnteredNumberError);
+    facilityValuePage.errorSummary().should('be.visible');
+    facilityValuePage.errorSummary().contains(notEnteredNumberError);
 
-    facilityValue.facilityValueInlineError().should('be.visible');
-    facilityValue.facilityValueInlineError().contains(notEnteredNumberError);
+    facilityValuePage.facilityValueInlineError().should('be.visible');
+    facilityValuePage.facilityValueInlineError().contains(notEnteredNumberError);
   });
 
   const errorTestCases = [
@@ -112,19 +112,19 @@ context('Amendments - Facility value - page tests', () => {
 
   errorTestCases.forEach(({ description, value, expectedErrorMessage }) => {
     it(`should render an error if ${description}`, () => {
-      cy.keyboardInput(facilityValue.facilityValue(), value);
+      cy.keyboardInput(facilityValuePage.facilityValue(), value);
       cy.clickContinueButton();
 
-      facilityValue.errorSummary().should('be.visible');
-      facilityValue.errorSummary().contains(expectedErrorMessage);
+      facilityValuePage.errorSummary().should('be.visible');
+      facilityValuePage.errorSummary().contains(expectedErrorMessage);
 
-      facilityValue.facilityValueInlineError().should('be.visible');
-      facilityValue.facilityValueInlineError().contains(expectedErrorMessage);
+      facilityValuePage.facilityValueInlineError().should('be.visible');
+      facilityValuePage.facilityValueInlineError().contains(expectedErrorMessage);
     });
   });
 
   it('should navigate to cancel page when cancel is clicked', () => {
-    facilityValue.cancelLink().click();
+    facilityValuePage.cancelLink().click();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
   });

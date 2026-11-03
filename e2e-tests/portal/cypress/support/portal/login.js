@@ -4,7 +4,7 @@ const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
 
 const PORTAL_2FA_FF = Cypress.expose('FF_PORTAL_2FA_ENABLED');
 
-module.exports = ({ username, password }) => {
+export const login = ({ username, password }) => {
   if (PORTAL_2FA_FF === 'true') {
     cy.loginOTP({ username, password });
   } else {

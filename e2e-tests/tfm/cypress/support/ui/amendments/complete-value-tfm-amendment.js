@@ -6,7 +6,7 @@ import amendmentsPage from '../../../e2e/pages/amendments/amendmentsPage';
  * @param {string} existingValue: Existing facility value. Defaults to '12,345.00'
  * @param {string} value: New facility value to be set. Defaults to '123'
  */
-const completeValueTFMAmendment = ({ existingValue = '12,345.00', value = '123' }) => {
+export const completeValueTFMAmendment = ({ existingValue = '12,345.00', value = '123' }) => {
   amendmentsPage.addAmendmentButton().click();
   cy.url().should('contain', 'request-date');
 
@@ -39,5 +39,3 @@ const completeValueTFMAmendment = ({ existingValue = '12,345.00', value = '123' 
   cy.url().should('contain', 'check-answers');
   cy.clickContinueButton();
 };
-
-export default completeValueTFMAmendment;

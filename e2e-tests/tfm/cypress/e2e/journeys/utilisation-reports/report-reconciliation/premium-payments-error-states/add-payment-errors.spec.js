@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, FEE_RECORD_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import pages from '../../../../pages';
+import { tfmPages } from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
@@ -27,7 +27,7 @@ context('PDC_RECONCILE users cannot add payments with invalid fee selections', (
     .withPayments([PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build()])
     .build();
 
-  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+  const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -49,7 +49,7 @@ context('PDC_RECONCILE users cannot add payments with invalid fee selections', (
 
   context('', () => {
     beforeEach(() => {
-      pages.landingPage.visit();
+      tfmPages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
 
       cy.visit(`utilisation-reports/${reportId}`);

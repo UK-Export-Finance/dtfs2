@@ -1,4 +1,4 @@
-const automaticCover = {
+export const exportersAddress = {
   companyNameTitle: () => cy.get('[data-cy="company-name-title"]'),
   registeredCompanyAddressTitle: () => cy.get('[data-cy="registered-company-address-title"]'),
   changeDetails: () => cy.get('[data-cy="change-details"]'),
@@ -10,5 +10,3 @@ const automaticCover = {
   correspondenceAddress: () => cy.get('[data-cy="correspondence-address"]'),
   manualAddressEntryLink: () => cy.get('[data-cy="enter-address-manually"]'),
 };
-
-export default automaticCover;

@@ -1,11 +1,11 @@
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
+import { tfmPages } from '../../../../../../../tfm/cypress/e2e/pages';
 import tfmPartials from '../../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import MOCK_DEAL_READY_TO_SUBMIT from '../../test-data/MIA-deal/dealReadyToSubmit';
-import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
+import MOCK_DEAL_READY_TO_SUBMIT from '../../test-data/AIN-deal/dealReadyToSubmit';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -37,7 +37,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearSessionCookies();
   });
 
-  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Accepted with conditions` decision, Portal deal status is updated, comments/conditions display', () => {
+  it('Portal AIN deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -52,10 +52,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
-
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
@@ -67,7 +63,7 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('include', '/dashboard');
 
     //---------------------------------------------------------------
-    // Underwriter Manager logs in to TFM
+    // user login to TFM
     //---------------------------------------------------------------
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
@@ -75,36 +71,18 @@ context('Portal to TFM deal submission', () => {
 
     cy.forceVisit(TFM_URL);
 
-    cy.tfmLogin(UNDERWRITER_MANAGER_1);
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
     const row = tfmPages.dealsPage.dealsTable.row(dealId);
     row.dealLink().click();
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/deal`);
 
-    //---------------------------------------------------------------
-    // Underwriter Manager submits a decision
-    //---------------------------------------------------------------
-    tfmPartials.caseSubNavigation.underwritingLink().click();
-    tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
+    tfmPartials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/tasks`);
 
-    tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
-    cy.clickSubmitButton();
+    tfmPages.tasksPage.filterRadioAllTasks().click();
 
-    //---------------------------------------------------------------
-    // Go back to Portal
-    //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
-
-    cy.login(BANK1_CHECKER1);
-    portalPages.contract.visit(deal);
-
-    //---------------------------------------------------------------
-    // Portal deal status should be updated
-    //---------------------------------------------------------------
-    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
-
-    cy.assertText(portalPages.contract.status(), 'Accepted by UKEF (without conditions)');
+    const TOTAL_AIN_TASKS = 2;
+    tfmPages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
   });
 });

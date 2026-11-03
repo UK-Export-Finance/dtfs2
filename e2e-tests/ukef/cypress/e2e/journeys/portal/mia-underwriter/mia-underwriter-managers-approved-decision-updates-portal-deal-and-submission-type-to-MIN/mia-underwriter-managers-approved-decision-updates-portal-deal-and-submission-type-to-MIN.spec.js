@@ -1,6 +1,6 @@
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
+import { tfmPages } from '../../../../../../../tfm/cypress/e2e/pages';
 import tfmPartials from '../../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';

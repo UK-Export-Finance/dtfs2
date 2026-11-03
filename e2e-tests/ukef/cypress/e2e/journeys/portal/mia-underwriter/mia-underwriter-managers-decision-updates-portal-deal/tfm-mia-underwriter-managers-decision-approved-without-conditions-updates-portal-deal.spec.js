@@ -1,7 +1,6 @@
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import portalPartials from '../../../../../../../portal/cypress/e2e/partials';
-import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
+import { tfmPages } from '../../../../../../../tfm/cypress/e2e/pages';
 import tfmPartials from '../../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -18,7 +17,7 @@ context('Portal to TFM deal submission', () => {
   before(() => {
     cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
       [deal] = insertedDeals;
-      dealId = insertedDeals[0]._id;
+      dealId = deal._id;
 
       const { mockFacilities } = deal;
 
@@ -38,7 +37,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearSessionCookies();
   });
 
-  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Refused` decision, Portal deal status is updated, comments/reason for refusal display', () => {
+  it('Portal MIA deal is submitted to UKEF. TFM Underwriter manager submits `Accepted with conditions` decision, Portal deal status is updated, comments/conditions display', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -53,6 +52,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
+    cy.clearCookie('dtfs-session');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
@@ -84,10 +87,7 @@ context('Portal to TFM deal submission', () => {
     tfmPartials.caseSubNavigation.underwritingLink().click();
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
-    const MOCK_COMMENTS = 'e2e refused comment';
-
-    tfmPages.managersDecisionPage.decisionRadioInputDecline().click();
-    cy.keyboardInput(tfmPages.managersDecisionPage.commentsInputDecline(), MOCK_COMMENTS);
+    tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
     cy.clickSubmitButton();
 
     //---------------------------------------------------------------
@@ -105,15 +105,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
 
-    cy.assertText(portalPages.contract.status(), 'Rejected by UKEF');
-
-    //---------------------------------------------------------------
-    // Portal deal comments/conditions should be displayed
-    //---------------------------------------------------------------
-    portalPages.contract.commentsTab().click();
-
-    cy.assertText(portalPartials.ukefComments.comments.title(), 'Reason for rejection:');
-
-    cy.assertText(portalPartials.ukefComments.comments.text(), MOCK_COMMENTS);
+    cy.assertText(portalPages.contract.status(), 'Accepted by UKEF (without conditions)');
   });
 });

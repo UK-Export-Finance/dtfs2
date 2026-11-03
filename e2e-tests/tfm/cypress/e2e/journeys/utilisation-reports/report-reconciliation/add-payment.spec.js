@@ -5,7 +5,7 @@ import {
   PaymentMatchingToleranceEntityMockBuilder,
 } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, CURRENCY } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
+import { tfmPages } from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import relative from '../../../relativeURL';
@@ -59,9 +59,9 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     .withPayments([payment])
     .build();
 
-  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+  const { premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
   const { premiumPaymentsTable } = premiumPaymentsContent;
-  const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable, insetToleranceText } = pages.utilisationReportAddPaymentPage;
+  const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable, insetToleranceText } = tfmPages.utilisationReportAddPaymentPage;
 
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -76,7 +76,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
@@ -239,7 +239,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     describe('by clicking the back button with checkboxes for fee records 3 and 4 checked', () => {
       beforeEach(() => {
-        pages.landingPage.visit();
+        tfmPages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
 
         cy.visit(`utilisation-reports/${REPORT_ID}`);
@@ -285,7 +285,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     describe('by clicking the cancel button with checkboxes for fee records 3 and 4 checked', () => {
       beforeEach(() => {
-        pages.landingPage.visit();
+        tfmPages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
 
         cy.visit(`utilisation-reports/${REPORT_ID}`);

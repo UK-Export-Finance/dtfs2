@@ -1,10 +1,10 @@
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import { headingCaption, mainHeading, submitButton } from '../partials';
-import applicationDetails from '../pages/application-details';
-import automaticCover from '../pages/automatic-cover';
-import facilities from '../pages/facilities';
-import statusBanner from '../pages/application-status-banner';
+import { applicationDetails } from '../pages/application-details';
+import { automaticCover } from '../pages/automatic-cover';
+import { facilitiesPage } from '../pages/facilities';
+import { statusBanner } from '../pages/application-status-banner';
 import { BANK1_MAKER1, ADMIN, READ_ONLY_ALL_BANKS } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
 
@@ -130,7 +130,7 @@ context('Application Details Page', () => {
     it('takes you to Cash facility page when clicking on `Add a cash facility` button', () => {
       applicationDetails.addCashFacilityButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/facilities`));
-      facilities.hasBeenIssuedHeading().contains('cash');
+      facilitiesPage.hasBeenIssuedHeading().contains('cash');
     });
 
     it('takes you to Contingent facility page when clicking on `Add a contingent facility` button', () => {

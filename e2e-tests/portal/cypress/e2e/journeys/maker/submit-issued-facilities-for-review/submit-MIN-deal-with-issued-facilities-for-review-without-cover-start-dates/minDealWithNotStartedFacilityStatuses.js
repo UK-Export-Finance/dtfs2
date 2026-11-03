@@ -2,7 +2,7 @@ const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 
 const now = new Date().valueOf();
 
-const deal = {
+export const minDealWithNotStartedFacilityStatuses = {
   submissionType: 'Manual Inclusion Notice',
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
@@ -228,5 +228,3 @@ const deal = {
   comments: [],
   supportingInformation: {},
 };
-
-export default deal;

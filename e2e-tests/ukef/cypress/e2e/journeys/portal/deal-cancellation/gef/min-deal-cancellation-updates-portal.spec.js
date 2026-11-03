@@ -1,8 +1,8 @@
 import { yesterday, today } from '@ukef/dtfs2-common/test-helpers';
 import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
-import applicationActivities from '../../../../../../../gef/cypress/e2e/pages/application-activities';
-import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
+import { applicationActivities } from '../../../../../../../gef/cypress/e2e/pages/application-activities';
+import { statusBanner } from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';

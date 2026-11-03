@@ -5,10 +5,8 @@
  * @param {string} expectedHref: Expected HREF
  * @param {string} expectedText: Expected text
  */
-const assertUrl = (selector, expectedHref, expectedText) => {
+export const assertUrl = (selector, expectedHref, expectedText) => {
   selector.should('have.attr', 'href', expectedHref);
 
   cy.assertText(selector, expectedText);
 };
-
-export default assertUrl;

@@ -5,7 +5,7 @@ import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
  * @param {object} overrides deal overrides
  * @returns {object} created mock deal
  */
-const createMockDeal = (overrides) => {
+export const createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
@@ -36,5 +36,3 @@ const createMockDeal = (overrides) => {
     mockFacilities: facilities,
   };
 };
-
-export default createMockDeal;
