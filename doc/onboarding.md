@@ -5,7 +5,7 @@ the starting point for new engineers. It pulls together the context, setup
 steps and links you need for your first few days, and points to the more
 detailed documentation that already exists in this repository.
 
-If you only read one other document, read the root [README.md](/README.md) --
+If you only read one other document, read the root [README.md](./README.md) --
 it is the source of truth for setup, running and testing the project. This
 guide exists to orient you first and link you to the right place second.
 
@@ -25,7 +25,7 @@ reviews, prices and manages through to maturity.
 | **GEF**      | General Export Facility -- a newer product with its own UI (`gef-ui`) that reuses `portal-api` `/gef` endpoints. |
 | **TFM**      | Trade Finance Manager -- the internal UKEF caseworker application used once a deal has been submitted.           |
 | **Deal**     | A submission from a bank, containing one or more facilities.                                                     |
-| **Facility** | A single bond, loan or other financial product within a deal.                                                    |
+| **Facility** | A single bond, loan (BSS/EWCS)or Cash, Contingent (GEF) or other financial product within a deal.                |
 | **Case**     | In TFM, a deal plus its facilities and TFM-specific data (tasks, parties, etc.).                                 |
 
 ### Services at a glance
@@ -63,11 +63,11 @@ the root README step by step. The short version:
    field (use `nvm install`/`nvm use`) and Docker + Docker Compose.
 2. Copy `.env.sample` to a single root `.env` file and fill in required
    values (ask the team for any shared secrets).
-3. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` and add them to
-   `portal-api`'s env vars.
-4. Run `npm run env:copy` to copy the root `.env` into every sub-project that
-   needs it.
-5. Run `npm ci` from the repository root (installs all workspaces).
+3. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` and save the
+   Base64-encoded private and public keys in the root `.env` as
+   `JWT_SIGNING_KEY` and `JWT_VALIDATING_KEY`, respectively.
+4. Run `npm ci` from the repository root (installs all workspaces).
+5. Run `npm run env:copy` to copy the root `.env` into every sub-project that
 6. Run `docker-compose up --build` to start supporting services.
 7. Load mock data with `npm run load` (or `npm run load:utilisation` if your
    work touches utilisation reports/SQL).
@@ -85,12 +85,15 @@ engineers have already hit and resolved.
 
 ## 3. Day-to-day development :wrench:
 
-- **Linting**: `npm run lint` (root or any service).
+- **Linting**: `npm run lint:all` from the root, or `npm run lint` in a microservice.
 - **Type checking**: `npm run type-check:all` from the root.
 - **Formatting**: project uses Prettier; `npm run prettier:fix:all` from the
   root fixes everything.
-- **Tests**: run `npm run pipeline` for everything, or run API/UI/E2E test
-  suites individually from their respective service folders -- see the
+- **Tests**: there's no single command that runs every suite -- run each
+  individually: `npm run api-test` (API, from `portal-api`,
+  `dtfs-central-api` or `trade-finance-manager-api`), `npm run unit-test`
+  (UI, from `portal-ui`, `gef-ui` or `trade-finance-manager-ui`), and
+  `npx cypress run --project=<name>` (E2E, from `e2e-tests`) -- see the
   ["Testing"](/README.md#testing-test_tube) section of the README for exact
   commands.
 - **CSS/JS builds**: `portal-ui`, `gef-ui` and `trade-finance-manager-ui` all
@@ -120,8 +123,8 @@ engineers have already hit and resolved.
    the Jira ticket number.
 2. CI runs lint, type-check and tests for the affected services.
 3. Once CI passes, another engineer reviews and approves the PR.
-4. The PR is merged, and GitHub Actions builds/pushes container images to
-   Azure for the Dev environment.
+4. The PR is merged into `main`. Dev deployments run separately on schedules
+   or pushes to the deployment branches (`dev` and `dev1`).
 
 See the ["Git Workflow"](/README.md#git-workflow-octocat) and
 ["Continuous Integration"](/README.md#continuous-integration-ci-arrows_counterclockwise)
@@ -148,8 +151,9 @@ sections of the README for more on environments and deployments.
 - [ ] Log in to Portal, GEF and TFM locally using the mock users.
 - [ ] Submit a mock deal in Portal/GEF and find it in TFM to see the full
       submission flow end-to-end.
-- [ ] Run the full test pipeline (`npm run pipeline`) and at least one Cypress
-      E2E suite locally.
+- [ ] Run an API test suite (`npm run api-test`), a UI test suite
+      (`npm run unit-test`) and at least one Cypress E2E suite
+      (`npx cypress run --project=<name>`) locally.
 - [ ] Read through [doc/gotchas.md](./gotchas.md) so you recognise common
       errors if you hit them.
 - [ ] Find out who to ask for `.env` secrets and access to the private
