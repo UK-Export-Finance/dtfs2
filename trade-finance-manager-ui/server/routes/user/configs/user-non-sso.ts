@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { GetRouter } from '../../../types/get-router';
-import * as userController from '../../../controllers/user/user-non-sso';
+import { GetRouter } from '@tfm-ui/types/get-router';
+import * as userController from '@tfm-ui/controllers/user/user-non-sso';
 
 export const getUserNonSsoRouter: GetRouter = () => {
   const userNonSsoRouter = express.Router();

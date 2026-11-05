@@ -79,6 +79,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     if (hasRelevantSupplyContractValues) {
       return true;
     }
+
     return false;
   };
 
@@ -346,6 +347,7 @@ router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }),
     count: data.count,
     errorList: data.errorList,
   };
+
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-ready-for-review.njk', {
       deal,
@@ -450,6 +452,7 @@ router.post('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), valida
     count: data.count,
     errorList: data.errorList,
   };
+
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-edit-name.njk', {
       contract: { _id },
@@ -642,6 +645,7 @@ router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER]
   }
 
   let validationErrors;
+
   if (data.errorList) {
     validationErrors = {
       count: Object.keys(data.errorList).length,
@@ -826,6 +830,7 @@ router.post('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKE
   if (criteriaMet === 'true') {
     return res.redirect(`/contract/${_id}/clone`);
   }
+
   return res.redirect('/unable-to-proceed');
 });
 

@@ -11,7 +11,6 @@ jest.doMock('express', () => ({
 
 describe('routes/file', () => {
   beforeEach(() => {
-    // eslint-disable-next-line global-require
     require('../downloadFile');
   });
 

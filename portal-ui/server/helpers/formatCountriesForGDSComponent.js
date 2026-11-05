@@ -13,6 +13,7 @@ const formatCountriesForGDSComponent = (countries, selectedCountryCode, showSele
   if (showSelectLabel) {
     return [selectLabel].concat(countryOptions);
   }
+
   return countryOptions;
 };
 

@@ -7,6 +7,7 @@ const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedInd
     if (selectedIndustrySector && selectedIndustrySector.code && selectedIndustrySector.code === curr.code) {
       return acc.concat(curr.classes);
     }
+
     return acc;
   }, []);
 

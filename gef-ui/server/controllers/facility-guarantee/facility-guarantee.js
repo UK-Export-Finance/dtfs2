@@ -41,6 +41,7 @@ function validateFacilityGuarantee({ feeType, dayCountBasis, inAdvanceFrequency,
   if (!DAY_COUNT_BASIS.includes(dayCountBasis)) {
     facilityGuaranteeErrors.push(dayCountBasisError);
   }
+
   return facilityGuaranteeErrors;
 }
 

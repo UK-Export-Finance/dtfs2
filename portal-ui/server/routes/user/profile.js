@@ -149,6 +149,7 @@ router.post('/:_id/change-password', async (req, res) => {
       if (status === 200) {
         return res.redirect(`/user/${_id}`);
       }
+
       formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
     }
 
@@ -159,6 +160,7 @@ router.post('/:_id/change-password', async (req, res) => {
       requireCurrentPassword: true,
     });
   }
+
   return res.redirect('/');
 });
 

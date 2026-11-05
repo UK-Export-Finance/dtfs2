@@ -87,7 +87,6 @@ const filtersToText = (filters) => {
   let filterString = 'Filters selected: ';
 
   if (filters.length > 0) {
-    /* eslint-disable no-restricted-syntax */
     for (const filter of filters) {
       // adds commas so read out with correct pauses
       filterString = filterString.concat(', ');

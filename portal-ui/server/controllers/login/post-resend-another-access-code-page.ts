@@ -1,13 +1,13 @@
 import { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
+import { ResendAnotherAccessCodeViewModel } from '@ukef/portal-ui/server/types/view-models/two-factor-authentication/resend-another-access-code-view-model';
+import { updateSessionAfterLogin } from '@ukef/portal-ui/server/helpers/updateSessionAfterLogin';
+import { generate2FAViewModel } from '@ukef/portal-ui/server/helpers/generate-2fa-view-model';
+import { isOtpExpired } from '@ukef/portal-ui/server/helpers/is-otp-expired';
+import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
+import { generateValidationErrors } from './validation';
 import { attemptOtpLogin } from './attempt-otp-login';
-import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/2fa/resend-another-access-code-view-model';
-import { updateSessionAfterLogin } from '../../helpers/updateSessionAfterLogin';
-import incorrectAccessCodeRule from './validation/rules/incorrect-access-code';
-import generateValidationErrors from './validation';
-import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
-import { isOtpExpired } from '../../helpers/is-otp-expired';
 
 const RESEND_ANOTHER_ACCESS_CODE_TEMPLATE = 'login/resend-another-access-code.njk';
 

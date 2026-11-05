@@ -1,5 +1,5 @@
 import { MAX_CHARACTER_COUNT } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel, ReasonForCancellingErrorsViewModel } from '../../../../types/view-models';
+import { ErrorSummaryViewModel, ReasonForCancellingErrorsViewModel } from '@tfm-ui/types/view-models';
 
 const REASON_TOO_LONG_MESSAGE = `Reason for cancelling must be ${MAX_CHARACTER_COUNT.toLocaleString('en-GB')} characters or less`;
 
@@ -11,6 +11,7 @@ export const validateReasonForCancelling = (reason: string): ReasonForCancelling
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const reasonForCancellingErrorMessage = reason.length > MAX_CHARACTER_COUNT ? REASON_TOO_LONG_MESSAGE : undefined;
+
   if (reasonForCancellingErrorMessage) {
     errorSummary.push({ text: reasonForCancellingErrorMessage, href: '#reason-for-cancelling' });
   }

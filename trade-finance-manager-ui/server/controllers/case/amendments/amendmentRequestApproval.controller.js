@@ -15,6 +15,7 @@ const getAmendmentRequestApproval = async (req, res) => {
     const { facilityId, amendmentId } = req.params;
     const { userToken } = req.session;
     const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+
     if (status !== 200) {
       return res.redirect('/not-found');
     }
@@ -76,8 +77,10 @@ const postAmendmentRequestApproval = async (req, res) => {
       if (approval) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
       }
+
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
     }
+
     console.error('Unable to update the amendment request approval');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
   } catch (error) {

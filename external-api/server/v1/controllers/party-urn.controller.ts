@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Response } from 'express';
 import { CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
-import { isValidPartyUrn } from '../../helpers';
+import { isValidPartyUrn } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

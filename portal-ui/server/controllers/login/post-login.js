@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 
-import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '../../helpers';
-import api from '../../api';
+import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '@ukef/portal-ui/server/helpers';
+import api from '@ukef/portal-ui/server/api';
 
 /**
  * Controller to handle login form submission
@@ -28,8 +28,13 @@ export const postLogin = async (req, res) => {
   };
 
   if (!email || !password) {
-    if (!email) loginErrors.push(emailError);
-    if (!password) loginErrors.push(passwordError);
+    if (!email) {
+      loginErrors.push(emailError);
+    }
+
+    if (!password) {
+      loginErrors.push(passwordError);
+    }
 
     const banks = await getPortalBankListForLoginPage();
 

@@ -5,9 +5,10 @@ const overrideFacilitiesIfAmendmentsInProgress = (facilities, amendments) => {
   if (Array.isArray(amendments) && amendments?.length > 0) {
     return facilities.map((facility) => {
       const modifiedFacility = facility;
-      // eslint-disable-next-line no-restricted-syntax
+
       for (const amendment of amendments) {
         const amendmentIsInProgress = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
+
         if (amendmentIsInProgress && amendment.facilityId === facility.facilityId) {
           modifiedFacility.hasAmendmentInProgressSubmittedFromPim = true;
           break;
@@ -16,6 +17,7 @@ const overrideFacilitiesIfAmendmentsInProgress = (facilities, amendments) => {
       return modifiedFacility;
     });
   }
+
   return facilities;
 };
 

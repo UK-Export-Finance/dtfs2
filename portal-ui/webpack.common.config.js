@@ -32,6 +32,11 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       ...webpackAliases,
+      /**
+       * Mirrors the '@ukef/portal-ui/*' path mapping in tsconfig.json so lint:fix's
+       * no-relative-import-paths autofix (which rewrites imports to this prefix) stays resolvable by Webpack.
+       */
+      '@ukef/portal-ui': path.resolve(__dirname),
       'node_modules/govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),
       'node_modules/@ministryofjustice': path.resolve(__dirname, '..', 'node_modules', '@ministryofjustice'),
       'govuk-frontend': path.resolve(__dirname, '..', 'node_modules', 'govuk-frontend'),

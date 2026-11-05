@@ -7,7 +7,7 @@ import {
   OTP_RESULT_TYPE,
   LoginWithSignInOtpResponse,
 } from '@ukef/dtfs2-common';
-import * as api from '../../api';
+import * as api from '@ukef/portal-ui/server/api';
 
 /**
  * Calls the sign-in OTP API and returns a typed result.
@@ -50,6 +50,7 @@ export const attemptOtpLogin = async ({ token, userId, signInOTP }: { token: str
         return { type: OTP_RESULT_TYPE.INCORRECT_CODE };
       }
     }
+
     throw apiError;
   }
 };

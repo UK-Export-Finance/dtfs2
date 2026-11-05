@@ -60,17 +60,17 @@ const getUnderwriterPage = async (req, res) => {
 
   // if amendments object exists then populate fields
   if (amendments.length) {
-    /* eslint-disable no-await-in-loop */
-    /* eslint-disable no-restricted-syntax */
     for (const amendment of amendments) {
       if (amendment?.ukefDecision) {
         amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
+
         // if bank decision then set isEditable in relevant way
         if (amendment?.bankDecision) {
           amendment.bankDecision.isEditable = userCanEditBankDecision(amendment, user);
         } else {
           amendment.bankDecision = { isEditable: userCanEditBankDecision(amendment, user) };
         }
+
         // checks if declined by UKEF
         if (amendment.ukefDecision?.submitted) {
           amendment.ukefDecision.isDeclined = ukefDecisionRejected(amendment);
@@ -102,12 +102,14 @@ const getUnderwriterPage = async (req, res) => {
         const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
         amendment.ukefDecision.submittedAt = `${date} at ${time}`;
       }
+
       amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
       amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
 
       if (amendment?.bankDecision?.receivedDate) {
         amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');
       }
+
       if (amendment?.bankDecision?.effectiveDate) {
         amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
       }

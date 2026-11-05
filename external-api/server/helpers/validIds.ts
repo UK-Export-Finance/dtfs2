@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Checks if the `dealIdentifier` and `facilityIdentifiers` are present in the `eStoreData` object
  * and if they do not contain certain temporary IDs and conforms to the pre-defined ID format.
@@ -7,7 +5,7 @@
  * @returns `true` if the `dealIdentifier` and `facilityIdentifiers` are present and do not contain temporary IDs, `false` otherwise.
  */
 import { UKEF_ID } from '@ukef/dtfs2-common';
-import { Estore } from '../interfaces/eStore.interface';
+import { Estore } from '@ukef/external-api/server/interfaces/eStore.interface';
 import { validUkefId } from './validUkefId';
 
 export const areValidUkefIds = (eStoreData: Estore): boolean => {

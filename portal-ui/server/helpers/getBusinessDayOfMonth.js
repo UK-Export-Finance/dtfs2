@@ -57,6 +57,7 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
   }
 
   const firstBusinessDay = getFirstBusinessDayOfMonth(dateInMonth, holidays);
+
   if (businessDay === 1) {
     return firstBusinessDay;
   }

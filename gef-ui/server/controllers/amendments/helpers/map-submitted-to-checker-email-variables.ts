@@ -19,7 +19,7 @@ const { PORTAL_UI_URL } = process.env;
  * @param checker
  * @returns mapped email variables
  */
-const mapSubmittedToCheckerEmailVariables = ({
+export const mapSubmittedToCheckerEmailVariables = ({
   deal,
   facility,
   amendment,
@@ -54,5 +54,3 @@ const mapSubmittedToCheckerEmailVariables = ({
     portalUrl,
   };
 };
-
-export default mapSubmittedToCheckerEmailVariables;

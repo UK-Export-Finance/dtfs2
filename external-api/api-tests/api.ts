@@ -13,11 +13,11 @@ const headers = {
 };
 
 export const api = (app: Express) => ({
-  get: async (url: string) => agent(app).get(url).set(headers),
+  get: async (url: string) => await agent(app).get(url).set(headers),
   getWithRequestBody: (data?: object) => ({
-    to: async (url: string) => agent(app).get(url).send(data).set(headers),
+    to: async (url: string) => await agent(app).get(url).send(data).set(headers),
   }),
   post: (data?: object) => ({
-    to: async (url: string) => agent(app).post(url).send(data).set(headers),
+    to: async (url: string) => await agent(app).post(url).send(data).set(headers),
   }),
 });

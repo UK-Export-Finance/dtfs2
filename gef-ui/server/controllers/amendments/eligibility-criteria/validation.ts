@@ -2,7 +2,7 @@ import { AmendmentsEligibilityCriterion, AmendmentsEligibilityCriterionWithAnswe
 import { ValidationError } from '../../../types/validation-error.ts';
 import { ErrorsOrValue } from '../../../types/errors-or-value.ts';
 
-type criterionWithValidAnswer = AmendmentsEligibilityCriterion & {
+type CriterionWithValidAnswer = AmendmentsEligibilityCriterion & {
   answer: boolean;
 };
 
@@ -11,7 +11,7 @@ type criterionWithValidAnswer = AmendmentsEligibilityCriterion & {
  * @param parsedResponse - the parsed response
  * @returns the value or errors depending on the validation result
  */
-export const validateEligibilityResponse = (parsedResponse: AmendmentsEligibilityCriterionWithAnswer[]): ErrorsOrValue<criterionWithValidAnswer[]> => {
+export const validateEligibilityResponse = (parsedResponse: AmendmentsEligibilityCriterionWithAnswer[]): ErrorsOrValue<CriterionWithValidAnswer[]> => {
   const errors: ValidationError[] = [];
 
   parsedResponse.forEach((item: AmendmentsEligibilityCriterionWithAnswer) => {
@@ -25,5 +25,5 @@ export const validateEligibilityResponse = (parsedResponse: AmendmentsEligibilit
     }
   });
 
-  return errors.length ? { errors } : { value: parsedResponse as criterionWithValidAnswer[] };
+  return errors.length ? { errors } : { value: parsedResponse as CriterionWithValidAnswer[] };
 };

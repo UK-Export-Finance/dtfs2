@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 /**
 Objective:
   The objective of the `getExchangeRate` function is to retrieve the exchange rate between two currencies, with an optional date parameter,
@@ -33,7 +29,7 @@ import { Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { CURRENCY, CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
-import { isValidCurrency, isValidDate } from '../../helpers';
+import { isValidCurrency, isValidDate } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

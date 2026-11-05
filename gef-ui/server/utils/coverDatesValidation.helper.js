@@ -15,6 +15,7 @@ const coverDatesValidation = (day, month, year) => {
       },
     };
   }
+
   // schema to validate that the year is 4 digits long and only numbers
   const coverYearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
   const coverYearValidation = coverYearSchema.validate(year.toString());

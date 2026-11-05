@@ -1,7 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const upsertAmendmentMock = jest.fn();
-
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
@@ -12,8 +8,10 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 import { postCreateDraftFacilityAmendment } from './post-create-draft';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
+const upsertAmendmentMock = jest.fn();
+
 jest.mock('../../../services/api', () => ({
-  upsertAmendment: upsertAmendmentMock,
+  upsertAmendment: (...args: unknown[]) => upsertAmendmentMock(...args),
 }));
 
 const dealId = 'dealId';

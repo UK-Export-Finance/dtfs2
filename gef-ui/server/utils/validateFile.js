@@ -12,7 +12,9 @@ const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'pd
  * @returns [isValid, error]
  */
 const validateFile = ({ originalname, size } = {}, maxSize = DEFAULT_MAX_SIZE, allowedFormats = DEFAULT_ALLOWED_FORMATS) => {
-  if (!originalname || !size) return [false, 'Invalid file'];
+  if (!originalname || !size) {
+    return [false, 'Invalid file'];
+  }
 
   if (!originalname.match(new RegExp(`\\.(${allowedFormats.join('|')})$`))) {
     return [
@@ -26,6 +28,7 @@ const validateFile = ({ originalname, size } = {}, maxSize = DEFAULT_MAX_SIZE, a
   if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= maxSize)) {
     return [true, null];
   }
+
   return [false, `${originalname} must be smaller than ${maxSize}MB`];
 };
 

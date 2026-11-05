@@ -35,6 +35,7 @@ const submittedEligibilityMatchesOriginalData = (formData, originalData) => {
   if (formDataMatchesOriginalData(formData, flattenedOriginalData)) {
     return true;
   }
+
   return false;
 };
 

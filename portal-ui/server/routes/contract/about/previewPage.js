@@ -55,6 +55,7 @@ router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKE
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   let formattedValidationErrors;
+
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(aboutSupplyContractPreviewValidationErrors(validationErrors, _id), errorHref);
   }

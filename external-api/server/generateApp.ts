@@ -7,7 +7,7 @@ import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
 import { checkApiKey } from './middleware/check-api-key';
-import { createRateLimit } from './middleware/rateLimit';
+import { createRateLimit } from './middleware/rate-limit';
 
 dotenv.config({ quiet: true });
 
@@ -30,7 +30,7 @@ export const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
 

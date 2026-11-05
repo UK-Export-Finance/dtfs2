@@ -88,6 +88,7 @@ exports.allFacilities = async (req, res) => {
       activeSortByOrder = CONSTANTS.SORT_BY.DESCENDING;
       delete requestBody.sortBy;
     }
+
     if (requestBody.sortBy === CONSTANTS.SORT_BY.ASCENDING) {
       activeSortByOrder = CONSTANTS.SORT_BY.ASCENDING;
       delete requestBody.sortBy;

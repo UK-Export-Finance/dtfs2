@@ -36,10 +36,12 @@ const validateFacilityValue = ({ interestPercentage, coverPercentage }, saveAndR
     errRef: 'interestPercentage',
     errMsg: 'You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places',
   };
+
   if (saveAndReturn) {
     if (coverPercentage && !oneToEightyRegex.test(coverPercentage)) {
       facilityValueErrors.push(coverPercentageError);
     }
+
     if (interestPercentage && !interestPercentageValidation(interestPercentage)) {
       facilityValueErrors.push(interestPercentageError);
     }
@@ -47,10 +49,12 @@ const validateFacilityValue = ({ interestPercentage, coverPercentage }, saveAndR
     if (!oneToEightyRegex.test(coverPercentage)) {
       facilityValueErrors.push(coverPercentageError);
     }
+
     if (!interestPercentageValidation(interestPercentage)) {
       facilityValueErrors.push(interestPercentageError);
     }
   }
+
   return facilityValueErrors;
 };
 

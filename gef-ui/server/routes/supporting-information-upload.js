@@ -44,6 +44,7 @@ router.post(
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       }
+
       // If there are errors, then return a message to the user
       // The MOJ multi-file-upload expects a 200 response when the request is not valid
       // It will only display the error messages when the response is 200.
@@ -52,6 +53,7 @@ router.post(
           error: { message: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}` },
         });
       }
+
       return res.status(200).send({ file: error.file, error: { message: error.message } });
     });
   },

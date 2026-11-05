@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
+import { asLoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
 import { validateFilenameFormat } from './utilisation-report-filename-validator';
-import { asLoggedInUserSession } from '../../../helpers/express-session';
 
 /**
  * The request type we pass in here is a non-standard
@@ -75,6 +75,7 @@ export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadError
   const { reportPeriod } = asLoggedInUserSession(req.session).utilisationReport!;
   const filename = req.file.originalname;
   const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+
   if (filenameError) {
     const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };

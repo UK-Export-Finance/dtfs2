@@ -491,6 +491,7 @@ describe('postChangeUnissuedFacility()', () => {
       if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
+
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
       mockRequest.body.shouldCoverStartOnSubmission = 'false';

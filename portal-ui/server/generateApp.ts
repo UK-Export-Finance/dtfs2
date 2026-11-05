@@ -6,8 +6,8 @@ import flash from 'connect-flash';
 import { exceptionHandlers, SWAGGER, xss, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import { HttpStatusCode } from 'axios';
-import routes from './routes';
-import swaggerRouter from './routes/swagger.route';
+import { router } from './routes';
+import { swaggerRouter } from './routes/swagger.route';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import { seo, security, createRateLimit } from './routes/middleware';
@@ -68,7 +68,7 @@ export const generateApp = () => {
   app.use(verifyCsrf);
   app.use(xss);
 
-  app.use('/', routes);
+  app.use('/', router);
 
   app.get('/{*path}', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.

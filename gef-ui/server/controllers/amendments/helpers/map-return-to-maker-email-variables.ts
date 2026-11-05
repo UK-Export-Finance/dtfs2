@@ -15,7 +15,7 @@ dotenv.config({ quiet: true });
  * @param user
  * @returns mapped email variables
  */
-const mapReturnToMakerEmailVariables = ({
+export const mapReturnToMakerEmailVariables = ({
   deal,
   facility,
   amendment,
@@ -47,5 +47,3 @@ const mapReturnToMakerEmailVariables = ({
     },
   };
 };
-
-export default mapReturnToMakerEmailVariables;

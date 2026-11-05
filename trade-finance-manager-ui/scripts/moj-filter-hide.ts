@@ -1,30 +1,43 @@
-type FilterToggleButtonConfig = {
+// Required as the MOJ component expects elements with jQuery functions (e.g., `addClass` and `removeClass`).
+// document.querySelector returns a standard DOM Element without these methods, so we use jQuery to provide them.
+// See: https://api.jquery.com/removeClass/ and https://developer.mozilla.org/en-US/docs/Web/API/Element
+import $ from 'jquery';
+
+type FilterToggleButtonOptions = {
   bigModeMediaQuery: string;
   startHidden: boolean;
   toggleButton: {
+    container: ReturnType<typeof $>;
     showText: string;
     hideText: string;
     classes: string;
   };
-  toggleButtonContainer: {
-    element: Element;
+  filter: {
+    container: ReturnType<typeof $>;
   };
 };
 
-type MOJFrontend = {
-  FilterToggleButton: new (root: Element, config: FilterToggleButtonConfig) => object;
+type MojFrontend = {
+  FilterToggleButton: new (options: FilterToggleButtonOptions) => object;
 };
 
-declare global {
-  interface Window {
-    MOJFrontend: MOJFrontend;
+const isMojFrontend = (value: unknown): value is MojFrontend =>
+  typeof value === 'object' && value !== null && 'FilterToggleButton' in value && typeof value.FilterToggleButton === 'function';
+
+const getMojFrontend = (): MojFrontend => {
+  const mojFrontend: unknown = Object.getOwnPropertyDescriptor(window, 'MOJFrontend')?.value;
+
+  if (!isMojFrontend(mojFrontend)) {
+    throw new Error('MOJFrontend.FilterToggleButton is unavailable');
   }
-}
+
+  return mojFrontend;
+};
 
 type FilterVisibility = 'SHOWN' | 'HIDDEN';
 
+const filterSelector = '.moj-filter-layout__filter';
 const toggleButtonContainerSelector = '.moj-action-bar__filter';
-const filterComponentSelector = '.moj-filter';
 
 const toggleButtonContainer = document.querySelector(toggleButtonContainerSelector)!;
 const toggleButtonContainerDataAttributes = (toggleButtonContainer as HTMLElement).dataset;
@@ -57,27 +70,22 @@ const initialiseFilterVisibility = (): boolean => {
  * Initialises the MOJFrontend FilterToggleButton with specified configuration.
  * This function sets up the filter panel toggle functionality for the UI.
  */
-const initialiseFilterToggleButton = (): object | undefined => {
+const initialiseFilterToggleButton = (): void => {
   const startHidden = initialiseFilterVisibility();
 
-  const filter = document.querySelector(filterComponentSelector);
-
-  if (filter && toggleButtonContainer) {
-    return new window.MOJFrontend.FilterToggleButton(filter, {
-      bigModeMediaQuery: '(min-width: 48.063em)',
-      startHidden,
-      toggleButton: {
-        showText: 'Show filters',
-        hideText: 'Hide filters',
-        classes: 'govuk-button--secondary',
-      },
-      toggleButtonContainer: {
-        element: toggleButtonContainer,
-      },
-    });
-  }
-
-  return undefined;
+  new (getMojFrontend().FilterToggleButton)({
+    bigModeMediaQuery: '(min-width: 48.063em)',
+    startHidden,
+    toggleButton: {
+      container: $(toggleButtonContainerSelector),
+      showText: 'Show filters',
+      hideText: 'Hide filters',
+      classes: 'govuk-button--secondary',
+    },
+    filter: {
+      container: $(filterSelector),
+    },
+  });
 };
 
 /**

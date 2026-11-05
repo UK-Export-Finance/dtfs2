@@ -145,6 +145,7 @@ const loanGuaranteeDetailsPayloadProperties = [
 
 const filterLoanGuaranteeDetailsPayload = (body) => {
   const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties, true);
+
   if (payload.facilityStage === FACILITY_STAGE.CONDITIONAL) {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -155,6 +156,7 @@ const filterLoanGuaranteeDetailsPayload = (body) => {
   } else if (payload.facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
     delete payload.ukefGuaranteeInMonths;
   }
+
   return payload;
 };
 
@@ -293,6 +295,7 @@ const filterLoanFinancialDetailsPayload = (body) => {
     delete sanitizedPayload['conversionRateDate-month'];
     delete sanitizedPayload['conversionRateDate-year'];
   }
+
   return sanitizedPayload;
 };
 
@@ -501,14 +504,17 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
   const { loanId, userToken } = requestParams(req);
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
-  // POST to api to flag that we have viewed preview page.
-  // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
-
-  // The status is extracted, otherwise bad things happen.
-  // When we GET a facility/loan, the status is dynamically added (it's not in the DB)
-  // here, in the preview screen, we need to extract the status from the POST
-  // otherwise the status will be added to the DB and not dynamically added.
-  const { status: _status, ...loanWithoutStatus } = loan;
+  /**
+   * POST to api to flag that we have viewed preview page.
+   * this is required specifically for other Loan forms/pages, to match the existing UX/UI.
+   *
+   * The status is extracted, otherwise bad things happen.
+   * When we GET a facility/loan, the status is dynamically added (it's not in the DB)
+   * here, in the preview screen, we need to extract the status from the POST
+   * otherwise the status will be added to the DB and not dynamically added.
+   */
+  const loanWithoutStatus = { ...loan };
+  delete loanWithoutStatus.status;
 
   const updatedLoan = {
     ...loanWithoutStatus,
@@ -518,6 +524,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
   await postToApi(api.updateLoan(dealId, loanId, updatedLoan, userToken));
 
   let formattedValidationErrors;
+
   if (validationErrors.count !== 0) {
     formattedValidationErrors = generateErrorSummary(loanPreviewValidationErrors(validationErrors, dealId, loanId), errorHref);
   }

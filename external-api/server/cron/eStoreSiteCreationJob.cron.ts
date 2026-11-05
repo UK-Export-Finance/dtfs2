@@ -1,11 +1,11 @@
 import { cloneDeep } from 'lodash';
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { cron } from '../helpers/cron';
-import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
-import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { Estore, EstoreErrorResponse, SiteExistsResponse } from '@ukef/external-api/server/interfaces';
+import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '@ukef/external-api/server/constants';
+import { siteExists } from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
 import { eStoreTermStoreCreationJob } from './eStoreTermStoreCreationJob.cron';
-import { siteExists } from '../v1/controllers/estore/eStoreApi';
-import { getNowAsEpoch } from '../helpers/date';
 
 /**
  * The `eStoreSiteCreationCronJob` function is responsible for creating a site for a given eStore data object.
@@ -103,15 +103,18 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
       throw new Error(`eStore site creation has failed for deal ${dealIdentifier} ${JSON.stringify(siteExistsResponse)}`);
     }
   } catch (error) {
-    // CRON job log update
-    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
-      'cron.site.create': {
-        error: String(error),
-        status: ESTORE_CRON_STATUS.FAILED,
-        timestamp: getNowAsEpoch(),
-      },
-      'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-    });
+    try {
+      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        'cron.site.create': {
+          error: String(error),
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
+        },
+        'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore site creation failure for deal %s %o', eStoreData?.dealId, logError);
+    }
 
     // Stop the CRON job
     cron({

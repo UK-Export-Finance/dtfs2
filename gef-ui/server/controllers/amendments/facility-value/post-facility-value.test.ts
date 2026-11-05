@@ -1,11 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const updateAmendmentMock = jest.fn();
-const getLatestAmendmentFacilityValueAndCoverEndDateMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
@@ -30,12 +22,18 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
 
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const updateAmendmentMock = jest.fn();
+const getLatestAmendmentFacilityValueAndCoverEndDateMock = jest.fn();
+
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendment: updateAmendmentMock,
-  getLatestAmendmentFacilityValueAndCoverEndDate: getLatestAmendmentFacilityValueAndCoverEndDateMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendment: (...args: unknown[]) => updateAmendmentMock(...args),
+  getLatestAmendmentFacilityValueAndCoverEndDate: (...args: unknown[]) => getLatestAmendmentFacilityValueAndCoverEndDateMock(...args),
 }));
 
 console.error = jest.fn();

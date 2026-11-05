@@ -38,6 +38,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
     }
 
     let addressForm = {};
+
     if (mappedAddress) {
       addressForm = mappedAddress;
     }
@@ -127,9 +128,11 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     await api.updateApplication({ dealId, application: applicationExporterUpdate, userToken });
 
     req.session.address = null;
+
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
+
     return res.redirect(`/gef/application-details/${dealId}/about-exporter`);
   } catch (error) {
     console.error("Error validating exporter's correspondence address %o", error);

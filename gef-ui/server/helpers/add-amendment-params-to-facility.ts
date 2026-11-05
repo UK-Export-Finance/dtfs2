@@ -35,6 +35,7 @@ export const addAmendmentParamsToFacility = ({
 
   let amendmentDetailsUrl = '';
   const { facilityId } = facility;
+
   if (isFacilityWithEffectiveAmendment) {
     const { amendmentId } = isFacilityWithEffectiveAmendment;
     amendmentDetailsUrl = getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });

@@ -1,15 +1,12 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const getApplicationMock = jest.fn();
-const getUserDetailsMock = jest.fn();
-const updateApplicationMock = jest.fn();
-
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { addCheckerCommentsToApplication } from './add-checker-comments-to-application';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
 import api from '../services/api';
+
+const getApplicationMock = jest.fn();
+const getUserDetailsMock = jest.fn();
+const updateApplicationMock = jest.fn();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 const mockUser = aPortalSessionUser();
@@ -20,9 +17,9 @@ const userId = '6597dffeb5ef5ff4267e5046';
 const mockComment = 'This is a test comment';
 
 jest.mock('../services/api', () => ({
-  getApplication: getApplicationMock,
-  getUserDetails: getUserDetailsMock,
-  updateApplication: updateApplicationMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getUserDetails: (...args: unknown[]) => getUserDetailsMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 describe('addCheckerCommentsToApplication', () => {

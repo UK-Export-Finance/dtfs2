@@ -119,6 +119,7 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
   if (currentPageIndex === 0 || currentPageIndex === -1) {
     throw new Error(`Cannot get previous page for ${currentPage}`);
   }
+
   const page = journey[currentPageIndex - 1];
   return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };

@@ -8,29 +8,28 @@ import {
   isFeeRecordCorrectionFeatureFlagEnabled,
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { getUtilisationReportReconciliationByReportId, GetUtilisationReportReconciliationRequest } from '.';
-import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { aPremiumPaymentsGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord, aPaymentDetails } from '../../../../test-helpers';
-import { PaymentDetails, PremiumPaymentsGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
+import api from '@tfm-ui/api';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { PaymentDetails, PremiumPaymentsGroup, UtilisationReportReconciliationDetailsResponseBody } from '@tfm-ui/api-response-types';
 import {
   PremiumPaymentsViewModelItem,
   PaymentDetailsViewModel,
   UtilisationReportReconciliationForReportViewModel,
   UtilisationDetailsViewModel,
   PremiumPaymentsViewModel,
-} from '../../../types/view-models';
-import { mapPaymentDetailsFiltersToViewModel } from '../helpers';
+} from '@tfm-ui/types/view-models';
+import { mapPaymentDetailsFiltersToViewModel } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { mapToRecordCorrectionViewModel } from '@tfm-ui/controllers/utilisation-reports/helpers/record-correction-helpers';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
-import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../constants/premium-payments-table-error-href';
-import { mapToRecordCorrectionViewModel } from '../helpers/record-correction-helpers';
+import { aPremiumPaymentsGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord, aPaymentDetails } from '../../../../test-helpers';
+import { getUtilisationReportReconciliationByReportId, GetUtilisationReportReconciliationRequest } from '.';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isFeeRecordCorrectionFeatureFlagEnabled: jest.fn().mockReturnValue(true),

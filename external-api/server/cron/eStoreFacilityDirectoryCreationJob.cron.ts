@@ -1,10 +1,10 @@
 import { HttpStatusCode } from 'axios';
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { FacilityFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
-import { cron } from '../helpers/cron';
-import { ENDPOINT, ESTORE_CRON_STATUS } from '../constants';
-import { createFacilityFolder } from '../v1/controllers/estore/eStoreApi';
-import { getNowAsEpoch } from '../helpers/date';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { FacilityFolderResponse, EstoreErrorResponse, Estore } from '@ukef/external-api/server/interfaces';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { ENDPOINT, ESTORE_CRON_STATUS } from '@ukef/external-api/server/constants';
+import { createFacilityFolder } from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
 import { eStoreDocumentsCreationJob } from './eStoreDocumentsCreationJob.cron';
 
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
@@ -117,14 +117,17 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
       throw new Error(`eStore facility directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(responses)}`);
     }
   } catch (error) {
-    // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
-      'cron.facility': {
-        error: String(error),
-        status: ESTORE_CRON_STATUS.FAILED,
-        timestamp: getNowAsEpoch(),
-      },
-    });
+    try {
+      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        'cron.facility': {
+          error: String(error),
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
+        },
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore facility directory creation failure for deal %s %o', eStoreData?.dealId, logError);
+    }
 
     // Stop the CRON job
     cron({

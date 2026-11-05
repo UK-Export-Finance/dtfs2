@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import { HEADERS, FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { PRODUCT_GROUP } from '../../constants';
-import { isValidDate } from '../../helpers';
-import { ExposurePeriodRequestParams } from '../../interfaces';
+import { PRODUCT_GROUP } from '@ukef/external-api/server/constants';
+import { isValidDate } from '@ukef/external-api/server/helpers';
+import { ExposurePeriodRequestParams } from '@ukef/external-api/server/interfaces';
 
 dotenv.config({ quiet: true });
 

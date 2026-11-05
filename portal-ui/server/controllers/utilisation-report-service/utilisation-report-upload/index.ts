@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 import { format, startOfMonth, addMonths } from 'date-fns';
 import { getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled, ReportPeriod } from '@ukef/dtfs2-common';
-import { extractCsvData, removeCellAddressesFromArray } from '../../../utils/csv-utils';
-import { getUploadErrors, UtilisationReportUploadErrors } from './utilisation-report-upload-errors';
-import { getDueReportPeriodsByBankId, getReportDueDate } from './utilisation-report-status';
-import api from '../../../api';
-import { getReportAndUserDetails, ReportAndUserDetails } from './utilisation-report-details';
-import { PRIMARY_NAV_KEY } from '../../../constants';
-import { filterReportJsonToRelevantKeys } from '../../../helpers/filterReportJsonToRelevantKeys';
-import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
+import { extractCsvData, removeCellAddressesFromArray } from '@ukef/portal-ui/server/utils/csv-utils';
+import api from '@ukef/portal-ui/server/api';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { filterReportJsonToRelevantKeys } from '@ukef/portal-ui/server/helpers/filterReportJsonToRelevantKeys';
+import { asLoggedInUserSession, LoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { ErrorSummaryViewModel } from '@ukef/portal-ui/server/types/view-models/error-summary-view-model';
 import { isNonEmptyPendingCorrectionsResponseBody, mapToPendingCorrectionsViewModel } from './pending-corrections-helper';
-import { ErrorSummaryViewModel } from '../../../types/view-models/error-summary-view-model';
+import { getReportAndUserDetails, ReportAndUserDetails } from './utilisation-report-details';
+import { getDueReportPeriodsByBankId, getReportDueDate } from './utilisation-report-status';
+import { getUploadErrors, UtilisationReportUploadErrors } from './utilisation-report-upload-errors';
 
 /**
  * Sets the utilisation report session data for the report upload journey
@@ -136,6 +136,7 @@ const renderPageWithError = (
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     });
   }
+
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,
@@ -155,6 +156,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
     }
 
     const uploadErrors = getUploadErrors(req, res);
+
     if (uploadErrors) {
       const { uploadErrorSummary, uploadValidationError } = uploadErrors;
 
@@ -283,6 +285,7 @@ export const postReportConfirmAndSend = async (req: Request, res: Response) => {
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
+
     console.error('Error saving utilisation report %o', response);
     return res.render('_partials/problem-with-service.njk', { user });
   } catch (error) {
@@ -303,6 +306,7 @@ export const getReportConfirmation = (req: Request, res: Response) => {
     if (!utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
+
     const { formattedReportPeriod, paymentOfficerEmails } = utilisationReport;
     delete (req.session as LoggedInUserSession).utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {

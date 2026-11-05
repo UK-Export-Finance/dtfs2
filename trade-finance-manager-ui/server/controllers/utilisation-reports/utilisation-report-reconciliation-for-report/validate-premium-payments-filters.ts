@@ -1,6 +1,6 @@
 import { isNonEmptyString } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel } from '../../../types/view-models';
-import { REGEX } from '../../../constants';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
+import { REGEX } from '@tfm-ui/constants';
 
 /**
  * Selector for the premium payments facility ID filter input element
@@ -21,12 +21,14 @@ export const validateFacilityIdQuery = (originalUrl: string, facilityIdQuery?: s
         href: FACILITY_ID_INPUT_ID,
       };
     }
+
     if (!REGEX.INT.test(facilityIdQuery)) {
       return {
         text: 'Facility ID must be a number',
         href: FACILITY_ID_INPUT_ID,
       };
     }
+
     if (!REGEX.PARTIAL_FACILITY_ID.test(facilityIdQuery)) {
       return {
         text: 'Facility ID must be between 4 and 10 characters',

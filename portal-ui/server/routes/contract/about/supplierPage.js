@@ -47,6 +47,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
 
   const { _id, userToken } = requestParams(req);
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+
   // if companies house submit button was pressed and there are validation errors,
   // combine with existing deal validation errors.
   if (req.session.companiesHouseSearchValidationErrors) {
@@ -71,6 +72,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     };
     req.session.aboutSupplierFormData = null;
   }
+
   if (deal.submissionDetails['supplier-companies-house-registration-number']) {
     if (!isValidCompanyRegistrationNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
       validationErrors.count += 1;
@@ -83,6 +85,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
       };
     }
   }
+
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
 
@@ -318,6 +321,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   }
 
   submissionDetails = industryFields(submissionDetails, industrySectors);
+
   if (!formDataMatchesOriginalData(submissionDetails, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetails, userToken);
   }

@@ -1,7 +1,7 @@
 import express from 'express';
 import { addYear, getISO8601 } from '@ukef/dtfs2-common';
 
-const router = express.Router();
+export const staticRouter = express.Router();
 const oneYearInFutureDate = addYear(1);
 const IsoExpiryDate = getISO8601(oneYearInFutureDate);
 
@@ -28,7 +28,7 @@ const IsoExpiryDate = getISO8601(oneYearInFutureDate);
  *       200:
  *         description: OK
  */
-router.get('/.well-known/security.txt', (req, res) => {
+staticRouter.get('/.well-known/security.txt', (req, res) => {
   res.type('text/plain');
 
   res.write('Contact: https://www.gov.uk/contact/govuk\n');
@@ -55,7 +55,7 @@ router.get('/.well-known/security.txt', (req, res) => {
  *       200:
  *         description: OK
  */
-router.get('/thanks.txt', (req, res) => {
+staticRouter.get('/thanks.txt', (req, res) => {
   res.type('text/plain');
 
   res.write('# We would like to thank the following:');
@@ -64,5 +64,3 @@ router.get('/thanks.txt', (req, res) => {
 
   res.send();
 });
-
-export default router;

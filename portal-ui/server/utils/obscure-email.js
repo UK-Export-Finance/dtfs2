@@ -2,6 +2,7 @@ const emailDomainSeparator = '@';
 
 const obscureEmail = (email) => {
   const trimmedEmail = email.trim();
+
   if (!email.includes(emailDomainSeparator)) {
     throw new Error(`Unable to obscure email: ${emailDomainSeparator} is not present in ${email}.`);
   }
@@ -12,6 +13,7 @@ const obscureEmail = (email) => {
   if (!firstCharacterBeforeAtSign) {
     throw new Error(`Unable to obscure email: there are no non-whitespace characters present before ${emailDomainSeparator} in ${email}.`);
   }
+
   const lastCharacterBeforeAtSign = beforeAtSign[beforeAtSign.length - 1];
   return `${firstCharacterBeforeAtSign}***${lastCharacterBeforeAtSign}@${afterAtSign}`;
 };

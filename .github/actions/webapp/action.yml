@@ -12,6 +12,9 @@ inputs:
     description: 'Source Git branch, main if none specified'
     required: false
     default: 'main'
+  sha:
+    description: 'Commit SHA used for deployment artefacts and slots'
+    required: false
   region:
     description: 'Azure region'
     required: true
@@ -35,7 +38,17 @@ runs:
       with:
         ref: ${{ inputs.branch }}
 
-    # Step 2: Create Azure CLI directory with proper permissions
+    # Step 2: Get Deployment SHA
+    - name: Deployment SHA 🏷️
+      run: |
+        if [ -n "${{ inputs.sha }}" ]; then
+          echo "DEPLOYMENT_SHA=${{ inputs.sha }}" >> "$GITHUB_ENV"
+        else
+         echo "DEPLOYMENT_SHA=${{ github.sha }}" >> "$GITHUB_ENV"
+        fi
+      shell: bash
+
+    # Step 3: Create Azure CLI directory with proper permissions
     - name: Azure CLI Setup 🛠️
       run: |
         # Ensure .azure directory exists with proper permissions
@@ -48,13 +61,13 @@ runs:
         umask 022
       shell: bash
 
-    # Step 3: Log in to Azure.
+    # Step 4: Log in to Azure.
     - name: Azure 🔐
       uses: azure/login@v3
       with:
         creds: ${{ inputs.credentials }}
 
-    # Step 4: Set up Azure CLI defaults.
+    # Step 5: Set up Azure CLI defaults.
     - name: Defaults ✨
       uses: azure/cli@v3
       with:
@@ -63,7 +76,7 @@ runs:
           az configure --defaults location=${{ inputs.region }}
           az configure --defaults group=${{ inputs.group }}
 
-    # Step 5: Set environment variables for ACR and WebApp.
+    # Step 6: Set environment variables for ACR and WebApp.
     - name: CLI 📝
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
@@ -71,7 +84,7 @@ runs:
         echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
       shell: bash
 
-    # Step 6: Log in to Azure Container Registry.
+    # Step 7: Log in to Azure Container Registry.
     - name: ACR 🔐
       uses: azure/docker-login@v2
       with:
@@ -79,28 +92,28 @@ runs:
         username: ${{ env.ACR_USER }}
         password: ${{ inputs.acr }}
 
-    # Step 7: Build and push Docker images.
+    # Step 8: Build and push Docker images.
     - name: Artefacts 🗃️
       working-directory: .
       run: |
         # Build images
         docker build -f ./${{ inputs.webapp }}/Dockerfile . \
-        -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }} \
+        -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ env.DEPLOYMENT_SHA }} \
         -t ${{ env.ACR }}/${{ inputs.webapp }}:latest \
-        --build-arg GITHUB_SHA=${{ github.sha }}
+        --build-arg GITHUB_SHA=${{ env.DEPLOYMENT_SHA }}
         # Push images
-        docker push ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }}
+        docker push ${{ env.ACR }}/${{ inputs.webapp }}:${{ env.DEPLOYMENT_SHA }}
         docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
       shell: bash
 
-    # Step 8: Create and swap deployment slot.
+    # Step 9: Create and swap deployment slot.
     - name: Slot 🔀
       uses: azure/cli@v3
       with:
         inlineScript: |
           # Create new temporary slot
           az webapp deployment slot create \
-          --slot ${{ github.sha }} \
+          --slot ${{ env.DEPLOYMENT_SHA }} \
           --name ${{ env.WEBAPP }} \
           --configuration-source ${{ env.WEBAPP }} \
           --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
@@ -108,11 +121,11 @@ runs:
           --docker-registry-server-password ${{ inputs.acr }}
           # Swap slot
           az webapp deployment slot swap \
-          --slot ${{ github.sha }} \
+          --slot ${{ env.DEPLOYMENT_SHA }} \
           --name ${{ env.WEBAPP }} \
           --action swap
 
-    # Step 9: Cleanup temporary slot.
+    # Step 10: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
       uses: azure/cli@v3
@@ -120,5 +133,5 @@ runs:
         inlineScript: |
           # Delete temporary slot
           az webapp deployment slot delete \
-          --slot ${{ github.sha }} \
+          --slot ${{ env.DEPLOYMENT_SHA }} \
           --name ${{ env.WEBAPP }}

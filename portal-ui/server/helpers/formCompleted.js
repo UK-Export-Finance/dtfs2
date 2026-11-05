@@ -7,6 +7,7 @@ const validationErrorsCount = (validationErrors, fields) => {
 
     return Object.keys(requiredFieldErrors).length;
   }
+
   return 0;
 };
 
@@ -16,6 +17,7 @@ const isCompleted = (validationErrors, fields) => {
   if (errorsCount === 0) {
     return true;
   }
+
   return false;
 };
 

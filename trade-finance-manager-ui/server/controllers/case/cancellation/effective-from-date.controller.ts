@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { asUserSession } from '../../../helpers/express-session';
-import { EffectiveFromDateViewModel } from '../../../types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { EffectiveFromDateViewModel } from '@tfm-ui/types/view-models';
+import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
+import api from '@tfm-ui/api';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
-import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
-import api from '../../../api';
 import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
 export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
@@ -109,6 +109,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
     }
+
     await api.updateDealCancellation(_id, { effectiveFrom: effectiveFromDate?.valueOf() }, userToken);
 
     return res.redirect(`/case/${_id}/cancellation/check-details`);

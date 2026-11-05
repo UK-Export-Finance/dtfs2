@@ -1,12 +1,12 @@
 import { isValid, parseISO } from 'date-fns';
 import { IsoDateTimeStamp, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth, getOneIndexedMonth } from '@ukef/dtfs2-common';
-import { GetPaymentDetailsWithFeeRecordsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
-import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { EditPaymentViewModel, FeeRecordDetailsCheckboxId, EditPaymentErrorsViewModel } from '../../../types/view-models';
+import { GetPaymentDetailsWithFeeRecordsResponseBody, FeeRecord, Payment } from '@tfm-ui/api-response-types';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { EditPaymentViewModel, FeeRecordDetailsCheckboxId, EditPaymentErrorsViewModel } from '@tfm-ui/types/view-models';
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
-import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
-import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
+import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
 const mapToEditPaymentFeeRecords = (
@@ -41,9 +41,11 @@ const mapToEditPaymentFeeRecords = (
 
 const mapToEditPaymentFormPaymentDate = (dateReceived: IsoDateTimeStamp): EditPaymentFormValues['paymentDate'] => {
   const dateReceivedAsDate = parseISO(dateReceived);
+
   if (!isValid(dateReceivedAsDate)) {
     throw new Error(`Payment date received '${dateReceived}' is not a valid date`);
   }
+
   return {
     day: dateReceivedAsDate.getUTCDate().toString(),
     month: getOneIndexedMonth(dateReceivedAsDate).toString(),

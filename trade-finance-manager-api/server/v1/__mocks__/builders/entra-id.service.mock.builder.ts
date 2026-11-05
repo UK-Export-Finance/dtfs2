@@ -7,10 +7,10 @@ export class EntraIdServiceMockBuilder extends BaseMockBuilder<EntraIdService> {
     super({
       defaultInstance: {
         getAuthCodeUrl: jest.fn(async () => {
-          return Promise.resolve(aGetAuthCodeUrlResponse());
+          return await Promise.resolve(aGetAuthCodeUrlResponse());
         }),
         handleRedirect: jest.fn(async () => {
-          return Promise.resolve(aHandleRedirectResponse());
+          return await Promise.resolve(aHandleRedirectResponse());
         }),
       },
     });

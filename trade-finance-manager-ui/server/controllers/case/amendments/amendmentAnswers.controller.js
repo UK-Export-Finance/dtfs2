@@ -111,10 +111,12 @@ const postAmendmentAnswers = async (req, res) => {
 
     if (isFacilityEndDateEnabled) {
       payload.isUsingFacilityEndDate = amendment.isUsingFacilityEndDate;
+
       if (amendment.isUsingFacilityEndDate) {
         payload.facilityEndDate = amendment.facilityEndDate;
         payload.bankReviewDate = null;
       }
+
       if (amendment.isUsingFacilityEndDate === false) {
         payload.bankReviewDate = amendment.bankReviewDate;
         payload.facilityEndDate = null;

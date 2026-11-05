@@ -31,7 +31,6 @@ describe('controllers - login (sso)', () => {
       logout(req, res);
 
       // Assert
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(req.session.destroy).toHaveBeenCalled();
     });
   });

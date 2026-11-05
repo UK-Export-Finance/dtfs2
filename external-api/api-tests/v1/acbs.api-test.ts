@@ -1,16 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-
 import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
-import { app } from '../../server/createApp';
-import { api } from '../api';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 const { APIM_TFS_URL, AZURE_ACBS_FUNCTION_URL } = process.env;
 const testApi = api(app);
@@ -63,6 +54,7 @@ describe('/acbs', () => {
   describe('POST /v1/acbs/facility/:id/issue', () => {
     axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityInput).reply(HttpStatusCode.Ok, {});
     axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityErrorInput).reply(HttpStatusCode.BadRequest, {});
+
     it('should catch error on ACBS issue facility API call', async () => {
       const { status } = await testApi.post(mockACBSFacilityErrorInput).to(`/acbs/facility/${mockACBSFacilityErrorInput.facilityIdentifier}/issue`);
       expect(status).toEqual(HttpStatusCode.BadRequest);

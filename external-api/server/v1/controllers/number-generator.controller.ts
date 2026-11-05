@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
@@ -13,8 +10,8 @@ import {
   NUMBER_TYPE,
   USER,
 } from '@ukef/dtfs2-common';
-import { NumberGeneratorErrorResponse } from '../../interfaces';
-import { InvalidEntityTypeError } from '../errors';
+import { NumberGeneratorErrorResponse } from '@ukef/external-api/server/interfaces';
+import { InvalidEntityTypeError } from '@ukef/external-api/server/v1/errors';
 
 dotenv.config({ quiet: true });
 

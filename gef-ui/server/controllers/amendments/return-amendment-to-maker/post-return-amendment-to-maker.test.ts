@@ -1,14 +1,4 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
-
-// TODO: DTFS2-7724 - remove this eslint-disable
-/* eslint-disable import/first */
-const updateAmendmentStatusMock = jest.fn();
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
-const getAmendmentMock = jest.fn();
-const getUserDetailsMock = jest.fn();
-const updateApplicationMock = jest.fn();
-
 import {
   PORTAL_LOGIN_STATUS,
   ROLES,
@@ -28,6 +18,13 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { validationErrorHandler } from '../../../utils/helpers';
 
+const updateAmendmentStatusMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
+const updateApplicationMock = jest.fn();
+
 console.error = jest.fn();
 
 const mockError = new Error('test error');
@@ -37,12 +34,12 @@ const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
-  getAmendment: getAmendmentMock,
-  updateAmendmentStatus: updateAmendmentStatusMock,
-  getUserDetails: getUserDetailsMock,
-  updateApplication: updateApplicationMock,
+  getApplication: (...args: unknown[]) => getApplicationMock(...args),
+  getFacility: (...args: unknown[]) => getFacilityMock(...args),
+  getAmendment: (...args: unknown[]) => getAmendmentMock(...args),
+  updateAmendmentStatus: (...args: unknown[]) => updateAmendmentStatusMock(...args),
+  getUserDetails: (...args: unknown[]) => getUserDetailsMock(...args),
+  updateApplication: (...args: unknown[]) => updateApplicationMock(...args),
 }));
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };

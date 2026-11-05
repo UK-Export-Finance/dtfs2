@@ -1,4 +1,4 @@
-export interface PremiumSchedule {
+export type PremiumSchedule = {
   premiumTypeId: number;
   premiumFrequencyId: number;
   productGroup: string;
@@ -11,4 +11,4 @@ export interface PremiumSchedule {
   exposurePeriod: number;
   maximumLiability: number;
   cumulativeAmount: number;
-}
+};

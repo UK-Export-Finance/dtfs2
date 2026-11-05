@@ -1,16 +1,16 @@
 import { HttpStatusCode } from 'axios';
-import { InsertOneResult, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Response } from 'express';
-import { EstoreRepo } from '../../../repositories/estore/estore-repo';
-import { getCollection } from '../../../database';
-import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
-import { EstoreRequest } from '../../../helpers/types/estore';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, EMAIL_TEMPLATES } from '../../../constants';
-import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
-import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { getCollection } from '@ukef/external-api/server/database';
+import { Estore, SiteExistsResponse, EstoreErrorResponse } from '@ukef/external-api/server/interfaces';
+import { EstoreRequest } from '@ukef/external-api/server/helpers/types/estore';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, EMAIL_TEMPLATES } from '@ukef/external-api/server/constants';
+import { areValidUkefIds, objectIsEmpty } from '@ukef/external-api/server/helpers';
+import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '@ukef/external-api/server/cron';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
+import { sendEmail } from '@ukef/external-api/server/v1/controllers/email.controller';
 import { createExporterSite, siteExists } from './eStoreApi';
-import { getNowAsEpoch } from '../../../helpers/date';
-import { sendEmail } from '../email.controller';
 
 const { UKEF_INTERNAL_NOTIFICATION } = process.env;
 
@@ -180,8 +180,6 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       throw new Error('eStore CRON job log insertion failed');
     }
 
-    const { insertedId: _id } = inserted as InsertOneResult;
-
     // Site exists check
     console.info('Initiating eStore site existence check for exporter %s', exporterName);
     const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
@@ -257,22 +255,25 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
   } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
 
-    // CRON job log update
-    await EstoreRepo.updateByDealId(req?.body?.dealId, {
-      'cron.site': {
-        status: ESTORE_CRON_STATUS.FAILED,
-        create: {
+    try {
+      await EstoreRepo.updateByDealId(req?.body?.dealId, {
+        'cron.site': {
           status: ESTORE_CRON_STATUS.FAILED,
-          response: String(error),
-          timestamp: getNowAsEpoch(),
+          create: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: String(error),
+            timestamp: getNowAsEpoch(),
+          },
         },
-      },
-      'cron.term.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.buyer.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.deal.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.facility.status': ESTORE_CRON_STATUS.FAILED,
-      'cron.document.status': ESTORE_CRON_STATUS.FAILED,
-    });
+        'cron.term.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.buyer.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.deal.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.facility.status': ESTORE_CRON_STATUS.FAILED,
+        'cron.document.status': ESTORE_CRON_STATUS.FAILED,
+      });
+    } catch (logError) {
+      console.error('Unable to record eStore directory creation failure for deal %s %o', req?.body?.dealId, logError);
+    }
 
     // Dispatch an alert
     await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {

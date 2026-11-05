@@ -1,16 +1,16 @@
 import { Response } from 'express';
 import { CustomExpressRequest, FEE_RECORD_STATUS, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
+import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
 import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
-} from '../../../helpers/premium-payments-table-checkbox-id-helper';
-import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+} from '@tfm-ui/helpers/premium-payments-table-checkbox-id-helper';
+import { ValidatedAddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
 import {
   parseValidatedAddPaymentFormValues,
   AddPaymentFormRequestBody,
@@ -18,8 +18,8 @@ import {
   EMPTY_ADD_PAYMENT_FORM_VALUES,
   mapToSelectedReportedFeesDetailsViewModel,
   getLinkToPremiumPaymentsTab,
-} from '../helpers';
-import { SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
+} from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { SelectedFeeRecordsPaymentDetailsResponse } from '@tfm-ui/api-response-types';
 
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
@@ -57,6 +57,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       const parsedAddPaymentFormValues = parseValidatedAddPaymentFormValues(paymentFormValues);
 
       const { feeRecordStatus } = await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
+
       if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
       }

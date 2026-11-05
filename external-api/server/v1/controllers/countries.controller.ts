@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
 import { CountryInterface, COUNTRIES } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
-import { sortArrayAlphabetically } from '../../helpers';
+import { sortArrayAlphabetically } from '@ukef/external-api/server/helpers';
 
 const allCountries: CountryInterface[] = COUNTRIES;
 

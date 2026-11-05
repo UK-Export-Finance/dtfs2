@@ -1,12 +1,9 @@
 import express from 'express';
 import { ROLES } from '@ukef/dtfs2-common';
 
+import { validateToken, validateRole } from '@ukef/portal-ui/server/routes/middleware';
 import userAdminRoutes from './users';
 
-import { validateToken, validateRole } from '../middleware';
+export const adminRouter = express.Router();
 
-const router = express.Router();
-
-router.use('/admin/', [validateToken, validateRole({ role: [ROLES.ADMIN] }), userAdminRoutes]);
-
-export default router;
+adminRouter.use('/admin/', [validateToken, validateRole({ role: [ROLES.ADMIN] }), userAdminRoutes]);

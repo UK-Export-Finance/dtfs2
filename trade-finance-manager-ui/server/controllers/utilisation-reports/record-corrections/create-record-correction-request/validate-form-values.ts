@@ -1,5 +1,5 @@
 import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionRequestTransientFormData, RecordCorrectionReason } from '@ukef/dtfs2-common';
-import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
+import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
 
 /** Represents validation response with either errors or validated form values */
 type ValidationResponse =
@@ -54,11 +54,13 @@ export const getCreateRecordCorrectionRequestFormErrors = ({
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const reasonsErrorMessage = getRecordCorrectionReasonsValidationError(reasons);
+
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
 
   const additionalInfoErrorMessage = getAdditionalInfoValidationError(additionalInfo);
+
   if (additionalInfoErrorMessage) {
     errorSummary.push({ text: additionalInfoErrorMessage, href: '#additionalInfo' });
   }
