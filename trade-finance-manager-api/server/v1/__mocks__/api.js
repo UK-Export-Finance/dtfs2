@@ -23,11 +23,11 @@ module.exports = {
   findBankById: jest.fn(),
   findOneDeal: jest.fn(),
   findOnePortalDeal: (dealId) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const deal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   findOneGefDeal: (dealId) => {
-    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const mockDeal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
     const deal = {
       _id: dealId,
@@ -37,7 +37,7 @@ module.exports = {
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   updatePortalDeal: (dealId, update) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const deal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -47,7 +47,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalGefDeal: (dealId, update) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const deal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -57,7 +57,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalDealStatus: (dealId, statusUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const deal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
     const updatedDeal = {
       ...deal,
       status: statusUpdate,
@@ -66,7 +66,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalFacility: (facilityId, facilityUpdate) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
+    const facility = ALL_MOCK_FACILITIES.find((facility) => facility._id === facilityId);
 
     const updatedFacility = {
       ...facility,
@@ -76,7 +76,7 @@ module.exports = {
     return updatedFacility;
   },
   updatePortalFacilityStatus: (facilityId, statusUpdate) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
+    const facility = ALL_MOCK_FACILITIES.find((facility) => facility._id === facilityId);
     const updatedFacility = {
       ...facility,
       previousStatus: facility.status,
@@ -92,9 +92,9 @@ module.exports = {
   queryDeals: jest.fn(),
   updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const deal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
-    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
+    const dealIndex = ALL_MOCK_DEALS.findIndex((deal) => deal._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -106,7 +106,7 @@ module.exports = {
     return updatedDeal;
   },
   resetDealForApiTest: (dealId) => {
-    const existingDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
+    const existingDeal = ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
     const resetDeal = {
       _id: dealId,
@@ -114,7 +114,7 @@ module.exports = {
       tfm: {},
     };
 
-    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
+    const dealIndex = ALL_MOCK_DEALS.findIndex((deal) => deal._id === dealId);
 
     ALL_MOCK_DEALS[dealIndex] = resetDeal;
 
@@ -122,11 +122,11 @@ module.exports = {
   },
   submitDeal: (dealType, dealId) => ({
     _id: dealId,
-    dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),
+    dealSnapshot: ALL_MOCK_DEALS.find((deal) => deal._id === dealId),
     tfm: {},
   }),
   findOneFacility: (facilityId) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
+    const facility = ALL_MOCK_FACILITIES.find((facility) => facility._id === facilityId);
 
     return {
       _id: facilityId,
@@ -150,7 +150,7 @@ module.exports = {
     };
   },
   findFacilitiesByDealId: (dealId) => {
-    const facilities = ALL_MOCK_FACILITIES.filter((f) => f.dealId === dealId);
+    const facilities = ALL_MOCK_FACILITIES.filter((facility) => facility.dealId === dealId);
 
     const mapped = facilities.map((facility) => ({
       _id: facility._id,
@@ -164,7 +164,7 @@ module.exports = {
     return mapped;
   },
   updateFacility: ({ facilityId, tfmUpdate }) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
+    const facility = ALL_MOCK_FACILITIES.find((facility) => facility._id === facilityId);
 
     // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
     // root object and in tfm object.
