@@ -27,9 +27,15 @@ essential information for the developers.
 
 ## Getting Started :rocket:
 
+:new: **New to DTFS?** Start with the [onboarding guide](./doc/onboarding.md)
+for an overview of the domain, services and a first-week checklist before
+diving into the setup steps below.
+
 ### Prerequisites :computer:
 
-- Node.js (Version 20 or later) with npm
+- Node.js (Version 24.22.1 or later) with npm (Version 11.19.1 or later) --
+  see the `engines` field in [package.json](./package.json) for the exact
+  minimum versions required.
 - Docker and Docker Compose
 
 ### Tech Stack :wrench:
@@ -146,11 +152,13 @@ updates the environment accordingly. To update a secret:
 
 ### Run All Tests (E2E, API and UI) :rocket:
 
-With Docker running, execute all tests using the following command:
+There is currently no single command that runs every test suite across the
+monorepo. With Docker running, run each suite individually as described in
+the following sections:
 
-```shell
-npm run pipeline
-```
+- [E2E Tests](#e2e-tests-rocket)
+- [API Tests](#api-tests-rocket)
+- [UI Tests](#ui-tests-rocket)
 
 ### E2E Tests :rocket:
 
