@@ -1,3 +1,4 @@
+/* eslint-disable no-new, no-undef */
 if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
   /**
    * Handles the deletion of a file in the multi-file upload component.
@@ -24,10 +25,11 @@ if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
   const container = document.querySelector('.moj-multi-file-upload');
   const csrf = document.querySelector("input[name='_csrf']")?.value;
 
-  new MOJFrontend.MultiFileUpload({
-    container,
+  new MOJFrontend.MultiFileUpload(container, {
     uploadUrl: `${globalThis.location.href}/upload?_csrf=${csrf}`,
     deleteUrl: `${globalThis.location.href}/delete?_csrf=${csrf}`,
-    fileDeleteHook,
+    hooks: {
+      deleteHook: fileDeleteHook,
+    },
   });
 }

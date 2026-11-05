@@ -11,7 +11,7 @@ dl {
       font-weight: 700!important;
     }
     .ukef-list-highlight {
-      background: govuk-colour('light-grey');
+      background: govuk-colour('black', $variant: 'tint-95');
       padding: 10px;
     }
     dt.ukef-list-highlight {

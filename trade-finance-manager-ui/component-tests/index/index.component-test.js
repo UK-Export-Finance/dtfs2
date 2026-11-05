@@ -24,13 +24,13 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-CAyq4+1uA5HnBdqpa745pOBW7KR2LGjnKJ67Q1bhwnMT7hHdXbd6Ewj5YKwvrEJSCMIY0KKyxo1pP6obkU+E8g==');
+      .toHaveAttribute('integrity', 'sha512-KE0GuPXQrVqhKt+CDnSgiBqbu5fHvjl0f4NHk0LXe82MyHp0hB1EGtM0BT0uqB2M6Xlp5UI56Sb2CH3AroPJZQ==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-NzdPZZvOfc3LtL1btszG9FVCLH7wA5JE5UY++5FQBvTZB4xzTwgm/btCEzTtOHO5SYYp+dzcf35WNwqo0L7pag==');
+      .toHaveAttribute('integrity', 'sha512-5sNAGskCHxkPjg7xheX+e7vpWcXAku7OfhJtyYZ+Kp/jjPBk5S/7uuA6gT2k+mROrUiP4yBMs8ZwItMAGomnAQ==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {

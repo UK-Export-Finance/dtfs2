@@ -2,9 +2,9 @@ import { HttpStatusCode } from 'axios';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import { CUSTOMER_TYPE, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
-import { app } from '../../server/createApp';
-import { api } from '../api';
-import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
+import { findACBSIndustrySector } from '@ukef/external-api/server/v1/controllers/industry-sectors.controller';
 
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS, INVALID_TOO_SHORT, INVALID_TOO_LONG } = MOCK_COMPANY_REGISTRATION_NUMBERS;

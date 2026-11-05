@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { ResendAnotherAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/resend-another-access-code-view-model';
+import { ResendAnotherAccessCodeViewModel } from '@ukef/portal-ui/server/types/view-models/two-factor-authentication/resend-another-access-code-view-model';
 
 type GetResendAnotherAccessCodePageRequestSession = { numberOfSignInOtpAttemptsRemaining: number; userEmail?: string };
 export type GetResendAnotherAccessCodePageRequest = CustomExpressRequest<Record<string, never>> & {

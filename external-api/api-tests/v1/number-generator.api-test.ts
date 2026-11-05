@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { getNowAsUtcISOString, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@ukef/dtfs2-common';
-import { getNumber } from '../../server/v1/controllers/number-generator.controller';
-import { InvalidEntityTypeError } from '../../server/v1/errors';
+import { getNumber } from '@ukef/external-api/server/v1/controllers/number-generator.controller';
+import { InvalidEntityTypeError } from '@ukef/external-api/server/v1/errors';
 
 dotenv.config({ quiet: true });
 

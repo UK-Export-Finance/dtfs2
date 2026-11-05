@@ -1,10 +1,10 @@
 import $ from 'jquery';
-import MOJFrontend, { initAll } from '@ministryofjustice/frontend';
+import * as MOJFrontend from '@ministryofjustice/frontend';
 
 const init = () => {
   window.$ = $;
 
-  initAll();
+  MOJFrontend.initAll();
 
   window.MOJFrontend = MOJFrontend;
 };

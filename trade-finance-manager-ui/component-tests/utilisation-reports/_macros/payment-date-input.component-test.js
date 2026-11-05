@@ -67,9 +67,9 @@ describe(component, () => {
   });
 
   it.each([
-    { inputName: 'paymentDate-day', paymentDateError: { ...aPaymentDateError(), dayError: false } },
-    { inputName: 'paymentDate-month', paymentDateError: { ...aPaymentDateError(), monthError: false } },
-    { inputName: 'paymentDate-year', paymentDateError: { ...aPaymentDateError(), yearError: false } },
+    { inputName: 'paymentDate-day', paymentDateError: { ...aPaymentDateError(), dayError: false, monthError: true } },
+    { inputName: 'paymentDate-month', paymentDateError: { ...aPaymentDateError(), monthError: false, dayError: true } },
+    { inputName: 'paymentDate-year', paymentDateError: { ...aPaymentDateError(), yearError: false, dayError: true } },
   ])('should not add the error class to the $inputName input when there is not an error with that field', ({ inputName, paymentDateError }) => {
     const wrapper = getWrapper({ paymentDateError });
 

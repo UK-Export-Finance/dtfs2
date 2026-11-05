@@ -1,9 +1,9 @@
 import { Currency, isNonEmptyString, isCurrencyValid, isPaymentReferenceOverMaxCharacterCount, isMonetaryValueValid } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
-import { REGEX } from '../../../constants';
-import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '../../../types/view-models';
-import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { REGEX } from '@tfm-ui/constants';
+import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '@tfm-ui/types/view-models';
+import { AddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
 
 const getPaymentCurrencyValidationsErrors = (paymentCurrency: string | undefined, feeRecordPaymentCurrency: Currency): string | undefined => {
   if (!isCurrencyValid(paymentCurrency)) {

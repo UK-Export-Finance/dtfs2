@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "audit:fix:all": "npm audit --fix --if-present",
-    "build:ui": "npm run build --workspace gef-ui && npm run build --workspace portal-ui && npm run build --workspace trade-finance-manager-ui && npm run integrity:update",
+    "build:ui": "npm run build --workspace gef-ui && npm run build --workspace portal-ui && npm run build --workspace trade-finance-manager-ui",
     "env:copy": "(cd utils && npm run env:copy)",
     "housekeeping": "npm update --save && npm i && npm run type-check:all && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml && npm run audit:fix:all && npm run spellcheck",
     "lint:all": "npm run lint --workspaces --if-present",

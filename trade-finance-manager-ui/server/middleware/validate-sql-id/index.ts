@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { isValidSqlId } from '../../helpers/validateIds';
+import { isValidSqlId } from '@tfm-ui/helpers/validateIds';
 
 export type ValidateSqlIdRequest = Request<{ [paramName: string]: string }>;
 

@@ -1,6 +1,6 @@
 import { isNonEmptyString } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel } from '../../../types/view-models';
-import { REGEX } from '../../../constants';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
+import { REGEX } from '@tfm-ui/constants';
 
 /**
  * Selector for the premium payments facility ID filter input element
