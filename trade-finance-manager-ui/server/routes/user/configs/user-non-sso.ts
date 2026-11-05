@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 import { GetRouter } from '../../../types/get-router';
 import * as userController from '../../../controllers/user/user-non-sso';

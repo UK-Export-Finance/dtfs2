@@ -1,5 +1,5 @@
 const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
-const createRateLimit = require('.');
+const { createRateLimit } = require('.');
 
 describe('createRateLimit', () => {
   let originalProcessEnv;

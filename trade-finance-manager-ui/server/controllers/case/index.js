@@ -139,6 +139,7 @@ const getCaseTasks = async (req, res) => {
 
   const deal = await api.getDeal(dealId, userToken, tasksFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+
   if (!deal) {
     return res.redirect('/not-found');
   }
@@ -212,6 +213,7 @@ const filterCaseTasks = async (req, res) => {
   }
 
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+
   if (!deal) {
     return res.redirect('/not-found');
   }
@@ -332,6 +334,7 @@ const putCaseTask = async (req, res) => {
 
 const formatCompletedAmendmentDetails = (allAmendments) => {
   const allCompletedAmendments = [];
+
   if (allAmendments.length) {
     Object.values(allAmendments).forEach((amendment) => {
       if (amendment.submittedByPim === true || amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
@@ -355,6 +358,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         item.requireUkefApproval = amendment?.requireUkefApproval ? 'Yes' : 'No';
         // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
         item.banksDecision = amendment?.bankDecision?.submitted ? amendment?.bankDecision?.decision : AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+
         // checks if coverEndDate/facility value or both on an amendment request are declined
         if (amendment?.ukefDecision?.submitted) {
           if (ukefDecisionRejected(amendment)) {
@@ -402,6 +406,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
       }
     });
   }
+
   return allCompletedAmendments;
 };
 

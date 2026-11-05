@@ -96,6 +96,7 @@ export const validatePostAddPaymentRequestBody = (req: ValidatePostAddPaymentReq
   }
 
   const selectedFeeRecordStatuses = getSetOfSelectedFeeRecordStatuses(checkedCheckboxIds);
+
   if (!allStatusesAreTheSameOrCombinationOfToDoStatuses(selectedFeeRecordStatuses)) {
     return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES, mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }

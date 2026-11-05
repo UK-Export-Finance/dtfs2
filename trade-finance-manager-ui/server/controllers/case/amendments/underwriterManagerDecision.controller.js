@@ -57,6 +57,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
+
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
 
@@ -81,8 +82,10 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value/managers-decision`);
       }
+
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions`);
     }
+
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
@@ -141,6 +144,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
+
     if (amendment?.changeFacilityValue && amendment?.value) {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
@@ -162,6 +166,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions`);
     }
+
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {

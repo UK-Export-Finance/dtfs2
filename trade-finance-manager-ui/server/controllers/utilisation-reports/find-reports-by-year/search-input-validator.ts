@@ -21,10 +21,13 @@ const getYearInputValidationError = (yearQuery: string): { yearError: string | u
   if (!isNonEmptyString(yearQuery) || !REGEX.YEAR.test(yearQuery)) {
     return { yearError: 'Enter a valid year', yearAsString: '' };
   }
+
   const parsedYear = Number(yearQuery);
+
   if (isBefore2024(parsedYear) || isInTheFuture(parsedYear)) {
     return { yearError: 'Enter a year that is between 2024 and the current year', yearAsString: '' };
   }
+
   return { yearError: undefined, yearAsString: yearQuery };
 };
 
@@ -32,6 +35,7 @@ const getBankInputValidationError = (bankIdQuery: string, validBankIds: string[]
   if (!isNonEmptyString(bankIdQuery) || !validBankIds.includes(bankIdQuery)) {
     return { bankError: 'Select a bank', bankIdAsString: '' };
   }
+
   return { bankError: undefined, bankIdAsString: bankIdQuery };
 };
 
@@ -48,9 +52,11 @@ export const validateSearchInput = ({ bankIdQuery, yearQuery, validBankIds }: Va
   const { yearError, yearAsString } = yearQuery ? getYearInputValidationError(yearQuery) : { yearError: 'Enter a valid year', yearAsString: '' };
 
   const errorSummary: ErrorSummaryViewModel[] = [];
+
   if (bankError) {
     errorSummary.push({ text: bankError, href: '#bank' });
   }
+
   if (yearError) {
     errorSummary.push({ text: yearError, href: '#year' });
   }

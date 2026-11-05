@@ -109,6 +109,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }
+
     await api.updateDealCancellation(_id, { bankRequestDate: bankRequestDate?.valueOf() }, userToken);
 
     return res.redirect(`/case/${_id}/cancellation/effective-from-date`);

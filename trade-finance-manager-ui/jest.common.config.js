@@ -4,6 +4,7 @@ module.exports = {
   preset: 'ts-jest',
   moduleNameMapper: {
     ...moduleNameMapper,
+    '^@tfm-ui/(.+)$': '<rootDir>/server/$1',
     '^.+\\.(css|less|scss)$': 'babel-jest',
   },
   transform: {

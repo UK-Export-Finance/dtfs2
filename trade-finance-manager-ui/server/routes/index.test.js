@@ -16,7 +16,7 @@ jest.mock('./case', () => mockCaseRoutes);
 
 describe('routes index', () => {
   beforeEach(() => {
-    require('./index'); // eslint-disable-line global-require
+    require('./index');
   });
 
   afterEach(() => {

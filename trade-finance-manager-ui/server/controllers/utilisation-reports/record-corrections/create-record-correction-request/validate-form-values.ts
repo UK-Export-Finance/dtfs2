@@ -54,11 +54,13 @@ export const getCreateRecordCorrectionRequestFormErrors = ({
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const reasonsErrorMessage = getRecordCorrectionReasonsValidationError(reasons);
+
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
 
   const additionalInfoErrorMessage = getAdditionalInfoValidationError(additionalInfo);
+
   if (additionalInfoErrorMessage) {
     errorSummary.push({ text: additionalInfoErrorMessage, href: '#additionalInfo' });
   }

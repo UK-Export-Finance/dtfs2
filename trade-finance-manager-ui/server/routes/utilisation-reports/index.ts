@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled, setNoStoreCacheControl } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';

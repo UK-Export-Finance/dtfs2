@@ -34,14 +34,17 @@ const amendmentRequestDateValidation = (body, facility) => {
   } else if (amendmentRequestIsPartiallyComplete) {
     let msg = 'Amendment request date must include a ';
     const dateFieldsInError = [];
+
     if (!amendmentRequestDateDay) {
       msg += 'day ';
       dateFieldsInError.push('amendmentRequestDate-day');
     }
+
     if (!amendmentRequestDateMonth) {
       msg += !amendmentRequestDateDay ? ' and month ' : 'month ';
       dateFieldsInError.push('amendmentRequestDate-month');
     }
+
     if (!amendmentRequestDateYear) {
       msg += !amendmentRequestDateDay || !amendmentRequestDateMonth ? 'and year' : 'year';
       dateFieldsInError.push('amendmentRequestDate-year');
