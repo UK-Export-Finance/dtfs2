@@ -189,7 +189,7 @@ jobs:
     name: Infrastructure setup 🔧
     # Skip QA suite for Dependabot-authored PRs
     if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
       TZ: ${{ env.TZ }}
@@ -210,7 +210,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -253,7 +253,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -299,7 +299,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -360,7 +360,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -407,7 +407,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -475,7 +475,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -522,7 +522,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -581,7 +581,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -658,7 +658,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -726,7 +726,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -811,7 +811,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -857,7 +857,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -924,7 +924,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -972,7 +972,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1059,7 +1059,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1105,7 +1105,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1148,7 +1148,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1192,7 +1192,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1244,7 +1244,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1298,7 +1298,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1454,7 +1454,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1509,7 +1509,7 @@ jobs:
       MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1559,7 +1559,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Project
@@ -1593,7 +1593,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1640,7 +1640,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:

@@ -7,7 +7,7 @@
 #
 # Setup Test Infrastructure:
 # Name: Infrastructure setup
-# Runs on: ubuntu-24.04
+# Runs on: ubuntu-latest
 # Outputs environment and timezone variables for use in subsequent jobs.
 # Steps:
 # Echoes the environment and timezone for verification.
@@ -15,20 +15,20 @@
 # Code Quality - SCA (Codacy):
 # Name: Codacy
 # Depends on: setup
-# Runs on: ubuntu-24.04
+# Runs on: ubuntu-latest
 # Uses the Codacy analysis CLI action to perform code quality analysis.
 #
 # Code Quality - Spell Check:
 # Name: Spelling
 # Depends on: setup
-# Runs on: ubuntu-24.04
+# Runs on: ubuntu-latest
 # Installs dependencies using npm.
 # Runs a spell check using the command npm run spellcheck.
 #
 # Licensing - SCA:
 # Name: Licensing ✏️
 # Depends on: setup
-# Runs on: ubuntu-24.04
+# Runs on: ubuntu-latest
 # Uses the Fossa action to scan for open-source licenses in the code.
 #
 # Key Points:
@@ -58,7 +58,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -75,7 +75,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Repository
@@ -92,7 +92,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Timezone
@@ -122,7 +122,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Repository
