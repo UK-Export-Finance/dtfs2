@@ -33,7 +33,7 @@ diving into the setup steps below.
 
 ### Prerequisites :computer:
 
-- Node.js (Version 24.22.1 or later) with npm (Version 11.19.1 or later) --
+- Node.js (Version 24.17.0 or later) with npm (Version 11.3.0 or later) --
   see the `engines` field in [package.json](./package.json) for the exact
   minimum versions required.
 - Docker and Docker Compose

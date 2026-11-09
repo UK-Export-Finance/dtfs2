@@ -5,7 +5,7 @@ the starting point for new engineers. It pulls together the context, setup
 steps and links you need for your first few days, and points to the more
 detailed documentation that already exists in this repository.
 
-If you only read one other document, read the root [README.md](./README.md) --
+If you only read one other document, read the root [README.md](../README.md) --
 it is the source of truth for setup, running and testing the project. This
 guide exists to orient you first and link you to the right place second.
 
