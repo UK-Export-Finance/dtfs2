@@ -31,6 +31,7 @@
     "build:ui": "npm run build --workspace gef-ui && npm run build --workspace portal-ui && npm run build --workspace trade-finance-manager-ui && npm run integrity:update",
     "env:copy": "(cd utils && npm run env:copy)",
     "housekeeping": "npm update --save && npm i && npm run type-check:all && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml && npm run audit:fix:all && npm run spellcheck",
+    "integrity:update": "node scripts/update-ui-asset-integrity.mjs",
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
     "load": "(cd utils && npm run load)",
