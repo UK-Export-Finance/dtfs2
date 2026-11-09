@@ -69,8 +69,8 @@ the root README step by step. The short version:
 4. Run `npm ci` from the repository root (installs all workspaces).
 5. Run `npm run env:copy` to copy the root `.env` into every sub-project that
 6. Run `docker-compose up --build` to start supporting services.
-7. Load mock data with `npm run load` (or `npm run load:utilisation` if your
-   work touches utilisation reports/SQL).
+7. In a new terminal, load mock data with `npm run load` (or `npm run load:utilisation`
+   if your work touches utilisation reports/SQL).
 8. Start everything with `npm run start`.
 
 Mock login credentials are defined in code, not the database seed scripts
