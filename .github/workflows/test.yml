@@ -189,7 +189,7 @@ jobs:
     name: Infrastructure setup 🔧
     # Skip QA suite for Dependabot-authored PRs
     if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       environment: ${{ env.environment }}
       TZ: ${{ env.TZ }}
@@ -210,7 +210,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -299,7 +299,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -407,7 +407,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -522,7 +522,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -581,7 +581,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -658,7 +658,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -726,7 +726,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -857,7 +857,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -972,7 +972,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1105,7 +1105,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1192,7 +1192,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1298,7 +1298,7 @@ jobs:
       FF_TFM_APIM_GIFT_INTEGRATION_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1509,7 +1509,7 @@ jobs:
       MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1593,7 +1593,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:
@@ -1640,7 +1640,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: ${{ fromJSON(vars.GHA_TEST_TIMEOUT_MINUTES) }}
 
     strategy:

@@ -7,7 +7,7 @@
 #
 # Setup Test Infrastructure:
 # Name: Infrastructure setup
-# Runs on: ubuntu-latest
+# Runs on: ubuntu-24.04
 # Outputs environment and timezone variables for use in subsequent jobs.
 # Steps:
 # Echoes the environment and timezone for verification.
@@ -15,7 +15,7 @@
 # Lint:
 # Name: Scanning
 # Depends on: setup
-# Runs on: ubuntu-latest
+# Runs on: ubuntu-24.04
 # Steps:
 # Sets the timezone using the specified value.
 # Checks out the repository code.
@@ -67,7 +67,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -83,7 +83,7 @@ jobs:
     name: Scanning 🎨
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -111,7 +111,7 @@ jobs:
     name: Prettier 🎨
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -139,7 +139,7 @@ jobs:
     name: TypeScript ⌨️
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -167,7 +167,7 @@ jobs:
     name: YAML ⌨️
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
@@ -195,7 +195,7 @@ jobs:
     name: Markdown ⌨️
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
