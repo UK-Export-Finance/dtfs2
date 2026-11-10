@@ -1,3 +1,4 @@
+import { contactPage } from './contact';
 import { landingPage } from './landingPage';
 
 module.exports = {
@@ -66,5 +67,5 @@ module.exports = {
   problemWithService: require('./problem-with-service'),
   pendingCorrections: require('./utilisation-report-service/record-corrections/pendingCorrections'),
   correctionLog: require('./utilisation-report-service/record-corrections/correctionLog'),
-  contact: require('./contact'),
+  contactPage,
 };
