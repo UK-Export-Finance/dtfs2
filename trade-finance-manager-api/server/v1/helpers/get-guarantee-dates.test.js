@@ -17,10 +17,27 @@ const unissuedFacility = {
   ukefGuaranteeInMonths: 12,
 };
 
+const unissuedFacilityGuaranteeAsString = {
+  hasBeenIssued: false,
+  ukefGuaranteeInMonths: '12',
+};
+
 describe('Get guarantee dates in TFM', () => {
   describe('When a facility is un-issued / commitment / 06', () => {
     it('Should return the correct dates', () => {
       const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(unissuedFacility, dealSubmissionDate);
+
+      // Deal submission date
+      expect(guaranteeCommencementDate).toEqual(submissionDate);
+      // GCD + Tenor
+      expect(guaranteeExpiryDate).toEqual('2024-01-01');
+      // Deal submission date
+      expect(effectiveDate).toEqual(submissionDate);
+    });
+  });
+  describe('When a facility is un-issued / commitment / 06 with guarantee as string', () => {
+    it('Should return the correct dates', () => {
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(unissuedFacilityGuaranteeAsString, dealSubmissionDate);
 
       // Deal submission date
       expect(guaranteeCommencementDate).toEqual(submissionDate);
