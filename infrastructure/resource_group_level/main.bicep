@@ -766,6 +766,16 @@ var tfmApiAdditionalSecureSettings = {
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
 
+// Key Vault
+var keyVaultName = 'kv-${product}-${environment}-${version}'
+module keyVault './modules/key-vault.bicep' = {
+  name: 'key-vault'
+  params: {
+    keyVaultName: keyVaultName
+    location: location
+  }
+}
+
 module networkSecurityGroup 'modules/gw-nsg.bicep' = {
   name: 'networkSecurityGroup'
   params: {
