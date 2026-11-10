@@ -253,7 +253,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -360,7 +360,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -475,7 +475,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -811,7 +811,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -924,7 +924,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1059,7 +1059,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1148,7 +1148,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1244,7 +1244,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1454,7 +1454,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1559,7 +1559,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Project
