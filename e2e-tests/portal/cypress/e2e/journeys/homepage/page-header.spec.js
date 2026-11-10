@@ -80,7 +80,7 @@ context('Portal GovUK header', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
 
-      dashboardDeals.visit();
+      pages.dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -147,7 +147,7 @@ context('Portal GovUK header', () => {
     before(() => {
       cy.login(BANK1_CHECKER1);
 
-      dashboardDeals.visit();
+      pages.dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -214,7 +214,7 @@ context('Portal GovUK header', () => {
     before(() => {
       cy.login(ADMIN);
 
-      dashboardDeals.visit();
+      pages.dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -282,7 +282,7 @@ context('Portal GovUK header', () => {
     before(() => {
       cy.login(READ_ONLY);
 
-      dashboardDeals.visit();
+      pages.dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
