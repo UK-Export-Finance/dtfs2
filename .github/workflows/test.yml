@@ -58,6 +58,7 @@ on:
 
     paths:
       - 'package*.json'
+      - 'doc/**'
       - 'docker*.yml'
       - '.github/**'
       - 'gef-ui/**'
@@ -73,6 +74,7 @@ on:
       - 'libs/**'
       - 'README.md'
       - 'reverse-proxy/**'
+      - '*.md'
 
   push:
     branches:
