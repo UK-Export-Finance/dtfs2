@@ -1,4 +1,5 @@
 import { contactPage } from './contact';
+import { header } from './header';
 import { landingPage } from './landingPage';
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
   resendAnotherAccessCode: require('./login/resend-another-access-code'),
   accessCodeExpired: require('./login/access-code-expired'),
   temporarilySuspendedAccessCode: require('./login/temporarily-suspended-access-code'),
-  header: require('./header'),
+  header,
   landingPage,
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
