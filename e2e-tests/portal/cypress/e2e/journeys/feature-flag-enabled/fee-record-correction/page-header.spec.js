@@ -1,6 +1,6 @@
-const { header } = require('../../../pages/headers');
+const { header } = require('../../../pages/header');
 const relative = require('../../../relativeURL');
-const { dashboardDeals } = require('../../../headers');
+const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN, BANK1_PAYMENT_REPORT_OFFICER1, READ_ONLY } = MOCK_USERS;
@@ -9,7 +9,7 @@ context('Portal GovUK header', () => {
   beforeEach(() => {
     cy.saveSession();
 
-    dashboardDeals.visit();
+    pages.dashboardDeals.visit();
   });
 
   describe('signed-out user header', () => {
