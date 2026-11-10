@@ -25,7 +25,7 @@ reviews, prices and manages through to maturity.
 | **GEF**      | General Export Facility -- a newer product with its own UI (`gef-ui`) that reuses `portal-api` `/gef` endpoints. |
 | **TFM**      | Trade Finance Manager -- the internal UKEF caseworker application used once a deal has been submitted.           |
 | **Deal**     | A submission from a bank, containing one or more facilities.                                                     |
-| **Facility** | A single bond, loan (BSS/EWCS)or Cash, Contingent (GEF) or other financial product within a deal.                |
+| **Facility** | A single bond, loan (BSS/EWCS) or Cash, Contingent (GEF) or other financial product within a deal.               |
 | **Case**     | In TFM, a deal plus its facilities and TFM-specific data (tasks, parties, etc.).                                 |
 
 ### Services at a glance
@@ -60,14 +60,14 @@ Follow the ["Getting Started"](/README.md#getting-started-rocket) section of
 the root README step by step. The short version:
 
 1. Install the Node.js version from [package.json](/package.json) `engines`
-   field (use `nvm install`/`nvm use`) and Docker + Docker Compose.
+   field (use `nvm install 24.17.0`/`nvm use 24.17.0`) and Docker + Docker Compose.
 2. Copy `.env.sample` to a single root `.env` file and fill in required
    values (ask the team for any shared secrets).
 3. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` and save the
    Base64-encoded private and public keys in the root `.env` as
    `JWT_SIGNING_KEY` and `JWT_VALIDATING_KEY`, respectively.
 4. Run `npm ci` from the repository root (installs all workspaces).
-5. Run `npm run env:copy` to copy the root `.env` into every sub-project that
+5. Run `npm run env:copy` to copy the root `.env` into every sub-project that needs it.
 6. Run `docker-compose up --build` to start supporting services.
 7. In a new terminal, load mock data with `npm run load` (or `npm run load:utilisation`
    if your work touches utilisation reports/SQL).
