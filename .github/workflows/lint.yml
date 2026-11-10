@@ -44,6 +44,7 @@ on:
 
     paths:
       - 'package*.json'
+      - 'doc/**'
       - 'docker*.yml'
       - '.github/**'
       - 'gef-ui/**'
@@ -58,6 +59,7 @@ on:
       - 'utils/**'
       - 'libs/**'
       - 'reverse-proxy/**'
+      - '*.md'
 
 env:
   environment: dev
