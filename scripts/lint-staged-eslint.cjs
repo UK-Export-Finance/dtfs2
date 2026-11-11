@@ -84,7 +84,13 @@ module.exports = {
     const failures = [];
 
     filesByConfigDir.forEach((files, configDir) => {
-      const { success, output } = run('npx', ['eslint', '--fix', ...files], { cwd: configDir });
+      /**
+       * ESLint resolves `files`/`ignores` glob patterns against a `cwd`-relative
+       * base path, so staged paths are passed relative to `configDir` (rather
+       * than absolute) to ensure they match correctly.
+       */
+      const relativeFiles = files.map((file) => path.relative(configDir, file));
+      const { success, output } = run('npx', ['eslint', '--fix', ...relativeFiles], { cwd: configDir });
 
       if (output) {
         log(output);
