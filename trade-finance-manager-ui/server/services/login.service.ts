@@ -1,5 +1,5 @@
 import { GetAuthCodeUrlParams, GetAuthCodeUrlResponse, HandleSsoRedirectFormRequest, HandleSsoRedirectFormResponse } from '@ukef/dtfs2-common';
-import * as api from '../api';
+import * as api from '@tfm-ui/api';
 
 export class LoginService {
   /**

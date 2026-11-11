@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { EstoreErrorResponse } from '../../interfaces';
+import { EstoreErrorResponse } from '@ukef/external-api/server/interfaces';
 
 const status = HttpStatusCode.InternalServerError;
 

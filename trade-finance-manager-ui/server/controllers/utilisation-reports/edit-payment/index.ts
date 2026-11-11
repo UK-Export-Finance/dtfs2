@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
-import { EditPaymentViewModel } from '../../../types/view-models';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { EditPaymentViewModel } from '@tfm-ui/types/view-models';
 import {
   EditPaymentFormRequestBody,
   extractEditPaymentFormValues,
@@ -11,12 +11,12 @@ import {
   parseValidatedEditPaymentFormValues,
   validateEditPaymentRequestFormValues,
   getReconciliationForReportHref,
-} from '../helpers';
-import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
+} from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { ValidatedEditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { getEditPaymentsCheckboxIdsFromObjectKeys } from '@tfm-ui/helpers/edit-payments-table-checkbox-id-helper';
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
-import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-payments-table-checkbox-id-helper';
-import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
-import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 
 export type GetEditPaymentRequest = CustomExpressRequest<{
   query: {

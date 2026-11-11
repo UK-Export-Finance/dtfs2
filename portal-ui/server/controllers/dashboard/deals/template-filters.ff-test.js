@@ -1,8 +1,8 @@
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
+import { FIELD_NAMES } from '@ukef/portal-ui/server/constants';
+import CONTENT_STRINGS from '@ukef/portal-ui/server/content-strings';
+import { generateFiltersArray } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-template-filters';
 import { statusFilters } from './template-filters';
-import { FIELD_NAMES } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
-import { generateFiltersArray } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/deals - template-filters', () => {
   describe('deal status filters - FF_TFM_DEAL_CANCELLATION_ENABLED enabled', () => {

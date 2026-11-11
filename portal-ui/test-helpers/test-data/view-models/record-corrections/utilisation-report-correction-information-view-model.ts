@@ -1,7 +1,7 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../server/constants';
-import { UtilisationReportCorrectionInformationViewModel } from '../../../../server/types/view-models/record-correction/utilisation-report-correction-information';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { UtilisationReportCorrectionInformationViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/utilisation-report-correction-information';
 
 export const aUtilisationReportCorrectionInformationViewModel = (): UtilisationReportCorrectionInformationViewModel => ({
   user: aPortalSessionUser(),

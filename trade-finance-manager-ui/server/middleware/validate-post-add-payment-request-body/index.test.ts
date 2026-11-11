@@ -1,10 +1,10 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { Currency, CURRENCY, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { ADD_PAYMENT_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { AddPaymentErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
 import { validatePostAddPaymentRequestBody, ValidatePostAddPaymentRequest } from '.';
-import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
-import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
-import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
-import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys';
 
 console.error = jest.fn();
 

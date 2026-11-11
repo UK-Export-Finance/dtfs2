@@ -1,9 +1,9 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { CheckDetailsViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
 import { aRequestSession } from '../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { CheckDetailsViewModel } from '../../../types/view-models';
-import api from '../../../api';
 import { getDealCancellationDetails, GetDealCancellationDetailsRequest } from './check-details.controller';
 
 jest.mock('../../../api', () => ({

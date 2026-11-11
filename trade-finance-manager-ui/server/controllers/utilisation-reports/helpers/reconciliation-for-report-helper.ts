@@ -9,7 +9,7 @@ import {
   PaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
+import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '@tfm-ui/api-response-types';
 import {
   PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
@@ -18,13 +18,13 @@ import {
   PaymentViewModelItem,
   PaymentDetailsRowViewModel,
   PaymentDetailsFiltersViewModel,
-} from '../../../types/view-models';
-import { DATE_FORMAT } from '../../../constants';
+} from '@tfm-ui/types/view-models';
+import { DATE_FORMAT } from '@tfm-ui/constants';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { KeyingSheetCheckboxId } from '@tfm-ui/types/keying-sheet-checkbox-id';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
-import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
 const SELECTABLE_FEE_RECORD_STATUSES: FeeRecordStatus[] = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH, FEE_RECORD_STATUS.TO_DO_AMENDED] as const;
 

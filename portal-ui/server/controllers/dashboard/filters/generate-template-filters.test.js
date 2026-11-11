@@ -1,6 +1,6 @@
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { generateFilterObject, generateFiltersArray, submissionTypeFilters } from './generate-template-filters';
 import { formatFieldValue } from './helpers';
-import CONSTANTS from '../../../constants';
 
 describe('controllers/dashboard/filters - ui-filters', () => {
   describe('generateFilterObject', () => {

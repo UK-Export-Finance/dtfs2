@@ -1,11 +1,11 @@
 import { when } from 'jest-when';
 import { Currency, CURRENCY, CurrencyAndAmount } from '@ukef/dtfs2-common';
-import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
+import { GetPaymentDetailsWithFeeRecordsResponseBody } from '@tfm-ui/api-response-types';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
+import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '@tfm-ui/types/view-models';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
-import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
-import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 

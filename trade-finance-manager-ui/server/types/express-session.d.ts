@@ -1,6 +1,6 @@
 import { AuthorizationUrlRequest } from '@azure/msal-node';
 import { TfmSessionUser } from '@ukef/dtfs2-common';
-import { RemoveFeesFromPaymentErrorKey } from '../controllers/utilisation-reports/helpers';
+import { RemoveFeesFromPaymentErrorKey } from '@tfm-ui/controllers/utilisation-reports/helpers';
 import { EditPaymentFormValues } from './edit-payment-form-values';
 import { AddPaymentErrorKey, InitiateRecordCorrectionRequestErrorKey, GenerateKeyingDataErrorKey } from './premium-payments-tab-error-keys';
 

@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { asUserSession } from '../../../helpers/express-session';
-import { CancelCancellationViewModel } from '../../../types/view-models';
-import api from '../../../api';
-import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { CancelCancellationViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
+import { canSubmissionTypeBeCancelled } from '@tfm-ui/controllers/helpers';
+import { isDealCancellationInDraft } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
 import { getPreviousPageUrl } from './helpers/get-previous-page-url';
-import { isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
 
 export type GetCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string }; query: { return: string }; reqBody: { previousPage: string } }>;

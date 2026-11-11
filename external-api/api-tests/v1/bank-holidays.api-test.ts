@@ -1,9 +1,9 @@
 import { getYear, addYears } from 'date-fns';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
-import { app } from '../../server/createApp';
-import { api } from '../api';
-import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
-import { BankHolidaysEvent } from '../../server/interfaces';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
+import { mockResponseBankHolidays } from '@ukef/external-api/api-tests/test-mocks/bank-holidays';
+import { BankHolidaysEvent } from '@ukef/external-api/server/interfaces';
 
 const { get } = api(app);
 

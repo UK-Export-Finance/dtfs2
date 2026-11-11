@@ -1,7 +1,7 @@
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../../constants/premium-payments-table-error-href';
-import { ADD_PAYMENT_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
-import { AddPaymentErrorKey } from '../../../../types/premium-payments-tab-error-keys';
-import { ErrorSummaryViewModel } from '../../../../types/view-models';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { ADD_PAYMENT_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { AddPaymentErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
 
 const { NO_FEE_RECORDS_SELECTED, DIFFERENT_STATUSES, DIFFERENT_PAYMENT_CURRENCIES, MULTIPLE_DOES_NOT_MATCH_SELECTED } = ADD_PAYMENT_ERROR_KEY;
 

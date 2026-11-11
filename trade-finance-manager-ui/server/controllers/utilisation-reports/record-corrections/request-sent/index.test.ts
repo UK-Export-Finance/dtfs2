@@ -1,10 +1,10 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
+import { RecordCorrectionRequestSentViewModel } from '@tfm-ui/types/view-models';
 import { getRecordCorrectionRequestSent, GetRecordCorrectionRequestSentRequest } from '.';
-import api from '../../../../api';
-import { RecordCorrectionRequestSentViewModel } from '../../../../types/view-models';
+import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
 
 jest.mock('../../../../api');
 

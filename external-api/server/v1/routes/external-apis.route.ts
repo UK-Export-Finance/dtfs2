@@ -1,25 +1,25 @@
 import express from 'express';
 
-import * as acbs from '../controllers/acbs.controller';
-import * as bankHolidays from '../controllers/bank-holidays.controller';
-import * as companies from '../controllers/companies.controller';
-import * as countries from '../controllers/countries.controller';
-import * as creditRiskRatings from '../controllers/credit-risk-ratings.controller';
-import * as currencies from '../controllers/currencies.controller';
-import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
-import * as email from '../controllers/email.controller';
-import * as eStore from '../controllers/estore/eStore.controller';
-import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as facilityCategories from '../controllers/facility-categories.controller';
-import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
-import * as industrySectors from '../controllers/industry-sectors.controller';
-import * as number from '../controllers/number-generator.controller';
-import * as obligationSubtypes from '../controllers/obligation-subtypes.controller';
-import * as partyDb from '../controllers/party-db.controller';
-import * as partyUrn from '../controllers/party-urn.controller';
-import * as premiumSchedule from '../controllers/premium-schedule.controller';
-import * as giftFacility from '../controllers/gift-facility.controller';
-import * as ukefIndustryCode from '../controllers/ukef-industry-code.controller';
+import * as acbs from '@ukef/external-api/server/v1/controllers/acbs.controller';
+import * as bankHolidays from '@ukef/external-api/server/v1/controllers/bank-holidays.controller';
+import * as companies from '@ukef/external-api/server/v1/controllers/companies.controller';
+import * as countries from '@ukef/external-api/server/v1/controllers/countries.controller';
+import * as creditRiskRatings from '@ukef/external-api/server/v1/controllers/credit-risk-ratings.controller';
+import * as currencies from '@ukef/external-api/server/v1/controllers/currencies.controller';
+import * as currencyExchangeRate from '@ukef/external-api/server/v1/controllers/currency-exchange-rate.controller';
+import * as email from '@ukef/external-api/server/v1/controllers/email.controller';
+import * as eStore from '@ukef/external-api/server/v1/controllers/estore/eStore.controller';
+import * as exposurePeriod from '@ukef/external-api/server/v1/controllers/exposure-period.controller';
+import * as facilityCategories from '@ukef/external-api/server/v1/controllers/facility-categories.controller';
+import * as geospatialAddresses from '@ukef/external-api/server/v1/controllers/geospatial-addresses.controller';
+import * as industrySectors from '@ukef/external-api/server/v1/controllers/industry-sectors.controller';
+import * as number from '@ukef/external-api/server/v1/controllers/number-generator.controller';
+import * as obligationSubtypes from '@ukef/external-api/server/v1/controllers/obligation-subtypes.controller';
+import * as partyDb from '@ukef/external-api/server/v1/controllers/party-db.controller';
+import * as partyUrn from '@ukef/external-api/server/v1/controllers/party-urn.controller';
+import * as premiumSchedule from '@ukef/external-api/server/v1/controllers/premium-schedule.controller';
+import * as giftFacility from '@ukef/external-api/server/v1/controllers/gift-facility.controller';
+import * as ukefIndustryCode from '@ukef/external-api/server/v1/controllers/ukef-industry-code.controller';
 
 export const apiRoutes = express.Router();
 

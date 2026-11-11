@@ -1,9 +1,9 @@
 import { ACTIVITY_TYPES, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import CONSTANTS from '@tfm-ui/constants';
+import { generateValidationErrors } from '@tfm-ui/helpers/validation';
 import activityController from '.';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
-import CONSTANTS from '../../../constants';
-import { generateValidationErrors } from '../../../helpers/validation';
 import { mapActivities } from './helpers/map-activities';
 
 const mockGetDealSuccessBannerMessage = jest.fn();

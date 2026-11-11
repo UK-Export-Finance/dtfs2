@@ -1,5 +1,5 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
-import { BaseViewModel } from '../base-view-model';
+import { BaseViewModel } from '@ukef/portal-ui/server/types/view-models/base-view-model';
 
 export type PendingCorrectionViewModel = {
   correctionId: number;

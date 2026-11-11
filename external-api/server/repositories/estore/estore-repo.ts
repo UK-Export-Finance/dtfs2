@@ -1,6 +1,6 @@
 import { Document, InsertOneResult, UpdateResult, WithId, ObjectId } from 'mongodb';
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { getCollection } from '../../database';
+import { getCollection } from '@ukef/external-api/server/database';
 
 /**
  * The EstoreRepo class provides methods to interact with the CRON_JOB_LOGS collection in the MongoDB database.

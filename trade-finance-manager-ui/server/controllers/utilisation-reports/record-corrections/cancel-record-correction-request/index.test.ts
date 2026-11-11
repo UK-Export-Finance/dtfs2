@@ -1,9 +1,9 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
+import api from '@tfm-ui/api';
+import { getLinkToPremiumPaymentsTab } from '@tfm-ui/controllers/utilisation-reports/helpers';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { getCancelRecordCorrectionRequest, GetCancelRecordCorrectionRequest } from '.';
-import api from '../../../../api';
-import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
 

@@ -2,7 +2,7 @@ import { IndustrySector } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import * as dotenv from 'dotenv';
-import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
+import { findACBSIndustrySector } from '@ukef/external-api/server/v1/controllers/industry-sectors.controller';
 
 dotenv.config({ quiet: true });
 

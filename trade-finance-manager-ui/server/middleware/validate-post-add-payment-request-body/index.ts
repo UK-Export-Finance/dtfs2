@@ -1,17 +1,17 @@
 import { allStatusesAreTheSameOrCombinationOfToDoStatuses, Currency, CustomExpressRequest, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
-import { asUserSession } from '../../helpers/express-session';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
 import {
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
-} from '../../helpers/premium-payments-table-checkbox-id-helper';
-import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
-import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../helpers/get-premium-payments-facility-id-query-from-referer';
-import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys';
-import { mapCheckedCheckboxesToRecord } from '../../helpers/map-checked-checkboxes-to-record';
-import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
+} from '@tfm-ui/helpers/premium-payments-table-checkbox-id-helper';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { getPremiumPaymentsFacilityIdQueryFromReferer } from '@tfm-ui/helpers/get-premium-payments-facility-id-query-from-referer';
+import { AddPaymentErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
+import { mapCheckedCheckboxesToRecord } from '@tfm-ui/helpers/map-checked-checkboxes-to-record';
+import { ADD_PAYMENT_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
 
 export type ValidatePostAddPaymentRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 

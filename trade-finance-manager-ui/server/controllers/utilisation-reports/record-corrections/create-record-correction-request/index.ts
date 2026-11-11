@@ -1,13 +1,13 @@
 import { Response } from 'express';
 import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
-import { asUserSession } from '../../../../helpers/express-session';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers';
-import api from '../../../../api';
+import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '@tfm-ui/types/view-models';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { getLinkToPremiumPaymentsTab } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import api from '@tfm-ui/api';
+import { getRecordCorrectionRequestCancelLinkHref } from '@tfm-ui/controllers/utilisation-reports/record-corrections/helpers';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
-import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 const createRecordCorrectionRequestTemplate = 'utilisation-reports/record-corrections/create-record-correction-request.njk';
 

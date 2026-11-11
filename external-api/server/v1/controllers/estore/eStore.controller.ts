@@ -1,16 +1,16 @@
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
-import { EstoreRepo } from '../../../repositories/estore/estore-repo';
-import { getCollection } from '../../../database';
-import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
-import { EstoreRequest } from '../../../helpers/types/estore';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, EMAIL_TEMPLATES } from '../../../constants';
-import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
-import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { getCollection } from '@ukef/external-api/server/database';
+import { Estore, SiteExistsResponse, EstoreErrorResponse } from '@ukef/external-api/server/interfaces';
+import { EstoreRequest } from '@ukef/external-api/server/helpers/types/estore';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, EMAIL_TEMPLATES } from '@ukef/external-api/server/constants';
+import { areValidUkefIds, objectIsEmpty } from '@ukef/external-api/server/helpers';
+import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '@ukef/external-api/server/cron';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
+import { sendEmail } from '@ukef/external-api/server/v1/controllers/email.controller';
 import { createExporterSite, siteExists } from './eStoreApi';
-import { getNowAsEpoch } from '../../../helpers/date';
-import { sendEmail } from '../email.controller';
 
 const { UKEF_INTERNAL_NOTIFICATION } = process.env;
 

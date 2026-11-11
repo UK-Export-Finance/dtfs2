@@ -1,8 +1,8 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
 import amendmentUnderwritersDecision from '.';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 

@@ -11,10 +11,10 @@ import {
   SessionBank,
   StatusTagColours,
 } from '@ukef/dtfs2-common';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { KeyingSheetCheckboxId } from '@tfm-ui/types/keying-sheet-checkbox-id';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
-import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
-import { KeyingSheetCheckboxId } from '../keying-sheet-checkbox-id';
 
 export type SortedAndFormattedCurrencyAndAmount = {
   formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;

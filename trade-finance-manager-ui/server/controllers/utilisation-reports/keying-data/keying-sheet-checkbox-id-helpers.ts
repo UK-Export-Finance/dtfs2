@@ -1,5 +1,5 @@
 import { KEYING_SHEET_ROW_STATUS, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
-import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
+import { KeyingSheetCheckboxId } from '@tfm-ui/types/keying-sheet-checkbox-id';
 
 const KEYING_SHEET_ROW_STATUS_GROUP = `(?<status>${Object.values(KEYING_SHEET_ROW_STATUS).join('|')})`;
 

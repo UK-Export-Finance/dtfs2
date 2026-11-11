@@ -1,7 +1,7 @@
 import { DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS, TEAM_IDS } from '@ukef/dtfs2-common';
+import api from '@tfm-ui/api';
+import { mockRes, mockUser } from '@tfm-ui/test-mocks';
 import partiesController from '.';
-import api from '../../../api';
-import { mockRes, mockUser } from '../../../test-mocks';
 import { userCanEdit } from './helpers';
 
 const mockGetDealSuccessBannerMessage = jest.fn();

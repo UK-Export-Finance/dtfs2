@@ -1,4 +1,4 @@
-import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 
 /**
  * Gets the reconciliation for report page href

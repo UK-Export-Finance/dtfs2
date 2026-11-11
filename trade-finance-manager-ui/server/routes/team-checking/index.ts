@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { isProduction } from '@ukef/dtfs2-common';
-import { renderTeamsChecker } from '../../controllers/team-checking';
-import { getTeamCombinations } from '../../helpers/team-checking.helper';
+import { renderTeamsChecker } from '@tfm-ui/controllers/team-checking';
+import { getTeamCombinations } from '@tfm-ui/helpers/team-checking.helper';
 
 export const teamCheckingRoutes = express.Router();
 

@@ -1,6 +1,8 @@
 import { when } from 'jest-when';
 import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus, mapCurrenciesToRadioItems } from '@ukef/dtfs2-common';
 import difference from 'lodash.difference';
+import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '@tfm-ui/api-response-types';
+import { PremiumPaymentsViewModelItem } from '@tfm-ui/types/view-models';
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
@@ -10,9 +12,7 @@ import {
   mapPaymentDetailsFiltersToViewModel,
   premiumPaymentsHasSelectableItems,
 } from './reconciliation-for-report-helper';
-import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
 import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails, aPremiumPaymentsViewModelItem } from '../../../../test-helpers';
-import { PremiumPaymentsViewModelItem } from '../../../types/view-models';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapPremiumPaymentsToViewModelItems', () => {

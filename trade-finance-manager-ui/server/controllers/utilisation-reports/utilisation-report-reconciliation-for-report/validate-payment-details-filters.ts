@@ -1,6 +1,6 @@
 import { CURRENCY_REGEX, MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT, PaymentDetailsFilters } from '@ukef/dtfs2-common';
-import { REGEX } from '../../../constants';
-import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
+import { REGEX } from '@tfm-ui/constants';
+import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '@tfm-ui/types/view-models';
 
 /**
  * Validates if the facility ID filter is valid.

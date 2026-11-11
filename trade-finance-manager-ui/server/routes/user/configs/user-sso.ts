@@ -1,5 +1,5 @@
 import express from 'express';
-import { GetRouter } from '../../../types/get-router';
+import { GetRouter } from '@tfm-ui/types/get-router';
 
 export const getUserSsoRouter: GetRouter = () => {
   const userSsoRouter = express.Router();

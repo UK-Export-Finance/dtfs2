@@ -1,12 +1,12 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
-import mapAssignToSelectOptions from '../../../helpers/map-assign-to-select-options';
-import amendmentLeadUnderwriterController from '.';
-import { userIsInTeam } from '../../../helpers/user';
-import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import mapAssignToSelectOptions from '@tfm-ui/helpers/map-assign-to-select-options';
+import { userIsInTeam } from '@tfm-ui/helpers/user';
+import { sortArrayOfObjectsAlphabetically } from '@tfm-ui/helpers/array';
 
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
+import amendmentLeadUnderwriterController from '.';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
   const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);

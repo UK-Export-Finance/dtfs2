@@ -1,7 +1,7 @@
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../../constants/premium-payments-table-error-href';
-import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { InitiateRecordCorrectionRequestErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
 import { getInitiateRecordCorrectionRequestError, validateInitiateRecordCorrectionErrorKey } from './initiate-record-correction-request-error';
-import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 
 describe('initiate-record-correction-request-error', () => {
   describe('getInitiateFeeRecordCorrectionRequestError', () => {

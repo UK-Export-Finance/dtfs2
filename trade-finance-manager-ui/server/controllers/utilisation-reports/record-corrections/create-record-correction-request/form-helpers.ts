@@ -1,5 +1,5 @@
 import { decodeHtmlEntities, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
-import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
+import { CreateRecordCorrectionRequestFormValues } from '@tfm-ui/types/view-models';
 
 /**
  * Values for the record correction reasons as a string array.

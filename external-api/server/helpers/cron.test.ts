@@ -1,7 +1,6 @@
 import { CronJob } from 'cron';
-import { ENDPOINT } from '../constants';
-import { EstoreCronJob } from '../interfaces';
-import { Category } from './types/estore';
+import { ENDPOINT } from '@ukef/external-api/server/constants';
+import { EstoreCronJob } from '@ukef/external-api/server/interfaces';
 import {
   eStoreBuyerDirectoryCreationJob,
   eStoreDealDirectoryCreationJob,
@@ -9,7 +8,8 @@ import {
   eStoreFacilityDirectoryCreationJob,
   eStoreSiteCreationCronJob,
   eStoreTermStoreCreationJob,
-} from '../cron';
+} from '@ukef/external-api/server/cron';
+import { Category } from './types/estore';
 import { cron } from './cron';
 
 jest.mock('cron', () => ({

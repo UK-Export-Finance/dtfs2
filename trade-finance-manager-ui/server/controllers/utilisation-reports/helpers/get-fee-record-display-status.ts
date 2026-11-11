@@ -1,5 +1,5 @@
 import { FeeRecordStatus } from '@ukef/dtfs2-common';
-import { FeeRecordDisplayStatus } from '../../../types/view-models';
+import { FeeRecordDisplayStatus } from '@tfm-ui/types/view-models';
 
 const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplayStatus> = {
   TO_DO: 'To do',

@@ -1,13 +1,13 @@
 import { CURRENCY, Currency } from '@ukef/dtfs2-common';
 import { subDays } from 'date-fns';
+import { AddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { PaymentDateErrorViewModel } from '@tfm-ui/types/view-models';
 import {
   validateAddPaymentRequestFormValues,
   validateAddToAnExistingPaymentRequestFormValues,
   validateEditPaymentRequestFormValues,
 } from './validate-payment-form-values';
-import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { PaymentDateErrorViewModel } from '../../../types/view-models';
 
 describe('validate-payment-form-values', () => {
   describe('validateAddPaymentRequestFormValues', () => {

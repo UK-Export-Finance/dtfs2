@@ -1,12 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import difference from 'lodash.difference';
-import { validateRecordCorrectionRequestFeeSelections, postInitiateRecordCorrectionRequest, PostInitiateRecordCorrectionRequest } from '.';
-import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
-import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../../helpers';
-import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
+import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import api from '@tfm-ui/api';
 import { aTfmSessionUser } from '../../../../../test-helpers';
-import api from '../../../../api';
+import { validateRecordCorrectionRequestFeeSelections, postInitiateRecordCorrectionRequest, PostInitiateRecordCorrectionRequest } from '.';
 
 jest.mock('../../../../api');
 

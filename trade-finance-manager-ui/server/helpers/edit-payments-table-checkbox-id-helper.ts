@@ -1,4 +1,4 @@
-import { EditPaymentsTableCheckboxId } from '../types/edit-payments-table-checkbox-id';
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
 
 const EDIT_PAYMENTS_TABLE_CHECKBOX_ID_REGEX = /feeRecordId-(?<id>\d+)/;
 

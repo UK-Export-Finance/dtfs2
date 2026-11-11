@@ -1,4 +1,4 @@
-import { Category } from '../helpers/types/estore';
+import { Category } from '@ukef/external-api/server/helpers/types/estore';
 
 /**
  * Represents a document stored in Azure, including its type, name, location, and parent identifier.

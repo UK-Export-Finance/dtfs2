@@ -1,20 +1,20 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { RECORD_CORRECTION_REASON, RecordCorrectionRequestTransientFormData } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
+import { CreateRecordCorrectionRequestViewModel } from '@tfm-ui/types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
+import { getLinkToPremiumPaymentsTab } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { getRecordCorrectionRequestCancelLinkHref } from '@tfm-ui/controllers/utilisation-reports/record-corrections/helpers';
+import { getCreateRecordCorrectionRequestFormErrors } from './validate-form-values';
+import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import {
   getCreateRecordCorrectionRequest,
   GetCreateRecordCorrectionRequestRequest,
   PostCreateRecordCorrectionRequestRequest,
   postCreateRecordCorrectionRequest,
 } from '.';
-import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
-import { getCreateRecordCorrectionRequestFormErrors } from './validate-form-values';
-import api from '../../../../api';
-import { getLinkToPremiumPaymentsTab } from '../../helpers';
-import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
+import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
 
 jest.mock('../../../../api');
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CURRENCIES, CurrencyInterface, CustomExpressRequest } from '@ukef/dtfs2-common';
-import { sortArrayAlphabetically } from '../../helpers';
+import { sortArrayAlphabetically } from '@ukef/external-api/server/helpers';
 
 const currencies: CurrencyInterface[] = CURRENCIES;
 

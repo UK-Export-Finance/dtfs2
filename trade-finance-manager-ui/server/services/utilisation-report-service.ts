@@ -1,5 +1,5 @@
 import { IsoMonthStamp, asString } from '@ukef/dtfs2-common';
-import { getBusinessDayOfMonth } from '../helpers/date';
+import { getBusinessDayOfMonth } from '@tfm-ui/helpers/date';
 
 export const getReportDueDate = (bankHolidays: Date[], submissionMonth: IsoMonthStamp): Date => {
   const businessDaysFromStartOfMonth = asString(

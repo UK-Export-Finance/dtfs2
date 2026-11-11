@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymentsCheckboxIds } from '../../../helpers/edit-payments-table-checkbox-id-helper';
-import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
-import { extractEditPaymentFormValues } from '../helpers';
-import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
+import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymentsCheckboxIds } from '@tfm-ui/helpers/edit-payments-table-checkbox-id-helper';
+import { RemoveFeesFromPaymentFormRequestBody } from '@tfm-ui/helpers/remove-fees-from-payment-helper';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { extractEditPaymentFormValues } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 
 export type RemoveFeesFromPaymentRequest = CustomExpressRequest<{
   reqBody: RemoveFeesFromPaymentFormRequestBody;

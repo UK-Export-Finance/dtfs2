@@ -1,10 +1,10 @@
 import { Response } from 'express';
 import { CustomExpressRequest, FLASH_TYPES } from '@ukef/dtfs2-common';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { asUserSession } from '../../../helpers/express-session';
-import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
-import api from '../../../api';
-import { CheckDetailsViewModel } from '../../../types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
+import api from '@tfm-ui/api';
+import { CheckDetailsViewModel } from '@tfm-ui/types/view-models';
 
 export type GetDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostDealCancellationDetailsRequest = CustomExpressRequest<{

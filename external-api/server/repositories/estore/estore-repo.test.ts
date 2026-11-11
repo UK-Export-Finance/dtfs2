@@ -1,6 +1,6 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
-import { getCollection } from '../../database';
+import { getCollection } from '@ukef/external-api/server/database';
 import { EstoreRepo } from './estore-repo';
 
 const mockUpdateOne = jest.fn();

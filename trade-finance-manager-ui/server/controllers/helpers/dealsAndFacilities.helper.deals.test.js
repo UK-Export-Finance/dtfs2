@@ -1,9 +1,9 @@
 import { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
-import api from '../../api';
-import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
-import { mockRes as generateMockRes } from '../../test-mocks';
+import api from '@tfm-ui/api';
+import PageOutOfBoundsError from '@tfm-ui/errors/page-out-of-bounds.error';
+import { mockRes as generateMockRes } from '@tfm-ui/test-mocks';
+import { DEAL } from '@tfm-ui/constants';
 import { queryDealsOrFacilities, renderDealsOrFacilitiesPage } from './dealsAndFacilities.helper';
-import { DEAL } from '../../constants';
 
 describe('controllers - deals', () => {
   let mockRes;

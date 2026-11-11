@@ -3,8 +3,8 @@ import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 
+import * as api from '@ukef/portal-ui/server/api';
 import { PostNewAccessCodePageRequest, postNewAccessCodePage } from './post-new-access-code-page';
-import * as api from '../../api';
 import { generateValidationErrors } from './validation';
 import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
 

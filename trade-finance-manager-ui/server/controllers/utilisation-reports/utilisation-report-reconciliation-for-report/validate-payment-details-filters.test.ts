@@ -1,5 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
+import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '@tfm-ui/types/view-models';
 import {
   isFacilityIdFilterValid,
   isPaymentCurrencyFilterValid,

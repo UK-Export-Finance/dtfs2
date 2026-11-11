@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { format } from 'date-fns';
 import { CustomExpressRequest, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '../../../api-response-types';
-import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
-import { asUserSession } from '../../../helpers/express-session';
-import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
-import { getReconciliationForReportHref } from '../helpers';
+import api from '@tfm-ui/api';
+import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '@tfm-ui/api-response-types';
+import { ConfirmDeletePaymentViewModel } from '@tfm-ui/types/view-models';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
+import { getReconciliationForReportHref } from '@tfm-ui/controllers/utilisation-reports/helpers';
 
 export type GetConfirmDeletePaymentRequest = CustomExpressRequest<{
   query: {

@@ -1,11 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import api from '../../api';
-import { getUtilisationReports } from '.';
-import { MOCK_BANK_HOLIDAYS } from '../../test-mocks/mock-bank-holidays';
-import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
-import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
+import api from '@tfm-ui/api';
+import { MOCK_BANK_HOLIDAYS } from '@tfm-ui/test-mocks/mock-bank-holidays';
+import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '@tfm-ui/test-mocks/mock-utilisation-report-reconciliation-summary';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
 import { getReportReconciliationSummariesViewModel, isPDCReconcileUser } from './helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
+import { getUtilisationReports } from '.';
 
 jest.mock('../../api');
 

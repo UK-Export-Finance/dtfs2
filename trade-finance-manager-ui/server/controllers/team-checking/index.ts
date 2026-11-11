@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { TeamToCheck } from '../../helpers/team-checking.helper';
-import { asUserSession } from '../../helpers/express-session';
-import { userIsInTeam } from '../../helpers/user';
-import { TeamCheckingPageViewModel } from '../../types/view-models';
+import { TeamToCheck } from '@tfm-ui/helpers/team-checking.helper';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { userIsInTeam } from '@tfm-ui/helpers/user';
+import { TeamCheckingPageViewModel } from '@tfm-ui/types/view-models';
 
 type RenderTeamsCheckerProps = {
   teamCombinations: TeamToCheck[];

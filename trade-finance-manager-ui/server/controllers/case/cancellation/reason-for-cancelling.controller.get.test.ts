@@ -1,10 +1,10 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aRequestSession } from '../../../../test-helpers';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { ReasonForCancellingViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
 import { getReasonForCancelling, GetReasonForCancellingRequest } from './reason-for-cancelling.controller';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { ReasonForCancellingViewModel } from '../../../types/view-models';
-import api from '../../../api';
+import { aRequestSession } from '../../../../test-helpers';
 
 jest.mock('../../../api', () => ({
   getDeal: jest.fn(),

@@ -1,4 +1,4 @@
-import { FindUtilisationReportByYearValidationErrors } from '../../controllers/utilisation-reports/find-reports-by-year/search-input-validator';
+import { FindUtilisationReportByYearValidationErrors } from '@tfm-ui/controllers/utilisation-reports/find-reports-by-year/search-input-validator';
 import { BaseViewModel } from './base-view-model';
 
 export type FindUtilisationReportsByYearBankViewModel = {

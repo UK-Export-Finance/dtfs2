@@ -1,11 +1,11 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
 import { IsoMonthStamp, ReportPeriod, UtilisationReportStatus, isEqualMonthAndYear } from '@ukef/dtfs2-common';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
-import { getReportDueDate } from '../../../services/utilisation-report-service';
-import api from '../../../api';
-import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } from '../../../types/view-models';
-import { UtilisationReportDisplayFrequency } from '../../../types/utilisation-report-display-frequency';
-import { BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX, UTILISATION_REPORT_DISPLAY_FREQUENCY } from '../../../constants';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '@tfm-ui/types/utilisation-reports';
+import { getReportDueDate } from '@tfm-ui/services/utilisation-report-service';
+import api from '@tfm-ui/api';
+import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } from '@tfm-ui/types/view-models';
+import { UtilisationReportDisplayFrequency } from '@tfm-ui/types/utilisation-report-display-frequency';
+import { BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX, UTILISATION_REPORT_DISPLAY_FREQUENCY } from '@tfm-ui/constants';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',

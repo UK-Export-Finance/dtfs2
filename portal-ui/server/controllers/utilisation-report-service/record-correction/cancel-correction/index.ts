@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
-import { asLoggedInUserSession } from '../../../../helpers/express-session';
-import api from '../../../../api';
+import { asLoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import api from '@ukef/portal-ui/server/api';
 
 export type CancelUtilisationReportCorrectionRequest = Request & {
   params: {

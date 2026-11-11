@@ -1,7 +1,7 @@
 import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
 import { add, startOfDay } from 'date-fns';
+import { EffectiveFromDateValidationViewModel } from '@tfm-ui/types/view-models';
 import { getErrorObjectFromMessageAndRefs, validateEffectiveFromDate } from './validate-effective-from-date';
-import { EffectiveFromDateValidationViewModel } from '../../../../types/view-models';
 
 jest.mock('@ukef/dtfs2-common', () => ({ applyStandardValidationAndParseDateInput: jest.fn() }));
 

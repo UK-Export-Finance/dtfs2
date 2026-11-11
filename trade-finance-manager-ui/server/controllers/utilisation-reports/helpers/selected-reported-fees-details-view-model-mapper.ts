@@ -1,7 +1,7 @@
 import { getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
+import { SelectedReportedFeesDetailsViewModel } from '@tfm-ui/types/view-models';
+import { SelectedFeeRecordsDetailsResponseBody } from '@tfm-ui/api-response-types';
 import { getKeyToCurrencyAndAmountSortValueMap } from '.';
-import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 
 export const mapToSelectedReportedFeesDetailsViewModel = (
   selectedFeeRecordData: SelectedFeeRecordsDetailsResponseBody,

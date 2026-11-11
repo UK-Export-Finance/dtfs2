@@ -1,4 +1,4 @@
-import { UtilisationReportReconciliationSummaryItem } from '../utilisation-reports';
+import { UtilisationReportReconciliationSummaryItem } from '@tfm-ui/types/utilisation-reports';
 import { BaseViewModel } from './base-view-model';
 
 export type FindReportSummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
