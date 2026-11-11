@@ -1,4 +1,4 @@
-const applicationActivities = {
+export const applicationActivities = {
   activityTimeline: () => cy.get('[data-cy="portal-activities-timeline"]'),
   byline: (activityTitle) => cy.get(`[data-cy="activity-${activityTitle}-byline"]`),
   dealLink: (id) => cy.get(`[data-cy="deal-link-${id}"]`),
@@ -13,5 +13,3 @@ const applicationActivities = {
   subNavigationBarApplication: () => cy.get('[data-cy="application-preview-link"]'),
   subNavigationBarActivities: () => cy.get('[data-cy="application-activities-link"]'),
 };
-
-module.exports = applicationActivities;

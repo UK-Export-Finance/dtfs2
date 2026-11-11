@@ -7,7 +7,7 @@ import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mo
 import { PIM_USER_1, TFM_URL } from '../../../../../../../../../e2e-fixtures';
 import caseDealPage from '../../../../../../../../../tfm/cypress/e2e/pages/caseDealPage';
 import facilityPage from '../../../../../../../../../tfm/cypress/e2e/pages/facilityPage';
-import facilitiesPage from '../../../../../../../../../tfm/cypress/e2e/pages/facilitiesPage';
+import { facilitiesPage } from '../../../../../../../../../tfm/cypress/e2e/pages/facilitiesPage';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

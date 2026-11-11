@@ -1,6 +1,6 @@
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../../e2e/pages/application-details';
+import { applicationDetails } from '../../e2e/pages/application-details';
 import relative from '../relativeURL';
 
 /**
@@ -11,7 +11,7 @@ import relative from '../relativeURL';
  * @param {string} dealId - the deal id
  * @param {string} dealType - if the deal is AIN or MIA
  */
-const submitMockDataLoaderDealToChecker = (dealId, dealType = DEAL_SUBMISSION_TYPE.AIN) => {
+export const submitMockDataLoaderDealToChecker = (dealId, dealType = DEAL_SUBMISSION_TYPE.AIN) => {
   cy.login(BANK1_MAKER1);
 
   cy.visit(relative(`/gef/application-details/${dealId}`));
@@ -34,5 +34,3 @@ const submitMockDataLoaderDealToChecker = (dealId, dealType = DEAL_SUBMISSION_TY
   cy.clickSubmitButton();
   cy.clickSubmitButton();
 };
-
-export default submitMockDataLoaderDealToChecker;

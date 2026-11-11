@@ -1,6 +1,6 @@
 import { today } from '@ukef/dtfs2-common/test-helpers';
-import statusBanner from '../../../e2e/pages/application-status-banner';
-import applicationDetails from '../../../e2e/pages/application-details';
+import { statusBanner } from '../../../e2e/pages/application-status-banner';
+import { applicationDetails } from '../../../e2e/pages/application-details';
 import { submitButton } from '../../../e2e/partials';
 
 /**
@@ -9,7 +9,7 @@ import { submitButton } from '../../../e2e/partials';
  * @param {string} dealName - name of the gef cloned deal
  * @param {string} facilityId - id of the facility which is in progress
  */
-const checkClonedDealBannerAndDeal = (dealName, facilityId) => {
+export const checkClonedDealBannerAndDeal = (dealName, facilityId) => {
   statusBanner.bannerStatus().contains('Draft');
   statusBanner.bannerCheckedBy().contains('-');
   statusBanner.bannerUkefDealId().should('not.exist');
@@ -55,5 +55,3 @@ const checkClonedDealBannerAndDeal = (dealName, facilityId) => {
       });
   });
 };
-
-export default checkClonedDealBannerAndDeal;

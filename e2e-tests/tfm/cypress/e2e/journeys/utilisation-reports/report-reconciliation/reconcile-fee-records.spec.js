@@ -7,11 +7,11 @@ import {
   getPreviousReportPeriodForBankScheduleByMonth,
   FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
+import { tfmPages } from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
-const { keyingSheetContent, premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+const { keyingSheetContent, premiumPaymentsContent } = tfmPages.utilisationReportPage.tabs;
 
 context('PDC_RECONCILE users can reconcile fee records', () => {
   const SUBMISSION_MONTH = toIsoMonthStamp(new Date());
@@ -106,25 +106,25 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
       }
     });
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     premiumPaymentsContent.generateKeyingDataButton().click();
-    pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
+    tfmPages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
   });
 
   describe('when logging in as "PDC_RECONCILE" user', () => {
     it('should display the relevant text', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('exist');
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('exist');
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
 
       cy.assertText(
-        pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText(),
+        tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText(),
         'Select payments and mark as done when they have been keyed into ACBS.',
       );
       cy.assertText(
-        pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
+        tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
         'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
       );
     });
@@ -132,17 +132,17 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
 
   describe('when logging in as "PDC_READ" user', () => {
     it('should display the relevant text', () => {
-      pages.landingPage.visit();
+      tfmPages.landingPage.visit();
       cy.login(USERS.PDC_READ);
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
-      pages.utilisationReportPage.tabs.keyingSheet().click();
+      tfmPages.utilisationReportPage.tabs.keyingSheet().click();
 
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('not.exist');
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('not.exist');
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
 
       cy.assertText(
-        pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
+        tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
         'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
       );
     });
@@ -174,24 +174,24 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     keyingSheetContent.selectAllCheckbox().click();
     keyingSheetContent.markAsDoneButton().click();
 
-    pages.utilisationReportPage.bankReportsNavLink().click();
-    pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Report completed');
+    tfmPages.utilisationReportPage.bankReportsNavLink().click();
+    tfmPages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Report completed');
 
-    pages.utilisationReportsSummaryPage.reportLink(BANK_ID, SUBMISSION_MONTH).click();
-    pages.utilisationReportPage.tabs.keyingSheet().click();
+    tfmPages.utilisationReportsSummaryPage.reportLink(BANK_ID, SUBMISSION_MONTH).click();
+    tfmPages.utilisationReportPage.tabs.keyingSheet().click();
     keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
     keyingSheetContent.markAsToDoButton().click();
 
-    pages.utilisationReportPage.bankReportsNavLink().click();
-    pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
+    tfmPages.utilisationReportPage.bankReportsNavLink().click();
+    tfmPages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
   });
 
   it('should not display select all checkbox when there are no further actions to take', () => {
     keyingSheetContent.selectAllCheckbox().click();
     keyingSheetContent.markAsDoneButton().click();
 
-    pages.utilisationReportPage.tabs.premiumPayments().click();
+    tfmPages.utilisationReportPage.tabs.premiumPayments().click();
 
-    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
+    tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
   });
 });

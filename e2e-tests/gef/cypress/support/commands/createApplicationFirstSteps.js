@@ -1,4 +1,4 @@
-import dashboardPage from '../../e2e/pages/dashboard-page';
+import { dashboardPage } from '../../e2e/pages/dashboard-page';
 
 /**
  * Sets up a new GEF application from the dashboard page including

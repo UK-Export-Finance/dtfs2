@@ -2,7 +2,7 @@ const cyGetFacilitySummaryListChild = (tableNum, selector) => cy.get('[data-cy="
 const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
   cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
 
-const applicationPreview = {
+export const applicationPreview = {
   bankReference: () => cy.get('[data-cy="bank-reference"]'),
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
@@ -104,5 +104,3 @@ const applicationPreview = {
   amendmentEffectiveFutureBanner: () => cy.get('[data-cy="amendment-effective-future-banner"]'),
   amendmentEffectiveFutureLink: () => cy.get('[data-cy="amendment-effective-future-banner-link"]'),
 };
-
-export default applicationPreview;

@@ -60,7 +60,7 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
 
         cy.visit(relative(`/gef/application-details/${ainDealPast._id}`));
 
-        gefPages.cloneDeal.cloneGefDealLink().should('not.exist');
+        gefPages.cloneDealPage.cloneGefDealLink().should('not.exist');
       });
     });
 
@@ -70,7 +70,7 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
 
         cy.visit(relative(`/gef/application-details/${minDealPast._id}`));
 
-        gefPages.cloneDeal.cloneGefDealLink().should('not.exist');
+        gefPages.cloneDealPage.cloneGefDealLink().should('not.exist');
       });
     });
   });
@@ -82,7 +82,7 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
 
         cy.visit(relative(`/gef/application-details/${ainDealFuture._id}`));
 
-        gefPages.cloneDeal.cloneGefDealLink().should('not.exist');
+        gefPages.cloneDealPage.cloneGefDealLink().should('not.exist');
       });
     });
 
@@ -92,7 +92,7 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
 
         cy.visit(relative(`/gef/application-details/${minDealFuture._id}`));
 
-        gefPages.cloneDeal.cloneGefDealLink().should('not.exist');
+        gefPages.cloneDealPage.cloneGefDealLink().should('not.exist');
       });
     });
   });

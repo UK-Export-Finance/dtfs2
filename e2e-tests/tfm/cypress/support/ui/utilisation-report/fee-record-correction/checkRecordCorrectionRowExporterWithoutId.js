@@ -1,6 +1,6 @@
-import pages from '../../../../e2e/pages';
+import { tfmPages } from '../../../../e2e/pages';
 
-const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
+const { recordCorrectionLogContent } = tfmPages.utilisationReportPage.tabs;
 
 /**
  * Checks value of exporter in record correction log table row
@@ -10,10 +10,8 @@ const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
  * @param {number} row - index of row in record correction log table
  * @param {string} exporter - exporter value to check
  */
-const checkRecordCorrectionRowExporterWithoutId = (row, exporter) =>
+export const checkRecordCorrectionRowExporterWithoutId = (row, exporter) =>
   cy.assertText(
     recordCorrectionLogContent.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').eq(row).find('td').eq(1),
     exporter,
   );
-
-export default checkRecordCorrectionRowExporterWithoutId;

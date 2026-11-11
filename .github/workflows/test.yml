@@ -58,6 +58,7 @@ on:
 
     paths:
       - 'package*.json'
+      - 'doc/**'
       - 'docker*.yml'
       - '.github/**'
       - 'gef-ui/**'
@@ -73,6 +74,7 @@ on:
       - 'libs/**'
       - 'README.md'
       - 'reverse-proxy/**'
+      - '*.md'
 
   push:
     branches:
@@ -253,7 +255,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -360,7 +362,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -475,7 +477,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -811,7 +813,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -924,7 +926,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1059,7 +1061,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1113,7 +1115,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ['portal/MIA-underwriter/**/*.spec.js']
+        spec: ['portal/mia-underwriter/**/*.spec.js']
 
     concurrency:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -1148,7 +1150,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1202,9 +1204,9 @@ jobs:
       matrix:
         spec:
           [
-            'portal/submit-AIN/**/*.spec.js',
-            'portal/submit-MIA/**/*.spec.js',
-            'portal/submit-MIN/**/*.spec.js',
+            'portal/submit-ain/**/*.spec.js',
+            'portal/submit-mia/**/*.spec.js',
+            'portal/submit-min/**/*.spec.js',
             'portal/submit-deal/**/*.spec.js',
             'utilisation-reports/**/*.spec.js',
           ]
@@ -1244,7 +1246,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1454,7 +1456,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Initialise
@@ -1559,7 +1561,7 @@ jobs:
       - name: Microservices health check
         uses: ./.github/actions/healthchecks
         with:
-          timeout: 480000 # 8 minutes
+          timeout: 600000 # 10 minutes
           interval: 10000 # 10 seconds
 
       - name: Project

@@ -12,7 +12,7 @@ import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
  * @param {String[]} reasons - array of strings to select reason for fee record correction
  * @param {string} additionalInfoUserInput - string for additional user input
  */
-const completeAndSubmitFeeRecordCorrectionRequestForm = ({
+export const completeAndSubmitFeeRecordCorrectionRequestForm = ({
   feeRecord,
   reportId,
   reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
@@ -22,5 +22,3 @@ const completeAndSubmitFeeRecordCorrectionRequestForm = ({
 
   cy.clickContinueButton();
 };
-
-export default completeAndSubmitFeeRecordCorrectionRequestForm;

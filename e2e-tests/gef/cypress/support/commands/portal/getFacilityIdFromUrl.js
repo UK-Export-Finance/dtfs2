@@ -1,7 +1,7 @@
 /**
  * Get a facility ID from the URL
  */
-const getFacilityIdFromUrl = () => {
+export const getFacilityIdFromUrl = () => {
   cy.url().then((url) => {
     const urlSplit = url.split('/');
 
@@ -10,5 +10,3 @@ const getFacilityIdFromUrl = () => {
     return facilityId;
   });
 };
-
-export default getFacilityIdFromUrl;

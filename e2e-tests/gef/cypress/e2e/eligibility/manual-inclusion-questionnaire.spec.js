@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { cancelLink, continueButton, errorSummary, headingCaption, mainHeading } from '../partials';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
+import { manualInclusion } from '../pages/manual-inclusion-questionnaire';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

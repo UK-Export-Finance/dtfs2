@@ -1,11 +1,11 @@
 import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
-import applicationDetails from '../../e2e/pages/application-details';
-import facilities from '../../e2e/pages/facilities';
-import aboutFacility from '../../e2e/pages/about-facility';
-import providedFacility from '../../e2e/pages/provided-facility';
-import facilityCurrency from '../../e2e/pages/facility-currency';
-import facilityValue from '../../e2e/pages/facility-value';
-import facilityGuarantee from '../../e2e/pages/facility-guarantee';
+import { applicationDetails } from '../../e2e/pages/application-details';
+import { facilitiesPage } from '../../e2e/pages/facilities';
+import { aboutFacility } from '../../e2e/pages/about-facility';
+import { providedFacility } from '../../e2e/pages/provided-facility';
+import { facilityCurrency } from '../../e2e/pages/facility-currency';
+import { facilityValuePage } from '../../e2e/pages/facility-value';
+import { facilityGuarantee } from '../../e2e/pages/facility-guarantee';
 
 /**
  * Creates a facility from the UI with the specified parameters
@@ -35,10 +35,11 @@ export const createFacility = ({
 
   // completes the has been issued section
   if (isIssued) {
-    facilities.hasBeenIssuedRadioYesRadioButton().click();
+    facilitiesPage.hasBeenIssuedRadioYesRadioButton().click();
   } else {
-    facilities.hasBeenIssuedRadioNoRadioButton().click();
+    facilitiesPage.hasBeenIssuedRadioNoRadioButton().click();
   }
+
   cy.clickContinueButton();
 
   cy.keyboardInput(aboutFacility.facilityName(), name);
@@ -91,9 +92,9 @@ export const createFacility = ({
   facilityCurrency.yenCheckbox().click();
   cy.clickContinueButton();
 
-  cy.keyboardInput(facilityValue.value(), '3000');
-  cy.keyboardInput(facilityValue.percentageCover(), '80');
-  cy.keyboardInput(facilityValue.interestPercentage(), '2.5');
+  cy.keyboardInput(facilityValuePage.value(), '3000');
+  cy.keyboardInput(facilityValuePage.percentageCover(), '80');
+  cy.keyboardInput(facilityValuePage.interestPercentage(), '2.5');
   cy.clickContinueButton();
 
   /**

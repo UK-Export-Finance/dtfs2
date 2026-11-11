@@ -1,11 +1,11 @@
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
-import automaticCover from '../pages/automatic-cover';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
-import securityDetails from '../pages/security-details';
-import applicationDetails from '../pages/application-details';
-import applicationSubmission from '../pages/application-submission';
-import statusBanner from '../pages/application-status-banner';
+import { automaticCover } from '../pages/automatic-cover';
+import { manualInclusion } from '../pages/manual-inclusion-questionnaire';
+import { securityDetails } from '../pages/security-details';
+import { applicationDetails } from '../pages/application-details';
+import { applicationSubmission } from '../pages/application-submission';
+import { statusBanner } from '../pages/application-status-banner';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;

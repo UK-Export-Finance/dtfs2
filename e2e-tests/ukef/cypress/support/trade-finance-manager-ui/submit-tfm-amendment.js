@@ -33,6 +33,7 @@ export const submitTfmAmendment = ({ dealId, facilityId, facilityValue, coverEnd
   if (coverEndDate) {
     amendmentsPage.amendmentCoverEndDateCheckbox().click();
   }
+
   cy.clickContinueButton();
 
   if (coverEndDate) {

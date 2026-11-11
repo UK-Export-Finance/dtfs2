@@ -1,5 +1,11 @@
-Cypress.Commands.add('clickSubmitButton', require('./click-submit-button'));
-Cypress.Commands.add('clickContinueButton', require('./click-continue-button'));
-Cypress.Commands.add('clickBackLink', require('./click-back-link'));
-Cypress.Commands.add('clickCancelLink', require('./click-cancel-link'));
-Cypress.Commands.add('clickReturnToMakerButton', require('./click-return-to-maker-button'));
+import { clickSubmitButton } from './click-submit-button';
+import { clickContinueButton } from './click-continue-button';
+import { clickBackLink } from './click-back-link';
+import { clickCancelLink } from './click-cancel-link';
+import { clickReturnToMakerButton } from './click-return-to-maker-button';
+
+Cypress.Commands.add('clickSubmitButton', clickSubmitButton);
+Cypress.Commands.add('clickContinueButton', clickContinueButton);
+Cypress.Commands.add('clickBackLink', clickBackLink);
+Cypress.Commands.add('clickCancelLink', clickCancelLink);
+Cypress.Commands.add('clickReturnToMakerButton', clickReturnToMakerButton);

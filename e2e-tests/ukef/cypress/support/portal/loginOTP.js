@@ -9,7 +9,7 @@ const { PORTAL_2FA_ACCESS_CODE } = require('../../../../e2e-fixtures/portal-user
  * @param {string} username - username to input on login page
  * @param {string} password - password to input on login page
  */
-const loginOTP = ({ username, password }) => {
+export const loginOTP = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInOTPs(username);
   cy.enterUsernameAndPassword({ username, password });
 
@@ -21,5 +21,3 @@ const loginOTP = ({ username, password }) => {
     cy.clickSubmitButton();
   });
 };
-
-export default loginOTP;

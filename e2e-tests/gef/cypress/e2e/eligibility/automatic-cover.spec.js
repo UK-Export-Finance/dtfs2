@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { continueButton, errorSummary, form, mainHeading, saveAndReturnButton } from '../partials';
-import automaticCover from '../pages/automatic-cover';
+import { automaticCover } from '../pages/automatic-cover';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
