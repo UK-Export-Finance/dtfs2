@@ -9,8 +9,8 @@
         "create-keying-sheet-tfm-facilities": "npx ts-node create-keying-sheet-tfm-facilities/index.ts",
         "db:seed": "npx ts-node sql-db-seeder/src/index.ts && npm run create-keying-sheet-tfm-facilities",
         "env:copy": "ts-node copy-env-vars/index.ts",
-        "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
-        "lint:fix": "eslint --fix --color **/*.{ts,js}",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "load": "ts-node mock-data-loader/re-insert-mocks.js",
         "load:e2e": "ts-node mock-data-loader/re-insert-mocks.js -- --e2e",
         "load:sql": "npm run load && npm run db:seed",
@@ -42,7 +42,19 @@
         "zod": "^3.25.76"
     },
     "devDependencies": {
-        "@types/jsonwebtoken": "^9.0.10"
+        "@eslint/js": "9.39.4",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@typescript-eslint/eslint-plugin": "8.59.2",
+        "@typescript-eslint/parser": "8.59.2",
+        "eslint": "9.39.4",
+        "eslint-config-prettier": "9.1.2",
+        "eslint-plugin-check-file": "3.3.2",
+        "eslint-plugin-import-x": "4.16.2",
+        "eslint-plugin-jest": "29.16.6",
+        "eslint-plugin-no-relative-import-paths": "1.6.1",
+        "eslint-plugin-prettier": "5.5.5",
+        "globals": "17.13.0",
+        "typescript-eslint": "8.71.1"
     },
     "engines": {
         "node": ">=24.17.0",

@@ -7,7 +7,7 @@ import {
   PENDING_RECONCILIATION,
   RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
-import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
+import { FeeRecordPaymentGroupSeeder } from 'sql-db-seeder/src/fee-record-payment-group/fee-record-payment-group.seeder';
 
 /**
  * Seeds lots of fee records and payments in different statuses.

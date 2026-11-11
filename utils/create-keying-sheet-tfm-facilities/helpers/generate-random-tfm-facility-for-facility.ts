@@ -1,10 +1,11 @@
 import { ObjectId, WithoutId } from 'mongodb';
 import { faker } from '@faker-js/faker';
 import { Facility, TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
-import { aTfmFacility, aTfmFacilityAmendmentWithFacilityIdAndDealId } from '../mock-data';
+import { aTfmFacility, aTfmFacilityAmendmentWithFacilityIdAndDealId } from 'create-keying-sheet-tfm-facilities/mock-data';
 
 const generateRandomTfmFacilityAmendmentsForFacility = (facility: Facility): TfmFacilityAmendment[] | undefined => {
   const numberToGenerate = faker.number.int({ min: 0, max: 3 });
+
   if (numberToGenerate === 0) {
     return undefined;
   }
@@ -20,6 +21,7 @@ export const generateRandomTfmFacilityForFacility = (facility: Facility, portalU
   const tfmFacility: TfmFacility = aTfmFacility(facility._id, facility, portalUserId);
 
   const amendments = generateRandomTfmFacilityAmendmentsForFacility(facility);
+
   if (amendments) {
     return { ...tfmFacility, amendments };
   }

@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 const { ObjectId } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/server/constants');
@@ -69,9 +68,11 @@ const mapEligibility = async (token, v1Eligibility) => {
       text,
       answer: v1Eligibility[v1Criterion].answer,
     };
+
     if (textList) {
       criteria.textList = textList;
     }
+
     return criteria;
   });
 
@@ -114,6 +115,7 @@ const mapUkefDecision = (v1Deal, status, submissionType) => {
         },
       ];
     }
+
     return [
       {
         decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
@@ -149,7 +151,7 @@ const formatFilenameForSharepoint = (filenameWithExtension) => {
 
 const mapDocuments = (documents, path) => {
   const documentsArray = [];
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const item of documents) {
     // split the v1Url at `://` - this to get the full path to the file
     const url = item.url.split('://');

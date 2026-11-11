@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 module.exports = [
   require('./1'),
   require('./2'),

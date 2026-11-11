@@ -1,6 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
 import { Deal } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 export class DealClient {
   private static collection?: Collection<WithoutId<Deal>>;
@@ -17,8 +17,10 @@ export class DealClient {
     const { ukefDealId } = deal;
 
     const numberOfDeals = await this.collection.count({ ukefDealId: { $eq: ukefDealId } });
+
     if (numberOfDeals !== 0) {
       console.info("Deal with UKEF deal id '%s' already exists", ukefDealId);
+
       return;
     }
 

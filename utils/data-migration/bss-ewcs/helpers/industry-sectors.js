@@ -1,4 +1,3 @@
-/* eslint-disable default-param-last */
 const api = require('../../api');
 
 let industrySectors;

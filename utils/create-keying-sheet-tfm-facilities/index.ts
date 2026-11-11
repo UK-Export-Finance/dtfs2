@@ -1,9 +1,9 @@
 import { ObjectId, WithoutId } from 'mongodb';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
-import { FacilityClient, mongoDbClient, TfmFacilityClient, DealClient, TfmDealClient } from './database-client';
-import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getPortalUserIdOrFail } from './helpers';
-import { aDeal, aFacility, aTfmDeal } from './mock-data';
+import { FacilityClient, mongoDbClient, TfmFacilityClient, DealClient, TfmDealClient } from 'create-keying-sheet-tfm-facilities/database-client';
+import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getPortalUserIdOrFail } from 'create-keying-sheet-tfm-facilities/helpers';
+import { aDeal, aFacility, aTfmDeal } from 'create-keying-sheet-tfm-facilities/mock-data';
 
 /**
  * A function to seed facilities into the mongo db for each facility id

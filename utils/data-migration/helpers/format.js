@@ -13,6 +13,7 @@ const stripCommas = (string, number = false) => {
   if (string) {
     return number ? Number(string.toString().replace(/,/g, '')) : string.replace(/,/g, '');
   }
+
   return string;
 };
 

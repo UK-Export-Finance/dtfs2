@@ -12,9 +12,11 @@ let filename;
 
 const init = (prefix) => {
   filename = `${logFolder}/${prefix}-log_${moment().format('YYYY-MM-DD_HH-mm-ss')}`;
+
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder);
   }
+
   return filename;
 };
 
@@ -46,6 +48,7 @@ const addError = (v1Id, msg) => {
   if (!logData.errors[v1Id]) {
     logData.errors[v1Id] = [];
   }
+
   logData.errors[v1Id].push(msg);
   console.error(msg);
   saveToFile();
@@ -55,6 +58,7 @@ const addWarning = (v1Id, msg) => {
   if (!logData.warnings[v1Id]) {
     logData.warnings[v1Id] = [];
   }
+
   logData.warnings[v1Id].push(msg);
   saveToFile();
 };
