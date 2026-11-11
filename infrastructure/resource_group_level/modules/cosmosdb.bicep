@@ -29,6 +29,9 @@ var normalizedAzure = replace(replace(replace(replace(cleanAzure, '[', ''), ']',
 var allowedIps = empty(normalizedAllowed) ? [] : split(replace(normalizedAllowed, ' ', ''), ',')
 var azureAllowedIps = empty(normalizedAzure) ? [] : split(replace(normalizedAzure, ' ', ''), ',')
 var allAllowedIps = concat(allowedIps, azureAllowedIps)
+var collectionOptions = capacityMode == 'Serverless' ? {} : {
+  throughput: defaultThroughput
+}
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
     name: 'EnableMongo'
@@ -140,9 +143,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -160,9 +161,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -180,9 +179,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -207,9 +204,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -237,9 +232,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -257,9 +250,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -277,9 +268,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -300,9 +289,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -330,9 +317,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -360,9 +345,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -390,9 +373,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -413,9 +394,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -436,9 +415,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -456,9 +433,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -476,9 +451,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -496,9 +469,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -519,9 +490,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -542,9 +511,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -565,9 +532,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
   {
@@ -588,9 +553,7 @@ var collectionsArray = [
           }
         ]
       }
-      options: {
-        throughput: defaultThroughput 
-      }
+      options: collectionOptions
     }
   }
 ]
