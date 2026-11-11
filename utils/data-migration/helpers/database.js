@@ -125,7 +125,9 @@ const portalFacilityUpdate = async (id, updates) => {
  * @param {object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
-const tfmDealUpdate = async (updatedDeal) => {
+const tfmDealUpdate = async (deal) => {
+  const updatedDeal = deal;
+
   try {
     const { _id } = updatedDeal;
     const idAsString = String(_id);
@@ -157,7 +159,9 @@ const tfmDealUpdate = async (updatedDeal) => {
  * @param {object} updatedFacility Updated facility payload
  * @returns {Promise} Resolve if successful otherwise reject.
  */
-const tfmFacilityUpdate = async (updatedFacility) => {
+const tfmFacilityUpdate = async (facility) => {
+  const updatedFacility = facility;
+
   if (typeof updatedFacility?.facilitySnapshot?.ukefFacilityId !== 'string') {
     throw new Error('Invalid UKEF Facility Id');
   }
