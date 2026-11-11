@@ -1,4 +1,5 @@
 import { contactPage } from './contact';
+import { footer } from './footer';
 import { header } from './header';
 import { landingPage } from './landingPage';
 
@@ -54,7 +55,7 @@ module.exports = {
   createUser: require('./admin/users/createUser'),
   editUser: require('./admin/users/editUser'),
   resetPassword: require('./resetPassword'),
-  footer: require('./footer'),
+  footer,
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
   feedbackPage: require('./feedbackPage'),

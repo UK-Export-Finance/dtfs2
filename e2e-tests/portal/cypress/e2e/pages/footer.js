@@ -1,4 +1,4 @@
-const page = {
+export const footer = {
   // Footer
   footer: () => cy.get('[data-cy="footer"]'),
   crown: () => cy.get('.govuk-footer__crown'),
@@ -13,5 +13,3 @@ const page = {
   accessibility: () => cy.get('[data-cy="footer-accessibility-statement-link"]'),
   vulnerability: () => cy.get('[data-cy="footer-report-vulnerability-link"]'),
 };
-
-module.exports = page;

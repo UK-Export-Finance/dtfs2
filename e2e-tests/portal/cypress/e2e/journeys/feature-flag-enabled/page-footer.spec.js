@@ -1,6 +1,5 @@
-const { footer } = require('../../pages/footer');
 const relative = require('../../relativeURL');
-const { login, dashboardDeals } = require('../../pages');
+const { login, dashboardDeals, footer } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
