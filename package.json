@@ -52,23 +52,6 @@
     "validate:md": "npx markdownlint-cli --config .markdownlint.json \"**/*.md\"",
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
   },
-  "lint-staged": {
-    "**/package.json": "sort-package-json",
-    "**/*.{js,ts}": [
-      "npx eslint --fix",
-      "npx prettier --write"
-    ],
-    "**/*.md": [
-      "npx prettier --write",
-      "npx markdownlint-cli --config .markdownlint.json"
-    ],
-    "**/*.yml": [
-      "npx yaml-lint --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
-    ],
-    "**/*": [
-      "npx cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
-    ]
-  },
   "overrides": {
     "ts-node": "^10.9.2"
   },
