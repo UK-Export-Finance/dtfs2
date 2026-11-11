@@ -28,10 +28,11 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
     guaranteeExpiryDate = formatDate(coverEndDate instanceof Date ? coverEndDate : parseISO(coverEndDate));
   } else {
     guaranteeCommencementDate = formatTimestamp(Number(dealSubmissionDate));
+
     guaranteeExpiryDate = formatTimestamp(
       getDateAsEpochMillisecondString(
         add(new Date(Number(dealSubmissionDate)), {
-          months: ukefGuaranteeInMonths,
+          months: Number(ukefGuaranteeInMonths),
         }),
       ),
     );
