@@ -2,7 +2,6 @@ const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/confirm-submission`),
   confirmSubmit: () => cy.get('[data-cy="confirmSubmit"]').get('#confirmSubmit'),
   acceptAndSubmit: () => ({
-    // eslint-disable-next-line consistent-return
     click: (deal) => {
       cy.get('[data-cy="AcceptAndSubmit"]').click();
       cy.wrap(deal).then((dealToSubmit) => {

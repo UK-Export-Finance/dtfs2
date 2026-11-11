@@ -1,4 +1,4 @@
-const facilitiesPage = {
+export const facilitiesPage = {
   heading: () => cy.get('[data-cy="facilities-heading"]'),
   searchFormInput: () => cy.get('[data-cy="search-input"]'),
   searchFormLabel: () => cy.get('[data-cy="search-input-label"]'),
@@ -51,5 +51,3 @@ const facilitiesPage = {
     page: (number) => cy.get(`[data-cy="Page_${number}"]`),
   },
 };
-
-module.exports = facilitiesPage;

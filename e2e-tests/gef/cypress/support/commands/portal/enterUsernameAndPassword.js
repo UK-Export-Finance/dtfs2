@@ -1,4 +1,4 @@
-const landingPage = require('../../../e2e/pages/landingPage');
+const { landingPage } = require('../../../e2e/pages/landingPage');
 
 module.exports = ({ username, password }) => {
   landingPage.visit();

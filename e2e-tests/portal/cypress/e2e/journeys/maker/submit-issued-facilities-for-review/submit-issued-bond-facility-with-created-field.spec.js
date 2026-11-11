@@ -2,7 +2,7 @@ const { oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
-const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
+const { dealWithNotStartedFacilityStatuses } = require('./dealWithNotStartedFacilityStatuses');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

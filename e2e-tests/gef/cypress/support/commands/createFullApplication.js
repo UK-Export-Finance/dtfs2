@@ -1,6 +1,6 @@
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../../e2e/pages/application-details';
-import submitToUkef from '../../e2e/pages/submit-to-ukef';
+import { applicationDetails } from '../../e2e/pages/application-details';
+import { submitToUkef } from '../../e2e/pages/submit-to-ukef';
 
 import relativeURL from '../relativeURL';
 

@@ -1,4 +1,4 @@
-const automaticCover = {
+export const automaticCover = {
   // Core elements
   trueRadioButton: (id) => cy.get(`[data-cy="automatic-cover-true-${id}"]`),
   falseRadioButton: (id) => cy.get(`[data-cy="automatic-cover-false-${id}"]`),
@@ -7,5 +7,3 @@ const automaticCover = {
   // Errors
   fieldError: () => cy.get('[data-cy="automatic-cover-error"]'),
 };
-
-export default automaticCover;

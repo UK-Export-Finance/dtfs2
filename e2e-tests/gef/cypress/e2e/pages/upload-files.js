@@ -1,4 +1,4 @@
-const uploadFIles = {
+export const uploadFiles = {
   supportingInfoStatus: () => cy.get('[data-cy="supportingInfo-status"]'),
   supportingInfoManualInclusionButton: () => cy.get('[data-cy="supportingInfo__manual-inclusion-cta"]'),
   supportingInfoManagementAccountsButton: () => cy.get('[data-cy="supportingInfo__management-accounts-cta"]'),
@@ -15,5 +15,3 @@ const uploadFIles = {
   exporterSecurityError: () => cy.get('[data-cy="exporter-security-error"]'),
   exporterSecurity: () => cy.get('[data-cy="exporter-security"]'),
 };
-
-export default uploadFIles;

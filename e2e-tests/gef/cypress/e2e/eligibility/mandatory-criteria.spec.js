@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { errorSummary, form, headingCaption, mainHeading } from '../partials';
-import mandatoryCriteria from '../pages/mandatory-criteria';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Mandatory Criteria Page', () => {

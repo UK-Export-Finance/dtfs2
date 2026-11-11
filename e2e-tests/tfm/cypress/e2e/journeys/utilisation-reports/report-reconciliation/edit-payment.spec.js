@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
+import { tfmPages } from '../../../pages';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import USERS from '../../../../fixtures/users';
@@ -72,7 +72,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`/utilisation-reports/${reportId}`);
@@ -80,7 +80,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
   describe('when navigating to the edit payment page', () => {
     it('should allow the user to navigate from the premium payments table', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
     });
@@ -88,7 +88,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     it('should allow the user to navigate from the payment details table', () => {
       cy.visit(`/utilisation-reports/${reportId}#payment-details`);
 
-      pages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
     });
@@ -96,7 +96,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
   describe('when clicking the back link on the edit payment page', () => {
     it('should return to the premium payments page when accessed from premium payments table', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -108,7 +108,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     it('should return to the payment details page when accessed from payment details table', () => {
       cy.visit(`/utilisation-reports/${reportId}#payment-details`);
 
-      pages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
 
@@ -120,7 +120,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
   describe('when displaying the edit payment form', () => {
     it('should display the payment currency as a fixed value next to the payment amount', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -128,7 +128,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     });
 
     it('should populate the form values with the current payment values', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -154,7 +154,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.reload();
 
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -172,7 +172,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'This is valid');
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       getFeeRecordCheckbox(feeRecord.id).should('be.checked');
       getFeeRecordCheckbox(anotherFeeRecord.id).should('not.be.checked');
@@ -199,7 +199,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       const newPaymentDateYear = '2021';
       const newPaymentReference = 'New payment reference';
 
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -221,11 +221,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), newPaymentReference);
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
 
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -249,7 +249,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       cy.reload();
 
       cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -257,7 +257,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
@@ -275,7 +275,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
 
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -283,7 +283,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('not.exist');
@@ -293,13 +293,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
   describe('when a payment is edited after accessing the edit payment page from the premium payments table', () => {
     it('should return to the premium payments page', () => {
-      pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
     });
@@ -309,13 +309,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     it('should return to the payment details page', () => {
       cy.visit(`/utilisation-reports/${reportId}#payment-details`);
 
-      pages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
+      tfmPages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
+      tfmPages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
     });

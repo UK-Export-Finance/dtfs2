@@ -1,7 +1,7 @@
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { headingCaption } = require('../../../../../gef/cypress/e2e/partials');
-const gefProblemWithService = require('../../../../../gef/cypress/e2e/pages/login/sign-in-link');
+const signInLink = require('../../../../../gef/cypress/e2e/pages/login/sign-in-link');
 const BssEwcsApplicationDetails = require('../../pages/contract');
 const BssEwcsProblemWithService = require('../../pages/login/sign-in-link');
 
@@ -42,7 +42,7 @@ context('Should get problem with service page when visiting BSS/EWCS with GEF de
 
     it('Visit GEF deal with BSS/EWCS deal identifier, should show problem with service page', () => {
       cy.visit(relative(`/gef/application-details/${BssEwcsDealId}`));
-      gefProblemWithService.shouldDisplayProblemWithServiceError();
+      signInLink.shouldDisplayProblemWithServiceError();
     });
 
     it('Visit BSS/EWCS deal with GEF deal identifier, should show problem with service page', () => {

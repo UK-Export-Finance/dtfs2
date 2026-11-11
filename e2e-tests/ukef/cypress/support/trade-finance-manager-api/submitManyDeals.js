@@ -10,9 +10,11 @@ module.exports = (deals) => {
     login(username, password).then((token) =>
       submitDeal(dealToInsert._id, dealToInsert.dealType, token).then(() => {
         persistedDeals.push(dealToInsert);
+
         if (persistedDeals.length === deals.length) {
           return persistedDeals;
         }
+
         return null;
       }),
     );

@@ -1,7 +1,7 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
+import { tfmPages } from '../../../../../../../tfm/cypress/e2e/pages';
 
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_DEAL_READY_TO_SUBMIT from './test-data/dealReadyToSubmit';

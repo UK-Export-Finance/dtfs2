@@ -1,4 +1,4 @@
-const facilityGuarantee = {
+export const facilityGuarantee = {
   feeTypeInAdvanceInput: () => cy.get('[data-cy="fee-type-in-advance"]'),
   feeTypeInArrearsInput: () => cy.get('[data-cy="fee-type-in-arrears"]'),
   feeTypeAtMaturityInput: () => cy.get('[data-cy="fee-type-at-maturity"]'),
@@ -16,5 +16,3 @@ const facilityGuarantee = {
 
   doneButton: () => cy.get('[data-cy="done-button"]'),
 };
-
-export default facilityGuarantee;

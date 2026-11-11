@@ -211,9 +211,11 @@ context('Amendments - Manual approval journey', () => {
           dealFacilities.push(...createdFacilities);
           facilityId = createdFacilities[0]?._id;
           ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
+
           if (!facilityId) {
             throw new Error('Expected a created facility id in before hook');
           }
+
           if (!ukefFacilityId) {
             throw new Error('Expected a created UKEF facility id in before hook');
           }
@@ -377,9 +379,11 @@ context('Amendments - Manual approval journey', () => {
           dealFacilities.push(...createdFacilities);
           facilityId = createdFacilities[0]?._id;
           ukefFacilityId = createdFacilities[0]?.ukefFacilityId;
+
           if (!facilityId) {
             throw new Error('Expected a created facility id in before hook');
           }
+
           if (!ukefFacilityId) {
             throw new Error('Expected a created UKEF facility id in before hook');
           }

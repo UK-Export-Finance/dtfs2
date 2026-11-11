@@ -20,13 +20,17 @@ import { checkerReturnsAmendmentToMaker } from './gef/checkerReturnsAmendmentToM
 import { checkerSubmitsPortalAmendmentRequest } from './gef/checkerSubmitsPortalAmendmentRequest';
 import { submitToUkefMultipleAmendmentsOnFacility } from './gef/submitToUkefMultipleAmendmentsOnFacility';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
+import { saveSession } from './utils/saveSession';
+import { keyboardInput } from './utils/keyboardInput';
+import { loginOTP } from './portal/loginOTP';
+import { completeDateFormFields } from './portal/completeDateFormFields';
 
 // Preserve session cookie
-Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+Cypress.Commands.add('saveSession', saveSession);
 // Resets the session
 Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
 
-Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+Cypress.Commands.add('keyboardInput', keyboardInput);
 
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
@@ -46,7 +50,7 @@ Cypress.Commands.add('createGefFacilities', require('./portal-api/createGefFacil
 Cypress.Commands.add('updateGefDeal', require('./portal-api/updateGefDeal'));
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
-Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
+Cypress.Commands.add('loginOTP', loginOTP);
 Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('overridePortalUserSignInOTPWithValidTokenByUsername', require('./portal/overridePortalUserSignInOTPWithValidTokenByUsername'));
@@ -57,7 +61,7 @@ Cypress.Commands.add('getOneDeal', getOneDeal);
 Cypress.Commands.add('getOneGefDeal', getOneGefDeal);
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
-Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
+Cypress.Commands.add('completeDateFormFields', completeDateFormFields);
 
 Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
 Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);

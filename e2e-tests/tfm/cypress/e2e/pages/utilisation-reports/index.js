@@ -10,7 +10,7 @@ import { createFeeRecordCorrectionRequestPage } from './fee-record-correction/cr
 import { checkFeeRecordCorrectionRequestPage } from './fee-record-correction/checkFeeRecordCorrectionRequestPage';
 import { feeRecordCorrectionRequestSentPage } from './fee-record-correction/feeRecordCorrectionRequestSentPage';
 import { feeRecordCorrectionLogDetailsPage } from './fee-record-correction/feeRecordCorrectionLogDetailsPage';
-import utilisationReportPageNotFoundPage from './pageNotFoundPage';
+import { pageNotFoundPage } from './pageNotFoundPage';
 
 export const utilisationReportPages = {
   utilisationReportsSummaryPage,
@@ -26,5 +26,5 @@ export const utilisationReportPages = {
   checkFeeRecordCorrectionRequestPage,
   feeRecordCorrectionRequestSentPage,
   feeRecordCorrectionLogDetailsPage,
-  utilisationReportPageNotFoundPage,
+  pageNotFoundPage,
 };

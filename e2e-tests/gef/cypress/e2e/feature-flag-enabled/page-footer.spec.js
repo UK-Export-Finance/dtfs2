@@ -1,4 +1,4 @@
-const page = require('../pages/footer');
+const { footer } = require('../pages/footer');
 const relative = require('../relativeURL');
 const MOCK_USERS = require('../../../../e2e-fixtures/portal-users.fixture');
 
@@ -13,22 +13,22 @@ context('Portal GovUK footer', () => {
 
   describe('signed-out user footer', () => {
     it('should ensure the footer component exist', () => {
-      page.footer().should('exist');
+      footer.footer().should('exist');
     });
 
     it('should displays the correct footer component with the crown logo', () => {
-      page.crown().should('exist');
-      page.navigation().should('exist');
-      page.coa().should('exist');
-      page.ogl().contains('All content is available under the Open Government Licence v3.0, except where otherwise stated');
+      footer.crown().should('exist');
+      footer.navigation().should('exist');
+      footer.coa().should('exist');
+      footer.ogl().contains('All content is available under the Open Government Licence v3.0, except where otherwise stated');
     });
 
     it('should display all the footer navigation links', () => {
-      page.contact().should('exist');
-      page.feedback().should('exist');
-      page.cookies().should('exist');
-      page.accessibility().should('exist');
-      page.vulnerability().should('exist');
+      footer.contact().should('exist');
+      footer.feedback().should('exist');
+      footer.cookies().should('exist');
+      footer.accessibility().should('exist');
+      footer.vulnerability().should('exist');
     });
   });
 
@@ -41,22 +41,22 @@ context('Portal GovUK footer', () => {
     });
 
     it('should ensure the footer component exist', () => {
-      page.footer().should('exist');
+      footer.footer().should('exist');
     });
 
     it('should displays the correct footer component with the crown logo', () => {
-      page.crown().should('exist');
-      page.navigation().should('exist');
-      page.coa().should('exist');
-      page.ogl().contains('All content is available under the Open Government Licence v3.0, except where otherwise stated');
+      footer.crown().should('exist');
+      footer.navigation().should('exist');
+      footer.coa().should('exist');
+      footer.ogl().contains('All content is available under the Open Government Licence v3.0, except where otherwise stated');
     });
 
     it('should display all the footer navigation links', () => {
-      page.contact().should('exist');
-      page.feedback().should('exist');
-      page.cookies().should('exist');
-      page.accessibility().should('exist');
-      page.vulnerability().should('exist');
+      footer.contact().should('exist');
+      footer.feedback().should('exist');
+      footer.cookies().should('exist');
+      footer.accessibility().should('exist');
+      footer.vulnerability().should('exist');
     });
   });
 });
