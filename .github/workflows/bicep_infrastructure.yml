@@ -66,7 +66,19 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v3
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_STAG_CREDENTIALS }}
+
+      - name: Verify Azure subscription 🧭
+        run: |
+          az account set --subscription "${{ secrets.AZURE_STAG_SUBSCRIPTION_ID }}"
+          ACTIVE_SUBSCRIPTION=$(az account show --query id -o tsv)
+          if [ "$ACTIVE_SUBSCRIPTION" != "${{ secrets.AZURE_STAG_SUBSCRIPTION_ID }}" ]; then
+            echo "Expected subscription ${{ secrets.AZURE_STAG_SUBSCRIPTION_ID }}, but active subscription is $ACTIVE_SUBSCRIPTION"
+            exit 1
+          fi
+          echo "Active subscription: $ACTIVE_SUBSCRIPTION"
+          echo "Active subscription name: $(az account show --query name -o tsv)"
+          echo "Target resource group: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}"
 
       - name: Azure defaults ✨
         uses: azure/cli@v3
@@ -102,7 +114,7 @@ jobs:
       - name: Login 🔐
         uses: azure/login@v3
         with:
-          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_STAG_CREDENTIALS }}
 
       - name: Set bicep properties ✨
         run: |
@@ -253,7 +265,7 @@ jobs:
       - name: Deploy Azure Resources
         uses: azure/arm-deploy@v2
         with:
-          subscriptionId: ${{ secrets.AZURE_DEV_SUBSCRIPTION_ID }}
+          subscriptionId: ${{ secrets.AZURE_STAG_SUBSCRIPTION_ID }}
           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
           template: ./infrastructure/resource_group_level/main.bicep
           parameters: ${{ env.BICEP_PARAMETERS }}
