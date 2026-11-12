@@ -22,6 +22,7 @@ const fillEligibilityCriteria = (dealSubmissionType) => {
   }
 
   eligibilityCriteria.nextPageButton().click();
+
   if (dealSubmissionType === DEAL_SUBMISSION_TYPE.MIA) {
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
   }

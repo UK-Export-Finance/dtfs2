@@ -5,7 +5,7 @@ import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixtur
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { mainHeading } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
+import { applicationPreview } from '../../../pages/application-preview';
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,

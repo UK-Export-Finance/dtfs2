@@ -1,7 +1,9 @@
 const { listAllDeals, logIn, deleteDeal, deleteGefApplication } = require('./api');
 
 const deleteAllDeals = (token, deals) => {
-  if (!deals || !deals.length) return;
+  if (!deals || !deals.length) {
+    return;
+  }
 
   deals.forEach((deal) => {
     if (deal.product === 'BSS/EWCS') {

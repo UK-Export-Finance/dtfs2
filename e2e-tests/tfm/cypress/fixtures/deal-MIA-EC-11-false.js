@@ -17,12 +17,10 @@ const criteriaWithAnswer11False = () => {
   return mapped;
 };
 
-const DEAL_MIA_EC_11_FALSE = {
+export const MOCK_DEAL_MIA_EC_11_FALSE = {
   ...DEAL_MIA,
   eligibility: {
     ...DEAL_MIA.eligibility,
     criteria: criteriaWithAnswer11False(),
   },
 };
-
-export default DEAL_MIA_EC_11_FALSE;

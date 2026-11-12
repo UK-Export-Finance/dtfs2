@@ -5,10 +5,10 @@ import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import applicationPreview from '../../../pages/application-preview';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import bankReviewDate from '../../../pages/bank-review-date';
+import { unissuedFacilityTable } from '../../../pages/unissued-facilities';
+import { applicationPreview } from '../../../pages/application-preview';
+import { aboutFacilityUnissued } from '../../../pages/unissued-facilities-about-facility';
+import { bankReviewDate } from '../../../pages/bank-review-date';
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,

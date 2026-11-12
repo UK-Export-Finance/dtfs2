@@ -1,11 +1,11 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
-import applicationDetails from '../pages/application-details';
-import dashboardPage from '../pages/dashboard-page';
-import companiesHouse from '../pages/companies-house';
-import exportersAddress from '../pages/exporters-address';
-import aboutExporter from '../pages/about-exporter';
-import selectExportersCorAddress from '../pages/select-exporters-corr-address';
+import { applicationDetails } from '../pages/application-details';
+import { dashboardPage } from '../pages/dashboard-page';
+import { companiesHouse } from '../pages/companies-house';
+import { exportersAddress } from '../pages/exporters-address';
+import { aboutExporter } from '../pages/about-exporter';
+import { selectExportersCorrAddress } from '../pages/select-exporters-corr-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let url;
@@ -124,7 +124,7 @@ context('Incomplete exporter section - application details page', () => {
       cy.keyboardInput(exportersAddress.correspondenceAddress(), 'SW1A 2AA');
       cy.clickContinueButton();
 
-      selectExportersCorAddress.selectAddress().select('0');
+      selectExportersCorrAddress.selectAddress().select('0');
       cy.clickContinueButton();
 
       cy.clickSaveAndReturnButton();

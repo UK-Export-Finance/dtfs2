@@ -1,4 +1,4 @@
-const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload__dropzone') => {
+export const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload__dropzone') => {
   // start watching the POST requests
   cy.intercept({
     method: 'POST',
@@ -9,5 +9,3 @@ const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload
 
   cy.wait('@upload', { requestTimeout: 20000 });
 };
-
-export default uploadFile;

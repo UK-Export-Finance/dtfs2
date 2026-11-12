@@ -1,5 +1,3 @@
-const ineligibleGef = {
+export const ineligibleAutomaticCover = {
   content: () => cy.get('[data-cy="content"]'),
 };
-
-export default ineligibleGef;
