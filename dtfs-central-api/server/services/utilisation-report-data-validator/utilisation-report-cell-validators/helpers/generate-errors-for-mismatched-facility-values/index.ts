@@ -1,5 +1,5 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
-import _ from 'lodash';
+import { isEqual } from 'lodash';
 
 /**
  * Adds error message for all matching facility id rows
@@ -38,7 +38,7 @@ export const generateErrorsForMismatchedFacilityValues = (
       exporter: row.exporter?.value,
     } as UtilisationReportDataValidationError;
 
-    const isNotInErrors = !errors.some((error) => _.isEqual(error, errorObject));
+    const isNotInErrors = !errors.some((error) => isEqual(error, errorObject));
 
     if (isNotInErrors) {
       newErrors.push(errorObject);

@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { validateSchema } from '@ukef/dtfs2-common';
 import { MongoObjectIdSchema } from './schemas';
 
@@ -7,21 +7,21 @@ import { MongoObjectIdSchema } from './schemas';
  * All the form data fields are of type string and nullable because the
  * form validation itself is taking place in the controller.
  */
-const PutFeeRecordCorrectionTransientFormDataPayloadSchema = z.object({
-  user: z.object({ _id: MongoObjectIdSchema }),
-  formData: z.object({
-    utilisation: z.string().optional(),
-    facilityId: z.string().optional(),
-    reportedCurrency: z.string().optional(),
-    reportedFee: z.string().optional(),
-    additionalComments: z.string().optional(),
+const PutFeeRecordCorrectionTransientFormDataPayloadSchema = zod.object({
+  user: zod.object({ _id: MongoObjectIdSchema }),
+  formData: zod.object({
+    utilisation: zod.string().optional(),
+    facilityId: zod.string().optional(),
+    reportedCurrency: zod.string().optional(),
+    reportedFee: zod.string().optional(),
+    additionalComments: zod.string().optional(),
   }),
 });
 
 /**
  * Type definition for fee record correction transient form data payload.
  */
-export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionTransientFormDataPayloadSchema>;
+export type PutFeeRecordCorrectionTransientFormDataPayload = zod.infer<typeof PutFeeRecordCorrectionTransientFormDataPayloadSchema>;
 
 /**
  * Middleware function to validate fee record correction transient form data payload.

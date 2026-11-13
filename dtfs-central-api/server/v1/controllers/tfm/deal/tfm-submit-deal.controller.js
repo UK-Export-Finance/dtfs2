@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common')
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
+const { flatten } = require('mongo-dot-notation');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
@@ -52,7 +52,7 @@ const createDealSnapshot = async (deal, auditDetails) => {
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, flatten(withoutId(dealObj)), {
       returnDocument: 'after',
       upsert: true,
     });
@@ -84,7 +84,7 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
     if (dealFacilities) {
       const updatedFacilities = await Promise.all(
         dealFacilities.map(async (facility) => {
-          const update = $.flatten({
+          const update = flatten({
             facilitySnapshot: facility,
             ...tfmInit,
             auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),

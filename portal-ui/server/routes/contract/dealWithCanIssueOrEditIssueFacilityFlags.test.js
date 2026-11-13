@@ -39,15 +39,19 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
     const result = dealWithCanIssueOrEditIssueFacilityFlags(mockUserRoles, mockDeal);
 
     const expectedBonds = mockDeal.bondTransactions.items.map((bond) => {
-      const b = bond;
-      b.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, bond);
-      return b;
+      const expectedBond = bond;
+
+      expectedBond.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, bond);
+
+      return expectedBond;
     });
 
     const expectedLoans = mockDeal.loanTransactions.items.map((loan) => {
-      const l = loan;
-      l.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, loan);
-      return l;
+      const expectedLoan = loan;
+
+      expectedLoan.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, loan);
+
+      return expectedLoan;
     });
 
     const bonds = result.bondTransactions.items;

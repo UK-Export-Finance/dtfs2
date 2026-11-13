@@ -19,11 +19,12 @@ const flattenOriginalData = (originalData, answers) => {
 const originalCriteriaAnswersAsStrings = (criteria) => {
   const result = {};
 
-  criteria.forEach((c) => {
-    if (typeof c.answer === 'boolean' && String(c.answer).length) {
-      result[`criterion-${c.id}`] = String(c.answer);
+  criteria.forEach((criterion) => {
+    if (typeof criterion.answer === 'boolean' && String(criterion.answer).length) {
+      result[`criterion-${criterion.id}`] = String(criterion.answer);
     }
   });
+
   return result;
 };
 

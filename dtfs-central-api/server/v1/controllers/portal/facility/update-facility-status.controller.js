@@ -1,7 +1,7 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, ApiError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
+const { flatten } = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
@@ -37,7 +37,7 @@ const updateBssEwcsFacilityStatus = async ({ facilityId, status, auditDetails })
     auditRecord,
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, flatten(withoutId(update)), {
     returnNewDocument: true,
     returnDocument: 'after',
   });

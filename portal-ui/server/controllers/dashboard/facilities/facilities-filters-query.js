@@ -26,8 +26,8 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
   const filtered = [];
   // removes _crsf from facilitiesFilter
   Object.values(dashboardFilters)
-    .filter((v) => !v._csrf)
-    .map((v) => filtered.push(v));
+    .filter((value) => !value._csrf)
+    .map((value) => filtered.push(value));
 
   dashboardFilters = filtered;
 

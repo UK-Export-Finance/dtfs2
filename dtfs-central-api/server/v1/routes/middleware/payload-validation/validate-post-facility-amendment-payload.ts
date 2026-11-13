@@ -1,11 +1,11 @@
-import z from 'zod';
+import zod from 'zod';
 import { validateSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
-const PostFacilityAmendmentSchema = z.object({
+const PostFacilityAmendmentSchema = zod.object({
   auditDetails: AuditDetailsSchema,
 });
 
-export type PostFacilityAmendmentPayload = z.infer<typeof PostFacilityAmendmentSchema>;
+export type PostFacilityAmendmentPayload = zod.infer<typeof PostFacilityAmendmentSchema>;
 
 export const validatePostFacilityAmendmentPayload = validateSchema(PostFacilityAmendmentSchema);

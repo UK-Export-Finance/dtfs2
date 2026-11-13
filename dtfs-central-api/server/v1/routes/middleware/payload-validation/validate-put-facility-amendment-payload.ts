@@ -1,113 +1,113 @@
-import z from 'zod';
+import zod from 'zod';
 import { validateSchema } from '@ukef/dtfs2-common';
 import { AmendmentStatusSchema, AuditDetailsSchema, AllCurrenciesSchema, MongoObjectIdSchema } from './schemas';
 import { dateFromIsoStringSchema } from './schemas/dateFromIsoString.schema';
 
-const SubmittedBySchema = z.object({
+const SubmittedBySchema = zod.object({
   _id: MongoObjectIdSchema,
-  username: z.string(),
-  name: z.string(),
-  email: z.string().email(),
+  username: zod.string(),
+  name: zod.string(),
+  email: zod.string().email(),
 });
 
-const PutFacilityAmendmentSchema = z.object({
-  payload: z
+const PutFacilityAmendmentSchema = zod.object({
+  payload: zod
     .object({
-      requestDate: z.number(),
-      changeFacilityValue: z.boolean(),
-      value: z.number().nullable(),
-      currentValue: z.number().nullable(),
-      changeCoverEndDate: z.boolean(),
-      currentCoverEndDate: z.number().nullable(),
-      isUsingFacilityEndDate: z.boolean().nullable(),
+      requestDate: zod.number(),
+      changeFacilityValue: zod.boolean(),
+      value: zod.number().nullable(),
+      currentValue: zod.number().nullable(),
+      changeCoverEndDate: zod.boolean(),
+      currentCoverEndDate: zod.number().nullable(),
+      isUsingFacilityEndDate: zod.boolean().nullable(),
       facilityEndDate: dateFromIsoStringSchema.nullable(),
       bankReviewDate: dateFromIsoStringSchema.nullable(),
-      ukefExposure: z.number().nullable(),
-      coveredPercentage: z.number(),
+      ukefExposure: zod.number().nullable(),
+      coveredPercentage: zod.number(),
       currency: AllCurrenciesSchema.nullable(),
       status: AmendmentStatusSchema,
-      coverEndDate: z.number().nullable(),
-      version: z.number(),
-      requireUkefApproval: z.boolean(),
-      submissionType: z.string(),
-      submittedByPim: z.boolean(),
-      submittedAt: z.number(),
-      submissionDate: z.number(),
-      sendFirstTaskEmail: z.boolean(),
-      firstTaskEmailSent: z.boolean(),
-      effectiveDate: z.number(),
-      automaticApprovalEmail: z.boolean(),
-      apimGift: z.object({
-        facilityAmendmentSent: z.boolean(),
+      coverEndDate: zod.number().nullable(),
+      version: zod.number(),
+      requireUkefApproval: zod.boolean(),
+      submissionType: zod.string(),
+      submittedByPim: zod.boolean(),
+      submittedAt: zod.number(),
+      submissionDate: zod.number(),
+      sendFirstTaskEmail: zod.boolean(),
+      firstTaskEmailSent: zod.boolean(),
+      effectiveDate: zod.number(),
+      automaticApprovalEmail: zod.boolean(),
+      apimGift: zod.object({
+        facilityAmendmentSent: zod.boolean(),
       }),
-      referenceNumber: z.string().optional(),
-      shouldNotUpdateTimestamp: z.boolean().optional(),
-      ukefDecision: z
+      referenceNumber: zod.string().optional(),
+      shouldNotUpdateTimestamp: zod.boolean().optional(),
+      ukefDecision: zod
         .object({
-          coverEndDate: z.string(),
-          value: z.string(),
-          conditions: z.string().nullable(),
-          declined: z.string().nullable(),
-          comments: z.string(),
-          submitted: z.boolean(),
-          submittedAt: z.number(),
+          coverEndDate: zod.string(),
+          value: zod.string(),
+          conditions: zod.string().nullable(),
+          declined: zod.string().nullable(),
+          comments: zod.string(),
+          submitted: zod.boolean(),
+          submittedAt: zod.number(),
           submittedBy: SubmittedBySchema,
-          managersDecisionEmail: z.boolean(),
-          managersDecisionEmailSent: z.boolean(),
+          managersDecisionEmail: zod.boolean(),
+          managersDecisionEmailSent: zod.boolean(),
         })
         .partial(),
-      bankDecision: z
+      bankDecision: zod
         .object({
-          decision: z.string(),
-          receivedDate: z.number(),
-          effectiveDate: z.number().nullable(),
-          submitted: z.boolean(),
-          banksDecisionEmail: z.boolean(),
-          banksDecisionEmailSent: z.boolean(),
-          submittedAt: z.number(),
+          decision: zod.string(),
+          receivedDate: zod.number(),
+          effectiveDate: zod.number().nullable(),
+          submitted: zod.boolean(),
+          banksDecisionEmail: zod.boolean(),
+          banksDecisionEmailSent: zod.boolean(),
+          submittedAt: zod.number(),
           submittedBy: SubmittedBySchema,
         })
         .partial(),
-      createdBy: z.object({
-        username: z.string(),
-        name: z.string(),
-        email: z.string().email(),
+      createdBy: zod.object({
+        username: zod.string(),
+        name: zod.string(),
+        email: zod.string().email(),
       }),
-      tfm: z
+      tfm: zod
         .object({
-          value: z.object({
-            value: z.number(),
+          value: zod.object({
+            value: zod.number(),
             currency: AllCurrenciesSchema,
           }),
-          amendmentExposurePeriodInMonths: z.number().nullable(),
-          exposure: z.object({
-            exposure: z.union([z.number(), z.string()]),
-            timestamp: z.number().nullable(),
-            ukefExposureValue: z.number(),
+          amendmentExposurePeriodInMonths: zod.number().nullable(),
+          exposure: zod.object({
+            exposure: zod.union([zod.number(), zod.string()]),
+            timestamp: zod.number().nullable(),
+            ukefExposureValue: zod.number(),
           }),
-          coverEndDate: z.number(),
-          isUsingFacilityEndDate: z.boolean().nullable(),
+          coverEndDate: zod.number(),
+          isUsingFacilityEndDate: zod.boolean().nullable(),
           facilityEndDate: dateFromIsoStringSchema.nullable(),
           bankReviewDate: dateFromIsoStringSchema.nullable(),
         })
         .partial(),
-      tasks: z.array(
-        z.object({
-          groupTitle: z.string(),
-          id: z.number(),
-          groupTasks: z.array(z.any()),
+      tasks: zod.array(
+        zod.object({
+          groupTitle: zod.string(),
+          id: zod.number(),
+          groupTasks: zod.array(zod.any()),
         }),
       ),
-      leadUnderwriter: z.object({
-        _id: z.union([MongoObjectIdSchema, z.literal('Unassigned')]),
-        firstName: z.string().nullable(),
-        lastName: z.string().nullable(),
+      leadUnderwriter: zod.object({
+        _id: zod.union([MongoObjectIdSchema, zod.literal('Unassigned')]),
+        firstName: zod.string().nullable(),
+        lastName: zod.string().nullable(),
       }),
     })
     .partial(),
   auditDetails: AuditDetailsSchema,
 });
 
-export type PutFacilityAmendmentPayload = z.infer<typeof PutFacilityAmendmentSchema>;
+export type PutFacilityAmendmentPayload = zod.infer<typeof PutFacilityAmendmentSchema>;
 
 export const validatePutFacilityAmendmentPayload = validateSchema(PutFacilityAmendmentSchema);

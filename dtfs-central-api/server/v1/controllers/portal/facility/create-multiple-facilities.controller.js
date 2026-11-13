@@ -16,20 +16,20 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
 
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    const facilitiesWithId = facilities.map((f) => {
-      const facility = f;
+    const facilitiesWithId = facilities.map((facility) => {
+      const mappedFacility = facility;
 
-      facility._id = new ObjectId(facility._id);
-      facility.createdDate = Date.now();
-      facility.updatedAt = Date.now();
-      facility.dealId = new ObjectId(dealId);
-      facility.auditRecord = auditRecord;
-      return facility;
+      mappedFacility._id = new ObjectId(mappedFacility._id);
+      mappedFacility.createdDate = Date.now();
+      mappedFacility.updatedAt = Date.now();
+      mappedFacility.dealId = new ObjectId(dealId);
+      mappedFacility.auditRecord = auditRecord;
+      return mappedFacility;
     });
 
     const idsArray = [];
-    facilitiesWithId.forEach((f) => {
-      idsArray.push(f._id.toHexString());
+    facilitiesWithId.forEach((facility) => {
+      idsArray.push(facility._id.toHexString());
     });
 
     const result = await collection.insertMany(facilitiesWithId);

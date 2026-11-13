@@ -1,5 +1,5 @@
 import { Collection, ObjectId, WithoutId, Filter } from 'mongodb';
-import * as $ from 'mongo-dot-notation';
+import { flatten } from 'mongo-dot-notation/dist/flatten';
 import { InvalidDealIdError, MONGO_DB_COLLECTIONS, Facility, AuditDetails } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -26,6 +26,6 @@ export class PortalFacilityRepo {
 
     const filter: Filter<WithoutId<Facility>> = { dealId: { $eq: new ObjectId(dealId) } };
 
-    await collection.updateMany(filter, $.flatten({ ...update, auditRecord }));
+    await collection.updateMany(filter, flatten({ ...update, auditRecord }));
   }
 }

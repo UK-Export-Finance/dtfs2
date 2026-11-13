@@ -1,7 +1,7 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
+const { flatten } = require('mongo-dot-notation');
 const { DealNotFoundError } = require('@ukef/dtfs2-common');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -54,7 +54,7 @@ const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
   const { _id, ...editedByWithoutId } = await handleEditedByPortal(dealId, {}, user);
   const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten({ editedBy: editedByWithoutId, auditRecord }), {
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, flatten({ editedBy: editedByWithoutId, auditRecord }), {
     returnNewDocument: true,
     returnDocument: 'after',
   });
@@ -145,7 +145,7 @@ const updateBssEwcsDeal = async ({ dealId, dealUpdate, user, auditDetails, exist
 
     const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(dealUpdateForDatabaseWithoutId), {
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, flatten(dealUpdateForDatabaseWithoutId), {
       returnNewDocument: true,
       returnDocument: 'after',
     });
@@ -190,7 +190,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, aud
     if (deal?.facilities) {
       const { facilities } = deal;
 
-      const updatedFacilities = facilities.filter((f) => f !== facilityId);
+      const updatedFacilities = facilities.filter((facility) => facility !== facilityId);
 
       const dealUpdate = {
         ...deal,

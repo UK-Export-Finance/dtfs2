@@ -29,7 +29,7 @@ const isOfTypeBankReportPeriodSchedule = (reportPeriodSchedule: unknown[]): repo
     return true;
   });
 
-const getRange = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, index) => index + start);
+const getRange = (start: number, end: number) => Array.from({ length: end - start + 1 }, (empty, index) => index + start);
 
 const getMonthsCoveredByPeriod = (period: BankReportPeriodSchedulePeriod): OneIndexedMonth[] => {
   if (period.startMonth === period.endMonth) {
@@ -70,8 +70,8 @@ const validateReportPeriodScheduleCoversTheYearChronologically = (reportPeriodSc
     }
   });
 
-  for (let i = 0; i < 11; i += 1) {
-    if (!areConsecutiveMonths(monthsInSchedule[i], monthsInSchedule[i + 1])) {
+  for (let index = 0; index < 11; index += 1) {
+    if (!areConsecutiveMonths(monthsInSchedule[index], monthsInSchedule[index + 1])) {
       throw new InvalidReportPeriodScheduleError('Utilisation report period schedule is not in correct order');
     }
   }

@@ -6,13 +6,13 @@ const formatBytes = (bytes, decimals = 2) => {
     return '0 Bytes';
   }
 
-  const k = 1024;
+  const kilobytes = 1024;
   const dm = decimals < 0 ? 0 : decimals;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const calculation = Math.floor(Math.log(bytes) / Math.log(kilobytes));
 
-  return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
+  return `${parseFloat((bytes / kilobytes ** calculation).toFixed(dm))} ${sizes[calculation]}`;
 };
 
 const multerFilter = (req, file, cb) => {

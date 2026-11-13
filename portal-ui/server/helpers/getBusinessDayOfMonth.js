@@ -63,9 +63,11 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
   }
 
   let indexBusinessDay = firstBusinessDay;
-  for (let i = 1; i < businessDay; i += 1) {
+
+  for (let index = 1; index < businessDay; index += 1) {
     indexBusinessDay = addOneBusinessDayWithHolidays(indexBusinessDay, holidays);
   }
+
   return indexBusinessDay;
 };
 
