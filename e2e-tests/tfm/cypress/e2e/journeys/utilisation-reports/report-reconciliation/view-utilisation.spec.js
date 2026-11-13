@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, convertMillisecondsToSeconds } from '@ukef/dtfs2-common/test-helpers';
 import { TFM_AMENDMENT_STATUS, CURRENCY, FEE_RECORD_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
+import { tfmPages } from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import relative from '../../../relativeURL';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
@@ -35,7 +35,7 @@ context('Users can view utilisation', () => {
   const dateWithinReportPeriod = new Date('2024-01-01');
   const dateAfterReportPeriodEnd = new Date('2024-03-01');
 
-  const { utilisationContent } = pages.utilisationReportPage.tabs;
+  const { utilisationContent } = tfmPages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
@@ -147,12 +147,12 @@ context('Users can view utilisation', () => {
   });
 
   beforeEach(() => {
-    pages.landingPage.visit();
+    tfmPages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-    pages.utilisationReportPage.tabs.utilisation().click();
+    tfmPages.utilisationReportPage.tabs.utilisation().click();
   });
 
   it('should render the utilisation for each fee record', () => {

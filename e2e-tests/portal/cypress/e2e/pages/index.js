@@ -1,4 +1,7 @@
-/* eslint-disable global-require */
+import { contactPage } from './contact';
+import { footer } from './footer';
+import { header } from './header';
+import { landingPage } from './landingPage';
 
 module.exports = {
   login: require('./login'),
@@ -10,8 +13,8 @@ module.exports = {
   resendAnotherAccessCode: require('./login/resend-another-access-code'),
   accessCodeExpired: require('./login/access-code-expired'),
   temporarilySuspendedAccessCode: require('./login/temporarily-suspended-access-code'),
-  header: require('./header'),
-  landingPage: require('./landingPage'),
+  header,
+  landingPage,
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),
@@ -52,7 +55,7 @@ module.exports = {
   createUser: require('./admin/users/createUser'),
   editUser: require('./admin/users/editUser'),
   resetPassword: require('./resetPassword'),
-  footer: require('./footer'),
+  footer,
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
   feedbackPage: require('./feedbackPage'),
@@ -66,5 +69,5 @@ module.exports = {
   problemWithService: require('./problem-with-service'),
   pendingCorrections: require('./utilisation-report-service/record-corrections/pendingCorrections'),
   correctionLog: require('./utilisation-report-service/record-corrections/correctionLog'),
-  contact: require('./contact'),
+  contactPage,
 };

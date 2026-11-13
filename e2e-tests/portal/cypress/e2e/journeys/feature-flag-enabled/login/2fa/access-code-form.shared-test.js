@@ -10,6 +10,7 @@ const commonBeforeEach = (user, opts = { login: true }) => {
 
   cy.getUserByUsername(username);
   cy.resetPortalUserStatusAndNumberOfSignInOTPs(username);
+
   if (opts.login) {
     cy.enterUsernameAndPassword(user);
   }

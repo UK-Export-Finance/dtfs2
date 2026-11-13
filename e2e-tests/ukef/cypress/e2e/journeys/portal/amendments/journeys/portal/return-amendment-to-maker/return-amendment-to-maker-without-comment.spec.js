@@ -3,7 +3,7 @@ import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fix
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
-import applicationDetails from '../../../../../../../../../gef/cypress/e2e/pages/application-details';
+import { applicationDetails } from '../../../../../../../../../gef/cypress/e2e/pages/application-details';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

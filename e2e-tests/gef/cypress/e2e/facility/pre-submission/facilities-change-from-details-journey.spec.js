@@ -1,8 +1,8 @@
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import applicationDetails from '../../pages/application-details';
-import aboutFacility from '../../pages/about-facility';
-import facilityGuarantee from '../../pages/facility-guarantee';
+import { applicationDetails } from '../../pages/application-details';
+import { aboutFacility } from '../../pages/about-facility';
+import { facilityGuarantee } from '../../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

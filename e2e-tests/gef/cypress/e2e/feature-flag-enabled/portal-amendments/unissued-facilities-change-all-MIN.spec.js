@@ -6,10 +6,10 @@ import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
 import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
 import { continueButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../pages/application-submission';
+import { applicationPreview } from '../../pages/application-preview';
+import { unissuedFacilityTable } from '../../pages/unissued-facilities';
+import { aboutFacilityUnissued } from '../../pages/unissued-facilities-about-facility';
+import { applicationSubmission } from '../../pages/application-submission';
 
 let dealId;
 let token;

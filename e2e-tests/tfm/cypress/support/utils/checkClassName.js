@@ -4,8 +4,6 @@
  * @param {object} selector: Cypress selector
  * @param {string} expectedClassName: Expected class name
  */
-const checkClassName = (selector, expectedClassName) => {
+export const checkClassName = (selector, expectedClassName) => {
   selector.should('have.attr', 'class', expectedClassName);
 };
-
-export default checkClassName;

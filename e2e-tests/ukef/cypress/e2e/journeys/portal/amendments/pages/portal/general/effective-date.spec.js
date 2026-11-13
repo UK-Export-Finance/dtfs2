@@ -5,7 +5,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtu
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { facilityValuePage } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import effectiveDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
 
@@ -53,7 +53,7 @@ context('Amendments - Date amendment effective from - page tests', () => {
 
         whatDoYouNeedToChange.facilityValueCheckbox().click();
         cy.clickContinueButton();
-        cy.keyboardInput(facilityValue.facilityValue(), '10000');
+        cy.keyboardInput(facilityValuePage.facilityValue(), '10000');
         cy.clickContinueButton();
         eligibility.allTrueRadioButtons().click({ multiple: true });
         cy.clickContinueButton();

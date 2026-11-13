@@ -1,7 +1,7 @@
 import relative from '../relativeURL';
 import { form } from '../partials';
-import mandatoryCriteria from '../pages/mandatory-criteria';
-import nameApplication from '../pages/name-application';
+import { mandatoryCriteria } from '../pages/mandatory-criteria';
+import { nameApplication } from '../pages/name-application';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Name Application Page - Add element to page', () => {

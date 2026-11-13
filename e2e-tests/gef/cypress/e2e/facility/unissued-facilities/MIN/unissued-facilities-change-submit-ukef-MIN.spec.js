@@ -5,14 +5,14 @@ import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fi
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { continueButton, submitButton } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import { applicationPreview } from '../../../pages/application-preview';
+import { unissuedFacilityTable } from '../../../pages/unissued-facilities';
+import { aboutFacilityUnissued } from '../../../pages/unissued-facilities-about-facility';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import applicationSubmission from '../../../pages/application-submission';
-import statusBanner from '../../../pages/application-status-banner';
-import applicationDetails from '../../../pages/application-details';
-import applicationActivities from '../../../pages/application-activities';
+import { applicationSubmission } from '../../../pages/application-submission';
+import { statusBanner } from '../../../pages/application-status-banner';
+import { applicationDetails } from '../../../pages/application-details';
+import { applicationActivities } from '../../../pages/application-activities';
 
 let dealId;
 let token;

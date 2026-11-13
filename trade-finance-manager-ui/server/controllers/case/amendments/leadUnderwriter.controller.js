@@ -60,6 +60,7 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   const isEditable = userIsInTeam(user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
   let currentLeadUnderWriterUserId;
+
   // if already set then shows name of assigned underwriter
   if (leadUnderwriter?._id) {
     currentLeadUnderWriterUserId = leadUnderwriter._id;

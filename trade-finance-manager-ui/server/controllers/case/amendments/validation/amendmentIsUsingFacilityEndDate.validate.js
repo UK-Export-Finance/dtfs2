@@ -2,6 +2,7 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
 
 const isUsingFacilityEndDateValidation = (isUsingFacilityEndDate) => {
   const amendmentRequestIsUsingFacilityEndDateErrors = [];
+
   if (isUsingFacilityEndDate == null) {
     amendmentRequestIsUsingFacilityEndDateErrors.push({
       errRef: 'isUsingFacilityEndDate',

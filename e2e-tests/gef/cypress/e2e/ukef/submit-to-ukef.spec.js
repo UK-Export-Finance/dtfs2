@@ -1,10 +1,10 @@
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
-import submitToUkef from '../pages/submit-to-ukef';
-import submitToUkefConfirmation from '../pages/submit-to-ukef-confirmation';
-import applicationDetails from '../pages/application-details';
-import statusBanner from '../pages/application-status-banner';
+import { submitToUkef } from '../pages/submit-to-ukef';
+import { submitToUkefConfirmation } from '../pages/submit-to-ukef-confirmation';
+import { applicationDetails } from '../pages/application-details';
+import { statusBanner } from '../pages/application-status-banner';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';

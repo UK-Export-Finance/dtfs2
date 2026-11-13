@@ -102,12 +102,15 @@ describe(component, () => {
         .toLinkTo(`/utilisation-reports/${report.reportId}`, report.formattedReportPeriod);
 
       wrapper.expectElement(`td:contains("${report.displayStatus}")`).toExist();
+
       if (report.formattedDateUploaded) {
         wrapper.expectElement(`td:contains("${report.formattedDateUploaded}")`).toExist();
       }
+
       if (report.totalFeesReported) {
         wrapper.expectElement(`td:contains("${report.totalFeesReported}")`).toExist();
       }
+
       if (report.reportedFeesLeftToReconcile) {
         wrapper.expectElement(`td:contains("${report.reportedFeesLeftToReconcile}")`).toExist();
       }

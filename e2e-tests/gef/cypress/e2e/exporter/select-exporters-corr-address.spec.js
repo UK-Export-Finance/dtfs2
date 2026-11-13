@@ -1,7 +1,7 @@
 import relative from '../relativeURL';
 import { backLink, errorSummary, headingCaption, mainHeading, form, continueButton } from '../partials';
-import exportersAddress from '../pages/exporters-address';
-import selectExportersCorAddress from '../pages/select-exporters-corr-address';
+import { exportersAddress } from '../pages/exporters-address';
+import { selectExportersCorrAddress } from '../pages/select-exporters-corr-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
@@ -33,13 +33,13 @@ context('Select Exporters Correspondence Address Page', () => {
       backLink();
       headingCaption();
       mainHeading();
-      selectExportersCorAddress.postcodeTitle();
-      selectExportersCorAddress.postcode();
+      selectExportersCorrAddress.postcodeTitle();
+      selectExportersCorrAddress.postcode();
       form();
-      selectExportersCorAddress.selectAddress();
-      selectExportersCorAddress.cantFindAddress();
+      selectExportersCorrAddress.selectAddress();
+      selectExportersCorrAddress.cantFindAddress();
       continueButton();
-      selectExportersCorAddress.changeLink();
+      selectExportersCorrAddress.changeLink();
     });
 
     it('redirects user to exporters address page when clicking on `Back` Link', () => {
@@ -48,12 +48,12 @@ context('Select Exporters Correspondence Address Page', () => {
     });
 
     it('redirects user to exporters address page when clicking on `Change` link', () => {
-      selectExportersCorAddress.changeLink().click();
+      selectExportersCorrAddress.changeLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/exporters-address`));
     });
 
     it('redirects user to enter-exporters-correspondence-address page when clicking on `I cant find the address in the list` link', () => {
-      selectExportersCorAddress.cantFindAddress().click();
+      selectExportersCorrAddress.cantFindAddress().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`));
     });
   });
@@ -62,11 +62,11 @@ context('Select Exporters Correspondence Address Page', () => {
     it('shows error message if no address has been selected from dropdown', () => {
       cy.clickContinueButton();
       errorSummary();
-      selectExportersCorAddress.selectAddressError();
+      selectExportersCorrAddress.selectAddressError();
     });
 
     it('redirects user to enter exporters correspondence address page if they select an address', () => {
-      selectExportersCorAddress.selectAddress().select('0');
+      selectExportersCorrAddress.selectAddress().select('0');
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`));
     });

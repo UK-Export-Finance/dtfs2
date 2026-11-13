@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
-const dealWithSomeIssuedFacilitiesReadyForReview = require('./dealWithSomeIssuedFacilitiesReadyForReview');
+const { dealWithSomeIssuedFacilitiesReadyForReview } = require('./dealWithSomeIssuedFacilitiesReadyForReview');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;

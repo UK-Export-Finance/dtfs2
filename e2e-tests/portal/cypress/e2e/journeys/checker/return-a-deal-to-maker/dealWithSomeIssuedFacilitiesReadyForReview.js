@@ -3,7 +3,7 @@ import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 
 const date = new Date();
 
-const deal = {
+export const dealWithSomeIssuedFacilitiesReadyForReview = {
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
@@ -319,5 +319,3 @@ const deal = {
     },
   },
 };
-
-export default deal;

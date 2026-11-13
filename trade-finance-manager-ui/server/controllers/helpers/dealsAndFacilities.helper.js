@@ -21,6 +21,7 @@ const buildQueryParametersObject = (sortBy, page, searchString) => {
     pagesize: CONSTANTS.TABLE.PAGE_SIZE,
     page,
   };
+
   if (searchString) {
     queryParams.searchString = searchString;
   }
@@ -37,17 +38,21 @@ const buildQueryParametersObject = (sortBy, page, searchString) => {
  */
 const buildQueryStringFromQueryParameterValues = (search, sortfield, sortorder) => {
   const queryParameters = [];
+
   if (search) {
     queryParameters.push(`search=${search}`);
   }
+
   if (sortfield && sortorder) {
     queryParameters.push(`sortfield=${sortfield}&sortorder=${sortorder}`);
   }
 
   let queryString = '';
+
   if (queryParameters.length > 0) {
     queryString = `?${queryParameters.join('&')}`;
   }
+
   return queryString;
 };
 
@@ -72,6 +77,7 @@ const getSortByDefault = (collectionName) => {
   if (collectionName === MONGO_DB_COLLECTIONS.DEALS) {
     return CONSTANTS.TABLE.SORT_BY.DEFAULT.DEALS;
   }
+
   if (collectionName === MONGO_DB_COLLECTIONS.FACILITIES) {
     return CONSTANTS.TABLE.SORT_BY.DEFAULT.FACILITIES;
   }
@@ -214,6 +220,7 @@ const queryDealsOrFacilities = (collectionName, req, res) => {
   const { search: newSearch, ascending, descending } = req.body;
   let newSortOrder;
   let newSortField;
+
   if (ascending || descending) {
     newSortOrder = ascending ? CONSTANTS.TABLE.SORT_BY.ASCENDING : CONSTANTS.TABLE.SORT_BY.DESCENDING;
     newSortField = req.body[newSortOrder];

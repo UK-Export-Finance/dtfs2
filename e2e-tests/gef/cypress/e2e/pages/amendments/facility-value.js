@@ -1,4 +1,4 @@
-const facilityValue = {
+const facilityValuePage = {
   facilityValue: () => cy.get('[data-cy="facility-value"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   facilityValueInlineError: () => cy.get('[data-cy="facility-value-inline-error"]'),
@@ -8,4 +8,4 @@ const facilityValue = {
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
-module.exports = facilityValue;
+module.exports = { facilityValuePage };

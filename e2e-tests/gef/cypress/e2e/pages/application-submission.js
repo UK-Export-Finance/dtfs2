@@ -1,4 +1,4 @@
-const applicationSubmission = {
+export const applicationSubmission = {
   applicationSubmissionPage: () => cy.get('[data-cy="application-submit-page"]'),
   commentsField: () => cy.get('[data-cy="application-comments"]'),
   submissionText: () => cy.get('[data-cy="application-submission-text"]'),
@@ -9,5 +9,3 @@ const applicationSubmission = {
   confirmationText: () => cy.get('[data-cy="confirmation-text"]'),
   backToDashboardLink: () => cy.get('[data-cy="dashboard-link"]'),
 };
-
-export default applicationSubmission;

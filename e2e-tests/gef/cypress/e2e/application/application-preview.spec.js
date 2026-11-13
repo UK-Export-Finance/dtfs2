@@ -1,6 +1,6 @@
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
-import applicationPreview from '../pages/application-preview';
+import { applicationPreview } from '../pages/application-preview';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN, MOCK_APPLICATION_MIA } from '../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../e2e-fixtures/mock-gef-facilities';

@@ -4,8 +4,8 @@ const {
   DEALS: { SECTION_STATUS },
 } = require('../../../../fixtures/constants');
 const { successMessage } = require('../../../partials');
-const firstSubmission = require('./deal-first-submission');
-const secondSubmission = require('./deal-second-submission');
+const { firstSubmission } = require('./deal-first-submission');
+const { secondSubmission } = require('./deal-second-submission');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

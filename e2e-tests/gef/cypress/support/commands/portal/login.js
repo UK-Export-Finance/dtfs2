@@ -4,7 +4,7 @@ const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
 
 const PORTAL_2FA_FF = Cypress.expose('FF_PORTAL_2FA_ENABLED');
 
-const login = ({ username, password }) => {
+export const login = ({ username, password }) => {
   if (PORTAL_2FA_FF === 'true') {
     cy.loginOTP({ username, password });
   } else {
@@ -25,5 +25,3 @@ const login = ({ username, password }) => {
   // before another visit can replace the transitional login page.
   cy.url().should('not.include', '/login');
 };
-
-export default login;

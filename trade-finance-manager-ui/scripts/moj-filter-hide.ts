@@ -3,15 +3,36 @@
 // See: https://api.jquery.com/removeClass/ and https://developer.mozilla.org/en-US/docs/Web/API/Element
 import $ from 'jquery';
 
-/**
- * Extends the global Window interface to include MOJFrontend property.
- * This is required for typing on the window property when using MOJFrontend functionality.
- */
-declare global {
-  interface Window {
-    MOJFrontend: any;
+type FilterToggleButtonOptions = {
+  bigModeMediaQuery: string;
+  startHidden: boolean;
+  toggleButton: {
+    container: ReturnType<typeof $>;
+    showText: string;
+    hideText: string;
+    classes: string;
+  };
+  filter: {
+    container: ReturnType<typeof $>;
+  };
+};
+
+type MojFrontend = {
+  FilterToggleButton: new (options: FilterToggleButtonOptions) => object;
+};
+
+const isMojFrontend = (value: unknown): value is MojFrontend =>
+  typeof value === 'object' && value !== null && 'FilterToggleButton' in value && typeof value.FilterToggleButton === 'function';
+
+const getMojFrontend = (): MojFrontend => {
+  const mojFrontend: unknown = Object.getOwnPropertyDescriptor(window, 'MOJFrontend')?.value;
+
+  if (!isMojFrontend(mojFrontend)) {
+    throw new Error('MOJFrontend.FilterToggleButton is unavailable');
   }
-}
+
+  return mojFrontend;
+};
 
 type FilterVisibility = 'SHOWN' | 'HIDDEN';
 
@@ -52,8 +73,7 @@ const initialiseFilterVisibility = (): boolean => {
 const initialiseFilterToggleButton = (): void => {
   const startHidden = initialiseFilterVisibility();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-new, @typescript-eslint/no-unsafe-member-access
-  new window.MOJFrontend.FilterToggleButton({
+  new (getMojFrontend().FilterToggleButton)({
     bigModeMediaQuery: '(min-width: 48.063em)',
     startHidden,
     toggleButton: {

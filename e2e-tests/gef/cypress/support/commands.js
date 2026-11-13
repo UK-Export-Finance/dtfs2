@@ -5,18 +5,35 @@ import { createFullApplication } from './commands/createFullApplication';
 import { createFacility } from './commands/create-facility';
 import { completeAboutExporterSection } from './commands/completeAboutExporterSection';
 import { createApplicationFirstSteps } from './commands/createApplicationFirstSteps';
+import { saveSession } from './utils/saveSession';
+import { keyboardInput } from './utils/keyboardInput';
+import { loginOTP } from './commands/portal/loginOTP';
+import { completeDateFormFields } from './commands/completeDateFormFields';
+import { automaticEligibilityCriteria } from './commands/automaticEligibilityCriteria';
+import { checkClonedDealBannerAndDeal } from './commands/clone/check-cloned-deal-banner-and-deal';
+import { cloneDeal } from './commands/clone/clone-deal';
+import { completeManualInclusionSupportingInfoSections } from './commands/complete-manual-inclusion-supporting-info-sections';
+import { loadData } from './commands/loadData';
+import { getDealIdFromUrl } from './commands/portal/getDealIdFromUrl';
+import { getFacilityIdFromUrl } from './commands/portal/getFacilityIdFromUrl';
+import { checkCloneDealLink } from './commands/clone/check-clone-deal-link';
+import { manualEligibilityCriteria } from './commands/manualEligibilityCriteria';
+import { submitMockDataLoaderDealToChecker } from './commands/submit-mock-data-loader-deal-to-checker';
+import { submitMockDataLoaderDealToUkef } from './commands/submit-mock-data-loader-deal-to-ukef';
+import { uploadFile } from './commands/uploadFile';
+import { login } from './commands/portal/login';
 
 import './commands/click-events';
 
 Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
-Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+Cypress.Commands.add('saveSession', saveSession);
 
-Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+Cypress.Commands.add('keyboardInput', keyboardInput);
 
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
-Cypress.Commands.add('login', require('./commands/portal/login'));
-Cypress.Commands.add('loginOTP', require('./commands/portal/loginOTP'));
+Cypress.Commands.add('login', login);
+Cypress.Commands.add('loginOTP', loginOTP);
 
 Cypress.Commands.add(
   'overridePortalUserSignInTokenWithValidTokenByUsername',
@@ -27,23 +44,23 @@ Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUs
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInOTPs', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInOTPs'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
-Cypress.Commands.add('getDealIdFromUrl', require('./commands/portal/getDealIdFromUrl'));
-Cypress.Commands.add('getFacilityIdFromUrl', require('./commands/portal/getFacilityIdFromUrl'));
+Cypress.Commands.add('getDealIdFromUrl', getDealIdFromUrl);
+Cypress.Commands.add('getFacilityIdFromUrl', getFacilityIdFromUrl);
 
-Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));
+Cypress.Commands.add('uploadFile', uploadFile);
 Cypress.Commands.add('insertElement', require('./commands/insertElement'));
 Cypress.Commands.add('getApplicationById', require('./commands/getApplicationById'));
-Cypress.Commands.add('loadData', require('./commands/loadData'));
-Cypress.Commands.add('automaticEligibilityCriteria', require('./commands/automaticEligibilityCriteria'));
-Cypress.Commands.add('manualEligibilityCriteria', require('./commands/manualEligibilityCriteria'));
-Cypress.Commands.add('completeDateFormFields', require('./commands/completeDateFormFields'));
-Cypress.Commands.add('submitMockDataLoaderDealToChecker', require('./commands/submit-mock-data-loader-deal-to-checker'));
-Cypress.Commands.add('submitMockDataLoaderDealToUkef', require('./commands/submit-mock-data-loader-deal-to-ukef'));
-Cypress.Commands.add('completeManualInclusionSupportingInfoSections', require('./commands/complete-manual-inclusion-supporting-info-sections'));
+Cypress.Commands.add('loadData', loadData);
+Cypress.Commands.add('automaticEligibilityCriteria', automaticEligibilityCriteria);
+Cypress.Commands.add('manualEligibilityCriteria', manualEligibilityCriteria);
+Cypress.Commands.add('completeDateFormFields', completeDateFormFields);
+Cypress.Commands.add('submitMockDataLoaderDealToChecker', submitMockDataLoaderDealToChecker);
+Cypress.Commands.add('submitMockDataLoaderDealToUkef', submitMockDataLoaderDealToUkef);
+Cypress.Commands.add('completeManualInclusionSupportingInfoSections', completeManualInclusionSupportingInfoSections);
 
-Cypress.Commands.add('checkCloneDealLink', require('./commands/clone/check-clone-deal-link'));
-Cypress.Commands.add('cloneDeal', require('./commands/clone/clone-deal'));
-Cypress.Commands.add('checkClonedDealBannerAndDeal', require('./commands/clone/check-cloned-deal-banner-and-deal'));
+Cypress.Commands.add('checkCloneDealLink', checkCloneDealLink);
+Cypress.Commands.add('cloneDeal', cloneDeal);
+Cypress.Commands.add('checkClonedDealBannerAndDeal', checkClonedDealBannerAndDeal);
 
 Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);

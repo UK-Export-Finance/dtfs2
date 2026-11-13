@@ -1,10 +1,10 @@
-import pages from '../../e2e/pages';
+import { tfmPages } from '../../e2e/pages';
 
-export default (opts) => {
+export const login = (opts) => {
   const { username, password } = opts;
 
-  pages.landingPage.visit();
-  cy.keyboardInput(pages.landingPage.email(), username);
-  cy.keyboardInput(pages.landingPage.password(), password);
+  tfmPages.landingPage.visit();
+  cy.keyboardInput(tfmPages.landingPage.email(), username);
+  cy.keyboardInput(tfmPages.landingPage.password(), password);
   cy.clickSubmitButton();
 };

@@ -14,6 +14,7 @@ export const localiseTimestamp = (utcTimestamp: number | string, format: string,
   if (!utcTimestamp) {
     return '';
   }
+
   const timestamp = parseInt(String(utcTimestamp), 10);
 
   if (Number.isNaN(timestamp)) {

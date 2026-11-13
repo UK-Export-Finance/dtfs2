@@ -1,4 +1,4 @@
-const coverStartDate = {
+export const coverStartDate = {
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   updateIndividualCoverStartDateButton: (id) => cy.get(`[data-cy="update-coverStartDate-button-${id}"]`),
   coverStartDateScreen: () => cy.get('[data-cy="ukefCoverStartDate-confirm"]'),
@@ -13,5 +13,3 @@ const coverStartDate = {
 
   coverStartDateSuccess: () => cy.get('[data-cy="confirm-cover-start-success"]'),
 };
-
-export default coverStartDate;
