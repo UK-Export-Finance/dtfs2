@@ -15,10 +15,10 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
   const updatedFacilities = [];
 
   modifiedDeal.facilities = await Promise.all(
-    modifiedDeal.facilities.map(async (f) => {
+    modifiedDeal.facilities.map(async (facility) => {
       try {
-        const facility = f;
-        const { _id: facilityId, hasBeenIssued, hasBeenIssuedAndAcknowledged } = facility;
+        const modifiedFacility = facility;
+        const { _id: facilityId, hasBeenIssued, hasBeenIssuedAndAcknowledged } = modifiedFacility;
 
         /**
          * `hasBeenIssued` : Facility has been issued by the maker.
@@ -50,9 +50,9 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
             };
 
             const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
-            facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
-            facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
-            facility.status = facilityStatusUpdate;
+            modifiedFacility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+            modifiedFacility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+            modifiedFacility.status = facilityStatusUpdate;
 
             facilityUpdate = {
               ...portalFacilityUpdate,
@@ -60,12 +60,12 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
           }
 
           // update TFM facility
-          const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-          const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+          const facilityExposurePeriod = await getFacilityExposurePeriod(modifiedFacility);
+          const facilityGuaranteeDates = getGuaranteeDates(modifiedFacility, dealSubmissionDate);
 
           // Premium Schedule is only valid for non-GEF facilities
           if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-            facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+            facilityPremiumSchedule = await getFacilityPremiumSchedule(modifiedFacility, facilityExposurePeriod, facilityGuaranteeDates);
             facilityUpdate = {
               premiumSchedule: facilityPremiumSchedule,
             };
@@ -78,9 +78,9 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
               };
 
               const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: facilityUpdatePortal, auditDetails });
-              facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+              modifiedFacility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
 
-              feeRecord = calculateGefFacilityFeeRecord(facility);
+              feeRecord = calculateGefFacilityFeeRecord(modifiedFacility);
 
               facilityUpdate = {
                 feeRecord,
@@ -103,14 +103,14 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
             tfmUpdate: facilityUpdate,
             auditDetails,
           });
-          facility.tfm = updateFacilityResponse.tfm;
-          updatedFacilities.push(facility);
+          modifiedFacility.tfm = updateFacilityResponse.tfm;
+          updatedFacilities.push(modifiedFacility);
         }
 
-        return facility;
+        return modifiedFacility;
       } catch (error) {
         console.error('TFM-API - error in update-issued-facilities.js %o', error);
-        return f;
+        return facility;
       }
     }),
   );

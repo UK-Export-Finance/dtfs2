@@ -1,8 +1,8 @@
 const mapPremiumTotals = (premiumSchedule) => {
   if (premiumSchedule) {
     return premiumSchedule
-      .map((s) => s.income)
-      .reduce((a, b) => a + b, 0)
+      .map((schedule) => schedule.income)
+      .reduce((previous, current) => previous + current, 0)
       .toFixed(2);
   }
 
