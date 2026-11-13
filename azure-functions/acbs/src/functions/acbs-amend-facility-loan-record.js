@@ -69,10 +69,15 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
       // 1.3.1 - UKEF Exposure
       if (amendment.amount) {
+        const amountPayload = {
+          effectiveDate: flrMapped.effectiveDate,
+          amountAmendment: flrMapped.amountAmendment,
+        };
+
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
           facilityIdentifier,
-          acbsFacilityLoanInput: flrMapped,
+          acbsFacilityLoanInput: amountPayload,
         });
 
         facilityLoanRecordAmendments = {
@@ -83,10 +88,15 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
       // 1.3.2 - Cover end date
       if (amendment.coverEndDate) {
+        const expiryPayload = {
+          expiryDate: flrMapped.expiryDate,
+          ...(flrMapped.nextDueDate && { nextDueDate: flrMapped.nextDueDate }),
+        };
+
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
           facilityIdentifier,
-          acbsFacilityLoanInput: flrMapped,
+          acbsFacilityLoanInput: expiryPayload,
         });
 
         facilityLoanRecordAmendments = {
