@@ -1,7 +1,7 @@
+import CONTENT_STRINGS from '@ukef/portal-ui/server/content-strings';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { generateSelectedFiltersObject, selectedSubmissionTypeFilters } from './generate-selected-filters';
 import { formatFieldValue } from './helpers';
-import CONTENT_STRINGS from '../../../content-strings';
-import CONSTANTS from '../../../constants';
 
 describe('controllers/dashboard/filters - ui-selected-filters', () => {
   describe('generateSelectedFiltersObject', () => {

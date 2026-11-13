@@ -1,5 +1,5 @@
 import { CURRENCY, PendingCorrection, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { NonEmptyPendingCorrectionsResponseBody } from '../../server/api-response-types';
+import { NonEmptyPendingCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
 import { aReportPeriod } from './report-period';
 
 export const aPendingCorrection = (): PendingCorrection => ({

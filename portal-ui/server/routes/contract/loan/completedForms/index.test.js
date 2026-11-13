@@ -1,6 +1,6 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/loan/pageFields';
+import { isCompleted } from '@ukef/portal-ui/server/helpers/formCompleted';
 import completedLoanForms from '.';
-import FIELDS from '../pageFields';
-import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedLoanForms', () => {
   it("should return an object with each loan page/form's completed status", () => {

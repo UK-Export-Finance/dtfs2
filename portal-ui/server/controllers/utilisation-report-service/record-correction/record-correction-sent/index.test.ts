@@ -2,10 +2,10 @@ import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-
 import httpMocks, { MockResponse, Session } from 'node-mocks-http';
 import { Request, Response } from 'express';
 import { getFormattedReportPeriodWithLongMonth, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { RecordCorrectionSentViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-sent';
+import { LoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
 import { getRecordCorrectionSent } from '..';
-import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-sent';
-import { LoggedInUserSession } from '../../../../helpers/express-session';
 
 console.error = jest.fn();
 

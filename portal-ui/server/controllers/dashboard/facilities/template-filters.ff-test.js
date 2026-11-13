@@ -1,7 +1,7 @@
 import { FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { FIELD_NAMES } from '@ukef/portal-ui/server/constants';
+import { generateFiltersArray } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-template-filters';
 import { stageFilters } from './template-filters';
-import { FIELD_NAMES } from '../../../constants';
-import { generateFiltersArray } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
   describe('facility stage filters - FF_TFM_DEAL_CANCELLATION_ENABLED enabled', () => {

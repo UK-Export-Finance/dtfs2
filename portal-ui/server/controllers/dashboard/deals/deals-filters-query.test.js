@@ -1,9 +1,9 @@
 import { PORTAL_AMENDMENT_STATUS, ROLES, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import { STATUS, SUBMISSION_TYPE, FIELD_NAMES, ALL_BANKS_ID } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
+import { STATUS, SUBMISSION_TYPE, FIELD_NAMES, ALL_BANKS_ID } from '@ukef/portal-ui/server/constants';
+import CONTENT_STRINGS from '@ukef/portal-ui/server/content-strings';
+import getCheckersApprovalAmendmentDealIds from '@ukef/portal-ui/server/helpers/getCheckersApprovalAmendmentDealIds';
 import keywordQuery from './deals-filters-keyword-query';
-import getCheckersApprovalAmendmentDealIds from '../../../helpers/getCheckersApprovalAmendmentDealIds';
+import { dashboardDealsFiltersQuery } from './deals-filters-query';
 
 jest.mock('../../../helpers/getCheckersApprovalAmendmentDealIds');
 

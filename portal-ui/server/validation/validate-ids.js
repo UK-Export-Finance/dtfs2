@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { FILE_NAME_REGEX } = require('../constants/regex');
+const { REGEX } = require('../constants');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 
 /**
@@ -56,7 +56,7 @@ const isValidDocumentType = (value) => FILE_UPLOAD.DOCUMENT_TYPES.includes(value
  * @param {string} value
  * @returns {boolean}
  */
-const isValidFileName = (value) => FILE_NAME_REGEX.test(value);
+const isValidFileName = (value) => REGEX.FILE_NAME_REGEX.test(value);
 
 /**
  * isValidBankId
@@ -64,7 +64,7 @@ const isValidFileName = (value) => FILE_NAME_REGEX.test(value);
  * @param {string} bankId
  * @returns {boolean} asserts if regex is matched
  */
-const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
+const isValidBankId = (bankId) => isValidRegex(REGEX.NUMERIC_ID, bankId);
 
 /**
  * isValidSqlId
@@ -72,7 +72,7 @@ const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
  * @param {string} id
  * @returns {boolean} asserts if regex is matched
  */
-const isValidSqlId = (id) => isValidRegex(/^\d+$/, id);
+const isValidSqlId = (id) => isValidRegex(REGEX.NUMERIC_ID, id);
 
 module.exports = {
   isValidMongoId,

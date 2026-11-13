@@ -10,6 +10,7 @@ const { MONTH_NAMES } = require('./month-names');
 const PORTAL_URL = require('./portalUrl.constant');
 const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
 const PRODUCT = require('./product');
+const REGEX = require('./regex');
 const STATUS = require('./status');
 const SORT_BY = require('./sort');
 const SUBMISSION_TYPE = require('./submission-type');
@@ -29,6 +30,7 @@ module.exports = {
   PRIMARY_NAV_KEY,
   PORTAL_URL,
   PRODUCT,
+  REGEX,
   SORT_BY,
   STATUS,
   SUBMISSION_TYPE,

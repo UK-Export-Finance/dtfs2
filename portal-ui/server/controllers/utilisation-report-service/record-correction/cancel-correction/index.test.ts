@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import api from '../../../../api';
+import api from '@ukef/portal-ui/server/api';
 import { cancelUtilisationReportCorrection, CancelUtilisationReportCorrectionRequest } from './index';
 
 jest.mock('../../../../api');

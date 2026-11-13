@@ -7,9 +7,13 @@ import {
   ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { addMonths, format, isBefore, startOfMonth } from 'date-fns';
-import { NextActionViewModel, PendingCorrectionsViewModel, PendingCorrectionViewModel } from '../../../types/view-models/record-correction/pending-corrections';
-import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
-import { PRIMARY_NAV_KEY } from '../../../constants';
+import {
+  NextActionViewModel,
+  PendingCorrectionsViewModel,
+  PendingCorrectionViewModel,
+} from '@ukef/portal-ui/server/types/view-models/record-correction/pending-corrections';
+import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
 
 /**
  * Constructs a NextActionViewModel from a the next due report period

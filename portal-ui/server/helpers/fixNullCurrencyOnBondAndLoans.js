@@ -1,5 +1,5 @@
+import api from '@ukef/portal-ui/server/api';
 import { findNullCurrencyBSSFacility } from './findNullCurrencyBSSFacility';
-import api from '../api';
 import postToApi from './postToApi';
 
 /**

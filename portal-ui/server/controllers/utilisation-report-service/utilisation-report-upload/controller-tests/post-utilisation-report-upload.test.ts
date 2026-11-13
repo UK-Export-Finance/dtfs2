@@ -1,13 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { PORTAL_LOGIN_STATUS, ReportPeriod, UTILISATION_REPORT_HEADERS, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
-import { MOCK_PORTAL_SESSION_USER } from '../../../../test-mocks/mock-portal-session-user';
+import { MOCK_PORTAL_SESSION_USER } from '@ukef/portal-ui/server/test-mocks/mock-portal-session-user';
+import { getUploadErrors } from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/utilisation-report-upload-errors';
+import { getDueReportPeriodsByBankId } from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/utilisation-report-status';
+import { extractCsvData } from '@ukef/portal-ui/server/utils/csv-utils';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { filterReportJsonToRelevantKeys } from '@ukef/portal-ui/server/helpers/filterReportJsonToRelevantKeys';
+import api from '@ukef/portal-ui/server/api';
 import { postUtilisationReportUpload } from '..';
-import { getUploadErrors } from '../utilisation-report-upload-errors';
-import { getDueReportPeriodsByBankId } from '../utilisation-report-status';
-import { extractCsvData } from '../../../../utils/csv-utils';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { filterReportJsonToRelevantKeys } from '../../../../helpers/filterReportJsonToRelevantKeys';
-import api from '../../../../api';
 
 jest.mock('../utilisation-report-upload-errors');
 jest.mock('../utilisation-report-status');

@@ -2,7 +2,7 @@ const { FLOATING_POINT_ROUNDING_DECIMAL_PLACES } = require('@ukef/dtfs2-common')
 const ExcelJS = require('exceljs');
 const csv = require('csv-parser');
 const { Readable } = require('stream');
-const { CELL_ADDRESS_REGEX } = require('../constants/regex');
+const { REGEX } = require('../constants');
 
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
@@ -164,7 +164,7 @@ const parseXlsxToCsvArrays = (worksheet) => {
       while (columnCount < headerCount) {
         rowData.push('');
         // calculate the cell address here given the last address
-        const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
+        const lastAddressMatch = lastAddress.match(REGEX.CELL_ADDRESS_REGEX);
 
         const [lastColumn, lastRow] = lastAddressMatch.slice(1);
 
@@ -219,7 +219,7 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
               const cellAddress = value.substring(lastDashIndex + 1);
 
               // Split the cell address into column and row
-              const cellAddressMatch = cellAddress.match(CELL_ADDRESS_REGEX);
+              const cellAddressMatch = cellAddress.match(REGEX.CELL_ADDRESS_REGEX);
 
               if (!cellAddressMatch) {
                 return { value: cellValue !== 'null' ? cellValue : null, column: null, row: null };
