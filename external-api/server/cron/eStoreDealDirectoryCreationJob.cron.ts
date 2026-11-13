@@ -1,10 +1,10 @@
 import { HttpStatusCode } from 'axios';
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { DealFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
-import { cron } from '../helpers/cron';
-import { ENDPOINT, ESTORE_CRON_STATUS } from '../constants';
-import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
-import { getNowAsEpoch } from '../helpers/date';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { DealFolderResponse, EstoreErrorResponse, Estore } from '@ukef/external-api/server/interfaces';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { ENDPOINT, ESTORE_CRON_STATUS } from '@ukef/external-api/server/constants';
+import { createDealFolder } from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
 import { eStoreFacilityDirectoryCreationJob } from './eStoreFacilityDirectoryCreationJob.cron';
 
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];

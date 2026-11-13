@@ -1,5 +1,5 @@
-import { app } from '../../server/createApp';
-import { api } from '../api';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 const { get } = api(app);
 

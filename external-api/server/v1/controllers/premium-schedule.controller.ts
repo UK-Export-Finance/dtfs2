@@ -6,8 +6,8 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { HEADERS, UKEF_ID } from '@ukef/dtfs2-common';
-import { PremiumSchedule } from '../../interfaces';
-import { validUkefId, objectIsEmpty } from '../../helpers';
+import { PremiumSchedule } from '@ukef/external-api/server/interfaces';
+import { validUkefId, objectIsEmpty } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

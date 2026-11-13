@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { CronJob } from 'cron';
-import { Estore, EstoreCronJob } from '../interfaces';
-import { ENDPOINT } from '../constants';
+import { Estore, EstoreCronJob } from '@ukef/external-api/server/interfaces';
+import { ENDPOINT } from '@ukef/external-api/server/constants';
 import {
   eStoreSiteCreationCronJob,
   eStoreTermStoreCreationJob,
@@ -9,7 +9,7 @@ import {
   eStoreDealDirectoryCreationJob,
   eStoreFacilityDirectoryCreationJob,
   eStoreDocumentsCreationJob,
-} from '../cron';
+} from '@ukef/external-api/server/cron';
 import { Category } from './types/estore';
 
 dotenv.config({ quiet: true });

@@ -1,0 +1,341 @@
+[1mdiff --git a/dtfs-central-api/eslint.config.cjs b/dtfs-central-api/eslint.config.cjs[m
+[1mindex 64d0f46ae..076b3db45 100644[m
+[1m--- a/dtfs-central-api/eslint.config.cjs[m
+[1m+++ b/dtfs-central-api/eslint.config.cjs[m
+[36m@@ -7,6 +7,7 @@[m [mconst typescriptEslint = require('@typescript-eslint/eslint-plugin');[m
+ const importX = require('eslint-plugin-import-x');[m
+ const noRelativeImportPaths = require('eslint-plugin-no-relative-import-paths');[m
+ const checkFile = require('eslint-plugin-check-file');[m
+[32m+[m[32mconst localRules = require('@ukef/eslint-local-rules');[m
+ const prettierConfig = require('eslint-config-prettier');[m
+ const prettierPlugin = require('eslint-plugin-prettier');[m
+ [m
+[36m@@ -92,6 +93,7 @@[m [mmodule.exports = defineConfig([[m
+       'import-x': importX,[m
+       'no-relative-import-paths': noRelativeImportPaths,[m
+       'check-file': checkFile,[m
+[32m+[m[32m      'local-rules': localRules,[m
+     },[m
+ [m
+     rules: {[m
+[36m@@ -216,6 +218,8 @@[m [mmodule.exports = defineConfig([[m
+       'import-x/consistent-type-specifier-style': 'off',[m
+       '@typescript-eslint/no-import-type-side-effects': 'off',[m
+       'import-x/no-useless-path-segments': 'off',[m
+[32m+[m
+[32m+[m[32m      'local-rules/require-regex-documentation': 'error',[m
+     },[m
+   },[m
+ [m
+[1mdiff --git a/dtfs-central-api/package.json b/dtfs-central-api/package.json[m
+[1mindex 84dc81706..7f3f110f4 100644[m
+[1m--- a/dtfs-central-api/package.json[m
+[1m+++ b/dtfs-central-api/package.json[m
+[36m@@ -69,6 +69,7 @@[m
+     "@types/supertest": "^7.2.1",[m
+     "@typescript-eslint/eslint-plugin": "^8.59.2",[m
+     "@typescript-eslint/parser": "^8.59.2",[m
+[32m+[m[32m    "@ukef/eslint-local-rules": "1.0.0",[m
+     "cross-env": "^10.1.0",[m
+     "eslint": "9.39.4",[m
+     "eslint-config-prettier": "^9.1.2",[m
+[1mdiff --git a/dtfs-central-api/server/helpers/portal-2fa/send-sign-in-otp-email.ts b/dtfs-central-api/server/helpers/portal-2fa/send-sign-in-otp-email.ts[m
+[1mindex b47c94dd6..534eebcf2 100644[m
+[1m--- a/dtfs-central-api/server/helpers/portal-2fa/send-sign-in-otp-email.ts[m
+[1m+++ b/dtfs-central-api/server/helpers/portal-2fa/send-sign-in-otp-email.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import { isAxiosError } from 'axios';[m
+[31m-import { PortalUser, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { PortalUser, REGEX } from '@ukef/dtfs2-common';[m
+ import { EmailSendError } from '../../errors/email-send-error';[m
+ import { MissingUserFieldsError } from '../../errors/missing-user-fields-error';[m
+ import { EMAIL_TEMPLATE_IDS } from '../../constants/email-template-ids';[m
+[36m@@ -14,7 +14,7 @@[m [mexport const sendSignInOtpEmail = async (user: PortalUser, securityCode: string)[m
+   const { _id, email, firstname, surname } = user;[m
+ [m
+   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks[m
+[31m-  const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m  const sanitisedId = String(_id).replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+ [m
+   console.info('Sending sign-in OTP email to user %s', sanitisedId);[m
+ [m
+[1mdiff --git a/dtfs-central-api/server/helpers/portal-2fa/verify-hash.test.ts b/dtfs-central-api/server/helpers/portal-2fa/verify-hash.test.ts[m
+[1mindex 4cdcf470f..9435c967c 100644[m
+[1m--- a/dtfs-central-api/server/helpers/portal-2fa/verify-hash.test.ts[m
+[1m+++ b/dtfs-central-api/server/helpers/portal-2fa/verify-hash.test.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import crypto from 'crypto';[m
+[31m-import { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { hash as generateHash, salt as generateSalt, HEX_STRING_TYPE, REGEX } from '@ukef/dtfs2-common';[m
+ import { verifyHash } from './verify-hash';[m
+ [m
+ describe('verifyHash', () => {[m
+[36m@@ -7,7 +7,7 @@[m [mdescribe('verifyHash', () => {[m
+   const otpCode = '123456';[m
+   const otpHash = generateHash(otpCode, otpSalt).toString(HEX_STRING_TYPE);[m
+   const maliciousUserId = 'user123\n!@#$';[m
+[31m-  const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m  const sanitisedUserId = maliciousUserId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+ [m
+   beforeEach(() => {[m
+     jest.spyOn(console, 'info').mockImplementation(() => {});[m
+[1mdiff --git a/dtfs-central-api/server/helpers/portal-2fa/verify-hash.ts b/dtfs-central-api/server/helpers/portal-2fa/verify-hash.ts[m
+[1mindex 685bcea39..97a3a308f 100644[m
+[1m--- a/dtfs-central-api/server/helpers/portal-2fa/verify-hash.ts[m
+[1m+++ b/dtfs-central-api/server/helpers/portal-2fa/verify-hash.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import crypto from 'crypto';[m
+[31m-import { hash as generateHash, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { hash as generateHash, HEX_STRING_TYPE, REGEX } from '@ukef/dtfs2-common';[m
+ [m
+ /**[m
+  * verifies provided otp code against stored hash and salt[m
+[36m@@ -13,7 +13,7 @@[m [mimport { hash as generateHash, HEX_STRING_TYPE, NEW_LINE_AND_PUNCTUATION_REGEX }[m
+  */[m
+ export const verifyHash = (otpCode: string, otpSalt: string, otpHash: string, userId: string) => {[m
+   // Strip newline and punctuation characters from the logged user ID to prevent log injection.[m
+[31m-  const sanitisedUserId = userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m  const sanitisedUserId = userId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+ [m
+   try {[m
+     console.info('Validating OTP hash for user %s', sanitisedUserId);[m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-facility-utilisation-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-facility-utilisation-error.ts[m
+[1mindex 904c35a4c..d9c7a6500 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-facility-utilisation-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-facility-utilisation-error.ts[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { REGEX } from '@ukef/dtfs2-common';[m
+ import { CSV } from '../../../constants';[m
+ import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';[m
+ [m
+[36m@@ -19,7 +19,7 @@[m [mexport const generateFacilityUtilisationError: UtilisationReportCellValidationEr[m
+     };[m
+   }[m
+ [m
+[31m-  if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData.value)) {[m
+[32m+[m[32m  if (!REGEX.CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData.value)) {[m
+     return {[m
+       errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',[m
+       column: facilityUtilisationCellData?.column,[m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-fees-paid-for-the-period-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-fees-paid-for-the-period-error.ts[m
+[1mindex 6a42cca5d..77e862cd2 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-fees-paid-for-the-period-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-fees-paid-for-the-period-error.ts[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { REGEX } from '@ukef/dtfs2-common';[m
+ import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';[m
+ import { CSV } from '../../../constants';[m
+ [m
+[36m@@ -19,7 +19,7 @@[m [mexport const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE[m
+     };[m
+   }[m
+ [m
+[31m-  if (!CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {[m
+[32m+[m[32m  if (!REGEX.CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {[m
+     return {[m
+       errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',[m
+       column: feesPaidForThePeriodCellData?.column,[m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-payment-exchange-rate-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-payment-exchange-rate-error.ts[m
+[1mindex f6328fd89..9ef1d3335 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-payment-exchange-rate-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-payment-exchange-rate-error.ts[m
+[36m@@ -1,6 +1,6 @@[m
+ import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';[m
+ import { CSV } from '../../../constants/csv';[m
+[31m-import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';[m
+[32m+[m[32mimport { REGEX } from '../../../constants';[m
+ import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';[m
+ [m
+ /**[m
+[36m@@ -38,7 +38,7 @@[m [mexport const generatePaymentExchangeRateError: UtilisationReportRowValidationErr[m
+     };[m
+   }[m
+ [m
+[31m-  if (!EXCHANGE_RATE_REGEX.test(paymentExchangeRateValue)) {[m
+[32m+[m[32m  if (!REGEX.EXCHANGE_RATE_REGEX.test(paymentExchangeRateValue)) {[m
+     return {[m
+       errorMessage: 'Payment exchange rate must be a number',[m
+       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,[m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-error.ts[m
+[1mindex 047160268..1dcd44508 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-error.ts[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { REGEX } from '@ukef/dtfs2-common';[m
+ import { CSV } from '../../../constants/csv';[m
+ import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';[m
+ [m
+[36m@@ -24,7 +24,7 @@[m [mexport const generateTotalFeesAccruedError: UtilisationReportCellValidationError[m
+     return generateError('Total fees accrued for the period must have an entry');[m
+   }[m
+ [m
+[31m-  if (!CURRENCY_NUMBER_REGEX.test(value)) {[m
+[32m+[m[32m  if (!REGEX.CURRENCY_NUMBER_REGEX.test(value)) {[m
+     return generateError('Total fees accrued for the period must be a number with a maximum of two decimal places');[m
+   }[m
+ [m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-exchange-rate-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-exchange-rate-error.ts[m
+[1mindex 5a18e3885..c8859052e 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-exchange-rate-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-total-fees-accrued-exchange-rate-error.ts[m
+[36m@@ -1,6 +1,6 @@[m
+ import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';[m
+ import { CSV } from '../../../constants/csv';[m
+[31m-import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';[m
+[32m+[m[32mimport { REGEX } from '../../../constants';[m
+ import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';[m
+ [m
+ /**[m
+[36m@@ -38,7 +38,7 @@[m [mexport const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowVali[m
+     };[m
+   }[m
+ [m
+[31m-  if (!EXCHANGE_RATE_REGEX.test(totalFeesAccruedExchangeRateValue)) {[m
+[32m+[m[32m  if (!REGEX.EXCHANGE_RATE_REGEX.test(totalFeesAccruedExchangeRateValue)) {[m
+     return {[m
+       errorMessage: 'Accrual exchange rate must be a number',[m
+       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,[m
+[1mdiff --git a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-ukef-facility-id-error.ts b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-ukef-facility-id-error.ts[m
+[1mindex d793248e7..719b096dc 100644[m
+[1m--- a/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-ukef-facility-id-error.ts[m
+[1m+++ b/dtfs-central-api/server/services/utilisation-report-data-validator/utilisation-report-cell-validators/generate-ukef-facility-id-error.ts[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import { UKEF_FACILITY_ID_REGEX } from '../../../constants/regex';[m
+[32m+[m[32mimport { REGEX } from '../../../constants';[m
+ import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';[m
+ import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';[m
+ [m
+[36m@@ -19,7 +19,7 @@[m [mexport const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe[m
+     };[m
+   }[m
+ [m
+[31m-  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdCellData.value)) {[m
+[32m+[m[32m  if (!REGEX.UKEF_FACILITY_ID_REGEX.test(facilityIdCellData.value)) {[m
+     return {[m
+       errorMessage: 'UKEF facility ID must be an 8 to 10 digit number',[m
+       column: facilityIdCellData?.column,[m
+[1mdiff --git a/dtfs-central-api/server/v1/controllers/portal/login/create-and-email-sign-in-otp.ts b/dtfs-central-api/server/v1/controllers/portal/login/create-and-email-sign-in-otp.ts[m
+[1mindex 086a675b0..a90c3deb5 100644[m
+[1m--- a/dtfs-central-api/server/v1/controllers/portal/login/create-and-email-sign-in-otp.ts[m
+[1m+++ b/dtfs-central-api/server/v1/controllers/portal/login/create-and-email-sign-in-otp.ts[m
+[36m@@ -1,6 +1,6 @@[m
+ import { HttpStatusCode } from 'axios';[m
+ import { Response } from 'express';[m
+[31m-import { CustomExpressRequest, AuditDetails, PortalUser, isProduction, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { CustomExpressRequest, AuditDetails, PortalUser, isProduction, REGEX } from '@ukef/dtfs2-common';[m
+ import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';[m
+ import { sendEmailAndIncrementSignInOTPSendCount } from '../../../../helpers/portal-2fa/send-email-and-increment-sign-in-otp-sent-count';[m
+ import { generateOtp } from '../../../../helpers/portal-2fa/generate-otp';[m
+[36m@@ -31,7 +31,7 @@[m [mexport const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod[m
+     }[m
+ [m
+     const userId = user._id.toString();[m
+[31m-    const sanitisedUserId = userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m    const sanitisedUserId = userId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+ [m
+     console.info('Creating and emailing sign in OTP for user %s', sanitisedUserId);[m
+ [m
+[36m@@ -86,7 +86,7 @@[m [mexport const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod[m
+ [m
+     return res.status(HttpStatusCode.Created).send({ signInOTPSendCount });[m
+   } catch (error) {[m
+[31m-    const sanitisedUserId = req.body.user?._id ? String(req.body.user._id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+[32m+[m[32m    const sanitisedUserId = req.body.user?._id ? String(req.body.user._id).replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+ [m
+     console.error('Failed to create and email sign in OTP for user %s: %o', sanitisedUserId, error);[m
+ [m
+[1mdiff --git a/dtfs-central-api/server/v1/controllers/portal/login/send-account-suspension-email.ts b/dtfs-central-api/server/v1/controllers/portal/login/send-account-suspension-email.ts[m
+[1mindex 704414117..bc2f5d2e2 100644[m
+[1m--- a/dtfs-central-api/server/v1/controllers/portal/login/send-account-suspension-email.ts[m
+[1m+++ b/dtfs-central-api/server/v1/controllers/portal/login/send-account-suspension-email.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import { isAxiosError } from 'axios';[m
+[31m-import { PortalUser, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { PortalUser, REGEX } from '@ukef/dtfs2-common';[m
+ import { EmailSendError } from '../../../../errors/email-send-error';[m
+ import { MissingUserFieldsError } from '../../../../errors/missing-user-fields-error';[m
+ import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';[m
+[36m@@ -14,7 +14,7 @@[m [mexport const sendAccountSuspensionEmail = async (user: PortalUser): Promise<void[m
+   const { _id, email, firstname, surname } = user;[m
+ [m
+   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks[m
+[31m-  const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m  const sanitisedId = String(_id).replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+ [m
+   console.info('Sending account suspension email to user %s', sanitisedId);[m
+ [m
+[1mdiff --git a/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.test.ts b/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.test.ts[m
+[1mindex 4bff721be..c9aa7a88a 100644[m
+[1m--- a/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.test.ts[m
+[1m+++ b/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.test.ts[m
+[36m@@ -1,7 +1,7 @@[m
+ import { HttpStatusCode } from 'axios';[m
+ import { Response } from 'express';[m
+ import { ObjectId } from 'mongodb';[m
+[31m-import { AuditDetails, issueValid2FAJWT, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { AuditDetails, issueValid2FAJWT, REGEX } from '@ukef/dtfs2-common';[m
+ import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';[m
+ import { validateOTPAndSignIn } from './validate-otp-and-sign-in';[m
+ import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';[m
+[36m@@ -250,7 +250,7 @@[m [mdescribe('validateOTPAndSignIn', () => {[m
+     it('should sanitise the logged userId', async () => {[m
+       // Arrange[m
+       const maliciousUserId = `${userId}\n\r!@#$%^&*()`;[m
+[31m-      const sanitisedUserId = maliciousUserId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+[32m+[m[32m      const sanitisedUserId = maliciousUserId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');[m
+       jest.mocked(getUserById).mockResolvedValue({ ...signedInUser, signInTokens: [] });[m
+ [m
+       const res = getMockResponse();[m
+[1mdiff --git a/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.ts b/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.ts[m
+[1mindex f259d3b0c..11b4f6246 100644[m
+[1m--- a/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.ts[m
+[1m+++ b/dtfs-central-api/server/v1/controllers/portal/login/validate-otp-and-sign-in.ts[m
+[36m@@ -1,6 +1,6 @@[m
+ import { HttpStatusCode } from 'axios';[m
+ import { Response } from 'express';[m
+[31m-import { CustomExpressRequest, AuditDetails, issueValid2FAJWT, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';[m
+[32m+[m[32mimport { CustomExpressRequest, AuditDetails, issueValid2FAJWT, REGEX } from '@ukef/dtfs2-common';[m
+ import { isUserBlockedOrDisabled } from '../../../../helpers/portal-2fa/is-user-blocked-or-disabled';[m
+ import { validateOtp } from '../../../../helpers/portal-2fa/validate-otp';[m
+ import { getUserById, PortalUsersRepo } from '../../../../repositories/users-repo';[m
+[36m@@ -23,7 +23,7 @@[m [mexport const validateOTPAndSignIn = async ([m
+     const { userId, signInOTPCode, auditDetails } = req.body;[m
+ [m
+     // Strip newline and punctuation characters from the logged user ID to prevent log injection.[m
+[31m-    const sanitisedUserId = typeof userId === 'string' ? userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+[32m+[m[32m    const sanitisedUserId = typeof userId === 'string' ? userId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+ [m
+     console.info('Validating OTP and signing in user %s', sanitisedUserId);[m
+ [m
+[36m@@ -67,7 +67,7 @@[m [mexport const validateOTPAndSignIn = async ([m
+ [m
+     return res.status(otpResponse.statusCode).send(otpResponse);[m
+   } catch (error) {[m
+[31m-    const sanitisedUserId = typeof req.body?.userId === 'string' ? req.body.userId.replace(NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+[32m+[m[32m    const sanitisedUserId = typeof req.body?.userId === 'string' ? req.body.userId.replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '') : 'unknown';[m
+ [m
+     console.error('Error validating OTP and signing in user %s: %o', sanitisedUserId, error);[m
+ [m
+[1mdiff --git a/dtfs-central-api/server/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers/get-record-correction-transient-form-validation-error.ts b/dtfs-central-api/server/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers/get-record-correction-transient-form-validation-error.ts[m
+[1mindex 0687822c6..0d0646d98 100644[m
+[1m--- a/dtfs-central-api/server/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers/get-record-correction-transient-form-validation-error.ts[m
+[1m+++ b/dtfs-central-api/server/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers/get-record-correction-transient-form-validation-error.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';[m
+[31m-import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';[m
+[32m+[m[32mimport { REGEX } from '../../../../../../constants';[m
+ import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';[m
+ [m
+ /**[m
+[36m@@ -11,7 +11,7 @@[m [mimport { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities[m
+  * - The facility ID does not correspond to an existing General Export Facility[m
+  */[m
+ export const getFacilityIdValidationError = async (facilityIdValue?: string): Promise<string | undefined> => {[m
+[31m-  if (!facilityIdValue || !UKEF_FACILITY_ID_REGEX.test(facilityIdValue)) {[m
+[32m+[m[32m  if (!facilityIdValue || !REGEX.UKEF_FACILITY_ID_REGEX.test(facilityIdValue)) {[m
+     return 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';[m
+   }[m
+ [m
