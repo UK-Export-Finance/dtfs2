@@ -1,4 +1,4 @@
-import { UKEF_FACILITY_ID_REGEX } from '../../../constants/regex';
+import { REGEX } from '../../../constants';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 
@@ -19,7 +19,7 @@ export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe
     };
   }
 
-  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdCellData.value)) {
+  if (!REGEX.UKEF_FACILITY_ID_REGEX.test(facilityIdCellData.value)) {
     return {
       errorMessage: 'UKEF facility ID must be an 8 to 10 digit number',
       column: facilityIdCellData?.column,

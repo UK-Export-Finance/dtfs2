@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { PortalUser, NEW_LINE_AND_PUNCTUATION_REGEX } from '@ukef/dtfs2-common';
+import { PortalUser, REGEX } from '@ukef/dtfs2-common';
 import { EmailSendError } from '../../../../errors/email-send-error';
 import { MissingUserFieldsError } from '../../../../errors/missing-user-fields-error';
 import { EMAIL_TEMPLATE_IDS } from '../../../../constants/email-template-ids';
@@ -14,7 +14,7 @@ export const sendAccountSuspensionEmail = async (user: PortalUser): Promise<void
   const { _id, email, firstname, surname } = user;
 
   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
-  const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
+  const sanitisedId = String(_id).replace(REGEX.NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   console.info('Sending account suspension email to user %s', sanitisedId);
 

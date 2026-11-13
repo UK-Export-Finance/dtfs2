@@ -1,6 +1,6 @@
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { CSV } from '../../../constants/csv';
-import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';
+import { REGEX } from '../../../constants';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -38,7 +38,7 @@ export const generatePaymentExchangeRateError: UtilisationReportRowValidationErr
     };
   }
 
-  if (!EXCHANGE_RATE_REGEX.test(paymentExchangeRateValue)) {
+  if (!REGEX.EXCHANGE_RATE_REGEX.test(paymentExchangeRateValue)) {
     return {
       errorMessage: 'Payment exchange rate must be a number',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,

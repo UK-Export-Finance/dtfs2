@@ -359,11 +359,49 @@ export const CURRENCIES: CurrencyInterface[] = [
 ];
 
 /**
- * Regular expression group to match valid currency codes.
- * This regex captures any of the currency codes defined in the CURRENCY enum.
- * Example matches: "GBP", "USD", etc.
+ * Named capture group pattern matching one of the GEF currency codes (see {@link CURRENCY}).
+ * Intended to be embedded within other regex patterns.
+ *
+ * Examples:
+ * - `GBP` (captured in the `currency` group)
+ * - `USD` (captured in the `currency` group)
+ *
+ * Does not match:
+ * - `AED` (not a GEF currency; see {@link ALL_CURRENCIES_REGEX_GROUP} instead)
  */
 export const CURRENCY_REGEX_GROUP = `(?<currency>${Object.values(CURRENCY).join('|')})`;
+
+/**
+ * Compiled regex from {@link CURRENCY_REGEX_GROUP}.
+ *
+ * Examples:
+ * - `GBP` (captured in the `currency` group)
+ *
+ * Does not match:
+ * - `AED` (not a GEF currency)
+ */
 export const CURRENCY_REGEX = new RegExp(CURRENCY_REGEX_GROUP);
+
+/**
+ * Named capture group pattern matching one of the BSS/EWCS currency codes (see {@link ALL_CURRENCIES}).
+ * Intended to be embedded within other regex patterns.
+ *
+ * Examples:
+ * - `AED` (captured in the `currency` group)
+ * - `GBP` (captured in the `currency` group)
+ *
+ * Does not match:
+ * - `XXX` (not a recognised currency code)
+ */
 export const ALL_CURRENCIES_REGEX_GROUP = `(?<currency>${Object.values(ALL_CURRENCIES).join('|')})`;
+
+/**
+ * Compiled regex from {@link ALL_CURRENCIES_REGEX_GROUP}.
+ *
+ * Examples:
+ * - `AED` (captured in the `currency` group)
+ *
+ * Does not match:
+ * - `XXX` (not a recognised currency code)
+ */
 export const ALL_CURRENCIES_REGEX = new RegExp(ALL_CURRENCIES_REGEX_GROUP);

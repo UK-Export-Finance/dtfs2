@@ -1,4 +1,4 @@
-import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';
+import { REGEX } from '@ukef/dtfs2-common';
 import { CSV } from '../../../constants/csv';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
@@ -24,7 +24,7 @@ export const generateTotalFeesAccruedError: UtilisationReportCellValidationError
     return generateError('Total fees accrued for the period must have an entry');
   }
 
-  if (!CURRENCY_NUMBER_REGEX.test(value)) {
+  if (!REGEX.CURRENCY_NUMBER_REGEX.test(value)) {
     return generateError('Total fees accrued for the period must be a number with a maximum of two decimal places');
   }
 

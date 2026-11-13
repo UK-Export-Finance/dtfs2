@@ -1,5 +1,5 @@
 import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
-import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';
+import { REGEX } from '../../../../../../constants';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
 /**
@@ -11,7 +11,7 @@ import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities
  * - The facility ID does not correspond to an existing General Export Facility
  */
 export const getFacilityIdValidationError = async (facilityIdValue?: string): Promise<string | undefined> => {
-  if (!facilityIdValue || !UKEF_FACILITY_ID_REGEX.test(facilityIdValue)) {
+  if (!facilityIdValue || !REGEX.UKEF_FACILITY_ID_REGEX.test(facilityIdValue)) {
     return 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
   }
 

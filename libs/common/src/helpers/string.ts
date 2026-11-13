@@ -1,3 +1,5 @@
+import { REGEX } from '@ukef/constants/regex';
+
 /**
  * Checks if a value is a string.
  *
@@ -44,10 +46,6 @@ export const replaceAllSpecialCharacters = (value: string, replace: string = '',
   let extension: string = '';
   let hasExtension: boolean = false;
 
-  /**
-   * This regular expression ensure replace consecutive strings are removed
-   * This also applies to leading and trailing replace string characters.
-   */
   const noConsecutiveRegEx = new RegExp(`(^${replace}+|${replace}+$)`, 'g');
 
   // 1. Preserve file extension
@@ -61,10 +59,10 @@ export const replaceAllSpecialCharacters = (value: string, replace: string = '',
   }
 
   // 2. Convert accented characters to non-accented characters
-  const nonAccentedCharacters = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const nonAccentedCharacters = name.normalize('NFD').replace(REGEX.ACCENTED_CHARACTERS_REGEX, '');
 
   // 3. Removes all special characters
-  const noSpecialCharacters = nonAccentedCharacters.replace(/[^a-zA-Z0-9]+/g, replace);
+  const noSpecialCharacters = nonAccentedCharacters.replace(REGEX.NON_ALPHANUMERIC_REGEX, replace);
 
   // 4. Removes and returns all consecutive replacement characters
   const sanitisedName = noSpecialCharacters.replace(noConsecutiveRegEx, '');
@@ -93,11 +91,11 @@ export const formatForSharePoint = (value: string, replace: string = '_', fileEx
   }
 
   // 1. Replaces '&' with 'and'
-  const noAmperstand = value.replace(/&/g, 'and');
+  const noAmperstand = value.replace(REGEX.AMPERSAND_REGEX, 'and');
 
   // 2. Remove reserved SharePoint and Windows filenames
   // Reference: https://support.microsoft.com/en-us/office/restrictions-and-limitations-in-onedrive-and-sharepoint-64883a5d-228e-48f5-b3d2-eb39e07630fa
-  const noReservedNames = noAmperstand.replace(/(^_vti_.*|\.lock|CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9]|desktop\.ini)/gi, '');
+  const noReservedNames = noAmperstand.replace(REGEX.SHAREPOINT_RESERVED_NAMES_REGEX, '');
 
   // 3. Replace special characters with replacement vaue and trim excess characters.
   return replaceAllSpecialCharacters(noReservedNames, replace, fileExtension);
