@@ -8,6 +8,7 @@ const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
   if (apiResponseStatus !== HttpStatusCode.Ok) {
     throw Error('Error updating amendment');
   }
+
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 

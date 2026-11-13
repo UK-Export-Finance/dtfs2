@@ -4,7 +4,7 @@ import relative from '../../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
 import dealsPage from '../../../pages/dealsPage';
-import facilitiesPage from '../../../pages/facilitiesPage';
+import { facilitiesPage } from '../../../pages/facilitiesPage';
 import { caseSubNavigation, successBanner } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 

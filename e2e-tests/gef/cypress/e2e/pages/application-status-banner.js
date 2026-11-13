@@ -1,5 +1,4 @@
-const statusBanner = {
-  // application banner/summary
+export const statusBanner = {
   applicationBanner: () => cy.get('[data-cy="application-banner"]'),
   bannerStatus: () => cy.get('[data-cy="status"]'),
   bannerProduct: () => cy.get('[data-cy="product"]'),
@@ -12,5 +11,3 @@ const statusBanner = {
   bannerDateSubmitted: () => cy.get('[data-cy="date-submitted"]'),
   bannerUkefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
 };
-
-export default statusBanner;

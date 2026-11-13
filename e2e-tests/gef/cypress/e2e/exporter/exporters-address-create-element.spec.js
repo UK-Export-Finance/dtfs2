@@ -1,7 +1,7 @@
 import relative from '../relativeURL';
-import exportersAddress from '../pages/exporters-address';
+import { exportersAddress } from '../pages/exporters-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import selectExportersCorAddress from '../pages/select-exporters-corr-address';
+import { selectExportersCorrAddress } from '../pages/select-exporters-corr-address';
 import { POSTCODE } from '../../fixtures/constants';
 
 let dealId;
@@ -33,7 +33,7 @@ context('Exporters Address Page - Add element to page', () => {
     cy.insertElement('separate-correspondence-form');
     cy.clickContinueButton();
 
-    selectExportersCorAddress.selectAddress().select('0');
+    selectExportersCorrAddress.selectAddress().select('0');
     cy.clickContinueButton();
     cy.clickContinueButton();
 

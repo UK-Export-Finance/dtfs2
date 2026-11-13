@@ -24,6 +24,7 @@ const getManagersConditionsAndComments = async (req, res) => {
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
     }
+
     const facility = await api.getFacility(facilityId, userToken);
 
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
@@ -40,6 +41,7 @@ const getManagersConditionsAndComments = async (req, res) => {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
     }
+
     amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
     amendment.facilityType = facility.facilitySnapshot.type;
     amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
@@ -85,6 +87,7 @@ const postManagersConditionsAndComments = async (req, res) => {
     amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
     amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
   }
+
   amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
   amendment.facilityType = facility.facilitySnapshot.type;
   amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
@@ -121,6 +124,7 @@ const postManagersConditionsAndComments = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
     }
+
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
@@ -146,6 +150,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
     }
+
     const facility = await api.getFacility(facilityId, userToken);
 
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
@@ -161,6 +166,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
     }
+
     amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
     amendment.facilityType = facility.facilitySnapshot.type;
     amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
@@ -216,6 +222,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/underwriting`);
     }
+
     console.error('Unable to submit the underwriter managers decision');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   } catch (error) {

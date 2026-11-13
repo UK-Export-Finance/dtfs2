@@ -283,7 +283,7 @@ describe('/v1/deals', () => {
         const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
         // Assert
-        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+        const facilityId = body.facilities.find((facility) => facility.hasBeenIssued === true)._id;
 
         expect(updateGefFacilitySpy).toHaveBeenCalledWith({
           auditDetails,

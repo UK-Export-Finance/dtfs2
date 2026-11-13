@@ -8,7 +8,7 @@ import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mo
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityEndDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import { facilityEndDate } from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

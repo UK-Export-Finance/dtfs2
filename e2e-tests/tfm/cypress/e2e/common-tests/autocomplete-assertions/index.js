@@ -1,4 +1,4 @@
-import pages from '../../pages';
+import { tfmPages as pages } from '../../pages';
 
 /**
  * checkAutocompleteInput
@@ -60,5 +60,3 @@ export const checkAutocompleteInput = {
     pages.autoCompleteField(fieldId).results().should('not.exist');
   },
 };
-
-export default checkAutocompleteInput;

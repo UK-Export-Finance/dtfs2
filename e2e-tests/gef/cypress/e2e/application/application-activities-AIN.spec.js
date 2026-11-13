@@ -2,11 +2,11 @@ import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import { mainHeading } from '../partials';
-import applicationActivities from '../pages/application-activities';
+import { applicationActivities } from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../pages/application-details';
-import statusBanner from '../pages/application-status-banner';
-import submitToUkef from '../pages/submit-to-ukef';
+import { applicationDetails } from '../pages/application-details';
+import { statusBanner } from '../pages/application-status-banner';
+import { submitToUkef } from '../pages/submit-to-ukef';
 import { toTitleCase } from '../../fixtures/helpers';
 
 let deal;

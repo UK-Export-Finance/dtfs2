@@ -102,6 +102,7 @@ const postAmendFacilityValue = async (req, res) => {
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
     }
+
     console.error('Unable to update the facility value');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   } catch (error) {

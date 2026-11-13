@@ -11,8 +11,8 @@ const dealProduct = (deal) => {
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const { facilities } = deal;
 
-    const bonds = facilities.filter((f) => f.type === FACILITY_TYPE.BOND);
-    const loans = facilities.filter((f) => f.type === FACILITY_TYPE.LOAN);
+    const bonds = facilities.filter((facility) => facility.type === FACILITY_TYPE.BOND);
+    const loans = facilities.filter((facility) => facility.type === FACILITY_TYPE.LOAN);
 
     const hasBonds = bonds.length > 0;
     const hasLoans = loans.length > 0;

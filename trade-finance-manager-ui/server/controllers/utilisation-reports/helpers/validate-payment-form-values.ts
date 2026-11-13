@@ -9,9 +9,11 @@ const getPaymentCurrencyValidationsErrors = (paymentCurrency: string | undefined
   if (!isCurrencyValid(paymentCurrency)) {
     return 'Select payment currency';
   }
+
   if (paymentCurrency !== feeRecordPaymentCurrency) {
     return 'The new payment currency must be the same as the reported payment currency of the selected fees';
   }
+
   return undefined;
 };
 
@@ -35,6 +37,7 @@ type DateFieldName = 'day' | 'month' | 'year';
 
 const getMissingDateFields = (day: string | undefined, month: string | undefined, year: string | undefined): DateFieldName[] => {
   const missingFields: DateFieldName[] = [];
+
   if (!isNonEmptyString(day)) {
     missingFields.push('day');
   }
@@ -80,6 +83,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   const fieldTitle = 'date payment received';
 
   const missingFields = getMissingDateFields(day, month, year);
+
   if (missingFields.length > 0) {
     return getMissingDateFieldsError(fieldTitle, missingFields);
   }
@@ -97,11 +101,13 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   }
 
   const date = parseDate(dayString, monthString, yearString);
+
   if (!isValid(date)) {
     return { message: `The ${fieldTitle} must be a real date`, dayError: true, monthError: true, yearError: true };
   }
 
   const today = new Date();
+
   if (!isBefore(date, startOfDay(today))) {
     return { message: `The ${fieldTitle} must be in the past`, dayError: true, monthError: true, yearError: true };
   }
@@ -125,6 +131,7 @@ const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const paymentAmountErrorMessage = isMonetaryValueValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
+
   if (paymentAmountErrorMessage) {
     errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
   }
@@ -132,11 +139,13 @@ const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues
   const paymentReferenceErrorMessage = isPaymentReferenceOverMaxCharacterCount(formValues.paymentReference)
     ? 'Payment reference must be 50 characters or less'
     : undefined;
+
   if (paymentReferenceErrorMessage) {
     errorSummary.push({ text: paymentReferenceErrorMessage, href: '#paymentReference' });
   }
 
   const paymentDateError = validatePaymentDateAndReturnErrorIfInvalid(formValues.paymentDate.day, formValues.paymentDate.month, formValues.paymentDate.year);
+
   if (paymentDateError) {
     errorSummary.push({ text: paymentDateError.message, href: getPaymentDateHref(paymentDateError) });
   }
@@ -157,11 +166,13 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
   errorSummary.push(...commonPaymentFormErrors.errorSummary);
 
   const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
+
   if (paymentCurrencyErrorMessage) {
     errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
   }
 
   const addAnotherPaymentErrorMessage = isAddAnotherPaymentChoiceValid(formValues.addAnotherPayment) ? undefined : 'Select add another payment choice';
+
   if (addAnotherPaymentErrorMessage) {
     errorSummary.push({ text: addAnotherPaymentErrorMessage, href: '#addAnotherPayment' });
   }
@@ -183,6 +194,7 @@ export const validateAddToAnExistingPaymentRequestFormValues = (paymentRadioIds:
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   const paymentGroupErrorMessage = paymentRadioIds.length > 0 ? undefined : 'Select a payment to add the fee or fees to';
+
   if (paymentGroupErrorMessage) {
     errorSummary.push({ text: paymentGroupErrorMessage, href: '#payment-groups' });
   }

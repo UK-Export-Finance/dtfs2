@@ -23,7 +23,7 @@ const withTimeout = async (promise, timeoutMs, operation, facilityId) => {
   try {
     return await Promise.race([
       promise,
-      new Promise((_, reject) => {
+      new Promise((resolve, reject) => {
         timeoutId = setTimeout(() => reject(new Error(`${operation} timed out after ${timeoutMs}ms`)), timeoutMs);
       }),
     ]);
@@ -45,10 +45,10 @@ const updateFacilities = async (deal, auditDetails) => {
   const { dealType, submissionDate: dealSubmissionDate, submissionType } = modifiedDeal;
 
   modifiedDeal.facilities = await Promise.all(
-    modifiedDeal.facilities.map(async (f) => {
-      const facility = f;
+    modifiedDeal.facilities.map(async (facility) => {
+      const modifiedFacility = facility;
 
-      const { _id: facilityId, hasBeenIssued } = facility;
+      const { _id: facilityId, hasBeenIssued } = modifiedFacility;
 
       let facilityUpdate;
       let facilityPremiumSchedule;
@@ -71,7 +71,7 @@ const updateFacilities = async (deal, auditDetails) => {
             // updates GEF facility collection
             const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: portalFacilityUpdate, auditDetails });
 
-            facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+            modifiedFacility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
           }
         } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
           const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
@@ -93,9 +93,9 @@ const updateFacilities = async (deal, auditDetails) => {
             facilityId,
           );
 
-          facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
-          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
-          facility.status = facilityStatusUpdate;
+          modifiedFacility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+          modifiedFacility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+          modifiedFacility.status = facilityStatusUpdate;
         }
 
         facilityUpdate = {
@@ -169,9 +169,9 @@ const updateFacilities = async (deal, auditDetails) => {
       // add the updated tfm object to returned facility.
       // if we return updateFacilityResponse, we'll get facilitySnapshot
       // - therefore losing the flat, generic facility mapping used in deal submission calls.
-      facility.tfm = updateFacilityResponse.tfm;
+      modifiedFacility.tfm = updateFacilityResponse.tfm;
 
-      return facility;
+      return modifiedFacility;
     }),
   );
 

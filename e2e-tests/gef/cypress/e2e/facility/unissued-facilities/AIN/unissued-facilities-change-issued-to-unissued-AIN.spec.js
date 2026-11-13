@@ -4,13 +4,13 @@ import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import { applicationPreview } from '../../../pages/application-preview';
+import { unissuedFacilityTable } from '../../../pages/unissued-facilities';
+import { aboutFacilityUnissued } from '../../../pages/unissued-facilities-about-facility';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
-import statusBanner from '../../../pages/application-status-banner';
-import facilities from '../../../pages/facilities';
+import { statusBanner } from '../../../pages/application-status-banner';
+import { facilitiesPage } from '../../../pages/facilities';
 
 let dealId;
 let token;
@@ -209,17 +209,17 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
-      facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
-      facilities.hasBeenIssuedRadioYesRadioButton().should('exist');
+      facilitiesPage.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
+      facilitiesPage.hasBeenIssuedRadioYesRadioButton().should('exist');
       // check that this box is checked (as already issued)
-      facilities
+      facilitiesPage
         .hasBeenIssuedRadioYesRadioButton()
         .invoke('attr', 'value')
         .then((value) => {
           expect(value).to.equal('true');
         });
 
-      facilities
+      facilitiesPage
         .hasBeenIssuedRadioNoRadioButton()
         .invoke('attr', 'value')
         .then((value) => {
@@ -306,7 +306,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
-      facilities.hasBeenIssuedRadioNoRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton().click();
       cy.clickContinueButton();
 
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(unissuedCashFacility.name);
@@ -340,7 +340,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
 
-      facilities.hasBeenIssuedRadioNoRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton().click();
       cy.clickContinueButton();
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
@@ -399,7 +399,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.visit(relative(`/gef/application-details/${dealId}`));
       // unissue facility
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
-      facilities.hasBeenIssuedRadioNoRadioButton().click();
+      facilitiesPage.hasBeenIssuedRadioNoRadioButton().click();
       cy.clickContinueButton();
 
       submitButton().should('not.exist');

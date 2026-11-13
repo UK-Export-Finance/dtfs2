@@ -21,12 +21,14 @@ export const validateFacilityIdQuery = (originalUrl: string, facilityIdQuery?: s
         href: FACILITY_ID_INPUT_ID,
       };
     }
+
     if (!REGEX.INT.test(facilityIdQuery)) {
       return {
         text: 'Facility ID must be a number',
         href: FACILITY_ID_INPUT_ID,
       };
     }
+
     if (!REGEX.PARTIAL_FACILITY_ID.test(facilityIdQuery)) {
       return {
         text: 'Facility ID must be between 4 and 10 characters',

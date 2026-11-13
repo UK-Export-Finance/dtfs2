@@ -3,6 +3,7 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
 const amendmentOptionsValidation = (amendmentOptions, hasBeenIssued) => {
   if (!amendmentOptions) {
     const amendmentOptionsValidationErrors = [];
+
     if (hasBeenIssued) {
       amendmentOptionsValidationErrors.push({
         errRef: 'amendmentOptions',
@@ -21,6 +22,7 @@ const amendmentOptionsValidation = (amendmentOptions, hasBeenIssued) => {
 
     return { errorsObject, amendmentOptionsValidationErrors };
   }
+
   return { errorsObject: {}, amendmentOptionsValidationErrors: [] };
 };
 

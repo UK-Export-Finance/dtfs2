@@ -168,6 +168,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
       if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.PROCEED) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/effective-date`);
       }
+
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 

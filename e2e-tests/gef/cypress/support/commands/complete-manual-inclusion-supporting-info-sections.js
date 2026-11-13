@@ -1,5 +1,5 @@
-import manualInclusion from '../../e2e/pages/manual-inclusion-questionnaire';
-import uploadFiles from '../../e2e/pages/upload-files';
+import { manualInclusion } from '../../e2e/pages/manual-inclusion-questionnaire';
+import { uploadFiles } from '../../e2e/pages/upload-files';
 import relative from '../relativeURL';
 
 /**
@@ -7,7 +7,7 @@ import relative from '../relativeURL';
  * completes the required uploads and sections to complete an MIA deal
  * @param {string} dealId - the deal id
  */
-const completeManualInclusionSupportingInfoSections = (dealId) => {
+export const completeManualInclusionSupportingInfoSections = (dealId) => {
   // upload manual inclusion document
   cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
   manualInclusion.uploadSuccess('file1.png');
@@ -82,5 +82,3 @@ const completeManualInclusionSupportingInfoSections = (dealId) => {
   // verify the status of the Supporting Information section is set to `Complete`
   uploadFiles.supportingInfoStatus().should('contain', 'Complete');
 };
-
-export default completeManualInclusionSupportingInfoSections;

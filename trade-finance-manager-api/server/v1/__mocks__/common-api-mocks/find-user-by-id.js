@@ -13,7 +13,7 @@ module.exports = {
           return user;
         }
 
-        return MOCK_USERS.find((u) => u._id === userId);
+        return MOCK_USERS.find((user) => user._id === userId);
       });
   },
 };

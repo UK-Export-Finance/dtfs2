@@ -16,16 +16,36 @@ import { completeAboutFinancialSection } from './portal/completeAboutFinancialSe
 import { inCompleteAboutSupplierSection } from './portal/inCompleteAboutSupplierSection';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 import { assertRiskMarginValidationError } from './portal/assertRiskMarginValidationError';
+import { saveSession } from './utils/saveSession';
+import { keyboardInput } from './utils/keyboardInput';
+import { login } from './portal/login';
+import { loginOTP } from './portal/loginOTP';
+import { completeDateFormFields } from './portal/completeDateFormFields';
+import { clickSubmitButton } from './portal/click-events/click-submit-button';
+import { clickAddBondButton } from './portal/click-events/click-add-bond-button';
+import { clickAddLoanButton } from './portal/click-events/click-add-loan-button';
+import { clickBackLink } from './portal/click-events/click-back-link';
+import { clickCancelButton } from './portal/click-events/click-cancel-button';
+import { clickContinueButton } from './portal/click-events/click-continue-button';
+import { clickReturnToMakerButton } from './portal/click-events/click-return-to-maker-button';
+import { clickProceedToReviewButton } from './portal/click-events/click-proceed-to-review-button';
+import { clickProceedToSubmitButton } from './portal/click-events/click-proceed-to-submit-button';
+import { clickSaveGoBackButton } from './portal/click-events/click-save-go-back-button';
+import { clickDashboardDealLinkByIndex } from './portal/click-events/click-dashboard-deal-link-by-index';
+import { loadData } from '../../../gef/cypress/support/commands/loadData';
+import { getDealIdFromUrl } from './portal/getDealIdFromUrl';
+import { assertSelectOptionDoesNotExist } from './utils/assertSelectOptionDoesNotExist';
+import { assertSelectOptionExists } from './utils/assertSelectOptionExists';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
 // Preserve session cookie
-Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+Cypress.Commands.add('saveSession', saveSession);
 
 // Resets the session
 Cypress.Commands.add('clearSessionCookies', require('./utils/clearSessionCookies'));
 
-Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+Cypress.Commands.add('keyboardInput', keyboardInput);
 
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
@@ -34,12 +54,12 @@ Cypress.Commands.add('assertText', require('./utils/assertText'));
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
 // Assert that a select element has an option with the given text
-Cypress.Commands.add('assertSelectOptionExists', require('./utils/assertSelectOptionExists'));
+Cypress.Commands.add('assertSelectOptionExists', assertSelectOptionExists);
 // Assert that a select element does not have an option with the given text
-Cypress.Commands.add('assertSelectOptionDoesNotExist', require('./utils/assertSelectOptionDoesNotExist'));
+Cypress.Commands.add('assertSelectOptionDoesNotExist', assertSelectOptionDoesNotExist);
 
 // Mock data loader
-Cypress.Commands.add('loadData', require('../../../gef/cypress/support/commands/loadData'));
+Cypress.Commands.add('loadData', loadData);
 
 // Assert that the print dialogue is shown
 Cypress.Commands.add('assertPrintDialogue', assertPrintDialogue);
@@ -75,18 +95,18 @@ Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 // commands that abstract common tasks you might perform while clicking round the portal..
-Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
-Cypress.Commands.add('clickAddLoanButton', require('./portal/click-events/click-add-loan-button'));
-Cypress.Commands.add('clickBackLink', require('./portal/click-events/click-back-link'));
-Cypress.Commands.add('clickCancelButton', require('./portal/click-events/click-cancel-button'));
-Cypress.Commands.add('clickContinueButton', require('./portal/click-events/click-continue-button'));
-Cypress.Commands.add('clickReturnToMakerButton', require('./portal/click-events/click-return-to-maker-button'));
-Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-events/click-proceed-to-review-button'));
-Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
-Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/click-save-go-back-button'));
-Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
-Cypress.Commands.add('clickDashboardDealLinkByIndex', require('./portal/click-events/click-dashboard-deal-link-by-index'));
-Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
+Cypress.Commands.add('clickAddBondButton', clickAddBondButton);
+Cypress.Commands.add('clickAddLoanButton', clickAddLoanButton);
+Cypress.Commands.add('clickBackLink', clickBackLink);
+Cypress.Commands.add('clickCancelButton', clickCancelButton);
+Cypress.Commands.add('clickContinueButton', clickContinueButton);
+Cypress.Commands.add('clickReturnToMakerButton', clickReturnToMakerButton);
+Cypress.Commands.add('clickProceedToReviewButton', clickProceedToReviewButton);
+Cypress.Commands.add('clickProceedToSubmitButton', clickProceedToSubmitButton);
+Cypress.Commands.add('clickSaveGoBackButton', clickSaveGoBackButton);
+Cypress.Commands.add('clickSubmitButton', clickSubmitButton);
+Cypress.Commands.add('clickDashboardDealLinkByIndex', clickDashboardDealLinkByIndex);
+Cypress.Commands.add('completeDateFormFields', completeDateFormFields);
 
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
@@ -94,8 +114,8 @@ Cypress.Commands.add('createADeal', require('./portal/createADeal'));
 Cypress.Commands.add('createBSSSubmission', require('./portal/createBSSSubmission'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
-Cypress.Commands.add('login', require('./portal/login'));
-Cypress.Commands.add('loginOTP', require('./portal/loginOTP'));
+Cypress.Commands.add('login', login);
+Cypress.Commands.add('loginOTP', loginOTP);
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('enterJourneyAtRequestCodeClicks', require('./portal/enterJourneyAtRequestCodeClicks'));
 Cypress.Commands.add('submitValidAccessCode', require('./portal/submitValidAccessCode'));
@@ -137,7 +157,7 @@ Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSect
 Cypress.Commands.add('inCompleteAboutSupplierSection', inCompleteAboutSupplierSection);
 Cypress.Commands.add('assertRiskMarginValidationError', assertRiskMarginValidationError);
 
-Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
+Cypress.Commands.add('getDealIdFromUrl', getDealIdFromUrl);
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

@@ -3,6 +3,7 @@ const generateHeadingText = (count, submittedValue, collectionName) => {
     if (count === 1) {
       return `${count} result for "${submittedValue}"`;
     }
+
     if (count > 1) {
       return `${count} results for "${submittedValue}"`;
     }

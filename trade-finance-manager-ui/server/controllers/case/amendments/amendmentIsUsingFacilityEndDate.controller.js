@@ -8,6 +8,7 @@ const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUr
     console.error('Unable to update is using facility end date');
     return fallbackUrl;
   }
+
   return isUsingFacilityEndDate ? `${baseUrl}/facility-end-date` : `${baseUrl}/bank-review-date`;
 };
 

@@ -21,12 +21,14 @@ context('Dashboard facilities - sort', () => {
     manyBssDeals.map((deal, index) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
         let companyName = '';
+
         // sets one company to lowercase
         if (index === 3) {
           companyName = randomValueGenerator.companyName({ lowerCase: true });
         } else {
           companyName = randomValueGenerator.companyName();
         }
+
         cy.updateDeal(
           _id,
           {

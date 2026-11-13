@@ -1,7 +1,7 @@
 /**
  * Get a deal ID from the URL
  */
-const getDealIdFromUrl = () => {
+export const getDealIdFromUrl = () => {
   cy.url().then((url) => {
     const urlSplit = url.split('/');
 
@@ -10,5 +10,3 @@ const getDealIdFromUrl = () => {
     return dealId;
   });
 };
-
-export default getDealIdFromUrl;

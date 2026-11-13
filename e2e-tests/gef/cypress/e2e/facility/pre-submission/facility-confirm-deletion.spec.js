@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import { mainHeading } from '../../partials';
-import facilityConfirmDeletion from '../../pages/facility-confirm-deletion';
-import applicationDetails from '../../pages/application-details';
+import { facilityConfirmDeletion } from '../../pages/facility-confirm-deletion';
+import { applicationDetails } from '../../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

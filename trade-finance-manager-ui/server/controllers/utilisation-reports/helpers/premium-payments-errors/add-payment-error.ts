@@ -39,6 +39,7 @@ export const getAddPaymentError = (addPaymentErrorKey: AddPaymentErrorKey): Erro
  */
 export const validateAddPaymentErrorKey = (addPaymentErrorKey: string): addPaymentErrorKey is AddPaymentErrorKey => {
   const allKeys: string[] = Object.values(ADD_PAYMENT_ERROR_KEY);
+
   if (allKeys.includes(addPaymentErrorKey)) {
     return true;
   }

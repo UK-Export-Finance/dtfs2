@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import applicationPreview from '../../pages/application-preview';
+import { applicationPreview } from '../../pages/application-preview';
 
 let dealId;
 

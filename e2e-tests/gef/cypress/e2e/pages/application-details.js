@@ -2,7 +2,7 @@ const cyGetFacilitySummaryListChild = (tableNum, selector) => cy.get('[data-cy="
 const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
   cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
 
-const applicationDetails = {
+export const applicationDetails = {
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
 
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
@@ -100,5 +100,3 @@ const applicationDetails = {
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
 };
-
-export default applicationDetails;

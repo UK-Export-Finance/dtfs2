@@ -14,6 +14,7 @@ const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+
   if (status !== 200) {
     return res.redirect('/not-found');
   }
@@ -91,8 +92,10 @@ const postAmendmentOptions = async (req, res) => {
       if (changeCoverEndDate) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/cover-end-date`);
       }
+
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
     }
+
     console.error('Unable to update the amendment options');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   } catch (error) {
