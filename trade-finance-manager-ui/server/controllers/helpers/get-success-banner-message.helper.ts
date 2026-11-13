@@ -1,6 +1,6 @@
 import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, MappedDealSnapshot } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import api from '../../api';
+import api from '@tfm-ui/api';
 import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
 
 /**

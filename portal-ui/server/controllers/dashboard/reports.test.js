@@ -1,8 +1,8 @@
 import { CURRENCY, ROLES } from '@ukef/dtfs2-common';
+import api from '@ukef/portal-ui/server/api';
+import mockResponse from '@ukef/portal-ui/server/helpers/responseMock';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { reportsController } from '.';
-import api from '../../api';
-import mockResponse from '../../helpers/responseMock';
-import CONSTANTS from '../../constants';
 
 const { MAKER, CHECKER } = ROLES;
 

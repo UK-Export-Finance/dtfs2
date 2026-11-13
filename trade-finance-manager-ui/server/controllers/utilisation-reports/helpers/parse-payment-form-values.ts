@@ -1,6 +1,6 @@
 import { getMonetaryValueAsNumber } from '@ukef/dtfs2-common';
-import { ParsedAddPaymentFormValues, ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { ParsedEditPaymentFormValues, ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { ParsedAddPaymentFormValues, ValidatedAddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { ParsedEditPaymentFormValues, ValidatedEditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
 
 const getDatePaymentReceived = ({ day, month, year }: { day: string; month: string; year: string }): Date => new Date(`${year}-${month}-${day}`);
 

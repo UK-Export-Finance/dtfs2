@@ -1,9 +1,9 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { cron } from '../helpers/cron';
-import { Estore } from '../interfaces';
-import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../constants';
-import { siteExists, createBuyerFolder } from '../v1/controllers/estore/eStoreApi';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { Estore } from '@ukef/external-api/server/interfaces';
+import { ENDPOINT, ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '@ukef/external-api/server/constants';
+import { siteExists, createBuyerFolder } from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
 import { eStoreSiteCreationCronJob } from './eStoreSiteCreationJob.cron';
 import { eStoreBuyerDirectoryCreationJob } from './eStoreBuyerDirectoryCreationJob.cron';
 import { eStoreTermStoreCreationJob } from './eStoreTermStoreCreationJob.cron';

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { asLoggedInUserSession } from '../../../../helpers/express-session';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import api from '../../../../api';
-import { RecordCorrectionLogViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
+import { asLoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import api from '@ukef/portal-ui/server/api';
+import { RecordCorrectionLogViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-log';
 import { mapCompletedCorrectionsToViewModel } from './helpers';
 
 /**

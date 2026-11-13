@@ -1,19 +1,19 @@
 import { CustomExpressRequest, isStatusToDoOrToDoAmended } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import axios from 'axios';
-import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../../helpers';
+import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '@tfm-ui/controllers/utilisation-reports/helpers';
 import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
-} from '../../../../helpers/premium-payments-table-checkbox-id-helper';
-import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../../../helpers/get-premium-payments-facility-id-query-from-referer';
-import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
-import { mapCheckedCheckboxesToRecord } from '../../../../helpers/map-checked-checkboxes-to-record';
-import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
-import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
-import { asUserSession } from '../../../../helpers/express-session';
-import api from '../../../../api';
+} from '@tfm-ui/helpers/premium-payments-table-checkbox-id-helper';
+import { getPremiumPaymentsFacilityIdQueryFromReferer } from '@tfm-ui/helpers/get-premium-payments-facility-id-query-from-referer';
+import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { mapCheckedCheckboxesToRecord } from '@tfm-ui/helpers/map-checked-checkboxes-to-record';
+import { InitiateRecordCorrectionRequestErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import api from '@tfm-ui/api';
 
 export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;

@@ -1,5 +1,5 @@
-import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY, INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
-import { AddPaymentErrorKey, GenerateKeyingDataErrorKey, InitiateRecordCorrectionRequestErrorKey } from '../../../types/premium-payments-tab-error-keys';
+import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY, INITIATE_RECORD_CORRECTION_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { AddPaymentErrorKey, GenerateKeyingDataErrorKey, InitiateRecordCorrectionRequestErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
 import { handleRedirectSessionData } from './handle-redirect-session-data';
 
 type RedirectSessionData = {

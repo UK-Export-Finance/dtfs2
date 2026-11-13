@@ -1,8 +1,8 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
+import { AddToAnExistingPaymentRadioId } from '@tfm-ui/types/add-to-an-existing-payment-radio-id';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
 import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-details-view-model';
 import { BaseViewModel } from './base-view-model';
-import { AddToAnExistingPaymentRadioId } from '../add-to-an-existing-payment-radio-id';
-import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 
 export type AddToAnExistingPaymentErrorsViewModel = {

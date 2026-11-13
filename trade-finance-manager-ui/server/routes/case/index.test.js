@@ -1,11 +1,11 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import { route } from '../../test-mocks/router-mock';
-import caseController from '../../controllers/case';
-import partiesController from '../../controllers/case/parties';
-import underwritingController from '../../controllers/case/underwriting';
-import activityController from '../../controllers/case/activity';
-import amendmentsController from '../../controllers/case/amendments';
-import { validateUserTeam } from '../../middleware';
+import { route } from '@tfm-ui/test-mocks/router-mock';
+import caseController from '@tfm-ui/controllers/case';
+import partiesController from '@tfm-ui/controllers/case/parties';
+import underwritingController from '@tfm-ui/controllers/case/underwriting';
+import activityController from '@tfm-ui/controllers/case/activity';
+import amendmentsController from '@tfm-ui/controllers/case/amendments';
+import { validateUserTeam } from '@tfm-ui/middleware';
 
 jest.mock('./cancellation', () => ({
   cancellationRouter: jest.fn(),

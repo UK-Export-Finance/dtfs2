@@ -1,16 +1,16 @@
 import { SessionData } from 'express-session';
-import { ErrorSummaryViewModel } from '../../../types/view-models';
-import { getAddPaymentError, validateAddPaymentErrorKey } from '../helpers/premium-payments-errors/add-payment-error';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
+import { getAddPaymentError, validateAddPaymentErrorKey } from '@tfm-ui/controllers/utilisation-reports/helpers/premium-payments-errors/add-payment-error';
 import {
   getGenerateKeyingDataError,
   getInitiateRecordCorrectionRequestError,
   validateGenerateKeyingDataErrorKey,
   validateInitiateRecordCorrectionErrorKey,
-} from '../helpers';
+} from '@tfm-ui/controllers/utilisation-reports/helpers';
 import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
-} from '../../../helpers/premium-payments-table-checkbox-id-helper';
+} from '@tfm-ui/helpers/premium-payments-table-checkbox-id-helper';
 
 /**
  * Handles redirect session data for utilisation report reconciliation.

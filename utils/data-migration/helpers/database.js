@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /**
  * Database connection helper functions
  */
@@ -24,7 +23,9 @@ const connect = async () => {
 };
 
 const disconnect = async () => {
-  if (client) await client.close();
+  if (client) {
+    await client.close();
+  }
 };
 
 /**
@@ -34,7 +35,10 @@ const disconnect = async () => {
  * @returns {Promise<object>} Collection rows
  */
 const getCollection = async (name, filter = null, raw = null) => {
-  if (!connection) await connect();
+  if (!connection) {
+    await connect();
+  }
+
   let rows;
 
   if (raw) {
@@ -64,7 +68,10 @@ const portalDealUpdate = async (id, updates) => {
   }
 
   try {
-    if (!connection) await connect();
+    if (!connection) {
+      await connect();
+    }
+
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
       { _id: { $eq: ObjectId(id) } },
       {
@@ -93,7 +100,10 @@ const portalFacilityUpdate = async (id, updates) => {
   }
 
   try {
-    if (!connection) await connect();
+    if (!connection) {
+      await connect();
+    }
+
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.FACILITIES).updateOne(
       { _id: { $eq: ObjectId(id) } },
       {
@@ -115,7 +125,9 @@ const portalFacilityUpdate = async (id, updates) => {
  * @param {object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
-const tfmDealUpdate = async (updatedDeal) => {
+const tfmDealUpdate = async (deal) => {
+  const updatedDeal = deal;
+
   try {
     const { _id } = updatedDeal;
     const idAsString = String(_id);
@@ -126,7 +138,9 @@ const tfmDealUpdate = async (updatedDeal) => {
 
     delete updatedDeal._id;
 
-    if (!connection) await connect();
+    if (!connection) {
+      await connect();
+    }
 
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL)
@@ -145,7 +159,9 @@ const tfmDealUpdate = async (updatedDeal) => {
  * @param {object} updatedFacility Updated facility payload
  * @returns {Promise} Resolve if successful otherwise reject.
  */
-const tfmFacilityUpdate = async (updatedFacility) => {
+const tfmFacilityUpdate = async (facility) => {
+  const updatedFacility = facility;
+
   if (typeof updatedFacility?.facilitySnapshot?.ukefFacilityId !== 'string') {
     throw new Error('Invalid UKEF Facility Id');
   }
@@ -153,7 +169,10 @@ const tfmFacilityUpdate = async (updatedFacility) => {
   try {
     delete updatedFacility._id;
 
-    if (!connection) await connect();
+    if (!connection) {
+      await connect();
+    }
+
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES)
       .updateOne(

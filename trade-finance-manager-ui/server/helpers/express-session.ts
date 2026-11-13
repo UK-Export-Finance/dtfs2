@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { UserPartialLoginDataNotDefinedError, UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
-import { PartiallyLoggedInUserSessionData, UserSessionData } from '../types/express-session';
+import { PartiallyLoggedInUserSessionData, UserSessionData } from '@tfm-ui/types/express-session';
 
 type Session = Request['session'];
 

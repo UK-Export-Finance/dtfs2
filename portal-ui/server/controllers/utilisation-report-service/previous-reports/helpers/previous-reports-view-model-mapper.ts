@@ -7,9 +7,9 @@ import {
   getMonthName,
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
-import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '@ukef/portal-ui/server/types/view-models/previous-reports';
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not submitted',

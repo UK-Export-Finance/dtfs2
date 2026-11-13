@@ -1,5 +1,5 @@
+import mockResponse from '@ukef/portal-ui/server/helpers/responseMock';
 import { getSchemeType, postSchemeType } from '.';
-import mockResponse from '../../helpers/responseMock';
 
 jest.mock('../../helpers', () => ({
   __esModule: true,

@@ -1,5 +1,5 @@
 import { TeamId } from '@ukef/dtfs2-common';
-import { TeamToCheck } from '../../helpers/team-checking.helper';
+import { TeamToCheck } from '@tfm-ui/helpers/team-checking.helper';
 
 /**
  * View model for the team checking page.

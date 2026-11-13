@@ -51,10 +51,10 @@ const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  const { _id, ...editedByWithoutId } = await handleEditedByPortal(dealId, {}, user);
+  const editedBy = await handleEditedByPortal(dealId, {}, user);
   const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten({ editedBy: editedByWithoutId, auditRecord }), {
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten({ editedBy, auditRecord }), {
     returnNewDocument: true,
     returnDocument: 'after',
   });

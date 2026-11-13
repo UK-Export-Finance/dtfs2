@@ -7,7 +7,7 @@ import {
   OTP_RESULT_TYPE,
   LoginWithSignInOtpResponse,
 } from '@ukef/dtfs2-common';
-import * as api from '../../api';
+import * as api from '@ukef/portal-ui/server/api';
 
 /**
  * Calls the sign-in OTP API and returns a typed result.

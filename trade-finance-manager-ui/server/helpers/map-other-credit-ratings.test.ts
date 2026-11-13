@@ -1,5 +1,5 @@
 import { CreditRiskRating, mapSelectOption } from '@ukef/dtfs2-common';
-import api from '../api';
+import api from '@tfm-ui/api';
 import { mapOtherCreditRatings } from './map-other-credit-ratings';
 
 jest.mock('../api');

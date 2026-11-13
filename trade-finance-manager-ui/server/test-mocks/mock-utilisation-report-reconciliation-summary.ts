@@ -1,6 +1,6 @@
 import { PENDING_RECONCILIATION, RECONCILIATION_COMPLETED, RECONCILIATION_IN_PROGRESS, REPORT_NOT_RECEIVED, UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '@tfm-ui/types/utilisation-reports';
 import { MOCK_BANKS } from './mock-banks';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../types/utilisation-reports';
 
 export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<UtilisationReportStatus, UtilisationReportReconciliationSummaryItem> = {
   REPORT_NOT_RECEIVED: {

@@ -23,7 +23,10 @@ TFM_USERS.forEach((u) => {
 
 // write json object to json file
 fs.writeFile('./tfm/users_with_passwords.json', JSON.stringify(TFM_USERS, null, 2), (error) => {
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
+
   console.info('The JSON file has been saved!');
 });
 
@@ -34,6 +37,9 @@ const json2csvParser = new Parser({ fields, transforms });
 const csv = json2csvParser.parse(TFM_USERS);
 
 fs.writeFile('./tfm/users_with_passwords.csv', csv, (error) => {
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
+
   console.info('The CSV file has been saved!');
 });

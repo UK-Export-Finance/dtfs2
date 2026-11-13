@@ -1,5 +1,5 @@
 import { ACCESS_CODE_PAGES } from '@ukef/dtfs2-common';
-import { LANDING_PAGES } from '../constants/landing-pages';
+import { LANDING_PAGES } from '@ukef/portal-ui/server/constants/landing-pages';
 
 /**
  * Gets the next access code page based on the number of attempts left.

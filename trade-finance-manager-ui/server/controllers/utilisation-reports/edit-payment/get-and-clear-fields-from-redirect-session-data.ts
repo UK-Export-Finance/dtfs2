@@ -1,7 +1,7 @@
 import { Request } from 'express';
-import { EditPaymentErrorsViewModel } from '../../../types/view-models';
-import { getRemoveFeesFromPaymentError } from '../helpers/get-remove-fees-from-payment-error-helper';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { EditPaymentErrorsViewModel } from '@tfm-ui/types/view-models';
+import { getRemoveFeesFromPaymentError } from '@tfm-ui/controllers/utilisation-reports/helpers/get-remove-fees-from-payment-error-helper';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.removeFeesFromPaymentErrorKey;

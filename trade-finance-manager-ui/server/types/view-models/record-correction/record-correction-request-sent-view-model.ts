@@ -1,4 +1,4 @@
-import { BaseViewModel } from '../base-view-model';
+import { BaseViewModel } from '@tfm-ui/types/view-models/base-view-model';
 
 export type RecordCorrectionRequestSentViewModel = BaseViewModel & {
   bank: { name: string };

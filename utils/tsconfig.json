@@ -27,6 +27,7 @@
     "module": "node20" /* Specify what module code is generated. */,
     "rootDirs": ["./", "../libs/"] /* Allow multiple folders to be treated as one when resolving modules. */,
     "moduleResolution": "node16" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "baseUrl": "." /* Allow non-relative imports (e.g. 'drivers/db-client') to resolve relative to this directory. */,
     "paths": {
       "@ukef/*": ["../libs/common/src/*"],
       "@ukef/dtfs2-common": ["../libs/common/src/index.ts"],
@@ -107,7 +108,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "ts-node": {
-    "require": ["@ukef/dtfs2-common/register-paths"],
+    "require": ["@ukef/dtfs2-common/register-paths", "./register-paths.cjs"],
     "files": true
   },
   "include": ["**/*.ts", "../libs/common/**/*.ts"],

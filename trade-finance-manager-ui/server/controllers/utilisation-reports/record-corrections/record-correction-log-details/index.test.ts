@@ -1,14 +1,14 @@
 import { recordCorrectionLogDetailsMock } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
+import { mapToRecordCorrectionStatus } from '@tfm-ui/controllers/utilisation-reports/helpers/map-record-correction-status';
+import { RecordCorrectionLogDetailsViewModel } from '@tfm-ui/types/view-models';
+import { getReconciliationForReportHref } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 import { getRecordCorrectionLogDetails, GetRecordCorrectionLogDetailsRequest } from '.';
-import api from '../../../../api';
-import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
-import { RecordCorrectionLogDetailsViewModel } from '../../../../types/view-models';
-import { getReconciliationForReportHref } from '../../helpers';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../../constants/reconciliation-for-report-tabs';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 
 jest.mock('../../../../api');
 

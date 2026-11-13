@@ -1,5 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { PaymentErrorsViewModel } from '../../../types/view-models';
+import { PaymentErrorsViewModel } from '@tfm-ui/types/view-models';
 import {
   AddPaymentFormRequestBody,
   AddToAnExistingPaymentFormRequestBody,

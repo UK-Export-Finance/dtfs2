@@ -1,11 +1,11 @@
 import { TFM_AMENDMENT_STATUS, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { mockRes, mockUser } from '../../../test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes, mockUser } from '@tfm-ui/test-mocks';
 import {
   MOCK_AMENDMENT_COVERENDDATE_CHANGE,
   MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
   MOCK_AMENDMENT_FACILITYVALUE_CHANGE,
-} from '../../../test-mocks/amendment-test-mocks';
+} from '@tfm-ui/test-mocks/amendment-test-mocks';
 import { getAmendmentBankReviewDate } from './amendmentBankReviewDate.controller';
 
 const res = mockRes();

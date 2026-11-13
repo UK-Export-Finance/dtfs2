@@ -1,7 +1,7 @@
 import { PORTAL_AMENDMENT_STATUS, ROLES, CHECKERS_AMENDMENTS_DEAL_ID, DEAL_STATUS } from '@ukef/dtfs2-common';
+import { STATUS, FIELD_NAMES } from '@ukef/portal-ui/server/constants';
+import getCheckersApprovalAmendmentDealIds from '@ukef/portal-ui/server/helpers/getCheckersApprovalAmendmentDealIds';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import { STATUS, FIELD_NAMES } from '../../../constants';
-import getCheckersApprovalAmendmentDealIds from '../../../helpers/getCheckersApprovalAmendmentDealIds';
 
 jest.mock('../../../helpers/getCheckersApprovalAmendmentDealIds');
 

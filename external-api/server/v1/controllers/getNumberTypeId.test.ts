@@ -1,4 +1,4 @@
-import { InvalidEntityTypeError } from '../errors';
+import { InvalidEntityTypeError } from '@ukef/external-api/server/v1/errors';
 import { getNumberTypeId } from './number-generator.controller';
 /**
  * Test suite for the getNumberTypeId function.

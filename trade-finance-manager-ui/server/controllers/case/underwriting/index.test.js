@@ -1,8 +1,8 @@
 import { TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
 
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
 

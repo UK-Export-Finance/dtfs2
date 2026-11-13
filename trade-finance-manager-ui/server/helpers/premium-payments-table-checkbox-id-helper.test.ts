@@ -1,11 +1,11 @@
 import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
 import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from './premium-payments-table-checkbox-id-helper';
-import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
 
 describe('premium payments table checkbox id helper', () => {
   describe('getFeeRecordIdsFromPremiumPaymentsCheckboxIds', () => {

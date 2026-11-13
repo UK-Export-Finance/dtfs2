@@ -1,10 +1,10 @@
 import { createMocks } from 'node-mocks-http';
 import { DayMonthYearInput, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aRequestSession } from '../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { BankRequestDateValidationViewModel, BankRequestDateViewModel } from '../../../types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { BankRequestDateValidationViewModel, BankRequestDateViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
 import { postBankRequestDate, PostBankRequestDateRequest } from './bank-request-date.controller';
-import api from '../../../api';
+import { aRequestSession } from '../../../../test-helpers';
 
 const validateBankRequestDateMock: jest.Mock<BankRequestDateValidationViewModel> = jest.fn(() => ({
   errors: null,

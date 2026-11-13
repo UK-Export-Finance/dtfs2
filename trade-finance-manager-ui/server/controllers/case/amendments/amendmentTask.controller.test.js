@@ -1,9 +1,9 @@
 import { cloneDeep } from 'lodash';
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
-import CONSTANTS from '../../../constants';
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
+import CONSTANTS from '@tfm-ui/constants';
+import { mockRes } from '@tfm-ui/test-mocks';
+import api from '@tfm-ui/api';
 import { postAmendmentTask } from './amendmentTasks.controller';
-import { mockRes } from '../../../test-mocks';
-import api from '../../../api';
 
 api.updateAmendment = jest.fn(() => {
   Promise.resolve(true);

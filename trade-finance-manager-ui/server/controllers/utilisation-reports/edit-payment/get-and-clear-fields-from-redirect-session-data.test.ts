@@ -1,7 +1,7 @@
 import { createRequest } from 'node-mocks-http';
+import { RemoveFeesFromPaymentErrorKey } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
-import { RemoveFeesFromPaymentErrorKey } from '../helpers';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 type RedirectSessionData = {
   removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey | undefined;

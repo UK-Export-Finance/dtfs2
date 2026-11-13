@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
 
 export type GetReportDownloadRequest = CustomExpressRequest<{ params: { id: string } }>;
 

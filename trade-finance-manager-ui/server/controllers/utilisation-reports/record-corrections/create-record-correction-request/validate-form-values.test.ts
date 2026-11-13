@@ -1,5 +1,5 @@
 import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
+import { CreateRecordCorrectionRequestFormValues } from '@tfm-ui/types/view-models';
 import * as validateFormValues from './validate-form-values';
 
 const { getAdditionalInfoValidationError, getCreateRecordCorrectionRequestFormErrors, validateCreateRecordCorrectionRequestFormValues } = validateFormValues;

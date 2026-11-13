@@ -2,9 +2,9 @@ import { anAuthorisationUrlRequest } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { Request, Response } from 'express';
+import { LoginService } from '@tfm-ui/services/login.service';
 import { aRequestSession } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
-import { LoginService } from '../../../services/login.service';
 
 jest.mock('../../../services/login.service', () => ({
   LoginService: {

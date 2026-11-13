@@ -19,6 +19,7 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
 
   if (v1Deal.Deal_information.Extra_fields.MIN_Checker.username) {
     const checkerMIN = getBssUserByEmail(v1Deal.Deal_information.Extra_fields.MIN_Checker.username);
+
     if (checkerMIN.username) {
       details.checkerMIN = checkerMIN;
     } else {
@@ -28,6 +29,7 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
 
   if (v1Deal.Deal_information.Extra_fields.First_Checker) {
     const checker = getBssUserByEmail(v1Deal.Deal_information.Extra_fields.First_Checker.username);
+
     if (checker.username) {
       details.checker = checker;
     } else {

@@ -9,10 +9,15 @@ const initUsers = async (token) => {
 };
 
 const getUserByEmail = (userData, email) => {
-  if (!email) return {};
+  if (!email) {
+    return {};
+  }
 
   const user = userData.find((u) => u.email?.toLowerCase() === email.toLowerCase());
-  if (!user) return {};
+
+  if (!user) {
+    return {};
+  }
 
   return {
     _id: user._id,
@@ -30,10 +35,15 @@ const getUserByEmail = (userData, email) => {
 };
 
 const getBssUserByEmail = (email) => {
-  if (!email) return {};
+  if (!email) {
+    return {};
+  }
 
   const user = users.find((b) => b.username.toLowerCase() === email.toLowerCase());
-  if (!user) return {};
+
+  if (!user) {
+    return {};
+  }
 
   return {
     _id: user._id,

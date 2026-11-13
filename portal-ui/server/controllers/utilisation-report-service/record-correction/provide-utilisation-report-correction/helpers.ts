@@ -6,11 +6,11 @@ import {
   RecordCorrectionFormValues,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
-import { GetFeeRecordCorrectionResponseBody, GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import { GetFeeRecordCorrectionResponseBody, GetFeeRecordCorrectionTransientFormDataResponseBody } from '@ukef/portal-ui/server/api-response-types';
 import {
   CorrectionRequestDetailsViewModel,
   ProvideCorrectionFormValuesViewModel,
-} from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
+} from '@ukef/portal-ui/server/types/view-models/record-correction/provide-utilisation-report-correction';
 
 /**
  * Maps the correction response to a correction request view model.

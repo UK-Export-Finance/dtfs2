@@ -1,6 +1,6 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/eligibility/pageFields';
+import { isCompleted } from '@ukef/portal-ui/server/helpers/formCompleted';
 import completedEligibilityForms from '.';
-import FIELDS from '../pageFields';
-import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedEligibilityForms', () => {
   it("should return an object with each eligibility page/form's completed status", () => {

@@ -1,4 +1,4 @@
-import { ReconciliationForReportTab } from '../reconciliation-for-report-tab';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 
 export type ConfirmDeletePaymentViewModel = {
   paymentSummaryListRows: {

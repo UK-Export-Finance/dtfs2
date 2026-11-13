@@ -1,10 +1,10 @@
 import { Currency } from '@ukef/dtfs2-common';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
-import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { AddToAnExistingPaymentErrorsViewModel, PaymentErrorsViewModel } from '../../../types/view-models';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
+import { AddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { AddToAnExistingPaymentErrorsViewModel, PaymentErrorsViewModel } from '@tfm-ui/types/view-models';
+import { AddToAnExistingPaymentRadioId } from '@tfm-ui/types/add-to-an-existing-payment-radio-id';
 import { validateAddPaymentRequestFormValues, validateAddToAnExistingPaymentRequestFormValues } from './validate-payment-form-values';
-import { AddToAnExistingPaymentRadioId } from '../../../types/add-to-an-existing-payment-radio-id';
 
 export type PremiumPaymentsTableCheckboxSelectionsRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'>;
 

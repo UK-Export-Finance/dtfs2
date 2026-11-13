@@ -1,4 +1,4 @@
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
 describe('getReconciliationForReportHref', () => {

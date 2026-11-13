@@ -1,6 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
 import { TfmFacility } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 export class TfmFacilityClient {
   private static collection?: Collection<WithoutId<TfmFacility>>;
@@ -17,8 +17,10 @@ export class TfmFacilityClient {
     const { ukefFacilityId } = tfmFacility.facilitySnapshot;
 
     const numberOfFacilities = await this.collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
+
     if (numberOfFacilities !== 0) {
       console.info(`TFM facility with UKEF facility id '${ukefFacilityId}' already exists`);
+
       return;
     }
 

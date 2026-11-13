@@ -7,15 +7,15 @@ import {
   RECORD_CORRECTION_REASON,
   ReportPeriod,
 } from '@ukef/dtfs2-common';
+import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { aNonEmptyPendingCorrectionsResponseBody, aPendingCorrection } from '@ukef/portal-ui/test-helpers/test-data';
 import {
   mapNextDueReportPeriodToNextActionViewModel,
   mapToPendingCorrectionsViewModel,
   isNonEmptyPendingCorrectionsResponseBody,
   mapToPendingCorrectionViewModel,
 } from './pending-corrections-helper';
-import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
-import { PRIMARY_NAV_KEY } from '../../../constants';
-import { aNonEmptyPendingCorrectionsResponseBody, aPendingCorrection } from '../../../../test-helpers/test-data';
 
 describe('pending-corrections-helper', () => {
   const mockToday = new Date('2023-04-01');

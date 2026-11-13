@@ -1,11 +1,11 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import underwriterManagersDecisionController from '.';
-import userCanEditManagersDecision from './helpers';
-import { mapDecisionObject, validateSubmittedValues } from '../../../helpers';
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
+import { mapDecisionObject, validateSubmittedValues } from '@tfm-ui/controllers/helpers';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
 
-import CONSTANTS from '../../../../constants';
+import CONSTANTS from '@tfm-ui/constants';
+import userCanEditManagersDecision from './helpers';
+import underwriterManagersDecisionController from '.';
 
 const res = mockRes();
 

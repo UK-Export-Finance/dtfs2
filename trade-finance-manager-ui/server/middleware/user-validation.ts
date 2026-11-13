@@ -1,6 +1,6 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { Request, Response, NextFunction } from 'express';
-import { LoginController } from '../controllers/login/login-sso/login.controller';
+import { LoginController } from '@tfm-ui/controllers/login/login-sso/login.controller';
 
 /**
  * Middleware to validate the user session

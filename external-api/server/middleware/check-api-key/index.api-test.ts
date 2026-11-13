@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
+import { mockReq, mockRes, mockNext } from '@ukef/external-api/server/test-mocks';
 import { checkApiKey } from '.';
-import { mockReq, mockRes, mockNext } from '../../test-mocks';
 
 dotenv.config({ quiet: true });
 

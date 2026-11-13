@@ -1,6 +1,6 @@
 import express from 'express';
-import * as loginNonSsoController from '../../../controllers/login/login-non-sso';
-import { GetRouter } from '../../../types/get-router';
+import * as loginNonSsoController from '@tfm-ui/controllers/login/login-non-sso';
+import { GetRouter } from '@tfm-ui/types/get-router';
 
 export const getLoginNonSsoRouter: GetRouter = () => {
   const loginNonSsoRouter = express.Router();

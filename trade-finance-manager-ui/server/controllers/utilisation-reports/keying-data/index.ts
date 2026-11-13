@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { KeyingSheetCheckboxId } from '@tfm-ui/types/keying-sheet-checkbox-id';
 import { getFeeRecordIdsForKeyingSheetRowsWithStatusFromObjectKeys } from './keying-sheet-checkbox-id-helpers';
-import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
 export type PostKeyingDataRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 

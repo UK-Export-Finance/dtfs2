@@ -12,6 +12,7 @@ const getFacilityEndDateProperties = () => {
       facilityEndDate: add(new Date(), { months: 2 }),
     };
   }
+
   return {};
 };
 
