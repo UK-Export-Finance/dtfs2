@@ -32,6 +32,49 @@ This is confusing because `acbs-amend-facility-loan-record.js` — the code resp
 
 ---
 
+## In High-Level Technical Terms
+
+This section explains the bug without code, for anyone who follows logical reasoning but doesn't need the implementation detail.
+
+**The setup**
+
+When a facility amendment is sent on to ACBS (the external finance system), DTFS can submit two different kinds of update, depending on what's being amended:
+
+1. An **"amount changed"** submission — used when the facility's value is being changed.
+2. A **"cover end date changed"** submission — used when the facility's expiry date is being changed.
+
+These go to two separate destinations, and each one only accepts its own specific set of information. The amount destination needs an effective date and the size of the change. The cover-end-date destination needs the new expiry date. Neither will accept the other's information — if you send the wrong information to either, it's rejected outright.
+
+**The rule that got lost**
+
+For facilities of type **"Loan"**, there's a standing rule: amount changes are never sent via the "amount changed" submission — they're handled by a completely different process elsewhere in the system. That submission type is only ever meant for other facility types (Bonds).
+
+Originally, the code enforced this directly, in one place: *"only send the amount submission if an amount actually changed, and this facility is a Bond."* Both conditions had to be true together, checked at the same point, immediately before sending.
+
+In February 2023, that combined check was split in two. The decision of *whether to send* stayed where it was, but it was simplified to only ask "did an amount change?" — it stopped also asking "is this a Bond?". The Bond-only rule was moved earlier in the process, into the step that *prepares* the information to send, on the assumption that for a Loan facility, that preparation step would always end up with nothing useful, so the system would naturally have nothing to send and skip the submission anyway.
+
+**Why this mostly still worked**
+
+That assumption holds *as long as the amount change is the only thing being amended*. In that case, the preparation step for a Loan facility produces nothing at all, a separate safety check spots that nothing was produced, and the entire workflow correctly stops there — before it ever reaches the "should I send the amount submission?" decision.
+
+**Where it falls apart**
+
+The assumption breaks down when **two changes are approved together**: an amount change *and* a cover-end-date change, on a **Loan** facility, in the same amendment. This is an entirely normal, legitimate thing for an underwriter to approve in one go — nothing unusual about the request itself.
+
+When this happens:
+
+- The preparation step is *not* empty — it has genuine cover-end-date information ready to send.
+- Because it isn't empty, the earlier safety check never triggers.
+- The system still only asks "did an amount change happen?" — yes, it did — so it goes ahead and tries to send the amount submission.
+- But what actually gets sent is whatever was prepared, which — for a Loan facility — only ever contains the cover-end-date information. The amount information was never prepared in the first place, because the Bond-only rule, now living in the preparation step, correctly left it out.
+- The amount destination receives a submission with the wrong information in it, rejects it, and the resulting error is reported against the amount submission — even though the data inside it actually belongs to the cover-end-date submission.
+
+**In one sentence**
+
+The system still asks "did an amount change?" before deciding whether to send the amount submission, but it no longer also asks "is this a Bond?" at that same decision point — and nothing downstream catches the mismatch on the one occasion both questions matter at once: a Loan facility with both an amount and a cover-end-date change in the same amendment.
+
+---
+
 ## Root Cause
 
 ### 0. Confirmed origin: the commit that introduced the gap
@@ -65,6 +108,8 @@ The relevant part of the diff (originally at `azure-functions/acbs-function/acbs
 ```
 
 **Before this commit**, the orchestrator itself explicitly checked `facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND` before calling the amount-amendment activity — the Bond/Loan distinction was enforced at the call site. **This commit removed that check** and relocated the Bond/Loan distinction into the mapping function (`facilityLoanAmend()`) instead, under the assumption that an empty/partial mapping result would be an adequate substitute signal. That assumption holds for the "amount only" case (handled by the separate empty-object early-return guard) but not for the "amount + coverEndDate together on a Loan facility" case described below — which is exactly the gap this report addresses.
+
+As a result, this means that the decision to call the amount-amendment activity is no longer based on the facility's actual type at all — it is based purely on whether the raw `amendment.amount` field is present on the input, regardless of what `facilityLoanAmend()` actually produced for that facility. The orchestrator trusts that `flrMapped` will only ever contain amount-related fields when it's safe to call that activity, but `flrMapped` is a single shared object that also accumulates `coverEndDate`-derived fields (`expiryDate`, `nextDueDate`) when both are amended together. For a `Loan` facility, nothing in the orchestrator re-checks facility type before sending `flrMapped` to the amount endpoint — so whatever fields happen to be present (even ones left over from the unrelated `coverEndDate` amendment, and none of the fields the amount endpoint actually needs) get sent regardless. The Bond-only restriction the original code enforced was never truly replaced; it only happens to look replaced for the subset of scenarios where `amount` is the sole amendment field.
 
 Since this commit, `azure-functions/acbs/src/functions/acbs-amend-facility-loan-record.js` (and its pre-rename equivalent) has had no further logic changes to the amount/cover-end-date gating — confirmed via `git log --follow` on the file, which shows no commits between this one and the 2025-10-02 directory rename (`feat(DTFS2-7457)`) that touch this logic.
 
