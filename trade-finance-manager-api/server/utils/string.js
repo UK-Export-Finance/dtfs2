@@ -1,14 +1,14 @@
 const { isString } = require('@ukef/dtfs2-common');
 
-const isEmptyString = (s) => !s || (isString(s) && !s.trim().length);
+const isEmptyString = (str) => !str || (isString(str) && !str.trim().length);
 
-const hasValue = (s) => Boolean(s) && !isEmptyString(s);
+const hasValue = (str) => Boolean(str) && !isEmptyString(str);
 
-const stripCommas = (s) => (hasValue(s) ? s.toString().replace(/,/g, '') : s);
+const stripCommas = (str) => (hasValue(str) ? str.toString().replace(/,/g, '') : str);
 
-const capitalizeFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toUpperCase() + s.toString().slice(1) : s);
+const capitalizeFirstLetter = (str) => (hasValue(str) ? str.toString().charAt(0).toUpperCase() + str.toString().slice(1) : str);
 
-const lowercaseFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toLowerCase() + s.toString().slice(1) : s);
+const lowercaseFirstLetter = (str) => (hasValue(str) ? str.toString().charAt(0).toLowerCase() + str.toString().slice(1) : str);
 
 module.exports = {
   isEmptyString,

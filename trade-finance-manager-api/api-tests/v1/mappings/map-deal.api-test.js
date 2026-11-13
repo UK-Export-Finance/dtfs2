@@ -38,10 +38,10 @@ describe('mappings - map-deal', () => {
       },
       bondTransactions: {},
       loanTransactions: {},
-      facilities: allFacilities.map((f) => ({
-        _id: f._id,
+      facilities: allFacilities.map((facility) => ({
+        _id: facility._id,
         facilitySnapshot: {
-          _id: f._id,
+          _id: facility._id,
         },
       })),
     };

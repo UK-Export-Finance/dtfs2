@@ -27,8 +27,8 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, au
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
+      groupTasks: group.groupTasks.map((task) => {
+        let modifiedTask = task;
 
         /**
          * Use group title instead of id.
@@ -36,8 +36,8 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, au
          * if the ordering is changed.
          * */
         if (groupTitlesToAssign.includes(group.groupTitle)) {
-          task = {
-            ...task,
+          modifiedTask = {
+            ...modifiedTask,
             assignedTo: {
               userFullName: newAssigneeFullName,
               userId,
@@ -45,7 +45,7 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, au
           };
         }
 
-        return task;
+        return modifiedTask;
       }),
     };
 

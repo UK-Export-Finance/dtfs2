@@ -99,6 +99,9 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
+      // disallow param names with 1 digit, excluding object property names
+      'id-length': ['error', { min: 2, properties: 'never' }],
+
       'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src', prefix: '@ukef' }],
 
       'no-case-declarations': 'off',
