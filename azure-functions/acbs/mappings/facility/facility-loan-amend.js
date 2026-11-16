@@ -2,8 +2,6 @@ const CONSTANTS = require('../../constants');
 const { formatDate } = require('../../helpers/date');
 const helpers = require('./helpers');
 
-const { FACILITY } = CONSTANTS;
-
 /**
  * Maps amendment details to a facility loan amendment record.
  *
@@ -24,14 +22,11 @@ const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
 
       // 1. UKEF Exposure
       if (amount) {
-        // 1.1. Amend amount, if facility type is not `Loan`.
-        if (type !== FACILITY.FACILITY_TYPE.LOAN) {
-          record = {
-            ...record,
-            effectiveDate: formatDate(effectiveDate),
-            amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
-          };
-        }
+        record = {
+          ...record,
+          effectiveDate: formatDate(effectiveDate),
+          amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
+        };
       }
 
       // 2. Cover end date
