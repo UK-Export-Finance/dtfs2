@@ -10,7 +10,7 @@ module.exports = {
     when(api.findOneDeal)
       .calledWith(expect.anything())
       .mockImplementation((dealId) => {
-        const mockDeal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
+        const mockDeal = mockDealToReturn || ALL_MOCK_DEALS.find((deal) => deal._id === dealId);
 
         if (!mockDeal) {
           return Promise.reject();

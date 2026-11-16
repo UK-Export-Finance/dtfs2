@@ -13,7 +13,7 @@ const getFirstTask = (tasks) => tasks[0].groupTasks[0];
  * @param {string} task ID
  * @returns {object} Task
  */
-const getTaskInGroupById = (groupTasks, taskId) => groupTasks.find((t) => t.id === taskId);
+const getTaskInGroupById = (groupTasks, taskId) => groupTasks.find((task) => task.id === taskId);
 
 /**
  * Get a task in a group by task title
@@ -30,7 +30,7 @@ const getTaskInGroupByTitle = (groupTasks, title) => groupTasks.find((task) => t
  * @returns {object} Group
  */
 const getGroupById = (allTaskGroups, groupId) => {
-  const group = allTaskGroups.find((g) => g.id === groupId);
+  const group = allTaskGroups.find((group) => group.id === groupId);
 
   return group;
 };

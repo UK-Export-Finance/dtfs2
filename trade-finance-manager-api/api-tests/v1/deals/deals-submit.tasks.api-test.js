@@ -91,7 +91,7 @@ describe('/v1/deals', () => {
           // Assert
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
-          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
+          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((team) => team.id === firstTask.team.id);
 
           expect(sendEmailApiSpy).toHaveBeenCalledTimes(3);
 
@@ -136,7 +136,7 @@ describe('/v1/deals', () => {
           // Assert
           const firstTask = body.tfm.tasks[0].groupTasks[0];
 
-          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
+          const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((team) => team.id === firstTask.team.id);
 
           const submissionDate = new Date(Number(body.dealSnapshot.details.submissionDate));
 

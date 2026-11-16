@@ -17,17 +17,17 @@ const createUpdatedTask = (allTaskGroups, taskUpdate) =>
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        let task = t;
+      groupTasks: group.groupTasks.map((task) => {
+        let modifiedTask = task;
 
         if (task.id === taskUpdate.id && task.groupId === taskUpdate.groupId) {
-          task = {
-            ...task,
+          modifiedTask = {
+            ...modifiedTask,
             ...taskUpdate,
           };
         }
 
-        return task;
+        return modifiedTask;
       }),
     };
 
@@ -46,9 +46,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
 
     group = {
       ...group,
-      groupTasks: group.groupTasks.map((t) => {
-        const task = t;
-
+      groupTasks: group.groupTasks.map((task) => {
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
         const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
@@ -82,11 +80,11 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
 
   if (canUnlockUnderWritingGroupTasks) {
-    taskGroups = taskGroups.map((g) => {
-      const group = g;
+    taskGroups = taskGroups.map((group) => {
+      const modifiedGroup = group;
 
       if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
-        group.groupTasks = group.groupTasks.map((task) => {
+        modifiedGroup.groupTasks = modifiedGroup.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
           // add the task to list of emails to be sent
@@ -111,7 +109,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
         });
       }
 
-      return group;
+      return modifiedGroup;
     });
   }
 
@@ -137,26 +135,26 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
     }
   });
 
-  taskGroups = taskGroups.map((g) => {
-    const group = g;
+  taskGroups = taskGroups.map((group) => {
+    const modifiedGroup = group;
 
-    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === modifiedGroup.id);
 
     if (groupHasTaskToUpdate) {
-      group.groupTasks = group.groupTasks.map((t) => {
-        const task = t;
+      modifiedGroup.groupTasks = group.groupTasks.map((task) => {
+        const modifiedTask = task;
 
         const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
 
         if (taskShouldAddEmailSentFlag) {
-          task.emailSent = true;
+          modifiedTask.emailSent = true;
         }
 
-        return task;
+        return modifiedTask;
       });
     }
 
-    return group;
+    return modifiedGroup;
   });
 
   return taskGroups;
