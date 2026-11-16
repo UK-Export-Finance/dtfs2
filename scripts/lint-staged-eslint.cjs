@@ -78,7 +78,7 @@ function run(command, args, options) {
  * `npm run lint` does per-workspace via each workspace's own `lint` script.
  */
 module.exports = {
-  title: 'eslint --fix && prettier --write',
+  title: 'eslint --fix && prettier --write', 
   task: async (stagedFiles, { log }) => {
     const filesByConfigDir = groupFilesByConfigDir(stagedFiles);
     const failures = [];
