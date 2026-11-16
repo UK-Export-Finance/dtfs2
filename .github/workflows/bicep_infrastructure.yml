@@ -108,7 +108,8 @@ jobs:
              product="${{ env.PRODUCT }}" \
              environment="${{ env.ENVIRONMENT }}" \
              version="${{ vars.VERSION }}" \
-             location="${{ vars.REGION }}"
+             location="${{ vars.REGION }}" \
+             deploymentPrincipalObjectId="${{ vars.AZURE_CLIENT_OBJECT_ID }}"
 
       - name: Push secrets to Key Vault 🔑
         shell: bash
