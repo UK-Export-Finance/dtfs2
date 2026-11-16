@@ -215,385 +215,385 @@ jobs:
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_TFS_KEY" \
+            --name "APIM-TFS-KEY" \
             --value "$APIM_TFS_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_MDM_KEY" \
+            --name "APIM-MDM-KEY" \
             --value "$APIM_MDM_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "GOV_NOTIFY_API_KEY" \
+            --name "GOV-NOTIFY-API-KEY" \
             --value "$GOV_NOTIFY_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PORTAL_API_KEY" \
+            --name "PORTAL-API-KEY" \
             --value "$PORTAL_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "TFM_API_KEY" \
+            --name "TFM-API-KEY" \
             --value "$TFM_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AUDIT_API_PASSWORD" \
+            --name "AUDIT-API-PASSWORD" \
             --value "$AUDIT_API_PASSWORD" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ENTRA_ID_CLIENT_SECRET" \
+            --name "ENTRA-ID-CLIENT-SECRET" \
             --value "$ENTRA_ID_CLIENT_SECRET" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "NSG_SOURCE_ADDRESS_PREFIX" \
+            --name "NSG-SOURCE-ADDRESS-PREFIX" \
             --value "$NSG_SOURCE_ADDRESS_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_SOURCE_ADDRESS_PREFIX" \
+            --name "UKEF-SOURCE-ADDRESS-PREFIX" \
             --value "$UKEF_SOURCE_ADDRESS_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "TEST_SOURCE_ADDRESS_PREFIX" \
+            --name "TEST-SOURCE-ADDRESS-PREFIX" \
             --value "$TEST_SOURCE_ADDRESS_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "GOV_NOTIFY_EMAIL_RECIPIENT" \
+            --name "GOV-NOTIFY-EMAIL-RECIPIENT" \
             --value "$GOV_NOTIFY_EMAIL_RECIPIENT" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PDC_INPUTTERS_EMAIL_RECIPIENT" \
+            --name "PDC-INPUTTERS-EMAIL-RECIPIENT" \
             --value "$PDC_INPUTTERS_EMAIL_RECIPIENT" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_GEF_REPORTING_EMAIL_RECIPIENT" \
+            --name "UKEF-GEF-REPORTING-EMAIL-RECIPIENT" \
             --value "$UKEF_GEF_REPORTING_EMAIL_RECIPIENT" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PEERING_REMOTE_VNET_SUBSCRIPTION_ID" \
+            --name "PEERING-REMOTE-VNET-SUBSCRIPTION-ID" \
             --value "$PEERING_REMOTE_VNET_SUBSCRIPTION_ID" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_STAG_VNET_ADDRESS_PREFIX" \
+            --name "AZ-STAG-VNET-ADDRESS-PREFIX" \
             --value "$AZ_STAG_VNET_ADDRESS_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_STAG_SNET_APPGW_CIDR_PREFIX" \
+            --name "AZ-STAG-SNET-APPGW-CIDR-PREFIX" \
             --value "$AZ_STAG_SNET_APPGW_CIDR_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR" \
+            --name "AZ-STAG-SNET-ASP-EGRESS-PREFIX-CIDR" \
             --value "$AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_STAG_SNET_ACA_CLAMAV_CIDR" \
+            --name "AZ-STAG-SNET-ACA-CLAMAV-CIDR" \
             --value "$AZ_STAG_SNET_ACA_CLAMAV_CIDR" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_STAG_SNET_PRIVATE_EP_CIDR" \
+            --name "AZ-STAG-SNET-PRIVATE-EP-CIDR" \
             --value "$AZ_STAG_SNET_PRIVATE_EP_CIDR" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_VPN_IPS" \
+            --name "UKEF-VPN-IPS" \
             --value "$UKEF_VPN_IPS" \
             --output none
 
            az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PROD_SUBNET_CIDR" \
+            --name "PROD-SUBNET-CIDR" \
             --value "$PROD_SUBNET_CIDR" \
             --output none
 
                       az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ROUTE_TBL_NEXT_HOP_ADDRESS" \
+            --name "ROUTE-TBL-NEXT-HOP-ADDRESS" \
             --value "$ROUTE_TBL_NEXT_HOP_ADDRESS" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_TFS_VALUE" \
+            --name "APIM-TFS-VALUE" \
             --value "$APIM_TFS_VALUE" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_TFS_URL" \
+            --name "APIM-TFS-URL" \
             --value "$APIM_TFS_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_MDM_URL" \
+            --name "APIM-MDM-URL" \
             --value "$APIM_MDM_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_MDM_VALUE" \
+            --name "APIM-MDM-VALUE" \
             --value "$APIM_MDM_VALUE" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "DTFS_CENTRAL_API_KEY" \
+            --name "DTFS-CENTRAL-API-KEY" \
             --value "$DTFS_CENTRAL_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "COMPANIES_HOUSE_API_URL" \
+            --name "COMPANIES-HOUSE-API-URL" \
             --value "$COMPANIES_HOUSE_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ORDNANCE_SURVEY_API_URL" \
+            --name "ORDNANCE-SURVEY-API-URL" \
             --value "$ORDNANCE_SURVEY_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "CORS_ORIGIN" \
+            --name "CORS-ORIGIN" \
             --value "$CORS_ORIGIN" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_ESTORE_URL" \
+            --name "APIM-ESTORE-URL" \
             --value "$APIM_ESTORE_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_ESTORE_KEY" \
+            --name "APIM-ESTORE-KEY" \
             --value "$APIM_ESTORE_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "APIM_ESTORE_VALUE" \
+            --name "APIM-ESTORE-VALUE" \
             --value "$APIM_ESTORE_VALUE" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "COMPANIES_HOUSE_API_KEY" \
+            --name "COMPANIES-HOUSE-API-KEY" \
             --value "$COMPANIES_HOUSE_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ORDNANCE_SURVEY_API_KEY" \
+            --name "ORDNANCE-SURVEY-API-KEY" \
             --value "$ORDNANCE_SURVEY_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PORTAL_UI_URL" \
+            --name "PORTAL-UI-URL" \
             --value "$PORTAL_UI_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "EXTERNAL_API_KEY" \
+            --name "EXTERNAL-API-KEY" \
             --value "$EXTERNAL_API_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_PORTAL_EXPORT_FOLDER" \
+            --name "AZURE-PORTAL-EXPORT-FOLDER" \
             --value "$AZURE_PORTAL_EXPORT_FOLDER" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_PORTAL_FILESHARE_NAME" \
+            --name "AZURE-PORTAL-FILESHARE-NAME" \
             --value "$AZURE_PORTAL_FILESHARE_NAME" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ESTORE_URL" \
+            --name "ESTORE-URL" \
             --value "$ESTORE_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "PORTAL_API_URL" \
+            --name "PORTAL-API-URL" \
             --value "$PORTAL_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_TFM_API_SYSTEM_KEY" \
+            --name "UKEF-TFM-API-SYSTEM-KEY" \
             --value "$UKEF_TFM_API_SYSTEM_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_TFM_API_REPORTS_KEY" \
+            --name "UKEF-TFM-API-REPORTS-KEY" \
             --value "$UKEF_TFM_API_REPORTS_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "UKEF_INTERNAL_NOTIFICATION_EMAIL" \
+            --name "UKEF-INTERNAL-NOTIFICATION-EMAIL" \
             --value "$UKEF_INTERNAL_NOTIFICATION_EMAIL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_DNS_SERVER_IP" \
+            --name "AZURE-DNS-SERVER-IP" \
             --value "$AZURE_DNS_SERVER_IP" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZ_DEV_VNET_ADDRESS_PREFIX" \
+            --name "AZ-DEV-VNET-ADDRESS-PREFIX" \
             --value "$AZ_DEV_VNET_ADDRESS_PREFIX" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "DEAL_API_URL" \
+            --name "DEAL-API-URL" \
             --value "$DEAL_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "TFM_API_URL" \
+            --name "TFM-API-URL" \
             --value "$TFM_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "TFM_UI_URL" \
+            --name "TFM-UI-URL" \
             --value "$TFM_UI_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AUDIT_API_URL" \
+            --name "AUDIT-API-URL" \
             --value "$AUDIT_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AUDIT_API_USERNAME" \
+            --name "AUDIT-API-USERNAME" \
             --value "$AUDIT_API_USERNAME" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "DTFS_CENTRAL_API_URL" \
+            --name "DTFS-CENTRAL-API-URL" \
             --value "$DTFS_CENTRAL_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "EXTERNAL_API_URL" \
+            --name "EXTERNAL-API-URL" \
             --value "$EXTERNAL_API_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "SQL_DB_HOST" \
+            --name "SQL-DB-HOST" \
             --value "$SQL_DB_HOST" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "SQL_DB_NAME" \
+            --name "SQL-DB-NAME" \
             --value "$SQL_DB_NAME" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "SQL_DB_USERNAME" \
+            --name "SQL-DB-USERNAME" \
             --value "$SQL_DB_USERNAME" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "SQL_DB_PORT" \
+            --name "SQL-DB-PORT" \
             --value "$SQL_DB_PORT" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_ACBS_FUNCTION_URL" \
+            --name "AZURE-ACBS-FUNCTION-URL" \
             --value "$AZURE_ACBS_FUNCTION_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ENTRA_ID_CLIENT_ID" \
+            --name "ENTRA-ID-CLIENT-ID" \
             --value "$ENTRA_ID_CLIENT_ID" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ENTRA_ID_TENANT_ID" \
+            --name "ENTRA-ID-TENANT-ID" \
             --value "$ENTRA_ID_TENANT_ID" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ENTRA_ID_CLOUD_INSTANCE" \
+            --name "ENTRA-ID-CLOUD-INSTANCE" \
             --value "$ENTRA_ID_CLOUD_INSTANCE" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "ENTRA_ID_REDIRECT_URL" \
+            --name "ENTRA-ID-REDIRECT-URL" \
             --value "$ENTRA_ID_REDIRECT_URL" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_PORTAL_STORAGE_ACCESS_KEY" \
+            --name "AZURE-PORTAL-STORAGE-ACCESS-KEY" \
             --value "$AZURE_PORTAL_STORAGE_ACCESS_KEY" \
             --output none
 
           az keyvault secret set \
             --vault-name "$KEY_VAULT_NAME" \
-            --name "AZURE_PORTAL_STORAGE_ACCOUNT" \
+            --name "AZURE-PORTAL-STORAGE-ACCOUNT" \
             --value "$AZURE_PORTAL_STORAGE_ACCOUNT" \
             --output none
 
