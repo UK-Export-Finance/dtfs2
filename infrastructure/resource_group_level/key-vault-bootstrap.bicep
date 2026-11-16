@@ -2,7 +2,6 @@ param product string
 param environment string
 param version string
 param location string
-param deploymentPrincipalObjectId string
 
 var keyVaultName = 'kv-${product}-${environment}-${version}'
 
@@ -11,6 +10,5 @@ module keyVault './modules/key-vault.bicep' = {
   params: {
     keyVaultName: keyVaultName
     location: location
-    deploymentPrincipalObjectId: deploymentPrincipalObjectId
   }
 }
