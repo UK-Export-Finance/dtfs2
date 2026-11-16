@@ -766,14 +766,10 @@ var tfmApiAdditionalSecureSettings = {
 var tfmApiSecureConnectionStrings = { }
 var tfmApiAdditionalSecureConnectionStrings = { }
 
-// Key Vault
 var keyVaultName = 'kv-${product}-${environment}-${version}'
-module keyVault './modules/key-vault.bicep' = {
-  name: 'key-vault'
-  params: {
-    keyVaultName: keyVaultName
-    location: location
-  }
+
+resource keyVault 'Microsoft.KeyVault/vaults@2024-11-01' existing = {
+  name: keyVaultName
 }
 
 module networkSecurityGroup 'modules/gw-nsg.bicep' = {
@@ -1088,6 +1084,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     additionalSecureSettings: portalApiAdditionalSecureSetting
     connectionStrings: portalApiConnectionStrings
     secureConnectionStrings: portalApiSecureConnectionStrings
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL-API-KEY')
     clamAvSettings: {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort

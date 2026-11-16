@@ -34,6 +34,9 @@ param websiteDynamicCache string
 param websiteHttploggingRetentionDays string
 param websiteNodeDefaultVersion string
 param timeZone string
+@description('API key required to access the Portal API.')
+@secure()
+param PORTAL_API_KEY string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -86,7 +89,12 @@ var settingsCalculated = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
 }
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)
+
+var keyVaultSecureSettings = {
+  PORTAL_API_KEY: PORTAL_API_KEY
+}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated, keyVaultSecureSettings)
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
@@ -107,7 +115,7 @@ module portalApiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsProperties
-    deployApplicationInsights: false 
+    deployApplicationInsights: true
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
     location: location

@@ -99,6 +99,504 @@ jobs:
       - name: Set Resource Group Name
         run: echo "RESOURCE_GROUP_NAME=rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" >> $GITHUB_ENV
 
+      - name: Deploy Key Vault 🔐
+        run: |
+         az deployment group create \
+           --resource-group "rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}" \
+           --template-file ./infrastructure/resource_group_level/key-vault-bootstrap.bicep \
+           --parameters \
+             product="${{ env.PRODUCT }}" \
+             environment="${{ env.ENVIRONMENT }}" \
+             version="${{ vars.VERSION }}" \
+             location="${{ vars.REGION }}"
+
+      - name: Push secrets to Key Vault 🔑
+        shell: bash
+        env:
+          SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
+          JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+          JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+          APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+          GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+          PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
+          TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
+          AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
+          ENTRA_ID_CLIENT_SECRET: ${{ secrets.ENTRA_ID_CLIENT_SECRET }}
+          NSG_SOURCE_ADDRESS_PREFIX: ${{ secrets.NSG_SOURCE_ADDRESS_PREFIX }}
+          UKEF_SOURCE_ADDRESS_PREFIX: ${{ secrets.UKEF_SOURCE_ADDRESS_PREFIX }}
+          TEST_SOURCE_ADDRESS_PREFIX: ${{ secrets.TEST_SOURCE_ADDRESS_PREFIX }}
+          GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+          PDC_INPUTTERS_EMAIL_RECIPIENT: ${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}
+          UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
+          PEERING_REMOTE_VNET_SUBSCRIPTION_ID: ${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}
+          AZ_STAG_VNET_ADDRESS_PREFIX: ${{ secrets.AZ_STAG_VNET_ADDRESS_PREFIX }}
+          AZ_STAG_SNET_APPGW_CIDR_PREFIX: ${{ secrets.AZ_STAG_SNET_APPGW_CIDR_PREFIX }}
+          AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR: ${{ secrets.AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR }}
+          AZ_STAG_SNET_ACA_CLAMAV_CIDR: ${{ secrets.AZ_STAG_SNET_ACA_CLAMAV_CIDR }}
+          AZ_STAG_SNET_PRIVATE_EP_CIDR: ${{ secrets.AZ_STAG_SNET_PRIVATE_EP_CIDR }}
+          UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
+          PROD_SUBNET_CIDR: ${{ secrets.PROD_SUBNET_CIDR }}
+          ROUTE_TBL_NEXT_HOP_ADDRESS: ${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}
+          APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+          APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+          APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+          APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+          DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
+          COMPANIES_HOUSE_API_URL: ${{ secrets.COMPANIES_HOUSE_API_URL }}
+          ORDNANCE_SURVEY_API_URL: ${{ secrets.ORDNANCE_SURVEY_API_URL }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+          APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+          APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+          APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
+          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+          ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+          PORTAL_UI_URL: ${{ secrets.PORTAL_UI_URL }}
+          EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
+          AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+          AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME}}
+          ESTORE_URL: ${{ secrets.ESTORE_URL }}
+          PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
+          UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+          UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+          UKEF_INTERNAL_NOTIFICATION_EMAIL: ${{ secrets.UKEF_INTERNAL_NOTIFICATION_EMAIL }}
+          AZURE_DNS_SERVER_IP: ${{ secrets.AZURE_DNS_SERVER_IP }}
+          AZ_DEV_VNET_ADDRESS_PREFIX: ${{ secrets.AZ_DEV_VNET_ADDRESS_PREFIX }}
+          DEAL_API_URL: ${{ secrets.DEAL_API_URL }}
+          TFM_API_URL: ${{ secrets.TFM_API_URL }}
+          TFM_UI_URL: ${{ secrets.TFM_UI_URL }}
+          AUDIT_API_URL: ${{ secrets.AUDIT_API_URL}}
+          AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
+          DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
+          EXTERNAL_API_URL: ${{ secrets.EXTERNAL_API_URL }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
+          SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
+          SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
+          SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
+          AZURE_ACBS_FUNCTION_URL: ${{ secrets.AZURE_ACBS_FUNCTION_URL }}
+          ENTRA_ID_CLIENT_ID: ${{ secrets.ENTRA_ID_CLIENT_ID }}
+          ENTRA_ID_TENANT_ID: ${{ secrets.ENTRA_ID_TENANT_ID }}
+          ENTRA_ID_CLOUD_INSTANCE: ${{ secrets.ENTRA_ID_CLOUD_INSTANCE }}
+          ENTRA_ID_REDIRECT_URL: ${{ secrets.ENTRA_ID_REDIRECT_URL }}
+          AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+          AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+
+
+        run: |
+          set -euo pipefail
+
+          KEY_VAULT_NAME="kv-${{ env.PRODUCT }}-${{ env.ENVIRONMENT }}-${{ vars.VERSION }}"
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SQL-DB-PASSWORD" \
+            --value "$SQL_DB_PASSWORD" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "JWT-SIGNING-KEY" \
+            --value "$JWT_SIGNING_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "JWT-VALIDATING-KEY" \
+            --value "$JWT_VALIDATING_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SESSION-SECRET" \
+            --value "$SESSION_SECRET" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_TFS_KEY" \
+            --value "$APIM_TFS_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_MDM_KEY" \
+            --value "$APIM_MDM_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "GOV_NOTIFY_API_KEY" \
+            --value "$GOV_NOTIFY_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PORTAL_API_KEY" \
+            --value "$PORTAL_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "TFM_API_KEY" \
+            --value "$TFM_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AUDIT_API_PASSWORD" \
+            --value "$AUDIT_API_PASSWORD" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ENTRA_ID_CLIENT_SECRET" \
+            --value "$ENTRA_ID_CLIENT_SECRET" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "NSG_SOURCE_ADDRESS_PREFIX" \
+            --value "$NSG_SOURCE_ADDRESS_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_SOURCE_ADDRESS_PREFIX" \
+            --value "$UKEF_SOURCE_ADDRESS_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "TEST_SOURCE_ADDRESS_PREFIX" \
+            --value "$TEST_SOURCE_ADDRESS_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "GOV_NOTIFY_EMAIL_RECIPIENT" \
+            --value "$GOV_NOTIFY_EMAIL_RECIPIENT" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PDC_INPUTTERS_EMAIL_RECIPIENT" \
+            --value "$PDC_INPUTTERS_EMAIL_RECIPIENT" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_GEF_REPORTING_EMAIL_RECIPIENT" \
+            --value "$UKEF_GEF_REPORTING_EMAIL_RECIPIENT" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PEERING_REMOTE_VNET_SUBSCRIPTION_ID" \
+            --value "$PEERING_REMOTE_VNET_SUBSCRIPTION_ID" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_STAG_VNET_ADDRESS_PREFIX" \
+            --value "$AZ_STAG_VNET_ADDRESS_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_STAG_SNET_APPGW_CIDR_PREFIX" \
+            --value "$AZ_STAG_SNET_APPGW_CIDR_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR" \
+            --value "$AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_STAG_SNET_ACA_CLAMAV_CIDR" \
+            --value "$AZ_STAG_SNET_ACA_CLAMAV_CIDR" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_STAG_SNET_PRIVATE_EP_CIDR" \
+            --value "$AZ_STAG_SNET_PRIVATE_EP_CIDR" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_VPN_IPS" \
+            --value "$UKEF_VPN_IPS" \
+            --output none
+
+           az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PROD_SUBNET_CIDR" \
+            --value "$PROD_SUBNET_CIDR" \
+            --output none
+
+                      az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ROUTE_TBL_NEXT_HOP_ADDRESS" \
+            --value "$ROUTE_TBL_NEXT_HOP_ADDRESS" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_TFS_VALUE" \
+            --value "$APIM_TFS_VALUE" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_TFS_URL" \
+            --value "$APIM_TFS_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_MDM_URL" \
+            --value "$APIM_MDM_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_MDM_VALUE" \
+            --value "$APIM_MDM_VALUE" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "DTFS_CENTRAL_API_KEY" \
+            --value "$DTFS_CENTRAL_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "COMPANIES_HOUSE_API_URL" \
+            --value "$COMPANIES_HOUSE_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ORDNANCE_SURVEY_API_URL" \
+            --value "$ORDNANCE_SURVEY_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "CORS_ORIGIN" \
+            --value "$CORS_ORIGIN" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_ESTORE_URL" \
+            --value "$APIM_ESTORE_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_ESTORE_KEY" \
+            --value "$APIM_ESTORE_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "APIM_ESTORE_VALUE" \
+            --value "$APIM_ESTORE_VALUE" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "COMPANIES_HOUSE_API_KEY" \
+            --value "$COMPANIES_HOUSE_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ORDNANCE_SURVEY_API_KEY" \
+            --value "$ORDNANCE_SURVEY_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PORTAL_UI_URL" \
+            --value "$PORTAL_UI_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "EXTERNAL_API_KEY" \
+            --value "$EXTERNAL_API_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_PORTAL_EXPORT_FOLDER" \
+            --value "$AZURE_PORTAL_EXPORT_FOLDER" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_PORTAL_FILESHARE_NAME" \
+            --value "$AZURE_PORTAL_FILESHARE_NAME" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ESTORE_URL" \
+            --value "$ESTORE_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "PORTAL_API_URL" \
+            --value "$PORTAL_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_TFM_API_SYSTEM_KEY" \
+            --value "$UKEF_TFM_API_SYSTEM_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_TFM_API_REPORTS_KEY" \
+            --value "$UKEF_TFM_API_REPORTS_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "UKEF_INTERNAL_NOTIFICATION_EMAIL" \
+            --value "$UKEF_INTERNAL_NOTIFICATION_EMAIL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_DNS_SERVER_IP" \
+            --value "$AZURE_DNS_SERVER_IP" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZ_DEV_VNET_ADDRESS_PREFIX" \
+            --value "$AZ_DEV_VNET_ADDRESS_PREFIX" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "DEAL_API_URL" \
+            --value "$DEAL_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "TFM_API_URL" \
+            --value "$TFM_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "TFM_UI_URL" \
+            --value "$TFM_UI_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AUDIT_API_URL" \
+            --value "$AUDIT_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AUDIT_API_USERNAME" \
+            --value "$AUDIT_API_USERNAME" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "DTFS_CENTRAL_API_URL" \
+            --value "$DTFS_CENTRAL_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "EXTERNAL_API_URL" \
+            --value "$EXTERNAL_API_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SQL_DB_HOST" \
+            --value "$SQL_DB_HOST" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SQL_DB_NAME" \
+            --value "$SQL_DB_NAME" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SQL_DB_USERNAME" \
+            --value "$SQL_DB_USERNAME" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "SQL_DB_PORT" \
+            --value "$SQL_DB_PORT" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_ACBS_FUNCTION_URL" \
+            --value "$AZURE_ACBS_FUNCTION_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ENTRA_ID_CLIENT_ID" \
+            --value "$ENTRA_ID_CLIENT_ID" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ENTRA_ID_TENANT_ID" \
+            --value "$ENTRA_ID_TENANT_ID" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ENTRA_ID_CLOUD_INSTANCE" \
+            --value "$ENTRA_ID_CLOUD_INSTANCE" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "ENTRA_ID_REDIRECT_URL" \
+            --value "$ENTRA_ID_REDIRECT_URL" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_PORTAL_STORAGE_ACCESS_KEY" \
+            --value "$AZURE_PORTAL_STORAGE_ACCESS_KEY" \
+            --output none
+
+          az keyvault secret set \
+            --vault-name "$KEY_VAULT_NAME" \
+            --name "AZURE_PORTAL_STORAGE_ACCOUNT" \
+            --value "$AZURE_PORTAL_STORAGE_ACCOUNT" \
+            --output none
+
+
 # 2. Validate infrastructure resources
   Resource-Deploy:
     name: Deploy Resources 📊
@@ -120,17 +618,7 @@ jobs:
         id: bicep-parameters
         run: |
           set -a
-          UKEF_VPN_IPS="${{ secrets.UKEF_VPN_IPS }}"
-          UKEF_VPN_IPS="${UKEF_VPN_IPS// /}"
-          AZ_PORTAL_IPS="${{ secrets.AZ_PORTAL_IPS }}"
-          AZ_PORTAL_IPS="${AZ_PORTAL_IPS// /}"
-          NSG_SOURCE_ADDRESS_PREFIX="${{ vars.NSG_SOURCE_ADDRESS_PREFIX }}"
-          NSG_SOURCE_ADDRESS_PREFIX="${NSG_SOURCE_ADDRESS_PREFIX// /}"
-          UKEF_SOURCE_ADDRESS_PREFIX="${{ vars.UKEF_SOURCE_ADDRESS_PREFIX }}"
-          UKEF_SOURCE_ADDRESS_PREFIX="${UKEF_SOURCE_ADDRESS_PREFIX// /}"
-          TEST_SOURCE_ADDRESS_PREFIX="${{ vars.TEST_SOURCE_ADDRESS_PREFIX }}"
-          TEST_SOURCE_ADDRESS_PREFIX="${TEST_SOURCE_ADDRESS_PREFIX// /}"
-          UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE="${{ secrets.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}"
+          UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE="${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}"
           UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}"
           UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}"
           UTILISATION_REPORT_DUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}"
@@ -139,55 +627,13 @@ jobs:
           ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE="${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}"
           DEAL_CANCELLATION_SCHEDULE="${{ vars.DEAL_CANCELLATION_SCHEDULE }}"
           RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE="${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}"
-          PEERING_REMOTE_VNET_SUBSCRIPTION_ID="${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}"
-          AZ_STAG_VNET_ADDRESS_PREFIX="${{ secrets.AZ_STAG_VNET_ADDRESS_PREFIX }}"
-          AZ_STAG_SNET_APPGW_CIDR_PREFIX="${{ secrets.AZ_STAG_SNET_APPGW_CIDR_PREFIX }}"
-          AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR="${{ secrets.AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR }}"
-          AZ_STAG_SNET_ACA_CLAMAV_CIDR="${{ secrets.AZ_STAG_SNET_ACA_CLAMAV_CIDR }}"
-          AZ_STAG_SNET_PRIVATE_EP_CIDR="${{ secrets.AZ_STAG_SNET_PRIVATE_EP_CIDR }}"
-          PROD_SUBNET_CIDR="${{ secrets.PROD_SUBNET_CIDR }}"
-          ROUTE_TBL_NEXT_HOP_ADDRESS="${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}"
           TIME_ZONE="${{ vars.TIMEZONE }}"
-          GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-          PDC_INPUTTERS_EMAIL_RECIPIENT="${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}"
-          UKEF_GEF_REPORTING_EMAIL_RECIPIENT="${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}"
           VERSION="${{ vars.VERSION || 'v1' }}"
           RATE_LIMIT_THRESHOLD="${{ vars.RATE_LIMIT_THRESHOLD }}"
-          APIM_TFS_KEY="${{ secrets.APIM_TFS_KEY }}"
-          APIM_TFS_VALUE="${{ secrets.APIM_TFS_VALUE }}"
-          APIM_TFS_URL="${{ secrets.APIM_TFS_URL }}"
-          APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}"
-          APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}"
-          APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}"
-          DTFS_CENTRAL_API_KEY="${{ secrets.DTFS_CENTRAL_API_KEY }}"
-          COMPANIES_HOUSE_API_URL="${{ secrets.COMPANIES_HOUSE_API_URL }}"
-          ORDNANCE_SURVEY_API_URL="${{ secrets.ORDNANCE_SURVEY_API_URL }}"
-          CORS_ORIGIN="${{ secrets.CORS_ORIGIN }}"
-          APIM_ESTORE_URL="${{ secrets.APIM_ESTORE_URL }}"
-          APIM_ESTORE_KEY="${{ secrets.APIM_ESTORE_KEY }}"
-          APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}"
-          COMPANIES_HOUSE_API_KEY="${{ secrets.COMPANIES_HOUSE_API_KEY }}"
-          ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}"
-          GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}"
-          EXTERNAL_API_KEY="${{ secrets.EXTERNAL_API_KEY }}"
-          PORTAL_UI_URL="${{ vars.PORTAL_UI_URL }}"
-          TFM_API_KEY="${{ secrets.TFM_API_KEY }}"
           UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH="${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}"
           UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH="${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}"
           AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}"
-          AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}"
-          AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}"
-          JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
-          JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
-          PORTAL_API_KEY="${{ secrets.PORTAL_API_KEY }}"
-          PORTAL_API_URL="${{ vars.PORTAL_API_URL }}"
           UTILISATION_REPORT_MAX_FILE_SIZE_BYTES="${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}"
-          SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
-          ESTORE_URL="${{ secrets.ESTORE_URL }}"
-          UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}"
-          UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}"
-          UKEF_INTERNAL_NOTIFICATION="${{ secrets.UKEF_INTERNAL_NOTIFICATION }}"
-          AZURE_DNS_SERVER_IP="${{ secrets.AZURE_DNS_SERVER_IP }}"
           WEBSITE_HTTPLOGGING_RETENTION_DAYS="${{ vars.WEBSITE_HTTPLOGGING_RETENTION_DAYS }}"
           WEBSITE_DYNAMIC_CACHE="${{ vars.WEBSITE_DYNAMIC_CACHE }}"
           WEBSITE_NODE_DEFAULT_VERSION="${{ vars.WEBSITE_NODE_DEFAULT_VERSION }}"
@@ -195,7 +641,6 @@ jobs:
           REDIRECT_URL="${{ vars.REDIRECT_URL }}"
           ASP_SKU="${{ vars.ASP_SKU }}"
           CONTACT_US_EMAIL_ADDRESS="${{ vars.CONTACT_US_EMAIL_ADDRESS }}"
-          DEAL_API_URL="${{ vars.DEAL_API_URL }}"
           FF_FEE_RECORD_CORRECTION_ENABLED="${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}"
           FF_PORTAL_2FA_ENABLED="${{ vars.FF_PORTAL_2FA_ENABLED }}"
           FF_PORTAL_FACILITY_AMENDMENTS_ENABLED="${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}"
@@ -204,29 +649,12 @@ jobs:
           MAINTENANCE_TIMESTAMP="${{ vars.MAINTENANCE_TIMESTAMP }}"
           CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED }}"
           GEF_DEAL_VERSION="${{ vars.GEF_DEAL_VERSION }}"
-          TFM_API="${{ vars.TFM_API }}"
-          TFM_UI_URL="${{ vars.TFM_UI_URL }}"
           DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}"
-          AUDIT_API_PASSWORD="${{ secrets.AUDIT_API_PASSWORD }}"
-          AUDIT_API_URL="${{ secrets.AUDIT_API_URL }}"
-          AUDIT_API_USERNAME="${{ secrets.AUDIT_API_USERNAME }}"
-          DTFS_CENTRAL_API_URL="${{ vars.DTFS_CENTRAL_API_URL }}"
-          EXTERNAL_API_URL="${{ vars.EXTERNAL_API_URL }}"
-          SQL_DB_HOST="${{ secrets.SQL_DB_HOST }}"
-          SQL_DB_NAME="${{ secrets.SQL_DB_NAME }}"
-          SQL_DB_PASSWORD="${{ secrets.SQL_DB_PASSWORD }}"
-          SQL_DB_USERNAME="${{ secrets.SQL_DB_USERNAME }}"
           SQL_DB_LOGGING_ENABLED="${{ vars.SQL_DB_LOGGING_ENABLED }}"
-          SQL_DB_PORT="${{ secrets.SQL_DB_PORT }}"
-          TFM_API_URL="${{ vars.TFM_API_URL }}"
-          AZURE_ACBS_FUNCTION_URL="${{ vars.AZURE_ACBS_FUNCTION_URL }}"
           CASH_UTILISATION_PERCENTAGE="${{ vars.CASH_UTILISATION_PERCENTAGE }}"
           CONTINGENT_UTILISATION_PERCENTAGE="${{ vars.CONTINGENT_UTILISATION_PERCENTAGE }}"
-          ENTRA_ID_CLIENT_ID="${{ vars.ENTRA_ID_CLIENT_ID }}"
-          ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}"
-          ENTRA_ID_CLIENT_SECRET="${{ vars.ENTRA_ID_CLIENT_SECRET }}"
-          ENTRA_ID_CLOUD_INSTANCE="${{ vars.ENTRA_ID_CLOUD_INSTANCE }}"
-          ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}"
+          PORT="${{ vars.PORT }}"
+          NODE_ENV="${{ vars.NODE_ENV }}"
           FF_SALESFORCE_CUSTOMER_CREATION_ENABLED="${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}"
           FF_TFM_FACILITY_END_DATE_ENABLED="${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}"
           CONTACT_US_SELF_SERVICE_PORTAL_URL="${{ vars.CONTACT_US_SELF_SERVICE_PORTAL_URL }}"
