@@ -19,6 +19,8 @@ const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1
  * @throws {Error} - Throws an error if the API request fails, or if any other error occurs.
  */
 const handler = async (party) => {
+  const partyId = party?.alternateIdentifier;
+
   try {
     if (!party) {
       return {};
@@ -59,8 +61,8 @@ const handler = async (party) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create party record %o', error);
-    throw new Error(`Unable to create party record ${error}`);
+    console.error('Unable to create party record for party %s %o', partyId, error);
+    throw new Error(`Unable to create party record for party ${partyId} ${error}`);
   }
 };
 

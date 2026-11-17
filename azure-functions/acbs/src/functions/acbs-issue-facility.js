@@ -12,6 +12,7 @@ const CONSTANTS = require('../../constants');
 
 df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
   const payload = context.df.input;
+  const facilityId = payload?.ukefFacilityId;
 
   try {
     const { facilityIdentifier, facility, deal } = payload;
@@ -108,7 +109,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
 
     throw new Error('Invalid argument set provided');
   } catch (error) {
-    console.error('Error processing facility issuance %o', error);
-    throw new Error(`Error processing facility issuance ${error}`);
+    console.error('Error processing facility issuance for facility %s: %o', facilityId, error);
+    throw new Error(`Error processing facility issuance for facility ${facilityId}: ${error}`);
   }
 });

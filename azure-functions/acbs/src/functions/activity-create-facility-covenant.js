@@ -23,6 +23,8 @@ const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid facility convenant record payload');
@@ -104,8 +106,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility convenant record %o', error);
-    throw new Error(`Unable to create facility convenant record ${error}`);
+    console.error('Unable to create facility convenant record for facility %s: %o', facilityId, error);
+    throw new Error(`Unable to create facility convenant record for facility ${facilityId}: ${error}`);
   }
 };
 

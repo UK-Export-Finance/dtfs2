@@ -46,6 +46,7 @@ const mappings = require('../../mappings');
  */
 df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFacilityGuarantee(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facilityIdentifier;
 
   try {
     if (!payload) {
@@ -66,7 +67,7 @@ df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFaci
 
     return facilityGuaranteeRecordAmendment;
   } catch (error) {
-    console.error('Error amending facility guarantee record %o', error);
-    throw new Error(`Error amending facility guarantee record ${error}`);
+    console.error('Error amending facility guarantee record for facility %s: %o', facilityId, error);
+    throw new Error(`Error amending facility guarantee record for facility ${facilityId}: ${error}`);
   }
 });

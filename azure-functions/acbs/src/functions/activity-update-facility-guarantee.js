@@ -34,6 +34,8 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid facility guarantee amendment payload');
@@ -73,8 +75,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to amend facility guarantee record %o', error);
-    throw new Error(`Unable to amend facility guarantee record ${error}`);
+    console.error('Unable to amend facility guarantee record for facility %s %o', facilityId, error);
+    throw new Error(`Unable to amend facility guarantee record for facility ${facilityId} ${error}`);
   }
 };
 

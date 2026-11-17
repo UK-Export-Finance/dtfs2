@@ -30,6 +30,7 @@ const mappings = require('../../mappings');
 
 df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityLoan(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facilityIdentifier;
 
   try {
     if (!payload) {
@@ -98,7 +99,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
     return facilityLoanRecordAmendments;
   } catch (error) {
-    console.error('Error amending facility loan record %o', error);
-    throw new Error(`Error amending facility loan record ${error}`);
+    console.error('Error amending facility loan record for facility %s: %o', facilityId, error);
+    throw new Error(`Error amending facility loan record for facility ${facilityId}: ${error}`);
   }
 });
