@@ -1,11 +1,11 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/loan/pageFields';
+import { pageSpecificValidationErrors } from '@ukef/portal-ui/server/helpers/pageSpecificValidationErrors';
 import {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
   loanDatesRepaymentsValidationErrors,
   loanPreviewValidationErrors,
 } from '.';
-import FIELDS from '../pageFields';
-import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 
 describe('loan page specific validation errors', () => {
   const mockLoanErrors = {

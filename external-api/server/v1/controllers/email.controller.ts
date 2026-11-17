@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { HEADERS, isGovNotifyMocked } from '@ukef/dtfs2-common';
-import { MDM } from '../../constants';
-import { getNowAsEpoch } from '../../helpers/date';
+import { MDM } from '@ukef/external-api/server/constants';
+import { getNowAsEpoch } from '@ukef/external-api/server/helpers/date';
 
 dotenv.config({ quiet: true });
 

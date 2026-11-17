@@ -1,7 +1,7 @@
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../../constants/premium-payments-table-error-href';
-import { ADD_PAYMENT_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { ADD_PAYMENT_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { AddPaymentErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
 import { getAddPaymentError, validateAddPaymentErrorKey } from './add-payment-error';
-import { AddPaymentErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 
 describe('add-payment-error', () => {
   describe('getAddPaymentError', () => {

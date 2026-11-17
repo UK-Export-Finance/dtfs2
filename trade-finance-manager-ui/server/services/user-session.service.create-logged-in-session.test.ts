@@ -1,8 +1,8 @@
 import { TfmSessionUser } from '@ukef/dtfs2-common';
 import { Cookie, Session, SessionData } from 'express-session';
+import { PartiallyLoggedInUserSessionData } from '@tfm-ui/types/express-session';
 import { UserSessionService } from './user-session.service';
 import { aTfmSessionUser } from '../../test-helpers';
-import { PartiallyLoggedInUserSessionData } from '../types/express-session';
 
 describe('user session service', () => {
   describe('createLoggedInSession', () => {

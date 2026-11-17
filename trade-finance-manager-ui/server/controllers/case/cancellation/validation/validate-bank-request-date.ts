@@ -1,6 +1,6 @@
 import { applyStandardValidationAndParseDateInput, DayMonthYearInput } from '@ukef/dtfs2-common';
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
-import { BankRequestDateValidationViewModel } from '../../../../types/view-models';
+import { BankRequestDateValidationViewModel } from '@tfm-ui/types/view-models';
 
 const DATE_TOO_LATE_MESSAGE = 'The bank request date cannot exceed 12 months in the future from the submission date';
 const DATE_TOO_EARLY_MESSAGE = 'The bank request date cannot exceed 12 months in the past from the submission date';

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { isValidMongoId } from '../../helpers/validateIds';
+import { isValidMongoId } from '@tfm-ui/helpers/validateIds';
 
 export type ValidateMongoIdRequest = Request<{ _id: string }>;
 

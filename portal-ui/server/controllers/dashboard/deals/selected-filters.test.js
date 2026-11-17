@@ -1,7 +1,7 @@
-import { generateSelectedFiltersObject, selectedSubmissionTypeFilters } from '../filters/generate-selected-filters';
+import { generateSelectedFiltersObject, selectedSubmissionTypeFilters } from '@ukef/portal-ui/server/controllers/dashboard/filters/generate-selected-filters';
+import CONTENT_STRINGS from '@ukef/portal-ui/server/content-strings';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { selectedFilters } from './selected-filters';
-import CONTENT_STRINGS from '../../../content-strings';
-import CONSTANTS from '../../../constants';
 
 describe('controllers/dashboard/deals - selected-filters', () => {
   describe('selectedFilters', () => {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import api from '../../../api';
-import { asLoggedInUserSession } from '../../../helpers/express-session';
-import { PreviousReportsViewModel } from '../../../types/view-models/previous-reports';
+import api from '@ukef/portal-ui/server/api';
+import { asLoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { PreviousReportsViewModel } from '@ukef/portal-ui/server/types/view-models/previous-reports';
 import { mapToPreviousReportsViewModel } from './helpers/previous-reports-view-model-mapper';
 
 type GetPreviousReportsRequest = Request & {

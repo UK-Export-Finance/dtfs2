@@ -1,6 +1,6 @@
 import { isNonEmptyString } from '@ukef/dtfs2-common';
-import { REGEX } from '../../../constants';
-import { ErrorSummaryViewModel } from '../../../types/view-models';
+import { REGEX } from '@tfm-ui/constants';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
 
 export type FindUtilisationReportByYearValidationErrors = {
   errorSummary: ErrorSummaryViewModel[];

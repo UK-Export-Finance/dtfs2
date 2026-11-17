@@ -1,6 +1,6 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/bond/pageFields';
+import { pageSpecificValidationErrors } from '@ukef/portal-ui/server/helpers/pageSpecificValidationErrors';
 import { bondDetailsValidationErrors, bondFinancialDetailsValidationErrors, bondFeeDetailsValidationErrors, bondPreviewValidationErrors } from '.';
-import FIELDS from '../pageFields';
-import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 
 describe('bond page specific validation errors', () => {
   const mockBondErrors = {

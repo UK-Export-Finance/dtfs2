@@ -1,5 +1,5 @@
 import { CustomExpressRequest, PortalSessionUser } from '@ukef/dtfs2-common';
-import { DASHBOARD } from '../constants';
+import { DASHBOARD } from '@ukef/portal-ui/server/constants';
 
 type SessionShape = {
   userToken?: string;

@@ -1,6 +1,6 @@
 import { aGetAuthCodeUrlResponse } from '@ukef/dtfs2-common/test-helpers';
+import * as api from '@tfm-ui/api';
 import { LoginService } from './login.service';
-import * as api from '../api';
 
 jest.mock('../api');
 

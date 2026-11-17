@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { CustomExpressRequest, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { FeeRecordToKey } from '../../../api-response-types';
-import { asUserSession } from '../../../helpers/express-session';
-import api from '../../../api';
-import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
-import { getFeeRecordDisplayStatus, getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
-import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
+import { FeeRecordToKey } from '@tfm-ui/api-response-types';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import api from '@tfm-ui/api';
+import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '@tfm-ui/types/view-models';
+import { getFeeRecordDisplayStatus, getKeyToCurrencyAndAmountSortValueMap } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
 
 export type PostCheckKeyingDataRequest = CustomExpressRequest<{ params: { reportId: string } }>;
 

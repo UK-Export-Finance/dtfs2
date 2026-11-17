@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken';
 import { PORTAL_LOGIN_STATUS, TIMEZONE, USER_STATUS, PortalUser, generatePasswordHash } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toString('ascii');
 

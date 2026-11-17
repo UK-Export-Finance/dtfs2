@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { AzureFileInfoEntity, FeeRecordEntity, PaymentEntity, PaymentMatchingToleranceEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { seedUtilisationReports } from './utilisation-report';
-import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
-import { mongoDbClient } from '../../drivers/db-client';
-import { seedPaymentMatchingTolerances } from './payment-matching-tolerance/payment-matching-tolerance.seed';
+import { seedUtilisationReports } from 'sql-db-seeder/src/utilisation-report';
+import { seedFeeRecordPaymentGroups } from 'sql-db-seeder/src/fee-record-payment-group';
+import { mongoDbClient } from 'drivers/db-client';
+import { seedPaymentMatchingTolerances } from 'sql-db-seeder/src/payment-matching-tolerance/payment-matching-tolerance.seed';
 
 /**
  * Clears all data from the specified MSSQL database.

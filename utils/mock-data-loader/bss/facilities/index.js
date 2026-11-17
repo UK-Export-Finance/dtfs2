@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 module.exports = [
   ...require('./deal-1-facilities'),
   ...require('./deal-2-facilities'),

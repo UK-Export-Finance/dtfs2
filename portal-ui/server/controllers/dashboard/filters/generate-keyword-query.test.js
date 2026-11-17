@@ -1,5 +1,5 @@
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { generateObject, generateKeywordQuery } from './generate-keyword-query';
-import CONSTANTS from '../../../constants';
 
 describe('controllers/dashboard/filters - generate-keyword-query', () => {
   describe('generateObject', () => {

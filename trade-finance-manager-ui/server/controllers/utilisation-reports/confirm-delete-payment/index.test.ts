@@ -1,11 +1,11 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { getConfirmDeletePayment, postConfirmDeletePayment, GetConfirmDeletePaymentRequest, PostConfirmDeletePaymentRequest } from '.';
-import api from '../../../api';
-import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
+import api from '@tfm-ui/api';
+import { ConfirmDeletePaymentViewModel } from '@tfm-ui/types/view-models';
+import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '@tfm-ui/api-response-types';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 import { aPayment, aPaymentDetailsWithoutFeeRecordsResponseBody, aTfmSessionUser } from '../../../../test-helpers';
-import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '../../../api-response-types';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
+import { getConfirmDeletePayment, postConfirmDeletePayment, GetConfirmDeletePaymentRequest, PostConfirmDeletePaymentRequest } from '.';
 
 console.error = jest.fn();
 

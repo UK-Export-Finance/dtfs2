@@ -1,12 +1,12 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { PORTAL_LOGIN_STATUS, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { getPreviousReports } from '.';
-import { PRIMARY_NAV_KEY } from '../../../constants';
-import { PreviousUtilisationReportsResponseBody } from '../../../api-response-types';
+import api from '@ukef/portal-ui/server/api';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { PreviousUtilisationReportsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { PreviousReportsViewModel } from '@ukef/portal-ui/server/types/view-models/previous-reports';
 import * as mapper from './helpers/previous-reports-view-model-mapper';
-import { PreviousReportsViewModel } from '../../../types/view-models/previous-reports';
+import { getPreviousReports } from '.';
 
 describe('previous-reports controller', () => {
   describe('getPreviousReports', () => {

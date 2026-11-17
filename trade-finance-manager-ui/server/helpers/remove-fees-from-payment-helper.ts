@@ -1,5 +1,5 @@
-import { EditPaymentFormRequestBody } from '../controllers/utilisation-reports/helpers';
-import { EditPaymentsTableCheckboxId } from '../types/edit-payments-table-checkbox-id';
+import { EditPaymentFormRequestBody } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
 
 export type RemoveFeesFromPaymentFormRequestBody = EditPaymentFormRequestBody &
   Partial<Record<EditPaymentsTableCheckboxId, 'on'>> & {

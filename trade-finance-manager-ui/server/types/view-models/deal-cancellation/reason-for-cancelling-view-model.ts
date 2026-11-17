@@ -1,4 +1,4 @@
-import { ErrorSummaryViewModel } from '../error-summary-view-model';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models/error-summary-view-model';
 import { BaseCancellationViewModel } from './base-cancellation-view-model';
 
 export type ReasonForCancellingErrorsViewModel = {

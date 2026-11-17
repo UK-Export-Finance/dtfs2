@@ -68,6 +68,7 @@ const migrateUsers = async () => {
       lowercase: true,
       uppercase: true,
     });
+
     if (!bank) {
       console.info({ banks, bankId: userV1.Bank_id });
       userNoBanksError.push(userV1.Mail);
@@ -116,14 +117,17 @@ const migrateUsers = async () => {
         existingUserErrors.push(user.username);
         return;
       }
+
       const userCreate = api.createUser(user, token).then((createResult) => {
         if (createResult.success) {
           consoleLogColor(`created user: ${createResult.user.username}`, 'green');
         } else {
           consoleLogColor(`error creating user: ${createResult.username}`);
         }
+
         return createResult;
       });
+
       createUserPromises.push(userCreate);
     });
 

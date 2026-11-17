@@ -1,7 +1,7 @@
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../../constants/premium-payments-table-error-href';
-import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { GenerateKeyingDataErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
 import { getGenerateKeyingDataError, validateGenerateKeyingDataErrorKey } from './generate-keying-data-error';
-import { GenerateKeyingDataErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 
 describe('generate-keying-data-error', () => {
   describe('getGenerateKeyingDataError', () => {

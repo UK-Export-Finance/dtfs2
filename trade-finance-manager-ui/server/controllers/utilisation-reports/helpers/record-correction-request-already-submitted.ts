@@ -1,5 +1,5 @@
 import { ERROR_KEY } from '@ukef/dtfs2-common';
-import { FeeRecordCorrectionRequestReviewResponseBody } from '../../../api-response-types';
+import { FeeRecordCorrectionRequestReviewResponseBody } from '@tfm-ui/api-response-types';
 
 /**
  * if record correction request is already submitted,

@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { isValidSqlId } from '../../../validation/validate-ids';
+import { isValidSqlId } from '@ukef/portal-ui/server/validation/validate-ids';
 
 export type ValidateSqlIdRequest = CustomExpressRequest<{ params: Record<string, string> }>;
 

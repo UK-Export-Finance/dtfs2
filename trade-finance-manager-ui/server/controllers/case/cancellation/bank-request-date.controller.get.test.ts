@@ -1,11 +1,11 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { aRequestSession } from '../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { BankRequestDateViewModel } from '../../../types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { BankRequestDateViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
 import { getBankRequestDate, GetBankRequestDateRequest } from './bank-request-date.controller';
-import api from '../../../api';
+import { aRequestSession } from '../../../../test-helpers';
 
 jest.mock('../../../api', () => ({
   getDeal: jest.fn(),

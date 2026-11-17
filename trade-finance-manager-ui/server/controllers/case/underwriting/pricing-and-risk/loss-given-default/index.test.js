@@ -1,7 +1,7 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
 import lossGivenDefaultController from '..';
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
 
 const res = mockRes();
 

@@ -3,9 +3,9 @@ import { CustomExpressRequest, EntraIdAuthCodeRedirectResponseBody, HandleSsoRed
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { asPartiallyLoggedInUserSession } from '../../../helpers/express-session';
-import { LoginService } from '../../../services/login.service';
-import { UserSessionService } from '../../../services/user-session.service';
+import { asPartiallyLoggedInUserSession } from '@tfm-ui/helpers/express-session';
+import { LoginService } from '@tfm-ui/services/login.service';
+import { UserSessionService } from '@tfm-ui/services/user-session.service';
 
 export class LoginController {
   /**

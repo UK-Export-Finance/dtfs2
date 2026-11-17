@@ -1,6 +1,6 @@
 import express from 'express';
-import { GetRouter } from '../../../types/get-router';
-import { LoginController } from '../../../controllers/login/login-sso/login.controller';
+import { GetRouter } from '@tfm-ui/types/get-router';
+import { LoginController } from '@tfm-ui/controllers/login/login-sso/login.controller';
 
 /**
  * Creates and configures the authentication SSO router.

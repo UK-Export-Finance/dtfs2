@@ -1,6 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
 import { TfmDeal } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 export class TfmDealClient {
   private static collection?: Collection<WithoutId<TfmDeal>>;
@@ -17,8 +17,10 @@ export class TfmDealClient {
     const { ukefDealId } = tfmDeal.dealSnapshot;
 
     const numberOfDeals = await this.collection.count({ 'dealSnapshot.ukefDealId': { $eq: ukefDealId } });
+
     if (numberOfDeals !== 0) {
       console.info("Tfm deal with ukef deal id '%s' already exists", ukefDealId);
+
       return;
     }
 

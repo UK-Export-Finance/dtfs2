@@ -1,6 +1,5 @@
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
 import { validateUkefDecision } from '.';
-
-import MOCKS from '../../test-mocks/amendment-test-mocks';
 
 const CONSTANTS = require('../../constants');
 

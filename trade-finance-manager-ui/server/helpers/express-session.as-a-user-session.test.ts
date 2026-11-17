@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
 import { asUserSession } from './express-session';
-import { MOCK_TFM_SESSION_USER } from '../test-mocks/mock-tfm-session-user';
 
 describe('express-session helper', () => {
   describe('asUserSession', () => {

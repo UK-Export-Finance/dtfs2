@@ -1,5 +1,5 @@
 import { KeyingSheetRowStatus } from '@ukef/dtfs2-common';
-import { KeyingSheetDisplayStatus } from '../../../types/view-models';
+import { KeyingSheetDisplayStatus } from '@tfm-ui/types/view-models';
 
 const KeyingSheetRowStatusToDisplayStatus: Record<KeyingSheetRowStatus, KeyingSheetDisplayStatus> = {
   TO_DO: 'To do',

@@ -1,6 +1,6 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
-import { getCollection } from '../../database';
+import { getCollection } from '@ukef/external-api/server/database';
 import { EstoreRepo } from './estore-repo';
 
 const mockUpdateOne = jest.fn();
@@ -104,7 +104,7 @@ describe('EstoreRepo', () => {
       expect(mockUpdateOne).toHaveBeenCalledWith(filter, { $set: document });
     });
 
-    it('should log and propagates the original rejected write', async () => {
+    it('should log and propagate the original rejected write', async () => {
       // Arrange
       const error = new Error('MongoDB write failed');
       mockUpdateOne.mockRejectedValueOnce(error);

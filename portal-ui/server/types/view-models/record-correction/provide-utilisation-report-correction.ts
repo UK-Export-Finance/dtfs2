@@ -1,7 +1,7 @@
 import { CurrencyAndAmountString, RadioItem, RecordCorrectionFormValueValidationErrors, RecordCorrectionReason } from '@ukef/dtfs2-common';
-import { AdditionalCommentsFieldLabels } from '../../../controllers/utilisation-report-service/record-correction/provide-utilisation-report-correction/helpers';
-import { BaseViewModel } from '../base-view-model';
-import { ErrorSummaryViewModel } from '../error-summary-view-model';
+import { AdditionalCommentsFieldLabels } from '@ukef/portal-ui/server/controllers/utilisation-report-service/record-correction/provide-utilisation-report-correction/helpers';
+import { BaseViewModel } from '@ukef/portal-ui/server/types/view-models/base-view-model';
+import { ErrorSummaryViewModel } from '@ukef/portal-ui/server/types/view-models/error-summary-view-model';
 
 export type CorrectionRequestDetailsViewModel = {
   facilityId: string;

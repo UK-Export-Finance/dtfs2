@@ -5,6 +5,7 @@ const mapMandatoryCriteria = (v1Deal) => {
   if (mandatoryCriteriaRequired(v1Deal)) {
     return { ...MANDATORY_CRITERIA.filter((criteria) => criteria.version === 30) };
   }
+
   return [];
 };
 

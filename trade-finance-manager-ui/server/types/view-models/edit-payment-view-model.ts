@@ -1,8 +1,8 @@
 import { Currency, CurrencyAndAmountString, SessionBank } from '@ukef/dtfs2-common';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { ReconciliationForReportTab } from '@tfm-ui/types/reconciliation-for-report-tab';
 import { PaymentErrorsViewModel } from './payment-errors-view-model';
-import { EditPaymentFormValues } from '../edit-payment-form-values';
 import { FeeRecordDetailsWithCheckboxesViewModel } from './fee-record-details-view-model';
-import { ReconciliationForReportTab } from '../reconciliation-for-report-tab';
 
 export type EditPaymentErrorsViewModel = PaymentErrorsViewModel & {
   removeSelectedFeesErrorMessage?: string;

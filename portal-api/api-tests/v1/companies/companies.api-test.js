@@ -1,5 +1,7 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common/test-helpers');
 const { HttpStatusCode } = require('axios');
+const nock = require('nock');
+const dotenv = require('dotenv');
 const app = require('../../../server/createApp');
 const { MAKER } = require('../../../server/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
@@ -8,6 +10,10 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { POSTCODE } = require('../../fixtures/postcode');
 const { companies } = require('../../../server/external-api/api');
 const { as, get } = require('../../api')(app);
+
+dotenv.config({ quiet: true });
+
+const { EXTERNAL_API_URL } = process.env;
 
 jest.unmock('../../../server/external-api/api');
 
@@ -20,7 +26,35 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     maker1 = testUsers().withRole(MAKER).one();
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   it(`returns a ${HttpStatusCode.Ok} response with the company when it is found`, async () => {
+    nock(EXTERNAL_API_URL)
+      .get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`)
+      .reply(HttpStatusCode.Ok, {
+        companiesHouseRegistrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+        companyName: 'Test Co.',
+        registeredAddress: {
+          addressLine1: '1 Test Road',
+          addressLine2: 'Test Place',
+          locality: 'London',
+          postalCode: POSTCODE.VALID,
+          country: 'Great Britain',
+        },
+        industries: [
+          {
+            code: '1009',
+            name: 'Information and communication',
+            class: {
+              code: '62012',
+              name: 'Business and domestic software development',
+            },
+          },
+        ],
+      });
+
     const { status, body } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
     expect(status).toEqual(HttpStatusCode.Ok);
     expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
@@ -47,11 +81,19 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
   });
 
   it(`returns a ${HttpStatusCode.NotFound} response when the company is not found`, async () => {
+    nock(EXTERNAL_API_URL)
+      .get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`)
+      .reply(HttpStatusCode.NotFound, { message: 'Not found', statusCode: HttpStatusCode.NotFound });
+
     const { status } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`);
     expect(status).toEqual(HttpStatusCode.NotFound);
   });
 
   it(`returns a ${HttpStatusCode.UnprocessableEntity} response when the company is an overseas company`, async () => {
+    nock(EXTERNAL_API_URL)
+      .get(`/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`)
+      .reply(HttpStatusCode.UnprocessableEntity, { message: 'Unprocessable entity', statusCode: HttpStatusCode.UnprocessableEntity });
+
     const { status } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`);
     expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
   });

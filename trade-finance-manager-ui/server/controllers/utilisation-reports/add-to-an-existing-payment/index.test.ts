@@ -1,12 +1,12 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { addToAnExistingPayment, AddToAnExistingPaymentRequest } from '.';
-import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
-import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
+import api from '@tfm-ui/api';
+import { AddToAnExistingPaymentViewModel } from '@tfm-ui/types/view-models';
+import { SelectedFeeRecordsDetailsResponseBody } from '@tfm-ui/api-response-types';
+import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { getLinkToPremiumPaymentsTab } from '@tfm-ui/controllers/utilisation-reports/helpers/get-link-to-premium-payments-tab';
 import { aTfmSessionUser } from '../../../../test-helpers';
-import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
-import { getLinkToPremiumPaymentsTab } from '../helpers/get-link-to-premium-payments-tab';
+import { addToAnExistingPayment, AddToAnExistingPaymentRequest } from '.';
 
 jest.mock('../../../api');
 jest.mock('../helpers/get-link-to-premium-payments-tab');

@@ -1,7 +1,7 @@
 import { Response } from 'express';
+import * as api from '@ukef/portal-ui/server/api';
+import { getNextAccessCodePage } from '@ukef/portal-ui/server/helpers/getNextAccessCodePage';
 import { requestNewAccessCode, GetNewAccessCodePageRequest } from './get-request-new-access-code';
-import * as api from '../../api';
-import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
 
 jest.mock('../../api');
 jest.mock('../../helpers/getNextAccessCodePage');

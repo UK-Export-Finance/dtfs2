@@ -1,7 +1,7 @@
 import { ROLES, FACILITY_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+import CONSTANTS, { ALL_BANKS_ID } from '@ukef/portal-ui/server/constants';
+import { DASHBOARD_FILTERS } from '@ukef/portal-ui/server/content-strings';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
-import { DASHBOARD_FILTERS } from '../../../content-strings';
 import keywordQuery from './facilities-filters-keyword-query';
 
 const { ADMIN, MAKER } = ROLES;

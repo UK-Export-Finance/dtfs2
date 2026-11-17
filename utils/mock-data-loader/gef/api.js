@@ -107,7 +107,11 @@ const listFacilities = async (token) => {
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
-  if (!response) return [];
+
+  if (!response) {
+    return [];
+  }
+
   return response.data;
 };
 

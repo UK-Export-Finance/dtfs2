@@ -1,7 +1,7 @@
-import CONSTANTS from '../../constants';
+import CONSTANTS from '@tfm-ui/constants';
 
+import { generateValidationErrors } from '@tfm-ui/helpers/validation';
 import { validateCommentField, validateSubmittedValues } from './validateSubmittedValues.helper';
-import { generateValidationErrors } from '../../helpers/validation';
 
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {

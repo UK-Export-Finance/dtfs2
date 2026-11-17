@@ -1,5 +1,5 @@
+import { generateValidationErrors } from '@tfm-ui/helpers/validation';
 import validateSubmittedValues from './validateSubmittedValues';
-import { generateValidationErrors } from '../../../../../helpers/validation';
 
 describe('POST underwriting - pricing and risk - facility risk profile - validate submitted values', () => {
   describe('when `riskProfile` is not provided', () => {

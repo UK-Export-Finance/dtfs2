@@ -3,4 +3,4 @@ export * from './show-hide-element';
 export * from './change-industry-classes';
 export * from './number';
 
-import '../styles/styles.scss';
+import '@ukef/portal-ui/styles/styles.scss';

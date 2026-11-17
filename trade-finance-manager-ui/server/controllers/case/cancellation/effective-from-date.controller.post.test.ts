@@ -1,10 +1,10 @@
 import { createMocks } from 'node-mocks-http';
 import { DayMonthYearInput, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aRequestSession } from '../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { EffectiveFromDateValidationViewModel, EffectiveFromDateViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
 import { postEffectiveFromDate, PostEffectiveFromDateRequest } from './effective-from-date.controller';
-import { EffectiveFromDateValidationViewModel, EffectiveFromDateViewModel } from '../../../types/view-models';
-import api from '../../../api';
+import { aRequestSession } from '../../../../test-helpers';
 
 const validateEffectiveFromDateMock: jest.Mock<EffectiveFromDateValidationViewModel> = jest.fn(() => ({
   errors: null,

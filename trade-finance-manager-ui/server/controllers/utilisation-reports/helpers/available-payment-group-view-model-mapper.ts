@@ -1,6 +1,6 @@
 import { getFormattedCurrencyAndAmount, SelectedFeeRecordsAvailablePaymentDetails, SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
-import { PaymentGroupInputsViewModel, PaymentInputViewModelItem } from '../../../types/view-models';
-import { AddToAnExistingPaymentRadioId } from '../../../types/add-to-an-existing-payment-radio-id';
+import { PaymentGroupInputsViewModel, PaymentInputViewModelItem } from '@tfm-ui/types/view-models';
+import { AddToAnExistingPaymentRadioId } from '@tfm-ui/types/add-to-an-existing-payment-radio-id';
 
 const getRadioIdForPaymentGroup = (payments: SelectedFeeRecordsAvailablePaymentDetails[]): AddToAnExistingPaymentRadioId => {
   const paymentIdList = payments.map(({ id }) => id).join(',');

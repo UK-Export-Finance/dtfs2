@@ -1,5 +1,5 @@
 import { Bank, MONGO_DB_COLLECTIONS, PDC_TEAM_IDS, PortalUser, ROLES, TfmUser } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 /**
  * This class should be used to query values from the MongoDB database. It is
@@ -23,6 +23,7 @@ export class MongoDbDataLoader {
     if (this.allBanks) {
       return this.allBanks;
     }
+
     const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
     this.allBanks = await collection.find().toArray();
     this.allBanks.forEach((bank) => {
@@ -40,11 +41,14 @@ export class MongoDbDataLoader {
     if (this.pdcReconciledUser) {
       return this.pdcReconciledUser;
     }
+
     const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
     const user = await collection.findOne({ teams: { $in: [PDC_TEAM_IDS.PDC_RECONCILE] } });
+
     if (!user) {
       throw new Error(`Failed to find a tfm user with role '${PDC_TEAM_IDS.PDC_RECONCILE}'`);
     }
+
     this.pdcReconciledUser = user;
     return user;
   }
@@ -59,14 +63,17 @@ export class MongoDbDataLoader {
     if (this.paymentReportOfficerUsers[username]) {
       return this.paymentReportOfficerUsers[username];
     }
+
     const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.USERS);
     const user = await collection.findOne({
       username: { $eq: username },
       roles: { $in: [ROLES.PAYMENT_REPORT_OFFICER] },
     });
+
     if (!user) {
       throw new Error(`Failed to find a payment report officer user with username '${username}'`);
     }
+
     this.paymentReportOfficerUsers[username] = user;
     return user;
   }
@@ -81,11 +88,14 @@ export class MongoDbDataLoader {
     if (this.banks[bankId]) {
       return this.banks[bankId];
     }
+
     const banksCollection = await mongoDbClient.getCollection('banks');
     const bank = await banksCollection.findOne({ id: { $eq: bankId } });
+
     if (!bank) {
       throw new Error(`Failed to get bank with id`);
     }
+
     this.banks[bank.id] = bank;
     return bank;
   }

@@ -1,14 +1,14 @@
 import httpMocks from 'node-mocks-http';
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { getFindReportsByYear } from '.';
-import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { aBank } from '../../../../test-helpers/test-data/bank';
+import api from '@tfm-ui/api';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { BankWithReportingYearsResponseBody } from '@tfm-ui/api-response-types';
+import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '@tfm-ui/types/view-models';
+import { UtilisationReportReconciliationSummaryItem } from '@tfm-ui/types/utilisation-reports';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
-import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
-import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
-import { UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
+import { aBank } from '../../../../test-helpers/test-data/bank';
+import { getFindReportsByYear } from '.';
 
 jest.mock('../../../api');
 

@@ -1,5 +1,5 @@
+import api from '@ukef/portal-ui/server/api';
 import { fixNullCurrencyOnBondAndLoans } from './fixNullCurrencyOnBondAndLoans';
-import api from '../api';
 import postToApi from './postToApi';
 
 jest.mock('./postToApi');

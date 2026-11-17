@@ -1,29 +1,29 @@
 import express from 'express';
 import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled, setNoStoreCacheControl } from '@ukef/dtfs2-common';
-import { getUtilisationReports } from '../../controllers/utilisation-reports';
-import { validateSqlId, validateUserTeam, validatePostAddPaymentRequestBody, validatePostRemoveFeesFromPaymentRequestBody } from '../../middleware';
-import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
-import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
-import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
-import { addPayment } from '../../controllers/utilisation-reports/add-payment';
-import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo } from '../../controllers/utilisation-reports/keying-data';
-import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
-import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
-import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
-import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
-import { addToAnExistingPayment } from '../../controllers/utilisation-reports/add-to-an-existing-payment';
+import { getUtilisationReports } from '@tfm-ui/controllers/utilisation-reports';
+import { validateSqlId, validateUserTeam, validatePostAddPaymentRequestBody, validatePostRemoveFeesFromPaymentRequestBody } from '@tfm-ui/middleware';
+import { getReportDownload } from '@tfm-ui/controllers/utilisation-reports/report-download';
+import { getUtilisationReportReconciliationByReportId } from '@tfm-ui/controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
+import { getFindReportsByYear } from '@tfm-ui/controllers/utilisation-reports/find-reports-by-year';
+import { addPayment } from '@tfm-ui/controllers/utilisation-reports/add-payment';
+import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo } from '@tfm-ui/controllers/utilisation-reports/keying-data';
+import { postCheckKeyingData } from '@tfm-ui/controllers/utilisation-reports/check-keying-data';
+import { getEditPayment, postEditPayment } from '@tfm-ui/controllers/utilisation-reports/edit-payment';
+import { getConfirmDeletePayment, postConfirmDeletePayment } from '@tfm-ui/controllers/utilisation-reports/confirm-delete-payment';
+import { postRemoveFeesFromPayment } from '@tfm-ui/controllers/utilisation-reports/remove-fees-from-payment';
+import { addToAnExistingPayment } from '@tfm-ui/controllers/utilisation-reports/add-to-an-existing-payment';
 import {
   getCreateRecordCorrectionRequest,
   postCreateRecordCorrectionRequest,
-} from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
+} from '@tfm-ui/controllers/utilisation-reports/record-corrections/create-record-correction-request';
 import {
   getRecordCorrectionRequestInformation,
   postRecordCorrectionRequestInformation,
-} from '../../controllers/utilisation-reports/record-corrections/check-the-information';
-import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
-import { getRecordCorrectionRequestSent } from '../../controllers/utilisation-reports/record-corrections/request-sent';
-import { getCancelRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
-import { getRecordCorrectionLogDetails } from '../../controllers/utilisation-reports/record-corrections/record-correction-log-details';
+} from '@tfm-ui/controllers/utilisation-reports/record-corrections/check-the-information';
+import { postInitiateRecordCorrectionRequest } from '@tfm-ui/controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
+import { getRecordCorrectionRequestSent } from '@tfm-ui/controllers/utilisation-reports/record-corrections/request-sent';
+import { getCancelRecordCorrectionRequest } from '@tfm-ui/controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
+import { getRecordCorrectionLogDetails } from '@tfm-ui/controllers/utilisation-reports/record-corrections/record-correction-log-details';
 
 export const utilisationReportsRoutes = express.Router();
 

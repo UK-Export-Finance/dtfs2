@@ -1,8 +1,8 @@
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
-import { app } from '../../server/createApp';
-import { api } from '../api';
-import { premiumScheduleCalls } from '../../server/v1/controllers/premium-schedule.controller';
-import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
+import { premiumScheduleCalls } from '@ukef/external-api/server/v1/controllers/premium-schedule.controller';
+import { mockResponsePremiumSchedule } from '@ukef/external-api/api-tests/test-mocks/premium-schedule';
 
 const { getWithRequestBody } = api(app);
 

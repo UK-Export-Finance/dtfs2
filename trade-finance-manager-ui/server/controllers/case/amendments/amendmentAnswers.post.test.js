@@ -2,8 +2,8 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { MAPPED_FACILITY_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
+import api from '@tfm-ui/api';
 import { postAmendmentAnswers } from './amendmentAnswers.controller';
-import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 
 jest.mock('../../../api', () => ({

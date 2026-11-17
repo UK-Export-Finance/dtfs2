@@ -8,7 +8,6 @@ const fs = require('fs');
  * @param {number} ms Milliseconds (1000ms = 1s)
  * @returns Sleeps for `ms` provided
  */
-// eslint-disable-next-line no-promise-executor-return
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
@@ -20,8 +19,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const write = async (path, data) => {
   if (path && data) {
     fs.writeFileSync(path, data, 'utf8', (e) => !e);
+
     return true;
   }
+
   return false;
 };
 

@@ -1,4 +1,5 @@
-import { use } from '../test-mocks/router-mock';
+import { use } from '@tfm-ui/test-mocks/router-mock';
+import { validateUser } from '@tfm-ui/middleware/user-validation';
 import homeRoutes from './home';
 import { loginRoutes } from './login';
 import dealsRoutes from './deals';
@@ -8,7 +9,6 @@ import feedbackThankYouRoutes from './feedback-thank-you';
 import { userRoutes } from './user';
 import { utilisationReportsRoutes } from './utilisation-reports';
 import footerRoutes from './footer';
-import { validateUser } from '../middleware/user-validation';
 import { teamCheckingRoutes } from './team-checking';
 
 const mockCaseRoutes = jest.fn();

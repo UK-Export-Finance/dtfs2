@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const xml2js = require('xml2js');
 const { decodeHtmlEntities } = require('@ukef/dtfs2-common');
 const fileshare = require('./helpers/fileshare');
@@ -91,26 +90,6 @@ const mapV2 = async (portalDealId, v1Deal) => {
   return mappedV2;
 };
 
-const archiveFile = async (dealId) => {
-  const filename = `deal_${dealId}.xml`;
-  const folder = `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`;
-
-  const from = {
-    fileshare: 'workflow',
-    folder,
-    filename,
-  };
-
-  const to = {
-    fileshare: 'workflow',
-    folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}_archived_success/${dealId}`,
-    filename,
-  };
-  fileshare.moveFile({ to, from }).then(() => {
-    fileshare.deleteDirectory('workflow', folder);
-  });
-};
-
 const processXml = async (dealId) => {
   const dealXml = await fileshare.readFile({
     fileshare: 'workflow',
@@ -131,7 +110,7 @@ const importSingleDeal = async (dealId) =>
     mapV2(dealId, workflowDeal).then(async (v2Deal) => {
       if (v2Deal) {
         if (shouldMigrateDeal(v2Deal.status)) {
-          const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
+          const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ deal }) => {
             if (completed) {
               log.addSuccess(dealId);
             } else if (deal.validationErrors) {
@@ -141,11 +120,13 @@ const importSingleDeal = async (dealId) =>
             } else {
               log.addError(dealId, 'unknown API deal create error');
             }
+
             return completed;
           });
           return completed;
         }
       }
+
       log.addError(dealId, `Error mapping v1 ${dealId} to v2`);
 
       return false;
@@ -161,7 +142,9 @@ const migrateDeals = async () => {
 
   for (let i = 0; i < dealFolders.length; i += 1) {
     console.info(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
+
     const success = await importSingleDeal(dealFolders[i].name);
+
     consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
   }
 };

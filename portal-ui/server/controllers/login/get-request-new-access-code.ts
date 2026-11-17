@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import * as api from '../../api';
-import { getNextAccessCodePage } from '../../helpers/getNextAccessCodePage';
+import * as api from '@ukef/portal-ui/server/api';
+import { getNextAccessCodePage } from '@ukef/portal-ui/server/helpers/getNextAccessCodePage';
 
 type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
 type GetRequestNewAccessCodePageSession = { userToken: string; numberOfSignInOtpAttemptsRemaining?: number };

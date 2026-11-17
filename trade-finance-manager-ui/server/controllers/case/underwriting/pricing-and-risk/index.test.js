@@ -1,10 +1,10 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import pricingAndRiskController from '..';
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import { mapOtherCreditRatings } from '@tfm-ui/helpers/map-other-credit-ratings';
+import { mapSelectedCreditRating } from '@tfm-ui/helpers/map-selected-credit-rating';
 import { userCanEditGeneral } from './helpers';
-import { mapOtherCreditRatings } from '../../../../helpers/map-other-credit-ratings';
-import { mapSelectedCreditRating } from '../../../../helpers/map-selected-credit-rating';
+import pricingAndRiskController from '..';
 
 jest.mock('../../../../helpers/map-other-credit-ratings', () => ({
   mapOtherCreditRatings: jest.fn(),

@@ -1,9 +1,9 @@
 import { generateNoUserLoggedInAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
-import caseController from '.';
-import { mockRes } from '../../test-mocks';
+import { mockRes } from '@tfm-ui/test-mocks';
 
-import api from '../../api';
+import api from '@tfm-ui/api';
+import caseController from '.';
 
 describe('controllers - feedback', () => {
   let res;

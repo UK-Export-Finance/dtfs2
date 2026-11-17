@@ -1,10 +1,10 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
-import { postRemoveFeesFromPayment, RemoveFeesFromPaymentRequest } from '.';
-import api from '../../../api';
+import api from '@tfm-ui/api';
+import { RemoveFeesFromPaymentFormRequestBody } from '@tfm-ui/helpers/remove-fees-from-payment-helper';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
-import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
-import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
+import { postRemoveFeesFromPayment, RemoveFeesFromPaymentRequest } from '.';
 
 jest.mock('../../../api');
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Response } from 'express';
 import { CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
-import { isValidPartyUrn } from '../../helpers';
+import { isValidPartyUrn } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

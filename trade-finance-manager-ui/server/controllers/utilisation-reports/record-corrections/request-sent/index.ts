@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { RecordCorrectionRequestSentViewModel } from '../../../../types/view-models';
-import { asUserSession } from '../../../../helpers/express-session';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import api from '../../../../api';
+import { RecordCorrectionRequestSentViewModel } from '@tfm-ui/types/view-models';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
 
 export type GetRecordCorrectionRequestSentRequest = CustomExpressRequest<{
   params: {

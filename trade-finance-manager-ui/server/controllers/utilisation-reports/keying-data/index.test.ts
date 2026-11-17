@@ -1,7 +1,7 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
+import api from '@tfm-ui/api';
 import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo, PostKeyingDataRequest } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
-import api from '../../../api';
 
 console.error = jest.fn();
 

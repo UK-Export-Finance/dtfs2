@@ -1,7 +1,7 @@
 import { difference } from 'lodash';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { mongoDbClient } from '../drivers/db-client';
-import { getUniqueFeeRecordFacilityIds, getUniqueTfmFacilitiesUkefFacilityIds } from './helpers';
+import { mongoDbClient } from 'drivers/db-client';
+import { getUniqueFeeRecordFacilityIds, getUniqueTfmFacilitiesUkefFacilityIds } from 'validate-facility-ids/helpers';
 
 /**
  * Runs the validate facility ids script

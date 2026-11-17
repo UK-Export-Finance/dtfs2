@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { PremiumSchedule } from '../../interfaces';
-import { validUkefId, objectIsEmpty } from '../../helpers';
+import { PremiumSchedule } from '@ukef/external-api/server/interfaces';
+import { validUkefId, objectIsEmpty } from '@ukef/external-api/server/helpers';
 import { premiumScheduleCalls, successStatus } from './premium-schedule.controller';
 
 /**

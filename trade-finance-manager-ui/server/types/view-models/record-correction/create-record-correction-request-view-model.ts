@@ -1,6 +1,6 @@
 import { RecordCorrectionReason } from '@ukef/dtfs2-common';
-import { BaseViewModel } from '../base-view-model';
-import { ErrorSummaryViewModel } from '../error-summary-view-model';
+import { BaseViewModel } from '@tfm-ui/types/view-models/base-view-model';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models/error-summary-view-model';
 
 export type CreateRecordCorrectionRequestErrorsViewModel = {
   reasonsErrorMessage?: string;

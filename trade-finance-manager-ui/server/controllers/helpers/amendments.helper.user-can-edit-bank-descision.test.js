@@ -1,6 +1,5 @@
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
 import { userCanEditBankDecision } from '.';
-
-import MOCKS from '../../test-mocks/amendment-test-mocks';
 
 describe('amendments helper', () => {
   describe('userCanEditBankDecision()', () => {

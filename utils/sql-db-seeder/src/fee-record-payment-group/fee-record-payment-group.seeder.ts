@@ -14,8 +14,8 @@ import {
   createAutoMatchedZeroPaymentFeeRecordForReport,
   createRandomFeeRecordForReport,
   splitAmountIntoRandomAmounts,
-} from './fee-record-payment-group.helpers';
-import { MongoDbDataLoader } from '../mongo-db-client';
+} from 'sql-db-seeder/src/fee-record-payment-group/fee-record-payment-group.helpers';
+import { MongoDbDataLoader } from 'sql-db-seeder/src/mongo-db-client';
 
 type AddRandomFeeRecordOverrides = {
   facilityId?: string;
@@ -95,12 +95,15 @@ export class FeeRecordPaymentGroupSeeder {
     if (!this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
     }
+
     if (this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.RECONCILED) {
       throw new Error(`Cannot save fee records with status '${this.status}' when report is manually reconciled`);
     }
+
     if (this.feeRecords.length === 0) {
       throw new Error('No fee records to save');
     }
+
     await dataSource.manager.save(FeeRecordEntity, this.feeRecords);
   }
 
@@ -108,6 +111,7 @@ export class FeeRecordPaymentGroupSeeder {
     if (this.status === FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot add payments to fee records with ${FEE_RECORD_STATUS.TO_DO} status`);
     }
+
     if (!this.paymentCurrency) {
       throw new Error(`Cannot create payments without a payment currency`);
     }

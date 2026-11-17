@@ -1,13 +1,13 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, FEE_RECORD_STATUS, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { addPayment, AddPaymentRequest } from '.';
-import { PaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
-import * as validation from '../helpers/validate-payment-form-values';
-import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
-import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
+import api from '@tfm-ui/api';
+import { PaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '@tfm-ui/types/view-models';
+import * as validation from '@tfm-ui/controllers/utilisation-reports/helpers/validate-payment-form-values';
+import { AddPaymentFormValues } from '@tfm-ui/types/add-payment-form-values';
+import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '@tfm-ui/api-response-types';
+import { AddPaymentFormRequestBody } from '@tfm-ui/controllers/utilisation-reports/helpers';
 import { aTfmSessionUser } from '../../../../test-helpers';
-import { AddPaymentFormRequestBody } from '../helpers';
+import { addPayment, AddPaymentRequest } from '.';
 
 jest.mock('../../../api');
 

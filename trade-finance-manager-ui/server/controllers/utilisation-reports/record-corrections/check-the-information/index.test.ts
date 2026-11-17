@@ -1,11 +1,11 @@
 import httpMocks, { MockResponse, RequestOptions } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON, ERROR_KEY } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { aTfmSessionUser } from '../../../../../test-helpers';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
+import { getRecordCorrectionRequestCancelLinkHref } from '@tfm-ui/controllers/utilisation-reports/record-corrections/helpers';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation, RecordCorrectionRequestInformationRequest } from '.';
-import api from '../../../../api';
-import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 
 jest.mock('../../../../api');
 

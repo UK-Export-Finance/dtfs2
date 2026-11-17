@@ -1,8 +1,8 @@
 import { PassThrough } from 'stream';
 import httpMocks, { RequestOptions } from 'node-mocks-http';
-import api from '../../../api';
+import api from '@tfm-ui/api';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
 import { getReportDownload, GetReportDownloadRequest } from '.';
-import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 
 jest.mock('../../../api');
 

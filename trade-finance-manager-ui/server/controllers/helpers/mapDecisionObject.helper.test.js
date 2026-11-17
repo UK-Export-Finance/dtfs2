@@ -1,4 +1,4 @@
-import { userFullName } from '../../helpers/user';
+import { userFullName } from '@tfm-ui/helpers/user';
 import { mapDecisionValue, mapDecisionObject } from './mapDecisionObject.helper';
 
 const CONSTANTS = require('../../constants');

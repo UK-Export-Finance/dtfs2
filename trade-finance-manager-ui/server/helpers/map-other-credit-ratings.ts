@@ -1,5 +1,5 @@
 import { mapSelectOption, CreditRiskRating, SelectOption } from '@ukef/dtfs2-common';
-import api from '../api';
+import api from '@tfm-ui/api';
 
 /**
  * Maps the other credit ratings to an array of select options for the accessible autocomplete select component

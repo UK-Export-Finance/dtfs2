@@ -1,8 +1,8 @@
 import { Cookie, Session, SessionData } from 'express-session';
 import { AuthorizationUrlRequest } from '@azure/msal-node';
+import { UserSessionData } from '@tfm-ui/types/express-session';
 import { UserSessionService } from './user-session.service';
 import { aTfmSessionUser } from '../../test-helpers';
-import { UserSessionData } from '../types/express-session';
 
 describe('user session service', () => {
   describe('createPartiallyLoggedInSession', () => {

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, Currency, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
-import { getRandomCurrency, getRandomFinancialAmount, getExchangeRate } from '../helpers';
+import { getRandomCurrency, getRandomFinancialAmount, getExchangeRate } from 'sql-db-seeder/src/helpers';
 
 type CreateRandomFeeRecordForReportOverrides = {
   status?: FeeRecordStatus;

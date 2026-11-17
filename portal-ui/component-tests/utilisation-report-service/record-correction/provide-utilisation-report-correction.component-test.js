@@ -1,7 +1,7 @@
 import { RECORD_CORRECTION_REASON, CURRENCY, mapCurrenciesToRadioItems } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
-import pageRenderer from '../../pageRenderer';
-import { aProvideUtilisationReportCorrectionViewModel } from '../../../test-helpers/test-data/view-models/record-corrections/provide-utilisation-report-correction-view-model';
+import pageRenderer from '@ukef/portal-ui/component-tests/pageRenderer';
+import { aProvideUtilisationReportCorrectionViewModel } from '@ukef/portal-ui/test-helpers/test-data/view-models/record-corrections/provide-utilisation-report-correction-view-model';
 
 const page = 'utilisation-report-service/record-correction/provide-utilisation-report-correction.njk';
 const render = pageRenderer(page);
