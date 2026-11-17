@@ -1,3 +1,4 @@
+import { COUNTRIES } from '@ukef/dtfs2-common';
 import { app } from '@ukef/external-api/server/createApp';
 import { api } from '@ukef/external-api/api-tests/api';
 
@@ -24,32 +25,21 @@ describe('/countries', () => {
     });
   });
 
-  it('does not include excluded countries in the countries list', async () => {
-    // Arrange
-    const excludedCountries = [
-      'Benin',
-      'Cape Verde',
-      'China',
-      'Gambia',
-      'Ghana',
-      'Hong Kong',
-      'Cote d Ivoire',
-      'Liberia',
-      'Nigeria',
-      'Senegal',
-      'Sierra Leone',
-      'Togo',
-    ];
-
-    // Act
+  it('returns all disabled countries with disabled set to true', async () => {
     const { status, body } = await get('/countries');
-    const countryNames = body.countries.map((c: any) => c.name);
+    const disabledCountries = COUNTRIES.filter((country) => country.disabled);
 
-    // Assert
     expect(status).toEqual(200);
-    expect(countryNames).toBeInstanceOf(Array);
-    excludedCountries.forEach((country) => {
-      expect(countryNames).not.toContain(country);
+
+    disabledCountries.forEach((country) => {
+      expect(body.countries).toContainEqual(
+        expect.objectContaining({
+          id: country.id,
+          name: country.name,
+          code: country.code,
+          disabled: true,
+        }),
+      );
     });
   });
 
