@@ -122,9 +122,7 @@ context('Users can route to the payments page for a bank', () => {
 
     pages.utilisationReportsSummaryPage.reconciliationStatus(PENDING_RECONCILIATION_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--grey');
 
-    pages.utilisationReportsSummaryPage
-      .reconciliationStatus(RECONCILIATION_IN_PROGRESS_BANK_ID, submissionMonthStamp)
-      .should('have.class', 'govuk-tag--light-blue');
+    pages.utilisationReportsSummaryPage.reconciliationStatus(RECONCILIATION_IN_PROGRESS_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--light-blue');
 
     pages.utilisationReportsSummaryPage.reconciliationStatus(REPORT_COMPLETED_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--green');
   });
