@@ -5,6 +5,8 @@ const utilisationReportsSummaryPage = {
     cy.get(`[data-cy="utilisation-report-reconciliation-table-row-bank-${bankId}-submission-month-${submissionMonth}"]`),
   reportLink: (bankId, submissionMonth) => cy.get(`a[data-cy="utilisation-report-link-${bankId}-submission-month-${submissionMonth}"]`),
   readOnlyBanner: () => cy.get('[data-cy="read-only-banner"]'),
+  reconciliationStatus: (bankId, submissionMonth) =>
+    utilisationReportsSummaryPage.tableRowSelector(bankId, submissionMonth).find('[data-cy="utilisation-report-reconciliation-status"]'),
 };
 
 module.exports = { utilisationReportsSummaryPage };

@@ -118,22 +118,15 @@ context('Users can route to the payments page for a bank', () => {
   });
 
   it('should render the report reconciliation statuses correctly', () => {
+    pages.utilisationReportsSummaryPage.reconciliationStatus(NOT_RECEIVED_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--red');
+
+    pages.utilisationReportsSummaryPage.reconciliationStatus(PENDING_RECONCILIATION_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--grey');
+
     pages.utilisationReportsSummaryPage
-      .tableRowSelector(NOT_RECEIVED_BANK_ID, submissionMonthStamp)
-      .find('[data-cy="utilisation-report-reconciliation-status"]')
-      .should('have.class', 'govuk-tag--red');
-    pages.utilisationReportsSummaryPage
-      .tableRowSelector(PENDING_RECONCILIATION_BANK_ID, submissionMonthStamp)
-      .find('[data-cy="utilisation-report-reconciliation-status"]')
-      .should('have.class', 'govuk-tag--grey');
-    pages.utilisationReportsSummaryPage
-      .tableRowSelector(RECONCILIATION_IN_PROGRESS_BANK_ID, submissionMonthStamp)
-      .find('[data-cy="utilisation-report-reconciliation-status"]')
+      .reconciliationStatus(RECONCILIATION_IN_PROGRESS_BANK_ID, submissionMonthStamp)
       .should('have.class', 'govuk-tag--light-blue');
-    pages.utilisationReportsSummaryPage
-      .tableRowSelector(REPORT_COMPLETED_BANK_ID, submissionMonthStamp)
-      .find('[data-cy="utilisation-report-reconciliation-status"]')
-      .should('have.class', 'govuk-tag--green');
+
+    pages.utilisationReportsSummaryPage.reconciliationStatus(REPORT_COMPLETED_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--green');
   });
 
   it('should show the problem with service page if there are no reports in the database', () => {
