@@ -12,7 +12,7 @@ const CONSTANTS = require('../../constants');
 
 df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
   const payload = context.df.input;
-  const facilityId = payload?.ukefFacilityId;
+  const facilityId = payload?.facilityIdentifier;
 
   try {
     const { facilityIdentifier, facility, deal } = payload;
