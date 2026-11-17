@@ -117,7 +117,7 @@ context('Users can route to the payments page for a bank', () => {
     pages.utilisationReportsSummaryPage.tableRowSelector(QUARTERLY_REPORTING_BANK_ID, latestQuarterlySubmissionMonthStamp).should('contain', 'Quarterly');
   });
 
-  it('should render the report reconciliation status correctly', () => {
+  it('should render the report reconciliation statuses correctly', () => {
     pages.utilisationReportsSummaryPage
       .tableRowSelector(NOT_RECEIVED_BANK_ID, submissionMonthStamp)
       .find('[data-cy="utilisation-report-reconciliation-status"]')
