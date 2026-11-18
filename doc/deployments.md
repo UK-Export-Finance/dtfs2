@@ -3,7 +3,7 @@
 This document describes how to deploy to the development, feature, staging, and
 production environments.
 
-## Development and feature environments
+## Dev and feature environments
 
 Development and feature environments are deployed automatically each day:
 
