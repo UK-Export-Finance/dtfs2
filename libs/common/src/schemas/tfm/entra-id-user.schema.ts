@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id-email.schema';
 import { TfmTeamSchema } from './tfm-team.schema';
 
@@ -10,10 +10,10 @@ import { TfmTeamSchema } from './tfm-team.schema';
  * @see ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA for the transformer to transform the Entra ID user to the upsert user request
  * @see UPSERT_TFM_USER_REQUEST_SCHEMA for the target upsert request schema
  */
-export const ENTRA_ID_USER_SCHEMA = z.object({
-  oid: z.string(),
-  verified_primary_email: z.array(ENTRA_ID_EMAIL_SCHEMA),
-  given_name: z.string(),
-  family_name: z.string(),
-  roles: z.array(TfmTeamSchema),
+export const ENTRA_ID_USER_SCHEMA = zod.object({
+  oid: zod.string(),
+  verified_primary_email: zod.array(ENTRA_ID_EMAIL_SCHEMA),
+  given_name: zod.string(),
+  family_name: zod.string(),
+  roles: zod.array(TfmTeamSchema),
 });

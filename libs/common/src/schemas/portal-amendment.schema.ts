@@ -1,4 +1,4 @@
-import z from 'zod';
+import zod from 'zod';
 import { getEpochMs } from '@ukef/helpers';
 import { AMENDMENT_TYPES } from '@ukef/constants';
 import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-date.schema';
@@ -8,53 +8,53 @@ import { CURRENCY_SCHEMA } from './currency.schema';
  *
  * If this schema is changed the Open Api docs should be updated too
  */
-export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
+export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = zod
   .object({
-    changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
-    currentCoverEndDate: z.number().nullable().optional(),
-    isUsingFacilityEndDate: z.boolean().nullable().optional(),
+    changeCoverEndDate: zod.boolean().optional(),
+    coverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable().optional()),
+    currentCoverEndDate: zod.number().nullable().optional(),
+    isUsingFacilityEndDate: zod.boolean().nullable().optional(),
     facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
     bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
-    changeFacilityValue: z.boolean().optional(),
-    value: z.number().nullable().optional(),
-    currentValue: z.number().nullable().optional(),
+    changeFacilityValue: zod.boolean().optional(),
+    value: zod.number().nullable().optional(),
+    currentValue: zod.number().nullable().optional(),
     currency: CURRENCY_SCHEMA.optional(),
-    eligibilityCriteria: z
+    eligibilityCriteria: zod
       .object({
-        version: z.number(),
-        criteria: z.array(
-          z.object({
-            id: z.number(),
-            text: z.string(),
-            textList: z.array(z.string()).optional(),
+        version: zod.number(),
+        criteria: zod.array(
+          zod.object({
+            id: zod.number(),
+            text: zod.string(),
+            textList: zod.array(zod.string()).optional(),
             /* When eligibilityCriteria is updated through a patch request with user values, all answers are required */
-            answer: z.boolean(),
+            answer: zod.boolean(),
           }),
         ),
       })
       .optional(),
-    effectiveDate: z.number().nonnegative().optional(),
-    tfm: z
+    effectiveDate: zod.number().nonnegative().optional(),
+    tfm: zod
       .object({
-        value: z
+        value: zod
           .object({
-            value: z.number(),
+            value: zod.number(),
             currency: CURRENCY_SCHEMA,
           })
           .optional(),
-        amendmentExposurePeriodInMonths: z.number().nullable().optional(),
-        exposure: z
+        amendmentExposurePeriodInMonths: zod.number().nullable().optional(),
+        exposure: zod
           .object({
-            exposure: z.union([z.number(), z.string()]),
-            timestamp: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable()),
-            ukefExposureValue: z.number(),
+            exposure: zod.union([zod.number(), zod.string()]),
+            timestamp: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable()),
+            ukefExposureValue: zod.number(),
           })
           .optional(),
-        coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
+        coverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
         facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
         bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
-        isUsingFacilityEndDate: z.boolean().optional(),
+        isUsingFacilityEndDate: zod.boolean().optional(),
       })
       .optional(),
   })
@@ -66,58 +66,58 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
  * If this schema is changed the Open Api docs should be updated too
  */
 export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.merge(
-  z.object({
-    amendmentId: z.string(),
-    facilityId: z.string(),
-    dealId: z.string(),
-    type: z.literal(AMENDMENT_TYPES.PORTAL),
-    createdAt: z.number(),
-    updatedAt: z.number(),
-    status: z.string(),
-    createdBy: z.object({
-      username: z.string(),
-      name: z.string(),
-      email: z.string().email(),
+  zod.object({
+    amendmentId: zod.string(),
+    facilityId: zod.string(),
+    dealId: zod.string(),
+    type: zod.literal(AMENDMENT_TYPES.PORTAL),
+    createdAt: zod.number(),
+    updatedAt: zod.number(),
+    status: zod.string(),
+    createdBy: zod.object({
+      username: zod.string(),
+      name: zod.string(),
+      email: zod.string().email(),
     }),
-    eligibilityCriteria: z.object({
-      version: z.number(),
-      criteria: z.array(
-        z.object({
-          id: z.number(),
-          text: z.string(),
-          textList: z.array(z.string()).optional(),
+    eligibilityCriteria: zod.object({
+      version: zod.number(),
+      criteria: zod.array(
+        zod.object({
+          id: zod.number(),
+          text: zod.string(),
+          textList: zod.array(zod.string()).optional(),
           /* When eligibilityCriteria is fetched from the database all the `answer` fields may be null: this is the case before the user has submitted their eligibility responses. */
-          answer: z.boolean().nullable(),
+          answer: zod.boolean().nullable(),
         }),
       ),
     }),
-    facilityType: z.string().optional(),
-    tfm: z.object({
-      value: z
+    facilityType: zod.string().optional(),
+    tfm: zod.object({
+      value: zod
         .object({
-          value: z.number(),
+          value: zod.number(),
           currency: CURRENCY_SCHEMA,
         })
         .optional(),
-      amendmentExposurePeriodInMonths: z.number().nullable().optional(),
-      exposure: z
+      amendmentExposurePeriodInMonths: zod.number().nullable().optional(),
+      exposure: zod
         .object({
-          exposure: z.union([z.number(), z.string()]),
-          timestamp: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable()),
-          ukefExposureValue: z.number(),
+          exposure: zod.union([zod.number(), zod.string()]),
+          timestamp: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().nullable()),
+          ukefExposureValue: zod.number(),
         })
         .optional(),
-      coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
+      coverEndDate: zod.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), zod.number().int().nonnegative().optional()),
       facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
       bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
-      isUsingFacilityEndDate: z.boolean().optional(),
+      isUsingFacilityEndDate: zod.boolean().optional(),
     }),
   }),
 );
 
 export const PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID = PORTAL_FACILITY_AMENDMENT.merge(
-  z.object({
-    ukefFacilityId: z.string().optional(),
-    referenceNumber: z.string().optional(),
+  zod.object({
+    ukefFacilityId: zod.string().optional(),
+    referenceNumber: zod.string().optional(),
   }),
 );

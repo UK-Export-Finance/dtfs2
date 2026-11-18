@@ -20,7 +20,7 @@ describe('sortAmendmentsByReferenceNumber', () => {
 
       const result = sortAmendmentsByReferenceNumber(amendments);
 
-      expect(result.map((a) => a.referenceNumber)).toEqual(['003', '002', null, undefined]);
+      expect(result.map((amendment) => amendment.referenceNumber)).toEqual(['003', '002', null, undefined]);
     });
   });
 
@@ -55,7 +55,7 @@ describe('sortAmendmentsByReferenceNumber', () => {
         sortByVersionWhenNoReferenceNumber: true,
       });
 
-      expect(result.map((a) => a.version)).toEqual([3, 2, 1, undefined]);
+      expect(result.map((amendment) => amendment.version)).toEqual([3, 2, 1, undefined]);
     });
 
     it('should only apply version ordering to amendments without referenceNumber', () => {
@@ -71,7 +71,7 @@ describe('sortAmendmentsByReferenceNumber', () => {
       });
 
       // First, ordered by referenceNumber descending
-      expect(result.map((a) => a.referenceNumber)).toEqual(['003', '001', null, null]);
+      expect(result.map((amendment) => amendment.referenceNumber)).toEqual(['003', '001', null, null]);
       // Then, items without referenceNumber ordered by version descending
       expect(result[2]).toEqual({ referenceNumber: null, version: 3 });
       expect(result[3]).toEqual({ referenceNumber: null, version: 1 });

@@ -1,37 +1,37 @@
-import z from 'zod';
+import zod from 'zod';
 import { AUDIT_DATABASE_RECORD_SCHEMA } from './audit-database-record.schema';
 import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from './unix-timestamp.schema';
 
-const BASE_PORTAL_USER_SCHEMA = z
+const BASE_PORTAL_USER_SCHEMA = zod
   .object({
-    username: z.string(),
-    firstname: z.string(),
-    surname: z.string(),
-    email: z.string(),
-    timezone: z.string(),
-    roles: z.array(z.string()),
-    bank: z.object({}),
-    'user-status': z.string(),
-    salt: z.string(),
-    hash: z.string(),
+    username: zod.string(),
+    firstname: zod.string(),
+    surname: zod.string(),
+    email: zod.string(),
+    timezone: zod.string(),
+    roles: zod.array(zod.string()),
+    bank: zod.object({}),
+    'user-status': zod.string(),
+    salt: zod.string(),
+    hash: zod.string(),
     auditRecord: AUDIT_DATABASE_RECORD_SCHEMA,
-    isTrusted: z.boolean(),
-    disabled: z.boolean().optional(),
+    isTrusted: zod.boolean(),
+    disabled: zod.boolean().optional(),
   })
   .strict();
 
 export const CREATE = BASE_PORTAL_USER_SCHEMA;
 
 export const UPDATE = BASE_PORTAL_USER_SCHEMA.extend({
-  blockedPasswordList: z.array(z.object({})),
+  blockedPasswordList: zod.array(zod.object({})),
   lastLogin: UNIX_TIMESTAMP_MILLISECONDS_SCHEMA,
-  loginFailureCount: z.number(),
-  passwordUpdatedAt: z.number(),
-  resetPwdToken: z.string(),
-  resetPwdTimestamp: z.string(),
-  sessionIdentifier: z.string(),
-  signInLinkSendDate: z.number(),
-  signInLinkSendCount: z.number(),
+  loginFailureCount: zod.number(),
+  passwordUpdatedAt: zod.number(),
+  resetPwdToken: zod.string(),
+  resetPwdTimestamp: zod.string(),
+  sessionIdentifier: zod.string(),
+  signInLinkSendDate: zod.number(),
+  signInLinkSendCount: zod.number(),
 })
   .partial()
   .strict();
