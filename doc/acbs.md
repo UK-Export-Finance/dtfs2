@@ -65,10 +65,14 @@ is checked for the numeric format.
 
 ### TFM deal fields read by `canSubmitToACBS`
 
-The helper receives a TFM deal object, then fetches the persisted deal again by
-`_id` when it checks the UKEF IDs. These are the fields it reads:
+The helper receives a TFM deal object and fetches the deal again by `_id` when
+checking UKEF IDs. `findOneTfmDeal` assembles the deal object and loads its
+facilities from separate TFM facility records. Therefore, the paths below
+describe the assembled deal object, not uniformly fields stored in one deal
+document. In particular, fields under `dealSnapshot.facilities[]` come from
+individual `tfm-facilities` documents.
 
-| TFM database path                                           | Requirement                                                                                                                                                                |
+| Assembled deal-object path                                  | Requirement                                                                                                                                                                |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `_id`                                                       | Must be truthy and identify a retrievable TFM deal.                                                                                                                        |
 | `dealSnapshot`                                              | Must be present.                                                                                                                                                           |
@@ -77,7 +81,7 @@ The helper receives a TFM deal object, then fetches the persisted deal again by
 | `dealSnapshot.ukefDealId`                                   | For GEF deals: required, truthy, and a valid 10-digit UKEF ID.                                                                                                             |
 | `dealSnapshot.details.ukefDealId`                           | For non-GEF (BSS/EWCS) deals: required, truthy, and a valid 10-digit UKEF ID.                                                                                              |
 | `dealSnapshot.facilities`                                   | Must be present as an array. An empty array technically passes these checks.                                                                                               |
-| `dealSnapshot.facilities[].facilitySnapshot.ukefFacilityId` | Must be truthy for every facility. See the format-validation caveat above.                                                                                                 |
+| `dealSnapshot.facilities[].facilitySnapshot.ukefFacilityId` | Must be truthy for every facility. This value is stored on the corresponding `tfm-facilities` document. See the format-validation caveat above.                            |
 | `tfm`                                                       | Must be present.                                                                                                                                                           |
 | `tfm.acbs`                                                  | Must be falsey/absent when `firstSubmissionCheck` is true (the default). It is not checked when that option is false.                                                      |
 | `tfm.parties`                                               | Must be present as an object; each entry is checked as described below. An empty object technically passes the URN check.                                                  |
@@ -87,7 +91,7 @@ The helper receives a TFM deal object, then fetches the persisted deal again by
 The standard `tfm.parties` object is populated with these four entries by
 [`addPartyUrns`](../trade-finance-manager-api/server/v1/controllers/deal.party-db.js):
 
-| TFM database fields                                                            | When `partyUrn` must be truthy          |
+| Assembled deal-object fields                                                   | When `partyUrn` must be truthy          |
 | ------------------------------------------------------------------------------ | --------------------------------------- |
 | `tfm.parties.exporter.partyUrnRequired`, `tfm.parties.exporter.partyUrn`       | When `exporter.companyName` is truthy.  |
 | `tfm.parties.buyer.partyUrnRequired`, `tfm.parties.buyer.partyUrn`             | When `buyer.name` is truthy.            |
@@ -112,12 +116,13 @@ those other party names is present, its matching URN is required as well.
 
 #### Exact facility bond-party fields
 
-For each entry in `dealSnapshot.facilities`:
+For each entry in the assembled `dealSnapshot.facilities` array, the matching
+URN is stored on that facility's individual `tfm-facilities` document:
 
-| Facility snapshot field                      | Required TFM database field                                             |
-| -------------------------------------------- | ----------------------------------------------------------------------- |
-| `facilitySnapshot.bondIssuer` is truthy      | `dealSnapshot.facilities[].tfm.bondIssuerPartyUrn` must be truthy.      |
-| `facilitySnapshot.bondBeneficiary` is truthy | `dealSnapshot.facilities[].tfm.bondBeneficiaryPartyUrn` must be truthy. |
+| Assembled facility condition                 | Required field on that TFM facility document  |
+| -------------------------------------------- | --------------------------------------------- |
+| `facilitySnapshot.bondIssuer` is truthy      | `tfm.bondIssuerPartyUrn` must be truthy.      |
+| `facilitySnapshot.bondBeneficiary` is truthy | `tfm.bondBeneficiaryPartyUrn` must be truthy. |
 
 These are only required for the corresponding bond party; if the snapshot
 field is falsey or absent, the matching URN is not required.
@@ -160,9 +165,14 @@ internal amendment email before starting ACBS processing.
 
 The External API exposes `GET /acbs/:entityType/:id`. It checks either a deal
 or facility ID against the corresponding TFS GET endpoint; a `404` means the
-ID is not in use. This is a separate endpoint, not the eligibility check used
-by TFM deal submission: `canSubmitToACBS` checks that IDs are valid numeric
-IDs, but does not call this endpoint.
+ID is not in use. This is separate from the eligibility check used by TFM deal
+submission. [`canSubmitToACBS`](../trade-finance-manager-api/server/v1/helpers/can-submit-to-acbs.js)
+uses [`dealHasAllValidUkefIds`](../trade-finance-manager-api/server/v1/helpers/dealHasAllUkefIds.js):
+it validates the deal ID as exactly 10 numeric digits, but for each facility
+only requires a truthy `ukefFacilityId`. The facility predicate does not reject
+a present-but-malformed ID, so this check does not guarantee that facility IDs
+are numeric. `canSubmitToACBS` does not call the External API ID-in-use
+endpoint.
 
 ## External API entry points
 
@@ -263,7 +273,7 @@ Facility covenant and guarantee amendments are additionally sent only when
 `FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED` is exactly `true`. If disabled, the
 loan and master amendment flows still run.
 
-## TFS and MDM calls
+## APIM calls (MDM, TFS)
 
 The exact paths below are relative to `APIM_TFS_URL` or `APIM_MDM_URL`.
 Implementations and HTTP methods are in
@@ -293,12 +303,24 @@ Implementations and HTTP methods are in
 | TFS `PATCH /v1/facilities/{facilityId}/guarantees`                      | Patches guarantee `guaranteedLimit` and/or `expirationDate`.                                                                                                                                                                                                                                                                                              | Amendment workflow only when `FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED=true`.                                                                                                                                              |
 | MDM `GET /v1/sector-industries?ukefIndustryId={industryId}`             | Looks up the ACBS industry-sector ID for the supplied UKEF industry ID; the first result's `acbsIndustryId` is used.                                                                                                                                                                                                                                      | Every initial deal orchestration.                                                                                                                                                                                         |
 | MDM `GET /v1/markets?search={country}`                                  | Searches for the ACBS country/market and uses the first result's `isoCode`.                                                                                                                                                                                                                                                                               | GEF deal with a non-UK supplier country.                                                                                                                                                                                  |
-| MDM `GET /v1/currencies/{currencyCode}`                                 | Looks up the ACBS currency code used in a covenant. Current code uses the first result's `acbsCode` only for an HTTP 200 response with more than one result; otherwise it falls back to `O`.                                                                                                                                                              | Before each facility covenant create.                                                                                                                                                                                     |
+| MDM `GET /v1/currencies/{currencyCode}`                                 | Looks up the ACBS currency code used in a covenant. The first result's `acbsCode` is used only for HTTP 200 with more than one result; otherwise the code falls back to `O`. A null response or HTTP 200 with null/missing `data` throws instead of falling back.                                                                                         | Before each facility covenant create.                                                                                                                                                                                     |
 | MDM `POST /v1/numbers`                                                  | Requests a covenant number (`numberTypeId: 8`, created/requesting system `Portal v2/TFM`); the first result's `maskedId` becomes the covenant identifier in the TFS create request.                                                                                                                                                                       | Immediately before each facility covenant create.                                                                                                                                                                         |
 
-Industry lookup falls back to the default ACBS industry code when MDM returns no
-usable result. Country lookup falls back to `GBR`. Both are best-effort
-reference lookups; a missing result does not itself fail the orchestration.
+Industry and country lookups use their defaults for request errors, non-200
+responses, and empty or missing `data`. For an HTTP 200 response with nonempty
+`data`, each returns the corresponding property from the first entry without
+checking that property exists: a missing `acbsIndustryId` or `isoCode` therefore
+produces `undefined` rather than the default. These are best-effort reference
+lookups; a missing result does not itself fail the orchestration.
+
+The currency lookup uses the first entry's `acbsCode` only when the response is
+HTTP 200 and `data.length > 1`; even a valid single-entry result falls back to
+`O`. Non-200 responses and network errors represented by the MDM client as a
+response object also fall back to `O`. A null response, or HTTP 200 with null or
+missing `data`, throws during the response checks and the covenant activity
+rethrows the error. If there are multiple entries but the first lacks
+`acbsCode`, the currency can instead become `undefined`; the current
+mandatory-field check may not detect it.
 
 ### MDM calls that prepare ACBS prerequisites
 
@@ -340,15 +362,20 @@ Axios rejection for a non-2xx response, while `checkFacilityId` does catch it
 and extracts the response status; their not-found behavior is therefore not
 implemented identically.
 
-Record-create activities check their configured mandatory fields before
-making a request. If fields are missing, they return a `missingMandatory`
-array without calling TFS; most record-create/update activities throw when TFS
-returns an HTTP error, allowing Durable retry behavior to apply. Successful
-record activities include the sent data, send/receive timestamps, and returned
-ACBS data in their activity result. The orchestration aggregates those results
-into its output, which TFM stores in the Durable status log and, on completion,
-copies into the deal/facility ACBS fields. Industry/country lookup activities
-instead log errors and return their documented default values.
+Record-create and update activities call the shared
+[`findMissingMandatory`](../azure-functions/acbs/helpers/mandatoryFields.js)
+helper before making a request. Its current predicate joins the `!== null`,
+`!== undefined`, and `!== ''` checks with `||`, so absent, null, and empty-string
+fields are not reported as missing. The resulting `missingMandatory` guard
+does not block incomplete payloads from reaching TFS. Most
+record-create/update activities throw when TFS returns an HTTP error, allowing
+Durable retry behavior to apply. Successful record activities include the sent
+data, send/receive timestamps, and returned ACBS data in their activity result.
+The orchestration aggregates those results into its output, which TFM stores in
+the Durable status log and, on completion, copies into the deal/facility ACBS
+fields. Industry/country lookup activities log request errors and return
+defaults from their error handlers, but an HTTP 200 response with nonempty data
+and a missing code property can produce `undefined` instead.
 
 ## Durable Functions lifecycle
 
@@ -390,11 +417,13 @@ The ACBS app uses Azure Durable Functions to run ACBS work asynchronously:
 `Completed` means the orchestrator returned normally; it does not always mean
 every ACBS write succeeded. For example, the deal and amendment orchestrators
 catch some errors and return `false`, which is still a normal orchestration
-return. Some activities can also return a `missingMandatory` result instead of
-throwing. Check `acbsTaskResult.output` and the activity results in the Durable
-status response, as well as the log/error details, before treating a completed
-instance as successful ACBS submission. A status such as `Failed` is recorded
-but does not trigger the completed-result updates.
+return. Several activities contain `missingMandatory` return branches, but the
+shared helper's current predicate does not identify absent, null, or empty
+string values, so those branches do not block those incomplete payloads. Check
+`acbsTaskResult.output` and the activity results in the Durable status response,
+as well as the log/error details, before treating a completed instance as
+successful ACBS submission. A status such as `Failed` is recorded but does not
+trigger the completed-result updates.
 
 ## Status tracking, retries, and configuration
 
