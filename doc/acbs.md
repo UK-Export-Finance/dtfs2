@@ -180,7 +180,10 @@ The routes are registered in
 [`external-apis.route.ts`](../external-api/server/v1/routes/external-apis.route.ts)
 and handled by
 [`acbs.controller.ts`](../external-api/server/v1/controllers/acbs.controller.ts).
-The External API base URL includes the version prefix (normally `/v1`).
+These External API routes have no version prefix: `generateApp.ts` mounts the
+routes directly, so their paths start at `/acbs`. Do not prepend `/v1` to
+these paths. The downstream TFS and MDM APIs use separate `v1/...` paths
+relative to their respective APIM base URLs.
 
 | Route                                | What it starts or checks                                                     |
 | ------------------------------------ | ---------------------------------------------------------------------------- |
