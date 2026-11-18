@@ -160,11 +160,15 @@ with `docker compose up -d external-api trade-finance-manager-api`. The normal
 
 ## Stopping the Local Environment :stop_sign:
 
-To stop the local environment, simply exit the running terminal and run:
+To stop and remove the entire local stack, including ACBS and Azurite if you
+started them, run:
 
 ```shell
 npm run stop
 ```
+
+The Azurite data volume is preserved. To stop only the ACBS and Azurite
+containers, use `npm run stop-acbs` instead.
 
 ## Login Credentials :key:
 

@@ -45,7 +45,7 @@
     "start:build:detach": "npm run start:build -- --detach",
     "start:detach": "npm run start -- --detach",
     "start-acbs": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local build acbs-local && docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local up -d --no-build acbs-local external-api trade-finance-manager-api",
-    "stop": "docker compose down",
+    "stop": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local down",
     "stop-acbs": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local stop acbs-local azurite",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "validate:all": "npm run lint:all && npm run prettier:all && npm run type-check:all && npm run validate:yml && npm run validate:md",
