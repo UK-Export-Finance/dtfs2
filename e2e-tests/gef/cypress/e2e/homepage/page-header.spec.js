@@ -252,6 +252,7 @@ context('Check GEF GOVUK header displays correctly', () => {
     it('should display all the payment report officer service navigation links', () => {
       header.uploadReport().should('exist');
       header.previousReport().should('exist');
+      header.recordCorrectionLog().should('exist');
       header.profile().should('exist');
       header.logout().should('exist');
     });

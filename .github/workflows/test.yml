@@ -772,7 +772,7 @@ jobs:
             'reports/**/*.spec.js',
             'payment-report-officer/utilisation-report-upload/**/*.spec.js',
             'payment-report-officer/previous-reports/**/*.spec.js',
-            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
+            'payment-report-officer/record-corrections/**/*.spec.js',
           ]
 
     concurrency:
@@ -1399,7 +1399,6 @@ jobs:
             './tfm/cypress/e2e/journeys/header/**/*.spec.js',
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',
