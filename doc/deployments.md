@@ -10,18 +10,18 @@ Development and feature environments are deployed automatically each day:
 - Development deployments start at 19:00.
 - Feature deployments start at 20:00.
 
-Both deployments use the `main` branch, so they include the changes present on
-`main` when the deployment starts. Changes merged after a deployment starts
-will be included in the next deployment. These environments have no locks, so
-no additional steps are required.
+Scheduled deployments use the `main` branch. Each migration,
+web app, and functions job checks out its branch when the job starts, rather
+than pinning every job to the same commit. A change pushed to main during a
+deployment may therefore be included by later jobs in that run. These
+environments have no locks, so no additional steps are required.
 
 Deployments do not retry automatically. If a deployment fails, rerun the failed
 jobs manually.
 
-For a manual deployment, merge or push your changes to the `dev` branch and
-push the branch to GitHub. This triggers both the development and feature
-deployments. Cancel the deployment you do not need, or run them one at a time
-and monitor each job.
+Pushing to the `dev` branch triggers both workflows as manual deployments of
+`dev`. Cancel the deployment you do not need, or run them one at a time and
+monitor each job.
 
 For more information, see [`deployment.yml`](../.github/workflows/deployment.yml)
 and [`feature.yml`](../.github/workflows/feature.yml).
