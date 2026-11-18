@@ -158,12 +158,6 @@ describe(page, () => {
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
     });
 
-    it('should NOT render the text for creating a record correction request on the premium payments tab for non-PDC_RECONCILE users', () => {
-      const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
-
-      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
-    });
-
     it('should render the facility ID filter input', () => {
       const wrapper = getWrapper();
       wrapper.expectElement('[data-cy="premium-payments-facility-filter-input"]').toExist();

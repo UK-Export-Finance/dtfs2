@@ -9,11 +9,11 @@ const {
 } = require('@ukef/dtfs2-common');
 const { UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { addMonths, format } = require('date-fns');
-const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
-const relativeURL = require('../../../../relativeURL');
-const { pendingCorrections, utilisationReportUpload } = require('../../../../pages');
-const { mainHeading } = require('../../../../partials');
-const { aliasSelector } = require('../../../../../../../support/alias-selector');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
+const relativeURL = require('../../../relativeURL');
+const { pendingCorrections, utilisationReportUpload } = require('../../../pages');
+const { mainHeading } = require('../../../partials');
+const { aliasSelector } = require('../../../../../../support/alias-selector');
 
 context('Pending corrections', () => {
   context('Report GEF Utilisation and fees page', () => {

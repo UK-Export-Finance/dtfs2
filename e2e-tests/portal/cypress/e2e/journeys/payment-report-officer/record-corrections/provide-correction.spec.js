@@ -8,11 +8,11 @@ import {
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
 } from '@ukef/dtfs2-common';
-import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../e2e-fixtures';
-import relative from '../../../../relativeURL';
-import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../../pages';
-import { correctionRequestDetails } from '../../../../partials';
-import { tfmFacilityForReport } from '../../../../../fixtures/mockUtilisationReportDetails';
+import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../pages';
+import { correctionRequestDetails } from '../../../partials';
+import { tfmFacilityForReport } from '../../../../fixtures/mockUtilisationReportDetails';
 
 context('Provide correction', () => {
   context('Report GEF utilisation and fees page', () => {
