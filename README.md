@@ -110,6 +110,54 @@ Several services are built:
 
 To access GEF locally, use [http://localhost](http://localhost).
 
+### Running locally with ACBS
+
+After the standard local setup above, run:
+
+```shell
+npm run start-acbs
+```
+
+This starts ACBS Durable Functions on port `7071` and Azurite on ports
+`10000`–`10002`. It also starts or updates External API and TFM API to point
+at the local Functions host, starting their Compose dependencies if needed.
+If you haven't built the other images yet, or you're testing through a UI,
+start the normal stack first.
+
+**After changing ACBS code**, rerun `npm run start-acbs`. Code changes aren't
+picked up live because the source is copied into the Docker image. The command
+rebuilds only `acbs-local`, reusing cached layers where possible. External API
+and TFM API use their existing images. You don't need to run `npm run stop-acbs`
+first.
+
+You don't need Azure Functions Core Tools, a separate Azurite install, or an
+Azure Storage account for ACBS. Stop any manually started Functions host or
+Azurite instance first to free those ports.
+
+To check that the local Functions host can schedule an orchestration without
+sending anything to ACBS:
+
+```shell
+curl -i http://localhost:7071/api/orchestrators/acbs \
+  -H 'Content-Type: application/json' --data 'null'
+```
+
+Expect `202 Accepted`, then poll the returned `statusQueryGetUri` for
+`runtimeStatus: "Completed"`.
+
+Local ACBS uses the same `APIM_TFS_*` and `APIM_MDM_*` settings as External API.
+To send real requests to ACBS, set these values from [.env.sample](./.env.sample)
+in your Git-ignored root `.env` and rerun `npm run start-acbs`. Use approved
+non-production endpoints and credentials only. Each `URL` needs a trailing
+slash, each `KEY` is the HTTP header name, and each `VALUE` is its credential.
+Real amendment requests can write to the remote ACBS environment.
+
+Use `npm run stop-acbs` to stop only ACBS Durable Functions and Azurite. The
+Azurite volume persists between runs. The APIs keep pointing at the local
+Functions host until you restart it or reapply the normal Compose configuration
+with `docker compose up -d external-api trade-finance-manager-api`. The normal
+`npm start` script and the production deployment are unchanged.
+
 ## Stopping the Local Environment :stop_sign:
 
 To stop the local environment, simply exit the running terminal and run:
