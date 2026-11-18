@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { format, startOfMonth, addMonths } from 'date-fns';
-import { getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled, ReportPeriod } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, ReportPeriod } from '@ukef/dtfs2-common';
 import { extractCsvData, removeCellAddressesFromArray } from '@ukef/portal-ui/server/utils/csv-utils';
 import api from '@ukef/portal-ui/server/api';
 import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
@@ -82,13 +82,11 @@ export const getUtilisationReportUpload = async (req: Request, res: Response) =>
   const bankId = user.bank.id;
 
   try {
-    if (isFeeRecordCorrectionFeatureFlagEnabled()) {
-      const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
+    const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
 
-      if (isNonEmptyPendingCorrectionsResponseBody(pendingCorrections)) {
-        const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections, user);
-        return res.render('utilisation-report-service/record-correction/pending-corrections.njk', viewModel);
-      }
+    if (isNonEmptyPendingCorrectionsResponseBody(pendingCorrections)) {
+      const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections, user);
+      return res.render('utilisation-report-service/record-correction/pending-corrections.njk', viewModel);
     }
 
     const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);

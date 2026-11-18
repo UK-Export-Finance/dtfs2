@@ -1,9 +1,9 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { PENDING_RECONCILIATION, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { tfmPages } from '../../../../pages';
-import USERS from '../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import { tfmPages } from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 const bankId = '961';
 const reportId = 1;

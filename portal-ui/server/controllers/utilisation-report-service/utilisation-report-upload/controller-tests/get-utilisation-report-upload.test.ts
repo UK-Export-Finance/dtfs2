@@ -1,6 +1,6 @@
 import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
-import { isFeeRecordCorrectionFeatureFlagEnabled, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import api from '@ukef/portal-ui/server/api';
 import { aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '@ukef/portal-ui/test-helpers/test-data';
 import { mapToPendingCorrectionsViewModel } from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/pending-corrections-helper';
@@ -20,7 +20,6 @@ jest.mock('../../../../api');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isFeeRecordCorrectionFeatureFlagEnabled: jest.fn(),
 }));
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
@@ -39,10 +38,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       });
 
     describe('when the fee record correction feature flag is enabled', () => {
-      beforeEach(() => {
-        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
-      });
-
       it("should fetch pending corrections for the user's bank", async () => {
         // Arrange
         const { res, req } = getHttpMocks();
@@ -98,10 +93,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     });
 
     describe('when the fee record correction feature flag is disabled', () => {
-      beforeEach(() => {
-        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(false);
-      });
-
       it('should not fetch pending corrections', async () => {
         // Arrange
         const { res, req } = getHttpMocks();

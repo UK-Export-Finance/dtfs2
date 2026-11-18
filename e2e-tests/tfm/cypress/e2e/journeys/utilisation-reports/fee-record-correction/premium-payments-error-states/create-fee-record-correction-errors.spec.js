@@ -1,11 +1,11 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, FEE_RECORD_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import { tfmPages } from '../../../../../pages';
-import USERS from '../../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../../e2e-fixtures';
-import relative from '../../../../../relativeURL';
-import { errorSummary } from '../../../../../partials';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import { tfmPages } from '../../../../pages';
+import USERS from '../../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import relative from '../../../../relativeURL';
+import { errorSummary } from '../../../../partials';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
   context('PDC_RECONCILE users cannot create record correction requests with invalid fee selections', () => {
