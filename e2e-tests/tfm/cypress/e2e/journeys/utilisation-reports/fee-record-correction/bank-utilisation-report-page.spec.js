@@ -6,7 +6,7 @@ import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
 const { utilisationReportPage } = pages;
 
-context('When fee record correction feature flag is enabled', () => {
+context('Fee record correction', () => {
   const bankId = '961';
   const reportId = 1;
 

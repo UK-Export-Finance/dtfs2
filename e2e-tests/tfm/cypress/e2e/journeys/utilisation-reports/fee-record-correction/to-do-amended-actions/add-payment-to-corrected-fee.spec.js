@@ -5,7 +5,7 @@ import USERS from '../../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
-context('When fee record correction feature flag is enabled', () => {
+context('Fee record correction', () => {
   context('PDC_RECONCILE users can add payments to fee records that have been corrected', () => {
     const BANK_ID = '961';
     const REPORT_ID = 1;

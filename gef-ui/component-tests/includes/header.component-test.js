@@ -71,44 +71,14 @@ describe(page, () => {
     itDoesNotRenderAUsersLink();
   });
 
-  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}' and FF_FEE_RECORD_CORRECTION_ENABLED is set to "true"`, () => {
-    const originalProcessEnv = { ...process.env };
-
+  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}'`, () => {
     beforeAll(() => {
-      process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       wrapper = render({ user: { roles: [ROLES.PAYMENT_REPORT_OFFICER] } });
-    });
-
-    afterAll(() => {
-      process.env = originalProcessEnv;
     });
 
     itRendersAUtilisationReportUploadLink();
     itRendersAPreviousReportsLink();
     itRendersARecordCorrectionLogLink();
-    itRendersAProfileLink();
-    itRendersASignOutLink();
-
-    itDoesNotRenderAHomeLink();
-    itDoesNotRenderAReportsLink();
-    itDoesNotRenderAUsersLink();
-  });
-
-  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}' and FF_FEE_RECORD_CORRECTION_ENABLED is set to "false"`, () => {
-    const originalProcessEnv = { ...process.env };
-
-    beforeAll(() => {
-      process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
-      wrapper = render({ user: { roles: [ROLES.PAYMENT_REPORT_OFFICER] } });
-    });
-
-    afterAll(() => {
-      process.env = originalProcessEnv;
-    });
-
-    itRendersAUtilisationReportUploadLink();
-    itRendersAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionLogLink();
     itRendersAProfileLink();
     itRendersASignOutLink();
 

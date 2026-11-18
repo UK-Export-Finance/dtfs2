@@ -6,7 +6,7 @@ import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 import relative from '../../../relativeURL';
 
-context('When fee record correction feature flag is enabled - record correction log details', () => {
+context('Record correction log details', () => {
   const bankId = '961';
   const reportId = 1;
 

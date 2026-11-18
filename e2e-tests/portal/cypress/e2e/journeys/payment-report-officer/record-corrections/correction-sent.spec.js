@@ -5,7 +5,7 @@ import relative from '../../../../relativeURL';
 import { provideCorrection, pendingCorrections, correctionSent } from '../../../../pages';
 import { mainHeading } from '../../../../partials';
 
-context('Correction sent page - Fee record correction feature flag enabled', () => {
+context('Correction sent page', () => {
   context('When a correction has been provided', () => {
     const reportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
 

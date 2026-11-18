@@ -4,7 +4,7 @@ import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../
 import relative from '../../../../relativeURL';
 import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../../pages';
 
-context('Check the information page - Fee record correction feature flag enabled', () => {
+context('Check the information page', () => {
   context('When a correction has been provided', () => {
     const reportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
 

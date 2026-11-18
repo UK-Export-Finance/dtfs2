@@ -257,10 +257,6 @@ context('Check GEF GOVUK header displays correctly', () => {
       header.logout().should('exist');
     });
 
-    it('should not display the record correction log link in service navigation when fee record correction is disabled', () => {
-      header.recordCorrectionLog().should('not.exist');
-    });
-
     it('should ensure the beta banner component exist', () => {
       header.betaBanner().should('exist');
     });

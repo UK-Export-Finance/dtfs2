@@ -51,7 +51,7 @@ const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
 
-context('When fee record correction feature flag is enabled - record correction log table sorting by exporter', () => {
+context('Record correction log table sorting by exporter', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);

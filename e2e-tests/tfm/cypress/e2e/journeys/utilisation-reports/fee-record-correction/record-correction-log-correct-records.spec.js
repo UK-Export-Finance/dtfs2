@@ -67,7 +67,7 @@ const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRec
 const { recordCorrectionLogContent } = tfmPages.utilisationReportPage.tabs;
 const { utilisationReportPage } = tfmPages;
 
-context('When fee record correction feature flag is enabled - record correction log with correct records', () => {
+context('Record correction log with correct records', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);

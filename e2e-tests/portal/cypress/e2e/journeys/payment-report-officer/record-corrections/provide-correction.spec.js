@@ -14,7 +14,7 @@ import { provideCorrection, pendingCorrections, reviewCorrection } from '../../.
 import { correctionRequestDetails } from '../../../../partials';
 import { tfmFacilityForReport } from '../../../../../fixtures/mockUtilisationReportDetails';
 
-context('Provide correction - Fee record correction feature flag enabled', () => {
+context('Provide correction', () => {
   context('Report GEF utilisation and fees page', () => {
     beforeEach(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);

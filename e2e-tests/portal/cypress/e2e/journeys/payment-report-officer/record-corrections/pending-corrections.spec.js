@@ -15,7 +15,7 @@ const { pendingCorrections, utilisationReportUpload } = require('../../../../pag
 const { mainHeading } = require('../../../../partials');
 const { aliasSelector } = require('../../../../../../../support/alias-selector');
 
-context('Pending corrections - Fee record correction feature flag enabled', () => {
+context('Pending corrections', () => {
   context('Report GEF Utilisation and fees page', () => {
     before(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);

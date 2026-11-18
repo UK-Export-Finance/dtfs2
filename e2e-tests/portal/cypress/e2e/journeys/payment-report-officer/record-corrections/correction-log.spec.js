@@ -5,7 +5,7 @@ const relativeURL = require('../../../../relativeURL');
 const { correctionLog } = require('../../../../pages');
 const { mainHeading } = require('../../../../partials');
 
-context('Correction log - Fee record correction feature flag enabled', () => {
+context('Correction log', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });

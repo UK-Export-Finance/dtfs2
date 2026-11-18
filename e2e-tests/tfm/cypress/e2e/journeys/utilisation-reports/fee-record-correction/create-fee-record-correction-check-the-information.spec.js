@@ -8,7 +8,7 @@ import relative from '../../../relativeURL';
 import { summaryList, mainHeading, cancelLink } from '../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
-context('When fee record correction feature flag is enabled', () => {
+context('Fee record correction', () => {
   const bankId = '961';
   const reportId = 1;
 
