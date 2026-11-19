@@ -65,7 +65,7 @@ describe('getUserById', () => {
     findOneMock.mockResolvedValue(null);
 
     // Act & Assert
-    await expect(getUserById(userId.toString())).rejects.toThrow(`Failed to find user with id ${userId.toString()}`);
+    await expect(getUserById(userId.toString())).resolves.toBeNull();
   });
 
   it('should call console.error and rethrow if a database error occurs', async () => {
