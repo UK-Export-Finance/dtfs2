@@ -2,6 +2,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   verify: jest.fn((req, res, next) => next()),
 }));
+
 jest.mock('../server/api', () => ({
   login: jest.fn(),
   sendSignInLink: jest.fn(),
@@ -9,7 +10,7 @@ jest.mock('../server/api', () => ({
   validateToken: () => true,
   downloadUtilisationReport: jest.fn().mockResolvedValue({
     headers: {
-      'content-disposition': `attachment; filename=report.csv`,
+      'content-disposition': 'attachment; filename=report.csv',
       'content-type': 'text/csv',
     },
   }),
@@ -46,171 +47,46 @@ describe('utilisation-report routes', () => {
   });
 
   describe('GET /utilisation-reports/provide-correction/:correctionId', () => {
-    const originalProcessEnv = { ...process.env };
     const getUrl = ({ correctionId }) => `/utilisation-reports/provide-correction/${correctionId}`;
 
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(getUrl({ correctionId: 1 }), {}, headers),
-        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
-      });
-    });
-
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      it(`should redirect to "/not-found"`, async () => {
-        // Arrange
-        const url = getUrl({ correctionId: 1 });
-
-        // Act
-        const response = await get(url);
-
-        // Assert
-        expect(response.headers.location).toEqual('/not-found');
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get(getUrl({ correctionId: 1 }), {}, headers),
+      whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+      successCode: HttpStatusCode.Ok,
+      disableHappyPath: true,
     });
   });
 
   describe('POST /utilisation-reports/provide-correction/:correctionId', () => {
-    const originalProcessEnv = { ...process.env };
     const getUrl = ({ correctionId }) => `/utilisation-reports/provide-correction/${correctionId}`;
 
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post(aRecordCorrectionFormValues(), headers).to(getUrl({ correctionId: 1 })),
-        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
-      });
-    });
-
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      it(`should redirect to "/not-found"`, async () => {
-        // Arrange
-        const url = getUrl({ correctionId: 1 });
-
-        // Act
-        const response = await post(aRecordCorrectionFormValues()).to(url);
-
-        // Assert
-        expect(response.headers.location).toEqual('/not-found');
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => post(aRecordCorrectionFormValues(), headers).to(getUrl({ correctionId: 1 })),
+      whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+      successCode: HttpStatusCode.Ok,
+      disableHappyPath: true,
     });
   });
 
   describe('POST /utilisation-reports/cancel-correction/:correctionId', () => {
-    const originalProcessEnv = { ...process.env };
     const getUrl = ({ correctionId }) => `/utilisation-reports/cancel-correction/${correctionId}`;
 
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post(undefined, headers).to(getUrl({ correctionId: 1 })),
-        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
-      });
-    });
-
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      it(`should redirect to "/not-found"`, async () => {
-        // Arrange
-        const url = getUrl({ correctionId: 1 });
-
-        // Act
-        const response = await post().to(url);
-
-        // Assert
-        expect(response.headers.location).toEqual('/not-found');
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => post(undefined, headers).to(getUrl({ correctionId: 1 })),
+      whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+      successCode: HttpStatusCode.Ok,
+      disableHappyPath: true,
     });
   });
 
   describe('GET /utilisation-reports/correction-log', () => {
-    const originalProcessEnv = { ...process.env };
     const url = '/utilisation-reports/correction-log';
 
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(url, {}, headers),
-        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
-      });
-    });
-
-    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
-      beforeAll(() => {
-        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        process.env = { ...originalProcessEnv };
-      });
-
-      it(`should redirect to "/not-found"`, async () => {
-        // Act
-        const response = await get(url);
-
-        // Assert
-        expect(response.headers.location).toEqual('/not-found');
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get(url, {}, headers),
+      whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+      successCode: HttpStatusCode.Ok,
+      disableHappyPath: true,
     });
   });
 });

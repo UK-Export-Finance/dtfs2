@@ -85,18 +85,16 @@
   ]
 %}
 
-{% if isFeeRecordCorrectionFeatureFlagEnabled %}
-  {% set itemsArray = (itemsArray.push({
-    label: "Record correction log",
-    id: "record-correction-log",
-    panel: {
-      html: recordCorrectionLogHtml
-    },
-    attributes: {
-      'data-cy': 'bank-report-tab-record-correction-log'
-    }
-  }), itemsArray) %}
-{% endif %}
+{% set itemsArray = (itemsArray.push({
+  label: "Record correction log",
+  id: "record-correction-log",
+  panel: {
+    html: recordCorrectionLogHtml
+  },
+  attributes: {
+    'data-cy': 'bank-report-tab-record-correction-log'
+  }
+}), itemsArray) %}
 
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">

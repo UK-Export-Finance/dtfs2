@@ -252,12 +252,9 @@ context('Check GEF GOVUK header displays correctly', () => {
     it('should display all the payment report officer service navigation links', () => {
       header.uploadReport().should('exist');
       header.previousReport().should('exist');
+      header.recordCorrectionLog().should('exist');
       header.profile().should('exist');
       header.logout().should('exist');
-    });
-
-    it('should not display the record correction log link in service navigation when fee record correction is disabled', () => {
-      header.recordCorrectionLog().should('not.exist');
     });
 
     it('should ensure the beta banner component exist', () => {

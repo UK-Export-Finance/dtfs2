@@ -44,7 +44,6 @@ describe(page, () => {
       selectedFilters: null,
     },
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
-    isFeeRecordCorrectionFeatureFlagEnabled: true,
     recordCorrectionDetails: { recordCorrectionRows: [] },
     statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
   };
@@ -140,12 +139,6 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
     });
 
-    it('should NOT render the text for creating a record correction request on the premium payments tab', () => {
-      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false });
-
-      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
-    });
-
     it('should render the premium payments with the relevant text for non-PDC_RECONCILE users', () => {
       const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
       const premiumPaymentsTabSelector = 'div#premium-payments';
@@ -163,12 +156,6 @@ describe(page, () => {
 
       wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
-    });
-
-    it('should NOT render the text for creating a record correction request on the premium payments tab for non-PDC_RECONCILE users', () => {
-      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false, user: aPdcReadUser() });
-
-      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
     });
 
     it('should render the facility ID filter input', () => {
@@ -223,29 +210,10 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
     });
 
-    describe('when isFeeRecordCorrectionFeatureFlagEnabled is false', () => {
-      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse = {
-        ...params,
-        isFeeRecordCorrectionFeatureFlagEnabled: false,
-        user: aPdcReconcileUser(),
-      };
-
-      it('should not render the create record correction request button', () => {
-        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse);
-
-        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
-      });
-    });
-
-    describe('when isFeeRecordCorrectionFeatureFlagEnabled is true', () => {
-      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue = {
-        ...params,
-        isFeeRecordCorrectionFeatureFlagEnabled: true,
-      };
-
+    describe('create record correction request button', () => {
       it('should render the create record correction request button for PDC_RECONCILE users', () => {
         const wrapper = getWrapper({
-          ...paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue,
+          ...params,
           user: aPdcReconcileUser(),
         });
 
@@ -254,7 +222,7 @@ describe(page, () => {
 
       it('should not render the create record correction request button for PDC_READ users', () => {
         const wrapper = getWrapper({
-          ...paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue,
+          ...params,
           user: aPdcReadUser(),
         });
 

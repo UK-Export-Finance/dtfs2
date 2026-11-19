@@ -1,10 +1,10 @@
 import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { PENDING_RECONCILIATION, FEE_RECORD_STATUS, RECORD_CORRECTION_REASON, CURRENCY, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
-import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../e2e-fixtures';
-import relative from '../../../../relativeURL';
-import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../../pages';
+import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../pages';
 
-context('Check the information page - Fee record correction feature flag enabled', () => {
+context('Check the information page', () => {
   context('When a correction has been provided', () => {
     const reportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
 

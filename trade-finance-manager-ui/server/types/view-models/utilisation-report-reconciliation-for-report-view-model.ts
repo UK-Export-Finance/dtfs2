@@ -186,6 +186,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
   recordCorrectionDetails: RecordCorrectionsViewModel;
-  isFeeRecordCorrectionFeatureFlagEnabled: boolean;
   statusTagColours: StatusTagColours;
 };

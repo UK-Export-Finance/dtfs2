@@ -28,7 +28,7 @@
 {% set isReportUser = isMaker or isChecker or isAdmin %}
 
 <!-- Feature flags -->
-{% set isFixedFeeRecordCorrection = isUser and isPaymentReportOfficer and FF_FEE_RECORD_CORRECTION_ENABLED === "true" %}
+{% set isFixedFeeRecordCorrection = isUser and isPaymentReportOfficer %}
 
 <!-- Navigation items -->
 {% set navigation = [] %}

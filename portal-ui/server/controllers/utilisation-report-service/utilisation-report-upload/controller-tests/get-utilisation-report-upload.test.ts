@@ -1,6 +1,6 @@
 import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
-import { isFeeRecordCorrectionFeatureFlagEnabled, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import api from '@ukef/portal-ui/server/api';
 import { aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '@ukef/portal-ui/test-helpers/test-data';
 import { mapToPendingCorrectionsViewModel } from '@ukef/portal-ui/server/controllers/utilisation-report-service/utilisation-report-upload/pending-corrections-helper';
@@ -20,7 +20,6 @@ jest.mock('../../../../api');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isFeeRecordCorrectionFeatureFlagEnabled: jest.fn(),
 }));
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
@@ -38,11 +37,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         session: { userToken, user, loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA },
       });
 
-    describe('when the fee record correction feature flag is enabled', () => {
-      beforeEach(() => {
-        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
-      });
-
+    describe('getUtilisationReportPendingCorrectionsByBankId', () => {
       it("should fetch pending corrections for the user's bank", async () => {
         // Arrange
         const { res, req } = getHttpMocks();
@@ -76,46 +71,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
         const pendingCorrectionsResponseBody: UtilisationReportPendingCorrectionsResponseBody = {};
         jest.mocked(api.getUtilisationReportPendingCorrectionsByBankId).mockResolvedValue(pendingCorrectionsResponseBody);
-
-        const mockDueReportPeriods = [{ ...aReportPeriod(), formattedReportPeriod: 'January 2036' }];
-        jest.mocked(getDueReportPeriodsByBankId).mockResolvedValue(mockDueReportPeriods);
-
-        const mockReportDueDate = '25 December 2025';
-        jest.mocked(getReportDueDate).mockResolvedValue(mockReportDueDate);
-
-        // Act
-        await getUtilisationReportUpload(req, res);
-
-        // Assert
-        expect(res._getRenderView()).toEqual('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk');
-        expect(res._getRenderData()).toEqual({
-          user,
-          primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-          dueReportPeriods: mockDueReportPeriods,
-          nextDueReportDueDate: mockReportDueDate,
-        });
-      });
-    });
-
-    describe('when the fee record correction feature flag is disabled', () => {
-      beforeEach(() => {
-        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(false);
-      });
-
-      it('should not fetch pending corrections', async () => {
-        // Arrange
-        const { res, req } = getHttpMocks();
-
-        // Act
-        await getUtilisationReportUpload(req, res);
-
-        // Assert
-        expect(api.getUtilisationReportPendingCorrectionsByBankId).toHaveBeenCalledTimes(0);
-      });
-
-      it('should render the utilisation report upload page', async () => {
-        // Arrange
-        const { res, req } = getHttpMocks();
 
         const mockDueReportPeriods = [{ ...aReportPeriod(), formattedReportPeriod: 'January 2036' }];
         jest.mocked(getDueReportPeriodsByBankId).mockResolvedValue(mockDueReportPeriods);
