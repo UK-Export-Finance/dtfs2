@@ -8,11 +8,25 @@ jest.mock('../server/api', () => ({
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
   downloadUtilisationReport: jest.fn().mockResolvedValue({
+    data: (() => {
+      const { PassThrough } = jest.requireActual('stream');
+
+      const reportStream = new PassThrough();
+
+      reportStream.end('report.csv');
+
+      return reportStream;
+    })(),
     headers: {
       'content-disposition': `attachment; filename=report.csv`,
       'content-type': 'text/csv',
     },
   }),
+  getFeeRecordCorrection: jest.fn(),
+  getFeeRecordCorrectionTransientFormData: jest.fn(),
+  putFeeRecordCorrection: jest.fn(),
+  deleteFeeRecordCorrectionTransientFormData: jest.fn(),
+  getCompletedFeeRecordCorrections: jest.fn(),
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
@@ -21,7 +35,8 @@ const { HttpStatusCode } = require('axios');
 const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const MOCK_BANKS = require('../test-helpers/mock-banks');
+const { aGetFeeRecordCorrectionResponseBody } = require('../test-helpers/test-data/get-fee-record-correction-response');
+const api = require('../server/api');
 
 const { get, post } = createApi(app);
 
@@ -33,15 +48,14 @@ describe('utilisation-report routes', () => {
       makeRequestWithHeaders: (headers) =>
         get(
           getUrl({
-            bankId: MOCK_BANKS.bank1.id,
-            reportId: '5099803df3f4948bd2f98391',
+            bankId: '9',
+            reportId: '12345678',
           }),
           {},
           headers,
         ),
       whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
       successCode: HttpStatusCode.Ok,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -54,6 +68,11 @@ describe('utilisation-report routes', () => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       });
 
+      beforeEach(() => {
+        api.getFeeRecordCorrection.mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+        api.getFeeRecordCorrectionTransientFormData.mockResolvedValue({});
+      });
+
       afterAll(() => {
         process.env = { ...originalProcessEnv };
       });
@@ -62,7 +81,6 @@ describe('utilisation-report routes', () => {
         makeRequestWithHeaders: (headers) => get(getUrl({ correctionId: 1 }), {}, headers),
         whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
         successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
       });
     });
 
@@ -97,6 +115,11 @@ describe('utilisation-report routes', () => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       });
 
+      beforeEach(() => {
+        api.putFeeRecordCorrection.mockResolvedValue({});
+        api.getFeeRecordCorrection.mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+      });
+
       afterAll(() => {
         process.env = { ...originalProcessEnv };
       });
@@ -104,8 +127,8 @@ describe('utilisation-report routes', () => {
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) => post(aRecordCorrectionFormValues(), headers).to(getUrl({ correctionId: 1 })),
         whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
+        successCode: HttpStatusCode.Found,
+        successHeaders: { location: '/utilisation-reports/provide-correction/1/check-the-information' },
       });
     });
 
@@ -140,6 +163,10 @@ describe('utilisation-report routes', () => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       });
 
+      beforeEach(() => {
+        api.deleteFeeRecordCorrectionTransientFormData.mockResolvedValue({});
+      });
+
       afterAll(() => {
         process.env = { ...originalProcessEnv };
       });
@@ -147,8 +174,8 @@ describe('utilisation-report routes', () => {
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) => post(undefined, headers).to(getUrl({ correctionId: 1 })),
         whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
+        successCode: HttpStatusCode.Found,
+        successHeaders: { location: '/utilisation-report-upload' },
       });
     });
 
@@ -183,6 +210,20 @@ describe('utilisation-report routes', () => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       });
 
+      beforeEach(() => {
+        api.getCompletedFeeRecordCorrections.mockResolvedValue([
+          {
+            id: 1,
+            dateSent: '2024-01-01T12:30:00.000Z',
+            exporter: 'An exporter',
+            formattedReasons: 'Reason 1',
+            formattedPreviousValues: 'Previous value',
+            formattedCorrectedValues: 'Corrected value',
+            bankCommentary: 'Commentary',
+          },
+        ]);
+      });
+
       afterAll(() => {
         process.env = { ...originalProcessEnv };
       });
@@ -191,7 +232,6 @@ describe('utilisation-report routes', () => {
         makeRequestWithHeaders: (headers) => get(url, {}, headers),
         whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
         successCode: HttpStatusCode.Ok,
-        disableHappyPath: true,
       });
     });
 
