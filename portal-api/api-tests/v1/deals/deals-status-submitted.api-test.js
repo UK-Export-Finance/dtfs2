@@ -183,13 +183,13 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         expect(dealAfterSecondSubmission.body.deal.details.ukefDealId).toEqual(dealAfterFirstSubmission.body.details.ukefDealId);
 
         dealAfterSecondSubmission.body.deal.bondTransactions.items.forEach((bond) => {
-          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) => b._id === bond._id);
+          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((item) => item._id === bond._id);
 
           expect(bond.ukefFacilityId).toEqual(bondInFirstSubmission.ukefFacilityId);
         });
 
         dealAfterSecondSubmission.body.deal.loanTransactions.items.forEach((loan) => {
-          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) => l._id === loan._id);
+          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((item) => item._id === loan._id);
 
           expect(loan.ukefFacilityId).toEqual(loanInFirstSubmission.ukefFacilityId);
         });
@@ -239,7 +239,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const dealId = postResult.body._id;
 
       const modifiedMockFacilities = originalFacilities;
-      const firstBond = modifiedMockFacilities.find((f) => f.type === 'Bond');
+      const firstBond = modifiedMockFacilities.find((facility) => facility.type === 'Bond');
 
       firstBond.status = 'Ready for check';
       firstBond.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();
@@ -267,7 +267,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const dealId = postResult.body._id;
 
       const modifiedMockFacilities = originalFacilities;
-      const firstLoan = modifiedMockFacilities.find((f) => f.type === 'Loan');
+      const firstLoan = modifiedMockFacilities.find((facility) => facility.type === 'Loan');
 
       firstLoan.status = 'Ready for check';
       firstLoan.requestedCoverStartDate = sub(nowDate, { days: 1 }).valueOf();

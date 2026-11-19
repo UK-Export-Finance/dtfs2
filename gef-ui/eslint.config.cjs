@@ -99,7 +99,10 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
-      // // DTFS gef-ui exception
+      // disallow param names with 1 digit, excluding object property names
+      'id-length': ['error', { min: 2, properties: 'never' }],
+
+      // DTFS gef-ui exception
       // Why: Allow relative import paths for certain exceptions in the project
       'no-relative-import-paths/no-relative-import-paths': 'off',
 

@@ -5,9 +5,9 @@ const { produce } = require('immer');
 const { mongoDbClient: db } = require('../server/drivers/db-client');
 
 const wipe = async (collections) => {
-  const drop = async (collection) =>
+  const drop = async (collectionName) =>
     new Promise((resolve) => {
-      db.getCollection(collection).then((c) => c.drop(() => resolve()));
+      db.getCollection(collectionName).then((collection) => collection.drop(() => resolve()));
     });
 
   const dropPromises = [];

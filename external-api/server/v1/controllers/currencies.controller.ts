@@ -6,7 +6,7 @@ const currencies: CurrencyInterface[] = CURRENCIES;
 
 type FindOneCurrencyRequest = CustomExpressRequest<{ params: { id: string } }>;
 
-export const findOneCurrency = (id: string) => currencies.find((c: CurrencyInterface) => c.id.toLowerCase() === id.toLowerCase());
+export const findOneCurrency = (id: string) => currencies.find((currency: CurrencyInterface) => currency.id.toLowerCase() === id.toLowerCase());
 
 export const findAll = (req: Request, res: Response) =>
   res.status(200).send({

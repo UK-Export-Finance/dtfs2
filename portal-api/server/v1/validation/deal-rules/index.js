@@ -6,8 +6,8 @@ const rules = [bankInternalRefName, additionalRefName];
 module.exports = (deal) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](deal, errorList);
+  for (let index = 0; index < rules.length; index += 1) {
+    errorList = rules[index](deal, errorList);
   }
 
   return errorList;

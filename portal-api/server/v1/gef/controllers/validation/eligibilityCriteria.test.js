@@ -8,14 +8,14 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
       const result = getAnsweredItems(mockAnswers);
 
-      const expected = mockAnswers.filter((a) => a.answer !== null);
+      const expected = mockAnswers.filter(({ answer }) => answer !== null);
 
       expect(result).toEqual(expected);
     });
   });
 
   describe('isAutomaticCover', () => {
-    describe('when all every answer is true', () => {
+    describe('when every answer is true', () => {
       it('should return true', () => {
         const mockAnswers = [{ answer: true }, { answer: true }];
 

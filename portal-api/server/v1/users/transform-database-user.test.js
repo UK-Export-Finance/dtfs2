@@ -37,8 +37,8 @@ describe('transformDatabaseUser', () => {
 
         const result = transformDatabaseUser(userInDatabase);
 
-        result.signInTokens.forEach((signInToken, i) => {
-          const databaseSignInToken = databaseSignInTokens[i];
+        result.signInTokens.forEach((signInToken, index) => {
+          const databaseSignInToken = databaseSignInTokens[index];
           expect(signInToken.salt).toEqual(Buffer.from(databaseSignInToken.saltHex, 'hex'));
           expect(signInToken.hash).toEqual(Buffer.from(databaseSignInToken.hashHex, 'hex'));
           expect(signInToken.expiry).toEqual(databaseSignInToken.expiry);

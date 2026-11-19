@@ -1,4 +1,4 @@
-const sortArrayAlphabetically = (arr, field) => arr.sort((a, b) => a[field].localeCompare(b[field]));
+const sortArrayAlphabetically = (arr, field) => arr.sort((previous, current) => previous[field].localeCompare(current[field]));
 
 module.exports = {
   sortArrayAlphabetically,

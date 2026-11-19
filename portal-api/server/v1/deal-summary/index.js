@@ -73,27 +73,27 @@ const calculate = (bondsInDealCurrency, loansInDealCurrency, supplyContractConve
 };
 
 const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans) => {
-  const hasCompletedBonds = bonds.filter((b) => {
+  const hasCompletedBonds = bonds.filter((bond) => {
     // if submittedAsIssuedDate is true, the facility has been previously completed.
-    if (b.submittedAsIssuedDate) {
-      return b;
+    if (bond.submittedAsIssuedDate) {
+      return bond;
     }
 
-    if (b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && b.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
-      return b;
+    if (bond.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && bond.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
+      return bond;
     }
 
     return null;
   });
 
-  const hasCompletedLoans = loans.filter((l) => {
+  const hasCompletedLoans = loans.filter((loan) => {
     // if submittedAsIssuedDate is true, the facility has been previously completed.
-    if (l.submittedAsIssuedDate) {
-      return l;
+    if (loan.submittedAsIssuedDate) {
+      return loan;
     }
 
-    if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
-      return l;
+    if (loan.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED && loan.status !== CONSTANTS.FACILITIES.DEAL_STATUS.INCOMPLETE) {
+      return loan;
     }
 
     return null;

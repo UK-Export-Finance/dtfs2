@@ -56,11 +56,11 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
 
   return {
     validationErrors: {
-      count: Object.values(errorList).filter((e) => e.text).length,
+      count: Object.values(errorList).filter((error) => error.text).length,
       errorList,
     },
     validationUploadErrors: {
-      count: Object.values(uploadErrorList).filter((e) => e.text).length,
+      count: Object.values(uploadErrorList).filter((error) => error.text).length,
       errorList: uploadErrorList,
     },
   };
