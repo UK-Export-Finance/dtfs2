@@ -12,12 +12,13 @@ const retryOptions = require('../../helpers/retryOptions');
 
 df.app.orchestration('acbs-facility-bond', function* createFacilityBond(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facility?.facilitySnapshot?.ukefFacilityId;
 
   try {
     const { deal, facility, dealAcbsData } = payload;
 
     const { facilitySnapshot } = facility;
-    const facilityIdentifier = facilitySnapshot.ukefFacilityId.padStart(10, 0);
+    const facilityIdentifier = facilityId.padStart(10, 0);
 
     // BOND specific data
     const code =
@@ -80,7 +81,7 @@ df.app.orchestration('acbs-facility-bond', function* createFacilityBond(context)
       facilityBondBeneficiaryGuarantee,
     };
   } catch (error) {
-    console.error('Error creating facility bond record %o', error);
-    throw new Error(`Error creating facility bond record ${error}`);
+    console.error('Error creating facility bond record for facility %s: %o', facilityId, error);
+    throw new Error(`Error creating facility bond record for facility ${facilityId}: ${error}`);
   }
 });

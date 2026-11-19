@@ -46,6 +46,7 @@ const mappings = require('../../mappings');
  */
 df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacilityCovenant(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facilityIdentifier;
 
   try {
     if (!payload) {
@@ -66,7 +67,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
 
     return facilityCovenantRecordAmendment;
   } catch (error) {
-    console.error('Error amending facility covenant record %o', error);
-    throw new Error(`Error amending facility covenant record ${error}`);
+    console.error('Error amending facility covenant record for facility %s: %o', facilityId, error);
+    throw new Error(`Error amending facility covenant record for facility ${facilityId}: ${error}`);
   }
 });

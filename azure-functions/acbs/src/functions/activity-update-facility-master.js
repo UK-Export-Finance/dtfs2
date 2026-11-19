@@ -62,6 +62,8 @@ const mandatoryFields = [
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid facility master amendment payload');
@@ -103,8 +105,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to amend facility master record %o', error);
-    throw new Error(`Unable to amend facility master record ${error}`);
+    console.error('Unable to amend facility master record for facility %s %o', facilityId, error);
+    throw new Error(`Unable to amend facility master record for facility ${facilityId} ${error}`);
   }
 };
 

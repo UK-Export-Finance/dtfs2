@@ -52,6 +52,7 @@ let response;
 
 df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
   const payload = context.df.input;
+  const facilityId = payload?.amendment?.facilityIdentifier;
 
   try {
     const { amendment } = payload;
@@ -186,7 +187,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     return response;
   } catch (error) {
-    console.error('Error amending facility records %o', error);
+    console.error('Error amending facility records for facility %s: %o', facilityId, error);
     return false;
   }
 });

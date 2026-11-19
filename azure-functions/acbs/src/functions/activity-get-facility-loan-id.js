@@ -31,6 +31,8 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * @throws {Error} - Throws an error if the facility ID is not provided, if the API request is not successful, if no data is returned, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     const { facilityIdentifier } = payload;
 
@@ -81,8 +83,8 @@ const handler = async (payload) => {
 
     return null;
   } catch (error) {
-    console.error('Unable to get facility loan %o', error);
-    throw new Error(`Unable to get facility loan ${error}`);
+    console.error('Unable to get facility loan for facility %s %o', facilityId, error);
+    throw new Error(`Unable to get facility loan for facility ${facilityId} ${error}`);
   }
 };
 

@@ -21,6 +21,8 @@ const mandatoryFields = ['effectiveDate', 'limitKey', 'guaranteeExpiryDate', 'ma
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const dealId = payload?.dealIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid deal guarantee record payload');
@@ -64,8 +66,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal guarantee record %o', error);
-    throw new Error(`Unable to create deal guarantee record ${error}`);
+    console.error('Unable to create deal guarantee record for deal %s: %o', dealId, error);
+    throw new Error(`Unable to create deal guarantee record for deal ${dealId}: ${error}`);
   }
 };
 

@@ -21,6 +21,8 @@ const mandatoryFields = ['maximumLiability', 'currency', 'guaranteeExpiryDate', 
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid facility investor record payload');
@@ -63,8 +65,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility investor record %o', error);
-    throw new Error(`Unable to create facility investor record ${error}`);
+    console.error('Unable to create facility investor record for facility %s: %o', facilityId, error);
+    throw new Error(`Unable to create facility investor record for facility ${facilityId} ${error}`);
   }
 };
 
