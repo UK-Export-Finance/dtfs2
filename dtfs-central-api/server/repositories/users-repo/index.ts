@@ -6,8 +6,8 @@ import { mongoDbClient } from '../../drivers/db-client';
 /**
  * Gets the portal user with the supplied id
  * @param userId - The user id
- * @returns The found user
- * @throws {Error} If a user with the specified id cannot be found
+ * @returns The found user, or null if no user exists with the supplied id
+ * @throws {Error} If the supplied id is invalid or the database query fails
  */
 export const getUserById = async (userId: string): Promise<PortalUser | null> => {
   try {
