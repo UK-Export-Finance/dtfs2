@@ -84,60 +84,6 @@ param APIM_MDM_VALUE string
 @description('CRON schedule controlling when utilisation reports for banks are generated.')
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string = '0 2 * * 1'
 
-@description('Authentication key used by services to call the DTFS Central API.')
-@secure()
-param DTFS_CENTRAL_API_KEY string
-
-@description('Allowed CORS origin used by frontend applications when calling APIs.')
-@secure()
-param CORS_ORIGIN string
-
-@description('Base URL for the Companies House API.')
-@secure()
-param COMPANIES_HOUSE_API_URL string
-
-@description('Base URL for the Ordnance Survey API.')
-@secure()
-param ORDNANCE_SURVEY_API_URL string
-
-@description('Base URL for the APIM eStore integration.')
-@secure()
-param APIM_ESTORE_URL string
-
-@description('Subscription key used to access the APIM eStore API.')
-@secure()
-param APIM_ESTORE_KEY string
-
-@description('Subscription value used when calling the APIM eStore API.')
-@secure()
-param APIM_ESTORE_VALUE string
-
-@description('API key used when calling the Companies House API.')
-@secure()
-param COMPANIES_HOUSE_API_KEY string
-
-@description('API key used when calling the Ordnance Survey API.')
-@secure()
-param ORDNANCE_SURVEY_API_KEY string
-
-@description('API key used to authenticate with the GOV.UK Notify service.')
-@secure()
-param GOV_NOTIFY_API_KEY string
-
-@description('Email address used as the default recipient for GOV.UK Notify emails.')
-@secure()
-param GOV_NOTIFY_EMAIL_RECIPIENT string
-
-@description('API key used by external integrations to call system APIs.')
-@secure()
-param EXTERNAL_API_KEY string
-
-@description('Maximum allowed size for utilisation report uploads (in bytes).')
-param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
-
-@description('Public URL of the DTFS portal UI.')
-param PORTAL_UI_URL string
-
 @description('Number of business days from the start of the month when utilisation reports become due.')
 param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
 
@@ -155,58 +101,6 @@ param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
 
 @description('Azure File Share name used to store utilisation reports.')
 param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
-
-@description('Folder within the Azure storage file share used for portal export files.')
-@secure()
-param AZURE_PORTAL_EXPORT_FOLDER string
-
-@description('Azure File Share name used for portal export storage.')
-@secure()
-param AZURE_PORTAL_FILESHARE_NAME string
-
-@description('JWT signing key used to generate authentication tokens.')
-@secure()
-param JWT_SIGNING_KEY string
-
-@description('JWT validation key used to verify authentication tokens.')
-@secure()
-param JWT_VALIDATING_KEY string
-
-@description('API key required to access the Portal API.')
-@secure()
-param PORTAL_API_KEY string
-
-@description('API key required to access the TFM API.')
-@secure()
-param TFM_API_KEY string
-
-@description('Secret used for session encryption and authentication.')
-@secure()
-param SESSION_SECRET string
-
-@description('Base URL used for the eStore integration.')
-@secure()
-param ESTORE_URL string
-
-@description('System authentication key used for calls to the UKEF TFM API.')
-@secure()
-param UKEF_TFM_API_SYSTEM_KEY string
-
-@description('API key used for retrieving reports from the UKEF TFM API.')
-@secure()
-param UKEF_TFM_API_REPORTS_KEY string
-
-@description('CRON schedule controlling when the Azure number generator function runs.')
-@secure()
-param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
-
-@description('Email address used for PDC inputter notifications.')
-@secure()
-param PDC_INPUTTERS_EMAIL_RECIPIENT string
-
-@description('Internal UKEF notification email or identifier used for internal alerts.')
-@secure()
-param UKEF_INTERNAL_NOTIFICATION string
 
 @description('Email address used for contacting the team.')
 param CONTACT_US_EMAIL_ADDRESS string
@@ -229,17 +123,11 @@ param MAINTENANCE_ACTIVE string
 @description('Timestamp indicating when the next maintenance window will occur')
 param MAINTENANCE_TIMESTAMP string
 
-@description('The URL of the Deal API, used for retrieving deal information.')
-param DEAL_API_URL string
-
 @description('Flag to enable or disable Azure Cosmos DB change feed processing for the application.')
 param CHANGE_STREAM_ENABLED string
 
 @description('Version identifier for GEF deal functionality, used to control feature rollout and compatibility.')
 param GEF_DEAL_VERSION string
-
-@description('The base URL of the TFM API used by portal-api to retrieve TFM data.')
-param TFM_API string
 
 @description('The URL of the TFM UI, used for redirecting users when access is blocked by WAF rules.')
 param TFM_UI_URL string
@@ -250,19 +138,11 @@ param DELETION_AUDIT_LOGS_TTL_SECONDS string
 @description('CRON schedule controlling when the eStore cron manager function runs.')
 param ESTORE_CRON_MANAGER_SCHEDULE string
 
-@description('Password used to authenticate with the audit API.')
-@secure()
-param AUDIT_API_PASSWORD string
-
 @description('CRON schedule controlling when durable functions logs are deleted.')
 param ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE string
 
 @description('Base URL for the audit API, used for recording significant actions and events within the system.')
 param AUDIT_API_URL string
-
-@description('Username used to authenticate with the audit API.')
-@secure()
-param AUDIT_API_USERNAME string
 
 @description('CRON schedule controlling when the deal cancellation function runs.')
 param DEAL_CANCELLATION_SCHEDULE string
@@ -280,60 +160,17 @@ param PORTAL_API_URL string
 @description('The schedule used to delete transient record correction form data.')
 param RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE string
 
-@description('The hostname of the SQL database server.')
-@secure()
-param SQL_DB_HOST string
-
 @description('Whether SQL database logging is enabled.')
 param SQL_DB_LOGGING_ENABLED string
 
-@description('The name of the SQL database to connect to.')
-@secure()
-param SQL_DB_NAME string
-
-@description('The username for authenticating with the SQL database.')
-@secure()
-param SQL_DB_USERNAME string
-
-@description('The port number for connecting to the SQL database.')
-param SQL_DB_PORT string
-
-@description('The password for authenticating with the SQL database.')
-@secure()
-param SQL_DB_PASSWORD string
-
-@description('The email address of the recipient for UKEF GEF reporting emails.')
-param UKEF_GEF_REPORTING_EMAIL_RECIPIENT string
-
 @description('The base URL of the TFM API used by dtfs-central-api to retrieve TFM data.')
 param TFM_API_URL string
-
-@description('The URL of the Azure ACBS function, used for interacting with the ACBS service.')
-param AZURE_ACBS_FUNCTION_URL string
 
 @description('The percentage of available cash that has been utilized.')
 param CASH_UTILISATION_PERCENTAGE string
 
 @description('The percentage of available contingent liabilities.')
 param CONTINGENT_UTILISATION_PERCENTAGE string
-
-@description('The client ID for the Azure AD application used for authentication.')
-@secure()
-param ENTRA_ID_CLIENT_ID string
-
-@description('The client secret for the Azure AD application used for authentication.')
-@secure()
-param ENTRA_ID_CLIENT_SECRET string
-
-@description('The cloud instance for the Azure AD application used for authentication.')
-param ENTRA_ID_CLOUD_INSTANCE string
-
-@description('The redirect URL for the Azure AD application used for authentication.')
-param ENTRA_ID_REDIRECT_URL string
-
-@description('The tenant ID for the Azure AD application used for authentication.')
-@secure()
-param ENTRA_ID_TENANT_ID string
 
 @description('Flag to enable or disable the Salesforce customer creation feature.')
 param FF_SALESFORCE_CUSTOMER_CREATION_ENABLED string
@@ -379,6 +216,9 @@ param redirectUrl string
 
 @description('The SKU (pricing tier) of the App Service Plan')
 param aspSku string
+
+@description('Maximum file size allowed for utilisation reports in bytes.')
+param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
 
 var storageLocations = [
   'uksouth'
@@ -555,61 +395,25 @@ var dtfsCentralApiSettings = {
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE
   TFM_API_URL: TFM_API_URL
   TFM_UI_URL: TFM_UI_URL
-  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+  SQL_DB_LOGGING_ENABLED: SQL_DB_LOGGING_ENABLED
 }
 var dtfsCentralApiSecureSettings = {}
-var dtfsCentralApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  AUDIT_API_PASSWORD: AUDIT_API_PASSWORD
-  AUDIT_API_USERNAME: AUDIT_API_USERNAME
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
-  SQL_DB_HOST: SQL_DB_HOST
-  SQL_DB_LOGGING_ENABLED: SQL_DB_LOGGING_ENABLED
-  SQL_DB_NAME: SQL_DB_NAME
-  SQL_DB_PASSWORD: SQL_DB_PASSWORD
-  SQL_DB_PORT: SQL_DB_PORT
-  SQL_DB_USERNAME: SQL_DB_USERNAME
-  TFM_API_KEY: TFM_API_KEY
-}
+var dtfsCentralApiAdditionalSecureSetting = {}
 
 var externalApiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
-    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
     DELETION_AUDIT_LOGS_TTL_SECONDS: DELETION_AUDIT_LOGS_TTL_SECONDS
     ESTORE_CRON_MANAGER_SCHEDULE: ESTORE_CRON_MANAGER_SCHEDULE
     MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
     MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
 }
 
-var externalApiSecureSettings = {
-  CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL
-  APIM_TFS_KEY: APIM_TFS_KEY
-  APIM_TFS_VALUE: APIM_TFS_VALUE
-  APIM_MDM_URL: APIM_MDM_URL
-  APIM_MDM_KEY: APIM_MDM_KEY
-  APIM_MDM_VALUE: APIM_MDM_VALUE
-  APIM_ESTORE_URL: APIM_ESTORE_URL
-  APIM_ESTORE_KEY: APIM_ESTORE_KEY
-  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
-  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
-  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
-  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
-  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
-}
+var externalApiSecureSettings = {}
 
-var externalApiAdditionalSecureSettings = {
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-}
+var externalApiAdditionalSecureSettings = {}
 
 var portalApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-  PORTAL_UI_URL: PORTAL_UI_URL
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
   UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
@@ -622,40 +426,18 @@ var portalApiSettings = {
   GEF_DEAL_VERSION: GEF_DEAL_VERSION
   MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
-  TFM_API: TFM_API
-  TFM_UI_URL: TFM_UI_URL
-  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
-  DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
-  DTFS_CENTRAL_API: DTFS_CENTRAL_API_URL
   DELETION_AUDIT_LOGS_TTL_SECONDS: DELETION_AUDIT_LOGS_TTL_SECONDS
 }
 
-var portalApiSecureSettings = {
-  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
-  CORS_ORIGIN: CORS_ORIGIN
-  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
-  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
-  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
-}
-var portalApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
-}
-var portalApiConnectionStrings = { }
-var portalApiSecureConnectionStrings = { }
+var portalApiSecureSettings = {}
+var portalApiAdditionalSecureSetting = {}
+var portalApiConnectionStrings = {}
+var portalApiSecureConnectionStrings = {}
 
 var portalUISettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
-  PORTAL_UI_URL: PORTAL_UI_URL
   CONTACT_US_EMAIL_ADDRESS: CONTACT_US_EMAIL_ADDRESS
-  DEAL_API_URL: DEAL_API_URL
   FF_FEE_RECORD_CORRECTION_ENABLED: FF_FEE_RECORD_CORRECTION_ENABLED
   FF_PORTAL_2FA_ENABLED: FF_PORTAL_2FA_ENABLED
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED : FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
@@ -664,15 +446,9 @@ var portalUISettings = {
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
 }
 
-var portalUISecureSettings = {
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
-  SESSION_SECRET: SESSION_SECRET
-}
+var portalUISecureSettings = {}
 
-var portalUIAdditionalSecureSettings = {
-  PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
-}
+var portalUIAdditionalSecureSettings = {}
 
 var portalUISecureConnectionStrings = { }
 var portalUIAdditionalSecureConnectionStrings = { }
@@ -691,15 +467,9 @@ var tfmUISettings = {
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
 }
 
-var tfmUISecureSettings = {
-  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
-  ESTORE_URL: ESTORE_URL
-  SESSION_SECRET: SESSION_SECRET
-}
+var tfmUISecureSettings = {}
 
-var tfmUIAdditionalSecureSettings = {
-  TFM_API_KEY: TFM_API_KEY
-}
+var tfmUIAdditionalSecureSettings = {}
 
 var tfmUISecureConnectionStrings = { }
 var tfmUIAdditionalSecureConnectionStrings = { }
@@ -712,13 +482,9 @@ var gefUISettings = {
     MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
 }
 
-var gefUISecureSettings = {
-  SESSION_SECRET: SESSION_SECRET
-}
+var gefUISecureSettings = {}
 
-var gefUIAdditionalSecureSettings = {
-  PORTAL_API_KEY: PORTAL_API_KEY
-}
+var gefUIAdditionalSecureSettings = {}
 
 var gefUISecureConnectionStrings = { }
 var gefUIAdditionalSecureConnectionStrings = { }
@@ -726,40 +492,22 @@ var gefUIAdditionalSecureConnectionStrings = { }
 var tfmApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
-  AZURE_ACBS_FUNCTION_URL: AZURE_ACBS_FUNCTION_URL
   CASH_UTILISATION_PERCENTAGE: CASH_UTILISATION_PERCENTAGE
   DELETION_AUDIT_LOGS_TTL_SECONDS: DELETION_AUDIT_LOGS_TTL_SECONDS
   CHANGE_STREAM_ENABLED: CHANGE_STREAM_ENABLED
   CONTINGENT_UTILISATION_PERCENTAGE: CONTINGENT_UTILISATION_PERCENTAGE
-  ENTRA_ID_CLIENT_ID: ENTRA_ID_CLIENT_ID
-  ENTRA_ID_CLOUD_INSTANCE: ENTRA_ID_CLOUD_INSTANCE
-  ENTRA_ID_REDIRECT_URL: ENTRA_ID_REDIRECT_URL
-  ENTRA_ID_TENANT_ID: ENTRA_ID_TENANT_ID
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED : FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
   FF_TFM_DEAL_CANCELLATION_ENABLED : FF_TFM_DEAL_CANCELLATION_ENABLED
   FF_TFM_FACILITY_END_DATE_ENABLED: FF_TFM_FACILITY_END_DATE_ENABLED
   MAINTENANCE_ACTIVE: MAINTENANCE_ACTIVE
   MAINTENANCE_TIMESTAMP: MAINTENANCE_TIMESTAMP
-  DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
   DTFS_CENTRAL_API: DTFS_CENTRAL_API_URL
 }
 
-var tfmApiSecureSettings = {
-  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
-  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY
-  ENTRA_ID_CLIENT_SECRET: ENTRA_ID_CLIENT_SECRET
-}
+var tfmApiSecureSettings = {}
 
 var tfmApiAdditionalSecureSettings = {
-  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  TFM_API_KEY: TFM_API_KEY
-  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
   TFM_UI_URL: TFM_UI_URL
 }
 
@@ -1029,6 +777,25 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    COMPANIES_HOUSE_API_URL: keyVault.getSecret('COMPANIES-HOUSE-API-URL')
+    ORDNANCE_SURVEY_API_URL: keyVault.getSecret('ORDNANCE-SURVEY-API-URL')
+    CORS_ORIGIN: keyVault.getSecret('CORS-ORIGIN')
+    APIM_TFS_URL: keyVault.getSecret('APIM-TFS-URL')
+    APIM_TFS_KEY: keyVault.getSecret('APIM-TFS-KEY')
+    APIM_TFS_VALUE: keyVault.getSecret('APIM-TFS-VALUE')
+    APIM_MDM_URL: keyVault.getSecret('APIM-MDM-URL')
+    APIM_MDM_KEY: keyVault.getSecret('APIM-MDM-KEY')
+    APIM_MDM_VALUE: keyVault.getSecret('APIM-MDM-VALUE')
+    APIM_ESTORE_URL: keyVault.getSecret('APIM-ESTORE-URL')
+    APIM_ESTORE_KEY: keyVault.getSecret('APIM-ESTORE-KEY')
+    APIM_ESTORE_VALUE: keyVault.getSecret('APIM-ESTORE-VALUE')
+    COMPANIES_HOUSE_API_KEY: keyVault.getSecret('COMPANIES-HOUSE-API-KEY')
+    ORDNANCE_SURVEY_API_KEY: keyVault.getSecret('ORDNANCE-SURVEY-API-KEY')
+    GOV_NOTIFY_API_KEY: keyVault.getSecret('GOV-NOTIFY-API-KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV-NOTIFY-EMAIL-RECIPIENT')
+    UKEF_INTERNAL_NOTIFICATION_EMAIL: keyVault.getSecret('UKEF-INTERNAL-NOTIFICATION-EMAIL')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL-API-KEY')
+
   }
 }
 
@@ -1055,6 +822,20 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL-API-KEY')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS-CENTRAL-API-KEY')
+    AUDIT_API_PASSWORD: keyVault.getSecret('AUDIT-API-PASSWORD')
+    AUDIT_API_USERNAME: keyVault.getSecret('AUDIT-API-USERNAME')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL-API-KEY')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT-SIGNING-KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT-VALIDATING-KEY')
+    SQL_DB_HOST: keyVault.getSecret('SQL-DB-HOST')
+    SQL_DB_NAME: keyVault.getSecret('SQL-DB-NAME')
+    SQL_DB_PASSWORD: keyVault.getSecret('SQL-DB-PASSWORD')
+    SQL_DB_PORT: keyVault.getSecret('SQL-DB-PORT')
+    SQL_DB_USERNAME: keyVault.getSecret('SQL-DB-USERNAME')
+    TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
+    UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF-GEF-REPORTING-EMAIL-RECIPIENT')
   }
 }
 
@@ -1069,14 +850,11 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     containerRegistryName: containerRegistry.name
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
-    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
-    tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: portalApiSettings
@@ -1085,6 +863,26 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     connectionStrings: portalApiConnectionStrings
     secureConnectionStrings: portalApiSecureConnectionStrings
     PORTAL_API_KEY: keyVault.getSecret('PORTAL-API-KEY')
+    PORTAL_UI_URL: keyVault.getSecret('PORTAL-UI-URL')
+    TFM_API: keyVault.getSecret('TFM-API')
+    TFM_UI_URL: keyVault.getSecret('TFM-UI-URL')
+    UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF-GEF-REPORTING-EMAIL-RECIPIENT')
+    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS-CENTRAL-API-URL')
+    DTFS_CENTRAL_API: keyVault.getSecret('DTFS-CENTRAL-API')
+    PDC_INPUTTERS_EMAIL_RECIPIENT: keyVault.getSecret('PDC-INPUTTERS-EMAIL-RECIPIENT')
+    CORS_ORIGIN: keyVault.getSecret('CORS-ORIGIN')
+    AZURE_PORTAL_EXPORT_FOLDER: keyVault.getSecret('AZURE-PORTAL-EXPORT-FOLDER')
+    AZURE_PORTAL_FILESHARE_NAME: keyVault.getSecret('AZURE-PORTAL-FILESHARE-NAME')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT-SIGNING-KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT-VALIDATING-KEY')
+    GOV_NOTIFY_API_KEY: keyVault.getSecret('GOV-NOTIFY-API-KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV-NOTIFY-EMAIL-RECIPIENT')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS-CENTRAL-API-KEY')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL-API-KEY')
+    TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
+    EXTERNAL_API_URL: keyVault.getSecret('EXTERNAL-API-URL')
+    TFM_API_URL: keyVault.getSecret('TFM-API-URL')
+
     clamAvSettings: {
       ipAddress: clamAv.outputs.exposedIp
       port: clamAv.outputs.exposedPort
@@ -1144,6 +942,30 @@ module portalUI 'modules/webapps/portal-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
     websiteHealthcheckingMax: websiteHealthcheckingMax
+    COMPANIES_HOUSE_API_URL: keyVault.getSecret('COMPANIES_HOUSE_API_URL')
+    PORTAL_UI_URL: keyVault.getSecret('PORTAL_UI_URL')
+    DEAL_API_URL: keyVault.getSecret('DEAL_API_URL')
+    COMPANIES_HOUSE_API_KEY: keyVault.getSecret('COMPANIES_HOUSE_API_KEY')
+    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL_API_KEY')
+    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
+    TFM_API: keyVault.getSecret('TFM_API')
+    TFM_UI_URL: keyVault.getSecret('TFM_UI_URL')
+    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS_CENTRAL_API_URL')
+    DTFS_CENTRAL_API: keyVault.getSecret('DTFS_CENTRAL_API')
+    PDC_INPUTTERS_EMAIL_RECIPIENT: keyVault.getSecret('PDC_INPUTTERS_EMAIL_RECIPIENT')
+    CORS_ORIGIN: keyVault.getSecret('CORS_ORIGIN')
+    AZURE_PORTAL_EXPORT_FOLDER: keyVault.getSecret('AZURE_PORTAL_EXPORT_FOLDER')
+    AZURE_PORTAL_FILESHARE_NAME: keyVault.getSecret('AZURE_PORTAL_FILESHARE_NAME')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT_SIGNING_KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT_VALIDATING_KEY')
+    GOV_NOTIFY_API_KEY: keyVault.getSecret('GOV_NOTIFY_API_KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV_NOTIFY_EMAIL_RECIPIENT')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS_CENTRAL_API_KEY')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL_API_KEY')
+    EXTERNAL_API_URL: keyVault.getSecret('EXTERNAL_API_URL')
+    TFM_API_URL: keyVault.getSecret('TFM_API_URL')
+    UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF_GEF_REPORTING_EMAIL_RECIPIENT')
   }
 }
 
@@ -1161,7 +983,6 @@ module tfmUI 'modules/webapps/trade-finance-manager-ui.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     redisName: redis.outputs.redisName
-    tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: tfmUISettings
@@ -1172,6 +993,11 @@ module tfmUI 'modules/webapps/trade-finance-manager-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF_TFM_API_SYSTEM_KEY')
+    ESTORE_URL: keyVault.getSecret('ESTORE_URL')
+    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
+    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
+    TFM_API_URL: keyVault.getSecret('TFM_API_URL')
   }
 }
 
@@ -1200,6 +1026,8 @@ module gefUI 'modules/webapps/gef-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL_API_KEY')
+    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
   }
 }
 
@@ -1321,5 +1149,24 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
+    AZURE_ACBS_FUNCTION_URL: keyVault.getSecret('AZURE_ACBS_FUNCTION_URL')
+    AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: keyVault.getSecret('AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE')
+    AZURE_PORTAL_STORAGE_ACCESS_KEY: keyVault.getSecret('AZURE_PORTAL_STORAGE_ACCESS_KEY')
+    AZURE_PORTAL_STORAGE_ACCOUNT: keyVault.getSecret('AZURE_PORTAL_STORAGE_ACCOUNT')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS_CENTRAL_API_KEY')
+    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS_CENTRAL_API_URL')
+    ENTRA_ID_CLIENT_ID: keyVault.getSecret('ENTRA_ID_CLIENT_ID')
+    ENTRA_ID_CLIENT_SECRET: keyVault.getSecret('ENTRA_ID_CLIENT_SECRET')
+    ENTRA_ID_CLOUD_INSTANCE: keyVault.getSecret('ENTRA_ID_CLOUD_INSTANCE')
+    ENTRA_ID_REDIRECT_URL: keyVault.getSecret('ENTRA_ID_REDIRECT_URL')
+    ENTRA_ID_TENANT_ID: keyVault.getSecret('ENTRA_ID_TENANT_ID')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL_API_KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV_NOTIFY_EMAIL_RECIPIENT')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT_SIGNING_KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT_VALIDATING_KEY')
+    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
+    UKEF_INTERNAL_NOTIFICATION_EMAIL: keyVault.getSecret('UKEF_INTERNAL_NOTIFICATION_EMAIL')
+    UKEF_TFM_API_REPORTS_KEY: keyVault.getSecret('UKEF_TFM_API_REPORTS_KEY')
+    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF_TFM_API_SYSTEM_KEY')
   }
 }

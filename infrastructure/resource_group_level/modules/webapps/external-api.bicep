@@ -23,6 +23,78 @@ param additionalSecureSettings object
 param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
 param timeZone string
+@description('Companies House API URL.')
+@secure()
+param COMPANIES_HOUSE_API_URL string
+
+@description('Ordnance Survey API URL.')
+@secure()
+param ORDNANCE_SURVEY_API_URL string
+
+@description('CORS origin for the external API.')
+@secure()
+param CORS_ORIGIN string
+
+@description('APIM TFS URL.')
+@secure()
+param APIM_TFS_URL string
+
+@description('APIM TFS key.')
+@secure()
+param APIM_TFS_KEY string
+
+@description('APIM TFS value.')
+@secure()
+param APIM_TFS_VALUE string
+
+@description('APIM MDM URL.')
+@secure()
+param APIM_MDM_URL string
+
+@description('APIM MDM key.')
+@secure()
+param APIM_MDM_KEY string
+
+@description('APIM MDM value.')
+@secure()
+param APIM_MDM_VALUE string
+
+@description('APIM E-Store URL.')
+@secure()
+param APIM_ESTORE_URL string
+
+@description('APIM E-Store key.')
+@secure()
+param APIM_ESTORE_KEY string
+
+@description('APIM E-Store value.')
+@secure()
+param APIM_ESTORE_VALUE string
+
+@description('Companies House API key.')
+@secure()
+param COMPANIES_HOUSE_API_KEY string
+
+@description('Ordnance Survey API key.')
+@secure()
+param ORDNANCE_SURVEY_API_KEY string
+
+@description('GOV Notify API key.')
+@secure()
+param GOV_NOTIFY_API_KEY string
+
+@description('GOV Notify email recipient.')
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+
+@description('UKEF internal notification email.')
+@secure()
+param UKEF_INTERNAL_NOTIFICATION_EMAIL string
+
+@description('External API key.')
+@secure()
+param EXTERNAL_API_KEY string
+
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -51,9 +123,30 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
 
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var keyVaultSecureSettings = {
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+  ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
+  CORS_ORIGIN: CORS_ORIGIN
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_ESTORE_URL: APIM_ESTORE_URL
+  APIM_ESTORE_KEY: APIM_ESTORE_KEY
+  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+  UKEF_INTERNAL_NOTIFICATION_EMAIL: UKEF_INTERNAL_NOTIFICATION_EMAIL
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, keyVaultSecureSettings)
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
@@ -71,7 +164,7 @@ module externalApiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: {}
-    deployApplicationInsights: false 
+    deployApplicationInsights: true
     dockerImageName: dockerImageName
     ftpsState: 'FtpsOnly'
     location: location

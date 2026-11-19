@@ -7,9 +7,6 @@ param privateEndpointsSubnetId string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
-param externalApiHostname string
-param dtfsCentralApiHostname string
-param tfmApiHostname string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
@@ -38,6 +35,82 @@ param timeZone string
 @secure()
 param PORTAL_API_KEY string
 
+@description('Portal UI URL.')
+@secure()
+param PORTAL_UI_URL string
+
+@description('TFM API.')
+@secure()
+param TFM_API string
+
+@description('TFM UI URL.')
+@secure()
+param TFM_UI_URL string
+
+@description('Email address used for UKEF GEF reporting.')
+@secure()
+param UKEF_GEF_REPORTING_EMAIL_RECIPIENT string
+
+@description('DTFS Central API URL.')
+@secure()
+param DTFS_CENTRAL_API_URL string
+
+@description('DTFS Central API.')
+@secure()
+param DTFS_CENTRAL_API string
+
+@description('Email address used for PDC inputters.')
+@secure()
+param PDC_INPUTTERS_EMAIL_RECIPIENT string
+
+@description('CORS_ORIGIN for the portal API.')
+@secure()
+param CORS_ORIGIN string
+
+@description('Azure portal export folder.')
+@secure()
+param AZURE_PORTAL_EXPORT_FOLDER string
+
+@description('Name of the Azure file share used by the portal.')
+@secure()
+param AZURE_PORTAL_FILESHARE_NAME string
+
+@description('JWT signing key used to generate authentication tokens.')
+@secure()
+param JWT_SIGNING_KEY string
+
+@description('JWT validation key used to verify authentication tokens.')
+@secure()
+param JWT_VALIDATING_KEY string
+
+@description('GOV Notify API key.')
+@secure()
+param GOV_NOTIFY_API_KEY string
+
+@description('Email address used for GOV Notify notifications.')
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+
+@description('Authentication key used by services to call the DTFS Central API.')
+@secure()
+param DTFS_CENTRAL_API_KEY string
+
+@description('API key used by external integrations to call system APIs.')
+@secure()
+param EXTERNAL_API_KEY string
+
+@description('API key required to access the TFM API.')
+@secure()
+param TFM_API_KEY string
+
+@description('External API URL.')
+@secure()
+param EXTERNAL_API_URL string
+
+@description('TFM API URL.')
+@secure()
+param TFM_API_URL string
+
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 var staticSettings = {
@@ -50,9 +123,6 @@ var staticSettings = {
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
-var dtfsCentralApiUrl = 'https://${dtfsCentralApiHostname}'
-var externalApiUrl = 'https://${externalApiHostname}'
-var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
@@ -66,11 +136,8 @@ var additionalSettings = {
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
   WEBSITE_NODE_DEFAULT_VERSION: websiteNodeDefaultVersion
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
-  DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
-  EXTERNAL_API_URL: externalApiUrl
-  TFM_API_URL: tfmApiUrl
 }
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
 var connectionStringsList = [for item in items(union(connectionStrings, secureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -92,6 +159,25 @@ var settingsCalculated = {
 
 var keyVaultSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
+  PORTAL_UI_URL: PORTAL_UI_URL
+  TFM_API: TFM_API
+  TFM_UI_URL: TFM_UI_URL
+  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+  DTFS_CENTRAL_API_URL: DTFS_CENTRAL_API_URL
+  DTFS_CENTRAL_API: DTFS_CENTRAL_API
+  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
+  CORS_ORIGIN: CORS_ORIGIN
+  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
+  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+  EXTERNAL_API_URL: EXTERNAL_API_URL
+  TFM_API_URL: TFM_API_URL
 }
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated, keyVaultSecureSettings)

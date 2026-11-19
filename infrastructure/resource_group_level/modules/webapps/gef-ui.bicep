@@ -1,6 +1,11 @@
 param location string
 param environment string
 param containerRegistryName string
+
+@description('Portal API key.')
+@secure()
+param PORTAL_API_KEY string
+
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
@@ -25,6 +30,10 @@ param additionalSecureConnectionStrings object
 param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
 param timeZone string
+
+@description('Session secret for the portal UI.')
+@secure()
+param SESSION_SECRET string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
@@ -53,8 +62,14 @@ var additionalSettings = {
 }
 var connectionStringsCalculated = { }
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
+
+var keyVaultSecureSettings = {
+  PORTAL_API_KEY: PORTAL_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, keyVaultSecureSettings)
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -82,7 +97,7 @@ module gefUiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsCombined
-    deployApplicationInsights: false 
+    deployApplicationInsights: true
     dockerImageName: dockerImageName
     ftpsState: 'FtpsOnly'
     location: location

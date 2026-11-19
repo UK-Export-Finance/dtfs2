@@ -5,7 +5,6 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
-param tfmApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
@@ -25,12 +24,29 @@ param additionalSecureConnectionStrings object
 param azureDnsServerIp string
 param websiteHttploggingRetentionDays string
 param timeZone string
+@description('UKEF TFM API system key.')
+@secure()
+param UKEF_TFM_API_SYSTEM_KEY string
+
+@description('E-Store URL.')
+@secure()
+param ESTORE_URL string
+
+@description('Session secret for the portal UI.')
+@secure()
+param SESSION_SECRET string
+
+@description('TFM API key.')
+@secure()
+param TFM_API_KEY string
+
+@description('TFM API URL.')
+@secure()
+param TFM_API_URL string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
-var tfmApiUrl = 'https://${tfmApiHostname}'
 var staticSettings = {
-  TFM_API_URL: tfmApiUrl
   REDIS_HOSTNAME: redis.properties.hostName
   REDIS_PORT: redis.properties.sslPort
   REDIS_KEY: redis.listKeys().primaryKey
@@ -52,9 +68,17 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
 
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var keyVaultSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  ESTORE_URL: ESTORE_URL
+  SESSION_SECRET: SESSION_SECRET
+  TFM_API_KEY: TFM_API_KEY
+  TFM_API_URL: TFM_API_URL
+}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, keyVaultSecureSettings)
 
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
@@ -84,7 +108,7 @@ module tfmUiWebapp 'webapp.bicep' = {
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
     connectionStrings: connectionStringsCombined
-    deployApplicationInsights: false 
+    deployApplicationInsights: true
     dockerImageName: dockerImageName
     ftpsState: 'Disabled'
     product: product
