@@ -1,10 +1,10 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
+import { MOCK_TFM_SESSION_USER } from '@tfm-ui/test-mocks/mock-tfm-session-user';
+import { RemoveFeesFromPaymentErrorKey } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
+import { EditPaymentFormValues } from '@tfm-ui/types/edit-payment-form-values';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 import { validatePostRemoveFeesFromPaymentRequestBody, PostRemoveFeesFromPaymentRequest } from '.';
-import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
-import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
-import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
-import { EditPaymentFormValues } from '../../types/edit-payment-form-values';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../constants/reconciliation-for-report-tabs';
 
 console.error = jest.fn();
 

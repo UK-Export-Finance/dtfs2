@@ -1,5 +1,5 @@
-import { aRecordCorrectionSentViewModel } from '../../../test-helpers/test-data/view-models';
-import pageRenderer from '../../pageRenderer';
+import { aRecordCorrectionSentViewModel } from '@ukef/portal-ui/test-helpers/test-data/view-models';
+import pageRenderer from '@ukef/portal-ui/component-tests/pageRenderer';
 
 const page = 'utilisation-report-service/record-correction/correction-sent.njk';
 const render = pageRenderer(page);

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { validationErrorHandler } from '../../../helpers/validationErrorHandler.helper';
+import api from '@tfm-ui/api';
+import { validationErrorHandler } from '@tfm-ui/helpers/validationErrorHandler.helper';
 
 export type PostLoginRequest = CustomExpressRequest<{ reqBody: { email?: string; password?: string } }>;
 

@@ -1,5 +1,5 @@
+import { MONTH_NAMES, FILE_UPLOAD } from '@ukef/portal-ui/server/constants';
 import { validateFilenameFormat } from './utilisation-report-filename-validator';
-import { MONTH_NAMES, FILE_UPLOAD } from '../../../constants';
 
 describe('utilisation-report-validator', () => {
   describe('validateFilenameFormat', () => {

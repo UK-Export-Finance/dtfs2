@@ -88,11 +88,13 @@ const K2MapData = {
 
 const findPortalValue = (constantTypeStr, constantFieldStr, k2Value) => {
   const constantType = K2MapData[constantTypeStr];
+
   if (!constantType) {
     return k2Value;
   }
 
   const constantField = constantType[constantFieldStr];
+
   if (!constantField) {
     return k2Value;
   }

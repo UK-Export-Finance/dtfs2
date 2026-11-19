@@ -1,14 +1,14 @@
 import { ROLES } from '@ukef/dtfs2-common';
-import { getAllDealsData, getTemplateVariables, getDataAndTemplateVariables, allDeals, removeSingleAllDealsFilter, removeAllDealsFilters } from '.';
-import mockResponse from '../../../helpers/responseMock';
-import { getFlashSuccessMessage } from '../../../helpers';
-import api from '../../../api';
-import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
-import { removeSessionFilter } from '../filters/remove-filter-from-session';
+import mockResponse from '@ukef/portal-ui/server/helpers/responseMock';
+import { getFlashSuccessMessage } from '@ukef/portal-ui/server/helpers';
+import api from '@ukef/portal-ui/server/api';
+import { submittedFiltersArray, submittedFiltersObject } from '@ukef/portal-ui/server/controllers/dashboard/filters/helpers';
+import { removeSessionFilter } from '@ukef/portal-ui/server/controllers/dashboard/filters/remove-filter-from-session';
+import CONSTANTS from '@ukef/portal-ui/server/constants';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
-import CONSTANTS from '../../../constants';
+import { getAllDealsData, getTemplateVariables, getDataAndTemplateVariables, allDeals, removeSingleAllDealsFilter, removeAllDealsFilters } from '.';
 
 const { MAKER, CHECKER } = ROLES;
 

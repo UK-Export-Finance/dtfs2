@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { TeamId } from '@ukef/dtfs2-common';
-import { asUserSession } from '../../helpers/express-session';
-import { userIsInTeam } from '../../helpers/user';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { userIsInTeam } from '@tfm-ui/helpers/user';
 
 /**
  * Middleware to check if the user is in at least

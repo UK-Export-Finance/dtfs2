@@ -1,5 +1,5 @@
 import { FeeRecordUtilisation, getFormattedCurrencyAndAmount, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { UtilisationDetailsViewModel, UtilisationTableRowViewModel } from '../../../types/view-models';
+import { UtilisationDetailsViewModel, UtilisationTableRowViewModel } from '@tfm-ui/types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 
 type UtilisationTableRowDataSortValues = { feesPayable: number; feesAccrued: number };

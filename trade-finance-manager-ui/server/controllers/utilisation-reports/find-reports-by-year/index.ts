@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 import { asString, isNonEmptyString } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
-import { validateSearchInput } from './search-input-validator';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
 import {
   BankReportingYearsDataListViewModel,
   FindUtilisationReportsByYearViewModel,
   UtilisationReportsByBankAndYearViewModel,
-} from '../../../types/view-models';
-import { getFindReportSummaryItemViewModel } from '../helpers';
-import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
+} from '@tfm-ui/types/view-models';
+import { getFindReportSummaryItemViewModel } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { BankWithReportingYearsResponseBody } from '@tfm-ui/api-response-types';
+import { validateSearchInput } from './search-input-validator';
 
 const findUtilisationReportsByYearTemplate = 'utilisation-reports/find-utilisation-reports-by-year.njk';
 const utilisationReportsByBankAndYearResultsTemplate = 'utilisation-reports/utilisation-reports-by-bank-and-year-results.njk';

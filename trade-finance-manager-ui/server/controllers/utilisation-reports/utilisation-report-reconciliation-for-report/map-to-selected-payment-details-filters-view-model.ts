@@ -1,5 +1,5 @@
 import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
-import { SelectedPaymentDetailsFiltersViewModel } from '../../../types/view-models';
+import { SelectedPaymentDetailsFiltersViewModel } from '@tfm-ui/types/view-models';
 import { getPaymentDetailsTabHref } from './get-payment-details-tab-href';
 
 /**

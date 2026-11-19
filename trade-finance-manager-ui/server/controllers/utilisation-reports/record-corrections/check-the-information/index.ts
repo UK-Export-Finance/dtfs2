@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { CustomExpressRequest, mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { RecordCorrectionRequestInformationViewModel, ProblemWithServiceViewModel } from '../../../../types/view-models';
-import { asUserSession } from '../../../../helpers/express-session';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import api from '../../../../api';
-import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '../../helpers';
-import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
+import { RecordCorrectionRequestInformationViewModel, ProblemWithServiceViewModel } from '@tfm-ui/types/view-models';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import api from '@tfm-ui/api';
+import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { getRecordCorrectionRequestCancelLinkHref } from '@tfm-ui/controllers/utilisation-reports/record-corrections/helpers';
 
 export type RecordCorrectionRequestInformationRequest = CustomExpressRequest<{
   params: {

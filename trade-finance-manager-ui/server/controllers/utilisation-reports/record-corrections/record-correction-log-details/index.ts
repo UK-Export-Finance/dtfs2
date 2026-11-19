@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
-import { asUserSession } from '../../../../helpers/express-session';
-import api from '../../../../api';
-import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
-import { RecordCorrectionLogDetailsViewModel } from '../../../../types/view-models';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getReconciliationForReportHref } from '../../helpers';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../../constants/reconciliation-for-report-tabs';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import api from '@tfm-ui/api';
+import { mapToRecordCorrectionStatus } from '@tfm-ui/controllers/utilisation-reports/helpers/map-record-correction-status';
+import { RecordCorrectionLogDetailsViewModel } from '@tfm-ui/types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { getReconciliationForReportHref } from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { RECONCILIATION_FOR_REPORT_TABS } from '@tfm-ui/constants/reconciliation-for-report-tabs';
 
 export type GetRecordCorrectionLogDetailsRequest = CustomExpressRequest<{ params: { correctionId: string } }>;
 

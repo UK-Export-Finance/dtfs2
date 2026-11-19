@@ -1,6 +1,6 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { BANK1_MAKER1 } from '@ukef/dtfs2-common/test-helpers';
-import MOCK_BANKS from '../banks';
+import MOCK_BANKS from 'mock-data-loader/banks';
 
 const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'Bank 1');
 const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'Bank 2');

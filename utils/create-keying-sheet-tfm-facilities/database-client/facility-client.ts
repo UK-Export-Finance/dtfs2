@@ -1,6 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
 import { Facility } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 export class FacilityClient {
   private static collection?: Collection<WithoutId<Facility>>;
@@ -17,8 +17,10 @@ export class FacilityClient {
     const { ukefFacilityId } = facility;
 
     const numberOfFacilities = await this.collection.count({ ukefFacilityId: { $eq: ukefFacilityId } });
+
     if (numberOfFacilities !== 0) {
       console.info(`Facility with UKEF facility id '${ukefFacilityId}' already exists`);
+
       return;
     }
 

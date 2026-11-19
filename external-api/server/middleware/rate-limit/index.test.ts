@@ -1,5 +1,5 @@
+import { InvalidEnvironmentVariableError } from '@ukef/external-api/server/errors/invalid-environment-variable.error';
 import { createRateLimit } from '.';
-import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 describe('createRateLimit', () => {
   let originalProcessEnv: any;

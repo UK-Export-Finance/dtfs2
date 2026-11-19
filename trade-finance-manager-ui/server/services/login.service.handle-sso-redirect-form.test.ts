@@ -1,7 +1,7 @@
 import { HandleSsoRedirectFormResponse } from '@ukef/dtfs2-common';
+import * as api from '@tfm-ui/api';
 import { aHandleSsoRedirectFormRequest, aHandleSsoRedirectFormResponse } from '../../test-helpers';
 import { LoginService } from './login.service';
-import * as api from '../api';
 
 jest.mock('../api');
 

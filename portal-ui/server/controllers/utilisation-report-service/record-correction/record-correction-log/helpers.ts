@@ -1,7 +1,7 @@
 import { DATE_FORMATS, getKeyToDateSortValueMap, IsoDateTimeStamp } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { CompletedCorrectionViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
-import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
+import { CompletedCorrectionViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-log';
+import { GetCompletedFeeRecordCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
 
 /**
  * Formats the date sent

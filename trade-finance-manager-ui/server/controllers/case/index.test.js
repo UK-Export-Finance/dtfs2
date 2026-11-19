@@ -7,12 +7,12 @@ import {
   PORTAL_AMENDMENT_STATUS,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
 } from '@ukef/dtfs2-common';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import { getTask } from '@tfm-ui/controllers/helpers';
+import mapAssignToSelectOptions from '@tfm-ui/helpers/map-assign-to-select-options';
+import { isDealCancellationEnabled, isDealCancellationEnabledForUser } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
 import caseController from '.';
-import api from '../../api';
-import { mockRes } from '../../test-mocks';
-import { getTask } from '../helpers';
-import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
-import { isDealCancellationEnabled, isDealCancellationEnabledForUser } from '../helpers/deal-cancellation-enabled.helper';
 
 const mockGetDealSuccessBannerMessage = jest.fn();
 

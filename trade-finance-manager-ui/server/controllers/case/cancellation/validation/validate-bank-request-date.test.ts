@@ -1,7 +1,7 @@
 import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
 import { add, startOfDay } from 'date-fns';
+import { BankRequestDateValidationViewModel } from '@tfm-ui/types/view-models';
 import { getErrorObjectFromMessageAndRefs, validateBankRequestDate } from './validate-bank-request-date';
-import { BankRequestDateValidationViewModel } from '../../../../types/view-models';
 
 jest.mock('@ukef/dtfs2-common', () => ({ applyStandardValidationAndParseDateInput: jest.fn() }));
 

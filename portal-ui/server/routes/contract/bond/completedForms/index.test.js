@@ -1,6 +1,6 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/bond/pageFields';
+import { isCompleted } from '@ukef/portal-ui/server/helpers/formCompleted';
 import completedBondForms from '.';
-import FIELDS from '../pageFields';
-import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedBondForms', () => {
   it("should return an object with each bond page/form's completed status", () => {

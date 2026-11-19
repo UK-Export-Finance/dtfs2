@@ -1,5 +1,5 @@
 import { Currency, CURRENCY_REGEX, CURRENCY_REGEX_GROUP, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
+import { PremiumPaymentsTableCheckboxId } from '@tfm-ui/types/premium-payments-table-checkbox-id';
 
 /**
  * Regular expression group to match comma-separated numeric IDs.

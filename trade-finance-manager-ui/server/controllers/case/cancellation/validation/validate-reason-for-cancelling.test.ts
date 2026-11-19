@@ -1,5 +1,5 @@
 import { MAX_CHARACTER_COUNT } from '@ukef/dtfs2-common';
-import { ReasonForCancellingErrorsViewModel } from '../../../../types/view-models';
+import { ReasonForCancellingErrorsViewModel } from '@tfm-ui/types/view-models';
 import { validateReasonForCancelling } from './validate-reason-for-cancelling';
 
 describe('validateReasonForCancelling', () => {

@@ -24,6 +24,7 @@ const insertMocks = async (mockDataLoaderToken, e2e, params) => {
   await portalBankListCollection.deleteMany({});
   await portalBankListCollection.createIndex({ name: 1 }, { unique: true });
   await portalBankListCollection.createIndex({ order: 1 }, { unique: true });
+
   if (MOCK_PORTAL_BANK_LIST.length > 0) {
     await portalBankListCollection.insertMany(MOCK_PORTAL_BANK_LIST);
   }
@@ -43,6 +44,7 @@ const insertMocks = async (mockDataLoaderToken, e2e, params) => {
 
   let insertDeals = MOCKS.DEALS;
   let insertFacilities = MOCKS.FACILITIES;
+
   if (e2e) {
     const { deals, facilities } = testDeals(params);
     insertDeals = deals.BSS;

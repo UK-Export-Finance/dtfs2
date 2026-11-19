@@ -7,8 +7,8 @@ import {
   RECONCILIATION_IN_PROGRESS,
   REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
-import { UtilisationReportSeeder } from './utilisation-report.seeder';
-import { MongoDbDataLoader } from '../mongo-db-client';
+import { UtilisationReportSeeder } from 'sql-db-seeder/src/utilisation-report/utilisation-report.seeder';
+import { MongoDbDataLoader } from 'sql-db-seeder/src/mongo-db-client';
 
 export const seedUtilisationReports = async (dataSource: DataSource): Promise<void> => {
   const banks = (await MongoDbDataLoader.getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);

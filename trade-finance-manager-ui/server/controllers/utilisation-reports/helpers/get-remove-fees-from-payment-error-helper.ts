@@ -1,4 +1,4 @@
-import { EditPaymentErrorsViewModel } from '../../../types/view-models';
+import { EditPaymentErrorsViewModel } from '@tfm-ui/types/view-models';
 
 export type RemoveFeesFromPaymentErrorKey = 'no-fee-records-selected' | 'all-fee-records-selected';
 

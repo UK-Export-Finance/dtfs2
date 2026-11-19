@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { fromUnixTime, getUnixTime, add } = require('date-fns');
 const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const MIGRATION_MAP = require('./migration-map');

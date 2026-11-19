@@ -10,11 +10,11 @@ import {
 import { Cookie, Session, SessionData } from 'express-session';
 import { Response } from 'express';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { LoginController } from './login.controller';
+import { PartiallyLoggedInUserSessionData } from '@tfm-ui/types/express-session';
+import { UserSessionService } from '@tfm-ui/services/user-session.service';
+import { LoginService } from '@tfm-ui/services/login.service';
 import { aHandleSsoRedirectFormResponse, aTfmSessionUser } from '../../../../test-helpers';
-import { PartiallyLoggedInUserSessionData } from '../../../types/express-session';
-import { UserSessionService } from '../../../services/user-session.service';
-import { LoginService } from '../../../services/login.service';
+import { LoginController } from './login.controller';
 
 jest.mock('../../../services/login.service', () => ({
   LoginService: {

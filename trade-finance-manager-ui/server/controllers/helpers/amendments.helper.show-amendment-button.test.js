@@ -1,7 +1,7 @@
 import { TEAM_IDS, DEAL_STATUS } from '@ukef/dtfs2-common';
+import { AmendmentButtonDealBuilder } from '@tfm-ui/test-mocks/show-amendments-button-deal-builder';
+import { DEAL } from '@tfm-ui/constants';
 import { showAmendmentButton } from './amendments.helper';
-import { AmendmentButtonDealBuilder } from '../../test-mocks/show-amendments-button-deal-builder';
-import { DEAL } from '../../constants';
 
 describe('amendments helper', () => {
   describe('showAmendmentButton()', () => {

@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { ADDRESSES } from '@ukef/dtfs2-common';
 import { axiosMock } from '@ukef/dtfs2-common/test-helpers/axios-mock-adapter';
-import { app } from '../../server/createApp';
-import { api } from '../api';
+import { app } from '@ukef/external-api/server/createApp';
+import { api } from '@ukef/external-api/api-tests/api';
 
 const { APIM_MDM_URL } = process.env;
 const { get } = api(app);

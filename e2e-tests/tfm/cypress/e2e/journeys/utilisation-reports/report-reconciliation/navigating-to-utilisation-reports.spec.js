@@ -2,6 +2,8 @@ import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-help
 import {
   REPORT_NOT_RECEIVED,
   PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
+  RECONCILIATION_COMPLETED,
   getOneIndexedMonth,
   getPreviousReportPeriodForBankScheduleByMonth,
   toIsoMonthStamp,
@@ -20,6 +22,10 @@ context('Users can route to the payments page for a bank', () => {
   const latestQuarterlySubmissionMonthStamp = getLatestQuarterlySubmissionMonthStamp();
   const QUARTERLY_REPORTING_BANK_ID = '10';
   const MONTHLY_REPORTING_BANK_ID = '9';
+  const NOT_RECEIVED_BANK_ID = MONTHLY_REPORTING_BANK_ID;
+  const PENDING_RECONCILIATION_BANK_ID = '961';
+  const RECONCILIATION_IN_PROGRESS_BANK_ID = '953';
+  const REPORT_COMPLETED_BANK_ID = '7';
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
@@ -43,21 +49,28 @@ context('Users can route to the payments page for a bank', () => {
     cy.wrap(visibleBanks).each((bank) => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonthStamp);
 
-      if (bank.id === MONTHLY_REPORTING_BANK_ID) {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
-          .withId(bank.id)
-          .withBankId(bank.id)
-          .withReportPeriod(reportPeriod)
-          .build();
-        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
-      } else {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
-          .withId(bank.id)
-          .withBankId(bank.id)
-          .withReportPeriod(reportPeriod)
-          .build();
-        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
+      let status;
+      switch (bank.id) {
+        case NOT_RECEIVED_BANK_ID:
+          status = REPORT_NOT_RECEIVED;
+          break;
+        case RECONCILIATION_IN_PROGRESS_BANK_ID:
+          status = RECONCILIATION_IN_PROGRESS;
+          break;
+        case REPORT_COMPLETED_BANK_ID:
+          status = RECONCILIATION_COMPLETED;
+          break;
+        case PENDING_RECONCILIATION_BANK_ID:
+        default:
+          status = PENDING_RECONCILIATION;
       }
+
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
+        .withId(bank.id)
+        .withBankId(bank.id)
+        .withReportPeriod(reportPeriod)
+        .build();
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
     });
 
     // Insert a report for the previous month for a specific monthly reporting bank
@@ -104,6 +117,18 @@ context('Users can route to the payments page for a bank', () => {
 
     pages.utilisationReportsSummaryPage.tableRowSelector(MONTHLY_REPORTING_BANK_ID, submissionMonthStamp).should('contain', 'Monthly');
     pages.utilisationReportsSummaryPage.tableRowSelector(QUARTERLY_REPORTING_BANK_ID, latestQuarterlySubmissionMonthStamp).should('contain', 'Quarterly');
+  });
+
+  it('should render the report reconciliation statuses correctly', () => {
+    pages.utilisationReportsSummaryPage.reconciliationStatus(NOT_RECEIVED_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--red');
+
+    pages.utilisationReportsSummaryPage.reconciliationStatus(PENDING_RECONCILIATION_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--grey');
+
+    pages.utilisationReportsSummaryPage
+      .reconciliationStatus(RECONCILIATION_IN_PROGRESS_BANK_ID, submissionMonthStamp)
+      .should('have.class', 'govuk-tag--light-blue');
+
+    pages.utilisationReportsSummaryPage.reconciliationStatus(REPORT_COMPLETED_BANK_ID, submissionMonthStamp).should('have.class', 'govuk-tag--green');
   });
 
   it('should show the problem with service page if there are no reports in the database', () => {

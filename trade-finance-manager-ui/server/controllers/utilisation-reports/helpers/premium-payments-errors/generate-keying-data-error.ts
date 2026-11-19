@@ -1,7 +1,7 @@
-import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../../constants/premium-payments-table-error-href';
-import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
-import { GenerateKeyingDataErrorKey } from '../../../../types/premium-payments-tab-error-keys';
-import { ErrorSummaryViewModel } from '../../../../types/view-models';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '@tfm-ui/constants/premium-payments-table-error-href';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
+import { GenerateKeyingDataErrorKey } from '@tfm-ui/types/premium-payments-tab-error-keys';
+import { ErrorSummaryViewModel } from '@tfm-ui/types/view-models';
 
 const { NO_MATCHING_FEE_RECORDS } = GENERATE_KEYING_DATA_ERROR_KEY;
 

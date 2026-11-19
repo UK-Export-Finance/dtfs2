@@ -1,5 +1,5 @@
 import { RecordCorrectionLogFields, StatusTagColours } from '@ukef/dtfs2-common';
-import { BaseViewModel } from '../base-view-model';
+import { BaseViewModel } from '@tfm-ui/types/view-models/base-view-model';
 
 export type RecordCorrectionLogDetailsViewModel = BaseViewModel & {
   correctionDetails: RecordCorrectionLogFields;

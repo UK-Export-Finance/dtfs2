@@ -1,10 +1,10 @@
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
-import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
+import api from '@tfm-ui/api';
+import { mockRes } from '@tfm-ui/test-mocks';
+import mapAssignToSelectOptions from '@tfm-ui/helpers/map-assign-to-select-options';
+import { userIsInTeam } from '@tfm-ui/helpers/user';
+import { sortArrayOfObjectsAlphabetically } from '@tfm-ui/helpers/array';
 import underwriterLeadUnderwriterController from '.';
-import { userIsInTeam } from '../../../../helpers/user';
-import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
 
 const res = mockRes();
 

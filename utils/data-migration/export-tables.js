@@ -30,6 +30,7 @@ const getCollection = async (collectionName) => {
   if (!connection) {
     await getConnection();
   }
+
   const collection = await connection.collection(collectionName);
 
   return collection;
@@ -50,11 +51,15 @@ const exportAllCollections = async (collections) => {
   if (!fs.existsSync(exportDirectory)) {
     fs.mkdirSync(exportDirectory);
   }
+
   // loop through the array of collections to export
   for (const table of collections.sort()) {
     const collection = await getCollection(table);
     await collection.find().toArray((error, result) => {
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
+
       const todayDate = new Date();
       const date = dateFns.format(todayDate, 'dd-LLL-yyyy @ hh mm aaa');
 
@@ -69,27 +74,33 @@ const exportAllCollections = async (collections) => {
       for (const item of result) {
         // all `_id` properties should be converted to MongoDb ObjectId
         item._id = { $oid: item._id };
+
         // delete the `_csrf`
         if (item._csrf) {
           delete item._csrf;
         }
+
         if (table === 'tfm-deals') {
           // override the item.dealSnapshot._id to be a MongoDb ObjectId
           item.dealSnapshot._id = { $oid: item.dealSnapshot._id };
           for (const val2 of item.dealSnapshot.facilities) {
             val2._id = { $oid: val2._id };
+
             if (val2._csrf) {
               delete val2._csrf;
             }
           }
         }
+
         if (table === 'tfm-facilities') {
           item.facilitySnapshot._id = { $oid: item.facilitySnapshot._id };
           item.facilitySnapshot.dealId = { $oid: item.facilitySnapshot.dealId };
+
           if (item.facilitySnapshot._csrf) {
             delete item.facilitySnapshot._csrf;
           }
         }
+
         if (table === 'facilities') {
           item.dealId = { $oid: item.dealId };
         }

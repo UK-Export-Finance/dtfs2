@@ -1,5 +1,5 @@
+import FIELDS from '@ukef/portal-ui/server/routes/contract/eligibility/pageFields';
 import eligibilityCheckYourAnswersValidationErrors from '.';
-import FIELDS from '../pageFields';
 
 describe('eligibility `check your answers` validation errors', () => {
   describe('eligibilityCheckYourAnswersValidationErrors', () => {

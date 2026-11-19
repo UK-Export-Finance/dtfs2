@@ -1,8 +1,8 @@
 import { MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
-import api from '../../../api';
-import { mockRes, mockUser } from '../../../test-mocks';
-import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE } from '../../../test-mocks/amendment-test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes, mockUser } from '@tfm-ui/test-mocks';
+import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE } from '@tfm-ui/test-mocks/amendment-test-mocks';
 import { postAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
 
 const res = mockRes();

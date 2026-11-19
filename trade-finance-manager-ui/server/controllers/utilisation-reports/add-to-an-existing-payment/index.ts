@@ -1,21 +1,21 @@
 import { Response } from 'express';
 import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
-import api from '../../../api';
-import { asUserSession } from '../../../helpers/express-session';
+import { AddToAnExistingPaymentViewModel } from '@tfm-ui/types/view-models';
+import api from '@tfm-ui/api';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
 import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
-} from '../../../helpers/premium-payments-table-checkbox-id-helper';
-import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
+} from '@tfm-ui/helpers/premium-payments-table-checkbox-id-helper';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
 import {
   extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   mapToSelectedReportedFeesDetailsViewModel,
   PremiumPaymentsTableCheckboxSelectionsRequestBody,
   getLinkToPremiumPaymentsTab,
-} from '../helpers';
-import { mapToPaymentGroupInputsViewModel } from '../helpers/available-payment-group-view-model-mapper';
-import { getPaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
+} from '@tfm-ui/controllers/utilisation-reports/helpers';
+import { mapToPaymentGroupInputsViewModel } from '@tfm-ui/controllers/utilisation-reports/helpers/available-payment-group-view-model-mapper';
+import { getPaymentsHeading } from '@tfm-ui/controllers/utilisation-reports/helpers/add-to-an-existing-payment-helper';
 
 export type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;

@@ -1,8 +1,8 @@
-import { get, post, use } from '../../helpers/routerMock';
+import { get, post, use } from '@ukef/portal-ui/server/helpers/routerMock';
 
-import { validateToken } from '../middleware';
+import { validateToken } from '@ukef/portal-ui/server/routes/middleware';
 
-import { getSchemeType, postSchemeType } from '../../controllers/schemeType';
+import { getSchemeType, postSchemeType } from '@ukef/portal-ui/server/controllers/schemeType';
 
 jest.mock('../middleware/validate-token');
 jest.mock('../middleware/is-maker');

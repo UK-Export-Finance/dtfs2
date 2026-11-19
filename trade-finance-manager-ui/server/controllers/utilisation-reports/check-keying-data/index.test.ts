@@ -1,12 +1,12 @@
 import httpMocks, { RequestOptions } from 'node-mocks-http';
 import { CURRENCY, FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
-import { postCheckKeyingData, PostCheckKeyingDataRequest } from '.';
-import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
-import api from '../../../api';
-import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
+import api from '@tfm-ui/api';
+import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '@tfm-ui/types/view-models';
+import { FeeRecordToKey, FeeRecordsToKeyResponseBody } from '@tfm-ui/api-response-types';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '@tfm-ui/constants/premium-payment-tab-error-keys';
 import { aFeeRecordsToKeyResponseBody } from '../../../../test-helpers';
-import { FeeRecordToKey, FeeRecordsToKeyResponseBody } from '../../../api-response-types';
-import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
+import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
+import { postCheckKeyingData, PostCheckKeyingDataRequest } from '.';
 
 console.error = jest.fn();
 

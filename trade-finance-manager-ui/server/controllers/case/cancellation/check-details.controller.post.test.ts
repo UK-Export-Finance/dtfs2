@@ -1,8 +1,8 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE, FLASH_TYPES } from '@ukef/dtfs2-common';
 import { add, sub } from 'date-fns';
+import api from '@tfm-ui/api';
 import { aRequestSession } from '../../../../test-helpers';
-import api from '../../../api';
 import { postDealCancellationDetails, PostDealCancellationDetailsRequest } from './check-details.controller';
 
 jest.mock('../../../api', () => ({

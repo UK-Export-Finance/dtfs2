@@ -1,5 +1,5 @@
 import { ROLES } from '@ukef/dtfs2-common';
-import mockResponse from '../../../helpers/responseMock';
+import mockResponse from '@ukef/portal-ui/server/helpers/responseMock';
 import isMaker from '.';
 
 const { CHECKER, MAKER } = ROLES;

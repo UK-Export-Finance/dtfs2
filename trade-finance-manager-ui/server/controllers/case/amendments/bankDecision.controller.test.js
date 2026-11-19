@@ -1,9 +1,9 @@
 import { getUnixTime, set } from 'date-fns';
 import { AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
-import api from '../../../api';
-import { mockRes, mockUser } from '../../../test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes, mockUser } from '@tfm-ui/test-mocks';
+import MOCKS from '@tfm-ui/test-mocks/amendment-test-mocks';
 import amendmentsController from './bankDecision.controller';
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 

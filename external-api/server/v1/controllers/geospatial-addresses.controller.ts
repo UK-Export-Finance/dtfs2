@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import * as dotenv from 'dotenv';
 import { CustomExpressRequest, HEADERS } from '@ukef/dtfs2-common';
-import { isValidPostcode } from '../../helpers';
+import { isValidPostcode } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

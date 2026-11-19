@@ -2,8 +2,8 @@ import { HEADERS, IndustrySectorInterface, IndustrySector } from '@ukef/dtfs2-co
 import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { INDUSTRY_SECTORS } from '../../external-api';
-import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
+import { INDUSTRY_SECTORS } from '@ukef/external-api/server/external-api';
+import { isValidIndustryId, sortArrayAlphabetically } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;

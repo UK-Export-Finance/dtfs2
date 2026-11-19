@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import api from '../../api';
-import { getIsoMonth } from '../../helpers/date';
+import api from '@tfm-ui/api';
+import { getIsoMonth } from '@tfm-ui/helpers/date';
+import { asUserSession } from '@tfm-ui/helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '@tfm-ui/constants';
+import { UtilisationReportsViewModel } from '@tfm-ui/types/view-models';
 import { getReportReconciliationSummariesViewModel, isPDCReconcileUser } from './helpers';
-import { asUserSession } from '../../helpers/express-session';
-import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
-import { UtilisationReportsViewModel } from '../../types/view-models';
 
 /**
  * Controller to get utilisation reports page

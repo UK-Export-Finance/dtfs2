@@ -1,4 +1,4 @@
-import { FeeRecordCorrectionRequestReviewResponseBody, FeeRecordCorrectionRequestReviewResponse } from '../../../api-response-types';
+import { FeeRecordCorrectionRequestReviewResponseBody, FeeRecordCorrectionRequestReviewResponse } from '@tfm-ui/api-response-types';
 
 /**
  * validates that the type of responseBody is FeeRecordCorrectionRequestReviewResponseBody

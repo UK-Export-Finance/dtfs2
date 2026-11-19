@@ -1,5 +1,5 @@
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
-import { DEAL } from '../constants';
+import { DEAL } from '@tfm-ui/constants';
 
 /**
  * The builder creates a valid deal object for the amendment button.

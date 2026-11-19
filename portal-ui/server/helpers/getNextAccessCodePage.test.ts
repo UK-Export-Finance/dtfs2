@@ -1,6 +1,6 @@
 import { ACCESS_CODE_PAGES, AccessCode } from '@ukef/dtfs2-common';
+import { LANDING_PAGES } from '@ukef/portal-ui/server/constants/landing-pages';
 import { getNextAccessCodePage } from './getNextAccessCodePage';
-import { LANDING_PAGES } from '../constants/landing-pages';
 
 describe('getNextAccessCodePage', () => {
   it(`should return correct access code page when attemptsLeft is 2`, () => {

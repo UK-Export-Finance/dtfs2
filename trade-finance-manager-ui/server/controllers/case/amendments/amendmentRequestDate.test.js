@@ -1,8 +1,8 @@
 import { add, format } from 'date-fns';
 import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
-import api from '../../../api';
-import { mockRes, mockUser } from '../../../test-mocks';
+import api from '@tfm-ui/api';
+import { mockRes, mockUser } from '@tfm-ui/test-mocks';
 
 import amendmentsController from './amendmentRequestDate.controller';
 

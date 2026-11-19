@@ -1,10 +1,10 @@
 import { Response, Request } from 'express';
 import { getFormattedMonetaryValue, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
-import api from '../../../../api';
-import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
-import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
+import api from '@ukef/portal-ui/server/api';
+import { asLoggedInUserSession, LoggedInUserSession } from '@ukef/portal-ui/server/helpers/express-session';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import { UtilisationReportCorrectionInformationViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/utilisation-report-correction-information';
+import { getRecordCorrectionCancelLinkHref } from '@ukef/portal-ui/server/helpers';
 
 export type UtilisationReportCorrectionReviewRequest = Request & {
   params: {

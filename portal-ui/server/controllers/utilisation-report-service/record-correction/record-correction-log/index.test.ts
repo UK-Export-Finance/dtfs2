@@ -2,12 +2,12 @@ import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Request, Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
-import { PRIMARY_NAV_KEY } from '../../../../constants';
-import api from '../../../../api';
+import { PRIMARY_NAV_KEY } from '@ukef/portal-ui/server/constants';
+import api from '@ukef/portal-ui/server/api';
+import { GetCompletedFeeRecordCorrectionsResponseBody } from '@ukef/portal-ui/server/api-response-types';
+import { RecordCorrectionLogViewModel } from '@ukef/portal-ui/server/types/view-models/record-correction/record-correction-log';
 import { getRecordCorrectionLog } from '.';
-import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
 import { mapCompletedCorrectionsToViewModel } from './helpers';
-import { RecordCorrectionLogViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
 
 jest.mock('../../../../api');
 

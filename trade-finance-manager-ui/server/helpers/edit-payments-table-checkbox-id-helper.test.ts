@@ -1,5 +1,5 @@
+import { EditPaymentsTableCheckboxId } from '@tfm-ui/types/edit-payments-table-checkbox-id';
 import { getFeeRecordIdsFromEditPaymentsCheckboxIds, getEditPaymentsCheckboxIdsFromObjectKeys } from './edit-payments-table-checkbox-id-helper';
-import { EditPaymentsTableCheckboxId } from '../types/edit-payments-table-checkbox-id';
 
 describe('edit payments table checkbox id helper', () => {
   describe('getFeeRecordIdsFromEditPaymentsCheckboxIds', () => {

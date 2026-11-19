@@ -2,9 +2,9 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
-import { Amendment } from '../../interfaces';
-import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
-import { validUkefId } from '../../helpers';
+import { Amendment } from '@ukef/external-api/server/interfaces';
+import { UNDERWRITER_MANAGER_DECISIONS } from '@ukef/external-api/server/constants';
+import { validUkefId } from '@ukef/external-api/server/helpers';
 
 dotenv.config({ quiet: true });
 

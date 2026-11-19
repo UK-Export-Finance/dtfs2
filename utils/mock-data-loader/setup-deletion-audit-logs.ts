@@ -1,5 +1,5 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../drivers/db-client';
+import { mongoDbClient } from 'drivers/db-client';
 
 export const deleteDeletionAuditLogsCollection = async () => {
   console.info('Audit logs');

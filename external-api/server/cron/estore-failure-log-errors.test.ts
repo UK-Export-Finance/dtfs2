@@ -1,8 +1,13 @@
-import { EstoreRepo } from '../repositories/estore/estore-repo';
-import { cron } from '../helpers/cron';
-import { Estore } from '../interfaces';
-import { ENDPOINT } from '../constants';
-import { addFacilityToTermStore, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
+import { EstoreRepo } from '@ukef/external-api/server/repositories/estore/estore-repo';
+import { cron } from '@ukef/external-api/server/helpers/cron';
+import { Estore } from '@ukef/external-api/server/interfaces';
+import { ENDPOINT } from '@ukef/external-api/server/constants';
+import {
+  addFacilityToTermStore,
+  createDealFolder,
+  createFacilityFolder,
+  uploadSupportingDocuments,
+} from '@ukef/external-api/server/v1/controllers/estore/eStoreApi';
 import { eStoreTermStoreCreationJob } from './eStoreTermStoreCreationJob.cron';
 import { eStoreDealDirectoryCreationJob } from './eStoreDealDirectoryCreationJob.cron';
 import { eStoreFacilityDirectoryCreationJob } from './eStoreFacilityDirectoryCreationJob.cron';

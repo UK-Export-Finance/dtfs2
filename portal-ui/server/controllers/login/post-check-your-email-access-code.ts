@@ -1,14 +1,14 @@
 import { HttpStatusCode } from 'axios';
 import { CustomExpressRequest, OTP_RESULT_TYPE } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { attemptOtpLogin } from './attempt-otp-login';
-import { updateSessionAfterLogin } from '../../helpers/updateSessionsAfterLogin';
-import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
+import { updateSessionAfterLogin } from '@ukef/portal-ui/server/helpers/updateSessionsAfterLogin';
+import { CheckYourEmailAccessCodeViewModel } from '@ukef/portal-ui/server/types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
+import { generate2FAViewModel } from '@ukef/portal-ui/server/helpers/generate-2fa-view-model';
+import { isOtpExpired } from '@ukef/portal-ui/server/helpers/is-otp-expired';
+import { getUserRedirectUrl } from '@ukef/portal-ui/server/helpers';
 import { generateValidationErrors } from './validation';
-import { CheckYourEmailAccessCodeViewModel } from '../../types/view-models/two-factor-authentication/check-your-email-access-code-view-model';
-import { generate2FAViewModel } from '../../helpers/generate-2fa-view-model';
-import { isOtpExpired } from '../../helpers/is-otp-expired';
-import { getUserRedirectUrl } from '../../helpers';
+import { incorrectAccessCodeRule } from './validation/rules/incorrect-access-code';
+import { attemptOtpLogin } from './attempt-otp-login';
 
 const CHECK_YOUR_EMAIL_TEMPLATE = 'login/check-your-email-access-code.njk';
 

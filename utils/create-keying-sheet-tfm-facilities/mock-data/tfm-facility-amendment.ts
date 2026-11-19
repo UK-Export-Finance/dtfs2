@@ -22,6 +22,7 @@ export const aTfmFacilityAmendmentWithFacilityIdAndDealId = (facilityId: ObjectI
   };
 
   amendment.changeCoverEndDate = faker.helpers.arrayElement([true, false]);
+
   if (amendment.changeCoverEndDate) {
     amendment.coverEndDate = getRandomCoverEndDateTimestamp();
   }

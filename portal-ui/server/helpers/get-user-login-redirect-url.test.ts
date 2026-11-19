@@ -1,7 +1,7 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
+import { LANDING_PAGES } from '@ukef/portal-ui/server/constants';
 import { getUserRedirectUrl } from './get-user-login-redirect-url';
-import { LANDING_PAGES } from '../constants';
 
 describe('getUserRedirectUrl', () => {
   describe('when the user is a maker', () => {

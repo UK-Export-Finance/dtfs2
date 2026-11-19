@@ -1,5 +1,5 @@
 import { FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
-import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel } from '../../../types/view-models';
+import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel } from '@tfm-ui/types/view-models';
 import { mapToRecordCorrectionStatus } from './map-record-correction-status';
 
 /**

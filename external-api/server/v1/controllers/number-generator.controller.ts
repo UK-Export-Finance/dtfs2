@@ -10,8 +10,8 @@ import {
   NUMBER_TYPE,
   USER,
 } from '@ukef/dtfs2-common';
-import { NumberGeneratorErrorResponse } from '../../interfaces';
-import { InvalidEntityTypeError } from '../errors';
+import { NumberGeneratorErrorResponse } from '@ukef/external-api/server/interfaces';
+import { InvalidEntityTypeError } from '@ukef/external-api/server/v1/errors';
 
 dotenv.config({ quiet: true });
 

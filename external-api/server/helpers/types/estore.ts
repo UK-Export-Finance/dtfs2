@@ -1,5 +1,5 @@
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { Estore } from '../../interfaces';
+import { Estore } from '@ukef/external-api/server/interfaces';
 
 /**
  * A type that extends the {@link CustomExpressRequest} type to include a specific request body.
