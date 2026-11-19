@@ -46,10 +46,12 @@ describe('/countries', () => {
 
     expect(status).toEqual(200);
 
+    expect(body.countries).toBeInstanceOf(Array);
     previouslyExcludedCountries.forEach((name) => {
       expect(body.countries).toContainEqual(
         expect.objectContaining({
           name,
+          disabled: true,
         }),
       );
     });
