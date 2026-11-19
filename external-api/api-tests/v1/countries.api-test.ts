@@ -25,11 +25,34 @@ describe('/countries', () => {
     });
   });
 
-  it('returns all disabled countries with disabled set to true', async () => {
+  it('should return previously excluded countries and all countries marked disabled', async () => {
+    const previouslyExcludedCountries = [
+      'Benin',
+      'Cape Verde',
+      'China',
+      'Gambia',
+      'Ghana',
+      'Hong Kong',
+      'Cote d Ivoire',
+      'Liberia',
+      'Nigeria',
+      'Senegal',
+      'Sierra Leone',
+      'Togo',
+    ];
+
     const { status, body } = await get('/countries');
     const disabledCountries = COUNTRIES.filter((country) => country.disabled);
 
     expect(status).toEqual(200);
+
+    previouslyExcludedCountries.forEach((name) => {
+      expect(body.countries).toContainEqual(
+        expect.objectContaining({
+          name,
+        }),
+      );
+    });
 
     disabledCountries.forEach((country) => {
       expect(body.countries).toContainEqual(
