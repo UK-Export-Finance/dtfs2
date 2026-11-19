@@ -68,7 +68,7 @@ describe('validateOTPAndSignIn', () => {
 
   describe('when getUserById rejects because the user does not exist', () => {
     beforeEach(() => {
-      jest.mocked(getUserById).mockRejectedValue(new Error(`Failed to find user with id ${userId}`));
+      jest.mocked(getUserById).mockResolvedValue(null);
     });
 
     it(`should respond with ${HttpStatusCode.InternalServerError} and the not found error message`, async () => {

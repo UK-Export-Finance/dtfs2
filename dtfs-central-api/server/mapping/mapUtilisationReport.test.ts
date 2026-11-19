@@ -45,6 +45,33 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
     });
   });
 
+  it('throws an error when the report is uploaded but the user is not found', async () => {
+    // Arrange
+    const reportId = 312;
+    const uploadedByUserId = mockPortalUser._id.toString();
+    const azureFileInfo = AzureFileInfoEntity.create({
+      ...MOCK_AZURE_FILE_INFO,
+      requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: uploadedByUserId },
+    });
+    const mockDate = new Date('2024-01');
+
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
+      .withId(reportId)
+      .withBankId(bankId)
+      .withReportPeriod(reportPeriod)
+      .withUploadedByUserId(uploadedByUserId)
+      .withAzureFileInfo(azureFileInfo)
+      .withDateUploaded(mockDate)
+      .build();
+
+    jest.mocked(getUserById).mockResolvedValue(null);
+
+    // Act & Assert
+    await expect(mapUtilisationReportEntityToGetUtilisationReportResponse(uploadedReport)).rejects.toThrow(
+      new Error(`Failed to find user with id ${uploadedByUserId}`),
+    );
+  });
+
   it('gets a user from the mongo database and maps the report when the report is uploaded', async () => {
     // Arrange
     const reportId = 312;
