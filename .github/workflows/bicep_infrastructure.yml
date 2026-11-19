@@ -641,8 +641,7 @@ jobs:
           WEBSITE_HEALTHCHECKING_MAX="${{ vars.WEBSITE_HEALTHCHECKING_MAX }}"
           REDIRECT_URL="${{ vars.REDIRECT_URL }}"
           ASP_SKU="${{ vars.ASP_SKU }}"
-          CONTACT_US_EMAIL_ADDRESS="${{ vars.CONTACT_US_EMAIL_ADDRESS }}"
-          FF_FEE_RECORD_CORRECTION_ENABLED="${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}"
+          CONTACT_US_EMAIL_ADDRESS="${{ vars.CONTACT_US_EMAIL_ADDRESS }}"          
           FF_PORTAL_2FA_ENABLED="${{ vars.FF_PORTAL_2FA_ENABLED }}"
           FF_PORTAL_FACILITY_AMENDMENTS_ENABLED="${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}"
           FF_TFM_DEAL_CANCELLATION_ENABLED="${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}"
@@ -666,7 +665,7 @@ jobs:
           export PARAMETERS_FILE
           node <<'NODE'
           const fs = require('fs');
-          const templatePath = 'infrastructure/resource_group_level/parameters_dev.json';
+          const templatePath = 'infrastructure/resource_group_level/parameters_staging.json';
           const outputPath = process.env.PARAMETERS_FILE;
           const template = fs.readFileSync(templatePath, 'utf8');
           const rendered = template.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_, key) => {
@@ -691,6 +690,6 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_STAG_SUBSCRIPTION_ID }}
           resourceGroupName: rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
           template: ./infrastructure/resource_group_level/main.bicep
-          parameters: ${{ env.BICEP_PARAMETERS }}
+          parameters: ${{ env.PARAMETERS_FILE }}
           scope: resourcegroup
 
