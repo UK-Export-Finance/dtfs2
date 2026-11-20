@@ -70,6 +70,29 @@ var requestRoutingRules = [
     }
   }]
 
+resource applicationGatewayWafPolicy 'Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies@2024-10-01' = {
+  name: '${applicationGatewayName}-waf'
+  location: location
+  properties: {
+    policySettings: {
+      state: 'Enabled'
+      mode: 'Prevention'
+      requestBodyCheck: false
+      maxRequestBodySizeInKb: 128
+      fileUploadLimitInMb: 100
+    }
+    managedRules: {
+      managedRuleSets: [
+        {
+          ruleSetType: 'OWASP'
+          ruleSetVersion: '3.2'
+        }
+      ]
+      exclusions: []
+    }
+  }
+}
+
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' = {
   name: applicationGatewayName
   location: location
@@ -146,16 +169,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
     rewriteRuleSets: []
     redirectConfigurations: []
     privateLinkConfigurations: []
-    webApplicationFirewallConfiguration: {
-      enabled: true
-      firewallMode: 'Prevention'
-      ruleSetType: 'OWASP'
-      ruleSetVersion: '3.2'
-      disabledRuleGroups: []
-      exclusions: []
-      requestBodyCheck: false
-      maxRequestBodySizeInKb: 128
-      fileUploadLimitInMb: 100
+    firewallPolicy: {
+      id: applicationGatewayWafPolicy.id
     }
     autoscaleConfiguration: autoscaleConfiguration
   }
