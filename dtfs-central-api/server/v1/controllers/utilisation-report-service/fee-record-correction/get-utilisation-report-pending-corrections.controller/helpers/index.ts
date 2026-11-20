@@ -17,6 +17,10 @@ export const mapReportToPendingCorrectionsResponseBody = async (report: Utilisat
 
   const uploadedByUser = await getUserById(report.uploadedByUserId);
 
+  if (!uploadedByUser) {
+    throw new Error(`Failed to find user with id ${report.uploadedByUserId}`);
+  }
+
   const nextDueReportPeriod = await getNextDueReportPeriod(bank);
 
   return {

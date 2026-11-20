@@ -6,18 +6,17 @@ import { mongoDbClient } from '../../drivers/db-client';
 /**
  * Gets the portal user with the supplied id
  * @param userId - The user id
- * @returns The found user
- * @throws {Error} If a user with the specified id cannot be found
+ * @returns The found user, or null if no user exists with the supplied id
+ * @throws {Error} If the supplied id is invalid or the database query fails
  */
-// TODO: DTFS2-8249 - handle not found case and return null here
-export const getUserById = async (userId: string): Promise<PortalUser> => {
+export const getUserById = async (userId: string): Promise<PortalUser | null> => {
   try {
     const usersCollection = await mongoDbClient.getCollection('users');
 
     const user = await usersCollection.findOne({ _id: { $eq: new ObjectId(userId) } });
 
     if (!user) {
-      throw new Error(`Failed to find user with id ${userId}`);
+      return null;
     }
 
     return user;
