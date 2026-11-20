@@ -29,11 +29,7 @@ export const validateOTPAndSignIn = async (
 
     const user = await getUserById(userId);
 
-    if (!user) {
-      throw new Error(`Failed to find user with id ${userId}`);
-    }
-
-    if (!user.signInTokens?.length) {
+    if (!user || !user.signInTokens?.length) {
       console.info('Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
       return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
     }
