@@ -1,0 +1,52 @@
+services:
+  external-api:
+    environment:
+      AZURE_ACBS_FUNCTION_URL: http://acbs-local
+
+  trade-finance-manager-api:
+    environment:
+      AZURE_ACBS_FUNCTION_URL: http://acbs-local
+
+  acbs-local:
+    build:
+      context: .
+      dockerfile: ./azure-functions/acbs/Dockerfile
+    image: dtfs/acbs-local
+    profiles:
+      - acbs-local
+    platform: linux/amd64
+    ports:
+      - "127.0.0.1:7071:80"
+    depends_on:
+      azurite:
+        condition: service_healthy
+    environment:
+      AzureWebJobsScriptRoot: /home/site/wwwroot
+      WEBSITE_HOSTNAME: localhost:7071
+      # The account and key are Azurite's public emulator defaults.
+      AzureWebJobsStorage: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1"
+      APIM_TFS_URL: "${APIM_TFS_URL:-}"
+      APIM_TFS_KEY: "${APIM_TFS_KEY:-}"
+      APIM_TFS_VALUE: "${APIM_TFS_VALUE:-}"
+      APIM_MDM_URL: "${APIM_MDM_URL:-}"
+      APIM_MDM_KEY: "${APIM_MDM_KEY:-}"
+      APIM_MDM_VALUE: "${APIM_MDM_VALUE:-}"
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.37.0
+    profiles:
+      - acbs-local
+    ports:
+      - "127.0.0.1:10000:10000"
+      - "127.0.0.1:10001:10001"
+      - "127.0.0.1:10002:10002"
+    volumes:
+      - acbs-azurite-data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "for (const port of [10000, 10001, 10002]) require('node:net').connect(port, '127.0.0.1').on('connect', function () { this.end(); })"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+volumes:
+  acbs-azurite-data:
