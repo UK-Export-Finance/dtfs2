@@ -31,7 +31,7 @@ export const validateOTPAndSignIn = async (
 
     if (!user || !user.signInTokens?.length) {
       console.info('Unable to verify account sign in code - no account exists with the provided ID: %s', sanitisedUserId);
-      return res.status(HttpStatusCode.NotFound).send({ message: 'User not found' });
+      return res.status(HttpStatusCode.NotFound).send({ message: 'User not found', notFound: true });
     }
 
     const userIsBlockedOrDisabled = isUserBlockedOrDisabled(user);

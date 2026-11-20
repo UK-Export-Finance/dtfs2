@@ -116,7 +116,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
-    expect(response.body).toEqual({ message: 'User not found' });
+    expect(response.body).toEqual({ message: 'User not found', notFound: true });
   });
 
   it(`should respond with a ${HttpStatusCode.Forbidden} when the user is blocked`, async () => {
@@ -145,14 +145,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.body).toEqual({ message: 'User is blocked or disabled' });
   });
 
-  /**
-   * NOTE: `getUserById` currently throws (rather than returning null) when no user is found,
-   * which is caught by the controller's top level try/catch and surfaced as a 500.
-   * This is a known, pre-existing bug (DTFS2-8249) - the endpoint's documented behaviour is a
-   * 404, but the actual current behaviour is a 500. This test asserts the actual behaviour, and
-   * should be updated to expect a 404 once DTFS2-8249 is fixed.
-   */
-  it(`should respond with a ${HttpStatusCode.InternalServerError} when the user does not exist (see DTFS2-8249)`, async () => {
+  it(`should respond with a ${HttpStatusCode.NotFound} when the user does not exist`, async () => {
     // Arrange
     const nonExistentUserId = new ObjectId().toString();
 
@@ -160,7 +153,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response: ValidateSignInCodeResponse = await testApi.post({ userId: nonExistentUserId, signInOTPCode: '123456', auditDetails }).to(BASE_URL);
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.InternalServerError);
-    expect(response.body).toEqual({ message: `Failed to find user with id ${nonExistentUserId}` });
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
+    expect(response.body).toEqual({ message: 'User not found', notFound: true });
   });
 });
