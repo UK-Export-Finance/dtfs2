@@ -80,7 +80,7 @@ describe('validateOTPAndSignIn', () => {
 
       // Assert
       expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
-      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'User not found' });
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'User not found', notFound: true });
     });
   });
 
