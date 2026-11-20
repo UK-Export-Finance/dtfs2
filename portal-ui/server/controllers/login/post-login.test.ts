@@ -5,7 +5,8 @@ import { MOCK_EMAIL } from '@ukef/dtfs2-common/test-helpers';
 import { validationErrorHandler } from '@ukef/portal-ui/server/helpers';
 import { MOCK_PORTAL_SESSION_USER } from '@ukef/portal-ui/server/test-mocks/mock-portal-session-user';
 import api from '@ukef/portal-ui/server/api';
-import { postLogin } from './post-login';
+import type { Response } from 'express';
+import { postLogin, PostLoginRequest } from './post-login';
 
 jest.mock('../../api');
 console.error = jest.fn();
@@ -23,19 +24,20 @@ const user = {
 };
 
 describe('postLogin', () => {
-  let req;
-  let res;
+  let req: PostLoginRequest;
+  let res: Response;
 
   beforeEach(() => {
     req = {
       body,
       session: {},
-    };
+    } as unknown as PostLoginRequest;
 
     res = {
       render: jest.fn(),
       redirect: jest.fn(),
-    };
+      status: jest.fn().mockReturnThis(),
+    } as unknown as Response;
 
     jest.mocked(api.getPortalBankList).mockResolvedValue([]);
   });
@@ -52,7 +54,7 @@ describe('postLogin', () => {
           password: '',
         },
         session: {},
-      };
+      } as unknown as PostLoginRequest;
 
       await postLogin(req, res);
 
@@ -80,7 +82,7 @@ describe('postLogin', () => {
           email: '',
         },
         session: {},
-      };
+      } as unknown as PostLoginRequest;
 
       await postLogin(req, res);
 
@@ -104,7 +106,7 @@ describe('postLogin', () => {
           password: '',
         },
         session: {},
-      };
+      } as unknown as PostLoginRequest;
 
       await postLogin(req, res);
 
@@ -135,7 +137,7 @@ describe('postLogin', () => {
           req = {
             body,
             session: {},
-          };
+          } as unknown as PostLoginRequest;
 
           jest.mocked(api.login).mockResolvedValue({ token, loginStatus: 'success', user });
           jest.mocked(api.sendSignInOTP).mockResolvedValue({ data: { numberOfSignInOtpAttemptsRemaining: 2 } });
@@ -207,7 +209,7 @@ describe('postLogin', () => {
           req = {
             body,
             session: {},
-          };
+          } as unknown as PostLoginRequest;
 
           jest.mocked(api.login).mockResolvedValue({ token, loginStatus: 'success', user: MOCK_PORTAL_SESSION_USER });
           jest.mocked(api.sendSignInOTP).mockRejectedValue(error);
@@ -255,7 +257,7 @@ describe('postLogin', () => {
           req = {
             body,
             session: {},
-          };
+          } as unknown as PostLoginRequest;
 
           jest.mocked(api.login).mockRejectedValue(error);
         });
