@@ -22,11 +22,21 @@ const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
 
       // 1. UKEF Exposure
       if (amount) {
-        record = {
-          ...record,
-          effectiveDate: formatDate(effectiveDate),
-          amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
-        };
+        /**
+         * A Loan's facility amount changes UKEF's maximum liability, not the
+         * borrower's outstanding principal. Mapping the difference here would tell
+         * ACBS to advance funds or reduce principal instead of updating the facility
+         * limit. The Facility Master Record handles the amount change.
+         * This guard leaves amountAmendment unset for Loans so the orchestrator
+         * skips the principal transaction but can still update the expiry date.
+         */
+        if (type !== CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
+          record = {
+            ...record,
+            effectiveDate: formatDate(effectiveDate),
+            amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
+          };
+        }
       }
 
       // 2. Cover end date

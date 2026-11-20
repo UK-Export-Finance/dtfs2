@@ -23,33 +23,85 @@ const facilityAtMaturity = {
   },
 };
 
+const nonLoanFacilityTypes = [
+  {
+    type: FACILITY.FACILITY_TYPE.BOND,
+    expectedAmountAmendment: 50000,
+  },
+  {
+    type: FACILITY.FACILITY_TYPE.CASH,
+    expectedAmountAmendment: 50000 * FACILITY.FACILITY_UTILISATION_PERCENTAGE.CASH,
+  },
+  {
+    type: FACILITY.FACILITY_TYPE.CONTINGENT,
+    expectedAmountAmendment: 50000 * FACILITY.FACILITY_UTILISATION_PERCENTAGE.CONTINGENT,
+  },
+];
+
 const facilityWithEmptySnapshot = { facilitySnapshot: {} };
 const facilityWithoutSnapshot = {};
 
 describe('facilityLoanAmend', () => {
   describe('when the facility amount is being amended', () => {
-    it('should return the difference between the amended amount and maximum liability', () => {
+    it('should not return an amount amendment for a loan', () => {
       // Act
       const result = facilityLoanAmend(amountAmendment, facility, facilityMasterRecord);
 
       // Assert
+      const expected = {};
+
+      expect(result).toEqual(expected);
+    });
+
+    it.each(nonLoanFacilityTypes)('should return the amount difference for $type facilities', ({ type, expectedAmountAmendment }) => {
+      // Arrange
+      const facilityWithType = {
+        facilitySnapshot: {
+          ...facility.facilitySnapshot,
+          type,
+        },
+      };
+
+      // Act
+      const result = facilityLoanAmend(amountAmendment, facilityWithType, facilityMasterRecord);
+
+      // Assert
       const expected = {
         effectiveDate: '2030-02-25',
-        amountAmendment: 50000,
+        amountAmendment: expectedAmountAmendment,
       };
 
       expect(result).toEqual(expected);
     });
 
-    it('should return zero amount amendment when the facility master record is missing', () => {
+    it.each(nonLoanFacilityTypes)('should return a zero amount difference for unchanged $type facilities', ({ type }) => {
+      // Arrange
+      const facilityWithType = {
+        facilitySnapshot: {
+          ...facility.facilitySnapshot,
+          type,
+        },
+      };
+      const unchangedAmountAmendment = { ...amountAmendment, amount: facilityMasterRecord.maximumLiability };
+
       // Act
-      const result = facilityLoanAmend(amountAmendment, facility);
+      const result = facilityLoanAmend(unchangedAmountAmendment, facilityWithType, facilityMasterRecord);
 
       // Assert
       const expected = {
         effectiveDate: '2030-02-25',
         amountAmendment: 0,
       };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should not return an amount amendment when the facility master record is missing', () => {
+      // Act
+      const result = facilityLoanAmend(amountAmendment, facility);
+
+      // Assert
+      const expected = {};
 
       expect(result).toEqual(expected);
     });
@@ -81,14 +133,35 @@ describe('facilityLoanAmend', () => {
   });
 
   describe('when the facility amount and cover end date are being amended', () => {
-    it('should return the amount difference and updated expiry and next due dates', () => {
+    it.each(nonLoanFacilityTypes)('should return the amount difference and updated expiry dates for $type facilities', ({ type, expectedAmountAmendment }) => {
+      // Arrange
+      const facilityWithTypeAtMaturity = {
+        facilitySnapshot: {
+          ...facilityAtMaturity.facilitySnapshot,
+          type,
+        },
+      };
+
+      // Act
+      const result = facilityLoanAmend(fullAmendment, facilityWithTypeAtMaturity, facilityMasterRecord);
+
+      // Assert
+      const expected = {
+        effectiveDate: '2030-02-25',
+        amountAmendment: expectedAmountAmendment,
+        expiryDate: '2030-02-25',
+        nextDueDate: '2030-02-25',
+      };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should return updated expiry and next due dates without an amount amendment', () => {
       // Act
       const result = facilityLoanAmend(fullAmendment, facilityAtMaturity, facilityMasterRecord);
 
       // Assert
       const expected = {
-        effectiveDate: '2030-02-25',
-        amountAmendment: 50000,
         expiryDate: '2030-02-25',
         nextDueDate: '2030-02-25',
       };
