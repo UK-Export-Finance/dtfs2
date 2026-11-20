@@ -28,28 +28,22 @@ const facilityWithoutSnapshot = {};
 
 describe('facilityLoanAmend', () => {
   describe('when the facility amount is being amended', () => {
-    it('should return the difference between the amended amount and maximum liability', () => {
+    it('should not return an amount amendment for a loan', () => {
       // Act
       const result = facilityLoanAmend(amountAmendment, facility, facilityMasterRecord);
 
       // Assert
-      const expected = {
-        effectiveDate: '2030-02-25',
-        amountAmendment: 50000,
-      };
+      const expected = {};
 
       expect(result).toEqual(expected);
     });
 
-    it('should return zero amount amendment when the facility master record is missing', () => {
+    it('should not return an amount amendment when the facility master record is missing', () => {
       // Act
       const result = facilityLoanAmend(amountAmendment, facility);
 
       // Assert
-      const expected = {
-        effectiveDate: '2030-02-25',
-        amountAmendment: 0,
-      };
+      const expected = {};
 
       expect(result).toEqual(expected);
     });
@@ -81,14 +75,12 @@ describe('facilityLoanAmend', () => {
   });
 
   describe('when the facility amount and cover end date are being amended', () => {
-    it('should return the amount difference and updated expiry and next due dates', () => {
+    it('should return updated expiry and next due dates without an amount amendment', () => {
       // Act
       const result = facilityLoanAmend(fullAmendment, facilityAtMaturity, facilityMasterRecord);
 
       // Assert
       const expected = {
-        effectiveDate: '2030-02-25',
-        amountAmendment: 50000,
         expiryDate: '2030-02-25',
         nextDueDate: '2030-02-25',
       };
