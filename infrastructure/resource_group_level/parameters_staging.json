@@ -49,7 +49,7 @@
       "value": "{{RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE}}"
     },
 
-    "timezone": {
+    "TIME_ZONE": {
       "value": "{{TIME_ZONE}}"
     },
 
