@@ -18,6 +18,18 @@ param secureSettings object
 param additionalSecureSettings object
 param azureDnsServerIp string
 param timeZone string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_URL string
+@secure()
+param APIM_MDM_VALUE string
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_MDM_KEY string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
@@ -43,8 +55,17 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
+
+var keyVaultSecureSettings = {
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_TFS_KEY: APIM_TFS_KEY
+}
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, keyVaultSecureSettings)
 var functionNumberGeneratorName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
 var applicationInsightsName = '${product}-${target}-${version}-${resourceNameFragment}'
@@ -77,7 +98,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2024-11-01' = {
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.2'
       remoteDebuggingVersion: 'VS2022'
-      httpLoggingEnabled: true 
+      httpLoggingEnabled: true
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }

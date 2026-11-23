@@ -1,8 +1,6 @@
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param containerRegistryName string
-param externalApiHostname string
-param dtfsCentralApiHostname string
 param nodeDeveloperMode bool
 param numberGeneratorFunctionDefaultHostName string
 param tfmUIUrl string
@@ -112,8 +110,7 @@ var staticSettings = {
   PORT: '5000'
   WEBSITES_PORT: '5000'
 }
-var dtfsCentralApiUrl = 'https://${dtfsCentralApiHostname}'
-var externalApiUrl = 'https://${externalApiHostname}'
+
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
@@ -123,8 +120,6 @@ var additionalSettings = {
   TZ: timeZone
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: websiteHttploggingRetentionDays
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
-  DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
-  EXTERNAL_API_URL: externalApiUrl
 }
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key

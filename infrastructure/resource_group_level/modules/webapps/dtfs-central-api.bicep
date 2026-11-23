@@ -77,6 +77,10 @@ param TFM_API_KEY string
 @secure()
 param UKEF_GEF_REPORTING_EMAIL_RECIPIENT string
 
+@description('URL of the Audit API.')
+@secure()
+param AUDIT_API_URL string
+
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' existing = {
   name: containerRegistryName
@@ -124,6 +128,7 @@ var keyVaultSecureSettings = {
   SQL_DB_USERNAME: SQL_DB_USERNAME
   TFM_API_KEY: TFM_API_KEY
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+  AUDIT_API_URL: AUDIT_API_URL
 }
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, calculatedSettings, keyVaultSecureSettings)

@@ -160,6 +160,118 @@
 
     "FF_TFM_PAYMENT_RECONCILIATION_ENABLED": {
       "value": "{{FF_TFM_PAYMENT_RECONCILIATION_ENABLED}}"
+    },
+
+    "FF_FEE_RECORD_CORRECTION_ENABLED": {
+      "value": "{{FF_FEE_RECORD_CORRECTION_ENABLED}}"
+    },
+
+    "PORTAL_API_URL": {
+      "value": "{{PORTAL_API_URL}}"
+    },
+
+    "TFM_API_URL": {
+      "value": "{{TFM_API_URL}}"
+    },
+
+    "TFM_UI_URL": {
+      "value": "{{TFM_UI_URL}}"
+    },
+
+    "UTILISATION_REPORT_DUE_EMAIL_SCHEDULE": {
+      "value": "{{UTILISATION_REPORT_DUE_EMAIL_SCHEDULE}}"
+    },
+
+    "acaClamAvCidr": {
+      "value": "{{AZ_STAG_SNET_ACA_CLAMAV_CIDR}}"
+    },
+
+    "appServicePlanEgressPrefixCidr": {
+      "value": "{{AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR}}"
+    },
+
+    "applicationGatewayCidr": {
+      "value": "{{AZ_STAG_SNET_APPGW_CIDR_PREFIX}}"
+    },
+
+    "aspSku": {
+      "value": "{{ASP_SKU}}"
+    },
+
+    "azureDnsServerIp": {
+      "value": "{{AZURE_DNS_SERVER_IP}}"
+    },
+
+    "azurePortalIpsString": {
+      "value": "{{AZ_PORTAL_IPS}}"
+    },
+
+    "nsgSourceAddressPrefix": {
+      "value": "{{NSG_SOURCE_ADDRESS_PREFIX}}"
+    },
+
+    "onPremiseNetworkIpsString": {
+      "value": "{{UKEF_VPN_IPS}}"
+    },
+
+    "peeringAddressSpace": {
+      "value": "{{AZ_STAG_VNET_ADDRESS_PREFIX}}"
+    },
+
+    "peeringRemoteVnetSubscriptionId": {
+      "value": "{{PEERING_REMOTE_VNET_SUBSCRIPTION_ID}}"
+    },
+
+    "privateEndpointsCidr": {
+      "value": "{{AZ_STAG_SNET_PRIVATE_EP_CIDR}}"
+    },
+
+    "productionSubnetCidr": {
+      "value": "{{PROD_SUBNET_CIDR}}"
+    },
+
+    "redirectUrl": {
+      "value": "{{REDIRECT_URL}}"
+    },
+
+    "routeTableNextHopIpAddress": {
+      "value": "{{ROUTE_TBL_NEXT_HOP_ADDRESS}}"
+    },
+
+    "target": {
+      "value": "{{TARGET}}"
+    },
+
+    "testSourceAddressPrefix": {
+      "value": "{{TEST_SOURCE_ADDRESS_PREFIX}}"
+    },
+
+    "timeZone": {
+      "value": "{{TIMEZONE}}"
+    },
+
+    "ukefSourceAddressPrefix": {
+      "value": "{{UKEF_SOURCE_ADDRESS_PREFIX}}"
+    },
+
+    "vnetAddressPrefix": {
+      "value": "{{AZ_STAG_VNET_ADDRESS_PREFIX}}"
+    },
+
+    "websiteDynamicCache": {
+      "value": "{{WEBSITE_DYNAMIC_CACHE}}"
+    },
+
+    "websiteHealthcheckingMax": {
+      "value": "{{WEBSITE_HEALTHCHECKING_MAX}}"
+    },
+
+    "websiteHttploggingRetentionDays": {
+      "value": "{{WEBSITE_HTTPLOGGING_RETENTION_DAYS}}"
+    },
+
+    "websiteNodeDefaultVersion": {
+      "value": "{{WEBSITE_NODE_DEFAULT_VERSION}}"
     }
   }
 }

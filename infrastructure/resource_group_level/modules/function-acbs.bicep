@@ -13,12 +13,24 @@ param version string
 param resourceNameFragment string = 'function-acbs'
 @secure()
 param settings object
-@secure()  
-param secureSettings object  
-@secure() 
+@secure()
+param secureSettings object
+@secure()
 param additionalSecureSettings object
 param azureDnsServerIp string
 param timeZone string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_URL string
+@secure()
+param APIM_MDM_VALUE string
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_MDM_KEY string
 
 var containerRegistryLoginServer = containerRegistry.properties.loginServer
 var dockerImageName = '${containerRegistryLoginServer}/azure-${resourceNameFragment}:${environment}'
@@ -44,9 +56,18 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'production' } : {}
 
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var keyVaultSecureSettings = {
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_TFS_KEY: APIM_TFS_KEY
+}
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, keyVaultSecureSettings)
 
 var functionAcbsName = '${product}-${target}-${version}-${resourceNameFragment}'
 var privateEndpointName = '${product}-${target}-${version}-${resourceNameFragment}'
@@ -81,7 +102,7 @@ resource functionAcbs 'Microsoft.Web/sites@2024-11-01' = {
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.2'
       remoteDebuggingVersion: 'VS2022'
-      httpLoggingEnabled: true 
+      httpLoggingEnabled: true
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }

@@ -641,7 +641,7 @@ jobs:
           WEBSITE_HEALTHCHECKING_MAX: ${{ vars.WEBSITE_HEALTHCHECKING_MAX }}
           REDIRECT_URL: ${{ vars.REDIRECT_URL }}
           ASP_SKU: ${{ vars.ASP_SKU }}
-          CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}          
+          CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
           FF_PORTAL_2FA_ENABLED: ${{ vars.FF_PORTAL_2FA_ENABLED }}
           FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
           FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
@@ -661,6 +661,25 @@ jobs:
           FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
           UTILISATION_REPORT_REMINDER_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_REMINDER_EMAIL_SCHEDULE }}
           ACBS_DURABLE_FUNCTIONS_LOG_DELETION_RETENTION_PERIOD: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_RETENTION_PERIOD }}
+          FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
+          PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
+          TFM_API_URL: ${{ secrets.TFM_API_URL }}
+          TFM_UI_URL: ${{ secrets.TFM_UI_URL }}
+          AZ_STAG_SNET_ACA_CLAMAV_CIDR: ${{ secrets.AZ_STAG_SNET_ACA_CLAMAV_CIDR }}
+          AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR: ${{ secrets.AZ_STAG_SNET_ASP_EGRESS_PREFIX_CIDR }}
+          AZ_STAG_SNET_APPGW_CIDR_PREFIX: ${{ secrets.AZ_STAG_SNET_APPGW_CIDR_PREFIX }}
+          AZURE_DNS_SERVER_IP: ${{ secrets.AZURE_DNS_SERVER_IP }}
+          NSG_SOURCE_ADDRESS_PREFIX: ${{ secrets.NSG_SOURCE_ADDRESS_PREFIX }}
+          UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
+          AZ_STAG_VNET_ADDRESS_PREFIX: ${{ secrets.AZ_STAG_VNET_ADDRESS_PREFIX }}
+          PEERING_REMOTE_VNET_SUBSCRIPTION_ID: ${{ secrets.PEERING_REMOTE_VNET_SUBSCRIPTION_ID }}
+          AZ_STAG_SNET_PRIVATE_EP_CIDR: ${{ secrets.AZ_STAG_SNET_PRIVATE_EP_CIDR }}
+          PROD_SUBNET_CIDR: ${{ secrets.PROD_SUBNET_CIDR }}
+          TARGET: ${{ vars.TARGET }}
+          ROUTE_TBL_NEXT_HOP_ADDRESS: ${{ secrets.ROUTE_TBL_NEXT_HOP_ADDRESS }}
+          TEST_SOURCE_ADDRESS_PREFIX: ${{ secrets.TEST_SOURCE_ADDRESS_PREFIX }}
+          TIMEZONE: ${{ vars.TIMEZONE }}
+          UKEF_SOURCE_ADDRESS_PREFIX: ${{ secrets.UKEF_SOURCE_ADDRESS_PREFIX }}
 
         run: |
           set -euo pipefail
@@ -684,7 +703,7 @@ jobs:
             console.error('Missing environment variables:', missing.join(', '));
             process.exit(1);
           }
-          JSON.parse(rendered);  
+          JSON.parse(rendered);
           fs.writeFileSync(outputPath, rendered);
           console.log(`Generated parameter file: ${outputPath}`);
           NODE

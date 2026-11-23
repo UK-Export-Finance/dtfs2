@@ -57,30 +57,6 @@ var shareDeleteRetentionEnabled = false
 @secure()
 param RATE_LIMIT_THRESHOLD string
 
-@description('API Management subscription key used to access the TFS API.')
-@secure()
-param APIM_TFS_KEY string
-
-@description('API Management subscription value associated with the TFS API.')
-@secure()
-param APIM_TFS_VALUE string
-
-@description('Base URL for the APIM endpoint exposing the TFS API.')
-@secure()
-param APIM_TFS_URL string
-
-@description('API Management subscription key used to access the MDM API.')
-@secure()
-param APIM_MDM_KEY string
-
-@description('Base URL for the APIM endpoint exposing the MDM API.')
-@secure()
-param APIM_MDM_URL string
-
-@description('API Management subscription value for the MDM API (varies between dev/staging environments).')
-@secure()
-param APIM_MDM_VALUE string
-
 @description('CRON schedule controlling when utilisation reports for banks are generated.')
 param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string = '0 2 * * 1'
 
@@ -140,9 +116,6 @@ param ESTORE_CRON_MANAGER_SCHEDULE string
 
 @description('CRON schedule controlling when durable functions logs are deleted.')
 param ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE string
-
-@description('Base URL for the audit API, used for recording significant actions and events within the system.')
-param AUDIT_API_URL string
 
 @description('CRON schedule controlling when the deal cancellation function runs.')
 param DEAL_CANCELLATION_SCHEDULE string
@@ -365,14 +338,7 @@ var functionSettings = {
  RATE_LIMIT_THRESHOLD : RATE_LIMIT_THRESHOLD
 }
 
-var functionSecureSettings = {
-  APIM_TFS_KEY: APIM_TFS_KEY
-  APIM_TFS_VALUE: APIM_TFS_VALUE
-  APIM_TFS_URL: APIM_TFS_URL
-  APIM_MDM_KEY: APIM_MDM_KEY
-  APIM_MDM_URL: APIM_MDM_URL
-  APIM_MDM_VALUE: APIM_MDM_VALUE
-}
+var functionSecureSettings = {}
 
 var functionAdditionalSecureSettings = { }
 
@@ -380,12 +346,10 @@ var dtfsCentralApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
-  AUDIT_API_URL: AUDIT_API_URL
   CHANGE_STREAM_ENABLED: CHANGE_STREAM_ENABLED
   DEAL_CANCELLATION_SCHEDULE: DEAL_CANCELLATION_SCHEDULE
   DELETION_AUDIT_LOGS_TTL_SECONDS: DELETION_AUDIT_LOGS_TTL_SECONDS
   DTFS_CENTRAL_API_URL  : DTFS_CENTRAL_API_URL
-  EXTERNAL_API_URL: EXTERNAL_API_URL
   FF_PORTAL_2FA_ENABLED: FF_PORTAL_2FA_ENABLED
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED : FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
   FF_TFM_DEAL_CANCELLATION_ENABLED: FF_TFM_DEAL_CANCELLATION_ENABLED
@@ -726,6 +690,12 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     additionalSecureSettings: functionAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
+    APIM_MDM_KEY: keyVault.getSecret('APIM-MDM-KEY')
+    APIM_TFS_KEY: keyVault.getSecret('APIM-TFS-KEY')
+    APIM_TFS_VALUE: keyVault.getSecret('APIM-TFS-VALUE')
+    APIM_TFS_URL: keyVault.getSecret('APIM-TFS-URL')
+    APIM_MDM_URL: keyVault.getSecret('APIM-MDM-URL')
+    APIM_MDM_VALUE: keyVault.getSecret('APIM-MDM-VALUE')
   }
 }
 
@@ -749,6 +719,12 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     additionalSecureSettings: functionAdditionalSecureSettings
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
+    APIM_MDM_KEY: keyVault.getSecret('APIM-MDM-KEY')
+    APIM_TFS_KEY: keyVault.getSecret('APIM-TFS-KEY')
+    APIM_TFS_VALUE: keyVault.getSecret('APIM-TFS-VALUE')
+    APIM_TFS_URL: keyVault.getSecret('APIM-TFS-URL')
+    APIM_MDM_URL: keyVault.getSecret('APIM-MDM-URL')
+    APIM_MDM_VALUE: keyVault.getSecret('APIM-MDM-VALUE')
   }
 }
 
@@ -836,6 +812,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     SQL_DB_USERNAME: keyVault.getSecret('SQL-DB-USERNAME')
     TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
     UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF-GEF-REPORTING-EMAIL-RECIPIENT')
+    AUDIT_API_URL: keyVault.getSecret('AUDIT-API-URL')
   }
 }
 
@@ -1135,8 +1112,6 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     version: version
     target: target
     containerRegistryName: containerRegistry.name
-    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
-    externalApiHostname: externalApi.outputs.defaultHostName
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     secureConnectionStrings: tfmApiSecureConnectionStrings
