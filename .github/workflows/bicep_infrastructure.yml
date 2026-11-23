@@ -681,6 +681,8 @@ jobs:
           TIMEZONE: ${{ vars.TIMEZONE }}
           UKEF_SOURCE_ADDRESS_PREFIX: ${{ secrets.UKEF_SOURCE_ADDRESS_PREFIX }}
           AZ_PORTAL_IPS: ${{ secrets.AZ_PORTAL_IPS }}
+          DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
+          EXTERNAL_API_URL: ${{ secrets.EXTERNAL_API_URL }}
 
         run: |
           set -euo pipefail

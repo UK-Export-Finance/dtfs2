@@ -123,10 +123,6 @@ param DEAL_CANCELLATION_SCHEDULE string
 @description('The URL of the DTFS Central API, used for retrieving data from or sending data to the API.')
 param DTFS_CENTRAL_API_URL string
 
-@description('The URL of the external API, used for retrieving data from or sending data to external systems.')
-@secure()
-param EXTERNAL_API_URL string
-
 @description('The URL of the portal API, used for retrieving data from or sending data to the portal.')
 param PORTAL_API_URL string
 

@@ -272,6 +272,18 @@
 
     "websiteNodeDefaultVersion": {
       "value": "{{WEBSITE_NODE_DEFAULT_VERSION}}"
+    },
+
+    "DEAL_CANCELLATION_SCHEDULE": {
+      "value": "{{DEAL_CANCELLATION_SCHEDULE}}"
+    },
+
+    "DTFS_CENTRAL_API_URL": {
+      "value": "{{DTFS_CENTRAL_API_URL}}"
+    },
+
+    "EXTERNAL_API_URL": {
+      "value": "{{EXTERNAL_API_URL}}"
     }
   }
 }
