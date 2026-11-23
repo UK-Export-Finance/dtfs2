@@ -111,7 +111,8 @@
 
     "CONTACT_US_EMAIL_ADDRESS": {
       "value": "{{CONTACT_US_EMAIL_ADDRESS}}"
-    },    
+    },
+    
 
     "FF_PORTAL_FACILITY_AMENDMENTS_ENABLED": {
       "value": "{{FF_PORTAL_FACILITY_AMENDMENTS_ENABLED}}"
@@ -167,22 +168,6 @@
 
     "FF_TFM_PAYMENT_RECONCILIATION_ENABLED": {
       "value": "{{FF_TFM_PAYMENT_RECONCILIATION_ENABLED}}"
-    },
-
-    "DTFS_CENTRAL_API_URL": {
-      "value": "{{DTFS_CENTRAL_API_URL}}"
-    },
-
-    "PORTAL_API_URL": {
-      "value": "{{PORTAL_API_URL}}"
-    },
-
-    "TFM_API_URL": {
-      "value": "{{TFM_API_URL}}"
-    },
-
-    "TFM_UI_URL": {
-      "value": "{{TFM_UI_URL}}"
     }
   }
 }
