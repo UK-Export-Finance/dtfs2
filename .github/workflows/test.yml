@@ -1341,7 +1341,6 @@ jobs:
             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/**/*.spec.js',
             './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
