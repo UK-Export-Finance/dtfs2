@@ -233,8 +233,11 @@ describe('postLogin', () => {
         });
 
         it(`should redirect to login/temporarily-suspended-access-code when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {
-          const forbiddenError = { response: { status: HttpStatusCode.Forbidden } };
-          jest.mocked(api.sendSignInOTP).mockRejectedValue(forbiddenError);
+          const axiosError = Object.assign(new Error('Forbidden'), {
+            isAxiosError: true,
+            response: { status: HttpStatusCode.Forbidden },
+          });
+          jest.mocked(api.sendSignInOTP).mockRejectedValue(axiosError);
 
           await postLogin(req, res);
 
@@ -293,8 +296,11 @@ describe('postLogin', () => {
         });
 
         it(`should redirect to /login/temporarily-suspended-access-code when a ${HttpStatusCode.Forbidden} error is thrown`, async () => {
-          const forbiddenError = { response: { status: HttpStatusCode.Forbidden } };
-          jest.mocked(api.login).mockRejectedValue(forbiddenError);
+          const axiosError = Object.assign(new Error('Forbidden'), {
+            isAxiosError: true,
+            response: { status: HttpStatusCode.Forbidden },
+          });
+          jest.mocked(api.login).mockRejectedValue(axiosError);
 
           await postLogin(req, res);
 

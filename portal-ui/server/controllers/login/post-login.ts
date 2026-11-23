@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import type { Response } from 'express';
@@ -92,86 +92,38 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
       return res.redirect(nextAccessCodePage);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
+      const authError = error as AxiosError;
+      const status = authError.response?.status;
 
-        if (!loginApiOtpSucceeded) {
-          const message = 'Failed to login';
-          const authError = error instanceof Error ? error : { message: 'Unknown error' };
-          logUserAuthError(authError, message);
-
-          if (status === HttpStatusCode.Forbidden) {
-            console.error('Access temporarily suspended for user %s', email);
-            req.session.numberOfSignInOtpAttemptsRemaining = -1;
-            return res.redirect('/login/temporarily-suspended-access-code');
-          }
-
-          loginErrors.push(emailError, passwordError);
-
-          const banks = await getPortalBankListForLoginPage();
-
-          return res.render('login/index.njk', {
-            errors: validationErrorHandler(loginErrors),
-            banks,
-          });
-        }
+      if (!loginApiOtpSucceeded) {
+        const message = 'Failed to login';
+        logUserAuthError(error as Error, message);
 
         if (status === HttpStatusCode.Forbidden) {
-          console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1', email);
-          req.session.numberOfSignInOtpAttemptsRemaining = -1;
-
-          return res.redirect('/login/temporarily-suspended-access-code');
-        }
-
-        const message = 'Failed to send sign in OTP, rendering problem with service page. The error was';
-        const authError = error instanceof Error ? error : { message: 'Unknown error' };
-        logUserAuthError(authError, message);
-      } else {
-        const isForbidden =
-          typeof error === 'object' &&
-          error !== null &&
-          'response' in error &&
-          typeof error.response === 'object' &&
-          error.response !== null &&
-          'status' in error.response &&
-          error.response.status === HttpStatusCode.Forbidden;
-
-        if (!loginApiOtpSucceeded) {
-          if (error instanceof Error) {
-            logUserAuthError(error, 'Failed to login');
-          } else if (isForbidden) {
-            logUserAuthError({ response: { status: HttpStatusCode.Forbidden } }, 'Failed to login');
-          } else {
-            console.error('An unknown error occurred during login: %o', error);
-          }
-
-          if (isForbidden) {
-            console.error('Access temporarily suspended for user %s', email);
-            req.session.numberOfSignInOtpAttemptsRemaining = -1;
-            return res.redirect('/login/temporarily-suspended-access-code');
-          }
-
-          loginErrors.push(emailError, passwordError);
-          const banks = await getPortalBankListForLoginPage();
-
-          return res.render('login/index.njk', {
-            errors: validationErrorHandler(loginErrors),
-            banks,
-          });
-        }
-
-        if (isForbidden) {
-          console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1', email);
+          console.error('Access temporarily suspended for user %s', email);
           req.session.numberOfSignInOtpAttemptsRemaining = -1;
           return res.redirect('/login/temporarily-suspended-access-code');
         }
 
-        if (error instanceof Error) {
-          logUserAuthError(error, 'Failed to send sign in OTP, rendering problem with service page. The error was');
-        } else {
-          console.error('An unknown error occurred during login: %o', error);
-        }
+        loginErrors.push(emailError, passwordError);
+
+        const banks = await getPortalBankListForLoginPage();
+
+        return res.render('login/index.njk', {
+          errors: validationErrorHandler(loginErrors),
+          banks,
+        });
       }
+
+      if (status === HttpStatusCode.Forbidden) {
+        console.error('Access temporarily suspended for user %s, setting numberOfSignInOtpAttemptsRemaining to -1', email);
+        req.session.numberOfSignInOtpAttemptsRemaining = -1;
+
+        return res.redirect('/login/temporarily-suspended-access-code');
+      }
+
+      const message = 'Failed to send sign in OTP, rendering problem with service page. The error was';
+      logUserAuthError(error as Error, message);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -202,69 +154,36 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       console.info('Portal-UI - Login and sign-in link sending successful for user %s. Redirecting to /login/check-your-email', user._id);
       return res.redirect('/login/check-your-email');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
+      const authError = error as AxiosError;
+      const status = authError.response?.status;
 
-        if (!loginApiLinkSucceeded) {
-          const message = 'Failed to login';
-          logUserAuthError(error, message);
-
-          if (status === HttpStatusCode.Forbidden) {
-            console.error('Access temporarily suspended for user');
-            return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
-          }
-
-          loginErrors.push(emailError, passwordError);
-
-          const banks = await getPortalBankListForLoginPage();
-
-          return res.render('login/index.njk', {
-            errors: validationErrorHandler(loginErrors),
-            banks,
-          });
-        }
+      if (!loginApiLinkSucceeded) {
+        const message = 'Failed to login';
+        logUserAuthError(error as Error, message);
 
         if (status === HttpStatusCode.Forbidden) {
-          req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
-
+          console.error('Access temporarily suspended for user');
           return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
         }
 
-        const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
-        logUserAuthError(error, message);
-      } else {
-        const isForbidden =
-          typeof error === 'object' &&
-          error !== null &&
-          'response' in error &&
-          typeof error.response === 'object' &&
-          error.response !== null &&
-          'status' in error.response &&
-          error.response.status === HttpStatusCode.Forbidden;
+        loginErrors.push(emailError, passwordError);
 
-        if (isForbidden) {
-          if (!loginApiLinkSucceeded) {
-            logUserAuthError({ response: { status: HttpStatusCode.Forbidden } }, 'Failed to login');
-            console.error('Access temporarily suspended for user');
-          } else {
-            req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
-          }
+        const banks = await getPortalBankListForLoginPage();
 
-          return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
-        }
-
-        console.error('An unknown error occurred during login: %o', error);
-
-        if (!loginApiLinkSucceeded) {
-          loginErrors.push(emailError, passwordError);
-          const banks = await getPortalBankListForLoginPage();
-
-          return res.render('login/index.njk', {
-            errors: validationErrorHandler(loginErrors),
-            banks,
-          });
-        }
+        return res.render('login/index.njk', {
+          errors: validationErrorHandler(loginErrors),
+          banks,
+        });
       }
+
+      if (status === HttpStatusCode.Forbidden) {
+        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
+
+        return res.status(HttpStatusCode.Forbidden).render('login/temporarily-suspended.njk');
+      }
+
+      const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
+      logUserAuthError(error as Error, message);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');
