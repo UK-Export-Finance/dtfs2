@@ -1,12 +1,12 @@
 exports.getEligibilityErrors = (criteria) => {
   const errorList = criteria.reduce(
-    (fields, c) => ({
+    (fields, criterion) => ({
       ...fields,
-      [c.id]:
-        typeof c.answer === 'undefined'
+      [criterion.id]:
+        typeof criterion.answer === 'undefined'
           ? {
-              order: `${c.id}`,
-              text: `Eligibility criterion ${c.id} is required`,
+              order: `${criterion.id}`,
+              text: `Eligibility criterion ${criterion.id} is required`,
             }
           : {},
     }),
@@ -14,7 +14,7 @@ exports.getEligibilityErrors = (criteria) => {
   );
 
   return {
-    count: Object.values(errorList).filter((e) => e.text).length,
+    count: Object.values(errorList).filter((error) => error.text).length,
     errorList,
   };
 };
@@ -76,7 +76,7 @@ exports.getCriteria11Errors = (criteria11Additional, criteria11IsFalse) => {
   }
 
   return {
-    count: Object.values(errorList).filter((e) => e.text).length,
+    count: Object.values(errorList).filter((error) => error.text).length,
     errorList,
   };
 };

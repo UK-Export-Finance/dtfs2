@@ -76,10 +76,10 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
           modifiedResult[newKeyName] = [];
         }
 
-        filters[key].forEach((condition, i) => {
-          modifiedResult[newKeyName][i] = {};
+        filters[key].forEach((condition, index) => {
+          modifiedResult[newKeyName][index] = {};
 
-          recursivelyReplaceEscapeOperators(condition, modifiedResult[newKeyName][i]);
+          recursivelyReplaceEscapeOperators(condition, modifiedResult[newKeyName][index]);
         });
       }
 

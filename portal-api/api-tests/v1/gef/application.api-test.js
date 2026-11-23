@@ -552,7 +552,7 @@ describe(baseUrl, () => {
         const dealId = body._id;
 
         // create issued facility that's associated with the deal
-        const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
+        const issuedFacility = mockFacilities.find((facility) => facility.hasBeenIssued === true);
         const createFacilityResponse = await as(maker1)
           .post({ dealId, ...issuedFacility })
           .to(facilitiesUrl);
@@ -579,7 +579,7 @@ describe(baseUrl, () => {
         const dealId = body._id;
 
         // create issued facility that's associated with the deal
-        const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
+        const issuedFacility = mockFacilities.find((facility) => facility.hasBeenIssued === true);
         const createFacilityResponse = await as(maker1)
           .post({ dealId, ...issuedFacility })
           .to(facilitiesUrl);
@@ -605,7 +605,7 @@ describe(baseUrl, () => {
         const { body } = await as(maker1).post(mockApplications[0]).to(baseUrl);
         const dealId = body._id;
         // create issued facility that's associated with the deal
-        const issuedFacility = mockFacilities.find((f) => f.shouldCoverStartOnSubmission === true);
+        const issuedFacility = mockFacilities.find((facility) => facility.shouldCoverStartOnSubmission === true);
 
         const createFacilityResponse = await as(maker1)
           .post({ dealId, ...issuedFacility })
@@ -644,7 +644,7 @@ describe(baseUrl, () => {
         const { body } = await as(maker1).post(mockApplications[0]).to(baseUrl);
         const dealId = body._id;
         // create issued facility that's associated with the deal
-        const issuedFacility = mockFacilities.find((f) => f.canResubmitIssuedFacilities === true);
+        const issuedFacility = mockFacilities.find((facility) => facility.canResubmitIssuedFacilities === true);
 
         const createFacilityResponse = await as(maker1)
           .post({ dealId, ...issuedFacility })

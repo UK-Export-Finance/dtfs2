@@ -6,8 +6,8 @@ jest.mock('../../services/api');
 const MockRequest = () => {
   const req = {};
   req.session = {
-    destroy: jest.fn((f) => {
-      f();
+    destroy: jest.fn((func) => {
+      func();
     }),
   };
   return req;

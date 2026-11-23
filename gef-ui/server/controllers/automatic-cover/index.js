@@ -84,7 +84,7 @@ const validateAutomaticCover = async (req, res, next) => {
 
     // only update the answers that have been submitted.
     Object.keys(body).forEach((key) => {
-      const answerIndex = newAnswers.findIndex((a) => a.id === Number(key));
+      const answerIndex = newAnswers.findIndex((answer) => answer.id === Number(key));
       newAnswers[answerIndex].answer = stringToBoolean(body[key]);
     });
 

@@ -10,6 +10,8 @@ type UnionCountryCurrencyIndustryInterface = CountryInterface | CurrencyInterfac
  * @returns The sorted array, ordered alphabetically by the specified field.
  */
 export const sortArrayAlphabetically = (arr: UnionCountryCurrencyIndustryInterface[], field: string): UnionCountryCurrencyIndustryInterface[] =>
-  arr.sort((a, b) =>
-    (a[field as keyof UnionCountryCurrencyIndustryInterface] as string).localeCompare(b[field as keyof UnionCountryCurrencyIndustryInterface] as string),
+  arr.sort((previous, current) =>
+    (previous[field as keyof UnionCountryCurrencyIndustryInterface] as string).localeCompare(
+      current[field as keyof UnionCountryCurrencyIndustryInterface] as string,
+    ),
   );

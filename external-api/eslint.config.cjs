@@ -99,6 +99,9 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
+      // disallow param names with 1 digit, excluding object property names
+      'id-length': ['error', { min: 2, properties: 'never' }],
+
       // DTFS exception
       // Why: Allow relative imports within the external-api package itself,
       // but enforce the use of the '@ukef/external-api' prefix for imports from other parts of the package.

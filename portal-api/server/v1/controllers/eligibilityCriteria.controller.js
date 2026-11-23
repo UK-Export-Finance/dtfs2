@@ -7,7 +7,7 @@ const { mongoDbClient: db } = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
 
 const sortEligibilityCriteria = (arr, callback) => {
-  const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
+  const sortedArray = arr.sort((previous, current) => Number(previous.id) - Number(current.id));
   return callback(sortedArray);
 };
 

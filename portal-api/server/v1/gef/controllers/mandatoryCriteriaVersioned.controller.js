@@ -9,7 +9,7 @@ const { mongoDbClient: db } = require('../../../drivers/db-client');
 const api = require('../../api');
 
 const sortMandatoryCriteria = (arr, callback) => {
-  const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
+  const sortedArray = arr.sort((previous, current) => Number(previous.version) - Number(current.version));
   return callback(sortedArray);
 };
 

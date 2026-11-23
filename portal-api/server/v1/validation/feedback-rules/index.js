@@ -11,8 +11,8 @@ const rules = [role, organisation, reasonForVisiting, easyToUse, clearlyExplaine
 module.exports = (feedback) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](feedback, errorList);
+  for (let index = 0; index < rules.length; index += 1) {
+    errorList = rules[index](feedback, errorList);
   }
 
   return errorList;

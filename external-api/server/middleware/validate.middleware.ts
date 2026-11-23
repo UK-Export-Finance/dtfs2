@@ -10,7 +10,8 @@ export const validateParametersMiddleware = (schema: any, property: any) => {
     } else {
       const { details } = error;
       const currentValue = req.params[property];
-      const message = details.map((i: any) => i.message).join(',');
+      const message = details.map((item: any) => item.message).join(',');
+
       res.status(400).json({
         error: message,
         currentValue,

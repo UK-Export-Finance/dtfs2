@@ -18,8 +18,8 @@ describe('/countries', () => {
       expect(body.countries.length).toBeGreaterThan(1);
       expect(body.countries[0]).toEqual(gbr);
 
-      for (let i = 2; i < body.countries.length; i += 1) {
-        expect(body.countries[i - 1].name < body.countries[i].name).toEqual(true);
+      for (let index = 2; index < body.countries.length; index += 1) {
+        expect(body.countries[index - 1].name < body.countries[index].name).toEqual(true);
       }
     });
   });
@@ -43,7 +43,7 @@ describe('/countries', () => {
 
     // Act
     const { status, body } = await get('/countries');
-    const countryNames = body.countries.map((c: any) => c.name);
+    const countryNames = body.countries.map((country: any) => country.name);
 
     // Assert
     expect(status).toEqual(200);

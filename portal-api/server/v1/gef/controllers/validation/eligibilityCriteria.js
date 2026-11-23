@@ -1,13 +1,13 @@
 const CONSTANTS = require('../../../../constants');
 
-const getAnsweredItems = (answers) => answers.filter((a) => a.answer === true || a.answer === false);
+const getAnsweredItems = (answers) => answers.filter(({ answer }) => answer === true || answer === false);
 
 const isAutomaticCover = (answers) => {
-  if (answers.every((a) => a.answer === true)) {
+  if (answers.every(({ answer }) => answer === true)) {
     return true;
   }
 
-  if (answers.some((a) => a.answer === null)) {
+  if (answers.some(({ answer }) => answer === null)) {
     return false;
   }
 

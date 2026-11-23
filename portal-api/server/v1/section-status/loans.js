@@ -44,8 +44,8 @@ const addAccurateStatusesToLoans = (deal) => {
   const { status: dealStatus, previousStatus: previousDealStatus } = deal;
 
   if (deal.loanTransactions.items.length) {
-    deal.loanTransactions.items.forEach((l) => {
-      const loan = l;
+    deal.loanTransactions.items.forEach((loan) => {
+      const modifiedLoan = loan;
       const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
 
@@ -53,7 +53,7 @@ const addAccurateStatusesToLoans = (deal) => {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan, deal);
       }
 
-      loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
+      modifiedLoan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
     });
   }
 
