@@ -33,10 +33,6 @@
       "value": "{{UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE}}"
     },
 
-    "AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE": {
-      "value": "{{AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}"
-    },
-
     "ESTORE_CRON_MANAGER_SCHEDULE": {
       "value": "{{ESTORE_CRON_MANAGER_SCHEDULE}}"
     },
@@ -47,10 +43,6 @@
 
     "RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE": {
       "value": "{{RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE}}"
-    },
-
-    "TIME_ZONE": {
-      "value": "{{TIME_ZONE}}"
     },
 
     "RATE_LIMIT_THRESHOLD": {
@@ -124,14 +116,6 @@
 
     "CONTINGENT_UTILISATION_PERCENTAGE": {
       "value": "{{CONTINGENT_UTILISATION_PERCENTAGE}}"
-    },
-
-    "port": {
-      "value": "{{PORT}}"
-    },
-
-    "nodeenv": {
-      "value": "{{NODE_ENV}}"
     },
 
     "FF_SALESFORCE_CUSTOMER_CREATION_ENABLED": {
@@ -256,10 +240,6 @@
 
     "DTFS_CENTRAL_API_URL": {
       "value": "{{DTFS_CENTRAL_API_URL}}"
-    },
-
-    "EXTERNAL_API_URL": {
-      "value": "{{EXTERNAL_API_URL}}"
     }
   }
 }
