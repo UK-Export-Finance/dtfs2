@@ -8,12 +8,7 @@ Check the version deployed in your environment, as behaviour may differ.
 
 ## 1. Overview
 
-DTFS has two distinct integration routes:
-
-1. The ACBS Durable Functions route.
-2. The newer GIFT route.
-
-Do not assume the routes send the same payloads.
+DTFS integrates with ACBS
 
 ### ACBS Durable Functions route
 
@@ -35,15 +30,15 @@ ACBS
 
 ### Components and explanation
 
-| Component         | Responsibility                                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| DTFS / TFM        | Holds the deal, facility and amendment data.                                                      |
-| External API      | Starts Durable Functions or forwards requests to TFS API.                                         |
-| Durable Functions | Coordinate ACBS record creation, issuance and amendments.                                         |
-| APIM              | Gateway in front of APIs. Environment policies and routing are separate from repository code.     |
-| TFS API           | Validates requests, maps them into ACBS requests, and calls ACBS. It also exposes GIFT endpoints. |
-| ACBS              | Holds and processes deal, facility, loan, guarantee and related financial records.                |
-| MDM               | Supplies reference data and identifiers used by the integration.                                  |
+| Component         | Responsibility                                                                                |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| DTFS / TFM        | Holds the deal, facility and amendment data.                                                  |
+| External API      | Starts Durable Functions or forwards requests to TFS API.                                     |
+| Durable Functions | Coordinate ACBS record creation, issuance and amendments.                                     |
+| APIM              | Gateway in front of APIs. Environment policies and routing are separate from repository code. |
+| TFS API           | Validates requests, maps them into ACBS requests, and calls ACBS                              |
+| ACBS              | Holds and processes deal, facility, loan, guarantee and related financial records.            |
+| MDM               | Supplies reference data and identifiers used by the integration.                              |
 
 Sources:
 
