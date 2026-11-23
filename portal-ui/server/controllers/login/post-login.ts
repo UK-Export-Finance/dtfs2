@@ -21,8 +21,8 @@ export type PostLoginRequest = CustomExpressRequest<{ reqBody: { email?: string;
 /**
  * Controller to handle login form submission
  * Handles both 2FA and non-2FA login flows depending on whether the 2FA feature flag is enabled.
- * @param {PostLoginRequest} req
- * @param {Response} res
+ * @param req
+ * @param res
  * @returns redirects to appropriate page based on login outcome and 2FA feature flag status
  */
 export const postLogin = async (req: PostLoginRequest, res: Response) => {
