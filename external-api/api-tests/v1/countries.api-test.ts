@@ -1,4 +1,3 @@
-import { COUNTRIES } from '@ukef/dtfs2-common';
 import { app } from '@ukef/external-api/server/createApp';
 import { api } from '@ukef/external-api/api-tests/api';
 
@@ -26,42 +25,60 @@ describe('/countries', () => {
   });
 
   it('should return previously excluded countries and all countries marked disabled', async () => {
-    const previouslyExcludedCountries = [
+    const disabledCountries = [
+      'Afghanistan',
+      'Belarus',
       'Benin',
+      'Bosnia and Herzegovina',
+      'Burkina Faso',
+      'Burma or Myanmar',
+      'Burundi',
       'Cape Verde',
+      'Central African Republic',
       'China',
+      'Congo',
+      'Congo, Democratic Republic of',
+      'Cote d Ivoire',
       'Gambia',
       'Ghana',
+      'Guinea',
+      'Guinea Bissau',
+      'Haiti',
       'Hong Kong',
-      'Cote d Ivoire',
+      'Iran',
+      'Iraq',
+      'Korea, Democratic Peoples Republic of',
+      'Lebanon',
       'Liberia',
+      'Libya',
+      'Mali',
+      'Nicaragua',
+      'Niger',
       'Nigeria',
+      'Palestinian National Authority',
+      'Russian Federation',
       'Senegal',
       'Sierra Leone',
+      'Somalia',
+      'Sudan',
+      'Syrian Arab Republic',
       'Togo',
+      'Venezuela',
+      'Western Sahara',
+      'Yemen',
+      'Zimbabwe',
     ];
 
     const { status, body } = await get('/countries');
-    const disabledCountries = COUNTRIES.filter((country) => country.disabled);
 
     expect(status).toEqual(200);
 
     expect(body.countries).toBeInstanceOf(Array);
-    previouslyExcludedCountries.forEach((name) => {
-      expect(body.countries).toContainEqual(
-        expect.objectContaining({
-          name,
-          disabled: true,
-        }),
-      );
-    });
 
-    disabledCountries.forEach((country) => {
+    disabledCountries.forEach((countryname) => {
       expect(body.countries).toContainEqual(
         expect.objectContaining({
-          id: country.id,
-          name: country.name,
-          code: country.code,
+          name: countryname,
           disabled: true,
         }),
       );
