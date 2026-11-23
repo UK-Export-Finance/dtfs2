@@ -60,7 +60,7 @@ describe('getUserById', () => {
     expect(result).toEqual(mockUser);
   });
 
-  it('should throw an error when no user is found for the id', async () => {
+  it('should return null when no user is found for the id', async () => {
     // Arrange
     findOneMock.mockResolvedValue(null);
 
