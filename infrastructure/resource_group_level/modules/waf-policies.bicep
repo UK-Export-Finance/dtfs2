@@ -298,30 +298,38 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     name: wafSku
   }
   properties: {
-    policySettings: {
+  policySettings: union(
+    {
       enabledState: 'Enabled'
       mode: 'Prevention'
-      redirectUrl: redirectUrl
       customBlockResponseStatusCode: 403
       customBlockResponseBody: unauthorisedMessageBody
       requestBodyCheck: 'Disabled'
-    }
-    customRules: {
-      rules: wafCustomRules
-    }
-    managedRules: wafSku == 'Premium_AzureFrontDoor' ? {
-      managedRuleSets: [
-        {
-          ruleSetType: ruleSet.ruleSetType
-          ruleSetVersion: ruleSet.ruleSetVersion
-          ruleGroupOverrides: devRuleOverrides
-          exclusions: []
+    },
+    rejectAction == 'Redirect'
+      ? {
+          redirectUrl: redirectUrl
         }
-      ]
-    } : {
-      managedRuleSets: []
-    }
+      : {}
+  )
+
+  customRules: {
+    rules: wafCustomRules
   }
+
+  managedRules: wafSku == 'Premium_AzureFrontDoor' ? {
+    managedRuleSets: [
+      {
+        ruleSetType: ruleSet.ruleSetType
+        ruleSetVersion: ruleSet.ruleSetVersion
+        ruleGroupOverrides: devRuleOverrides
+        exclusions: []
+      }
+    ]
+  } : {
+    managedRuleSets: []
+  }
+}
 }
 
 
