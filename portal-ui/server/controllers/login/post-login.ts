@@ -6,6 +6,9 @@ import type { Response } from 'express';
 import { validationErrorHandler, getNextAccessCodePage, getPortalBankListForLoginPage } from '@ukef/portal-ui/server/helpers';
 import api from '@ukef/portal-ui/server/api';
 
+type SendSignInLinkResponse = { data: { numberOfSendSignInLinkAttemptsRemaining: number } };
+type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
+
 type PostLoginSession = {
   userEmail?: string;
   userToken?: string;
@@ -21,8 +24,8 @@ export type PostLoginRequest = CustomExpressRequest<{ reqBody: { email?: string;
 /**
  * Controller to handle login form submission
  * Handles both 2FA and non-2FA login flows depending on whether the 2FA feature flag is enabled.
- * @param req
- * @param res
+ * @param req - post login request
+ * @param res - post login response
  * @returns redirects to appropriate page based on login outcome and 2FA feature flag status
  */
 export const postLogin = async (req: PostLoginRequest, res: Response) => {
@@ -79,7 +82,6 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       req.session.userId = user.userId;
 
       console.info('Portal-UI - API login successful for user %s. Attempting to send sign in OTP', user.userId);
-      type SendSignInOtpResponse = { data: { numberOfSignInOtpAttemptsRemaining: number } };
 
       const otpResponse = (await api.sendSignInOTP(token)) as SendSignInOtpResponse;
       const { numberOfSignInOtpAttemptsRemaining } = otpResponse.data;
@@ -97,7 +99,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
       if (!loginApiOtpSucceeded) {
         const message = 'Failed to login';
-        logUserAuthError(error as Error, message);
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user %s', email);
@@ -123,7 +125,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       }
 
       const message = 'Failed to send sign in OTP, rendering problem with service page. The error was';
-      logUserAuthError(error as Error, message);
+      logUserAuthError(error, message);
 
       return res.render('_partials/problem-with-service.njk');
     }
@@ -144,7 +146,6 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       req.session.userId = user._id;
 
       console.info('Portal-UI - API login successful for user %s. Attempting to send sign in link', user._id);
-      type SendSignInLinkResponse = { data: { numberOfSendSignInLinkAttemptsRemaining: number } };
 
       const linkResponse = (await api.sendSignInLink(token)) as SendSignInLinkResponse;
       const { numberOfSendSignInLinkAttemptsRemaining } = linkResponse.data;
@@ -159,7 +160,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
       if (!loginApiLinkSucceeded) {
         const message = 'Failed to login';
-        logUserAuthError(error as Error, message);
+        logUserAuthError(error, message);
 
         if (status === HttpStatusCode.Forbidden) {
           console.error('Access temporarily suspended for user');
@@ -183,7 +184,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       }
 
       const message = 'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was';
-      logUserAuthError(error as Error, message);
+      logUserAuthError(error, message);
 
       // Continue login flow so the user can retry sending sign-in link
       return res.redirect('/login/check-your-email');

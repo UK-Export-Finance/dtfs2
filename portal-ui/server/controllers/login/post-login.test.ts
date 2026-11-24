@@ -237,6 +237,7 @@ describe('postLogin', () => {
             isAxiosError: true,
             response: { status: HttpStatusCode.Forbidden },
           });
+
           jest.mocked(api.sendSignInOTP).mockRejectedValue(axiosError);
 
           await postLogin(req, res);
@@ -300,6 +301,7 @@ describe('postLogin', () => {
             isAxiosError: true,
             response: { status: HttpStatusCode.Forbidden },
           });
+
           jest.mocked(api.login).mockRejectedValue(axiosError);
 
           await postLogin(req, res);
