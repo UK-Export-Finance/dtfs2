@@ -1004,6 +1004,17 @@ module gefUI 'modules/webapps/gef-ui.bicep' = {
   }
 }
 
+module applicationGatewayWafPolicy 'modules/application-gateway-waf-policy.bicep' = {
+  name: 'applicationGatewayWafPolicy'
+  params: {
+    location: location
+    product: product
+    target: target
+    version: version
+  }
+}
+
+
 module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
   name: 'applicationGatewayPortal'
   params: {
@@ -1017,6 +1028,8 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     portalUIHostname: portalUI.outputs.defaultHostName
     gefUIHostname: gefUI.outputs.defaultHostName
     apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
+
+    wafPolicyId: applicationGatewayWafPolicy.outputs.wafPolicyId
   }
 }
 
@@ -1030,6 +1043,8 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     tfsTfmIpId: tfsIp.outputs.tfsTfmIpId
     tfmUIHostname: tfmUI.outputs.defaultHostName
+
+    wafPolicyId: applicationGatewayWafPolicy.outputs.wafPolicyId
   }
 }
 

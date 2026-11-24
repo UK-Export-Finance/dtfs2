@@ -8,6 +8,7 @@ param apiPortalAccessPort int = 0
 param product string
 param target string
 param version string
+param wafPolicyId string
 param applicationGatewaySku object = {
   name: 'WAF_v2'
   tier: 'WAF_v2'
@@ -263,17 +264,11 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2024-10-01' =
     rewriteRuleSets: []
     redirectConfigurations: []
     privateLinkConfigurations: []
-    webApplicationFirewallConfiguration: {
-      enabled: true
-      firewallMode: 'Prevention'
-      ruleSetType: 'OWASP'
-      ruleSetVersion: '3.2'
-      disabledRuleGroups: []
-      exclusions: []
-      requestBodyCheck: false
-      maxRequestBodySizeInKb: 128
-      fileUploadLimitInMb: 100
-    }
+
+    firewallPolicy: {
+      id: wafPolicyId
+   }
+
     autoscaleConfiguration: autoscaleConfiguration
   }
 }
