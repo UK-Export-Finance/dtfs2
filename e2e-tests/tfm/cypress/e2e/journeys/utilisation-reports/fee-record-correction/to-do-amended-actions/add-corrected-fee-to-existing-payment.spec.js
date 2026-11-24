@@ -1,11 +1,11 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, CURRENCY, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { tfmPages as pages } from '../../../../../pages';
-import USERS from '../../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import { tfmPages as pages } from '../../../../pages';
+import USERS from '../../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
-context('When fee record correction feature flag is enabled', () => {
+context('Fee record correction', () => {
   context('PDC_RECONCILE users can add a corrected fee to an existing payment', () => {
     const BANK_ID = '961';
     const REPORT_ID = 1;

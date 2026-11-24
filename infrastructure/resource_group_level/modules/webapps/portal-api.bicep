@@ -41,7 +41,6 @@ var staticSettings = {
   CLAMAV_HOST: clamAvSettings.ipAddress
   CLAMAV_PORT: clamAvSettings.port
   CLAMAV_DEBUG_MODE_ENABLED: 'true'
-  CLAMAV_SCANNING_ENABLED: 'true'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'

@@ -1,12 +1,12 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { tfmPages as pages } from '../../../../pages';
-import USERS from '../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
-import relative from '../../../../relativeURL';
+import { tfmPages as pages } from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import relative from '../../../relativeURL';
 
-context('When fee record correction feature flag is enabled - record correction log details', () => {
+context('Record correction log details', () => {
   const bankId = '961';
   const reportId = 1;
 

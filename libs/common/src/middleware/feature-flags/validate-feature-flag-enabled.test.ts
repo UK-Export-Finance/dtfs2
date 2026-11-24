@@ -3,7 +3,6 @@ import { createMocks } from 'node-mocks-http';
 import * as featureFlags from '@ukef/helpers/is-feature-flag-enabled';
 import {
   validateDealCancellationEnabled,
-  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validatePortalFacilityAmendmentsEnabled,
   validatePortal2FAFeatureFlagIsEnabled,
 } from './validate-feature-flag-enabled';
@@ -19,10 +18,6 @@ describe('feature flag middleware', () => {
 
   describe('validatePortalFacilityAmendmentsEnabled', () => {
     withBackendMiddlewareFeatureFlagTests('isPortalFacilityAmendmentsFeatureFlagEnabled', validatePortalFacilityAmendmentsEnabled);
-  });
-
-  describe('validateFeeRecordCorrectionFeatureFlagIsEnabled', () => {
-    withFrontendMiddlewareFeatureFlagTests('isFeeRecordCorrectionFeatureFlagEnabled', validateFeeRecordCorrectionFeatureFlagIsEnabled);
   });
 
   describe('validatePortal2FAFeatureFlagIsEnabled', () => {

@@ -11,7 +11,6 @@ const featureFlagsSchema = z.object({
    * If set to false, disables all routes associated with TFM 6
    */
   CHANGE_STREAM_ENABLED: featureFlagOptions,
-  FF_FEE_RECORD_CORRECTION_ENABLED: featureFlagOptions,
   FF_TFM_DEAL_CANCELLATION_ENABLED: featureFlagOptions,
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: featureFlagOptions,
   FF_TFM_SSO_ENABLED: featureFlagOptions,
@@ -28,8 +27,6 @@ const isFeatureFlagEnabled = (featureFlag: FeatureFlag) => (): boolean => {
 };
 
 export const isChangeStreamEnabled = isFeatureFlagEnabled('CHANGE_STREAM_ENABLED');
-
-export const isFeeRecordCorrectionFeatureFlagEnabled = isFeatureFlagEnabled('FF_FEE_RECORD_CORRECTION_ENABLED');
 
 export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION_ENABLED');
 

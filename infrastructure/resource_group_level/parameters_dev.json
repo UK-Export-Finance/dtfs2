@@ -209,9 +209,6 @@
       "DEAL_API_URL": {
         "value": "{{DEAL_API_URL}}"
       },
-      "FF_FEE_RECORD_CORRECTION_ENABLED": {
-        "value": "{{FF_FEE_RECORD_CORRECTION_ENABLED}}"
-      },
       "FF_PORTAL_2FA_ENABLED": {
         "value": "{{FF_PORTAL_2FA_ENABLED}}"
       },

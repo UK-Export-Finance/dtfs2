@@ -1,9 +1,9 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, today } from '@ukef/dtfs2-common/test-helpers';
 import { FEE_RECORD_STATUS, PENDING_RECONCILIATION, RECORD_CORRECTION_REASON, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { tfmPages } from '../../../../pages';
-import USERS from '../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import { tfmPages } from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 const bankId = '961';
 const reportId = 1;
@@ -27,7 +27,7 @@ const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
 
-context('When fee record correction feature flag is enabled', () => {
+context('Fee record correction', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);

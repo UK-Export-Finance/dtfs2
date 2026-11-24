@@ -177,7 +177,6 @@ env:
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
-  FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
@@ -651,7 +650,6 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
-      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
@@ -774,7 +772,7 @@ jobs:
             'reports/**/*.spec.js',
             'payment-report-officer/utilisation-report-upload/**/*.spec.js',
             'payment-report-officer/previous-reports/**/*.spec.js',
-            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
+            'payment-report-officer/record-corrections/**/*.spec.js',
           ]
 
     concurrency:
@@ -1022,7 +1020,7 @@ jobs:
             'login/**/*.spec.js',
             'users/**/*.spec.js',
             'utilisation-reports/report-reconciliation/**/*.spec.js',
-            'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
+            'utilisation-reports/fee-record-correction/**/*.spec.js',
           ]
 
     concurrency:
@@ -1291,7 +1289,6 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
-      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'false'
@@ -1344,7 +1341,6 @@ jobs:
             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
@@ -1402,7 +1398,6 @@ jobs:
             './tfm/cypress/e2e/journeys/header/**/*.spec.js',
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/change/*.spec.js',

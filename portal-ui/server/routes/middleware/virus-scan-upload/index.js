@@ -2,7 +2,7 @@ const NodeClam = require('clamscan');
 const { Readable } = require('stream');
 const { TIMEOUT } = require('@ukef/dtfs2-common');
 
-const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENABLED } = process.env;
+const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED } = process.env;
 
 /**
  * Middleware to perform a virus scan on an uploaded file using ClamAV.
@@ -40,7 +40,7 @@ const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENA
  * });
  */
 const virusScanUpload = async (req, res, next) => {
-  if (CLAMAV_SCANNING_ENABLED === 'true' && req.file?.buffer) {
+  if (req.file?.buffer) {
     try {
       const ClamScan = await new NodeClam()
         .init({
