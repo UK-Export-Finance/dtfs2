@@ -915,30 +915,30 @@ module portalUI 'modules/webapps/portal-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
     websiteHealthcheckingMax: websiteHealthcheckingMax
-    COMPANIES_HOUSE_API_URL: keyVault.getSecret('COMPANIES_HOUSE_API_URL')
-    PORTAL_UI_URL: keyVault.getSecret('PORTAL_UI_URL')
-    DEAL_API_URL: keyVault.getSecret('DEAL_API_URL')
-    COMPANIES_HOUSE_API_KEY: keyVault.getSecret('COMPANIES_HOUSE_API_KEY')
-    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
-    PORTAL_API_KEY: keyVault.getSecret('PORTAL_API_KEY')
-    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
-    TFM_API: keyVault.getSecret('TFM_API')
-    TFM_UI_URL: keyVault.getSecret('TFM_UI_URL')
-    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS_CENTRAL_API_URL')
-    DTFS_CENTRAL_API: keyVault.getSecret('DTFS_CENTRAL_API')
-    PDC_INPUTTERS_EMAIL_RECIPIENT: keyVault.getSecret('PDC_INPUTTERS_EMAIL_RECIPIENT')
-    CORS_ORIGIN: keyVault.getSecret('CORS_ORIGIN')
-    AZURE_PORTAL_EXPORT_FOLDER: keyVault.getSecret('AZURE_PORTAL_EXPORT_FOLDER')
-    AZURE_PORTAL_FILESHARE_NAME: keyVault.getSecret('AZURE_PORTAL_FILESHARE_NAME')
-    JWT_SIGNING_KEY: keyVault.getSecret('JWT_SIGNING_KEY')
-    JWT_VALIDATING_KEY: keyVault.getSecret('JWT_VALIDATING_KEY')
-    GOV_NOTIFY_API_KEY: keyVault.getSecret('GOV_NOTIFY_API_KEY')
-    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV_NOTIFY_EMAIL_RECIPIENT')
-    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS_CENTRAL_API_KEY')
-    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL_API_KEY')
-    EXTERNAL_API_URL: keyVault.getSecret('EXTERNAL_API_URL')
-    TFM_API_URL: keyVault.getSecret('TFM_API_URL')
-    UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF_GEF_REPORTING_EMAIL_RECIPIENT')
+    COMPANIES_HOUSE_API_URL: keyVault.getSecret('COMPANIES-HOUSE-API-URL')
+    PORTAL_UI_URL: keyVault.getSecret('PORTAL-UI-URL')
+    DEAL_API_URL: keyVault.getSecret('DEAL-API-URL')
+    COMPANIES_HOUSE_API_KEY: keyVault.getSecret('COMPANIES-HOUSE-API-KEY')
+    SESSION_SECRET: keyVault.getSecret('SESSION-SECRET')
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL-API-KEY')
+    TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
+    TFM_API: keyVault.getSecret('TFM-API')
+    TFM_UI_URL: keyVault.getSecret('TFM-UI-URL')
+    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS-CENTRAL-API-URL')
+    DTFS_CENTRAL_API: keyVault.getSecret('DTFS-CENTRAL-API')
+    PDC_INPUTTERS_EMAIL_RECIPIENT: keyVault.getSecret('PDC-INPUTTERS-EMAIL-RECIPIENT')
+    CORS_ORIGIN: keyVault.getSecret('CORS-ORIGIN')
+    AZURE_PORTAL_EXPORT_FOLDER: keyVault.getSecret('AZURE-PORTAL-EXPORT-FOLDER')
+    AZURE_PORTAL_FILESHARE_NAME: keyVault.getSecret('AZURE-PORTAL-FILESHARE-NAME')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT-SIGNING-KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT-VALIDATING-KEY')
+    GOV_NOTIFY_API_KEY: keyVault.getSecret('GOV-NOTIFY-API-KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV-NOTIFY-EMAIL-RECIPIENT')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS-CENTRAL-API-KEY')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL-API-KEY')
+    EXTERNAL_API_URL: keyVault.getSecret('EXTERNAL-API-URL')
+    TFM_API_URL: keyVault.getSecret('TFM-API-URL')
+    UKEF_GEF_REPORTING_EMAIL_RECIPIENT: keyVault.getSecret('UKEF-GEF-REPORTING-EMAIL-RECIPIENT')
   }
 }
 
@@ -966,11 +966,11 @@ module tfmUI 'modules/webapps/trade-finance-manager-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
-    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF_TFM_API_SYSTEM_KEY')
-    ESTORE_URL: keyVault.getSecret('ESTORE_URL')
-    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
-    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
-    TFM_API_URL: keyVault.getSecret('TFM_API_URL')
+    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF-TFM-API-SYSTEM-KEY')
+    ESTORE_URL: keyVault.getSecret('ESTORE-URL')
+    SESSION_SECRET: keyVault.getSecret('SESSION-SECRET')
+    TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
+    TFM_API_URL: keyVault.getSecret('TFM-API-URL')
   }
 }
 
@@ -999,8 +999,8 @@ module gefUI 'modules/webapps/gef-ui.bicep' = {
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
-    PORTAL_API_KEY: keyVault.getSecret('PORTAL_API_KEY')
-    SESSION_SECRET: keyVault.getSecret('SESSION_SECRET')
+    PORTAL_API_KEY: keyVault.getSecret('PORTAL-API-KEY')
+    SESSION_SECRET: keyVault.getSecret('SESSION-SECRET')
   }
 }
 
@@ -1120,24 +1120,24 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     azureDnsServerIp: azureDnsServerIp
     timeZone: timeZone
     websiteHttploggingRetentionDays: websiteHttploggingRetentionDays
-    AZURE_ACBS_FUNCTION_URL: keyVault.getSecret('AZURE_ACBS_FUNCTION_URL')
-    AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: keyVault.getSecret('AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE')
-    AZURE_PORTAL_STORAGE_ACCESS_KEY: keyVault.getSecret('AZURE_PORTAL_STORAGE_ACCESS_KEY')
-    AZURE_PORTAL_STORAGE_ACCOUNT: keyVault.getSecret('AZURE_PORTAL_STORAGE_ACCOUNT')
-    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS_CENTRAL_API_KEY')
-    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS_CENTRAL_API_URL')
-    ENTRA_ID_CLIENT_ID: keyVault.getSecret('ENTRA_ID_CLIENT_ID')
-    ENTRA_ID_CLIENT_SECRET: keyVault.getSecret('ENTRA_ID_CLIENT_SECRET')
-    ENTRA_ID_CLOUD_INSTANCE: keyVault.getSecret('ENTRA_ID_CLOUD_INSTANCE')
-    ENTRA_ID_REDIRECT_URL: keyVault.getSecret('ENTRA_ID_REDIRECT_URL')
-    ENTRA_ID_TENANT_ID: keyVault.getSecret('ENTRA_ID_TENANT_ID')
-    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL_API_KEY')
-    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV_NOTIFY_EMAIL_RECIPIENT')
-    JWT_SIGNING_KEY: keyVault.getSecret('JWT_SIGNING_KEY')
-    JWT_VALIDATING_KEY: keyVault.getSecret('JWT_VALIDATING_KEY')
-    TFM_API_KEY: keyVault.getSecret('TFM_API_KEY')
-    UKEF_INTERNAL_NOTIFICATION_EMAIL: keyVault.getSecret('UKEF_INTERNAL_NOTIFICATION_EMAIL')
-    UKEF_TFM_API_REPORTS_KEY: keyVault.getSecret('UKEF_TFM_API_REPORTS_KEY')
-    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF_TFM_API_SYSTEM_KEY')
+    AZURE_ACBS_FUNCTION_URL: keyVault.getSecret('AZURE-ACBS-FUNCTION-URL')
+    AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: keyVault.getSecret('AZURE-NUMBER-GENERATOR-FUNCTION-SCHEDULE')
+    AZURE_PORTAL_STORAGE_ACCESS_KEY: keyVault.getSecret('AZURE-PORTAL-STORAGE-ACCESS-KEY')
+    AZURE_PORTAL_STORAGE_ACCOUNT: keyVault.getSecret('AZURE-PORTAL-STORAGE-ACCOUNT')
+    DTFS_CENTRAL_API_KEY: keyVault.getSecret('DTFS-CENTRAL-API-KEY')
+    DTFS_CENTRAL_API_URL: keyVault.getSecret('DTFS-CENTRAL-API-URL')
+    ENTRA_ID_CLIENT_ID: keyVault.getSecret('ENTRA-ID-CLIENT-ID')
+    ENTRA_ID_CLIENT_SECRET: keyVault.getSecret('ENTRA-ID-CLIENT-SECRET')
+    ENTRA_ID_CLOUD_INSTANCE: keyVault.getSecret('ENTRA-ID-CLOUD-INSTANCE')
+    ENTRA_ID_REDIRECT_URL: keyVault.getSecret('ENTRA-ID-REDIRECT-URL')
+    ENTRA_ID_TENANT_ID: keyVault.getSecret('ENTRA-ID-TENANT-ID')
+    EXTERNAL_API_KEY: keyVault.getSecret('EXTERNAL-API-KEY')
+    GOV_NOTIFY_EMAIL_RECIPIENT: keyVault.getSecret('GOV-NOTIFY-EMAIL-RECIPIENT')
+    JWT_SIGNING_KEY: keyVault.getSecret('JWT-SIGNING-KEY')
+    JWT_VALIDATING_KEY: keyVault.getSecret('JWT-VALIDATING-KEY')
+    TFM_API_KEY: keyVault.getSecret('TFM-API-KEY')
+    UKEF_INTERNAL_NOTIFICATION_EMAIL: keyVault.getSecret('UKEF-INTERNAL-NOTIFICATION-EMAIL')
+    UKEF_TFM_API_REPORTS_KEY: keyVault.getSecret('UKEF-TFM-API-REPORTS-KEY')
+    UKEF_TFM_API_SYSTEM_KEY: keyVault.getSecret('UKEF-TFM-API-SYSTEM-KEY')
   }
 }
