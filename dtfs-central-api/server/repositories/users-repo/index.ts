@@ -16,6 +16,7 @@ export const getUserById = async (userId: string): Promise<PortalUser | null> =>
     const user = await usersCollection.findOne({ _id: { $eq: new ObjectId(userId) } });
 
     if (!user) {
+      console.error(`getUserById - failed to find user with the id %s`, userId);
       return null;
     }
 

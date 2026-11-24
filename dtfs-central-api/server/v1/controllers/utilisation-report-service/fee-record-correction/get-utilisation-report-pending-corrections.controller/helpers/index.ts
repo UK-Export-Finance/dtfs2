@@ -18,6 +18,7 @@ export const mapReportToPendingCorrectionsResponseBody = async (report: Utilisat
   const uploadedByUser = await getUserById(report.uploadedByUserId);
 
   if (!uploadedByUser) {
+    console.error(`mapReportToPendingCorrectionsResponseBody - failed to find user with the id %s`, report.uploadedByUserId);
     throw new Error(`Failed to find user with id ${report.uploadedByUserId}`);
   }
 

@@ -45,7 +45,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
     });
   });
 
-  it('throws an error when the report is uploaded but the user is not found', async () => {
+  it('should throw an error when the report is uploaded but the user is not found', async () => {
     // Arrange
     const reportId = 312;
     const uploadedByUserId = mockPortalUser._id.toString();
