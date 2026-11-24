@@ -14,7 +14,7 @@ resource applicationGatewayWafPolicy 'Microsoft.Network/ApplicationGatewayWebApp
   }
   properties: {
     policySettings: {
-      enabledState: 'Enabled'
+      state: 'Enabled'
       mode: 'Prevention'
       requestBodyCheck: false
       maxRequestBodySizeInKb: 128
