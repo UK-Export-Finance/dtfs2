@@ -10,7 +10,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 const statusCheckboxSelectors = dashboardDeals.filters.panel.form.status;
 
-context('Dashboard Deals Cancellation status filter - Deal cancellation feature flag enabled', () => {
+context('Dashboard Deals Cancellation status filter', () => {
   const ALL_DEALS = [];
 
   before(() => {
