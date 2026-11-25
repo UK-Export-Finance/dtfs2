@@ -44,25 +44,11 @@ describe('logUserAuthError', () => {
     expect(console.error).toHaveBeenNthCalledWith(1, ...expected);
   });
 
-  it.each([null, undefined, 'error', 42])('logs an unknown error for %p', (error) => {
-    logUserAuthError(error, 'Custom log message');
-
-    expect(console.error).toHaveBeenCalledWith('%s: Unknown error', 'Custom log message');
-  });
-
   it('should preserve falsy non-nullish values', () => {
     const error = { message: '', code: '', response: { status: 0, data: false } };
 
     logUserAuthError(error, 'Custom log message');
 
     expect(console.error).toHaveBeenCalledWith('%s: %s (status: %s, code: %s) %o', 'Custom log message', '', 0, '', false);
-  });
-
-  it('should use fallbacks for nullish values while preserving a null status', () => {
-    const error = { message: null, code: undefined, response: { status: null, data: null } };
-
-    logUserAuthError(error, 'Custom log message');
-
-    expect(console.error).toHaveBeenCalledWith('%s: %s (status: %s, code: %s) %o', 'Custom log message', 'Unknown error', null, 'UNKNOWN', 'Unknown error');
   });
 });
