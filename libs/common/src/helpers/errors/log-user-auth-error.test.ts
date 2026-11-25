@@ -44,6 +44,12 @@ describe('logUserAuthError', () => {
     expect(console.error).toHaveBeenNthCalledWith(1, ...expected);
   });
 
+  it.each([null, undefined, 'error', 42])('logs an unknown error for %p', (error) => {
+    logUserAuthError(error, 'Custom log message');
+
+    expect(console.error).toHaveBeenCalledWith('%s: Unknown error', 'Custom log message');
+  });
+
   it('should preserve falsy non-nullish values', () => {
     const error = { message: '', code: '', response: { status: 0, data: false } };
 
