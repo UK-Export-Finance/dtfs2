@@ -94,7 +94,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
       return res.redirect(nextAccessCodePage);
     } catch (error) {
-      if (error instanceof Error || axios.isAxiosError(error)) {
+      if (error instanceof Error) {
         const authError = error;
         const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
@@ -157,7 +157,7 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       console.info('Portal-UI - Login and sign-in link sending successful for user %s. Redirecting to /login/check-your-email', user._id);
       return res.redirect('/login/check-your-email');
     } catch (error) {
-      if (error instanceof Error || axios.isAxiosError(error)) {
+      if (error instanceof Error) {
         const authError = error;
         const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
