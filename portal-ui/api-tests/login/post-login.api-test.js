@@ -79,7 +79,12 @@ describe('POST /login', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockRejectedValue({ response: { status: HttpStatusCode.Forbidden } });
+        .mockRejectedValue(
+          Object.assign(new Error('Forbidden'), {
+            isAxiosError: true,
+            response: { status: HttpStatusCode.Forbidden },
+          }),
+        );
     });
 
     it('does not send a sign in link', async () => {
@@ -128,7 +133,12 @@ describe('POST /login', () => {
     it(`should return ${HttpStatusCode.Forbidden} if the sign in link returns ${HttpStatusCode.Forbidden}`, async () => {
       when(api.sendSignInLink)
         .calledWith(token)
-        .mockRejectedValueOnce({ response: { status: HttpStatusCode.Forbidden } });
+        .mockRejectedValueOnce(
+          Object.assign(new Error('Forbidden'), {
+            isAxiosError: true,
+            response: { status: HttpStatusCode.Forbidden },
+          }),
+        );
 
       const { status } = await loginWith({ email: anEmail, password: aPassword });
 
