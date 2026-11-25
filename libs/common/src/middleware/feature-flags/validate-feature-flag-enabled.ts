@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from 'axios';
-import { isPortalFacilityAmendmentsFeatureFlagEnabled, isTfmDealCancellationFeatureFlagEnabled } from '@ukef/helpers';
+import { isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/helpers';
 import { FeatureFlag, isPortal2FAFeatureFlagEnabled } from '@ukef/helpers/is-feature-flag-enabled';
 
 /**
@@ -39,13 +39,6 @@ export const generateFrontendFeatureFlagMiddleware =
 
     return next();
   };
-
-/**
- * Backend middleware to check if the deal cancellation feature flag is enabled
- */
-export const validateDealCancellationEnabled = generateBackendFeatureFlagMiddleware('FF_TFM_DEAL_CANCELLATION_ENABLED', () =>
-  isTfmDealCancellationFeatureFlagEnabled(),
-);
 
 /**
  * Backend middleware to check if the portal amendments feature flag is enabled

@@ -52,187 +52,159 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
   });
 
-  describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-    beforeEach(() => {
-      process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-    });
+  beforeEach(() => {
+    submitDealCancellationMock.mockResolvedValue({
+      cancelledDealUkefId: ukefDealId,
+      riskExpiredFacilityUkefIds: ukefFacilityIds,
+    } as TfmDealCancellationResponse);
+  });
 
-    afterAll(() => {
-      process.env = originalProcessEnv;
-    });
+  afterAll(() => {
+    process.env = originalProcessEnv;
+  });
 
-    it('returns a 404 response for an authenticated user with a valid id path', async () => {
-      // Arrange
-      const url = getSubmitTfmDealCancellationUrl({ id: validId });
+  withTeamAuthorisationTests({
+    allowedTeams: [TEAM_IDS.PIM],
+    getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+    makeRequestAsUser: (user: TestUser) =>
+      as(user)
+        .post(aValidPayload())
+        .to(getSubmitTfmDealCancellationUrl({ id: validId })),
+    successStatusCode: 200,
+  });
 
-      // Act
-      const response = await as(aPimUser).post(aValidPayload()).to(url);
+  it('returns a 401 response when user is not authenticated', async () => {
+    // Arrange
+    const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
-      // Assert
-      expect(response.status).toEqual(404);
+    // Act
+    const response = await post(aValidPayload()).to(url);
+
+    // Assert
+    expect(response.status).toEqual(401);
+  });
+
+  it('returns a 400 response when the id path param is invalid', async () => {
+    // Arrange
+    const url = getSubmitTfmDealCancellationUrl({ id: 'invalid' });
+
+    // Act
+    const response = await as(aPimUser).post(aValidPayload()).to(url);
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
+  });
+
+  it('returns a 400 response when the payload is invalid', async () => {
+    // Arrange
+    const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+    // Act
+    const response = await as(aPimUser).post({}).to(url);
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
+  });
+
+  it('calls api.submitDealCancellation with the correct parameters', async () => {
+    // Arrange
+    const url = getSubmitTfmDealCancellationUrl({ id: validId });
+    const cancellation = aValidPayload();
+
+    // Act
+    await as(aPimUser).post(cancellation).to(url);
+
+    // Assert
+    expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
+    expect(submitDealCancellationMock).toHaveBeenCalledWith({
+      dealId: validId,
+      cancellation,
+      auditDetails: expect.any(Object) as object,
     });
   });
 
-  describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-    beforeEach(() => {
-      process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
-      jest.clearAllMocks();
-    });
+  it('returns 500 if an unknown error is thrown', async () => {
+    // Arrange
+    submitDealCancellationMock.mockRejectedValueOnce(new Error('An error occurred'));
 
-    beforeEach(() => {
-      submitDealCancellationMock.mockResolvedValue({
-        cancelledDealUkefId: ukefDealId,
-        riskExpiredFacilityUkefIds: ukefFacilityIds,
-      } as TfmDealCancellationResponse);
-    });
+    const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
-    afterAll(() => {
-      process.env = originalProcessEnv;
-    });
+    // Act
+    const response = await as(aPimUser).post(aValidPayload()).to(url);
 
-    withTeamAuthorisationTests({
-      allowedTeams: [TEAM_IDS.PIM],
-      getUserWithTeam: (team) => testUsers().withTeam(team).one(),
-      makeRequestAsUser: (user: TestUser) =>
-        as(user)
-          .post(aValidPayload())
-          .to(getSubmitTfmDealCancellationUrl({ id: validId })),
-      successStatusCode: 200,
-    });
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.InternalServerError);
+    expect(response.body).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Failed to submit deal cancellation' });
+  });
 
-    it('returns a 401 response when user is not authenticated', async () => {
+  it('returns correct status & message if an ApiError is thrown', async () => {
+    // Arrange
+    const errorStatus = HttpStatusCode.BadRequest;
+    const errorMessage = 'An error occurred';
+    submitDealCancellationMock.mockRejectedValueOnce(new TestApiError({ status: errorStatus, message: errorMessage }));
+
+    const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+    // Act
+    const response = await as(aPimUser).post(aValidPayload()).to(url);
+
+    // Assert
+    expect(response.status).toEqual(errorStatus);
+    expect(response.body).toEqual({ status: errorStatus, message: `Failed to submit deal cancellation: ${errorMessage}` });
+  });
+
+  describe('when the deal and facilities are fetched successfully', () => {
+    it('sends correct email when effective date is today', async () => {
       // Arrange
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
-      // Act
-      const response = await post(aValidPayload()).to(url);
-
-      // Assert
-      expect(response.status).toEqual(401);
-    });
-
-    it('returns a 400 response when the id path param is invalid', async () => {
-      // Arrange
-      const url = getSubmitTfmDealCancellationUrl({ id: 'invalid' });
+      const payload = { ...aValidPayload(), effectiveFrom: new Date().valueOf() };
 
       // Act
-      const response = await as(aPimUser).post(aValidPayload()).to(url);
+      await as(aPimUser).post(payload).to(url);
 
       // Assert
-      expect(response.status).toEqual(HttpStatusCode.BadRequest);
-    });
-
-    it('returns a 400 response when the payload is invalid', async () => {
-      // Arrange
-      const url = getSubmitTfmDealCancellationUrl({ id: validId });
-
-      // Act
-      const response = await as(aPimUser).post({}).to(url);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.BadRequest);
-    });
-
-    it('calls api.submitDealCancellation with the correct parameters', async () => {
-      // Arrange
-      const url = getSubmitTfmDealCancellationUrl({ id: validId });
-      const cancellation = aValidPayload();
-
-      // Act
-      await as(aPimUser).post(cancellation).to(url);
-
-      // Assert
-      expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
-      expect(submitDealCancellationMock).toHaveBeenCalledWith({
-        dealId: validId,
-        cancellation,
-        auditDetails: expect.any(Object) as object,
-      });
-    });
-
-    it('returns 500 if an unknown error is thrown', async () => {
-      // Arrange
-      submitDealCancellationMock.mockRejectedValueOnce(new Error('An error occurred'));
-
-      const url = getSubmitTfmDealCancellationUrl({ id: validId });
-
-      // Act
-      const response = await as(aPimUser).post(aValidPayload()).to(url);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.InternalServerError);
-      expect(response.body).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Failed to submit deal cancellation' });
-    });
-
-    it('returns correct status & message if an ApiError is thrown', async () => {
-      // Arrange
-      const errorStatus = HttpStatusCode.BadRequest;
-      const errorMessage = 'An error occurred';
-      submitDealCancellationMock.mockRejectedValueOnce(new TestApiError({ status: errorStatus, message: errorMessage }));
-
-      const url = getSubmitTfmDealCancellationUrl({ id: validId });
-
-      // Act
-      const response = await as(aPimUser).post(aValidPayload()).to(url);
-
-      // Assert
-      expect(response.status).toEqual(errorStatus);
-      expect(response.body).toEqual({ status: errorStatus, message: `Failed to submit deal cancellation: ${errorMessage}` });
-    });
-
-    describe('when the deal and facilities are fetched successfully', () => {
-      it('sends correct email when effective date is today', async () => {
-        // Arrange
-        const url = getSubmitTfmDealCancellationUrl({ id: validId });
-
-        const payload = { ...aValidPayload(), effectiveFrom: new Date().valueOf() };
-
-        // Act
-        await as(aPimUser).post(payload).to(url);
-
-        // Assert
-        expect(sendEmailMock).toHaveBeenCalledTimes(1);
-        expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
-          bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
-          effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
-          cancelReason: payload.reason,
-          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+      expect(sendEmailMock).toHaveBeenCalledTimes(1);
+      expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
+        bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+        effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+        cancelReason: payload.reason,
+        formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
  2. Facility ID ${ukefFacilityIds[1]}`,
-          ukefDealId,
-        });
+        ukefDealId,
       });
+    });
 
-      it('sends correct email when effective date is in the future', async () => {
-        // Arrange
-        const url = getSubmitTfmDealCancellationUrl({ id: validId });
+    it('sends correct email when effective date is in the future', async () => {
+      // Arrange
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
-        const payload = { ...aValidPayload(), effectiveFrom: add(new Date(), { days: 2 }).valueOf() };
+      const payload = { ...aValidPayload(), effectiveFrom: add(new Date(), { days: 2 }).valueOf() };
 
-        // Act
-        await as(aPimUser).post(payload).to(url);
+      // Act
+      await as(aPimUser).post(payload).to(url);
 
-        // Assert
-        expect(sendEmailMock).toHaveBeenCalledTimes(1);
-        expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
-          bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
-          effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
-          cancelReason: payload.reason,
-          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+      // Assert
+      expect(sendEmailMock).toHaveBeenCalledTimes(1);
+      expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
+        bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+        effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+        cancelReason: payload.reason,
+        formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
  2. Facility ID ${ukefFacilityIds[1]}`,
-          ukefDealId,
-        });
+        ukefDealId,
       });
+    });
 
-      it('returns 200 for an authenticated user', async () => {
-        // Arrange
-        const url = getSubmitTfmDealCancellationUrl({ id: validId });
+    it('returns 200 for an authenticated user', async () => {
+      // Arrange
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
-        // Act
-        const response = await as(aPimUser).post(aValidPayload()).to(url);
+      // Act
+      const response = await as(aPimUser).post(aValidPayload()).to(url);
 
-        // Assert
-        expect(response.status).toEqual(HttpStatusCode.Ok);
-      });
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
   });
 });

@@ -11,7 +11,7 @@ import api from '@tfm-ui/api';
 import { mockRes } from '@tfm-ui/test-mocks';
 import { getTask } from '@tfm-ui/controllers/helpers';
 import mapAssignToSelectOptions from '@tfm-ui/helpers/map-assign-to-select-options';
-import { isDealCancellationEnabled, isDealCancellationEnabledForUser } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled, isUserAllowedToCancelDeal } from '@tfm-ui/controllers/helpers/deal-cancellation-enabled.helper';
 import caseController from '.';
 
 const mockGetDealSuccessBannerMessage = jest.fn();
@@ -22,8 +22,8 @@ jest.mock('../helpers/get-success-banner-message.helper', () => ({
 
 jest.mock('../helpers/deal-cancellation-enabled.helper', () => ({
   ...jest.requireActual('../helpers/deal-cancellation-enabled.helper'),
-  isDealCancellationEnabledForUser: jest.fn().mockReturnValue(false),
-  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
+  isUserAllowedToCancelDeal: jest.fn().mockReturnValue(false),
+  canSubmissionTypeBeCancelled: jest.fn().mockReturnValue(false),
 }));
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -155,13 +155,13 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
         it('should check whether deal cancellation is enabled', async () => {
           await caseController.getCaseDeal(req, res);
 
-          expect(isDealCancellationEnabledForUser).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user);
+          expect(isUserAllowedToCancelDeal).toHaveBeenCalledWith(session.user);
         });
 
         describe('when deal cancellation is enabled', () => {
           beforeEach(() => {
-            jest.mocked(isDealCancellationEnabledForUser).mockReturnValue(true);
-            jest.mocked(isDealCancellationEnabled).mockReturnValue(true);
+            jest.mocked(isUserAllowedToCancelDeal).mockReturnValue(true);
+            jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(true);
           });
 
           describe('when the deal can still be cancelled', () => {
@@ -227,8 +227,8 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
 
         describe('when deal cancellation is disabled', () => {
           it('should render the template with showDealCancelButton=false', async () => {
-            jest.mocked(isDealCancellationEnabledForUser).mockReturnValue(false);
-            jest.mocked(isDealCancellationEnabled).mockReturnValue(false);
+            jest.mocked(isUserAllowedToCancelDeal).mockReturnValue(false);
+            jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(false);
 
             await caseController.getCaseDeal(req, res);
 

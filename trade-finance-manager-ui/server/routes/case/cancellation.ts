@@ -3,14 +3,13 @@ import { TEAM_IDS } from '@ukef/dtfs2-common';
 import { getReasonForCancelling, postReasonForCancelling } from '@tfm-ui/controllers/case/cancellation/reason-for-cancelling.controller';
 import { getBankRequestDate, postBankRequestDate } from '@tfm-ui/controllers/case/cancellation/bank-request-date.controller';
 import { validateUserTeam } from '@tfm-ui/middleware';
-import { validateDealCancellationEnabled } from '@tfm-ui/middleware/feature-flags/deal-cancellation';
 import { getEffectiveFromDate, postEffectiveFromDate } from '@tfm-ui/controllers/case/cancellation/effective-from-date.controller';
 import { getCancelCancellation, postCancelCancellation } from '@tfm-ui/controllers/case/cancellation/cancel-cancellation.controller';
 import { getDealCancellationDetails, postDealCancellationDetails } from '@tfm-ui/controllers/case/cancellation/check-details.controller';
 
 export const cancellationRouter = Router();
 
-cancellationRouter.use(validateDealCancellationEnabled, validateUserTeam([TEAM_IDS.PIM]));
+cancellationRouter.use(validateUserTeam([TEAM_IDS.PIM]));
 
 /**
  * @openapi

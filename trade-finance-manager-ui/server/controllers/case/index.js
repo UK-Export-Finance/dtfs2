@@ -12,14 +12,7 @@ const {
   isFutureEffectiveDate,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const {
-  getTask,
-  showAmendmentButton,
-  ukefDecisionRejected,
-  isDealCancellationEnabledForUser,
-  canDealBeCancelled,
-  isDealCancellationInDraft,
-} = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, isUserAllowedToCancelDeal, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
@@ -78,12 +71,12 @@ const getCaseDeal = async (req, res) => {
 
     const { dealSnapshot } = deal;
 
-    const dealCancellationIsEnabled = isDealCancellationEnabledForUser(dealSnapshot.submissionType, user);
+    const canUserCancelDeal = isUserAllowedToCancelDeal(user);
 
     let showDealCancelButton = false;
     let hasDraftCancellation = false;
 
-    if (dealCancellationIsEnabled) {
+    if (canUserCancelDeal) {
       const cancellation = await api.getDealCancellation(dealId, userToken);
       showDealCancelButton = canDealBeCancelled(cancellation.status);
       hasDraftCancellation = isDealCancellationInDraft(cancellation.status);

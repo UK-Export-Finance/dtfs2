@@ -87,110 +87,84 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   });
 
   describe('POST /v1/tfm/deals/:dealId/cancellation/submit', () => {
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-      });
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/deals/:dealId/cancellation/submit',
+      makeRequest: (url) => testApi.post({ cancellation, auditDetails }).to(url),
+    });
 
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
+    it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
+      const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-      it('should return 404', async () => {
-        const { status } = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
+      expect(submitCancellationResponse.body).toEqual({
+        cancelledDealUkefId: ukefDealId,
+        riskExpiredFacilityUkefIds: [ukefFacilityId],
+      } as TfmDealCancellationResponse);
+      expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
+    });
 
-        expect(status).toEqual(HttpStatusCode.NotFound);
+    it('should return 404 if deal is valid but the existing cancellation does not match the passed in params', async () => {
+      const differentDealCancellationDetails = { ...cancellation, reason: 'a different reason' };
+
+      const submitCancellationResponse = await testApi.post({ cancellation: differentDealCancellationDetails, auditDetails }).to(submitDealCancellationUrl);
+
+      expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+      expect(submitCancellationResponse.body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Deal not found: ${dealId}`,
       });
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
+    it('should return 404 if dealId is valid but not associated to a deal', async () => {
+      const validButNonExistentDealId = new ObjectId();
+
+      const submitCancellationResponse = await testApi
+        .post({ cancellation, auditDetails })
+        .to(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation/submit`);
+
+      expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+      expect(submitCancellationResponse.body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Deal not found: ${validButNonExistentDealId.toString()}`,
       });
+    });
 
-      afterAll(() => {
-        jest.resetAllMocks();
+    it('should return 400 if invalid dealId', async () => {
+      const invalidDealId = '1234';
+
+      const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation/submit`);
+      expect(submitCancellationResponse.status).toEqual(400);
+      expect(submitCancellationResponse.body).toEqual({
+        code: 'INVALID_MONGO_ID_PATH_PARAMETER',
+        message: "Expected path parameter 'dealId' to be a valid mongo id",
       });
+    });
 
-      withMongoIdPathParameterValidationTests({
-        baseUrl: '/v1/tfm/deals/:dealId/cancellation/submit',
-        makeRequest: (url) => testApi.post({ cancellation, auditDetails }).to(url),
+    it('should return 400 if auditDetails are valid but do not correspond to a user', async () => {
+      const invalidAuditDetails = generateTfmAuditDetails(new ObjectId());
+
+      const submitCancellationResponse = await testApi
+        .post({ cancellation, auditDetails: invalidAuditDetails })
+        .to(`/v1/tfm/deals/${dealId}/cancellation/submit`);
+
+      expect(submitCancellationResponse.status).toEqual(400);
+      expect(submitCancellationResponse.body).toEqual({
+        code: 'INVALID_AUDIT_DETAILS',
+        message: `Supplied auditDetails 'id' ${invalidAuditDetails.id.toString()} does not correspond to a valid user`,
+        status: 400,
       });
+    });
 
-      it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
-        const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
+    it('should return 400 if the payload is invalid', async () => {
+      const invalidPayload = {
+        reason: '',
+        bankRequestDate: new Date().valueOf(),
+        effectiveFrom: undefined,
+      };
 
-        expect(submitCancellationResponse.body).toEqual({
-          cancelledDealUkefId: ukefDealId,
-          riskExpiredFacilityUkefIds: [ukefFacilityId],
-        } as TfmDealCancellationResponse);
-        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
-      });
+      const submitCancellationResponse = await testApi.post({ cancellation: invalidPayload, auditDetails }).to(submitDealCancellationUrl);
 
-      it('should return 404 if deal is valid but the existing cancellation does not match the passed in params', async () => {
-        const differentDealCancellationDetails = { ...cancellation, reason: 'a different reason' };
-
-        const submitCancellationResponse = await testApi.post({ cancellation: differentDealCancellationDetails, auditDetails }).to(submitDealCancellationUrl);
-
-        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
-        expect(submitCancellationResponse.body).toEqual({
-          status: HttpStatusCode.NotFound,
-          message: `Deal not found: ${dealId}`,
-        });
-      });
-
-      it('should return 404 if dealId is valid but not associated to a deal', async () => {
-        const validButNonExistentDealId = new ObjectId();
-
-        const submitCancellationResponse = await testApi
-          .post({ cancellation, auditDetails })
-          .to(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation/submit`);
-
-        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
-        expect(submitCancellationResponse.body).toEqual({
-          status: HttpStatusCode.NotFound,
-          message: `Deal not found: ${validButNonExistentDealId.toString()}`,
-        });
-      });
-
-      it('should return 400 if invalid dealId', async () => {
-        const invalidDealId = '1234';
-
-        const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation/submit`);
-        expect(submitCancellationResponse.status).toEqual(400);
-        expect(submitCancellationResponse.body).toEqual({
-          code: 'INVALID_MONGO_ID_PATH_PARAMETER',
-          message: "Expected path parameter 'dealId' to be a valid mongo id",
-        });
-      });
-
-      it('should return 400 if auditDetails are valid but do not correspond to a user', async () => {
-        const invalidAuditDetails = generateTfmAuditDetails(new ObjectId());
-
-        const submitCancellationResponse = await testApi
-          .post({ cancellation, auditDetails: invalidAuditDetails })
-          .to(`/v1/tfm/deals/${dealId}/cancellation/submit`);
-
-        expect(submitCancellationResponse.status).toEqual(400);
-        expect(submitCancellationResponse.body).toEqual({
-          code: 'INVALID_AUDIT_DETAILS',
-          message: `Supplied auditDetails 'id' ${invalidAuditDetails.id.toString()} does not correspond to a valid user`,
-          status: 400,
-        });
-      });
-
-      it('should return 400 if the payload is invalid', async () => {
-        const invalidPayload = {
-          reason: '',
-          bankRequestDate: new Date().valueOf(),
-          effectiveFrom: undefined,
-        };
-
-        const submitCancellationResponse = await testApi.post({ cancellation: invalidPayload, auditDetails }).to(submitDealCancellationUrl);
-
-        expect(submitCancellationResponse.status).toEqual(400);
-        expect(submitCancellationResponse.body).toHaveProperty('code', API_ERROR_CODE.INVALID_PAYLOAD);
-      });
+      expect(submitCancellationResponse.status).toEqual(400);
+      expect(submitCancellationResponse.body).toHaveProperty('code', API_ERROR_CODE.INVALID_PAYLOAD);
     });
   });
 });

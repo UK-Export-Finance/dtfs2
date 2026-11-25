@@ -2,7 +2,6 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const { validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
 const {
   validatePutFacilityAmendmentPayload,
   validatePostFacilityAmendmentPayload,
@@ -673,7 +672,7 @@ tfmRouter
  */
 tfmRouter
   .route('/deals/:dealId/cancellation')
-  .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
+  .all(validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
   .put(validatePutDealCancellationPayload, tfmPutUpdateDealCancellationController.updateTfmDealCancellation)
   .get(tfmGetDealCancellationController.getTfmDealCancellation)
   .delete(validateDeleteDealCancellationPayload, tfmDeleteDealCancellationController.deleteTfmDealCancellation);
@@ -718,7 +717,6 @@ tfmRouter
 tfmRouter
   .route('/deals/:dealId/cancellation/submit')
   .post(
-    validateDealCancellationEnabled,
     validation.mongoIdValidation('dealId'),
     handleExpressValidatorResult,
     validatePostSubmitDealCancellationPayload,

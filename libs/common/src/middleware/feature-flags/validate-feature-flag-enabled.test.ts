@@ -1,19 +1,11 @@
 import { RequestHandler } from 'express';
 import { createMocks } from 'node-mocks-http';
 import * as featureFlags from '@ukef/helpers/is-feature-flag-enabled';
-import {
-  validateDealCancellationEnabled,
-  validatePortalFacilityAmendmentsEnabled,
-  validatePortal2FAFeatureFlagIsEnabled,
-} from './validate-feature-flag-enabled';
+import { validatePortalFacilityAmendmentsEnabled, validatePortal2FAFeatureFlagIsEnabled } from './validate-feature-flag-enabled';
 
 describe('feature flag middleware', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-  });
-
-  describe('validateDealCancellationEnabled', () => {
-    withBackendMiddlewareFeatureFlagTests('isTfmDealCancellationFeatureFlagEnabled', validateDealCancellationEnabled);
   });
 
   describe('validatePortalFacilityAmendmentsEnabled', () => {
