@@ -164,6 +164,13 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
             jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(true);
           });
 
+          it('fetches cancellation data for an eligible submission type', async () => {
+            await caseController.getCaseDeal(req, res);
+
+            expect(canSubmissionTypeBeCancelled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN);
+            expect(api.getDealCancellation).toHaveBeenCalledWith(mockDeal._id, token);
+          });
+
           describe('when the deal can still be cancelled', () => {
             it('should render the template with showDealCancelButton=true', async () => {
               jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: DRAFT });
@@ -228,14 +235,34 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
         describe('when deal cancellation is disabled', () => {
           it('should render the template with showDealCancelButton=false', async () => {
             jest.mocked(isUserAllowedToCancelDeal).mockReturnValue(false);
-            jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(false);
+            jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(true);
 
             await caseController.getCaseDeal(req, res);
 
+            expect(api.getDealCancellation).not.toHaveBeenCalled();
             expect(res.render).toHaveBeenCalledWith(
               'case/deal/deal.njk',
               expect.objectContaining({
                 showDealCancelButton: false,
+                hasDraftCancellation: false,
+              }),
+            );
+          });
+
+          it('renders an MIA deal without fetching cancellation data for an allowed user', async () => {
+            jest.mocked(isUserAllowedToCancelDeal).mockReturnValue(true);
+            jest.mocked(canSubmissionTypeBeCancelled).mockReturnValue(false);
+            api.getDeal = () => Promise.resolve({ ...mockDeal, dealSnapshot: { ...mockDeal.dealSnapshot, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(canSubmissionTypeBeCancelled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.MIA);
+            expect(api.getDealCancellation).not.toHaveBeenCalled();
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                showDealCancelButton: false,
+                hasDraftCancellation: false,
               }),
             );
           });

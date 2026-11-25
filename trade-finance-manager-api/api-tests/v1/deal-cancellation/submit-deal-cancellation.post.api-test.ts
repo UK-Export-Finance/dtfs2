@@ -53,6 +53,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     submitDealCancellationMock.mockResolvedValue({
       cancelledDealUkefId: ukefDealId,
       riskExpiredFacilityUkefIds: ukefFacilityIds,
