@@ -45,6 +45,12 @@ export const mapUtilisationReportEntityToGetUtilisationReportResponse = async (
   assertAllUploadFieldsArePopulated(reportEntity);
 
   const uploadedByUser = await getUserById(reportEntity.uploadedByUserId);
+
+  if (!uploadedByUser) {
+    console.error(`mapUtilisationReport - failed to find user with the id %s`, reportEntity.uploadedByUserId);
+    throw new Error(`Failed to find user with id ${reportEntity.uploadedByUserId}`);
+  }
+
   const responseWithUploadDetails: GetUtilisationReportResponse = {
     ...response,
     dateUploaded: reportEntity.dateUploaded,

@@ -60,12 +60,14 @@ describe('getUserById', () => {
     expect(result).toEqual(mockUser);
   });
 
-  it('should throw an error when no user is found for the id', async () => {
+  it('should return null when no user is found for the provided id', async () => {
     // Arrange
     findOneMock.mockResolvedValue(null);
 
     // Act & Assert
-    await expect(getUserById(userId.toString())).rejects.toThrow(`Failed to find user with id ${userId.toString()}`);
+    const result = await getUserById(userId.toString());
+
+    expect(result).toBeNull();
   });
 
   it('should call console.error and rethrow if a database error occurs', async () => {

@@ -66,12 +66,12 @@ describe('validateOTPAndSignIn', () => {
     jest.resetAllMocks();
   });
 
-  describe('when getUserById rejects because the user does not exist', () => {
+  describe('when getUserById returns null because the user does not exist', () => {
     beforeEach(() => {
-      jest.mocked(getUserById).mockRejectedValue(new Error(`Failed to find user with id ${userId}`));
+      jest.mocked(getUserById).mockResolvedValue(null);
     });
 
-    it(`should respond with ${HttpStatusCode.InternalServerError} and the not found error message`, async () => {
+    it(`should respond with ${HttpStatusCode.NotFound} and a not found message`, async () => {
       // Arrange
       const res = getMockResponse();
 
@@ -79,8 +79,8 @@ describe('validateOTPAndSignIn', () => {
       await invokeController({ userId, signInOTPCode, auditDetails }, res);
 
       // Assert
-      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.InternalServerError);
-      expect(res.send).toHaveBeenNthCalledWith(1, { message: `Failed to find user with id ${userId}` });
+      expect(res.status).toHaveBeenNthCalledWith(1, HttpStatusCode.NotFound);
+      expect(res.send).toHaveBeenNthCalledWith(1, { message: 'User not found', notFound: true });
     });
   });
 
