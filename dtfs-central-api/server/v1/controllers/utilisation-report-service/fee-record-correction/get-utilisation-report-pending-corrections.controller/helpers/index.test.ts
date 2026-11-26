@@ -69,16 +69,16 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
           .build();
       });
 
-      describe('and when finding the user errors', () => {
-        const mockError = new Error('Could not find user');
-
+      describe('and when the user is not found', () => {
         beforeEach(() => {
-          jest.mocked(getUserById).mockRejectedValue(mockError);
+          jest.mocked(getUserById).mockResolvedValue(null);
         });
 
-        it('should rethrow the error', async () => {
+        it('should throw an error indicating the user could not be found', async () => {
           // Act & Assert
-          await expect(mapReportToPendingCorrectionsResponseBody(report, aBank())).rejects.toThrow(mockError);
+          await expect(mapReportToPendingCorrectionsResponseBody(report, aBank())).rejects.toThrow(
+            new Error(`Failed to find user with id ${report.uploadedByUserId}`),
+          );
         });
       });
 
