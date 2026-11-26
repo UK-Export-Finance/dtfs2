@@ -3,6 +3,9 @@
 This document describes how to deploy to the development, feature, staging, and
 production environments.
 
+For merging release changes and tagged release history back to `main`, see
+[Merging releases back to main](./merging-releases-to-main.md).
+
 ## Dev and feature environments
 
 Development and feature environments are deployed automatically each day:
