@@ -79,12 +79,7 @@ describe('POST /login', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockRejectedValue(
-          Object.assign(new Error('Forbidden'), {
-            isAxiosError: true,
-            response: { status: HttpStatusCode.Forbidden },
-          }),
-        );
+        .mockRejectedValue({ response: { status: HttpStatusCode.Forbidden } });
     });
 
     it('does not send a sign in link', async () => {

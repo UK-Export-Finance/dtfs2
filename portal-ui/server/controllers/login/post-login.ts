@@ -1,5 +1,5 @@
-import axios, { HttpStatusCode } from 'axios';
-import { isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { AuthErrorObject, isPortal2FAFeatureFlagEnabled, logUserAuthError } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import type { Response } from 'express';
 
@@ -94,9 +94,9 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
       return res.redirect(nextAccessCodePage);
     } catch (error) {
-      if (error instanceof Error) {
-        const authError = error;
-        const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+      if (typeof error === 'object' && error !== null) {
+        const authError: AuthErrorObject = error;
+        const status = authError.response?.status;
 
         if (!loginApiOtpSucceeded) {
           const message = 'Failed to login';
@@ -130,6 +130,9 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
 
         return res.render('_partials/problem-with-service.njk');
       }
+
+      console.error('Unexpected error during login: %o', error);
+      return res.render('_partials/problem-with-service.njk');
     }
   } else {
     let loginApiLinkSucceeded = false;
@@ -157,9 +160,9 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
       console.info('Portal-UI - Login and sign-in link sending successful for user %s. Redirecting to /login/check-your-email', user._id);
       return res.redirect('/login/check-your-email');
     } catch (error) {
-      if (error instanceof Error) {
-        const authError = error;
-        const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+      if (typeof error === 'object' && error !== null) {
+        const authError: AuthErrorObject = error;
+        const status = authError.response?.status;
 
         if (!loginApiLinkSucceeded) {
           const message = 'Failed to login';
@@ -192,6 +195,10 @@ export const postLogin = async (req: PostLoginRequest, res: Response) => {
         // Continue login flow so the user can retry sending sign-in link
         return res.redirect('/login/check-your-email');
       }
+
+      // Fallback for strings, numbers, null, etc.
+      console.error('Unexpected error during login: %o', error);
+      return res.render('_partials/problem-with-service.njk');
     }
   }
 };
