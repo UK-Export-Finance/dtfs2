@@ -301,6 +301,15 @@ describe('postLogin', () => {
           expect(req.session.numberOfSignInOtpAttemptsRemaining).toEqual(-1);
           expect(res.redirect).toHaveBeenNthCalledWith(1, '/login/temporarily-suspended-access-code');
         });
+
+        it('should handle non-object errors gracefully', async () => {
+          const nonObjectError = 'Some error';
+          jest.mocked(api.login).mockRejectedValue(nonObjectError);
+
+          await postLogin(req, res);
+
+          expect(console.error).toHaveBeenNthCalledWith(1, 'Unexpected error during login: %o', nonObjectError);
+        });
       });
     });
   });
