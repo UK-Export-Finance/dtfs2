@@ -36,7 +36,6 @@ describe('postLogin', () => {
     res = {
       render: jest.fn(),
       redirect: jest.fn(),
-      status: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
     jest.mocked(api.getPortalBankList).mockResolvedValue([]);
