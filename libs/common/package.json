@@ -71,7 +71,7 @@
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
@@ -117,14 +117,14 @@
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "jest-when": "^4.0.3",
-    "supertest": "^7.3.0",
+    "supertest": "^7.3.1",
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3",
     "typescript-eslint": "8.71.1"
   },
   "engines": {
-    "node": ">=24.17.0",
-    "npm": ">=11.3.0"
+    "node": ">=24.22.1",
+    "npm": ">=11.19.1"
   },
   "engineStrict": true
 }

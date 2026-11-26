@@ -1,4 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
+import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { validateUtilisationReportCsvData } from '.';
 import { validateHeaders } from './utilisation-report-cell-validators/validate-csv-data/headers';
 import { validateCells } from './utilisation-report-cell-validators/validate-csv-data/cells';
@@ -15,6 +16,16 @@ jest.mock('./utilisation-report-cell-validators', () => ({
 }));
 
 describe('services/utilisation-report-data-validator', () => {
+  const ukefGefFacilitiesExistSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilitiesExist');
+
+  beforeEach(() => {
+    ukefGefFacilitiesExistSpy.mockResolvedValue({ '20001371': true, '20001372': true });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   const csvData = [
     {
       'ukef facility id': { value: '20001371', column: 'B', row: 1 },

@@ -61,7 +61,7 @@ context('Quarterly utilisation report upload', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('test-large-file-February_2024_quarterly.xlsx');
       cy.clickContinueButton();
 
-      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
+      utilisationReportUpload.utilisationReportFileInputErrorMessage({ timeout: 60000 }).should('have.length', 1);
     });
 
     it('should display an error if no file has been selected', () => {

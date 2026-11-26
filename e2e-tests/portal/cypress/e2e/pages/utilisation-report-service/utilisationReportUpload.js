@@ -2,9 +2,9 @@ const { continueButton } = require('../../partials');
 
 const page = {
   utilisationReportFileInput: () => cy.get('[data-cy="utilisation-report-file-upload"]'),
-  utilisationReportFileInputErrorMessage: () => cy.get('[data-cy="utilisation-report-file-upload-error-message"]'),
+  utilisationReportFileInputErrorMessage: (options) => cy.get('[data-cy="utilisation-report-file-upload-error-message"]', options),
   checkReportTitle: () => cy.get('[data-cy="check-the-report-title"]'),
-  validationErrorTable: () => cy.get('[data-cy="validation-errors-table"]'),
+  validationErrorTable: (options) => cy.get('[data-cy="validation-errors-table"]', options),
   validationErrorTableRows: () => cy.get('[data-cy="validation-errors-table-row"]'),
   validationErrorMessage: (errorIndex) => cy.get(`[data-cy="validation-errors-table-row"] [data-cy="message-${errorIndex}"]`),
   validationErrorExporter: (errorIndex) => cy.get(`[data-cy="validation-errors-table-row"] [data-cy="exporter-${errorIndex}"]`),

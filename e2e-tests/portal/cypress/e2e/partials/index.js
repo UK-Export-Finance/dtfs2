@@ -11,7 +11,7 @@ module.exports = {
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   dashboardFilters,
   dashboardSubNavigation,
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  errorSummary: (options) => cy.get('[data-cy="error-summary"]', options),
   errorSummaryLink: () => cy.get('[data-cy="error-summary-link"]'),
   errorSummaryLinks: () => cy.get('.govuk-error-summary__list a'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),

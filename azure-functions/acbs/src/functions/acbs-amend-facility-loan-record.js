@@ -67,8 +67,18 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
         loanId,
       };
 
+      /**
+       * A Loan's facility amount is updated on the Facility Master Record, not on the
+       * loan record. When both the value and coverEndDate change, amendment.amount
+       * is set, but the loan mapper only includes expiry fields.
+       *
+       * Checking amendment.amount sent that expiry-only payload to the loan amount
+       * endpoint, which rejected it because effectiveDate and amountAmendment were
+       * missing. Check flrMapped.amountAmendment instead so we skip the amount call
+       * and still update the loan's expiry date.
+       */
       // 1.3.1 - UKEF Exposure
-      if (amendment.amount) {
+      if (flrMapped.amountAmendment !== undefined) {
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
           facilityIdentifier,

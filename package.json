@@ -1,6 +1,6 @@
 {
   "name": "dtfs",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "private": true,
   "description": "DTFS",
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
@@ -46,7 +46,9 @@
     "start:build": "npm run start -- --build",
     "start:build:detach": "npm run start:build -- --detach",
     "start:detach": "npm run start -- --detach",
-    "stop": "docker compose down",
+    "start-acbs": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local build acbs-local && docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local up -d --no-build acbs-local external-api trade-finance-manager-api",
+    "stop": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local down",
+    "stop-acbs": "docker compose -f docker-compose.yml -f docker-compose.acbs.yml --profile acbs-local stop acbs-local azurite",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "validate:all": "npm run lint:all && npm run prettier:all && npm run type-check:all && npm run validate:yml && npm run validate:md",
     "validate:md": "npx markdownlint-cli --config .markdownlint.json \"**/*.md\"",
@@ -85,7 +87,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "markdownlint-cli": "^0.49.1",
-    "prettier": "3.9.9",
+    "prettier": "3.9.10",
     "sort-package-json": "^4.0.0",
     "typescript-eslint": "8.71.1",
     "wait-on": "^9.5.1",
@@ -94,8 +96,8 @@
     "yaml-lint": "^1.7.0"
   },
   "engines": {
-    "node": ">=24.17.0",
-    "npm": ">=11.3.0"
+    "node": ">=24.22.1",
+    "npm": ">=11.19.1"
   },
   "engineStrict": true
 }
