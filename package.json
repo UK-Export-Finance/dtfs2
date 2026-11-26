@@ -55,7 +55,6 @@
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
   },
   "overrides": {
-    "minimatch": "^11.0.1",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
