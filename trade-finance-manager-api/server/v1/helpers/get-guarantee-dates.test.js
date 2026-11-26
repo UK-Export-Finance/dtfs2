@@ -17,10 +17,35 @@ const unissuedFacility = {
   ukefGuaranteeInMonths: 12,
 };
 
+const unissuedFacilityGuaranteeAsString = {
+  hasBeenIssued: false,
+  ukefGuaranteeInMonths: '12',
+};
+
 describe('Get guarantee dates in TFM', () => {
   describe('When a facility is un-issued / commitment / 06', () => {
     it('Should return the correct dates', () => {
-      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(unissuedFacility, dealSubmissionDate);
+      // Act
+      const result = getGuaranteeDates(unissuedFacility, dealSubmissionDate);
+
+      // Assert
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = result;
+
+      // Deal submission date
+      expect(guaranteeCommencementDate).toEqual(submissionDate);
+      // GCD + Tenor
+      expect(guaranteeExpiryDate).toEqual('2024-01-01');
+      // Deal submission date
+      expect(effectiveDate).toEqual(submissionDate);
+    });
+  });
+  describe('When a facility is un-issued / commitment / 06 with guarantee as string', () => {
+    it('Should return the correct dates', () => {
+      // Act
+      const result = getGuaranteeDates(unissuedFacilityGuaranteeAsString, dealSubmissionDate);
+
+      // Assert
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = result;
 
       // Deal submission date
       expect(guaranteeCommencementDate).toEqual(submissionDate);
@@ -33,7 +58,11 @@ describe('Get guarantee dates in TFM', () => {
 
   describe('when a facility is Issued / 07', () => {
     it('Should return the correct dates', () => {
-      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = getGuaranteeDates(issuedFacility, dealSubmissionDate);
+      // Act
+      const result = getGuaranteeDates(issuedFacility, dealSubmissionDate);
+
+      // Assert
+      const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = result;
 
       // Cover start date
       expect(guaranteeCommencementDate).toEqual('2023-01-01');

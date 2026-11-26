@@ -1,21 +1,9 @@
-import { when } from 'jest-when';
 import { generateUkefFacilityIdError } from './generate-ukef-facility-id-error';
-import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 
 describe('generateUkefFacilityIdError', () => {
   const testExporterName = 'test exporter';
 
-  const gefFacilityExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilityExists');
-
-  beforeEach(() => {
-    gefFacilityExistsSpy.mockResolvedValue(true);
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('returns an error when the value is missing', async () => {
+  it('returns an error when the value is missing', () => {
     // Arrange
     const nullFacilityId = {
       value: null,
@@ -31,14 +19,13 @@ describe('generateUkefFacilityIdError', () => {
     };
 
     // Act
-    const ukefFacilityIdError = await generateUkefFacilityIdError(nullFacilityId, testExporterName);
+    const ukefFacilityIdError = generateUkefFacilityIdError(nullFacilityId, testExporterName);
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
-    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 
-  it('returns an error when the value is not an 8 to 10 digit string', async () => {
+  it('returns an error when the value is not an 8 to 10 digit string', () => {
     // Arrange
     const invalidFacilityId = {
       value: '1234567',
@@ -54,14 +41,13 @@ describe('generateUkefFacilityIdError', () => {
     };
 
     // Act
-    const ukefFacilityIdError = await generateUkefFacilityIdError(invalidFacilityId, testExporterName);
+    const ukefFacilityIdError = generateUkefFacilityIdError(invalidFacilityId, testExporterName);
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
-    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 
-  it('returns an error when the value could not be found in the TFM facilities collection', async () => {
+  it('returns an error when the value could not be found in the TFM facilities collection', () => {
     // Arrange
     const facilityIdValue = '12345678';
 
@@ -69,6 +55,7 @@ describe('generateUkefFacilityIdError', () => {
       value: facilityIdValue,
       column: 'Z',
       row: 1,
+      ukefFacilityIdMatches: false,
     };
     const expectedError = {
       errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
@@ -78,18 +65,14 @@ describe('generateUkefFacilityIdError', () => {
       exporter: testExporterName,
     };
 
-    when(gefFacilityExistsSpy).calledWith(facilityIdValue).mockResolvedValue(false);
-
     // Act
-    const ukefFacilityIdError = await generateUkefFacilityIdError(validFacilityId, testExporterName);
+    const ukefFacilityIdError = generateUkefFacilityIdError(validFacilityId, testExporterName);
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
-    expect(gefFacilityExistsSpy).toHaveBeenCalledTimes(1);
-    expect(gefFacilityExistsSpy).toHaveBeenCalledWith(facilityIdValue);
   });
 
-  it('returns null if the value is a valid UKEF GEF Facility ID', async () => {
+  it('returns null if the value is a valid UKEF GEF Facility ID', () => {
     // Arrange
     const facilityIdValue = '12345678';
 
@@ -100,15 +83,13 @@ describe('generateUkefFacilityIdError', () => {
     };
 
     // Act
-    const ukefFacilityIdError = await generateUkefFacilityIdError(validFacilityId);
+    const ukefFacilityIdError = generateUkefFacilityIdError({ ...validFacilityId, ukefFacilityIdMatches: true });
 
     // Assert
     expect(ukefFacilityIdError).toBeNull();
-    expect(gefFacilityExistsSpy).toHaveBeenCalledTimes(1);
-    expect(gefFacilityExistsSpy).toHaveBeenCalledWith(facilityIdValue);
   });
 
-  it('returns the correct column and row when an error is found', async () => {
+  it('returns the correct column and row when an error is found', () => {
     // Arrange
     const invalidFacilityIdWithDifferentRowAndColumn = {
       value: '1234567',
@@ -124,10 +105,9 @@ describe('generateUkefFacilityIdError', () => {
     };
 
     // Act
-    const ukefFacilityIdError = await generateUkefFacilityIdError(invalidFacilityIdWithDifferentRowAndColumn, testExporterName);
+    const ukefFacilityIdError = generateUkefFacilityIdError(invalidFacilityIdWithDifferentRowAndColumn, testExporterName);
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
-    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 });

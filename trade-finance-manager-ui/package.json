@@ -53,7 +53,7 @@
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "express-rate-limit": "^6.11.2",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
@@ -115,7 +115,7 @@
     "sass": "^1.105.1",
     "sass-loader": "17.0.1",
     "style-loader": "4.0.0",
-    "supertest": "^7.3.0",
+    "supertest": "^7.3.1",
     "terser-webpack-plugin": "^5.6.1",
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3",
@@ -125,8 +125,8 @@
     "webpack-merge": "^6.0.1"
   },
   "engines": {
-    "node": ">=24.17.0",
-    "npm": ">=11.3.0"
+    "node": ">=24.22.1",
+    "npm": ">=11.19.1"
   },
   "engineStrict": true
 }

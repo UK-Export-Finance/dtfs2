@@ -1,36 +1,25 @@
-import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
-import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-for-mismatched-facility-values';
+import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
+import { addErrorOnEveryRow } from '../add-error-on-every-row';
+import { hasMismatch } from '../has-mismatch';
 
 /**
  * generates errors for base currency
  * if the value for base currency in the map does not match the value in the row
- * then call generateErrorsForMismatchedFacilityValues to generate an error for all rows of the same facility id
- * @param existingData - data in the map
- * @param baseCurrencyValue - provided value for base currency
- * @param errors - existing validation errors
- * @param csvData - all csv data
- * @param row - current row to generate errors from
+ * then call addErrorOnEveryRow to generate an error for all rows of the same facility id
+ * @param rows - rows to generate errors for
+ * @param completeRows - all csv data for the facility
  * @returns generated errors
  */
 export const generateBaseCurrencyErrors = (
-  baseCurrencyValue: string,
-  errors: UtilisationReportDataValidationError[],
-  csvData: UtilisationReportCsvRowData[],
-  row: UtilisationReportCsvRowData,
-  existingData?: UtilisationReportFacilityData,
+  rows: UtilisationReportCsvRowData[],
+  completeRows: UtilisationReportCsvRowData[],
 ): UtilisationReportDataValidationError[] => {
-  /**
-   * if the value for base currency in the map does not match the value in the row
-   * call to addMatchingRowErrors to generate an error for all rows of the same facility id
-   */
-  if (existingData?.baseCurrency !== baseCurrencyValue) {
-    const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
-    const field = 'base currency';
+  const field = 'base currency';
+  const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
 
-    const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage);
-
-    errors.push(...generatedErrors);
+  if (!hasMismatch(completeRows, field)) {
+    return [];
   }
 
-  return errors;
+  return addErrorOnEveryRow(rows, field, errorMessage);
 };
