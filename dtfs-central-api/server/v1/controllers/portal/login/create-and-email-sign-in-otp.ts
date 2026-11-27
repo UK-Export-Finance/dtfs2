@@ -22,7 +22,7 @@ export const createAndEmailSignInOTP = async (req: CustomExpressRequest<{ reqBod
   try {
     const { user, auditDetails } = req.body;
 
-    const doesUserExist = user && user._id && user.email && user.firstname && user.surname;
+    const doesUserExist = user && user._id && user.email && user.firstname && user.lastName;
 
     if (!doesUserExist || !auditDetails) {
       console.error('User or auditDetails not found');

@@ -7,7 +7,7 @@ const mockDataLoaderUser = {
   username: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   password: 'AbC!2345',
   firstname: 'Mock',
-  surname: 'DataLoader',
+  lastName: 'DataLoader',
   roles: [ROLES.MAKER, ROLES.ADMIN],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },

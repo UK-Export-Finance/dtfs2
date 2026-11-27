@@ -3,11 +3,11 @@ const CONSTANTS = require('../../../constants');
 const bssEmailVariables = (deal, facilityLists) => {
   const { ukefDealId, name, submissionType, maker, exporter } = deal;
 
-  const { firstname, surname } = maker;
+  const { firstname, lastName } = maker;
 
   const emailVariables = {
     firstname,
-    surname,
+    lastName,
     exporterName: exporter.companyName,
     name,
     ukefDealId,

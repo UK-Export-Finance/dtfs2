@@ -114,8 +114,8 @@ describe('postAbandonPortalFacilityAmendment', () => {
         newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
         newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
         newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
-        makersName: `${mockUser.firstname} ${mockUser.surname}`,
-        checkersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersName: `${mockUser.firstname} ${mockUser.lastName}`,
+        checkersName: `${mockUser.firstname} ${mockUser.lastName}`,
         checkersEmail: mockUser.email,
       },
     });

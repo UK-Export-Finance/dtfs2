@@ -38,7 +38,7 @@ export const mockFacilities: Facility[] = [
     ukefFacilityId: '1234567890',
     unissuedToIssuedByMaker: {
       firstname: 'Mister',
-      surname: 'One',
+      lastName: 'One',
       _id: '61e567d7db41bd65b00bd47a',
     },
   },
@@ -52,7 +52,7 @@ export const mockFacilities: Facility[] = [
     ukefFacilityId: '321',
     unissuedToIssuedByMaker: {
       firstname: 'Mister',
-      surname: 'Two',
+      lastName: 'Two',
       _id: '61e567d7db41bd65b00bd47b',
     },
   },
@@ -74,7 +74,7 @@ export const facilityWithDealId = (dealId: string | ObjectId) => ({
         ukefFacilityId: '1234567890',
         unissuedToIssuedByMaker: {
           firstname: 'Mister',
-          surname: 'One',
+          lastName: 'One',
           _id: '61e567d7db41bd65b00bd47a',
         },
       },

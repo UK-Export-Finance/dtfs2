@@ -36,11 +36,11 @@ describe(page, () => {
       facilityType: FACILITY_TYPE.CASH,
       maker: {
         firstname: 'Maker first',
-        surname: 'Maker last',
+        lastName: 'Maker last',
       },
       checker: {
         firstname: 'Checker first',
-        surname: 'Checker last',
+        lastName: 'Checker last',
       },
     },
     {
@@ -60,11 +60,11 @@ describe(page, () => {
       facilityType: undefined,
       maker: {
         firstname: 'Maker first',
-        surname: 'Maker last',
+        lastName: 'Maker last',
       },
       checker: {
         firstname: 'Checker first',
-        surname: 'Checker last',
+        lastName: 'Checker last',
       },
       amendmentUrl,
     },
@@ -132,14 +132,14 @@ describe(page, () => {
 
     it('should render `changed by` copy', () => {
       const selector = `[data-cy="facility-changed-by-${mockActivityFacility.ukefFacilityId}"]`;
-      const expected = `Changed by ${mockActivityFacility.maker.firstname} ${mockActivityFacility.maker.surname}`;
+      const expected = `Changed by ${mockActivityFacility.maker.firstname} ${mockActivityFacility.maker.lastName}`;
 
       wrapper.expectText(selector).toRead(expected);
     });
 
     it('should render `checked by` copy', () => {
       const selector = `[data-cy="facility-checked-by-${mockActivityFacility.ukefFacilityId}"]`;
-      const expected = `Checked by ${mockActivityFacility.checker.firstname} ${mockActivityFacility.checker.surname}`;
+      const expected = `Checked by ${mockActivityFacility.checker.firstname} ${mockActivityFacility.checker.lastName}`;
 
       wrapper.expectText(selector).toRead(expected);
     });

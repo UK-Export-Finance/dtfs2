@@ -6,7 +6,7 @@ const BASE_PORTAL_USER_SCHEMA = z
   .object({
     username: z.string(),
     firstname: z.string(),
-    surname: z.string(),
+    lastName: z.string(),
     email: z.string(),
     timezone: z.string(),
     roles: z.array(z.string()),

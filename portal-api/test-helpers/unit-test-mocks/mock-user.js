@@ -6,7 +6,7 @@ const BASE_TEST_USER = {
   _id: '075bcd157dcb851180e02a7c',
   username: 'maker-1',
   firstname: 'Mister',
-  surname: 'One',
+  lastName: 'One',
   email: 'one@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: [MAKER],

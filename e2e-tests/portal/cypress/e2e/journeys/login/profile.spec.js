@@ -17,7 +17,7 @@ describe('User profile page', () => {
 
     it('should display the correct user profile information', () => {
       cy.assertText(userProfile.firstname(), BANK1_MAKER1.firstname);
-      cy.assertText(userProfile.surname(), BANK1_MAKER1.surname);
+      cy.assertText(userProfile.lastName(), BANK1_MAKER1.lastName);
       cy.assertText(userProfile.email(), BANK1_MAKER1.email);
       cy.assertText(userProfile.roles(), BANK1_MAKER1.roles.join(', '));
       cy.assertText(userProfile.bank(), UKEF_BANK_1.name);
@@ -37,7 +37,7 @@ describe('User profile page', () => {
 
     it('should display the correct user profile information', () => {
       cy.assertText(userProfile.firstname(), ADMIN.firstname);
-      cy.assertText(userProfile.surname(), ADMIN.surname);
+      cy.assertText(userProfile.lastName(), ADMIN.lastName);
       cy.assertText(userProfile.email(), ADMIN.email);
       userProfile.roles().should('contain', ADMIN.roles[0]);
       userProfile.roles().should('contain', ADMIN.roles[1]);
@@ -57,7 +57,7 @@ describe('User profile page', () => {
 
     it('should display the correct user profile information', () => {
       cy.assertText(userProfile.firstname(), BANK1_CHECKER1.firstname);
-      cy.assertText(userProfile.surname(), BANK1_CHECKER1.surname);
+      cy.assertText(userProfile.lastName(), BANK1_CHECKER1.lastName);
       cy.assertText(userProfile.email(), BANK1_CHECKER1.email);
       cy.assertText(userProfile.roles(), BANK1_CHECKER1.roles.join(', '));
       cy.assertText(userProfile.bank(), UKEF_BANK_1.name);
@@ -77,7 +77,7 @@ describe('User profile page', () => {
 
     it('should display the correct user profile information', () => {
       cy.assertText(userProfile.firstname(), BANK1_PAYMENT_REPORT_OFFICER1.firstname);
-      cy.assertText(userProfile.surname(), BANK1_PAYMENT_REPORT_OFFICER1.surname);
+      cy.assertText(userProfile.lastName(), BANK1_PAYMENT_REPORT_OFFICER1.lastName);
       cy.assertText(userProfile.email(), BANK1_PAYMENT_REPORT_OFFICER1.email);
       cy.assertText(userProfile.roles(), BANK1_PAYMENT_REPORT_OFFICER1.roles.join(', '));
       cy.assertText(userProfile.bank(), UKEF_BANK_1.name);

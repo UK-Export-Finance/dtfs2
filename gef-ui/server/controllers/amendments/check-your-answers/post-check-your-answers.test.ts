@@ -48,7 +48,7 @@ const userToken = 'userToken';
 const mockChecker = {
   ...mockUser,
   firstname: 'checkerFirst',
-  surname: 'checkerLast',
+  lastName: 'checkerLast',
   email: 'checker@ukexportfinance.gov.uk',
 };
 
@@ -150,8 +150,8 @@ describe('postCheckYourAnswers', () => {
           newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
-          makersName: `${mockUser.firstname} ${mockUser.surname}`,
-          checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+          makersName: `${mockUser.firstname} ${mockUser.lastName}`,
+          checkersName: `${mockChecker.firstname} ${mockChecker.lastName}`,
           dateSubmittedByMaker: format(new Date(), DATE_FORMATS.DD_MMMM_YYYY),
           portalUrl: `${PORTAL_UI_URL}/login`,
           makersEmail: mockUser.email,
@@ -216,8 +216,8 @@ describe('postCheckYourAnswers', () => {
           newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
-          makersName: `${mockUser.firstname} ${mockUser.surname}`,
-          checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+          makersName: `${mockUser.firstname} ${mockUser.lastName}`,
+          checkersName: `${mockChecker.firstname} ${mockChecker.lastName}`,
           dateSubmittedByMaker: format(new Date(), DATE_FORMATS.DD_MMMM_YYYY),
           portalUrl: `${PORTAL_UI_URL}/login`,
           makersEmail: mockUser.email,

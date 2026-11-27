@@ -23,7 +23,7 @@ const getUserByEmail = (userData, email) => {
     _id: user._id,
     username: user.username,
     firstname: user.firstname,
-    surname: user.surname,
+    lastName: user.lastName,
     email: user.email,
     roles: user.roles,
     bank: {
@@ -49,7 +49,7 @@ const getBssUserByEmail = (email) => {
     _id: user._id,
     username: user.username,
     firstname: user.firstname,
-    surname: user.surname,
+    lastName: user.lastName,
     email: user.email,
     bank: {
       id: user.bank.id,

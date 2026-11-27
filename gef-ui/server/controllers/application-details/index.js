@@ -53,7 +53,7 @@ function buildHeader(app) {
     applicationStatus: app.status,
     dateCreated: app.createdAt,
     timezone: app.maker.timezone || timezone,
-    createdBy: `${app.maker.firstname} ${app.maker.surname}`,
+    createdBy: `${app.maker.firstname} ${app.maker.lastName}`,
     comments: app.comments,
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
@@ -67,7 +67,7 @@ function buildHeader(app) {
 
   if (app.checker) {
     checker = {
-      checkedBy: `${app.checker.firstname} ${app.checker.surname}`,
+      checkedBy: `${app.checker.firstname} ${app.checker.lastName}`,
     };
   }
 

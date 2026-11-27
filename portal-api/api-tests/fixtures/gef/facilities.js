@@ -86,7 +86,7 @@ const FACILITIES = [
     ukefFacilityId: '1234567890',
     unissuedToIssuedByMaker: {
       firstname: 'Mister',
-      surname: 'One',
+      lastName: 'One',
       _id: '61e567d7db41bd65b00bd47a',
     },
   },
@@ -110,7 +110,7 @@ const FACILITIES = [
     ukefFacilityId: '321',
     unissuedToIssuedByMaker: {
       firstname: 'Mister',
-      surname: 'Two',
+      lastName: 'Two',
       _id: '61e567d7db41bd65b00bd47b',
     },
   },

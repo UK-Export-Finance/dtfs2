@@ -25,8 +25,8 @@ const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 const makersBank: { name: string } = mockDeal.maker.bank as { name: string };
 const bankName = `${makersBank.name}`;
-const makersName = `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`;
-const checkersName = `${mockUser.firstname} ${mockUser.surname}`;
+const makersName = `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.lastName)}`;
+const checkersName = `${mockUser.firstname} ${mockUser.lastName}`;
 const makersEmail = String(mockDeal.maker.email);
 
 const genericFields = {

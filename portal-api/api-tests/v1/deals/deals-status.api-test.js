@@ -239,7 +239,7 @@ describe('/v1/deals/:id/status', () => {
           username: testbank1Maker.username,
           email: testbank1Maker.email,
           firstname: testbank1Maker.firstname,
-          surname: testbank1Maker.surname,
+          lastName: testbank1Maker.lastName,
           timezone: 'Europe/London',
           'user-status': STATUS.ACTIVE,
           isTrusted: testbank1Maker.isTrusted,

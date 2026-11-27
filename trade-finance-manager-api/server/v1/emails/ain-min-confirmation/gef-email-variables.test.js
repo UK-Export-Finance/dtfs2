@@ -23,7 +23,7 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
     const expected = {
       submissionType: mockSubmittedDeal.submissionType,
       firstname: mockSubmittedDeal.maker.firstname,
-      surname: mockSubmittedDeal.maker.surname,
+      lastName: mockSubmittedDeal.maker.lastName,
       exporterName: mockSubmittedDeal.exporter.companyName,
       ukefDealId: mockSubmittedDeal.ukefDealId,
       bankGefDealId: mockSubmittedDeal.bankInternalRefName,

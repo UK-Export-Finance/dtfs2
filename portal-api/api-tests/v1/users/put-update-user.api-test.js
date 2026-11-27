@@ -58,7 +58,7 @@ describe('a user', () => {
         const updatedUserCredentials = {
           roles: [CHECKER, MAKER],
           firstname: 'NEW_FIRSTNAME',
-          surname: 'NEW_SURNAME',
+          lastName: 'NEW_LASTNAME',
           'user-status': STATUS.BLOCKED,
         };
 
@@ -72,7 +72,7 @@ describe('a user', () => {
           expect.objectContaining({
             roles: [CHECKER, MAKER],
             firstname: 'NEW_FIRSTNAME',
-            surname: 'NEW_SURNAME',
+            lastName: 'NEW_LASTNAME',
             'user-status': STATUS.BLOCKED,
           }),
         );

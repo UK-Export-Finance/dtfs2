@@ -3,7 +3,7 @@ const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 
 /**
  * @typedef {object} ReportAndUserDetails
- * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
+ * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {lastName}'
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in {@link getFormattedReportPeriodWithLongMonth}
  */
@@ -22,8 +22,8 @@ const getReportAndUserDetails = (report) => {
 
   const { dateUploaded, uploadedByUser, reportPeriod } = report;
 
-  const { firstname, surname } = uploadedByUser;
-  const uploadedByFullName = `${firstname} ${surname}`;
+  const { firstname, lastName } = uploadedByUser;
+  const uploadedByFullName = `${firstname} ${lastName}`;
 
   const date = parseISO(dateUploaded);
   const formattedDate = format(date, 'd MMMM yyyy');

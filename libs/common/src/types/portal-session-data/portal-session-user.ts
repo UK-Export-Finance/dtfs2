@@ -9,7 +9,7 @@ export type PortalSessionUser = {
   _id: string;
   username: string;
   firstname: string;
-  surname: string;
+  lastName: string;
   email: string;
   roles: Role[];
   bank: PortalSessionBank;

@@ -18,7 +18,7 @@ export const getUserWithRoles = (roles) => {
   return {
     username,
     firstname: 'First Name',
-    surname: 'Surname',
+    lastName: 'Last name',
     email,
     roles,
     bank: BANK_1,

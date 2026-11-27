@@ -11,21 +11,21 @@ import { externalApi } from '../../external-api/api';
  * @param securityCode - the one-time security code to include in the email
  */
 export const sendSignInOtpEmail = async (user: PortalUser, securityCode: string): Promise<void> => {
-  const { _id, email, firstname, surname } = user;
+  const { _id, email, firstname, lastName } = user;
 
   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
   const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   console.info('Sending sign-in OTP email to user %s', sanitisedId);
 
-  if (!email || !firstname || !surname) {
+  if (!email || !firstname || !lastName) {
     console.error('Unable to send access code email: user %s is missing required fields', sanitisedId);
     throw new MissingUserFieldsError(sanitisedId);
   }
 
   const emailVariables = {
     firstName: firstname,
-    lastName: surname,
+    lastName: lastName,
     securityCode,
   };
 

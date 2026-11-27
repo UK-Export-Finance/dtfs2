@@ -165,13 +165,13 @@ describe('getReconciliationSummary', () => {
       const mockUploadedByUser: UploadedByUserDetails = {
         id: '5ce819935e539c343f141ece',
         firstname: 'Test',
-        surname: 'User',
+        lastName: 'User',
       };
 
       const mockGetUserByIdResponse = {
         _id: new ObjectId(mockUploadedByUser.id),
         firstname: mockUploadedByUser.firstname,
-        surname: mockUploadedByUser.surname,
+        lastName: mockUploadedByUser.lastName,
       } as PortalUser;
 
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);

@@ -27,7 +27,7 @@ describe(`GET ${BASE_URL}`, () => {
   const portalUser = {
     _id: new ObjectId(),
     firstname: 'Test',
-    surname: 'User',
+    lastName: 'User',
   } as PortalUser;
   const portalUserId = portalUser._id.toString();
 

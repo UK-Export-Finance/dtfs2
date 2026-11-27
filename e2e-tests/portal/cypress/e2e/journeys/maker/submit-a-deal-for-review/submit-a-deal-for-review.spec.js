@@ -258,7 +258,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       cy.assertText(contractComments.row(0).comment(), 'a mandatory comment');
 
-      cy.assertText(contractComments.row(0).commentorName(), `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      cy.assertText(contractComments.row(0).commentorName(), `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
     });
   });
 

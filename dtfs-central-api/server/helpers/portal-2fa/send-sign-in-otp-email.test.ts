@@ -33,7 +33,7 @@ describe('sendSignInOtpEmail', () => {
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
       expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_ACCESS_CODE_EMAIL, user.email, {
         firstName: user.firstname,
-        lastName: user.surname,
+        lastName: user.lastName,
         securityCode: '123456',
       });
     });
@@ -43,7 +43,7 @@ describe('sendSignInOtpEmail', () => {
     it.each([
       { description: 'email is empty', overrides: { email: '' } },
       { description: 'firstname is empty', overrides: { firstname: '' } },
-      { description: 'surname is empty', overrides: { surname: '' } },
+      { description: 'lastName is empty', overrides: { lastName: '' } },
     ])('should throw a MissingUserFieldsError when $description', async ({ overrides }) => {
       // Arrange
       const user = { ...aPortalUser(), ...overrides };

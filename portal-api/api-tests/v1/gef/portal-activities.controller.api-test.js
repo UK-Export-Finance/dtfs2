@@ -69,7 +69,7 @@ describe('submissionPortalActivity()', () => {
     // get author object from checker from db
     const author = {
       firstName: checker.firstname,
-      lastName: checker.surname,
+      lastName: checker.lastName,
       _id: checker._id,
     };
     expect(portalActivityObject.author).toEqual(author);
@@ -138,7 +138,7 @@ describe('facilityChangePortalActivity()', () => {
 
     const makerToInsert = {
       firstname: maker.firstname,
-      surname: maker.surname,
+      lastName: maker.lastName,
       _id: maker._id,
       email: maker.email,
       roles: maker.roles,
@@ -175,18 +175,18 @@ describe('facilityChangePortalActivity()', () => {
     // checker object - checks matches test checker
     const checkerInObject = {
       firstname: checker.firstname,
-      surname: checker.surname,
+      lastName: checker.lastName,
       _id: JSON.stringify(checker._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
-    expect(portalActivityObject.checker.surname).toEqual(checkerInObject.surname);
+    expect(portalActivityObject.checker.lastName).toEqual(checkerInObject.lastName);
     expect(JSON.stringify(portalActivityObject.checker._id)).toEqual(checkerInObject._id);
 
     // maker object matches the unissuedToIssuedByMaker
     const makerInObject = {
       firstname: mockFacilityOne[0].unissuedToIssuedByMaker.firstname,
-      surname: mockFacilityOne[0].unissuedToIssuedByMaker.surname,
+      lastName: mockFacilityOne[0].unissuedToIssuedByMaker.lastName,
       _id: mockFacilityOne[0].unissuedToIssuedByMaker._id,
     };
 
@@ -217,7 +217,7 @@ describe('facilityChangePortalActivity()', () => {
 
     const makerToInsert = {
       firstname: maker.firstname,
-      surname: maker.surname,
+      lastName: maker.lastName,
       _id: maker._id,
       email: maker.email,
       roles: maker.roles,
@@ -286,7 +286,7 @@ describe('getUserInfo()', () => {
 
     const expectedUserObject = {
       firstname: checker.firstname,
-      surname: checker.surname,
+      lastName: checker.lastName,
       _id: checker._id,
     };
 
@@ -305,7 +305,7 @@ describe('getUserInfo()', () => {
 
     const expectedUserObject = {
       firstname: '',
-      surname: '',
+      lastName: '',
       _id: checker?._id,
     };
 

@@ -83,7 +83,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
       });
 
       describe('and when the user is found', () => {
-        const user = { ...aPortalUser(), firstname: 'John', surname: 'Doe' };
+        const user = { ...aPortalUser(), firstname: 'John', lastName: 'Doe' };
 
         beforeEach(() => {
           jest.mocked(getUserById).mockResolvedValue(user);
@@ -99,7 +99,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
           // Assert
           expect(result).toEqual({
             reportPeriod: report.reportPeriod,
-            uploadedByFullName: `${user.firstname} ${user.surname}`,
+            uploadedByFullName: `${user.firstname} ${user.lastName}`,
             dateUploaded: report.dateUploaded,
             corrections: mapFeeRecordsToPendingCorrections(report.feeRecords),
             nextDueReportPeriod: await getNextDueReportPeriod(bank),

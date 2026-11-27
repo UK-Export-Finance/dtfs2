@@ -12,7 +12,7 @@
   },
   "maker": {
     "firstname": "Hugo",
-    "surname": "Drax",
+    "lastName": "Drax",
     "email": "maker1@ukexportfinance.gov.uk",
     "__typename": "Maker"
   },

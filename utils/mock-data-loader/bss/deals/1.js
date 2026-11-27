@@ -33,7 +33,7 @@ module.exports = {
       },
       lastLogin: '1626968154830',
       firstname: 'Hugo',
-      surname: 'Drax',
+      lastName: 'Drax',
       email: BANK1_MAKER1.email,
       timezone: 'Europe/London',
       'user-status': 'active',

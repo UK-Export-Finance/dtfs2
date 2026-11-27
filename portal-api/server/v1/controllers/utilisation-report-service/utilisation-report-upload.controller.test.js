@@ -24,7 +24,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   };
 
   const PARSED_REPORT_DATA = [];
-  const PARSED_USER = { firstname: 'first', surname: 'last', bank: { id: '123' } };
+  const PARSED_USER = { firstname: 'first', lastName: 'last', bank: { id: '123' } };
 
   const getHttpMocks = () =>
     httpMocks.createMocks(
@@ -34,7 +34,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
           formattedReportPeriod: 'June 2024',
           reportData: '[]',
           reportPeriod: '{ "start": { "month": 6, "year": 2026 }, "end": { "month": 6, "year": 2026 }}',
-          user: '{ "firstname": "first", "surname": "last", "bank": { "id": "123" } }',
+          user: '{ "firstname": "first", "lastName": "last", "bank": { "id": "123" } }',
         },
       },
       { eventEmitter: events.EventEmitter },

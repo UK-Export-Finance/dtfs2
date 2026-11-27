@@ -5,7 +5,7 @@ import { CHECKER, MAKER, READ_ONLY } from '../constants/roles';
 const makerUser = {
   username: 'MAKER',
   firstname: 'mock',
-  surname: 'mock',
+  lastName: 'mock',
   email: 'maker@ukexportfinance.gov.uk',
   roles: [MAKER],
   'user-status': 'active',
@@ -15,7 +15,7 @@ const makerUser = {
 const checkerUser = {
   username: 'CHECKER',
   firstname: 'mock',
-  surname: 'Ker',
+  lastName: 'Ker',
   email: 'checker@ukexportfinance.gov.uk',
   roles: [CHECKER],
   'user-status': 'active',
@@ -25,7 +25,7 @@ const checkerUser = {
 const combinedUser = {
   username: 'COMBINED',
   firstname: 'mock',
-  surname: 'mock',
+  lastName: 'mock',
   email: 'combined@ukexportfinance.gov.uk',
   roles: [MAKER, CHECKER],
   'user-status': 'active',
@@ -35,7 +35,7 @@ const combinedUser = {
 const userWithoutMakerOrCheckerRole = {
   username: 'USER_WITHOUT_MAKER_OR_CHECKER',
   firstname: 'user without',
-  surname: 'maker or checker',
+  lastName: 'maker or checker',
   email: 'user-without-maker-or-checker@ukexportfinance.gov.uk',
   roles: [READ_ONLY],
   'user-status': 'active',

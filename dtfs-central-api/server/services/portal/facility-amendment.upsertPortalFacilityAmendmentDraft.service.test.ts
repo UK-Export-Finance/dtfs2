@@ -189,7 +189,7 @@ describe('PortalFacilityAmendmentService', () => {
         },
         createdBy: {
           username: aPortalUser().username,
-          name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
+          name: `${aPortalUser().firstname} ${aPortalUser().lastName}`,
           email: aPortalUser().email,
         },
         tfm: {},
@@ -227,7 +227,7 @@ describe('PortalFacilityAmendmentService', () => {
         },
         createdBy: {
           username: aPortalUser().username,
-          name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
+          name: `${aPortalUser().firstname} ${aPortalUser().lastName}`,
           email: aPortalUser().email,
         },
         tfm: {},

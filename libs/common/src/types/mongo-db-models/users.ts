@@ -17,7 +17,7 @@ export type PortalUser = Prettify<
     disabled?: boolean;
     timezone: string;
     firstname: string;
-    surname: string;
+    lastName: string;
     roles: PortalRole[];
     email: string;
     bank: Bank;

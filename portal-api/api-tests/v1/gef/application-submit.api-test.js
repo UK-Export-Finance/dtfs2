@@ -60,7 +60,7 @@ describe('submissionPortalActivity()', () => {
     // get author object from checker from db
     const author = {
       firstName: checker1.firstname,
-      lastName: checker1.surname,
+      lastName: checker1.lastName,
       _id: checker1._id,
     };
     expect(portalActivityObject.author).toEqual(author);
@@ -148,12 +148,12 @@ describe('submissionPortalActivity()', () => {
     // checker object - checks matches test checker
     const checkerInObject = {
       firstname: checker1.firstname,
-      surname: checker1.surname,
+      lastName: checker1.lastName,
       _id: JSON.stringify(checker1._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
-    expect(portalActivityObject.checker.surname).toEqual(checkerInObject.surname);
+    expect(portalActivityObject.checker.lastName).toEqual(checkerInObject.lastName);
     expect(JSON.stringify(portalActivityObject.checker._id)).toEqual(checkerInObject._id);
 
     expect(portalActivityObject.html).toEqual('facility');

@@ -6,7 +6,7 @@ const chance = new Chance();
 const MOCK_REQUEST = {
   username: 'maker1@ukexportfinance.gov.uk',
   firstname: chance.first(),
-  surname: chance.last(),
+  lastName: chance.last(),
   email: chance.email(),
   roles: [MAKER],
   bank: {
@@ -26,7 +26,7 @@ const MOCK_REQUEST = {
 const MOCK_REQUEST_CHECKER = {
   username: 'checker1@ukexportfinance.gov.uk',
   firstname: chance.first(),
-  surname: chance.last(),
+  lastName: chance.last(),
   email: chance.email(),
   roles: [CHECKER],
   bank: {

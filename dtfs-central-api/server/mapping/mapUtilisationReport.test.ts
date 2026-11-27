@@ -11,7 +11,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
   const mockPortalUser = {
     _id: new ObjectId(),
     firstname: 'Test',
-    surname: 'User',
+    lastName: 'User',
   } as PortalUser;
 
   const bankId = '123';
@@ -107,7 +107,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
       uploadedByUser: {
         id: uploadedByUserId,
         firstname: mockPortalUser.firstname,
-        surname: mockPortalUser.surname,
+        lastName: mockPortalUser.lastName,
       },
       azureFileInfo: MOCK_AZURE_FILE_INFO,
     });

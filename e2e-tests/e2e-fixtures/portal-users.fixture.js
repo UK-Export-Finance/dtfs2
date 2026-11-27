@@ -6,7 +6,7 @@ const USER_WITH_INJECTION = {
   email: '{ "$gt": "" }',
   password: 'TestPassword123!',
   firstname: 'test',
-  surname: 'injection',
+  lastName: 'injection',
   bank: {
     id: '9',
     name: 'Bank 1',

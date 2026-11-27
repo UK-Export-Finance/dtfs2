@@ -84,6 +84,6 @@ context('A checker selects to return a deal to maker from the view-contract page
 
     cy.assertText(contractComments.row(0).comment(), 'to you');
 
-    cy.assertText(contractComments.row(0).commentorName(), `${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+    cy.assertText(contractComments.row(0).commentorName(), `${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
   });
 });

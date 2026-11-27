@@ -5,7 +5,7 @@ module.exports = {
     username: 'noBankNoRole@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'One',
+    lastName: 'One',
     email: 'noBankNoRole@ukexportfinance.gov.uk',
     roles: [],
     isTrusted: false,
@@ -14,7 +14,7 @@ module.exports = {
     username: 'testBank1Maker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Two',
+    lastName: 'Two',
     email: 'testBank1Maker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
@@ -28,7 +28,7 @@ module.exports = {
     username: 'testBank1Maker2@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Two',
+    lastName: 'Two',
     email: 'testBank1Maker2@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
@@ -42,7 +42,7 @@ module.exports = {
     username: 'testBank1Checker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Three',
+    lastName: 'Three',
     email: 'testBank1Checker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
@@ -56,7 +56,7 @@ module.exports = {
     username: 'testBank1MakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Four',
+    lastName: 'Four',
     email: 'testBank1MakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
@@ -70,7 +70,7 @@ module.exports = {
     username: 'testBank1Reader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Five',
+    lastName: 'Five',
     email: 'testBank1Reader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
@@ -84,7 +84,7 @@ module.exports = {
     username: 'testBank2Maker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Six',
+    lastName: 'Six',
     email: 'testBank2Maker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
@@ -97,7 +97,7 @@ module.exports = {
     username: 'testBank2Checker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Seven',
+    lastName: 'Seven',
     email: 'testBank2Checker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
@@ -110,7 +110,7 @@ module.exports = {
     username: 'testBank2MakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Eight',
+    lastName: 'Eight',
     email: 'testBank2MakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
@@ -123,7 +123,7 @@ module.exports = {
     username: 'testBank2Reader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
-    surname: 'Nine',
+    lastName: 'Nine',
     email: 'testBank2Reader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {

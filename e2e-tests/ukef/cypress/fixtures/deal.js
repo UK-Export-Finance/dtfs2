@@ -19,14 +19,14 @@ export const MOCK_DEAL = {
   maker: {
     username: 'JOE',
     firstname: chance.first(),
-    surname: chance.last(),
+    lastName: chance.last(),
   },
   details: {
     bank: 'Mock bank',
     checker: {
       username: 'CHECKER',
       firstname: chance.first(),
-      surname: chance.last(),
+      lastName: chance.last(),
     },
     submissionDate: '1606900616651',
   },

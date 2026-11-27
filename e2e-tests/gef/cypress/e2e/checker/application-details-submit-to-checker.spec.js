@@ -142,13 +142,13 @@ context('Application Details Submission', () => {
     });
 
     it('shows the latest comment with the firstname and lastname', () => {
-      applicationDetails.comments().contains(`Comments from ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationDetails.comments().contains(`Comments from ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
       applicationDetails.comments().contains('test');
     });
 
     it('updates status in application banner', () => {
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
-      cy.assertText(statusBanner.bannerCreatedBy(), `${maker.firstname} ${maker.surname}`);
+      cy.assertText(statusBanner.bannerCreatedBy(), `${maker.firstname} ${maker.lastName}`);
     });
   });
 });

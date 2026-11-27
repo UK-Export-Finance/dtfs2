@@ -15,7 +15,7 @@ const existingUser = {
   'user-status': 'active',
   timezone: 'Europe/London',
   firstname: 'First',
-  surname: 'Last',
+  lastName: 'Last',
   email: 'maker1@ukexportfinance.gov.uk',
   username: 'maker1@ukexportfinance.gov.uk',
   roles: [MAKER],

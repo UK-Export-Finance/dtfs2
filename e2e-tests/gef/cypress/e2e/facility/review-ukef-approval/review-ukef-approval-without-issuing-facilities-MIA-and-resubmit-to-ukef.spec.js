@@ -482,7 +482,7 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });

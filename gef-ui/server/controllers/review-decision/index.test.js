@@ -75,7 +75,7 @@ const MockApplicationResponse = () => {
 
 const MockMakerUserResponse = () => ({
   firstName: 'first',
-  surname: 'surname',
+  lastName: 'lastName',
   timezone: 'Europe/London',
 });
 

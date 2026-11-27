@@ -11,7 +11,7 @@ const insertTfmUsersAndTeams = async () => {
     username: 're-insert-mocks',
     password: 'AbC!2345',
     firstname: 'Mock',
-    surname: 'DataLoader',
+    lastName: 'DataLoader',
     roles: [ADMIN],
     email: 're-insert-mocks-tfm@ukexportfinance.gov.uk',
   });

@@ -13,7 +13,7 @@ describe('submit to ukef routes', () => {
   beforeEach(() => {
     api.getApplication.mockResolvedValue(cloneMock(MOCK_BASIC_DEAL));
     api.getFacilities.mockResolvedValue({ status: 'Completed', items: [] });
-    api.getUserDetails.mockResolvedValue({ _id: '619bae3467cc7c002069fc21', firstname: 'Checker', surname: 'One' });
+    api.getUserDetails.mockResolvedValue({ _id: '619bae3467cc7c002069fc21', firstname: 'Checker', lastName: 'One' });
     api.updateApplication.mockResolvedValue({});
     api.setApplicationStatus.mockResolvedValue({});
   });

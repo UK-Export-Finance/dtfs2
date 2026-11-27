@@ -39,14 +39,14 @@ const send = async (deal, fromStatus, user) => {
 
   const { 'supplier-name': supplierName } = deal.submissionDetails;
 
-  const { firstname, surname, username } = user;
+  const { firstname, lastName, username } = user;
 
-  const updatedByName = `${firstname} ${surname}`;
+  const updatedByName = `${firstname} ${lastName}`;
   const updatedByEmail = username;
 
   const baseEmailVariables = {
     firstName: maker.firstname,
-    surname: maker.surname,
+    lastName: maker.lastName,
     submissionType,
     supplierName,
     bankInternalRefName,

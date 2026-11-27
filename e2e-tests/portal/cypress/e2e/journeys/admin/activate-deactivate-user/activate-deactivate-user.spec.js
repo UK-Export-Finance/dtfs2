@@ -16,7 +16,7 @@ context('Admin user updates an existing user', () => {
     email: 'email@example.com',
     password: 'AbC!2345',
     firstname: 'first',
-    surname: 'last',
+    lastName: 'last',
     bank: UKEF_BANK_1,
     roles: [MAKER],
   };
@@ -38,7 +38,7 @@ context('Admin user updates an existing user', () => {
 
     cy.keyboardInput(createUser.username(), userToUpdate.username);
     cy.keyboardInput(createUser.firstname(), userToUpdate.firstname);
-    cy.keyboardInput(createUser.surname(), userToUpdate.surname);
+    cy.keyboardInput(createUser.lastName(), userToUpdate.lastName);
 
     createUser.bank().select(userToUpdate.bank.id);
     createUser.createUser().click();

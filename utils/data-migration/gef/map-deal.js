@@ -133,7 +133,7 @@ const mapComments = (v1Comments, v2Users) => {
       roles: user.roles,
       userName: user.username,
       firstname: user.firstname,
-      surname: user.surname,
+      lastName: user.lastName,
       comment: v1Comment.comment,
     };
   });

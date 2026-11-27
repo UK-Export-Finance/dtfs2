@@ -58,7 +58,7 @@ export const mapUtilisationReportEntityToGetUtilisationReportResponse = async (
     uploadedByUser: {
       id: uploadedByUser._id.toString(),
       firstname: uploadedByUser.firstname,
-      surname: uploadedByUser.surname,
+      lastName: uploadedByUser.lastName,
     },
   };
   return responseWithUploadDetails;

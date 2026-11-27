@@ -6,7 +6,7 @@ export type PortalSessionUser = Prettify<
     PortalUser,
     | 'username'
     | 'firstname'
-    | 'surname'
+    | 'lastName'
     | 'email'
     | 'roles'
     | 'timezone'

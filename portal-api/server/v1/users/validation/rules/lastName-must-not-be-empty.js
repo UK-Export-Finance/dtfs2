@@ -1,16 +1,16 @@
 /**
- * Validates that if the surname is present it is not empty
+ * Validates that if the lastName is present it is not empty
  * @param {object} user the existing user
  * @param {object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
-const surnameMustNotBeEmpty = (user, change) => {
-  if (!change?.surname?.trim()) {
+const lastNameMustNotBeEmpty = (user, change) => {
+  if (!change?.lastName?.trim()) {
     return [
       {
-        surname: {
+        lastName: {
           order: '2',
-          text: 'Surname is required',
+          text: 'Last name is required',
         },
       },
     ];
@@ -19,4 +19,4 @@ const surnameMustNotBeEmpty = (user, change) => {
   return [];
 };
 
-module.exports = surnameMustNotBeEmpty;
+module.exports = lastNameMustNotBeEmpty;

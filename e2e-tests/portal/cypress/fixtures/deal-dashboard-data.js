@@ -71,7 +71,7 @@ module.exports = [
       {
         user: {
           firstname: 'bob',
-          surname: 'builder',
+          lastName: 'builder',
         },
         timestamp: '2020 07 01 11:12:08:194 +0100',
         text: 'to me',
@@ -99,7 +99,7 @@ module.exports = [
       {
         user: {
           firstname: 'bob',
-          surname: 'builder',
+          lastName: 'builder',
         },
         timestamp: '2020 07 01 11:12:08:194 +0100',
         text: 'to me',
@@ -140,7 +140,7 @@ module.exports = [
       {
         user: {
           firstname: 'bob',
-          surname: 'builder',
+          lastName: 'builder',
         },
         timestamp: '2020 07 01 11:12:08:194 +0100',
         text: 'to me',
@@ -164,7 +164,7 @@ module.exports = [
       {
         user: {
           firstname: 'bob',
-          surname: 'builder',
+          lastName: 'builder',
         },
         timestamp: '2020 07 01 11:12:08:194 +0100',
         text: 'to me',
@@ -188,7 +188,7 @@ module.exports = [
       {
         user: {
           firstname: 'bob',
-          surname: 'builder',
+          lastName: 'builder',
         },
         timestamp: '2020 07 01 11:12:08:194 +0100',
         text: 'to me',

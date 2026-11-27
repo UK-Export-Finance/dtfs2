@@ -96,7 +96,7 @@ export class PortalFacilityAmendmentService {
       eligibilityCriteria: { version, criteria: updatedCriteria },
       createdBy: {
         username: user.username,
-        name: `${user.firstname} ${user.surname}`,
+        name: `${user.firstname} ${user.lastName}`,
         email: user.email,
       },
       tfm: {},

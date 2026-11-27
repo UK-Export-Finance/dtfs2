@@ -5,7 +5,7 @@ export const aPortalSessionUser = (): PortalSessionUser => ({
   _id: 'abc123',
   username: 'firstlast',
   firstname: 'first',
-  surname: 'last',
+  lastName: 'last',
   email: 'first.last@ukexportfinance.gov.uk',
   roles: [],
   bank: aPortalSessionBank(),

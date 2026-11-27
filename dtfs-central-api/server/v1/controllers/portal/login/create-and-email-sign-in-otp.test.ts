@@ -75,7 +75,7 @@ describe('createAndEmailSignInOTP', () => {
       { description: 'user._id is missing', body: { user: { ...user, _id: undefined }, auditDetails } },
       { description: 'user.email is missing', body: { user: { ...user, email: undefined }, auditDetails } },
       { description: 'user.firstname is missing', body: { user: { ...user, firstname: undefined }, auditDetails } },
-      { description: 'user.surname is missing', body: { user: { ...user, surname: undefined }, auditDetails } },
+      { description: 'user.lastName is missing', body: { user: { ...user, lastName: undefined }, auditDetails } },
     ])(`should respond with ${HttpStatusCode.NotFound} when $description`, async ({ body }) => {
       // Arrange
       const res = getMockResponse();

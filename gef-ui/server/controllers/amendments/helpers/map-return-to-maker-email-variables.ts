@@ -29,11 +29,11 @@ export const mapReturnToMakerEmailVariables = ({
   const { maker } = deal;
 
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
-  const makersName = `${String(maker.firstname)} ${String(maker.surname)}`;
+  const makersName = `${String(maker.firstname)} ${String(maker.lastName)}`;
   const makersEmail = String(maker.email);
 
-  const { firstname, surname, email } = user;
-  const checkersName = `${firstname} ${surname}`;
+  const { firstname, lastName, email } = user;
+  const checkersName = `${firstname} ${lastName}`;
   const checkersEmail = email;
 
   return {

@@ -15,7 +15,7 @@ const approvedWithoutConditionsBothAmendments = {
   _id: 'test',
   user: {
     firstname: 'Bob',
-    surname: 'Smith',
+    lastName: 'Smith',
     email: MOCK_EMAIL,
   },
   dealSnapshot: {

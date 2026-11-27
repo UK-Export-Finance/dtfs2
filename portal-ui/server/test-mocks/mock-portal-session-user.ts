@@ -5,7 +5,7 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
   _id: '65954cc526d3899694cafff2',
   username: 'PAYMENT_REPORT_OFFICER',
   firstname: 'PAYMENT',
-  surname: 'REPORT OFFICER',
+  lastName: 'REPORT OFFICER',
   email: MOCK_EMAIL,
   roles: ['payment-report-officer'],
   bank: {

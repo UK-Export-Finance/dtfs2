@@ -104,7 +104,7 @@ describe('a user', () => {
                 bank: MOCK_USER.bank,
                 _id: expect.any(String),
                 firstname: MOCK_USER.firstname,
-                surname: MOCK_USER.surname,
+                lastName: MOCK_USER.lastName,
                 timezone: 'Europe/London',
                 'user-status': STATUS.ACTIVE,
                 isTrusted: MOCK_USER.isTrusted,

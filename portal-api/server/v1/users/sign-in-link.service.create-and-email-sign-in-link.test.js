@@ -184,7 +184,7 @@ describe('SignInLinkService', () => {
 
                 expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
                   firstName: user.firstname,
-                  lastName: user.surname,
+                  lastName: user.lastName,
                   signInLink,
                   signInLinkDuration: '30 minutes',
                 });
@@ -197,7 +197,7 @@ describe('SignInLinkService', () => {
 
                 expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
                   firstName: user.firstname,
-                  lastName: user.surname,
+                  lastName: user.lastName,
                   signInLink,
                   signInLinkDuration: '1 minute',
                 });

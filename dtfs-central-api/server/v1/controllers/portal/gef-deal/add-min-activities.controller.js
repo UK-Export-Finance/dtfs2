@@ -31,12 +31,12 @@ const updateChangedToIssued = async ({ facilities, auditDetails }) => {
 const getUserInfo = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-    const { firstname, surname = '' } = userId ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } }) : {};
+    const { firstname, lastName = '' } = userId ? await userCollection.findOne({ _id: { $eq: new ObjectId(userId) } }) : {};
 
     // creates user object which can be used
     const user = {
       firstname,
-      surname,
+      lastName,
       _id: userId,
     };
     return user;
@@ -51,7 +51,7 @@ const portalActivityGenerator = (activityParams) => {
 
   const userToAdd = {
     firstName: user.firstname,
-    lastName: user.surname,
+    lastName: user.lastName,
     _id: user._id,
   };
 

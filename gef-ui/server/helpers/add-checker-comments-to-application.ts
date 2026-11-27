@@ -21,7 +21,7 @@ export const addCheckerCommentsToApplication = async (dealId: string, userToken:
         roles: checker.roles,
         userName: checker.username,
         firstname: checker.firstname,
-        surname: checker.surname,
+        lastName: checker.lastName,
         email: checker.email,
         createdAt: Date.now(),
         comment,

@@ -93,7 +93,7 @@ describe('controllers/application-submission', () => {
               roles: [MAKER],
               userName: 'maker',
               firstname: 'Bob',
-              surname: 'Smith',
+              lastName: 'Smith',
               email: MOCK_EMAIL,
               createdAt: expect.any(Number),
               comment: mockRequest.body.comment,

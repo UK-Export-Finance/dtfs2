@@ -510,13 +510,13 @@ context('Check activity feed', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
 
       // first facility issued activity
-      applicationActivities.facilityActivityChangedBy(facilities[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities.facilityActivityChangedBy(facilities[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
       applicationActivities
         .facilityActivityCheckedBy(facilities[0].ukefFacilityId)
-        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
       applicationActivities.previousStatusTag(facilities[0].ukefFacilityId).contains('Unissued');
       applicationActivities.newStatusTag(facilities[0].ukefFacilityId).contains('Issued');
       applicationActivities.facilityActivityLink(facilities[0].ukefFacilityId).contains(`${facilities[0].type} facility ${facilities[0].ukefFacilityId}`);

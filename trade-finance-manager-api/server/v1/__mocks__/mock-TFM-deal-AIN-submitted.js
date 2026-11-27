@@ -102,7 +102,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       email: 'maker1@ukexportfinance.gov.uk',
       firstname: 'First',
       roles: ['maker'],
-      surname: 'Last',
+      lastName: 'Last',
       timezone: 'Europe/London',
       'user-status': 'active',
       username: 'maker1@ukexportfinance.gov.uk',

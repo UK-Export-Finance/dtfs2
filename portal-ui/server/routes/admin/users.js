@@ -200,7 +200,7 @@ router.get('/users/edit/:_id', async (req, res) => {
  *
  */
 router.post('/users/edit/:_id', async (req, res) => {
-  const payloadProperties = ['firstname', 'surname', 'user-status', 'roles', 'isTrusted'];
+  const payloadProperties = ['firstname', 'lastName', 'user-status', 'roles', 'isTrusted'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 

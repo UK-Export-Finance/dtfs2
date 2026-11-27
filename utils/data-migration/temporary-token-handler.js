@@ -19,7 +19,7 @@ const migrationUserFields = {
   username: 'data-migration',
   password: 'AbC!2345',
   firstname: 'V1 Migration',
-  surname: 'DataLoader',
+  lastName: 'DataLoader',
   email: 'data-migration',
   roles: [MAKER, ADMIN],
   bank: {

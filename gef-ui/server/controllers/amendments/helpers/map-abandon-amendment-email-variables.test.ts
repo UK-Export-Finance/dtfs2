@@ -22,8 +22,8 @@ const facilityEndDate = new Date();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const makersName = `${mockUser.firstname} ${mockUser.surname}`;
-const checkersName = `${mockUser.firstname} ${mockUser.surname}`;
+const makersName = `${mockUser.firstname} ${mockUser.lastName}`;
+const checkersName = `${mockUser.firstname} ${mockUser.lastName}`;
 const checkersEmail = String(mockUser.email);
 
 const genericFields = {

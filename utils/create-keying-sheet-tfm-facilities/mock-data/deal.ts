@@ -51,7 +51,7 @@ export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: Object
       isVisibleInTfmUtilisationReports: true,
     },
     firstname: 'Maker',
-    surname: 'Maker',
+    lastName: 'Maker',
     email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     'user-status': 'active',

@@ -45,17 +45,17 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId: string): Promise<Pay
  * @param bankId - the id of the bank
  * @param submittedDate - the date the report was submitted
  * @param submittedByFirstName - the first name of the user who submitted the report
- * @param submittedBySurname - the surname name of the user who submitted the report
+ * @param submittedByLastName - the last name of the user who submitted the report
  */
 export const sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam = async (
   reportPeriod: string,
   bankId: string,
   submittedDate: Date,
   submittedByFirstName: string,
-  submittedBySurname: string,
+  submittedByLastName: string,
 ) => {
   try {
-    const reportSubmittedBy = `${submittedByFirstName} ${submittedBySurname}`;
+    const reportSubmittedBy = `${submittedByFirstName} ${submittedByLastName}`;
     const { teamName, emails } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateForEmail(submittedDate);
 

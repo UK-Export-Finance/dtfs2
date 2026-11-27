@@ -32,7 +32,7 @@ exports.findOneUserGet = async (req, res) => {
 const sanitizeUser = (user) => ({
   username: user.username,
   firstname: user.firstname,
-  surname: user.surname,
+  lastName: user.lastName,
   email: user.email,
   roles: user.roles,
   bank: user.bank,

@@ -25,7 +25,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
       const result = commonEmailVars(mockDeal);
 
       const expected = {
-        recipientName: `${mockDeal.maker.firstname} ${mockDeal.maker.surname}`,
+        recipientName: `${mockDeal.maker.firstname} ${mockDeal.maker.lastName}`,
         exporterName: mockDeal.exporter.companyName,
         bankReferenceNumber: mockDeal.bankInternalRefName,
         ukefDealId: mockDeal.ukefDealId,

@@ -103,7 +103,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.maker.roles).toEqual(testbank1Maker.roles);
         expect(cloned.deal.maker.bank).toEqual(testbank1Maker.bank);
         expect(cloned.deal.maker.firstname).toEqual(testbank1Maker.firstname);
-        expect(cloned.deal.maker.surname).toEqual(testbank1Maker.surname);
+        expect(cloned.deal.maker.lastName).toEqual(testbank1Maker.lastName);
         expect(cloned.deal.maker._id).toEqual(testbank1Maker._id);
 
         expect(cloned.deal.bank).toEqual(testbank1Maker.bank);

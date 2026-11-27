@@ -85,7 +85,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
   const variables = {
     username: user.username,
     firstname: user.firstname,
-    surname: user.surname,
+    lastName: user.lastName,
     bank: user.bank && user.bank.name ? user.bank.name : '',
     roles: user.roles.join(','),
     status: user['user-status'],

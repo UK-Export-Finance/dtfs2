@@ -34,10 +34,10 @@ export const mapSubmittedToUkefEmailVariables = ({
   const criteria = amendment.eligibilityCriteria?.criteria || [];
   const formattedEligibilityCriteria = generateAmendmentMandatoryCriteria(criteria);
 
-  const makersName = `${String(deal.maker.firstname)} ${String(deal.maker.surname)}`;
+  const makersName = `${String(deal.maker.firstname)} ${String(deal.maker.lastName)}`;
   const makersEmail = String(deal.maker.email);
 
-  const checkersName = `${user.firstname} ${user.surname}`;
+  const checkersName = `${user.firstname} ${user.lastName}`;
   const checkersEmail = user.email;
 
   const makersBank = deal.maker.bank;

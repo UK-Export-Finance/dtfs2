@@ -16,13 +16,13 @@ describe(component, () => {
     previousStatus: 'previousStatus',
     maker: {
       firstname: 'Robert',
-      surname: 'Bruce',
+      lastName: 'Bruce',
     },
     details: {
       ukefDealId: 'ukefDealId',
       checker: {
         firstname: 'First',
-        surname: 'Last',
+        lastName: 'Last',
       },
       submissionDate: getNowAsEpoch(),
     },
@@ -55,10 +55,10 @@ describe(component, () => {
 
     it('displays deal.previousStatus', () => wrapper.expectText('[data-cy="previousStatus"]').toRead(deal.previousStatus));
 
-    it('displays deal.maker name', () => wrapper.expectText('[data-cy="maker"]').toRead(`${deal.maker.firstname} ${deal.maker.surname}`));
+    it('displays deal.maker name', () => wrapper.expectText('[data-cy="maker"]').toRead(`${deal.maker.firstname} ${deal.maker.lastName}`));
 
     it('displays deal.details.checker', () =>
-      wrapper.expectText('[data-cy="checker"]').toRead(`${deal.details.checker.firstname} ${deal.details.checker.surname}`));
+      wrapper.expectText('[data-cy="checker"]').toRead(`${deal.details.checker.firstname} ${deal.details.checker.lastName}`));
 
     it('displays deal.details.submissionDate', () =>
       wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(deal.details.submissionDate), timezone, FULL_DATE)));

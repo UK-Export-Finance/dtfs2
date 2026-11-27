@@ -5,7 +5,7 @@ const { testApi } = require('../../test-api');
 const newUser = {
   username: 'maker1@ukexportfinance.gov.uk',
   firstname: 'First',
-  surname: 'Last',
+  lastName: 'Last',
   salt: '00',
   hash: '01',
   email: 'maker1@ukexportfinance.gov.uk',

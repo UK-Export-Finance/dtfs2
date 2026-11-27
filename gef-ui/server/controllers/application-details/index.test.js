@@ -140,7 +140,7 @@ describe('controllers/application-details', () => {
           applicationStatus: mockApplicationResponse.status,
           dateCreated: mockApplicationResponse.createdAt,
           timezone: mockApplicationResponse.maker.timezone,
-          createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
+          createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.lastName}`,
           comments: mockApplicationResponse.comments,
           applicationType: mockApplicationResponse.submissionType,
           submissionCount: mockApplicationResponse.submissionCount,

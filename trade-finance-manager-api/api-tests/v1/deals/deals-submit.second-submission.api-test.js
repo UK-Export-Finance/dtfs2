@@ -76,7 +76,7 @@ const mockChecker = {
   },
   email: MOCK_EMAIL,
   firstname: 'Test',
-  surname: 'User',
+  lastName: 'User',
   roles: ['checker'],
   timezone: 'Europe/London',
   username: 'checker1@ukexportfinance.gov.uk',

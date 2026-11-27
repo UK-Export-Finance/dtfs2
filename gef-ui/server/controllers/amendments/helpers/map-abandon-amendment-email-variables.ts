@@ -30,11 +30,11 @@ export const mapAbandonAmendmentEmailVariables = ({
 }) => {
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
 
-  const checkersName = `${checker?.firstname} ${checker?.surname}`;
+  const checkersName = `${checker?.firstname} ${checker?.lastName}`;
   const checkersEmail = checker?.email;
 
-  const { firstname, surname, email } = user;
-  const makersName = `${firstname} ${surname}`;
+  const { firstname, lastName, email } = user;
+  const makersName = `${firstname} ${lastName}`;
   const makersEmail = email;
 
   return {

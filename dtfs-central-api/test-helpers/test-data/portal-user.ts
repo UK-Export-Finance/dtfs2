@@ -7,7 +7,7 @@ export const aPortalUser = (): PortalUser => ({
   username: 'Test user',
   email: 'test-user@test.com',
   firstname: 'Test',
-  surname: 'User',
+  lastName: 'User',
   roles: [],
   bank: aBank(),
   timezone: 'London',

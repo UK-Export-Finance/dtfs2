@@ -34,10 +34,10 @@ export const mapSubmittedToCheckerEmailVariables = ({
 }) => {
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
 
-  const makersName = `${user.firstname} ${user.surname}`;
+  const makersName = `${user.firstname} ${user.lastName}`;
   const makersEmail = user.email;
 
-  const checkersName = `${checker.firstname} ${checker.surname}`;
+  const checkersName = `${checker.firstname} ${checker.lastName}`;
   const checkersEmail = checker.email;
 
   const dateSubmittedByMaker = format(now(), DATE_FORMATS.DD_MMMM_YYYY);

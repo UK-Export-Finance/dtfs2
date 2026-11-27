@@ -46,18 +46,18 @@
   }) }}
 
   {{ govukInput({
-    attributes: {"data-cy": "surname"},
+    attributes: {"data-cy": "lastName"},
     label: {
-      text: "Surname",
+      text: "Last name",
       classes: "govuk-label--s"
     },
     classes: "govuk-!-width-one-third",
-    id: "surname",
-    name: "surname",
-    value: displayedUser.surname,
-    errorMessage: validationErrors.errorList.surname and {
-      text: validationErrors.errorList.surname.text,
-      attributes: { "data-cy": "surname-error-message" }
+    id: "lastName",
+    name: "lastName",
+    value: displayedUser.lastName,
+    errorMessage: validationErrors.errorList.lastName and {
+      text: validationErrors.errorList.lastName.text,
+      attributes: { "data-cy": "lastName-error-message" }
     }
   }) }}
 

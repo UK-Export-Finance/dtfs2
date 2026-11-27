@@ -17,7 +17,7 @@ export const MOCK_DEAL_AIN = {
   maker: {
     username: BANK1_MAKER1.username,
     firstname: 'Joe',
-    surname: 'Bloggs',
+    lastName: 'Bloggs',
     email: BANK1_MAKER1.email,
   },
   details: {
@@ -25,7 +25,7 @@ export const MOCK_DEAL_AIN = {
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
-      surname: 'Largo',
+      lastName: 'Largo',
     },
     submissionDate: today.unixMillisecondsString,
     submissionCount: 1,

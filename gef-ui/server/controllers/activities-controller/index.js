@@ -55,8 +55,8 @@ const getPortalActivities = async (req, res) => {
   const deal = await getApplication({ dealId, userToken });
   const checker = await getUserDetails({ userId: deal.checkerId, userToken });
   const portalActivities = mapPortalActivities(deal._id, deal.portalActivities);
-  const checkedBy = `${checker.firstname} ${checker.surname}`;
-  const createdBy = `${deal.maker.firstname} ${deal.maker.surname}`;
+  const checkedBy = `${checker.firstname} ${checker.lastName}`;
+  const createdBy = `${deal.maker.firstname} ${deal.maker.lastName}`;
   const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
 
   /*

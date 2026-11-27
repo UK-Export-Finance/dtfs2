@@ -25,7 +25,7 @@ export const aUtilisationReportResponse = (): UtilisationReportResponseBody => (
   uploadedByUser: {
     id: '5099803df3f4948bd2f98391',
     firstname: 'first',
-    surname: 'last',
+    lastName: 'last',
   },
   status: RECONCILIATION_COMPLETED,
 });

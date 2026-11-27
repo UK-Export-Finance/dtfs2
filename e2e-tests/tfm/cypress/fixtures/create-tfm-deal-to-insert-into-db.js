@@ -60,7 +60,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       bank: 'Mock bank',
       checker: {
         firstname: 'Emilio',
-        surname: 'Largo',
+        lastName: 'Largo',
         username: 'CHECKER',
       },
       created: 1707232702216,
@@ -193,7 +193,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       firstname: 'First',
       lastLogin: 1707232702188,
       roles: ['maker'],
-      surname: 'Last',
+      lastName: 'Last',
       timezone: 'Europe/London',
       'user-status': 'active',
       username: 'BANK1_MAKER1',

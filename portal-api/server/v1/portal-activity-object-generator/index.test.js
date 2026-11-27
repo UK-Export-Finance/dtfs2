@@ -5,7 +5,7 @@ describe('portalActivityGenerator()', () => {
   const applicationType = 'Manual Inclusion Application submitted to UKEF';
   const user = {
     firstname: 'tester',
-    surname: 'testing',
+    lastName: 'testing',
     _id: 12345,
   };
   const activityType = 'NOTICE';
@@ -16,12 +16,12 @@ describe('portalActivityGenerator()', () => {
   };
   const maker = {
     firstname: 'Joe',
-    surname: 'Bloggs',
+    lastName: 'Bloggs',
     id: '12345',
   };
   const checker = {
     firstname: 'Bob',
-    surname: 'Smith',
+    lastName: 'Smith',
     id: '4567',
   };
   const activityHTML = 'facility';

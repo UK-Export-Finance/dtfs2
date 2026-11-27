@@ -7,13 +7,13 @@ const { generateMandatoryCriteriaString } = require('../../helpers/generate-mand
 const gefEmailVariables = async (deal, facilityLists) => {
   const { submissionType, maker, exporter, bankInternalRefName, additionalRefName, ukefDealId } = deal;
 
-  const { firstname, surname } = maker;
+  const { firstname, lastName } = maker;
   const mandatoryCriteria = await generateMandatoryCriteriaString(deal.mandatoryVersionId);
   const eligibilityCriteria = generateEligibilityCriteriaString(deal.eligibility.criteria);
   const emailVariables = {
     submissionType,
     firstname,
-    surname,
+    lastName,
     exporterName: exporter.companyName,
     ukefDealId,
     bankGefDealId: bankInternalRefName,

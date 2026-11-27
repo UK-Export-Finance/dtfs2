@@ -140,7 +140,7 @@ const MockUserResponse = () => ({
   username: 'maker',
   bank: { id: 'BANKID' },
   firstname: 'Joe',
-  surname: 'Bloggs',
+  lastName: 'Bloggs',
   timezone: 'Europe/London',
 });
 
@@ -148,7 +148,7 @@ const MockUserResponseChecker = () => ({
   username: 'checker',
   bank: { id: 'BANKID' },
   firstname: 'Joe',
-  surname: 'Bloggs',
+  lastName: 'Bloggs',
   timezone: 'Europe/London',
 });
 
@@ -283,7 +283,7 @@ const MockSubmissionRequest = () => ({
     user: {
       username: 'maker',
       firstname: 'Bob',
-      surname: 'Smith',
+      lastName: 'Smith',
       email: MOCK_EMAIL,
       bank: { id: 'BANKID' },
       roles: [MAKER],
@@ -313,7 +313,7 @@ const MockRequestUnissued = () => {
       roles: [MAKER],
       _id: '12345',
       firstname: 'Test',
-      surname: 'Test',
+      lastName: 'Test',
     },
     userToken: 'TEST',
   };
@@ -338,7 +338,7 @@ const MockRequestIssuedToUnissued = () => {
       roles: [MAKER],
       _id: '12345',
       firstname: 'Test',
-      surname: 'Test',
+      lastName: 'Test',
     },
     userToken: 'TEST',
   };

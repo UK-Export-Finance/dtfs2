@@ -20,7 +20,7 @@ describe(page, () => {
       },
       maker: {
         firstname: 'John',
-        surname: 'Doe',
+        lastName: 'Doe',
         email: 'john.doe@exporter.com',
       },
       submissionDetails: {

@@ -53,7 +53,7 @@ context('Application Details Page', () => {
 
       statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       cy.assertText(statusBanner.bannerSubmissionType(), '-');
-      cy.assertText(statusBanner.bannerCreatedBy(), `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
+      cy.assertText(statusBanner.bannerCreatedBy(), `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.lastName}`);
       cy.assertText(statusBanner.bannerExporter(), '-');
       cy.assertText(statusBanner.bannerCheckedBy(), '-');
       cy.assertText(statusBanner.bannerBuyer(), '-');

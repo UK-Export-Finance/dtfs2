@@ -5,7 +5,7 @@ const MOCK_PORTAL_USERS = [
     timezone: 'Europe/London',
     username: 'maker1@ukexportfinance.gov.uk',
     firstname: 'First',
-    surname: 'Last',
+    lastName: 'Last',
     email: 'maker1@ukexportfinance.gov.uk',
     roles: ['maker'],
     bank: {

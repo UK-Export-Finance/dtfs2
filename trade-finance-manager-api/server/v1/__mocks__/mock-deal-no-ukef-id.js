@@ -15,7 +15,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
-      surname: 'Largo',
+      lastName: 'Largo',
     },
     submissionDate: '1606900616651',
     submissionCount: 1,

@@ -14,7 +14,7 @@ describe('updatePortalDealFromMIAtoMIN()', () => {
       name: 'bank',
     },
     firstname: 'bob',
-    surname: 'bob',
+    lastName: 'bob',
   };
 
   const checkerAuditDetails = generatePortalAuditDetails(checker);

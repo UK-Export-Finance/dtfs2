@@ -224,7 +224,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   const { maker, status: previousStatus, bankInternalRefName, exporter } = existingApplication;
 
   // get maker user details
-  const { firstname: firstName = '', surname = '' } = maker;
+  const { firstname: firstName = '', lastName = '' } = maker;
 
   // get exporter name
   const { companyName = '' } = exporter;
@@ -232,13 +232,13 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   user.bank.emails.forEach(async (email) => {
     await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
       firstName,
-      surname,
+      lastName,
       submissionType: existingApplication.submissionType || '',
       supplierName: companyName,
       bankInternalRefName,
       currentStatus: status,
       previousStatus,
-      updatedByName: `${user.firstname} ${user.surname}`,
+      updatedByName: `${user.firstname} ${user.lastName}`,
       updatedByEmail: user.email,
     });
   });

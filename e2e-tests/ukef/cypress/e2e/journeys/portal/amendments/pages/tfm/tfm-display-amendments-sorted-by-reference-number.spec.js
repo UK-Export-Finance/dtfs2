@@ -16,7 +16,7 @@ const CHANGED_FACILITY_VALUE = '20000';
 const CHANGED_FACILITY_VALUE_2 = '30000';
 const CHANGED_FACILITY_VALUE_3 = '40000';
 
-const submittedByString = `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname} - ${BANK1_MAKER1.bank.name}`;
+const submittedByString = `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName} - ${BANK1_MAKER1.bank.name}`;
 
 context(
   'Amendments - TFM - Amendments details page - TFM should display portal amendments and tfm amendments on the amendment details page in descending order',

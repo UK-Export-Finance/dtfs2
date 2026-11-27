@@ -98,11 +98,11 @@ const sendMiaAcknowledgement = async (deal) => {
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
   const { ukefDealId, bankInternalRefName, submissionType, maker, exporter } = deal;
 
-  const { firstname, surname } = maker;
+  const { firstname, lastName } = maker;
 
   return {
     firstname,
-    surname,
+    lastName,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
     ukefDealId,

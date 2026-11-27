@@ -215,7 +215,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
       filename: file.originalname,
       reportData: filteredCsvJson,
       bankName: user.bank.name,
-      submittedBy: `${user.firstname} ${user.surname}`,
+      submittedBy: `${user.firstname} ${user.lastName}`,
     };
 
     return res.redirect('/utilisation-report-upload/confirm-and-send');

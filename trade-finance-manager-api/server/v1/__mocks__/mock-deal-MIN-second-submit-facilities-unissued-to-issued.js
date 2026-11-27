@@ -21,7 +21,7 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
-      surname: 'Largo',
+      lastName: 'Largo',
     },
     submissionDate: '1606900616651',
     submissionCount: 2,

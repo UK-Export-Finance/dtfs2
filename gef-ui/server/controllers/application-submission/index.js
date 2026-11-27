@@ -79,7 +79,7 @@ const postApplicationSubmission = async (req, res, next) => {
         roles: user.roles,
         userName: user.username,
         firstname: user.firstname,
-        surname: user.surname,
+        lastName: user.lastName,
         email: user.email,
         createdAt: Date.now(),
         comment: normalizedComment,

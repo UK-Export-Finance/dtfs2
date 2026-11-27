@@ -39,7 +39,7 @@ describe('controllers/return-to-maker', () => {
     getUserDetails.mockResolvedValue({
       username: 'checker',
       firstname: 'Bob',
-      surname: 'Smith',
+      lastName: 'Smith',
       email: MOCK_EMAIL,
       roles: 'Checker,',
     });
@@ -119,7 +119,7 @@ describe('controllers/return-to-maker', () => {
               createdAt: expect.any(Number),
               userName: 'checker',
               firstname: 'Bob',
-              surname: 'Smith',
+              lastName: 'Smith',
               email: MOCK_EMAIL,
               roles: 'Checker,',
             },

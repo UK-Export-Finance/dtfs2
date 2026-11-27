@@ -2,12 +2,12 @@
 {% extends "index.njk" %}
 
 {% block pageTitle -%}
-  Profile for {{ user.firstname }} {{ user.surname }}
+  Profile for {{ user.firstname }} {{ user.lastName }}
 {%- endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Logged in as {{ user.firstname }} {{ user.surname }}</h1>
+  <h1 class="govuk-heading-l">Logged in as {{ user.firstname }} {{ user.lastName }}</h1>
 
   <h2 class="govuk-heading-m">Account information</h2>
 
@@ -22,10 +22,10 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
-      <p class="govuk-body">Surname:</p>
+      <p class="govuk-body">Last name:</p>
     </div>
     <div class="govuk-grid-column-one-quarter">
-       <p class="govuk-body" data-cy="user-surname">{{ user.surname }}</p>
+       <p class="govuk-body" data-cy="user-lastName">{{ user.lastName }}</p>
     </div>
   </div>
 

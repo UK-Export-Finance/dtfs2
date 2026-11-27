@@ -8,24 +8,24 @@ import { externalApi } from '../../../../external-api/api';
 /**
  * Sends an account suspension notification email to the user via GOV.UK Notify.
  * Called when the user has exhausted all OTP send attempts and their account is suspended.
- * @param user the portal user to send the email to, must contain _id, email, firstname, and surname fields.
+ * @param user the portal user to send the email to, must contain _id, email, firstname, and lastName fields.
  */
 export const sendAccountSuspensionEmail = async (user: PortalUser): Promise<void> => {
-  const { _id, email, firstname, surname } = user;
+  const { _id, email, firstname, lastName } = user;
 
   // Sanitise the user ID by removing all non-alphanumeric, dash, and underscore characters to prevent log injection attacks
   const sanitisedId = String(_id).replace(NEW_LINE_AND_PUNCTUATION_REGEX, '');
 
   console.info('Sending account suspension email to user %s', sanitisedId);
 
-  if (!email || !firstname || !surname) {
+  if (!email || !firstname || !lastName) {
     console.error('Unable to send account suspension email: user %s is missing required fields', sanitisedId);
     throw new MissingUserFieldsError(sanitisedId);
   }
 
   const emailVariables = {
     firstName: firstname,
-    lastName: surname,
+    lastName: lastName,
   };
 
   try {

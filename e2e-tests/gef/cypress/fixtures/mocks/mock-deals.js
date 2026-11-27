@@ -174,7 +174,7 @@ const commonApplicationDetails = {
   maker: {
     username: BANK1_MAKER1.username,
     firstname: chance.first(),
-    surname: chance.last(),
+    lastName: chance.last(),
     email: BANK1_MAKER1.email,
     roles: [],
     bank: {},
@@ -186,7 +186,7 @@ const commonApplicationDetails = {
   checker: {
     username: BANK1_CHECKER1.username,
     firstname: chance.first(),
-    surname: chance.last(),
+    lastName: chance.last(),
     email: BANK1_CHECKER1.email,
     roles: ['maker'],
     bank: {},

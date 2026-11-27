@@ -33,7 +33,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
 
     const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
 
-    if (!checker?.firstname || !checker?.surname || !checker?.email) {
+    if (!checker?.firstname || !checker?.lastName || !checker?.email) {
       console.error('Checker %s was not found from the deal %s', deal.checkerId, dealId);
       return res.redirect('/not-found');
     }

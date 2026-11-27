@@ -28,7 +28,7 @@ describe('/v1/utilisation-reports', () => {
     username: 'payment-report-officer',
     password: 'AbC!2345',
     firstname: 'Payton',
-    surname: 'Archer',
+    lastName: 'Archer',
     email: 'payment-officer1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [PAYMENT_REPORT_OFFICER],

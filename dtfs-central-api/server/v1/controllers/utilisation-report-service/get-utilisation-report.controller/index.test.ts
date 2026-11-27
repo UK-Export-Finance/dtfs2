@@ -41,7 +41,7 @@ describe('getUtilisationReport', () => {
     const uploadedByUser: UploadedByUserDetails = {
       id: '5ce819935e539c343f141ece',
       firstname: 'Test',
-      surname: 'User',
+      lastName: 'User',
     };
 
     const azureFileInfo = AzureFileInfoEntity.create({
@@ -97,7 +97,7 @@ describe('getUtilisationReport', () => {
       const mockGetUserByIdResponse = {
         _id: new ObjectId(uploadedByUser.id),
         firstname: uploadedByUser.firstname,
-        surname: uploadedByUser.surname,
+        lastName: uploadedByUser.lastName,
       } as PortalUser;
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 

@@ -530,10 +530,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       // first facility issued activity
       applicationActivities
         .facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId)
-        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
-        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
       applicationActivities.previousStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
       applicationActivities.newStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
       applicationActivities
@@ -547,10 +547,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       // 2nd facility issued activity
       applicationActivities
         .facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId)
-        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId)
-        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
       applicationActivities.previousStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
       applicationActivities.newStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
       applicationActivities
@@ -564,10 +564,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       // 3rd facility issued activity
       applicationActivities
         .facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId)
-        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.lastName}`);
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId)
-        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
       applicationActivities.previousStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
       applicationActivities.newStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
       applicationActivities

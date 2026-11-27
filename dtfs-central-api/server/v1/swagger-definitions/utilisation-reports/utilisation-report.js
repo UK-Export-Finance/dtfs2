@@ -48,7 +48,7 @@
  *           firstname:
  *             type: string
  *             example: 'John'
- *           surname:
+ *           lastName:
  *             type: string
  *             example: 'Smith'
  *       bank:

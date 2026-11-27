@@ -22,7 +22,7 @@ describe('PORTAL_USER', () => {
           type: 'string',
         },
         {
-          parameterPath: 'surname',
+          parameterPath: 'lastName',
           type: 'string',
         },
         {
@@ -108,7 +108,7 @@ function aValidPayload(): z.infer<typeof UPDATE> {
   return {
     username: 'maker-1',
     firstname: 'Mister',
-    surname: 'One',
+    lastName: 'One',
     email: 'one@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],

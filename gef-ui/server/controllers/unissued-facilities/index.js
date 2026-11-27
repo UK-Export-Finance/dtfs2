@@ -201,7 +201,7 @@ const postChangeUnissuedFacility = async (req, res) => {
 
     const userObj = {
       firstname: user.firstname,
-      surname: user.surname,
+      lastName: user.lastName,
       _id: user._id,
     };
 
@@ -309,7 +309,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     const userObj = {
       firstname: user.firstname,
-      surname: user.surname,
+      lastName: user.lastName,
       _id: user._id,
     };
 

@@ -16,14 +16,14 @@ const MOCK_DEAL = {
   maker: {
     username: 'JOE',
     firstname: 'Joe',
-    surname: 'Bloggs',
+    lastName: 'Bloggs',
   },
   details: {
     bank: 'Mock bank',
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
-      surname: 'Largo',
+      lastName: 'Largo',
     },
     submissionDate: '1606900616651',
     submissionCount: 1,

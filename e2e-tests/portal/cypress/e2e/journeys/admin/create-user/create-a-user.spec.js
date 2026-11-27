@@ -13,7 +13,7 @@ context('Admin user creates a new user', () => {
     email: 'an.address@example.com',
     password: 'AbC!2345',
     firstname: 'bob',
-    surname: 'builder',
+    lastName: 'builder',
     bank: UKEF_BANK_1,
     roles: [MAKER],
   };
@@ -23,7 +23,7 @@ context('Admin user creates a new user', () => {
     email: 'email@example.com',
     password: 'aaa',
     firstname: 'alfred',
-    surname: 'd. great',
+    lastName: 'd. great',
     bank: UKEF_BANK_2,
     roles: [MAKER],
   };
@@ -67,9 +67,9 @@ context('Admin user creates a new user', () => {
       // Click the create user button without filling in the fields
       createUser.createUser().click();
 
-      // Check if the validation text is displayed for the first name, surname, roles, and bank fields
+      // Check if the validation text is displayed for the first name, lastName, roles, and bank fields
       createUser.firstNameError().should('contain', 'First name is required');
-      createUser.surNameError().should('contain', 'Surname is required');
+      createUser.lastNameError().should('contain', 'Last name is required');
       createUser.rolesError().should('contain', 'At least one role is required');
     });
 
@@ -88,7 +88,7 @@ context('Admin user creates a new user', () => {
 
       cy.keyboardInput(createUser.username(), userWithInvalidPassword.username);
       cy.keyboardInput(createUser.firstname(), userWithInvalidPassword.firstname);
-      cy.keyboardInput(createUser.surname(), userWithInvalidPassword.surname);
+      cy.keyboardInput(createUser.lastName(), userWithInvalidPassword.lastName);
 
       createUser.bank().select(userWithInvalidPassword.bank.id);
 
@@ -114,7 +114,7 @@ context('Admin user creates a new user', () => {
       // as the string has object characters, need to use parseSpecialCharSequences
       createUser.username().type(USER_WITH_INJECTION.username, { delay: 0, parseSpecialCharSequences: false });
       cy.keyboardInput(createUser.firstname(), USER_WITH_INJECTION.firstname);
-      cy.keyboardInput(createUser.surname(), USER_WITH_INJECTION.surname);
+      cy.keyboardInput(createUser.lastName(), USER_WITH_INJECTION.lastName);
 
       createUser.bank().select(USER_WITH_INJECTION.bank.id);
 
@@ -169,7 +169,7 @@ context('Admin user creates a new user', () => {
     it('should receive error when user is admin and the email address is from a non-UKEF domain', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.lastName(), validUser.lastName);
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), validUser.username);
@@ -188,7 +188,7 @@ context('Admin user creates a new user', () => {
     it('should receive error when a non ukef user is read-only with all banks', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.lastName(), validUser.lastName);
       createUser.isTrustedFalse().click();
       createUser.role(READ_ONLY).click();
       cy.keyboardInput(createUser.username(), validUser.username);
@@ -213,7 +213,7 @@ context('Admin user creates a new user', () => {
 
       cy.keyboardInput(createUser.username(), validUser.username);
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.lastName(), validUser.lastName);
 
       createUser.bank().select(validUser.bank.id);
 
@@ -249,7 +249,7 @@ context('Admin user creates a new user', () => {
 
       cy.keyboardInput(createUser.username(), validUser.username);
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.lastName(), validUser.lastName);
 
       createUser.bank().select(validUser.bank.id);
 
@@ -268,7 +268,7 @@ context('Admin user creates a new user', () => {
     it('should create a read-only user', () => {
       cy.keyboardInput(createUser.username(), ukefEmailUser.username);
       cy.keyboardInput(createUser.firstname(), ukefEmailUser.firstname);
-      cy.keyboardInput(createUser.surname(), ukefEmailUser.surname);
+      cy.keyboardInput(createUser.lastName(), ukefEmailUser.lastName);
 
       createUser.bank().select(ukefEmailUser.bank.id);
 
@@ -283,7 +283,7 @@ context('Admin user creates a new user', () => {
     it('should create a new admin user with a UKEF email address.', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), ukefEmailUser.firstname);
-      cy.keyboardInput(createUser.surname(), ukefEmailUser.surname);
+      cy.keyboardInput(createUser.lastName(), ukefEmailUser.lastName);
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), ukefEmailUser.username);
@@ -301,7 +301,7 @@ context('Admin user creates a new user', () => {
     it('should create a new non-admin user with a UKEF email address.', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.lastName(), validUser.lastName);
       createUser.isTrustedFalse().click();
       createUser.role(PAYMENT_REPORT_OFFICER).click();
       cy.keyboardInput(createUser.username(), validUser.username);

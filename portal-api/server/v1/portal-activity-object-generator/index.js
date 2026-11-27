@@ -5,7 +5,7 @@ const portalActivityGenerator = (activityParams) => {
 
   const userToAdd = {
     firstName: user.firstname,
-    lastName: user.surname,
+    lastName: user.lastName,
     _id: user._id,
   };
 

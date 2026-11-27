@@ -12,7 +12,7 @@ context('Admin user updates an existing user', () => {
     email: 'email@example.com',
     password: 'AbC!2345',
     firstname: 'first',
-    surname: 'last',
+    lastName: 'last',
     bank: UKEF_BANK_1,
     roles: [MAKER],
   };
@@ -43,7 +43,7 @@ context('Admin user updates an existing user', () => {
     // Fill in details
     cy.keyboardInput(createUser.username(), userToUpdate.username);
     cy.keyboardInput(createUser.firstname(), userToUpdate.firstname);
-    cy.keyboardInput(createUser.surname(), userToUpdate.surname);
+    cy.keyboardInput(createUser.lastName(), userToUpdate.lastName);
 
     userToUpdate.roles.forEach((role) => {
       createUser.role(role).click();
@@ -106,13 +106,13 @@ context('Admin user updates an existing user', () => {
 
   it('changing their details should display the new details when the edit page is reloaded', () => {
     const newFirstName = 'new first name';
-    const newSurname = 'new surname';
+    const newLastName = 'new last name';
     const newRole = CHECKER;
 
     openPageToEdit(userToUpdate);
 
     cy.keyboardInput(editUser.firstname(), `{selectAll}{backspace}${newFirstName}`);
-    cy.keyboardInput(editUser.surname(), `{selectAll}{backspace}${newSurname}`);
+    cy.keyboardInput(editUser.lastName(), `{selectAll}{backspace}${newLastName}`);
 
     // switch off all of the users roles
     userToUpdate.roles.forEach((role) => {
@@ -124,7 +124,7 @@ context('Admin user updates an existing user', () => {
     openPageToEdit(userToUpdate);
 
     editUser.firstname().should('have.value', newFirstName);
-    editUser.surname().should('have.value', newSurname);
+    editUser.lastName().should('have.value', newLastName);
     userToUpdate.roles.forEach((role) => {
       editUser.role(role).should('not.be.checked');
     });
@@ -168,7 +168,7 @@ context('Admin user updates an existing user', () => {
     // Create a new UKEF user
     cy.keyboardInput(createUser.username(), ukefEmailUser.username);
     cy.keyboardInput(createUser.firstname(), ukefEmailUser.firstname);
-    cy.keyboardInput(createUser.surname(), ukefEmailUser.surname);
+    cy.keyboardInput(createUser.lastName(), ukefEmailUser.lastName);
 
     userToUpdate.roles.forEach((role) => {
       createUser.role(role).click();

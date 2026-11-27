@@ -31,7 +31,7 @@ const insertUser = async (overrides: Partial<PortalUser> = {}): Promise<PortalUs
     _id: new ObjectId(),
     email: TEST_EMAIL,
     firstname: 'Test',
-    surname: 'User',
+    lastName: 'User',
     ...overrides,
   };
 

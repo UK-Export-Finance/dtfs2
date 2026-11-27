@@ -58,7 +58,7 @@ const uploadReportAndSendNotification = async (req, res) => {
       parsedUser?.bank?.id,
       new Date(dateUploaded),
       parsedUser.firstname,
-      parsedUser.surname,
+      parsedUser.lastName,
     );
     return res.status(201).send({ paymentOfficerEmails });
   } catch (error) {

@@ -21,7 +21,7 @@ const sanitize = (user) => ({
   bank: user.bank,
   lastLogin: user.lastLogin,
   firstname: user.firstname,
-  surname: user.surname,
+  lastName: user.lastName,
   email: user.email,
   timezone: user.timezone,
   'user-status': user['user-status'],

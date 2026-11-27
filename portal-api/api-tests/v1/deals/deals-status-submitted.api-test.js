@@ -218,7 +218,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         username: testbank1Checker.username,
         roles: testbank1Checker.roles,
         firstname: testbank1Checker.firstname,
-        surname: testbank1Checker.surname,
+        lastName: testbank1Checker.lastName,
         timezone: testbank1Checker.timezone,
         lastLogin: expect.any(String),
         'user-status': STATUS.ACTIVE,

@@ -26,7 +26,7 @@ describe(`GET ${BASE_URL}`, () => {
   const portalUser = {
     ...aPortalUser(),
     firstname: 'John',
-    surname: 'Doe',
+    lastName: 'Doe',
   };
 
   const portalUserId = portalUser._id.toString();
@@ -154,7 +154,7 @@ describe(`GET ${BASE_URL}`, () => {
       // Assert
       expect(response.body).toEqual({
         reportPeriod: report.reportPeriod,
-        uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
+        uploadedByFullName: `${portalUser.firstname} ${portalUser.lastName}`,
         dateUploaded: report.dateUploaded?.toISOString(),
         corrections: [
           {
@@ -291,7 +291,7 @@ describe(`GET ${BASE_URL}`, () => {
 
       const expected = {
         reportPeriod: oldestReportWithPendingCorrections.reportPeriod,
-        uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
+        uploadedByFullName: `${portalUser.firstname} ${portalUser.lastName}`,
         dateUploaded: oldestReportWithPendingCorrections.dateUploaded?.toISOString(),
         corrections: expectedCorrections,
         nextDueReportPeriod: expectAnyReportPeriod,

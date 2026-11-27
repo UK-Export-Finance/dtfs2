@@ -26,7 +26,7 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
 
     const expected = {
       firstname: mockSubmittedDeal.maker.firstname,
-      surname: mockSubmittedDeal.maker.surname,
+      lastName: mockSubmittedDeal.maker.lastName,
       exporterName: mockSubmittedDeal.exporter.companyName,
       name: mockSubmittedDeal.name,
       ukefDealId: mockSubmittedDeal.ukefDealId,

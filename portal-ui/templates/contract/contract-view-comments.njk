@@ -33,7 +33,7 @@
         <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment" data-cy="comments-{{count}}">
 
           <p class="govuk-body">
-            <span class="govuk-!-font-weight-bold" data-cy="commentor-name-{{count}}">{{ comment.user.firstname }} {{ comment.user.surname }}</span>
+            <span class="govuk-!-font-weight-bold" data-cy="commentor-name-{{count}}">{{ comment.user.firstname }} {{ comment.user.lastName }}</span>
             {{ comment.timestamp | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
           </p>
 

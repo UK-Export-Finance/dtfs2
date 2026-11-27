@@ -84,7 +84,7 @@ const migrateUsers = async () => {
       timezone: 'Europe/London',
       username: userV1.Mail,
       firstname: userV1.First_name,
-      surname: userV1.Last_name,
+      lastName: userV1.Last_name,
       email: userV1.Mail,
       roles: generateRoles(userV1.Roles),
       bank: {

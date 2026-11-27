@@ -3,7 +3,7 @@ const { getReportAndUserDetails } = require('./utilisation-report-details');
 describe('utilisation-report-details', () => {
   const user = {
     firstname: 'John',
-    surname: 'Smith',
+    lastName: 'Smith',
   };
   const morningReport = {
     _id: 'abc',

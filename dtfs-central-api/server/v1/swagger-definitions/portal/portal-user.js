@@ -19,7 +19,7 @@
  *       firstname:
  *         type: string
  *         example: Joe
- *       surname:
+ *       lastName:
  *         type: string
  *         example: Bloggs
  *       username:

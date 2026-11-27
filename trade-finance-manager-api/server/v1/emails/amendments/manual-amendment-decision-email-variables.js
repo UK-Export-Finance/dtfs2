@@ -5,12 +5,12 @@ const approvedWithWithoutConditionsDecision = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId, ukefDecision } = amendment;
   const { exporter, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
+  const { firstname, lastName } = user;
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
 
   return {
-    recipientName: `${firstname} ${surname}`,
+    recipientName: `${firstname} ${lastName}`,
     ukefFacilityId,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
@@ -24,7 +24,7 @@ const approvedWithConditionsDeclinedDecision = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId, ukefDecision } = amendment;
   const { exporter, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
+  const { firstname, lastName } = user;
   const { conditions, declined, value } = ukefDecision;
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
@@ -33,7 +33,7 @@ const approvedWithConditionsDeclinedDecision = (amendmentVariables) => {
   const amendmentTypeDeclined = value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
 
   return {
-    recipientName: `${firstname} ${surname}`,
+    recipientName: `${firstname} ${lastName}`,
     ukefFacilityId,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
@@ -50,7 +50,7 @@ const approvedWithoutConditionsDeclinedDecision = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId, ukefDecision } = amendment;
   const { exporter, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
+  const { firstname, lastName } = user;
   const { declined, value } = ukefDecision;
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
@@ -59,7 +59,7 @@ const approvedWithoutConditionsDeclinedDecision = (amendmentVariables) => {
   const amendmentTypeDeclined = value === AMENDMENT_UW_DECISION.DECLINED ? AMENDMENT_TYPE.VALUE : AMENDMENT_TYPE.COVER_END_DATE;
 
   return {
-    recipientName: `${firstname} ${surname}`,
+    recipientName: `${firstname} ${lastName}`,
     ukefFacilityId,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
@@ -75,13 +75,13 @@ const declinedDecision = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId, ukefDecision } = amendment;
   const { exporter, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
+  const { firstname, lastName } = user;
   const { declined } = ukefDecision;
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
 
   return {
-    recipientName: `${firstname} ${surname}`,
+    recipientName: `${firstname} ${lastName}`,
     ukefFacilityId,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
@@ -94,12 +94,12 @@ const banksDecisionEmailVariables = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId } = amendment;
   const { exporter, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
+  const { firstname, lastName } = user;
 
   const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
 
   return {
-    recipientName: `${firstname} ${surname}`,
+    recipientName: `${firstname} ${lastName}`,
     ukefFacilityId,
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,

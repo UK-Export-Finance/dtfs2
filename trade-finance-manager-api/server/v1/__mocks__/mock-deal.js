@@ -21,7 +21,7 @@ const MOCK_BSS_EWCS_DEAL = {
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',
-      surname: 'Largo',
+      lastName: 'Largo',
     },
     submissionDate: '1606900616651',
     submissionCount: 1,
@@ -304,7 +304,7 @@ const MOCK_GEF_MAPPED_DEAL = {
     firstname: 'Maker',
     isTrusted: null,
     roles: ['maker'],
-    surname: '1',
+    lastName: '1',
     timezone: 'Europe/London',
     'user-status': 'active',
     username: 'maker1@ukexportfinance.gov.uk',

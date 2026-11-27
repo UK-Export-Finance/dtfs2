@@ -435,13 +435,13 @@ describe(baseUrl, () => {
     describe('status update emails', () => {
       const expectedEmailVariables = (maker, updatedByUser, deal) => ({
         firstName: maker.firstName,
-        surname: maker.surname,
+        lastName: maker.lastName,
         submissionType: deal.submissionType,
         supplierName: deal.exporter.companyName,
         bankInternalRefName: deal.bankInternalRefName,
         currentStatus: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
         previousStatus: deal.status,
-        updatedByName: `${updatedByUser.firstname} ${updatedByUser.surname}`,
+        updatedByName: `${updatedByUser.firstname} ${updatedByUser.lastName}`,
         updatedByEmail: updatedByUser.email,
       });
 
@@ -697,7 +697,7 @@ describe(baseUrl, () => {
           username: checker1.username,
           roles: checker1.roles,
           firstname: checker1.firstname,
-          surname: checker1.surname,
+          lastName: checker1.lastName,
           timezone: checker1.timezone,
           lastLogin: expect.any(String),
           'user-status': STATUS.ACTIVE,
@@ -735,7 +735,7 @@ describe(baseUrl, () => {
       // get author object from checker1
       const author = {
         firstName: checker1.firstname,
-        lastName: checker1.surname,
+        lastName: checker1.lastName,
         _id: checker1._id,
       };
       expect(result.author).toEqual(author);

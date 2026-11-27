@@ -8,7 +8,7 @@ const render = pageRenderer(page);
 describe(page, () => {
   const user = {
     firstname: 'John',
-    surname: 'Smith',
+    lastName: 'Smith',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
   const dueReportPeriods = [

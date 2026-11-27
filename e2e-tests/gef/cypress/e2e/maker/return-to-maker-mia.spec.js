@@ -92,7 +92,7 @@ context('Return to Maker as MIA', () => {
     });
 
     it('comments are showing and application details page should be fully unlocked', () => {
-      applicationPreview.comments().contains(`Comments from ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationPreview.comments().contains(`Comments from ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.lastName}`);
       applicationPreview.comments().contains('comment1');
       statusBanner.bannerStatus().contains("Further Maker's input required");
 

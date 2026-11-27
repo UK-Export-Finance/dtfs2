@@ -24,6 +24,6 @@ export const MOCK_UTILISATION_REPORT: UtilisationReportResponseBody = {
   uploadedByUser: {
     id: '5099803df3f4948bd2f98391',
     firstname: 'Test',
-    surname: 'User',
+    lastName: 'User',
   },
 };

@@ -93,7 +93,7 @@
     <div class="govuk-!-margin-top-3" data-cy="latest-comment">
       {% for comment in comments %}
         <strong>Comments from {{ comment.firstname }}
-          {{ comment.surname }}</strong>
+          {{ comment.lastName }}</strong>
         <p>{{ comment.createdAt | localiseTimestamp('dd MMM yyyy h:mmaaa', timezone) }}</p>
         <p>{{ comment.comment }}</p>
       {% endfor %}

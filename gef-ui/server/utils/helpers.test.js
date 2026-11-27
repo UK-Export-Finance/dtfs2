@@ -1384,7 +1384,7 @@ describe('displayTaskComments()', () => {
           roles: [ROLES.MAKER],
           userName: 'maker1@ukexportfinance.gov.uk',
           firstname: 'First',
-          surname: 'Last',
+          lastName: 'Last',
           email: 'maker1@ukexportfinance.gov.uk',
           createdAt: 1744014786955,
           comment: '123',

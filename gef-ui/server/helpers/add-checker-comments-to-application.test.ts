@@ -56,7 +56,7 @@ describe('addCheckerCommentsToApplication', () => {
             roles: mockUser.roles,
             userName: mockUser.username,
             firstname: mockUser.firstname,
-            surname: mockUser.surname,
+            lastName: mockUser.lastName,
             email: mockUser.email,
             createdAt: expect.any(Number) as number,
             comment: mockComment,

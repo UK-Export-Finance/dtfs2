@@ -7,7 +7,7 @@ export const BANK1_MAKER1 = {
   username: 'maker1@ukexportfinance.gov.uk',
   password: 'AbC!2345',
   firstname: 'First',
-  surname: 'Last',
+  lastName: 'Last',
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: [ROLES.MAKER],

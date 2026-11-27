@@ -14,7 +14,7 @@ const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
 const firstNameMustNotBeEmpty = require('./rules/firstName-must-not-be-empty');
-const surnameMustNotBeEmpty = require('./rules/surname-must-not-be-empty');
+const lastNameMustNotBeEmpty = require('./rules/lastName-must-not-be-empty');
 const selectAtLeastOneRole = require('./rules/select-at-least-one-role');
 const selectAtLeastOneBank = require('./rules/select-at-least-one-bank');
 const adminFromUkefOnly = require('./rules/admin-from-ukef-only');
@@ -33,7 +33,7 @@ jest.mock('./rules/username-and-email-must-match');
 jest.mock('./rules/email-must-be-valid-email-address');
 jest.mock('./rules/email-must-be-unique');
 jest.mock('./rules/firstName-must-not-be-empty');
-jest.mock('./rules/surname-must-not-be-empty');
+jest.mock('./rules/lastName-must-not-be-empty');
 jest.mock('./rules/select-at-least-one-role');
 jest.mock('./rules/select-at-least-one-bank');
 jest.mock('./rules/admin-from-ukef-only');
@@ -44,7 +44,7 @@ const mockUser = {
   username: 'maker1@ukexportfinance.gov.uk',
   email: 'maker1@ukexportfinance.gov.uk',
   firstName: 'Maker',
-  surname: 'One',
+  lastName: 'One',
   roles: [MAKER],
   banks: ['bank1'],
 };
@@ -67,7 +67,7 @@ describe('Validation Rules', () => {
     emailMustBeValidEmailAddress.mockResolvedValue([]);
     emailMustBeUnique.mockResolvedValue([]);
     firstNameMustNotBeEmpty.mockResolvedValue([]);
-    surnameMustNotBeEmpty.mockResolvedValue([]);
+    lastNameMustNotBeEmpty.mockResolvedValue([]);
     selectAtLeastOneRole.mockResolvedValue([]);
     selectAtLeastOneBank.mockResolvedValue([]);
     adminFromUkefOnly.mockResolvedValue([]);
@@ -94,8 +94,8 @@ describe('Validation Rules', () => {
       expect(emailMustBeValidEmailAddress).toHaveBeenCalledWith(null, candidateChange);
       expect(emailMustBeUnique).toHaveBeenCalledWith(null, candidateChange);
       expect(firstNameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
-      expect(surnameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
-      expect(surnameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
+      expect(lastNameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
+      expect(lastNameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
       expect(selectAtLeastOneRole).toHaveBeenCalledWith(null, candidateChange);
       expect(selectAtLeastOneBank).toHaveBeenCalledWith(null, candidateChange);
       expect(adminFromUkefOnly).toHaveBeenCalledWith(null, candidateChange);

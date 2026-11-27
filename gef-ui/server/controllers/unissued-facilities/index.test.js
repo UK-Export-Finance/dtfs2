@@ -206,7 +206,7 @@ describe('postChangeUnissuedFacility()', () => {
   const maker = {
     _id: '12345',
     firstname: 'Test',
-    surname: 'Test',
+    lastName: 'Test',
   };
 
   describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
@@ -673,7 +673,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   const maker = {
     _id: '12345',
     firstname: 'Test',
-    surname: 'Test',
+    lastName: 'Test',
   };
 
   describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {

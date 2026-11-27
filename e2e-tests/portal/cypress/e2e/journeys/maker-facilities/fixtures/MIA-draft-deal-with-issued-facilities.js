@@ -25,7 +25,7 @@ const deal = {
     },
     lastLogin: now,
     firstname: 'Hugo',
-    surname: 'Drax',
+    lastName: 'Drax',
     email: 'maker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     'user-status': 'active',
