@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.4",
-    "@typescript-eslint/eslint-plugin": "8.59.2",
-    "@typescript-eslint/parser": "8.59.2",
+    "@typescript-eslint/eslint-plugin": "8.74.0",
+    "@typescript-eslint/parser": "8.74.0",
     "@ukef/dtfs2-common": "1.0.0",
     "bson": "^6.10.4",
     "chance": "^1.1.13",
