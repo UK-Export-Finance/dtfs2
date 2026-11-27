@@ -1,17 +1,9 @@
-import { CronScheduleFunc, CronSchedulerJobTask } from './scheduler.types';
+import { CronSchedulerJobTask } from './scheduler.types';
 
-/**
- * 'node-cron' requires the task function to be synchronous (return type `void`)
- * but some of the scheduler functions are asynchronous (return type
- * `Promise<void>`). This function takes in any task and uses an IIFE to turn it
- * into a synchronous function
- */
 export const asyncTaskToSyncTask =
-  (task: CronSchedulerJobTask): CronScheduleFunc =>
+  (task: CronSchedulerJobTask): ((now: Date | 'manual' | 'init') => void) =>
   (now) => {
-    (async () => {
-      await task(now);
-    })();
+    void task(now);
   };
 
 /**

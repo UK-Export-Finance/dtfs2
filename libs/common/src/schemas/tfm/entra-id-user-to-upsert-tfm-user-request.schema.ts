@@ -16,5 +16,4 @@ export const ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA = ENTRA_ID_USER_SCH
   timezone,
   firstName: entraIdUser.given_name,
   lastName: entraIdUser.family_name,
-  lastLogin: Date.now(),
 })).pipe(UPSERT_TFM_USER_REQUEST_SCHEMA);

@@ -1,9 +1,9 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests/with-default-options.tests';
 import { CURRENCY } from '@ukef/constants';
 
-export const withCurrencySchemaTests = <Schema extends ZodSchema>({
+export const withCurrencySchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

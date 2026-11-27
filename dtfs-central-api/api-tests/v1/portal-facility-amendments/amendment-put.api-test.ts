@@ -141,7 +141,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
-        message: ["amendment: Unrecognized key(s) in object: 'extraField' (unrecognized_keys)"],
+        message: ['amendment: Unrecognized key: "extraField" (unrecognized_keys)'],
         code: API_ERROR_CODE.INVALID_PAYLOAD,
       });
     });

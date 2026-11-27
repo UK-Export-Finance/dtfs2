@@ -1,8 +1,8 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 import { withDefaultOptionsTests } from './with-default-options.tests';
 
-export const withBooleanTests = <Schema extends ZodSchema>({
+export const withBooleanTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

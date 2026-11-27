@@ -11,6 +11,8 @@ const createWebpackPreprocessor = () => {
   webpackOptions.resolve.alias = {
     ...webpackOptions.resolve.alias,
     ...webpackAliases,
+    // The scheduler is server-only and imports Node built-ins unavailable in Cypress.
+    '@ukef/dtfs2-common$': path.resolve(__dirname, '../../libs/common/src/index.shared.ts'),
   };
 
   /**

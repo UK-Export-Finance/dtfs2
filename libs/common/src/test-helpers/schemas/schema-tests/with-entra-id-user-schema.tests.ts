@@ -1,10 +1,10 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { anEntraIdUser } from '@ukef/test-helpers/mock-data';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 import { withSchemaValidationTests } from '@ukef/test-helpers/schemas/with-schema-validation.tests';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 
-export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
+export const withEntraIdUserSchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

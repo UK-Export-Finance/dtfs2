@@ -7,7 +7,7 @@ const SubmittedBySchema = z.object({
   _id: MongoObjectIdSchema,
   username: z.string(),
   name: z.string(),
-  email: z.string().email(),
+  email: z.email(),
 });
 
 const PutFacilityAmendmentSchema = z.object({
@@ -71,7 +71,7 @@ const PutFacilityAmendmentSchema = z.object({
       createdBy: z.object({
         username: z.string(),
         name: z.string(),
-        email: z.string().email(),
+        email: z.email(),
       }),
       tfm: z
         .object({

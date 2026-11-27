@@ -1,8 +1,8 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests/with-default-options.tests';
 
-export const withIsoDateTimeStampToDateSchemaTests = <Schema extends ZodSchema>({
+export const withIsoDateTimeStampToDateSchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

@@ -19,7 +19,7 @@ export const TFM_FACILITY_AMENDMENT = z.object({
   createdBy: z.object({
     username: z.string(),
     name: z.string(),
-    email: z.string().email(),
+    email: z.email(),
   }),
   facilityType: z.string().optional(),
   changeCoverEndDate: z.boolean().optional(),

@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import {
   withUnixTimestampMillisecondsSchemaTests,
   withUnixTimestampSecondsSchemaTests,
@@ -26,7 +26,7 @@ import { WithTestsForTestCaseProps } from '@ukef/test-helpers/schemas/types/with
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema>): void => {
+export const withTestsForTestcase = <Schema extends ZodType>(props: WithTestsForTestCaseProps<Schema>): void => {
   const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 

@@ -1,14 +1,9 @@
-import * as cron from 'node-cron';
-
-export type CronScheduleFunc = Parameters<typeof cron.schedule>[1];
-
-type CronScheduleFuncParameters = Parameters<Extract<CronScheduleFunc, Function>>[0];
+export type CronScheduleFunc = ((now: Date | 'manual' | 'init') => void) | string;
 
 /**
- * The `now` parameter is provided here as
- * node-cron's schedule function expects tasks to take this parameter.
+ * The scheduler passes the time at which the task starts.
  */
-export type CronSchedulerJobTask = (now: CronScheduleFuncParameters) => void | Promise<void>;
+export type CronSchedulerJobTask = (now: Date | 'manual' | 'init') => void | Promise<void>;
 
 export type CronSchedulerJob = {
   /**

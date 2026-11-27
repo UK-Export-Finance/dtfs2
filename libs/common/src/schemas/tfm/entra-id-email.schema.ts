@@ -6,4 +6,4 @@ import { z } from 'zod';
  *
  * @see https://zod.dev/?id=string-email
  */
-export const ENTRA_ID_EMAIL_SCHEMA = z.string().email();
+export const ENTRA_ID_EMAIL_SCHEMA = z.email();

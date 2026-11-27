@@ -188,7 +188,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
         code: 'INVALID_PAYLOAD',
-        message: [`newStatus: Invalid enum value. Expected '${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}', received '${anInvalidStatus}' (invalid_enum_value)`],
+        message: [`newStatus: Invalid input: expected "${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}" (invalid_value)`],
       });
     });
 
@@ -210,7 +210,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
         code: 'INVALID_PAYLOAD',
-        message: ['bankId: Expected string, received number (invalid_type)'],
+        message: ['bankId: Invalid input: expected string, received number (invalid_type)'],
       });
     });
 
@@ -232,7 +232,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
         code: 'INVALID_PAYLOAD',
-        message: ['bankName: Required (invalid_type)'],
+        message: ['bankName: Invalid input: expected string, received undefined (invalid_type)'],
       });
     });
 

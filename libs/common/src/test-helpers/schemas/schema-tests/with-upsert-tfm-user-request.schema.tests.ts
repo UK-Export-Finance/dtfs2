@@ -1,10 +1,10 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 import { withSchemaValidationTests } from '@ukef/test-helpers/schemas/with-schema-validation.tests';
 import { aUpsertTfmUserRequest } from '@ukef/test-helpers/mock-data';
 
-export const withUpsertTfmUserRequestSchemaTests = <Schema extends ZodSchema>({
+export const withUpsertTfmUserRequestSchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
