@@ -215,9 +215,6 @@
       "FF_PORTAL_FACILITY_AMENDMENTS_ENABLED": {
         "value": "{{FF_PORTAL_FACILITY_AMENDMENTS_ENABLED}}"
       },
-      "FF_TFM_DEAL_CANCELLATION_ENABLED": {
-        "value": "{{FF_TFM_DEAL_CANCELLATION_ENABLED}}"
-      },
       "MAINTENANCE_ACTIVE": {
         "value": "{{MAINTENANCE_ACTIVE}}"
       },

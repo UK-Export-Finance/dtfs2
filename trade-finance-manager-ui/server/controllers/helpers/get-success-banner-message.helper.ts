@@ -1,7 +1,7 @@
 import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, MappedDealSnapshot } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import api from '@tfm-ui/api';
-import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled } from './deal-cancellation-enabled.helper';
 
 /**
  * Returns deal cancellation message if the deal is pending cancellation
@@ -19,9 +19,9 @@ export const getScheduledCancellationBannerMessage = async ({
   const { submissionType, _id: dealId } = dealSnapshot;
   const { ukefDealId } = dealSnapshot.details;
 
-  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType);
+  const canDealBeCancelled = canSubmissionTypeBeCancelled(submissionType);
 
-  if (!dealCancellationIsEnabled) {
+  if (!canDealBeCancelled) {
     return null;
   }
 

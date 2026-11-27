@@ -36,11 +36,11 @@ describe('controllers/dashboard/facilities - template-filters', () => {
 
   describe('stageFilters', () => {
     it('should return generateFiltersArray with all possible `facility stage` field inputs', () => {
-      const mockSubmittedFilters = {};
+      const mockSubmittedFilters = { stage: [FACILITY_STAGE.RISK_EXPIRED] };
 
       const result = stageFilters(mockSubmittedFilters);
 
-      const expectedFieldName = FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
+      const expectedFieldName = FIELD_NAMES.FACILITY.STAGE;
 
       const expectedFieldInputs = [
         {
@@ -50,6 +50,10 @@ describe('controllers/dashboard/facilities - template-filters', () => {
         {
           text: FACILITY_STAGE.UNISSUED,
           value: FACILITY_STAGE.UNISSUED,
+        },
+        {
+          text: FACILITY_STAGE.RISK_EXPIRED,
+          value: FACILITY_STAGE.RISK_EXPIRED,
         },
       ];
 

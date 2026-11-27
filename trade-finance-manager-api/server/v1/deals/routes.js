@@ -1,5 +1,5 @@
 const express = require('express');
-const { TEAM_IDS, validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
@@ -84,7 +84,7 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .all(validateDealCancellationEnabled, validation.dealIdValidation, handleExpressValidatorResult)
+  .all(validation.dealIdValidation, handleExpressValidatorResult)
   .put(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validatePutDealCancellationPayload, updateDealCancellation)
   .get(getDealCancellation)
   .delete(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), deleteDealCancellation);
@@ -92,7 +92,6 @@ dealsAuthRouter
 dealsAuthRouter
   .route('/deals/:dealId/cancellation/submit')
   .post(
-    validateDealCancellationEnabled,
     validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]),
     validation.dealIdValidation,
     handleExpressValidatorResult,

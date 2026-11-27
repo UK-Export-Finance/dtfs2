@@ -53,111 +53,80 @@ describe('/v1/deals/:id/cancellation', () => {
       process.env = originalProcessEnv;
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('returns a 404 response for an authenticated user with a valid id path', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
-
-        // Act
-        const response = await as(aPimUser).put(validPayload).to(url);
-
-        // Assert
-        expect(response.status).toEqual(404);
-      });
+    withTeamAuthorisationTests({
+      allowedTeams: [TEAM_IDS.PIM],
+      getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+      makeRequestAsUser: (user: TestUser) =>
+        as(user)
+          .put(validPayload)
+          .to(getTfmDealCancellationUrl({ id: validId })),
+      successStatusCode: 200,
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
-      });
+    it('returns a 401 response when user is not authenticated', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: validId });
 
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
+      // Act
+      const response = await put(url, validPayload);
 
-      withTeamAuthorisationTests({
-        allowedTeams: [TEAM_IDS.PIM],
-        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
-        makeRequestAsUser: (user: TestUser) =>
-          as(user)
-            .put(validPayload)
-            .to(getTfmDealCancellationUrl({ id: validId })),
-        successStatusCode: 200,
-      });
+      // Assert
+      expect(response.status).toEqual(401);
+    });
 
-      it('returns a 401 response when user is not authenticated', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
+    it('returns a 400 response when the id path param is invalid', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: 'invalid' });
 
-        // Act
-        const response = await put(url, validPayload);
+      // Act
+      const response = await as(aPimUser).put(validPayload).to(url);
 
-        // Assert
-        expect(response.status).toEqual(401);
-      });
+      // Assert
+      expect(response.status).toEqual(400);
+    });
 
-      it('returns a 400 response when the id path param is invalid', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: 'invalid' });
+    const invalidPayloads = [
+      {
+        description: 'the reason is not a string',
+        payload: { reason: 12 },
+      },
+      {
+        description: `the reason is over ${MAX_CHARACTER_COUNT} characters`,
+        payload: { reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1) },
+      },
+      {
+        description: 'the bankRequestDate is a string ',
+        payload: { bankRequestDate: new Date().toISOString() },
+      },
+      {
+        description: 'the effectiveFrom is a string ',
+        payload: { effectiveFrom: new Date().toISOString() },
+      },
+    ];
 
-        // Act
-        const response = await as(aPimUser).put(validPayload).to(url);
+    it.each(invalidPayloads)('returns a 400 response when $description', async ({ payload }) => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: validId });
 
-        // Assert
-        expect(response.status).toEqual(400);
-      });
+      // Act
+      const response = await as(aPimUser).put(payload).to(url);
 
-      const invalidPayloads = [
-        {
-          description: 'the reason is not a string',
-          payload: { reason: 12 },
-        },
-        {
-          description: `the reason is over ${MAX_CHARACTER_COUNT} characters`,
-          payload: { reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1) },
-        },
-        {
-          description: 'the bankRequestDate is a string ',
-          payload: { bankRequestDate: new Date().toISOString() },
-        },
-        {
-          description: 'the effectiveFrom is a string ',
-          payload: { effectiveFrom: new Date().toISOString() },
-        },
-      ];
+      // Assert
+      expect(response.status).toEqual(400);
+    });
 
-      it.each(invalidPayloads)('returns a 400 response when $description', async ({ payload }) => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
+    it('updates the deal cancellation for an authenticated user', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: validId });
 
-        // Act
-        const response = await as(aPimUser).put(payload).to(url);
+      // Act
+      const response = await as(aPimUser).put(validPayload).to(url);
 
-        // Assert
-        expect(response.status).toEqual(400);
-      });
+      const expectedResponse = { ...mockUpdateResult, upsertedId: validId };
 
-      it('updates the deal cancellation for an authenticated user', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
-
-        // Act
-        const response = await as(aPimUser).put(validPayload).to(url);
-
-        const expectedResponse = { ...mockUpdateResult, upsertedId: validId };
-
-        // Assert
-        expect(response.status).toEqual(200);
-        expect(response.body).toEqual(expectedResponse);
-      });
+      // Assert
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(expectedResponse);
     });
   });
 });

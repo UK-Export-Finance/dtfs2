@@ -16,7 +16,8 @@ const {
   getTask,
   showAmendmentButton,
   ukefDecisionRejected,
-  isDealCancellationEnabledForUser,
+  isUserAllowedToCancelDeal,
+  canSubmissionTypeBeCancelled,
   canDealBeCancelled,
   isDealCancellationInDraft,
 } = require('../helpers');
@@ -78,12 +79,12 @@ const getCaseDeal = async (req, res) => {
 
     const { dealSnapshot } = deal;
 
-    const dealCancellationIsEnabled = isDealCancellationEnabledForUser(dealSnapshot.submissionType, user);
+    const canUserCancelDeal = isUserAllowedToCancelDeal(user);
 
     let showDealCancelButton = false;
     let hasDraftCancellation = false;
 
-    if (dealCancellationIsEnabled) {
+    if (canUserCancelDeal && canSubmissionTypeBeCancelled(dealSnapshot.submissionType)) {
       const cancellation = await api.getDealCancellation(dealId, userToken);
       showDealCancelButton = canDealBeCancelled(cancellation.status);
       hasDraftCancellation = isDealCancellationInDraft(cancellation.status);

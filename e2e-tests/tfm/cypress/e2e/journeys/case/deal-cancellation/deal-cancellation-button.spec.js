@@ -6,7 +6,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
 import reasonForCancellingPage from '../../../pages/deal-cancellation/reason-for-cancelling';
 
-context('Deal cancellation button - feature flag enabled', () => {
+context('Deal cancellation button', () => {
   describe('when visiting a BSS/EWCS AIN deal summary page', () => {
     let dealId;
     before(() => {

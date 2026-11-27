@@ -40,78 +40,47 @@ describe('/v1/deals/:id/cancellation', () => {
       process.env = originalProcessEnv;
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('returns a 404 response for an authenticated user with a valid id path', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
-
-        // Act
-        const response = await as(aPimUser).remove({}).to(url);
-
-        // Assert
-        expect(response.status).toEqual(HttpStatusCode.NotFound);
-      });
+    withTeamAuthorisationTests({
+      allowedTeams: [TEAM_IDS.PIM],
+      getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+      makeRequestAsUser: (user: TestUser) =>
+        as(user)
+          .remove({})
+          .to(getTfmDealCancellationUrl({ id: validId })),
+      successStatusCode: HttpStatusCode.NoContent,
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
-      });
+    it('returns a 401 response when user is not authenticated', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: validId });
 
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
+      // Act
+      const response = await remove(url, {});
 
-      withTeamAuthorisationTests({
-        allowedTeams: [TEAM_IDS.PIM],
-        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
-        makeRequestAsUser: (user: TestUser) =>
-          as(user)
-            .remove({})
-            .to(getTfmDealCancellationUrl({ id: validId })),
-        successStatusCode: HttpStatusCode.NoContent,
-      });
+      // Assert
+      expect(response.status).toEqual(401);
+    });
 
-      it('returns a 401 response when user is not authenticated', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
+    it('returns a 400 response when the id path param is invalid', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: 'invalid' });
 
-        // Act
-        const response = await remove(url, {});
+      // Act
+      const response = await as(aPimUser).remove({}).to(url);
 
-        // Assert
-        expect(response.status).toEqual(401);
-      });
+      // Assert
+      expect(response.status).toEqual(400);
+    });
 
-      it('returns a 400 response when the id path param is invalid', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: 'invalid' });
+    it('deletes the deal cancellation for an authenticated user', async () => {
+      // Arrange
+      const url = getTfmDealCancellationUrl({ id: validId });
 
-        // Act
-        const response = await as(aPimUser).remove({}).to(url);
+      // Act
+      const response = await as(aPimUser).remove({}).to(url);
 
-        // Assert
-        expect(response.status).toEqual(400);
-      });
-
-      it('deletes the deal cancellation for an authenticated user', async () => {
-        // Arrange
-        const url = getTfmDealCancellationUrl({ id: validId });
-
-        // Act
-        const response = await as(aPimUser).remove({}).to(url);
-
-        // Assert
-        expect(response.status).toEqual(HttpStatusCode.NoContent);
-      });
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.NoContent);
     });
   });
 });

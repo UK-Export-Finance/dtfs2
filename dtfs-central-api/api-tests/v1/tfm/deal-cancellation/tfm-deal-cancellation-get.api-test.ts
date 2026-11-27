@@ -40,76 +40,50 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
   });
 
   describe('GET /v1/tfm/deals/:dealId/cancellation', () => {
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('should return 404', async () => {
-        const { status } = await testApi.get(dealCancellationUrl);
-
-        expect(status).toEqual(HttpStatusCode.NotFound);
-      });
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/deals/:dealId/cancellation',
+      makeRequest: (url) => testApi.get(url),
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
-      });
+    it('should return the deal cancellation object if it exists', async () => {
+      const dealCancellation: TfmDealCancellation = {
+        reason: 'test reason',
+        bankRequestDate: 1794418807,
+        effectiveFrom: 1794419907,
+      };
 
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
+      await testApi.put({ dealCancellationUpdate: dealCancellation, auditDetails: generateTfmAuditDetails(aTfmUser()._id) }).to(dealCancellationUrl);
 
-      withMongoIdPathParameterValidationTests({
-        baseUrl: '/v1/tfm/deals/:dealId/cancellation',
-        makeRequest: (url) => testApi.get(url),
-      });
+      const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
-      it('should return the deal cancellation object if it exists', async () => {
-        const dealCancellation: TfmDealCancellation = {
-          reason: 'test reason',
-          bankRequestDate: 1794418807,
-          effectiveFrom: 1794419907,
-        };
+      expect(getCancellationResponse.body).toEqual({ ...dealCancellation, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+      expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
+    });
 
-        await testApi.put({ dealCancellationUpdate: dealCancellation, auditDetails: generateTfmAuditDetails(aTfmUser()._id) }).to(dealCancellationUrl);
+    it('should return an empty object if the deal does not have an existing cancellation', async () => {
+      const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
-        const getCancellationResponse = await testApi.get(dealCancellationUrl);
+      expect(getCancellationResponse.body).toEqual({});
+      expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
+    });
 
-        expect(getCancellationResponse.body).toEqual({ ...dealCancellation, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
-        expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
-      });
+    it('should return 404 if dealId is valid but not associated to a deal', async () => {
+      const validButNonExistentDealId = new ObjectId();
 
-      it('should return an empty object if the deal does not have an existing cancellation', async () => {
-        const getCancellationResponse = await testApi.get(dealCancellationUrl);
+      const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation`);
 
-        expect(getCancellationResponse.body).toEqual({});
-        expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
-      });
+      expect(getCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+      expect(getCancellationResponse.body).toEqual({ status: HttpStatusCode.NotFound, message: `Deal not found: ${validButNonExistentDealId.toString()}` });
+    });
 
-      it('should return 404 if dealId is valid but not associated to a deal', async () => {
-        const validButNonExistentDealId = new ObjectId();
+    it('should return 400 if invalid dealId', async () => {
+      const invalidDealId = '1234';
 
-        const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation`);
-
-        expect(getCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
-        expect(getCancellationResponse.body).toEqual({ status: HttpStatusCode.NotFound, message: `Deal not found: ${validButNonExistentDealId.toString()}` });
-      });
-
-      it('should return 400 if invalid dealId', async () => {
-        const invalidDealId = '1234';
-
-        const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${invalidDealId}/cancellation`);
-        expect(getCancellationResponse.status).toEqual(400);
-        expect(getCancellationResponse.body).toEqual({
-          code: 'INVALID_MONGO_ID_PATH_PARAMETER',
-          message: "Expected path parameter 'dealId' to be a valid mongo id",
-        });
+      const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${invalidDealId}/cancellation`);
+      expect(getCancellationResponse.status).toEqual(400);
+      expect(getCancellationResponse.body).toEqual({
+        code: 'INVALID_MONGO_ID_PATH_PARAMETER',
+        message: "Expected path parameter 'dealId' to be a valid mongo id",
       });
     });
   });

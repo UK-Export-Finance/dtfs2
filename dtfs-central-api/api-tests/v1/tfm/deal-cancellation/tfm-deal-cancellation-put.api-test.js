@@ -60,67 +60,45 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
   });
 
   describe('PUT /v1/tfm/deals/:dealId/cancellation', () => {
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('should return 404', async () => {
-        const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
-
-        expect(status).toEqual(404);
-      });
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/deals/:dealId/cancellation',
+      makeRequest: (url) => testApi.put({}).to(url),
     });
 
-    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
-      beforeEach(() => {
-        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
-      });
+    withValidateAuditDetailsTests({
+      makeRequest: async (auditDetails) => await testApi.put({ auditDetails, dealCancellationUpdate }).to(dealCancellationUrl),
+      validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
+    });
 
-      withMongoIdPathParameterValidationTests({
-        baseUrl: '/v1/tfm/deals/:dealId/cancellation',
-        makeRequest: (url) => testApi.put({}).to(url),
-      });
+    it('should update a deal with the deal cancellation based on dealId', async () => {
+      const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
-      withValidateAuditDetailsTests({
-        makeRequest: async (auditDetails) => await testApi.put({ auditDetails, dealCancellationUpdate }).to(dealCancellationUrl),
-        validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
-      });
+      const expected = {
+        acknowledged: true,
+        modifiedCount: 1,
+        upsertedId: null,
+        upsertedCount: 0,
+        matchedCount: 1,
+      };
+      expect(bodyPutResponse).toEqual(expected);
+      expect(status).toEqual(200);
+    });
 
-      it('should update a deal with the deal cancellation based on dealId', async () => {
-        const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+    it('should return 404 if dealId is valid but NOT associated to a deal', async () => {
+      const validButNonExistentDealId = new ObjectId();
 
-        const expected = {
-          acknowledged: true,
-          modifiedCount: 1,
-          upsertedId: null,
-          upsertedCount: 0,
-          matchedCount: 1,
-        };
-        expect(bodyPutResponse).toEqual(expected);
-        expect(status).toEqual(200);
-      });
+      const { status } = await testApi
+        .put({ dealCancellationUpdate, auditDetails: tfmAuditDetails })
+        .to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);
 
-      it('should return 404 if dealId is valid but NOT associated to a deal', async () => {
-        const validButNonExistentDealId = new ObjectId();
+      expect(status).toEqual(404);
+    });
 
-        const { status } = await testApi
-          .put({ dealCancellationUpdate, auditDetails: tfmAuditDetails })
-          .to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);
+    it('should return 400 if invalid dealId', async () => {
+      const invalidDealId = '1234';
 
-        expect(status).toEqual(404);
-      });
-
-      it('should return 400 if invalid dealId', async () => {
-        const invalidDealId = '1234';
-
-        const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation`);
-        expect(status).toEqual(400);
-      });
+      const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation`);
+      expect(status).toEqual(400);
     });
   });
 });
