@@ -1,5 +1,5 @@
 import { isValid, parseISO } from 'date-fns';
-import z from 'zod';
+import zod from 'zod';
 import { DayMonthYearInput, GenericValidationError } from '@ukef/types';
 
 type ValueAndFieldRefs = {
@@ -119,7 +119,7 @@ const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, value
 
   // schema to validate that the year is 4 digits long and only numbers
   let yearFormatError;
-  const yearFormatSchema = z.string().length(4).regex(/^\d+$/);
+  const yearFormatSchema = zod.string().length(4).regex(/^\d+$/);
 
   try {
     yearFormatSchema.parse(year);
@@ -129,7 +129,7 @@ const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, value
 
   // schema which ensures that the month is an integer between 1 and 12 (allows for leading 0s)
   let monthFormatError;
-  const monthFormatSchema = z.string().regex(/^([1-9]|1[012]|0[1-9])$/);
+  const monthFormatSchema = zod.string().regex(/^([1-9]|1[012]|0[1-9])$/);
 
   try {
     monthFormatSchema.parse(month);
@@ -139,7 +139,7 @@ const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, value
 
   // schema which ensures that the day is an integer between 1 and 31 (allows for leading 0s)
   let dayFormatError;
-  const dayFormatSchema = z.string().regex(/^(3[01]|[12][0-9]|[1-9]|0[1-9])$/);
+  const dayFormatSchema = zod.string().regex(/^(3[01]|[12][0-9]|[1-9]|0[1-9])$/);
 
   try {
     dayFormatSchema.parse(day);

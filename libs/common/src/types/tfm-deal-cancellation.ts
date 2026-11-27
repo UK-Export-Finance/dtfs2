@@ -1,8 +1,8 @@
-import z from 'zod';
+import zod from 'zod';
 import { ObjectId } from 'mongodb';
 import { DEAL_CANCELLATION } from '@ukef/schemas/deal-cancellation';
 
-export type TfmDealCancellation = z.infer<typeof DEAL_CANCELLATION>;
+export type TfmDealCancellation = zod.infer<typeof DEAL_CANCELLATION>;
 
 export type TfmDealCancellationResponse = {
   cancelledDealUkefId: string | ObjectId;

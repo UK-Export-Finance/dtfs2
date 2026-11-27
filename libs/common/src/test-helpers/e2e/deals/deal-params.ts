@@ -25,12 +25,12 @@ export const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE_VARS = {
 
 export const DEAL_WITH_ONLY_1_FACILITY_BOND_VARS = {
   testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-  mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND)],
+  mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((facility) => facility.type === FACILITY_TYPE.BOND)],
 };
 
 export const DEAL_WITH_ONLY_1_FACILITY_LOAN_VARS = {
   testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-  mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
+  mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((facility) => facility.type === FACILITY_TYPE.LOAN)],
 };
 
 // NOTE: searching by date queries multiple fields.

@@ -32,7 +32,7 @@ export const errorsIncludeMessage = (errors: ApiErrors, substring: string): bool
   const searchTerm = substring.toLowerCase();
 
   // Use `some` to check if any error message includes the substring and return the resulting boolean value.
-  const hasErrorContainingMessage = errors.some((e) => typeof e.msg === 'string' && e.msg.toLowerCase().includes(searchTerm));
+  const hasErrorContainingMessage = errors.some((error) => typeof error.msg === 'string' && error.msg.toLowerCase().includes(searchTerm));
 
   return hasErrorContainingMessage;
 };

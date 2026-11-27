@@ -36,16 +36,16 @@ type SortAmendmentsOptions = {
 export const sortAmendmentsByReferenceNumber = <T extends SortableAmendment>(amendments: T[], options: SortAmendmentsOptions = {}): T[] => {
   const { sortByVersionWhenNoReferenceNumber = false } = options;
 
-  return amendments.sort((a, b) => {
-    if (a.referenceNumber && b.referenceNumber) {
-      return b.referenceNumber.localeCompare(a.referenceNumber);
+  return amendments.sort((previous, current) => {
+    if (previous.referenceNumber && current.referenceNumber) {
+      return current.referenceNumber.localeCompare(previous.referenceNumber);
     }
 
-    if (a.referenceNumber && !b.referenceNumber) {
+    if (previous.referenceNumber && !current.referenceNumber) {
       return -1;
     }
 
-    if (!a.referenceNumber && b.referenceNumber) {
+    if (!previous.referenceNumber && current.referenceNumber) {
       return 1;
     }
 
@@ -53,8 +53,8 @@ export const sortAmendmentsByReferenceNumber = <T extends SortableAmendment>(ame
       return 0;
     }
 
-    const aVersion = typeof a.version === 'number' ? a.version : 0;
-    const bVersion = typeof b.version === 'number' ? b.version : 0;
+    const aVersion = typeof previous.version === 'number' ? previous.version : 0;
+    const bVersion = typeof current.version === 'number' ? current.version : 0;
 
     return bVersion - aVersion;
   });

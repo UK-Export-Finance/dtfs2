@@ -99,6 +99,9 @@ module.exports = defineConfig([
       'no-underscore-dangle': 'off',
       'class-methods-use-this': 'off',
 
+      // disallow param names with 1 digit, excluding object property names
+      'id-length': ['error', { min: 2, properties: 'never' }],
+
       // DTFS libs/common exception
       // Why: ESLint will otherwise autofix relative import paths, which we want to allow in this service.
       'no-relative-import-paths/no-relative-import-paths': 'off',
