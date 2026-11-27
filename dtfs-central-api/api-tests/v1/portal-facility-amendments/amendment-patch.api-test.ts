@@ -130,7 +130,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
-        message: ["update: Unrecognized key(s) in object: 'additional' (unrecognized_keys)"],
+        message: ['update: Unrecognized key: "additional" (unrecognized_keys)'],
         code: API_ERROR_CODE.INVALID_PAYLOAD,
       });
     });
