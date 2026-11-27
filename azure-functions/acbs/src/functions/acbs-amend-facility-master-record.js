@@ -30,6 +30,7 @@ const mappings = require('../../mappings');
 
 df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilityMaster(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facilityIdentifier;
 
   try {
     if (!payload) {
@@ -80,7 +81,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
 
     return facilityMasterRecordAmendments;
   } catch (error) {
-    console.error('Error amending facility master record %o', error);
-    throw new Error(`Error amending facility master record ${error}`);
+    console.error('Error amending facility master record for facility %s: %o', facilityId, error);
+    throw new Error(`Error amending facility master record for facility ${facilityId}: ${error}`);
   }
 });

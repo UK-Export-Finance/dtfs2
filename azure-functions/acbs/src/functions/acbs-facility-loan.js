@@ -12,6 +12,7 @@ const retryOptions = require('../../helpers/retryOptions');
 
 df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context) {
   const payload = context.df.input;
+  const facilityId = payload?.facility?.facilitySnapshot?.ukefFacilityId;
 
   try {
     const { deal, facility, dealAcbsData } = payload;
@@ -60,7 +61,7 @@ df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context)
 
     return response;
   } catch (error) {
-    console.error('Error creating facility loan record %o', error);
-    throw new Error(`Error creating facility loan record ${error}`);
+    console.error('Error creating facility loan record for facility %s: %o', facilityId, error);
+    throw new Error(`Error creating facility loan record for facility ${facilityId}: ${error}`);
   }
 });

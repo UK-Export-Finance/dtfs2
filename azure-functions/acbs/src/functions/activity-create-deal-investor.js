@@ -21,6 +21,8 @@ const mandatoryFields = ['effectiveDate', 'currency'];
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const dealId = payload?.dealIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid deal investor record payload');
@@ -64,8 +66,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal investor record %o', error);
-    throw new Error(`Unable to create deal investor record ${error}`);
+    console.error('Unable to create deal investor record for deal %s: %o', dealId, error);
+    throw new Error(`Unable to create deal investor record for deal ${dealId}: ${error}`);
   }
 };
 

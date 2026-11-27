@@ -15,6 +15,8 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * @throws {Error} - Throws an error if the facilityIdentifier is not provided, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     const { facilityIdentifier } = payload;
 
@@ -51,8 +53,8 @@ const handler = async (payload) => {
 
     throw new Error('Invalid argument set');
   } catch (error) {
-    console.error('Unable to get facility %o', error);
-    throw new Error(`Unable to get facility ${error}`);
+    console.error('Unable to get facility %s %o', facilityId, error);
+    throw new Error(`Unable to get facility ${facilityId} ${error}`);
   }
 };
 

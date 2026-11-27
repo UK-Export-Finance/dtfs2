@@ -39,6 +39,8 @@ const mandatoryFields = ['effectiveDate', 'amountAmendment'];
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
+  const facilityId = payload?.facilityIdentifier;
+
   try {
     if (!payload) {
       throw new Error('Invalid facility loan amount amendment payload');
@@ -79,8 +81,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to amend facility loan amount %o', error);
-    throw new Error(`Unable to amend facility loan amount ${error}`);
+    console.error('Unable to amend facility loan amount for facility %s %o', facilityId, error);
+    throw new Error(`Unable to amend facility loan amount for facility ${facilityId} ${error}`);
   }
 };
 
