@@ -16,8 +16,8 @@ export const initialiseCronJobScheduler = (jobs: CronSchedulerJob[]) => {
     }
 
     console.info("Adding scheduled job '%s' on schedule '%s'", description, cronExpression);
-    cron
-      .schedule(cronExpression, asyncTaskToSyncTask(taskWithErrorLogging(description, task)))
-      .on('error', (error) => console.error("An error occurred scheduling job '%s' %o", description, error));
+    const runTask = asyncTaskToSyncTask(taskWithErrorLogging(description, task));
+    // v3 skipped runs once their matching second had passed.
+    cron.schedule(cronExpression, ({ triggeredAt }) => runTask(triggeredAt), { missedExecutionTolerance: 0 });
   });
 };
