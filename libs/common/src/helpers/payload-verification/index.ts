@@ -9,7 +9,7 @@ import { isVerifiedPayloadByType } from './is-verified-payload-by-type';
  * New implementation should use schema and zod
  */
 export const isVerifiedPayload = ({ payload, template }: IsVerifiedPayloadParams): boolean => {
-  if (template instanceof z.Schema) {
+  if (template instanceof z.ZodType) {
     return isVerifiedPayloadByZod({ payload, template });
   }
 

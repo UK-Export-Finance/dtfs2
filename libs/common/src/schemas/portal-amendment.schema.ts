@@ -77,7 +77,7 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
     createdBy: z.object({
       username: z.string(),
       name: z.string(),
-      email: z.string().email(),
+      email: z.email(),
     }),
     eligibilityCriteria: z.object({
       version: z.number(),

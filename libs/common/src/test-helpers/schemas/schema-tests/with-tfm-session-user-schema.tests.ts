@@ -1,11 +1,11 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { ObjectId } from 'mongodb';
 import { TEAM_IDS } from '@ukef/constants';
 import { withSchemaValidationTests } from '@ukef/test-helpers/schemas/with-schema-validation.tests';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 
-export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
+export const withTfmSessionUserSchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

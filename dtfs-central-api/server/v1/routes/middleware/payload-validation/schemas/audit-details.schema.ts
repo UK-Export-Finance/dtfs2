@@ -25,6 +25,6 @@ export const AuditDetailsSchema = z.union(
     }),
   ],
   {
-    message: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
+    error: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
   },
 );

@@ -34,6 +34,16 @@ describe('isVerifiedPayload', () => {
 
       expect(isVerifiedPayloadByType).not.toHaveBeenCalled();
     });
+
+    it('should recognise a transformed zod schema', () => {
+      const payload = { name: 'First' };
+      const template = z.object({ name: z.string() }).transform(({ name }) => ({ name: name.toUpperCase() }));
+
+      isVerifiedPayload({ payload, template });
+
+      expect(isVerifiedPayloadByZod).toHaveBeenCalledWith({ payload, template });
+      expect(isVerifiedPayloadByType).not.toHaveBeenCalled();
+    });
   });
 
   describe('when a type object is passed as a template', () => {

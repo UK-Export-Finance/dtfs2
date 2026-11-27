@@ -1,4 +1,4 @@
-import { AnyZodObject, SafeParseError, SafeParseSuccess, ZodError, ZodIssue } from 'zod';
+import { z, ZodSafeParseError, ZodSafeParseSuccess, ZodIssue } from 'zod';
 import { RequestHandler } from 'express';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -7,21 +7,24 @@ import { validateSchema } from './create-validation-middleware-for-schema';
 console.error = jest.fn();
 
 describe('createValidationMiddleware', () => {
-  const aSuccessResponse = <T extends object>(data: T): SafeParseSuccess<T> => ({
+  const aSuccessResponse = <T extends object>(data: T): ZodSafeParseSuccess<T> => ({
     success: true,
     data,
   });
 
-  const anErrorResponse = (issues: ZodIssue[]): SafeParseError<object> => ({
-    success: false,
-    error: { issues } as ZodError<object>,
-  });
+  const anErrorResponse = (issues: ZodIssue[]): ZodSafeParseError<Record<string, unknown>> => {
+    const result = z.record(z.string(), z.unknown()).safeParse(null);
 
-  const mockSafeParse = jest.fn();
+    if (result.success) {
+      throw new Error('Expected invalid record to fail validation');
+    }
 
-  const mockSchema = {
-    safeParse: mockSafeParse,
-  } as unknown as AnyZodObject;
+    result.error.issues.splice(0, result.error.issues.length, ...issues);
+    return result;
+  };
+
+  const mockSchema = z.record(z.string(), z.unknown());
+  const mockSafeParse = jest.spyOn(mockSchema, 'safeParse');
 
   const runValidator: RequestHandler = (req, res, next) => validateSchema(mockSchema)(req, res, next);
 
@@ -72,11 +75,11 @@ describe('createValidationMiddleware', () => {
       const next = jest.fn();
 
       const issues: ZodIssue[] = [
-        { path: ['field1', 'field2', 'field3'], message: 'Message about field 1', code: 'invalid_type', expected: 'array', received: 'nan' },
-        { path: ['field4'], message: 'Message about field 4', code: 'not_finite' },
+        { path: ['field1', 'field2', 'field3'], message: 'Message about field 1', code: 'invalid_type', expected: 'array' },
+        { path: ['field4'], message: 'Message about field 4', code: 'custom' },
       ];
 
-      const expectedFormattedMessages = ['field1.field2.field3: Message about field 1 (invalid_type)', 'field4: Message about field 4 (not_finite)'];
+      const expectedFormattedMessages = ['field1.field2.field3: Message about field 1 (invalid_type)', 'field4: Message about field 4 (custom)'];
 
       mockSafeParse.mockReturnValue(anErrorResponse(issues));
 

@@ -54,7 +54,7 @@
     "unit-test-ff": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^5.5.0",
+    "@azure/msal-node": "^7.2.3",
     "@types/big.js": "^7.0.0",
     "@types/connect-redis": "^0.0.23",
     "@types/express-session": "^1.19.0",
@@ -93,7 +93,7 @@
     "tsconfig-paths": "^3.15.0",
     "typeorm": "^0.3.31",
     "typescript": "^5.9.3",
-    "zod": "^3.25.76"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "9.39.4",

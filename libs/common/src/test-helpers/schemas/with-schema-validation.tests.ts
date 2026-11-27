@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { z, ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { SchemaTestOptions } from './types/schema-test-options.type';
 import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
 import { withTestsForTestcase } from './tests';
@@ -65,7 +65,7 @@ import { withTestsForTestcase } from './tests';
  * }]
  * ```
  */
-export const withSchemaValidationTests = <Schema extends ZodSchema>({
+export const withSchemaValidationTests = <Schema extends ZodType>({
   schema,
   schemaTestOptions = {},
   aValidPayload,
@@ -74,7 +74,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
   schema: Schema;
   schemaTestOptions?: SchemaTestOptions;
   testCases: TestCaseWithPathParameter[];
-  aValidPayload: () => z.infer<Schema>;
+  aValidPayload: () => object;
 }) => {
   const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };
 

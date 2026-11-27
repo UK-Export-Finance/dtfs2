@@ -1,11 +1,11 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 import { ObjectId } from 'mongodb';
 import { WithSchemaTestParams } from '@ukef/test-helpers/schemas/types/with-schema-test.type';
 import { generateTfmUserAuditDatabaseRecord } from '@ukef/change-stream';
 import { withDefaultOptionsTests } from '@ukef/test-helpers/schemas/primitive-types-tests';
 import { withSchemaValidationTests } from '@ukef/test-helpers/schemas/with-schema-validation.tests';
 
-export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
+export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodType>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,

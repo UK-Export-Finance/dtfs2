@@ -24,6 +24,10 @@ describe('dateFromIsoString.schema', () => {
       expect(success).toEqual(false);
     });
 
+    it('rejects ISO strings with timezone offsets', () => {
+      expect(dateFromIsoStringSchema.safeParse('2022-03-05T00:00:00+01:00').success).toEqual(false);
+    });
+
     it("sets the 'data' property to the parsed date", () => {
       // Arrange
       const validIsoString = new Date('2022-03-5').toISOString();

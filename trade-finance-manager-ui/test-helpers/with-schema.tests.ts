@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 
 type SchemaTestCases = { aTestCase: () => any; description: string }[];
 
@@ -7,7 +7,7 @@ export const withSchemaTests = ({
   failureTestCases,
   successTestCases,
 }: {
-  schema: ZodSchema;
+  schema: ZodType;
   failureTestCases: SchemaTestCases;
   successTestCases: SchemaTestCases;
 }) => {
