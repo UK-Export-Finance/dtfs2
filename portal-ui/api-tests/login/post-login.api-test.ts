@@ -32,10 +32,10 @@ describe('POST /login', () => {
     jest.clearAllMocks();
   });
 
-  const loginWith = ({ email, password }) => post({ email, password }).to('/login');
+  const loginWith = ({ email, password }: { email: string; password: string }) => post({ email, password }).to('/login');
 
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => post({}, headers).to('/login'),
+    makeRequestWithHeaders: (headers: Record<string, string>) => post({}, headers).to('/login'),
     whitelistedRoles: allRoles,
     successCode: HttpStatusCode.Ok,
   });
@@ -66,12 +66,17 @@ describe('POST /login', () => {
 
   describe('when the login attempt does not succeed', () => {
     beforeEach(() => {
-      when(api.login).calledWith(anEmail, aPassword).mockRejectedValueOnce(new AxiosError());
+      when(api.login).calledWith(anEmail, aPassword).mockRejectedValueOnce('error');
     });
 
     it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: aPassword });
       expect(api.sendSignInLink).not.toHaveBeenCalled();
+    });
+
+    it('should handle non-object errors gracefully', async () => {
+      await loginWith({ email: anEmail, password: aPassword });
+      expect(console.error).toHaveBeenCalledWith('Unexpected error during login: %o', 'error');
     });
   });
 
