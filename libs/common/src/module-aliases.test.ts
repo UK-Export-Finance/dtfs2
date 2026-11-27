@@ -59,9 +59,13 @@ describe('common source aliases', () => {
       const { createRequire } = require('node:module');
       const requireCommon = createRequire(${JSON.stringify(path.join(__dirname, '../package.json'))});
       const common = requireCommon('@ukef/dtfs2-common');
+      const shared = requireCommon('./src/index.shared');
       const { CURRENCY } = requireCommon('@ukef/constants');
       const { getUnixTimestampSeconds } = requireCommon('@ukef/helpers/date');
       assert.equal(typeof common.asString, 'function');
+      assert.equal(typeof common.initialiseCronJobScheduler, 'function');
+      assert.equal('initialiseCronJobScheduler' in shared, false);
+      assert.deepEqual(Object.keys(shared).sort(), Object.keys(common).filter((key) => key !== 'initialiseCronJobScheduler').sort());
       assert.equal(CURRENCY.GBP, 'GBP');
       assert.equal(getUnixTimestampSeconds(new Date(0)), 0);
       assert.throws(() => requireCommon('@ukef/not-a-common-module'), { code: 'MODULE_NOT_FOUND' });
