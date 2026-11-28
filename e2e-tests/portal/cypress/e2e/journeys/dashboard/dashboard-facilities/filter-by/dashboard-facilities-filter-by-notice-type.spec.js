@@ -10,7 +10,7 @@ const {
   shouldRenderAppliedFilterInPanelSelectedFilters,
   shouldRenderAppliedFilterInMainContainerSelectedFilters,
   shouldRenderOnlyGivenTypes,
-} = require('../_actions-and-assertions');
+} = require('../actions-and-assertions');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
